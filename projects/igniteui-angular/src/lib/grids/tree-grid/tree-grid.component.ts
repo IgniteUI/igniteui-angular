@@ -599,7 +599,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data });
+        this.rowAddedNotifier.next({ data, owner: this });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -718,7 +718,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             rowID: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
-            oldValue: null
+            oldValue: null,
+            owner: this
         };
         this.rowDelete.emit(args);
         if (args.cancel) {
@@ -727,8 +728,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-            this.rowDeleted.emit({ data: record });
+            this.rowDeleted.emit({ data: record, owner: this });
         }
         return record;
     }
