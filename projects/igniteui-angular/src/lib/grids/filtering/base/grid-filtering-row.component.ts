@@ -279,7 +279,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public get localeId(): number {
+    public get weekStart(): number {
         return getLocaleFirstDayOfWeek(this.filteringService.grid.locale);
     }
 

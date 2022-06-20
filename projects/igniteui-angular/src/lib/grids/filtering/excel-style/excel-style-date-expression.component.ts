@@ -35,7 +35,7 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
         return this.grid.resourceStrings['igx_grid_filter_row_time_placeholder'];
     }
 
-    public get localeId(): number {
+    public get weekStart(): number {
         return getLocaleFirstDayOfWeek(this.grid.locale);
     }
 }

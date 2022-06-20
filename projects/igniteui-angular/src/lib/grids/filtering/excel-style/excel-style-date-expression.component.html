@@ -15,7 +15,7 @@
 </igx-select>
 
 <igx-date-picker #picker *ngIf="column.dataType === 'date'"
-    [weekStart]="column.pipeArgs.weekStart ?? localeId"
+    [weekStart]="column.pipeArgs.weekStart ?? weekStart"
     [(value)]="expressionUI.expression.searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
