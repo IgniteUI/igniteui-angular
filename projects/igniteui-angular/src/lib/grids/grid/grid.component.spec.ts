@@ -1140,9 +1140,10 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
             await wait(100);
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
@@ -1152,8 +1153,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();
             expect(defaultHeightNum).toBe(330);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
         });
 
         it(`should render grid with correct height when parent container's height is set
