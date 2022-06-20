@@ -72,3 +72,26 @@
     ));
 }
 
+/// Adds typography styles for the pie-chart component.
+/// Uses the 'h6' and 'subtitle-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by type-scale.
+/// @param {Map} $categories [(title: 'h6', subtitle: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} type-style
+@mixin pie-chart-typography($type-scale, $categories: (
+    title: 'h6',
+    subtitle: 'subtitle-1',
+)) {
+    $name: 'pie-chart';
+    $title: map.get($categories, 'title');
+    $subtitle: map.get($categories, 'subtitle');
+
+    $title-styles: type-scale-category($type-scale, $title);
+    $subtitle-styles: type-scale-category($type-scale, $subtitle);
+
+    igx-pie-chart {
+        @include font-var('title-text-style', $title-styles, $name);
+        @include font-var('subtitle-text-style', $subtitle-styles, $name);
+    }
+}
