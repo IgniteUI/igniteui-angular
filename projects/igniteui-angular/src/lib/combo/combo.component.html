@@ -36,7 +36,7 @@
     (opened)="handleOpened()" (closed)="handleClosed()">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" theme="material" class="igx-combo__search">
         <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text"
-            [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
+            [(ngModel)]="searchValue" (input)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         <igx-suffix *ngIf="showSearchCaseIcon">
