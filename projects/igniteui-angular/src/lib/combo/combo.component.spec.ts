@@ -1753,22 +1753,38 @@ describe('igxCombo', () => {
                 combo.valueKey = 'key';
                 combo.displayKey = 'value';
                 combo.data = [
-                    { key: 0, value: 0 },
-                    { key: 'truthy value', value: false },
-                    { key: null, value: null },
-                    { key: undefined, value: undefined },
+                    { key: 'item1', value: false },
+                    { key: 'item2', value: null },
+                    { key: 'item3', value: '' },
+                    { key: 'item4', value: NaN },
+                    { key: 'item5', value: undefined },
                 ];
+
                 combo.open();
                 fixture.detectChanges();
+                const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0];
+                expect(item1.nativeElement.textContent.trim()).toEqual('item1');
 
-                const item = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
-                const displayText = item.nativeElement.textContent.trim();
-                expect(displayText).toEqual('truthy value');
+                const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+                expect(item2.nativeElement.textContent.trim()).toEqual('item2');
 
-                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+                expect(item3.nativeElement.textContent.trim()).toEqual('item3');
+
+                const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+                expect(item4.nativeElement.textContent.trim()).toEqual('item4');
+
+                const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+                expect(item5.nativeElement.textContent.trim()).toEqual('item5');
+
+                item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                expect(combo.value).toBe('truthy value');
+                expect(combo.value).toBe('item1, item2, item3, item4, item5');
             });
         });
         describe('primitive data dropdown: ', () => {
