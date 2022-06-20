@@ -939,6 +939,15 @@ describe('IgxSimpleCombo', () => {
             expect(document.activeElement).toEqual(addItemButton.nativeElement);
         }));
 
+        it('should not add text in search input when typing only blank spaces', () => {
+            combo.open();
+            fixture.detectChanges();
+            UIInteractions.simulateTyping('  ', input);
+            fixture.detectChanges();
+
+            expect(combo.comboInput.value).toEqual('');
+        });
+
         it('should close when an item is clicked on', () => {
             spyOn(combo, 'close').and.callThrough();
             combo.open();
