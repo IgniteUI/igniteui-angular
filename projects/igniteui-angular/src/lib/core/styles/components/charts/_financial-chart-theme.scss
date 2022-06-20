@@ -262,27 +262,13 @@
     );
 }
 
-/// Adds typography styles for the financial-chart component.
-/// Uses the 'h6', 'subtitle-1' and 'body-2'
-/// category from the typographic scale.
-/// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by type-scale.
-/// @param {Map} $categories [(
-/// 'title': 'h6',
-/// 'subtitle': 'subtitle-1,
-/// 'x-axis-label-text-style': 'body-2',
-/// 'y-axis-label-text-style': 'body-2',
-/// 'x-axis-title-text-style': 'body-2',
-/// 'y-axis-title-text-style': 'body-2',
-/// )] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin financial-chart-typography($type-scale, $categories: (
-    'title': 'h6',
+    'title': 'h1',
     'subtitle': 'subtitle-1',
-    'x-axis-label-text-style': 'body-2',
-    'x-axis-title-text-style': 'body-2',
-    'y-axis-label-text-style': 'body-2',
-    'y-axis-title-text-style': 'body-2',
+    'x-axis-label-text-style': 'h4',
+    'x-axis-title-text-style': 'h3',
+    'y-axis-label-text-style': 'h4',
+    'y-axis-title-text-style': 'h3',
 )) {
     $name: 'financial-chart';
     $title: map.get($categories, 'title');
