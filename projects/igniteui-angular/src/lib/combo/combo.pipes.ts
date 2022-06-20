@@ -11,8 +11,11 @@ import { IComboFilteringOptions } from './combo.component';
     name: 'comboClean'
 })
 export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
+    public transform(collection: any[], valueKey: any) {
+        if (valueKey) {
+            return collection.filter(e => !!e[valueKey] || e[valueKey] === 0);
+        }
+        return collection.filter(e => !!e || e === 0);
     }
 }
 
@@ -26,7 +29,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
         if (!collection) {
             return [];
         }
-        if (!searchValue || !shouldFilter) {
+        if (!searchValue?.trim() || !shouldFilter) {
             return collection;
         } else {
             const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();

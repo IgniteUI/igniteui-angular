@@ -1023,7 +1023,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public isAddButtonVisible(): boolean {
         // This should always return a boolean value. If this.searchValue was '', it returns '' instead of false;
-        return this.searchValue !== '' && this.customValueFlag;
+        return this.searchValue.trim() !== '' && this.customValueFlag;
     }
 
     /** @hidden @internal */
