@@ -196,7 +196,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
         });
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            const filtered = this.filteredData.find(this.findMatch);
+            const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === undefined || filtered === null) {
                 this.filterValue = this.searchValue = this.comboInput.value;
                 return;
@@ -249,7 +249,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleKeyDown(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ENTER) {
-            const filtered = this.filteredData.find(this.findMatch);
+            const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === null || filtered === undefined) {
                 return;
             }
@@ -381,7 +381,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
     }
 
-    protected findMatch = (element: any): boolean => {
+    protected findAllMatches = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
         if (value === null || value === undefined || value === '') {
             // we can accept null, undefined and empty strings as empty display values
@@ -417,6 +417,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
+        } else if (this.isRemote) {
+            this.registerRemoteEntries(newSelectionAsArray, false);
         }
     }
 
@@ -442,7 +444,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
-        const filtered = this.filteredData.find(this.findMatch);
+        const filtered = this.filteredData.find(this.findAllMatches);
         if (filtered === undefined || filtered === null || !this.selectedItem) {
             this.clearAndClose();
             return;

@@ -1914,7 +1914,8 @@ describe('igxCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxComboSampleComponent
+                    IgxComboSampleComponent,
+                    IgxComboRemoteDataComponent
                 ],
                 imports: [
                     IgxComboModule,
@@ -2117,6 +2118,19 @@ describe('igxCombo', () => {
             simulateComboItemClick(0);
             expect(combo.selection.length).toEqual(0);
             expect(itemCheckbox[0].classList.contains(CSS_CLASS_ITME_CHECKBOX_CHECKED)).toBeFalsy();
+        });
+        it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
+            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
+            combo.toggle();
+            fixture.detectChanges();
+
+            simulateComboItemClick(0);
+            expect(combo.selection.length).toEqual(0);
+            expect((combo as any)._remoteSelection[0]).toBeUndefined();
         });
     });
     describe('Grouping tests: ', () => {
