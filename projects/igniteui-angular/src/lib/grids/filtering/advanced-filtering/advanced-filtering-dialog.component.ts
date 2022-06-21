@@ -393,7 +393,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public get filterableColumns(): ColumnType[] {
-        return this.grid.columnList.filter((col) => !col.columnGroup && col.filterable);
+        return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
     }
 
     /**

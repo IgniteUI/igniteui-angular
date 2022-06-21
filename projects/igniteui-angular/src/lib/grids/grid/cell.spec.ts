@@ -345,8 +345,8 @@ describe('IgxGrid - Cell component #grid', () => {
         it('should not make last column width 0 when no column width is set', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(NoColumnWidthGridComponent);
             fix.detectChanges();
-            const columns = fix.componentInstance.grid.columnList;
-            const lastCol: IgxColumnComponent = columns.last;
+            const columns = fix.componentInstance.grid.columns;
+            const lastCol: IgxColumnComponent = columns[columns.length - 1];
             lastCol._cells.forEach((cell) => {
                 expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
             });

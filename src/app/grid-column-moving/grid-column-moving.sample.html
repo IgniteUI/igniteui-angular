@@ -13,6 +13,7 @@
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <button (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
+            <button (click)='reverseColumn()'>Reverse</button>
             <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
                 [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
                 (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
@@ -29,6 +30,10 @@
                     [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable" [filterable]="c.filterable"
                     [editable]="true" [hidden]="c.hidden" [pinned]="c.pinned" [hasSummary]="c.summary"
                     [dataType]="c.type">
+                    <ng-template igxCell let-cell="cell">
+                        <div *ngIf='show'>{{ cell.value}}</div>
+                        
+                    </ng-template>
                 </igx-column>
                 <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
