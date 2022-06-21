@@ -22,6 +22,7 @@
 @use '../components/charts/funnel-chart-theme' as *;
 @use '../components/charts/gauge-theme' as *;
 @use '../components/charts/graph-theme' as *;
+@use '../components/charts/pie-chart-theme' as *;
 @use '../components/charts/shape-chart-theme' as *;
 @use '../components/checkbox/checkbox-theme' as *;
 @use '../components/chip/chip-theme' as *;
@@ -82,6 +83,7 @@
     @include input-group-typography($type-scale);
     @include navbar-typography($type-scale);
     @include navdrawer-typography($type-scale);
+    @include pie-chart-typography($type-scale);
     @include radio-typography($type-scale);
     @include shape-chart-typography($type-scale);
     @include slider-typography($type-scale);
