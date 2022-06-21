@@ -1301,8 +1301,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected _recalcOnContainerChange() {
-        this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-        this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();

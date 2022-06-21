@@ -2912,7 +2912,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.columnList.toArray()[0].header = 'Custom Header Text';
+        grid.columns[0].header = 'Custom Header Text';
         tick();
         fix.detectChanges();
 
