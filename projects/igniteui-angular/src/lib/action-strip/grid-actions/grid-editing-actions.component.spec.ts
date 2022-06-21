@@ -245,14 +245,14 @@ describe('igxGridEditingActions #grid ', () => {
 
     describe('TreeGrid - action strip', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fixture.detectChanges();
             treeGrid = fixture.componentInstance.treeGrid;
             actionStrip = fixture.componentInstance.actionStrip;
-        }));
+        });
 
-        it('should allow deleting row', async () => {
+        it('should allow deleting row', () => {
             spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
             spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
             const row = treeGrid.rowList.toArray()[0];
@@ -271,12 +271,17 @@ describe('igxGridEditingActions #grid ', () => {
                 owner: treeGrid
             };
 
+            const rowDeletedArgs = {
+                data: treeGrid.getRowData(row.key),
+                owner: treeGrid
+            };
+
             // select delete
             addChildBtn.actionClick.emit();
             fixture.detectChanges();
 
             expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalled();
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.rowData['ID']).toBe(6);
         });
     });
