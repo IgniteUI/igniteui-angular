@@ -28,7 +28,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     ) { }
 
     public get_column_by_name(name: string): ColumnType {
-        return this.grid.columnList.find((col: ColumnType) => col.field === name);
+        return this.grid.columns.find((col: ColumnType) => col.field === name);
     }
 
     public get_summary_data() {

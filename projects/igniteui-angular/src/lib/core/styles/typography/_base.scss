@@ -276,12 +276,13 @@
 ///   $h1-style: type-scale-category($type-scale, 'h1');
 ///   @include font-var('h1-font', $h1-style);
 @mixin font-var($name, $type-style, $prefix: null) {
-    $fs: map.get($type-style, 'font-style');
+    $ff: var(--igx-font-family);
     $fz: map.get($type-style, 'font-size');
-    $fw: map.get($type-style, 'font-weight');
-    $lh: map.get($type-style, 'line-height');
 
     // unused for now
+    $fs: map.get($type-style, 'font-style');
+    $fw: map.get($type-style, 'font-weight');
+    $lh: map.get($type-style, 'line-height');
     $tt: map.get($type-style, 'text-transform');
     $ls: map.get($type-style, 'letter-spacing');
     $mt: map.get($type-style, 'margin-top');
@@ -289,7 +290,6 @@
 
     @include css-vars((
         'name': $prefix,
-        #{$name}: #{$fs $fw $fz}/#{$lh} inherit,
+        #{$name}: #{$fz} #{$ff},
     ));
 }
-
