@@ -58,10 +58,10 @@ export class IgxSplitterComponent implements AfterContentInit {
     @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
     public panes!: QueryList<IgxSplitterPaneComponent>;
 
-     /**
-     * @hidden
-     * @internal
-     */
+    /**
+    * @hidden
+    * @internal
+    */
     @HostBinding('class.igx-splitter')
     public cssClass = 'igx-splitter';
 
@@ -154,7 +154,7 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     private sibling!: IgxSplitterPaneComponent;
 
-    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
+    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) { }
     /**
      * Gets/Sets the splitter orientation.
      *
@@ -204,7 +204,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
         const siblingRect = this.sibling.element.getBoundingClientRect();
         this.initialSiblingSize = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        const args: ISplitterBarResizeEventArgs = {pane: this.pane, sibling: this.sibling};
+        const args: ISplitterBarResizeEventArgs = { pane: this.pane, sibling: this.sibling };
         this.resizeStart.emit(args);
     }
 
@@ -256,7 +256,7 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (this.sibling.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
-            const percentSiblingPaneSize =  (siblingSize / totalSize) * 100;
+            const percentSiblingPaneSize = (siblingSize / totalSize) * 100;
             this.sibling.size = percentSiblingPaneSize + '%';
         } else {
             // px resize
@@ -290,7 +290,16 @@ export class IgxSplitterComponent implements AfterContentInit {
      * This method inits panes with properties.
      */
     private initPanes() {
-        this.panes.forEach(pane => pane.owner = this);
+        this.panes.forEach(pane => {
+            pane.owner = this;
+            if (this.type === SplitterType.Horizontal) {
+                pane.minWidth = pane.minSize ?? '0';
+                pane.maxWidth = pane.maxSize ?? '100%';
+            } else {
+                pane.minHeight = pane.minSize ?? '0';
+                pane.maxHeight = pane.maxSize ?? '100%';
+            }
+        });
         this.assignFlexOrder();
         if (this.panes.filter(x => x.collapsed).length > 0) {
             // if any panes are collapsed, reset sizes.
@@ -328,7 +337,7 @@ export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright 
  * @hidden @internal
  * Represents the draggable bar that visually separates panes and allows for changing their sizes.
  */
- @Component({
+@Component({
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html'
 })
@@ -433,66 +442,66 @@ export class IgxSplitBarComponent {
         if (SPLITTER_INTERACTION_KEYS.has(key)) {
             event.preventDefault();
         }
-            switch (key) {
-                case 'arrowup':
-                case 'up':
-                    if (this.type === SplitterType.Vertical) {
-                        if (ctrl) {
-                            this.onCollapsing(false);
-                            break;
-                        }
-                        if (!this.resizeDisallowed) {
-                            event.preventDefault();
-                            this.moveStart.emit(this.pane);
-                            this.moving.emit(10);
-                        }
+        switch (key) {
+            case 'arrowup':
+            case 'up':
+                if (this.type === SplitterType.Vertical) {
+                    if (ctrl) {
+                        this.onCollapsing(false);
+                        break;
                     }
-                    break;
-                case 'arrowdown':
-                case 'down':
-                    if (this.type === SplitterType.Vertical) {
-                        if (ctrl) {
-                            this.onCollapsing(true);
-                            break;
-                        }
-                        if (!this.resizeDisallowed) {
-                            event.preventDefault();
-                            this.moveStart.emit(this.pane);
-                            this.moving.emit(-10);
-                        }
+                    if (!this.resizeDisallowed) {
+                        event.preventDefault();
+                        this.moveStart.emit(this.pane);
+                        this.moving.emit(10);
                     }
-                    break;
-                case 'arrowleft':
-                case 'left':
-                    if (this.type === SplitterType.Horizontal) {
-                        if (ctrl) {
-                            this.onCollapsing(false);
-                            break;
-                        }
-                        if (!this.resizeDisallowed) {
-                            event.preventDefault();
-                            this.moveStart.emit(this.pane);
-                            this.moving.emit(10);
-                        }
+                }
+                break;
+            case 'arrowdown':
+            case 'down':
+                if (this.type === SplitterType.Vertical) {
+                    if (ctrl) {
+                        this.onCollapsing(true);
+                        break;
                     }
-                    break;
-                case 'arrowright':
-                case 'right':
-                    if (this.type === SplitterType.Horizontal) {
-                        if (ctrl) {
-                            this.onCollapsing(true);
-                            break;
-                        }
-                        if (!this.resizeDisallowed) {
-                            event.preventDefault();
-                            this.moveStart.emit(this.pane);
-                            this.moving.emit(-10);
-                        }
+                    if (!this.resizeDisallowed) {
+                        event.preventDefault();
+                        this.moveStart.emit(this.pane);
+                        this.moving.emit(-10);
                     }
-                    break;
-                default:
-                    break;
-            }
+                }
+                break;
+            case 'arrowleft':
+            case 'left':
+                if (this.type === SplitterType.Horizontal) {
+                    if (ctrl) {
+                        this.onCollapsing(false);
+                        break;
+                    }
+                    if (!this.resizeDisallowed) {
+                        event.preventDefault();
+                        this.moveStart.emit(this.pane);
+                        this.moving.emit(10);
+                    }
+                }
+                break;
+            case 'arrowright':
+            case 'right':
+                if (this.type === SplitterType.Horizontal) {
+                    if (ctrl) {
+                        this.onCollapsing(true);
+                        break;
+                    }
+                    if (!this.resizeDisallowed) {
+                        event.preventDefault();
+                        this.moveStart.emit(this.pane);
+                        this.moving.emit(-10);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -526,7 +535,7 @@ export class IgxSplitBarComponent {
      */
     public onDragMove(event: IDragMoveEventArgs) {
         const isHorizontal = this.type === SplitterType.Horizontal;
-        const curr =  isHorizontal ? event.pageX : event.pageY;
+        const curr = isHorizontal ? event.pageX : event.pageY;
         const delta = this.startPoint - curr;
         if (delta !== 0) {
             this.moving.emit(delta);
@@ -537,7 +546,7 @@ export class IgxSplitBarComponent {
 
     public onDragEnd(event: any) {
         const isHorizontal = this.type === SplitterType.Horizontal;
-        const curr =  isHorizontal ? event.pageX : event.pageY;
+        const curr = isHorizontal ? event.pageX : event.pageY;
         const delta = this.startPoint - curr;
         if (delta !== 0) {
             this.movingEnd.emit(delta);
