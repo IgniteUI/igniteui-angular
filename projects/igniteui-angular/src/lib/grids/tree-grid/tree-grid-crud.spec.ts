@@ -967,8 +967,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.deleteRow(someRow.key);
                 fix.detectChanges();
 
-                expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
-                expect(treeGrid.rowDeleted.emit).toHaveBeenCalled();
+                expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
                 
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);

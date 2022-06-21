@@ -265,14 +265,14 @@ describe('igxGridEditingActions #grid ', () => {
 
     describe('TreeGrid - action strip', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fixture.detectChanges();
             treeGrid = fixture.componentInstance.treeGrid;
             actionStrip = fixture.componentInstance.actionStrip;
-        }));
+        });
 
-        it('should allow deleting row', async () => {
+        it('should allow deleting row', () => {
             spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
             spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
             const row = treeGrid.rowList.toArray()[0];
@@ -281,7 +281,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const editActions = fixture.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions[3].componentInstance.iconName).toBe('delete');
-            const addChildBtn = editActions[3].componentInstance;
+            const deleteChildBtn = editActions[3].componentInstance;
 
             const rowDeleteArgs = {
                 rowID: row.key,
@@ -292,7 +292,7 @@ describe('igxGridEditingActions #grid ', () => {
             };
 
             // select delete
-            addChildBtn.actionClick.emit();
+            deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
             expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
