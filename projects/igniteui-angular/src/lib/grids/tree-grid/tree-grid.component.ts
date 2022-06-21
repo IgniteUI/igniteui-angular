@@ -435,7 +435,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
+        const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxTreeGridRow && column) {
             return new IgxGridCell(this as any, rowIndex, column.field);
         }
@@ -803,7 +803,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
             return new IgxGridCell(this as any, rowIndex, columnField);
         }
@@ -823,7 +823,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByKey(rowSelector: any, columnField: string): CellType {
         const row = this.getRowByKey(rowSelector);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
             return new IgxGridCell(this as any, row.index, columnField);
         }
@@ -893,7 +893,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```
      */
     public get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+        return this.columns.some((col) => col.groupable && !col.columnGroup);
     }
 
     protected generateDataFields(data: any[]): string[] {
@@ -982,12 +982,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
+    protected initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
+            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
     }
