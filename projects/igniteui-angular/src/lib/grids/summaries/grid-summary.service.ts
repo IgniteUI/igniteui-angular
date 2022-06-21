@@ -38,7 +38,7 @@ export class IgxGridSummaryService {
             this.removeSummaries(rowID);
         }
         if (args.rowID !== undefined && args.rowID !== null) {
-            let columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
+            let columnName = args.cellID ? this.grid.columns.find(col => col.index === args.cellID.columnID).field : undefined;
             if (columnName && this.grid.rowEditable) {
                 return;
             }
@@ -97,7 +97,7 @@ export class IgxGridSummaryService {
             return this.summaryHeight = 0;
         }
         let maxSummaryLength = 0;
-        this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
+        this.grid.columns.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             const getCurrentSummaryColumn = column.summaries.operate([], [], column.field).length;
             if (getCurrentSummaryColumn) {
                 if (maxSummaryLength < getCurrentSummaryColumn) {
@@ -119,7 +119,7 @@ export class IgxGridSummaryService {
         if (!this.hasSummarizedColumns || !data) {
             return rowSummaries;
         }
-        this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
+        this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
                     data, column.field, this.grid.locale, column.pipeArgs);
@@ -157,7 +157,7 @@ export class IgxGridSummaryService {
     }
 
     public get hasSummarizedColumns(): boolean {
-        const summarizedColumns = this.grid.columnList.filter(col => col.hasSummary && !col.hidden);
+        const summarizedColumns = this.grid.columns.filter(col => col.hasSummary && !col.hidden);
         return summarizedColumns.length > 0;
     }
 
