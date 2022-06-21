@@ -36,7 +36,7 @@
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
-    [labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
+    [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" theme="material" class="igx-combo__search">

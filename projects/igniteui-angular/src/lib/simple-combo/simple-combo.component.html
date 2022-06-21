@@ -45,7 +45,7 @@
 </igx-input-group>
 
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
-    [labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
+    [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()" [singleMode]="true">
     <ng-container *ngTemplateOutlet="headerTemplate">
