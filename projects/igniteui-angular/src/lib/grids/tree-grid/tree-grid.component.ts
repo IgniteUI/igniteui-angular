@@ -89,6 +89,7 @@ let NEXT_ID = 0;
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
+        IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
