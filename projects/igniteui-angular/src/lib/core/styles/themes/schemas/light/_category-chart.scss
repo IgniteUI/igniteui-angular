@@ -9,10 +9,10 @@
 /// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
 /// @property {List} marker-brushes [series]- Defines the palette from which automatically assigned series marker brushes colors are selected.
-/// @property {List} negative-brushes [series] - Defines the palette used for coloring negative items in a chart type with contextual coloring, such as Waterfall.
+/// @property {List} negative-brushes [hsl(347, 82%, 64%)] - Defines the palette used for coloring negative items in a chart type with contextual coloring, such as Waterfall.
+/// @property {List} negative-outlines [hsl(347, 82%, 64%)] - Defines the brushes used for drawing negative elements in a chart type with contextual coloring, such as Waterfall.
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @property {List} marker-outlines [series] - Defines the palette from which automatically assigned series marker outline colors are selected.
-/// @property {List} negative-outlines [series] - Defines the brushes used for drawing negative elements in a chart type with contextual coloring, such as Waterfall.
 /// @property {String} title-alignment [null] - The horizontal alignment to use for the title.
 /// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
 /// @property {Color} title-text-color [null] - Sets the color of the chart title.
@@ -70,13 +70,13 @@ $light-category-chart: (
 
     'marker-brushes': series,
 
-    'negative-brushes': series,
+    'negative-brushes': hsl(347, 82%, 64%),
 
     'outlines': series,
 
     'marker-outlines': series,
 
-    'negative-outlines': series,
+    'negative-outlines': hsl(347, 82%, 64%),
 
     'title-alignment': null,
 
