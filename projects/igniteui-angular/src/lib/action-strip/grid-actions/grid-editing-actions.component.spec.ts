@@ -291,12 +291,17 @@ describe('igxGridEditingActions #grid ', () => {
                 owner: treeGrid
             };
 
+            const rowDeletedArgs = {
+                data: treeGrid.getRowData(row.key),
+                owner: treeGrid
+            };
+
             // select delete
             deleteChildBtn.actionClick.emit();
             fixture.detectChanges();
 
-            expect(treeGrid.rowDelete.emit).toHaveBeenCalledWith(rowDeleteArgs);
-            expect(treeGrid.rowDeleted.emit).toHaveBeenCalled();
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
             expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });
