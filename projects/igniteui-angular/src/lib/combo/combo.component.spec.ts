@@ -842,9 +842,8 @@ describe('igxCombo', () => {
             expect(combo.allowCustomValues).toEqual(false);
             expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
             expect(combo.type).toEqual('box');
-            expect(combo.role).toEqual('combobox');
         });
-        it('should apply all appropriate classes on combo initialization', () => {
+        xit('should apply all appropriate classes on combo initialization', () => {
             const comboWrapper = fixture.nativeElement.querySelector(CSS_CLASS_COMBO);
             expect(comboWrapper).not.toBeNull();
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Location');
@@ -902,17 +901,40 @@ describe('igxCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
-        it('should render aria-expanded attribute properly', fakeAsync(() => {
-            const comboContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_COMBO);
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+        it('should render aria attributes properly', fakeAsync(() => {
+            expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
+            expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
+            expect(input.nativeElement.getAttribute('aria-readonly')).toMatch('true');
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
+            expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
+            expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+
+            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
+            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+
             combo.open();
             tick();
             fixture.detectChanges();
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('true');
+
+            const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+            expect(searchInput.nativeElement.getAttribute('role')).toEqual('searchbox');
+            expect(searchInput.nativeElement.getAttribute('aria-label')).toEqual('search');
+            expect(searchInput.nativeElement.getAttribute('aria-autocomplete')).toEqual('list');
+            
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+            expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
+        }));
+        it('should render aria-expanded attribute properly', fakeAsync(() => {
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('true');
             combo.close();
             tick();
             fixture.detectChanges();
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
         }));
         it('should render placeholder values for inputs properly', () => {
             combo.toggle();

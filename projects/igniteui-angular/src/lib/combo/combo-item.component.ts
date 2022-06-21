@@ -29,7 +29,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     @HostBinding('attr.aria-label')
     @Input()
     public get ariaLabel(): string {
-        return this.itemID;
+        const valueKey = this.comboAPI.valueKey;
+        return (valueKey !== null && this.value != null) ? this.value[valueKey] : this.value;
     }
 
     /** @hidden @internal */

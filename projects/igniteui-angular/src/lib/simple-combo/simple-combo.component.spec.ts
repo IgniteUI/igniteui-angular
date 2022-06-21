@@ -477,7 +477,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.allowCustomValues).toEqual(false);
             expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
             expect(combo.type).toEqual('box');
-            expect(combo.role).toEqual('combobox');
         });
         it('should apply all appropriate classes on combo initialization', () => {
             const comboWrapper = fixture.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
