@@ -245,14 +245,14 @@ describe('igxGridEditingActions #grid ', () => {
 
     describe('TreeGrid - action strip', () => {
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fixture.detectChanges();
             treeGrid = fixture.componentInstance.treeGrid;
             actionStrip = fixture.componentInstance.actionStrip;
-        });
+        }));
 
-        it('should allow deleting row', () => {
+        it('should allow deleting row', async () => {
             spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
             spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
             const row = treeGrid.rowList.toArray()[0];
