@@ -13,21 +13,11 @@
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <button (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
-            <igx-grid
-                #grid1
-                [columnSelection]="'single'"
-                [data]="data"
-                [displayDensity]="density"
-                [allowFiltering]="true"
-                (columnMovingStart)="columnMovingStart()"
-                (columnMoving)="columnMoving()"
-                (columnMovingEnd)="columnMovingEnd()"
-                [rowSelection] ="'multiple'"
-                [filterMode]="'excelStyleFilter'"
-                [rowEditable]="true"
-                [width]="'900px'"
-                [primaryKey]="'ID'"
-                >
+            <button (click)='reverseColumn()'>Reverse</button>
+            <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
+                [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
+                (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
+                [rowEditable]="true" [primaryKey]="'ID'">
                 <igx-grid-toolbar [displayDensity]="'compact'">
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -35,20 +25,16 @@
                         <igx-grid-toolbar-advanced-filtering>
                         </igx-grid-toolbar-advanced-filtering>
                     </igx-grid-toolbar-actions>
-                  </igx-grid-toolbar>
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                    [header]="c.field"
-                                                    [movable]="c.movable"
-                                                    [groupable]="c.groupable"
-                                                    [resizable]="c.resizable"
-                                                    [width]="c.width"
-                                                    [sortable]="c.sortable"
-                                                    [filterable]="c.filterable"
-                                                    [editable]="true"
-                                                    [hidden]="c.hidden"
-                                                    [pinned]="c.pinned"
-                                                    [hasSummary]="c.summary"
-                                                    [dataType]="c.type">
+                </igx-grid-toolbar>
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
+                    [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable" [filterable]="c.filterable"
+                    [editable]="true" [hidden]="c.hidden" [pinned]="c.pinned" [hasSummary]="c.summary"
+                    [movable]='true'
+                    [dataType]="c.type">
+                    <ng-template igxCell let-cell="cell">
+                        <div *ngIf='show'>{{ cell.value}}</div>
+                        
+                    </ng-template>
                 </igx-column>
                 <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
