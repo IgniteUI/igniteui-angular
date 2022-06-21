@@ -138,7 +138,7 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     private sibling!: IgxSplitterPaneComponent;
 
-    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
+    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) { }
     /**
      * Gets/Sets the splitter orientation.
      *
@@ -188,7 +188,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
         const siblingRect = this.sibling.element.getBoundingClientRect();
         this.initialSiblingSize = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        const args: ISplitterBarResizeEventArgs = {pane: this.pane, sibling: this.sibling};
+        const args: ISplitterBarResizeEventArgs = { pane: this.pane, sibling: this.sibling };
         this.resizeStart.emit(args);
     }
 
@@ -240,7 +240,7 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (this.sibling.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
-            const percentSiblingPaneSize =  (siblingSize / totalSize) * 100;
+            const percentSiblingPaneSize = (siblingSize / totalSize) * 100;
             this.sibling.size = percentSiblingPaneSize + '%';
         } else {
             // px resize
@@ -274,7 +274,16 @@ export class IgxSplitterComponent implements AfterContentInit {
      * This method inits panes with properties.
      */
     private initPanes() {
-        this.panes.forEach(pane => pane.owner = this);
+        this.panes.forEach(pane => {
+            pane.owner = this;
+            if (this.type === SplitterType.Horizontal) {
+                pane.minWidth = pane.minSize ?? '0';
+                pane.maxWidth = pane.maxSize ?? '100%';
+            } else {
+                pane.minHeight = pane.minSize ?? '0';
+                pane.maxHeight = pane.maxSize ?? '100%';
+            }
+        });
         this.assignFlexOrder();
         if (this.panes.filter(x => x.collapsed).length > 0) {
             // if any panes are collapsed, reset sizes.
