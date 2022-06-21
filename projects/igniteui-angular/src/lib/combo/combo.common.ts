@@ -527,8 +527,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <!-- Set in markup -->
      *  <igx-combo #combo>
      *      ...
-     *      <ng-template igxComboItem>
-     *          <div class="custom-item" let-item let-key="valueKey">
+     *      <ng-template igxComboItem let-item let-key="valueKey">
+     *          <div class="custom-item">
      *              <div class="custom-item__name">{{ item[key] }}</div>
      *              <div class="custom-item__cost">{{ item.cost }}</div>
      *          </div>
@@ -1187,10 +1187,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     };
 
     protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
+        if (this.ngControl) {
+            if (this.ngControl.control.validator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
+            } else {
+                // P.M. 18 May 2022: IgxCombo's asterisk not removed when removing required validator dynamically in reactive form #11543
+                this.inputGroup.isRequired = false;
+            }
         }
     }
 

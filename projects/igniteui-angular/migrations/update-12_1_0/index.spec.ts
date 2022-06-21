@@ -116,7 +116,7 @@ export class TestComponent implements OnInit {
     (onClosing)="handleEvent($event, 'closing')"
     (onClosed)="handleEvent($event, 'closed')"
 >
-    Display something onOpening, onClosing, onOpened, onClosed
+    Display something
 </igx-banner>`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -129,7 +129,7 @@ export class TestComponent implements OnInit {
     (closing)="handleEvent($event, 'closing')"
     (closed)="handleEvent($event, 'closed')"
 >
-    Display something onOpening, onClosing, onOpened, onClosed
+    Display something
 </igx-banner>`);
     });
 
@@ -223,7 +223,7 @@ export class TestComponent implements OnInit {
             '/testSrc/appPrefix/component/test.component.html', `
 <igx-expansion-panel (onExpanded)="handleExpanded($event)" (onCollapsed)="handleCollapsed($event)">
     <igx-expansion-panel-header (onInteraction)="handleInteraction($event)">
-        Trigger something onInteraction and onExpanded and onCollapsed
+        Trigger something
     </igx-expansion-panel-header>
 </igx-expansion-panel>`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
@@ -233,7 +233,7 @@ export class TestComponent implements OnInit {
             .toEqual(`
 <igx-expansion-panel (contentExpanded)="handleExpanded($event)" (contentCollapsed)="handleCollapsed($event)">
     <igx-expansion-panel-header (interaction)="handleInteraction($event)">
-        Trigger something onInteraction and onExpanded and onCollapsed
+        Trigger something
     </igx-expansion-panel-header>
 </igx-expansion-panel>`);
     });
@@ -476,7 +476,7 @@ public onBannerOpened(event: BannerEventArgs) {
             (onClosed)="handleEvent($event, 'closed')"
             (onSelection)="handleEvent($event, 'selection')"
         >
-            Display something onOpening, onClosing, onOpened, onClosed
+            Display something
         </igx-drop-down>`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
                 .toPromise();
@@ -489,7 +489,7 @@ public onBannerOpened(event: BannerEventArgs) {
             (closed)="handleEvent($event, 'closed')"
             (selectionChanging)="handleEvent($event, 'selection')"
         >
-            Display something onOpening, onClosing, onOpened, onClosed
+            Display something
         </igx-drop-down>`);
     });
 

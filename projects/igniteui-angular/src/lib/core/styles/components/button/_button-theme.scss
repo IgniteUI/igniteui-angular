@@ -110,6 +110,7 @@
         $_hover-shadow: $hover-shadow;
         $_focus-shadow: $focus-shadow;
         $_active-shadow: $active-shadow;
+        $_border-radius: $border-radius;
 
         @if not($variant) {
             $variant: map.get($_schema, 'variant');
@@ -167,6 +168,10 @@
             $_active-shadow: elevation($elevations, $active-elevation);
         }
 
+        @if not($_border-radius) {
+            $_border-radius: border-radius(map.get($_schema, 'border-radius'));
+        }
+
         $themes: map.merge($themes, (
             $_name: extend(apply-palette($_schema, $palette), (
                 name: $name,
@@ -185,7 +190,7 @@
                 active-background: $active-background,
                 active-foreground: $active-foreground,
 
-                border-radius: $border-radius,
+                border-radius: $_border-radius,
                 border-color: $border-color,
                 hover-border-color: $hover-border-color,
                 focus-border-color: $focus-border-color,
@@ -523,7 +528,7 @@
     %igx-button--flat {
         background: var-get($flat-theme, 'background');
         color: var-get($flat-theme, 'foreground');
-        border-radius: border-radius(var-get($flat-theme, 'border-radius'));
+        border-radius: var-get($flat-theme, 'border-radius');
 
         &:hover {
             background: var-get($flat-theme, 'hover-background');
@@ -564,7 +569,7 @@
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
-        border-radius: border-radius(var-get($outlined-theme, 'border-radius'));
+        border-radius: var-get($outlined-theme, 'border-radius');
         padding: map.get($outlined-button-padding, 'comfortable');
 
         @if $variant == 'indigo-design' {
@@ -671,7 +676,7 @@
         color: var-get($raised-theme, 'foreground');
         background: var-get($raised-theme, 'background');
         box-shadow: $raised-shadow;
-        border-radius: border-radius(var-get($raised-theme, 'border-radius'));
+        border-radius: var-get($raised-theme, 'border-radius');
 
         &:hover {
             color: var-get($raised-theme, 'hover-foreground');
@@ -779,7 +784,7 @@
         background: var-get($fab-theme, 'background');
         border-color: var-get($flat-theme, 'border-color');
         box-shadow: $fab-shadow;
-        border-radius: border-radius(var-get($fab-theme, 'border-radius'));
+        border-radius: var-get($fab-theme, 'border-radius');
 
         @if $variant == 'indigo-design' {
             min-width: map.get($button-floating-size-indigo, 'comfortable');
@@ -910,7 +915,7 @@
         padding: $button-icon-padding;
         color: var-get($icon-theme, 'foreground');
         background: var-get($icon-theme, 'background');
-        border-radius: border-radius(var-get($icon-theme, 'border-radius'));
+        border-radius: var-get($icon-theme, 'border-radius');
         border-color: var-get($icon-theme, 'border-color');
 
         @if $variant == 'indigo-design' {

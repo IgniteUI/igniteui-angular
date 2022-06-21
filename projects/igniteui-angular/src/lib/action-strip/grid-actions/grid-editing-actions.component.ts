@@ -36,6 +36,18 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * An input to enable/disable action strip row editing button
+     */
+    @Input()
+    public editRow = true;
+
+    /**
+    * An input to enable/disable action strip row deleting button
+    */
+    @Input()
+    public deleteRow = true;
+
+    /**
      * Getter if the row is disabled
      *
      * @hidden
@@ -115,10 +127,10 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      *
      * @example
      * ```typescript
-     * this.gridEditingActions.deleteRow();
+     * this.gridEditingActions.deleteRowHandler();
      * ```
      */
-    public deleteRow(event?): void {
+    public deleteRowHandler(event?): void {
         if (event) {
             event.stopPropagation();
         }

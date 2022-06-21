@@ -159,7 +159,7 @@ export const replaceMatch = (content: string, toReplace: string, replaceWith: st
 export const getLanguageService = (filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService => {
     const fileVersions = new Map<string, number>();
     patchHostOverwrite(host, fileVersions);
-    const servicesHost = {
+    const servicesHost: ts.LanguageServiceHost = {
         getCompilationSettings: () => options,
         getScriptFileNames: () => filePaths,
         getScriptVersion: fileName => {
@@ -175,7 +175,8 @@ export const getLanguageService = (filePaths: string[], host: Tree, options: ts.
         },
         getCurrentDirectory: () => process.cwd(),
         getDefaultLibFileName: opts => ts.getDefaultLibFilePath(opts),
-        fileExists: fileName => filePaths.indexOf(fileName) !== -1
+        fileExists: fileName => filePaths.indexOf(fileName) !== -1,
+        readFile: (path: string, encoding?: string): string => host.read(path).toString(encoding)
     };
 
     return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
