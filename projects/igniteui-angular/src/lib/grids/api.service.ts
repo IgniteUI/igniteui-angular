@@ -324,8 +324,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
 
         const record = data[index];
-        // //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        grid.rowDeletedNotifier.next({ data: data[index] });
+        grid.rowDeletedNotifier.next({ data: data[index], owner: grid });
 
         this.deleteRowFromData(rowId, index);
 
