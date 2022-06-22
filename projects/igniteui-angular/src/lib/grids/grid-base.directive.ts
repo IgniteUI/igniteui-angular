@@ -3337,6 +3337,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
+            if (this.isPercentWidth) {
+                this.calculateGridWidth();
+            }
             this.notifyChanges();
         });
 
