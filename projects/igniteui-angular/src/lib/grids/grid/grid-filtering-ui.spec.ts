@@ -4741,7 +4741,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const daysOfWeek = calendar.querySelector('.igx-calendar__body-row');
             const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
 
-            expect(weekStart.innerText).toMatch('Fri ');
+            expect(weekStart.innerText).toMatch('Fri');
         }));
 
         it('Should filter grid with ISO 8601 dates through custom date filter dialog', fakeAsync(() => {
