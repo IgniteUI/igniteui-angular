@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 14.1.0
+
+- `igxPivotGrid`
+    - Add option to template the pivot value chip content:
+    ```
+    <ng-template igxPivotValueChip let-value>
+            {{ value.member }}
+    </ng-template>
+    ``` 
+
 ## 14.0.0
 
 ### General
