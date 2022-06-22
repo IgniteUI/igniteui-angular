@@ -775,6 +775,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
+                if (this.sizesCache.length === 18) {
+                    debugger;
+                }
                 const height = window.getComputedStyle(rNode).getPropertyValue('height');
                 const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
@@ -1609,7 +1612,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.igxForContainerSize = args.containerSize;
                 const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
-                if (sizeDiff) {
+                if (sizeDiff && this.igxForScrollOrientation === 'vertical') {
                     this._adjustScrollPositionAfterSizeChange(sizeDiff);
                 }
                 this._updateScrollOffset();
