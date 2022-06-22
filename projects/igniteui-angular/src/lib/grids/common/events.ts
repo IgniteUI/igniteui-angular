@@ -66,6 +66,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 }
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
+    owner: GridType;
 }
 
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
