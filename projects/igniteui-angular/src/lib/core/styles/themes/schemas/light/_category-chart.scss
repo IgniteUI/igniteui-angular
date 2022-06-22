@@ -33,7 +33,7 @@
 /// @property {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
 /// @property {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
 /// @property {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
-/// @property {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @property {Color} x-axis-stroke [color: ('grays', 500)] - Sets the color to apply to the X-axis line.
 /// @property {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
 /// @property {Number} x-axis-tick-length [null] - Sets the length of tickmarks along the X-axis.
 /// @property {Color} x-axis-tick-stroke [color: ('grays', 500)] - Sets the color to apply to tickmarks along the X-axis.
@@ -46,7 +46,7 @@
 /// @property {Color} y-axis-label-text-color [color: ('grays', 700)] - Sets the color of labels on the Y-axis.
 /// @property {String} y-axis-label-text-style [null] - Sets the CSS font property for labels on Y-axis.
 /// @property {String} y-axis-label-vertical-alignment [null] - Sets the vertical alignment of Y-axis labels.
-/// @property {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the y-axis.
+/// @property {Color} y-axis-major-stroke [color: ('grays', 300)] - Sets the color to apply to major gridlines along the y-axis.
 /// @property {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
 /// @property {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
 /// @property {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
@@ -133,7 +133,9 @@ $light-category-chart: (
 
     'x-axis-strip': null,
 
-    'x-axis-stroke': null,
+    'x-axis-stroke': (
+        color: ('grays', 300),
+    ),
 
     'x-axis-stroke-thickness': null,
 
@@ -171,7 +173,9 @@ $light-category-chart: (
 
     'y-axis-label-vertical-alignment': null,
 
-    'y-axis-major-stroke': null,
+    'y-axis-major-stroke': (
+        color: ('grays', 300),
+    ),
 
     'y-axis-major-stroke-thickness': null,
 

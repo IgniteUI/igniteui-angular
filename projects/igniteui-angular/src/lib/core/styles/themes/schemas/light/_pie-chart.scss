@@ -8,7 +8,7 @@
 /// @type {Map}
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
-/// @property {Number} label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
+/// @property {Number} label-extent [30] - Sets the pixel amount by which the labels are offset from the edge of the slices.
 /// @property {Color} label-inner-color [null] - Sets the color for labels rendered inside of the pie chart.
 /// @property {Color} label-outer-color [color: ('grays', 700)] - Sets the color for labels rendered outside of the pie chart.
 /// @property {String} labels-position [null] - Sets the position of chart labels. Valid values are: 'none', 'center', 'insideEnd', 'outsideEnd', and 'bestFit'.
@@ -20,7 +20,7 @@
 $light-pie-chart: (
     'brushes': series,
     'outlines': series,
-    'label-extent': null,
+    'label-extent': 30,
     'label-inner-color': null,
 
     'label-outer-color': (
