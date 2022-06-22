@@ -122,7 +122,7 @@ export abstract class IgxGroupByAreaDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column = drag.column;
-            if (!this.grid.columnList.find(c => c === column)) {
+            if (!this.grid.columns.find(c => c === column)) {
                 return;
             }
 
