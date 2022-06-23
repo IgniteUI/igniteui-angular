@@ -129,7 +129,9 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     }
 
     /**
-     * Gets/Sets on which day the week starts.
+     * Gets the start day of the week.
+     * Can return a numeric or an enum representation of the week day.
+     * If not set, defaults to the first day of the week for the application locale.
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
@@ -138,6 +140,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
 
     /**
      * Sets the start day of the week.
+     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      */
     public set weekStart(value: WEEKDAYS | number) {
         this._weekStart = value;
