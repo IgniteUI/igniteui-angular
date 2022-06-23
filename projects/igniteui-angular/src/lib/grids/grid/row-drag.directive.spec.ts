@@ -509,7 +509,7 @@ describe('Row Drag Tests #grid', () => {
             verifyDragAndDropRowCellValues(1, 0);
         });
         it('should be able to drag grid row when column moving is enabled', fakeAsync(() => {
-            const dragGridColumns = dragGrid.columnList.toArray();
+            const dragGridColumns = dragGrid.columns;
             dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
             tick();
             fixture.detectChanges();

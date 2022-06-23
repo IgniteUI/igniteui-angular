@@ -898,7 +898,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public ngAfterContentInit() {
         // ignore any user defined columns and auto-generate based on pivot config.
-        this.columnList.reset([]);
+        this.updateColumns([]);
         Promise.resolve().then(() => {
             this.setupColumns();
         });
@@ -1855,9 +1855,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 }
             }
         });
-        this.reflow();
 
-        this.columnList.reset(columns);
+        this.updateColumns(columns);
+        this.reflow();
         if (data && data.length > 0) {
             this.shouldGenerate = false;
         }

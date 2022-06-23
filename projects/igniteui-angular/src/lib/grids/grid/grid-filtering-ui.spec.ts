@@ -3099,23 +3099,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(2).field).toBe('ProductName');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[2].field).toBe('ProductName');
+            expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(1).field).toBe('ID');
-            expect(grid.columnList.get(0).field).toBe('Downloads');
+            expect(grid.columns[1].field).toBe('ID');
+            expect(grid.columns[0].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(0).field).toBe('ID');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[0].field).toBe('ID');
+            expect(grid.columns[1].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
@@ -5713,23 +5713,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(2).field).toBe('ProductName');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[2].field).toBe('ProductName');
+            expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(1).field).toBe('ID');
-            expect(grid.columnList.get(0).field).toBe('Downloads');
+            expect(grid.columns[1].field).toBe('ID');
+            expect(grid.columns[0].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(0).field).toBe('ID');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[0].field).toBe('ID');
+            expect(grid.columns[1].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
