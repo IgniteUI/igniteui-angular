@@ -437,7 +437,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, { leading: true, trailing: true }),
+                throttleTime(40, undefined, { leading: true, trailing: false }),
                 destructor
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
