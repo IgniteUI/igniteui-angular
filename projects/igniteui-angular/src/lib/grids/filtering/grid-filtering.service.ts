@@ -214,7 +214,7 @@ export class IgxFilteringService implements OnDestroy {
         this.grid.page = 0;
 
         filteringTree.filteringOperands = [];
-        for (const column of this.grid.columnList) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
@@ -256,7 +256,7 @@ export class IgxFilteringService implements OnDestroy {
             const expressions = this.getExpressions(field);
             expressions.length = 0;
         } else {
-            this.grid.columnList.forEach(c => {
+            this.grid.columns.forEach(c => {
                 const expressions = this.getExpressions(c.field);
                 expressions.length = 0;
             });
@@ -291,7 +291,7 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = this.grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of this.grid.columnList) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }
@@ -325,7 +325,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getExpressions(columnId: string): ExpressionUI[] {
         if (!this.columnToExpressionsMap.has(columnId)) {
-            const column = this.grid.columnList.find((col) => col.field === columnId);
+            const column = this.grid.columns.find((col) => col.field === columnId);
             const expressionUIs = new Array<ExpressionUI>();
             if (column) {
                 this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
@@ -345,7 +345,7 @@ export class IgxFilteringService implements OnDestroy {
             this.columnsWithComplexFilter.clear();
 
             this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
-                const column = this.grid.columnList.find((col) => col.field === key);
+                const column = this.grid.columns.find((col) => col.field === key);
                 if (column) {
                     value.length = 0;
 
@@ -427,7 +427,7 @@ export class IgxFilteringService implements OnDestroy {
             return true;
         }
 
-        const column = this.grid.columnList.find((col) => col.field === columnId);
+        const column = this.grid.columns.find((col) => col.field === columnId);
         const isComplex = column && this.isFilteringTreeComplex(column.filteringExpressionsTree);
         if (isComplex) {
             this.columnsWithComplexFilter.add(columnId);
