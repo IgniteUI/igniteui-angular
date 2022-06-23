@@ -775,9 +775,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
-                if (this.sizesCache.length === 18) {
-                    debugger;
-                }
                 const height = window.getComputedStyle(rNode).getPropertyValue('height');
                 const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
