@@ -5,8 +5,8 @@ All notable changes for each version of this project will be documented in this 
 ## 14.0.0
 
 ### New Features
-- Make `weekStart` calendar's property default value to depend on current locale
-    - If the calendar `locale` value is not set, its value will be determined based on the Angular application global `LOCALE_ID`.
+- date picker, date range picker, calendar, grid locale and `weekStart` will default to application global locale, if not explicitly set.
+- Add `weekStart` and `locale` input's to `PickerBaseDirective`.
 - Add `weekStart` property to `IColumnPipeArgs` so we can control the date pickers used in the grid.
 
 ### General
