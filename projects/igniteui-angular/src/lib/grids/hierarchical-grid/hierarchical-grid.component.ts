@@ -40,6 +40,7 @@ import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 
 let NEXT_ID = 0;
 
@@ -58,6 +59,7 @@ export interface HierarchicalStateRecord {
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
+        IgxColumnResizingService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
         IgxForOfSyncService,
