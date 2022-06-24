@@ -154,6 +154,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     public set type(value) {
         this._type = value;
         this.resetPaneSizes();
+        this.panes?.notifyOnChanges();
     }
 
     /**
@@ -298,7 +299,13 @@ export class IgxSplitterComponent implements AfterContentInit {
     private resetPaneSizes() {
         if (this.panes) {
             // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size = 'auto');
+            this.panes.forEach(x => {
+                x.size = 'auto'
+                x.minWidth = '0';
+                x.maxWidth = '100%';
+                x.minHeight = '0';
+                x.maxHeight = '100%';
+            });
         }
     }
 

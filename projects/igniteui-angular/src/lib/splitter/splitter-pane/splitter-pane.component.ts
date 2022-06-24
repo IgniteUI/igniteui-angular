@@ -19,6 +19,9 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
     templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
+    private _minSize: string;
+    private _maxSize: string;
+
     /**
      * @hidden @internal
      * Gets/Sets the 'display' property of the current pane.
@@ -37,7 +40,15 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public minSize!: string;
+    public get minSize(): string {
+        return this._minSize;
+    };
+    public set minSize(value: string) {
+        this._minSize = value;
+        if (this.owner) {
+            this.owner.panes.notifyOnChanges();
+        }
+    }
 
     /**
      * Gets/Set the maximum allowed size of the current pane.
@@ -50,7 +61,15 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public maxSize!: string;
+    public get maxSize(): string {
+        return this._maxSize;
+    };
+    public set maxSize(value: string) {
+        this._maxSize = value;
+        if (this.owner) {
+            this.owner.panes.notifyOnChanges();
+        }
+    }
 
     /**
      * Gets/Sets whether pane is resizable.
