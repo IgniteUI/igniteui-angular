@@ -529,7 +529,7 @@
         flex-direction: column;
         text-align: center;
 
-        > * {
+        > [igxtabheaderlabel] {
             @include line-clamp(2, true, true);
         }
 

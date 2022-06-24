@@ -575,7 +575,7 @@ describe('Row Pinning #grid', () => {
 
         it('should calculate global summaries with both pinned and unpinned collections', () => {
             // enable summaries for each column
-            grid.columnList.forEach(c => {
+            grid.columns.forEach(c => {
                 c.hasSummary = true;
             });
             fix.detectChanges();
@@ -601,7 +601,7 @@ describe('Row Pinning #grid', () => {
 
         it('should calculate groupby row summaries only within unpinned collection', () => {
             // enable summaries for each column
-            grid.columnList.forEach(c => {
+            grid.columns.forEach(c => {
                 c.hasSummary = true;
             });
             fix.detectChanges();
@@ -920,7 +920,7 @@ describe('Row Pinning #grid', () => {
         it('should hide columns in pinned and unpinned area', () => {
             // pin 2nd data row
             grid.pinRow(fix.componentInstance.data[1]);
-            const hiddenCol = grid.columnList.get(1);
+            const hiddenCol = grid.columns[1];
             hiddenCol.hidden = true;
             fix.detectChanges();
 
