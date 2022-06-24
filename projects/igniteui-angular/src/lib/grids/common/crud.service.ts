@@ -477,8 +477,8 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         if (isAddRow) {
             this.endAddRow();
             if (commit) {
-                this.grid.rowAddedNotifier.next({ data: args.newValue });
-                this.grid.rowAdded.emit({ data: args.newValue });
+                this.grid.rowAddedNotifier.next({ data: args.newValue, owner: this.grid });
+                this.grid.rowAdded.emit({ data: args.newValue, owner: this.grid });
             }
         }
 

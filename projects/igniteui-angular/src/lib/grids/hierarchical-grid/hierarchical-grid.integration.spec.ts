@@ -56,7 +56,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const expectedColumnGroups = 1;
             const expectedLevel = 1;
 
-            expect(hierarchicalGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
+            expect(hierarchicalGrid.columns.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(hierarchicalGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
             expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(3);
@@ -70,7 +70,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
 
-            expect(childGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
+            expect(childGrid.columns.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(childGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
             expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(6);
@@ -297,7 +297,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             // enable sorting
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            childGrid.columnList.first.sortable = true;
+            childGrid.columns[0].sortable = true;
             fixture.detectChanges();
 
             const childHeader = GridFunctions.getColumnHeader('ID', fixture, childGrid);
@@ -489,8 +489,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         })
 
         it('should render summaries for column inside a column group.', fakeAsync(() => {
-            fixture.componentInstance.rowIsland.childColumns.first.hasSummary = false;
-            fixture.componentInstance.rowIsland.childColumns.last.hasSummary = true;
+            const count = fixture.componentInstance.rowIsland.columns.length - 1;
+            fixture.componentInstance.rowIsland.columns[0].hasSummary = false;
+            fixture.componentInstance.rowIsland.columns[count].hasSummary = true;
             fixture.detectChanges();
 
             // expand first row
@@ -832,7 +833,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeFalsy();
-            expect(childGrid.columnList.first.pinned).toBeFalsy();
+            expect(childGrid.columns[0].pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
             UIInteractions.simulateClickAndSelectEvent(firstHeaderIcon);
@@ -840,7 +841,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick();
 
             childHeader = GridFunctions.getColumnHeaders(fixture)[3];
-            expect(childGrid.columnList.first.pinned).toBeTruthy();
+            expect(childGrid.columns[0].pinned).toBeTruthy();
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
