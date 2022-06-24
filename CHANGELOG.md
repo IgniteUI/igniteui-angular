@@ -3,11 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 14.0.0
+- `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 
 ### New Features
-- date picker, date range picker, calendar, grid locale and `weekStart` will default to application global locale, if not explicitly set.
-- Add `weekStart` and `locale` input's to `PickerBaseDirective`.
-- Add `weekStart` property to `IColumnPipeArgs` so we can control the date pickers used in the grid.
+
 
 ### General
 - Updating dependency to Angular 14
@@ -16,6 +15,12 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridEditingActions`
     - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
+
+- Locale settings
+    - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+    - `IColumnPipeArgs` interface now expose a `weekStart` property to control the first week of day in calendar used in the grid for editing and filtering
+    - `locale` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will now default to globall Angular application locale, if not set.
+    - `weekStart` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will default to the default first day for the current component `locale`, if not set.
 
 ## 13.2.0
 
