@@ -606,7 +606,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data });
+        this.rowAddedNotifier.next({ data: data, owner: this });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -721,8 +721,23 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        return this.gridAPI.deleteRowById(rowId);
+        const args = {
+            rowID: rowId,
+            cancel: false,
+            rowData: this.getRowData(rowId),
+            oldValue: null,
+            owner: this
+        };
+        this.rowDelete.emit(args);
+        if (args.cancel) {
+            return;
+        }
 
+        const record = this.gridAPI.deleteRowById(rowId);
+        if (record !== null && record !== undefined) {
+            this.rowDeleted.emit({ data: record, owner: this });
+        }
+        return record;
     }
 
     /**
