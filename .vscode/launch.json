@@ -19,19 +19,49 @@
             }
         },
         {
-            "name": "Run migration",
+            "name": "Run migrations",
             "request": "launch",
             "type": "node",
-            "cwd": "<directory to apply migrations in>",
+
+            // "cwd": "<absolute directory of the project, having an old version of igniteui-angular, on which the migrations are applied>",
+            "cwd": "C:\\Users\\User\\Desktop\\ng_proj\\test_migrations",
             "args": [
                 "-r",
+
+                // you need to install ts-node for this project and the test one
                 "ts-node/register",
-                // e.g. "${env:AppData}/npm/node_modules/@angular/cli/bin/ng"
-                "<path/to/ng>", "g",
-                "<../path/to>/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>"
+
+                // "<path/to/ng>", "g",
+                "${env:AppData}/npm/node_modules/@angular/cli/bin/ng", "g",
+
+                // "<../../relative/path/from/cwd/to>/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>
+                "../../../../../work/git/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-24"
             ],
             "env": {
                 "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/migrations/tsconfig.json"
+            }
+        },
+        {
+            "name": "Run schematics",
+            "request": "launch",
+            "type": "node",
+
+            // "cwd": "<absolute directory of the project, created with ng cli, on which the 'ng add' schematic is applied>"
+            "cwd": "C:\\Users\\User\\Desktop\\ng_proj\\test_schematics",
+            "args": [
+                "-r",
+
+                // you need to install ts-node for this project and the test one
+                "ts-node/register",
+
+                // "<path/to/ng>", "g",
+                "${env:AppData}/npm/node_modules/@angular/cli/bin/ng", "g",
+
+                // "<../../relative/path/from/cwd/to>/igniteui-angular/projects/igniteui-angular/schematics/collection.json:ng-add"
+                "../../../../../work/git/igniteui-angular/projects/igniteui-angular/schematics/collection.json:ng-add"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/schematics/tsconfig.json"
             }
         },
         {
