@@ -613,6 +613,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
