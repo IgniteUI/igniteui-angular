@@ -19,8 +19,6 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
     templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
-    private _minSize: string;
-    private _maxSize: string;
 
     /**
      * @hidden @internal
@@ -221,6 +219,8 @@ export class IgxSplitterPaneComponent {
         return this._collapsed;
     }
 
+    private _minSize: string;
+    private _maxSize: string;
     private _size = 'auto';
     private _dragSize;
     private _collapsed = false;
