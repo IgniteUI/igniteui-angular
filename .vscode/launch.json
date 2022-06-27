@@ -28,7 +28,7 @@
             "args": [
                 "-r",
 
-                // you need to install ts-node for this project and the test one
+                // you need to install ts-node for the test project
                 "ts-node/register",
 
                 // "<path/to/ng>", "g",
@@ -51,7 +51,7 @@
             "args": [
                 "-r",
 
-                // you need to install ts-node for this project and the test one
+                // you need to install ts-node for the test project
                 "ts-node/register",
 
                 // "<path/to/ng>", "g",
