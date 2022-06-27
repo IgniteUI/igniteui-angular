@@ -1231,6 +1231,41 @@ describe('IgxSimpleCombo', () => {
             }));
         });
     });
+
+    describe('Selection tests: ', () => {
+        configureTestSuite();
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxComboRemoteDataComponent
+                ],
+                imports: [
+                    IgxSimpleComboModule,
+                    NoopAnimationsModule,
+                    IgxToggleModule,
+                    ReactiveFormsModule,
+                    FormsModule
+                ]
+            }).compileComponents();
+        }));
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+        });
+        it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.selection.length).toEqual(0);
+            expect((combo as any)._remoteSelection[0]).toBeUndefined();
+        });
+    });
 });
 
 @Component({

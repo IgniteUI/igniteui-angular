@@ -3,8 +3,8 @@
         <h4 class="sample-title">Time Picker with Date value binding</h4>
         <p class="sample-description">{{showDate(date)}}</p>
         <div class="preview">
-            <igx-time-picker #tp [value]="date" [minValue]="min" [maxValue]="max" [spinLoop]="spinLoop"
-                [itemsDelta]="itemsDelta" [inputFormat]="format" (valueChange)="valueChanged($event)"
+            <igx-time-picker #tp [value]="date" [minValue]="min" [maxValue]="max" [spinLoop]="spinLoop"  locale="FR"
+                [itemsDelta]="itemsDelta" [inputFormat]="format" displayFormat="longDate" (valueChange)="valueChanged($event)"
                 (validationFailed)="validationFailed($event)">
             </igx-time-picker>
         </div>
