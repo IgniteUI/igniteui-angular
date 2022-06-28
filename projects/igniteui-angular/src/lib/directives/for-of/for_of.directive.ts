@@ -1609,7 +1609,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.igxForContainerSize = args.containerSize;
                 const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
-                if (sizeDiff) {
+                if (sizeDiff && this.igxForScrollOrientation === 'vertical') {
                     this._adjustScrollPositionAfterSizeChange(sizeDiff);
                 }
                 this._updateScrollOffset();
