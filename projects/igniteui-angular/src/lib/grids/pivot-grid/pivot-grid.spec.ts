@@ -1030,6 +1030,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedExpressions: ISortingExpression[] = [
                     { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
