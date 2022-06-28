@@ -1,7 +1,7 @@
 import { workspaces } from '@angular-devkit/core';
 import { SchematicContext, Rule, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
-import { createHost } from './util';
+import { createHost, getDefaultProjectFromWorkspace } from './util';
 
 export enum PackageTarget {
     DEV = 'devDependencies',
@@ -156,7 +156,7 @@ const addHammerToConfig =
 const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
-    const defaultProject = workspace.projects.get(workspace.extensions['defaultProject'] as string) || workspace.projects.values().next().value as workspaces.ProjectDefinition;
+    const defaultProject = getDefaultProjectFromWorkspace(workspace);
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
