@@ -392,6 +392,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             pg.nativeElement.offsetParent?.id === id);
     }
 
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() {
+        return this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents.first :
+            super.excelStyleFilteringComponent;
+    }
+
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
      * ```typescript
