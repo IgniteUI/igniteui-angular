@@ -47,11 +47,8 @@ export class IgxTreeExpandIndicatorDirective {
  * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
  *
  * @igxModule IgxTreeModule
- *
  * @igxKeywords tree
- * 
  * @igxTheme igx-tree-theme
- *
  * @igxGroup Grids & Lists
  *
  * @remark
@@ -64,18 +61,17 @@ export class IgxTreeExpandIndicatorDirective {
  * @example
  * ```html
  * <igx-tree>
- *	<igx-tree-node>
- *		I am a parent node 1
- *		<igx-tree-node>
- *			I am a child node 1
- *		</igx-tree-node>
+ *   <igx-tree-node>
+ *      I am a parent node 1
+ *      <igx-tree-node>
+ *          I am a child node 1
+ *      </igx-tree-node>
  *      ...
- *	</igx-tree-node>
- *	...
- *</igx-tree>
+ *   </igx-tree-node>
+ *	 ...
+ * </igx-tree>
  * ```
  */
-
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
