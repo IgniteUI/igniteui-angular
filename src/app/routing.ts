@@ -1,5 +1,5 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -132,7 +132,7 @@ import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/s
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 
-const appRoutes = [
+const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',

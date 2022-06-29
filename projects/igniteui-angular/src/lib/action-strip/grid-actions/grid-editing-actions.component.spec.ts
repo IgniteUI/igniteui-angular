@@ -14,6 +14,8 @@ import {
     IgxHierarchicalGridModule
 } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -26,14 +28,16 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
                 IgxActionStripEditMenuComponent,
-                IgxHierarchicalGridActionStripComponent
+                IgxHierarchicalGridActionStripComponent,
+                IgxTreeGridEditActionsComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripModule,
                 IgxGridModule,
                 IgxHierarchicalGridModule,
-                IgxIconModule
+                IgxIconModule,
+                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -91,6 +95,26 @@ describe('igxGridEditingActions #grid ', () => {
             // first cell of the row should be the active one, excluding ID as primaryKey
             expect(grid.selectionService.activeElement.column).toBe(1);
             expect(grid.selectionService.activeElement.row).toBe(0);
+        });
+
+        it('should allow hiding/showing the edit/delete actions via the related property.', () => {
+           const editActions = fixture.componentInstance.actionStrip.actionButtons.first;
+           editActions.editRow = false;
+           fixture.detectChanges();
+
+           grid.actionStrip.show(grid.rowList.first);
+           fixture.detectChanges();
+           let icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+           let iconsText = icons.map(x => x.nativeElement.innerText);
+           expect(iconsText).toEqual(['delete']);
+
+           editActions.editRow = true;
+           editActions.deleteRow = false;
+           fixture.detectChanges();
+
+           icons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+           iconsText = icons.map(x => x.nativeElement.innerText);
+           expect(iconsText).toEqual(['edit']);
         });
     });
 
@@ -236,6 +260,49 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(actionStripRoot.hidden).toBeTrue();
             expect(actionStripChild.hidden).toBeTrue();
+        });
+    });
+
+    describe('TreeGrid - action strip', () => {
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
+            fixture.detectChanges();
+            treeGrid = fixture.componentInstance.treeGrid;
+            actionStrip = fixture.componentInstance.actionStrip;
+        });
+
+        it('should allow deleting row', () => {
+            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
+            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            const row = treeGrid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            const editActions = fixture.debugElement.queryAll(By.css(`igx-grid-action-button`));
+            expect(editActions[3].componentInstance.iconName).toBe('delete');
+            const deleteChildBtn = editActions[3].componentInstance;
+
+            const rowDeleteArgs = {
+                rowID: row.key,
+                cancel: false,
+                rowData: treeGrid.getRowData(row.key),
+                oldValue: null,
+                owner: treeGrid
+            };
+
+            const rowDeletedArgs = {
+                data: treeGrid.getRowData(row.key),
+                owner: treeGrid
+            };
+
+            // select delete
+            deleteChildBtn.actionClick.emit();
+            fixture.detectChanges();
+
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(treeGrid.rowList.first.data['ID']).toBe(6);
         });
     });
 });

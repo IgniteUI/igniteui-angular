@@ -1190,6 +1190,34 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
+        it('Should deselect a selected row and its children using Ctrl + click.', () => {
+            treeGrid.selectRows([847], true);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+
+            // select a child of the first parent and all of its children
+            const firstRow = treeGrid.gridAPI.get_row_by_index(3);
+            UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(6);
+
+            const firstChildRow = treeGrid.gridAPI.get_row_by_index(4);
+
+            UIInteractions.simulateClickEvent(firstChildRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+
+            const secondRow = treeGrid.gridAPI.get_row_by_index(8);
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+        });
+
         it('After adding a new child row to a selected parent its checkbox state SHOULD be indeterminate.', async () => {
             treeGrid.selectRows([847], true);
             fix.detectChanges();

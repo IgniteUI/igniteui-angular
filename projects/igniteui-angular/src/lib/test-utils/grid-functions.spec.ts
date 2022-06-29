@@ -149,7 +149,7 @@ export class GridFunctions {
     }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
-        const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
+        const colGroups = grid.columns.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;
         } else if (colGroups.length === 1) {
@@ -2030,7 +2030,7 @@ export class GridFunctions {
             const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
             expect(groupBlock).not.toBeNull();
             groupSetting.columns.forEach((col, colIndex) => {
-                const cell = cellsFromBlock[colIndex] as any;
+                const cell = cellsFromBlock.find(x => x.column.field == col.field) as any;
                 const cellElem = cell.nativeElement;
                 // check correct attributes are applied
                 expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
@@ -2244,7 +2244,7 @@ export class GridSelectionFunctions {
         const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
         for (let i = startCol; i <= endCol; i++) {
             for (let j = startRow; j <= endRow; j++) {
-                const cell = grid.gridAPI.get_cell_by_index(j, grid.columnList.find(col => col.visibleIndex === i).field);
+                const cell = grid.gridAPI.get_cell_by_index(j, grid.columns.find(col => col.visibleIndex === i).field);
                 if (cell) {
                     GridSelectionFunctions.verifyCellSelected(cell, selected);
                 }

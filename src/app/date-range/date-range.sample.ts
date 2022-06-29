@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
+import { Component, ViewChild } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl } from '@angular/forms';
+import { DateRange, IChangeRadioEventArgs, IgxDateRangePickerComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',
@@ -8,6 +8,9 @@ import { DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
     styleUrls: ['./date-range.sample.scss']
 })
 export class DateRangeSampleComponent {
+    @ViewChild('dr1', { static: true })
+    private dateRangePicker: IgxDateRangePickerComponent;
+
     public range: DateRange = { start: new Date('2000,10,1'), end: new Date('2000,10,20') };
     public range1: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
     public range2: DateRange;
@@ -20,12 +23,12 @@ export class DateRangeSampleComponent {
     public minDate: Date = new Date();
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
 
-    public reactiveForm: FormGroup;
+    public reactiveForm: UntypedFormGroup;
 
     public updateOnOptions: string[] = ['change', 'blur', 'submit'];
     public updateOn = 'blur';
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         const today = new Date();
         const in5days = new Date();
         in5days.setDate(today.getDate() + 5);
@@ -47,12 +50,20 @@ export class DateRangeSampleComponent {
         Object.keys(this.reactiveForm.controls).forEach(name => {
             const control = this.reactiveForm.controls[name];
             const value = control.value;
-            const newControl = new FormControl(
+            const newControl = new UntypedFormControl(
                 value,
                 { updateOn: e.value, validators: Validators.required }
             );
             this.reactiveForm.setControl(name, newControl);
         });
+    }
+
+    public changeLocale(locale: string) {
+        this.dateRangePicker.locale = locale;
+    }
+
+    public changeWeekStart(value: number) {
+        this.dateRangePicker.weekStart = value;
     }
 }
 const minDateValidator = (minValue: Date): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
