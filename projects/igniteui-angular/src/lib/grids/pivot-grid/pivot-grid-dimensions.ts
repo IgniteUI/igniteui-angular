@@ -1,5 +1,6 @@
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
@@ -46,6 +47,11 @@ export interface IPivotDateDimensionOptions {
 export class IgxPivotDateDimension implements IPivotDimension {
     /** Enables/Disables a particular dimension from pivot structure. */
     public enabled = true;
+    
+    /**
+     * Gets/Sets data type
+     */
+    public dataType?: GridColumnDataType;
 
     /** Default options used for initialization. */
     public defaultOptions = {
@@ -93,6 +99,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             console.warn(`Please provide data child level to the pivot dimension.`);
             return;
         }
+
+        this.dataType = inBaseDimension.dataType;
 
         const baseDimension = options.fullDate ? inBaseDimension : null;
         const monthDimensionDef: IPivotDimension = {
