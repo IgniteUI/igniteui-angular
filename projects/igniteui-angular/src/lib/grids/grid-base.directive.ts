@@ -191,9 +191,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public autoGenerate = false;
 
-    @Input()
-    public autoSizeColumns = false;
-
     /**
      * Controls whether columns moving is enabled in the grid.
      *
@@ -251,6 +248,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
         }
         return 0;
+    }
+
+    public get hasColumnsToAutosize() {
+        return this._columns.some(x => x.width === 'fit-content');
     }
 
     /**
@@ -3606,7 +3607,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            if (this.autoSizeColumns) {
+            if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
                     this.autoSizeColumnsInView();
@@ -3650,7 +3651,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
-            if (this.autoSizeColumns) {
+            if (this.hasColumnsToAutosize) {
                this.autoSizeColumnsInView();
             }
             this._rendered = true;
@@ -6981,7 +6982,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected autoSizeColumnsInView() {
-        if(!this.autoSizeColumns) return;
+        if(!this.hasColumnsToAutosize) return;
         const vState = this.headerContainer.state;
         let colResized = false;
         for (let i = vState.startIndex; i < vState.startIndex + vState.chunkSize; i++) {
