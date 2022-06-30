@@ -53,7 +53,7 @@
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
-        [attr.aria-activedescendant]="this.dropdown.focusedItem?.id || ''"
+        [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
             | comboClean

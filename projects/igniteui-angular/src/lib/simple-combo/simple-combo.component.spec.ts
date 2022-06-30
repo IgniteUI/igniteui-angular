@@ -862,9 +862,10 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(1);
         });
 
-        it('should clear the selection on tab/blur if the search text does not match any value', () => {
+        it('should clear the selection on tab/blur if the search text does not match any value', fakeAsync(() => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
+            tick();
             fixture.detectChanges();
             expect(combo.selection.length).toBe(1);
             expect(input.nativeElement.value).toEqual('Massachusetts');
@@ -883,7 +884,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value.length).toEqual(0);
             expect(combo.selection.length).toEqual(0);
-        });
+        }));
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;

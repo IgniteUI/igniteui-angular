@@ -55,7 +55,7 @@
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
-        [attr.aria-activedescendant]="this.dropdown.focusedItem?.id || ''">
+        [attr.aria-activedescendant]="this.activeDescendant">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:filterable
             | comboGrouping:groupKey:valueKey:groupSortingDirection;

@@ -843,6 +843,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
+    /** @hidden @internal */
+    public activeDescendant = '';
+
 
     protected _data = [];
     protected _value = '';
@@ -863,7 +866,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-
+    
     public abstract dropdown: IgxComboDropDownComponent;
 
     public abstract selectionChanging: EventEmitter<any>;
@@ -939,6 +942,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public toggle(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
+        if (this.collapsed){
+            this.activeDescendant = this.dropdown.focusedItem?.id || '';
+        }
     }
 
     /**
@@ -952,6 +958,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public open(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.open(overlaySettings);
+        this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
     /**
