@@ -7003,7 +7003,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const cellsContentWidths = [];
                 col._cells.forEach((cell) => cellsContentWidths.push(cell.nativeElement.offsetWidth));
                 cellsContentWidths.push(col.headerCell.nativeElement.offsetWidth);
-                col.autoSize = Math.max(...cellsContentWidths);
+                let maxSize =  Math.ceil(Math.max(...cellsContentWidths)) + 1;
+                if (col.maxWidth && maxSize > col.maxWidthPx) {
+                    maxSize = col.maxWidthPx;
+                } else if (maxSize < col.minWidthPx) {
+                    maxSize = col.minWidthPx;
+                }
+                col.autoSize = maxSize;
                 col.resetCaches();
                 colResized = true;
             }

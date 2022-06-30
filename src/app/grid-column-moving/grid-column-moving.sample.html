@@ -27,8 +27,8 @@
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
-                    [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable" [filterable]="c.filterable"
-                    [editable]="true" [hidden]="c.hidden" [pinned]="c.pinned" [hasSummary]="c.summary"
+                    [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
+                    [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
                     [dataType]="c.type">
                     <ng-template igxCell let-cell="cell">
                         <div *ngIf='show'>{{ cell.value}}</div>
