@@ -10,6 +10,10 @@
 ////
 
 @mixin component {
+    @include b(igx-banner-host) {
+        @extend %igx-banner-host !optional;
+    }
+
     @include b(igx-banner) {
         $this: bem--selector-to-string(&);
         @include register-component(

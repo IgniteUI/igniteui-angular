@@ -95,6 +95,12 @@
         justify-content: flex-end;
     }
 
+    %igx-banner-host {
+        igx-expansion-panel-body {
+            padding: 0 !important;
+        }
+    }
+
     %igx-banner__illustration {
         justify-content: center;
         width: rem(40);
