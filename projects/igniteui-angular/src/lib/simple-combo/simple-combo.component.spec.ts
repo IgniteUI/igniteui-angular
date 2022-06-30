@@ -12,7 +12,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxIconComponent, IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputState } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
@@ -862,7 +862,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(1);
         });
 
-        it('should clear the selection on tab/blur if the search text does not match any value', fakeAsync(() => {
+        it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
             tick();
@@ -884,7 +884,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value.length).toEqual(0);
             expect(combo.selection.length).toEqual(0);
-        }));
+        });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
