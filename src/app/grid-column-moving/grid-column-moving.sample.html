@@ -29,7 +29,7 @@
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [groupable]="c.groupable"
                     [resizable]="c.resizable" width="auto" [sortable]="c.sortable" [filterable]="c.filterable"
                     [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="'150px'" [maxWidth]="'400px'"
-                    [dataType]="c.type">
+                    [dataType]="c.type" [pinned]='c.pinned'>
                     <ng-template igxCell let-cell="cell">
                         <div *ngIf='show'>{{ cell.value}}</div>
                         

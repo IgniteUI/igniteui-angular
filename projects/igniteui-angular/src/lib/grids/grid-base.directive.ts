@@ -6997,8 +6997,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if(!this.hasColumnsToAutosize) return;
         const vState = this.headerContainer.state;
         let colResized = false;
-        for (let i = vState.startIndex; i < vState.startIndex + vState.chunkSize; i++) {
-            const col = this.visibleColumns[i];
+        const columnsInView = this.pinnedColumns.concat(this.unpinnedColumns.slice(vState.startIndex, vState.startIndex + vState.chunkSize));
+        for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths = [];
                 col._cells.forEach((cell) => cellsContentWidths.push(cell.nativeElement.offsetWidth));
