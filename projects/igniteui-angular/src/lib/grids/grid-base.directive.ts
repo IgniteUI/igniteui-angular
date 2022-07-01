@@ -3617,7 +3617,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.autoSizeColumnsInView();
+                    this.zone.onStable.pipe(first()).subscribe(() => {
+                        this.autoSizeColumnsInView();
+                    });
                 });
             }
             fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -6553,6 +6555,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
         this.resetCaches(recalcFeatureWidth);
+        if (this.hasColumnsToAutosize) {
+            this.cdr.detectChanges();
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.autoSizeColumnsInView();
+            });
+        }
     }
 
     /**
