@@ -101,14 +101,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     public set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
-        if (this.grid && this.grid.columnList && this.grid.columnList.length > 0) {
+        if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
             const columns = this.grid && this.grid.pinnedColumns && this.grid.unpinnedColumns ?
                 this.grid.pinnedColumns.concat(this.grid.unpinnedColumns) : [];
             if (!this._hidden && !columns.find(c => c.field === this.field)) {
                 this.grid.resetColumnCollections();
             }
-            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
     }
 

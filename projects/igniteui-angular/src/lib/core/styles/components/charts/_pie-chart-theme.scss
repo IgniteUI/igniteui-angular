@@ -72,3 +72,22 @@
     ));
 }
 
+/// Adds typography styles for the pie-chart component.
+/// Uses the 'body-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by type-scale.
+/// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} type-style
+@mixin pie-chart-typography($type-scale, $categories: (
+    text: 'body-2',
+)) {
+    $name: 'pie-chart';
+    $text: map.get($categories, 'text');
+
+    $text-styles: type-scale-category($type-scale, $text);
+
+    igx-pie-chart {
+        @include font-var('text-style', $text-styles, $name);
+    }
+}
