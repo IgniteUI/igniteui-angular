@@ -17,7 +17,7 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForGridScroll } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
@@ -42,7 +42,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 GridAddColumnComponent,
                 IgxGridCurrencyColumnComponent,
                 IgxGridPercentColumnComponent,
-                IgxGridDateTimeColumnComponent
+                IgxGridDateTimeColumnComponent,
+                ResizableColumnsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         });
@@ -1148,6 +1149,59 @@ describe('IgxGrid - Column properties #grid', () => {
 
     });
 
+    describe('Auto-sizing with width auto: ', () => {
+        it('should auto-size column in view on init.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            expect(grid.columns[0].width).toBe('95px');
+            expect(grid.columns[1].width).toBe('207px');
+        }));
+
+        it('should auto-size within minWidth/maxWidth bounds', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', minWidth: '100px', maxWidth: '200px' },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            expect(grid.columns[0].width).toBe('100px');
+            expect(grid.columns[1].width).toBe('200px');
+        }));
+
+        it('should auto-size column when scrolled into view.', (async() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto' },
+                { field: 'CompanyName', width: 'auto' },
+                { field: 'ContactName', width: 'auto' },
+                { field: 'ContactTitle', width: 'auto' },
+                { field: 'Address', width: 'auto' },
+                { field: 'City', width: 'auto' },
+                { field: 'Region', width: 'auto'},
+                { field: 'PostalCode', width: 'auto' },
+                { field: 'Phone', width: 'auto' },
+                { field: 'Fax', width: 'auto' }
+            ];
+            fix.detectChanges();
+            await wait();
+            const grid = fix.componentInstance.instance;
+            // initially no autoSize
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('fit-content');
+            // scroll last column in view
+            grid.navigateTo(0, 9);
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            // check size after it comes in view
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
+        }));
+    });
+
 });
 
 @Component({
@@ -1159,6 +1213,20 @@ export class ColumnsFromIterableComponent {
 
     public data = SampleTestData.personIDNameData();
     public columns = ['ID', 'Name'];
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent)
+})
+export class ResizableColumnsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public data = SampleTestData.contactInfoData();
+    public columns = [
+        { field: 'ID', width: 'auto' },
+        { field: 'Address', minWidth: '100px', maxWidth: '400px', width: 'auto' }
+    ];
 }
 
 @Component({
