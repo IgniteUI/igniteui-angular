@@ -394,6 +394,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             pg.nativeElement.offsetParent?.id === id);
     }
 
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() {
+        return this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents.first :
+            super.excelStyleFilteringComponent;
+    }
+
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
      * ```typescript
@@ -1076,7 +1083,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             return topCols;
         } else {
-           return this.columnList.toArray()
+            return this.columnList.toArray()
         }
     }
 

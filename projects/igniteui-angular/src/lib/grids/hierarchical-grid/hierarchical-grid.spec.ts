@@ -1647,6 +1647,20 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
 
+    it('should allow setting custom template for excel style filtering on row island.', async () => {
+        const fixture = TestBed.createComponent(IgxHierarchicalGridCustomFilteringTemplateComponent);
+        fixture.detectChanges();
+
+        const hierarchicalGrid = fixture.componentInstance.hgrid;
+        const ri = fixture.componentInstance.rowIsland;
+        const firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+        expect(childGrid.excelStyleFilteringComponent).toBe(ri.excelStyleFilteringComponent);
+    });
+
     it('should correctly filter templated row island in hierarchical grid', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridCustomFilteringTemplateComponent);
         fixture.detectChanges();
