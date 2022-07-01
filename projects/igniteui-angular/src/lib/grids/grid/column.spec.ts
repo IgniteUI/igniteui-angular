@@ -230,7 +230,7 @@ describe('IgxGrid - Column properties #grid', () => {
         cityCol = grid.getColumnByName('City');
         expect(cityCol).not.toBeDefined();
 
-         // add to pinned area
+        // add to pinned area
         fix.componentInstance.columns.push({ field: 'City', width: 150, type: 'string', pinned: true });
         fix.detectChanges();
 
@@ -1172,7 +1172,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns[1].width).toBe('200px');
         }));
 
-        it('should auto-size column when scrolled into view.', (async() => {
+        it('should auto-size column when scrolled into view.', (async () => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.columns = [
                 { field: 'ID', width: 'auto' },
@@ -1181,7 +1181,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 { field: 'ContactTitle', width: 'auto' },
                 { field: 'Address', width: 'auto' },
                 { field: 'City', width: 'auto' },
-                { field: 'Region', width: 'auto'},
+                { field: 'Region', width: 'auto' },
                 { field: 'PostalCode', width: 'auto' },
                 { field: 'Phone', width: 'auto' },
                 { field: 'Fax', width: 'auto' }
@@ -1200,6 +1200,75 @@ describe('IgxGrid - Column properties #grid', () => {
             // check size after it comes in view
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
         }));
+
+        it('should auto-size correctly when cell has custom template', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            const grid = fix.componentInstance.instance;
+            fix.detectChanges();
+            const col = grid.columns[0];
+            col.bodyTemplate = fix.componentInstance.customTemplate;
+            fix.detectChanges();
+            tick();
+            expect(col.width).toBe('137px');
+        }));
+
+        it('should auto-size after an initially hidden column is shown.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', hidden: true },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const col = grid.columns[0];
+            expect(col.width).toBe('fit-content');
+            col.hidden = false;
+            fix.detectChanges();
+            tick();
+            expect(col.width).toBe('95px');
+        }));
+
+        it('should auto-size initially pinned column.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', pinned: true },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const pinnedCol = grid.pinnedColumns[0];
+            expect(pinnedCol.width).toBe('97px');
+        }));
+
+        it('should auto-size columns added in view after grid is resized', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto' },
+                { field: 'CompanyName', width: 'auto' },
+                { field: 'ContactName', width: 'auto' },
+                { field: 'ContactTitle', width: 'auto' },
+                { field: 'Address', width: 'auto' },
+                { field: 'City', width: 'auto' },
+                { field: 'Region', width: 'auto' },
+                { field: 'PostalCode', width: 'auto' },
+                { field: 'Phone', width: 'auto' },
+                { field: 'Fax', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const lastCol = grid.columns[grid.columns.length - 1];
+            expect(lastCol.width).toBe('fit-content');
+            // resize grid so that all columns are in view
+            grid.width = '1500px';
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+            const widths = grid.columns.map(x => x.width);
+            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+        }));
     });
 
 });
@@ -1215,15 +1284,32 @@ export class ColumnsFromIterableComponent {
     public columns = ['ID', 'Name'];
 }
 
+interface IColumnConfig {
+    field: string,
+    width: string,
+    minWidth?: string;
+    maxWidth?: string;
+    hidden?: boolean;
+    pinned?: boolean;
+}
+
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent)
+    template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
+    `
+    <ng-template #customTemplate let-value>
+    <button igxButton="raised">{{value}}</button>
+    </ng-template>
+    `
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
+    @ViewChild('customTemplate', { read: TemplateRef, static: true })
+    public customTemplate: TemplateRef<any>;
+
     public data = SampleTestData.contactInfoData();
-    public columns = [
+    public columns: IColumnConfig[] = [
         { field: 'ID', width: 'auto' },
         { field: 'Address', minWidth: '100px', maxWidth: '400px', width: 'auto' }
     ];

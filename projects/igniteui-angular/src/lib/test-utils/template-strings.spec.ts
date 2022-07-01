@@ -179,7 +179,9 @@ export class ColumnDefinitions {
                                               [resizable]="c.resizable"
                                               [width]="c.width"
                                               [minWidth]="c.minWidth"
-                                              [maxWidth]="c.maxWidth">
+                                              [maxWidth]="c.maxWidth"
+                                              [hidden]="c.hidden"
+                                              [pinned]="c.pinned">
         </igx-column>
     `;
 
