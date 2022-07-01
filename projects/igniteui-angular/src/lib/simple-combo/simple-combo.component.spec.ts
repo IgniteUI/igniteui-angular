@@ -865,7 +865,6 @@ describe('IgxSimpleCombo', () => {
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
-            tick();
             fixture.detectChanges();
             expect(combo.selection.length).toBe(1);
             expect(input.nativeElement.value).toEqual('Massachusetts');
