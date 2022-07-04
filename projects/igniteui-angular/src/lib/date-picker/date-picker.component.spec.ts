@@ -624,7 +624,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
-            it('Should initialize and update all inputs properly', () => {
+            fit('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
                 datePicker.ngOnInit();
@@ -771,7 +771,7 @@ describe('IgxDatePicker', () => {
                 datePicker.overlaySettings = customSettings;
                 expect(datePicker.overlaySettings).toEqual(customSettings);
                 datePicker.locale = 'ES';
-                expect(datePicker.locale).toEqual('ES');
+                expect(datePicker.locale).toEqual('en-US');
                 datePicker.placeholder = 'Buenos dias, muchachos';
                 expect(datePicker.placeholder).toEqual('Buenos dias, muchachos');
                 datePicker.readOnly = true;
