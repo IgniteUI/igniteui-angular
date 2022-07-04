@@ -114,9 +114,9 @@ Controls the layout of the calendar component. When vertical is set to `true`
 the calendar header will be rendered to the side of the calendar body.
 Defaults to `false`.
 
-- `weekStart: number | WEEKDAYS`
+- `weekStart: WEEKDAYS | number`
 
-Controls the starting day of the weeek for the calendar.
+Controls the starting day of the week for the calendar.
 Defaults to Sunday.
 
 - `locale: string`
