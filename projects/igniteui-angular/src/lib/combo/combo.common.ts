@@ -1173,7 +1173,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             return keys;
         }
         // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
+
+        return keys.map(key => isNaN(key) && key !== undefined && typeof key !== 'string' ?
+            this.data.find(entry => isNaN(entry[this.valueKey]) && entry[this.valueKey] !== undefined) :
+            this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {

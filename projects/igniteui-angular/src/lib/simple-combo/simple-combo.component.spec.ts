@@ -1097,37 +1097,6 @@ describe('IgxSimpleCombo', () => {
             expect(item4).toBeDefined();
         });
 
-        it('should not display falsy item values except 0 (array of primitive data)', () => {
-            combo.valueKey = null;
-            combo.displayKey = null;
-            combo.data = [ 0, false, null, '', NaN, undefined ];
-
-            combo.open();
-            fixture.detectChanges();
-
-            const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-            expect(items.length).toEqual(1);
-        });
-
-        it('should not display item values with falsy valueKey except 0 (array of objects)' , () => {
-            combo.valueKey = 'key';
-            combo.displayKey = 'value';
-            combo.data = [
-                { key: 0, value: 1 },
-                { key: false, value: 2 },
-                { key: null, value: 3 },
-                { key: '', value: 4 },
-                { key: NaN, value: 5 },
-                { key: undefined, value: 6 },
-            ];
-
-            combo.open();
-            fixture.detectChanges();
-
-            const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
-            expect(items.length).toEqual(1);
-        });
-
         it('should use valueKey as display text when displayKey is a falsy value (if valueKey is truthy)' , () => {
             fixture = TestBed.createComponent(ComboModelBindingComponent);
             fixture.detectChanges();
