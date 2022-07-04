@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 14.1.0
+- Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
+```
+<column width='auto' ...>
+```
+
+
+
 ## 14.0.0
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 
