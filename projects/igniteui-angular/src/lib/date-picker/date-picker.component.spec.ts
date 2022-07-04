@@ -650,7 +650,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.spinLoop).toEqual(true);
                 expect(datePicker.tabIndex).toEqual(undefined);
                 expect(datePicker.overlaySettings).toEqual(undefined);
-                expect(datePicker.locale).toEqual('ES');
+                expect(datePicker.locale).toEqual('en-US');
                 expect(datePicker.placeholder).toEqual('');
                 expect(datePicker.readOnly).toEqual(false);
                 expect(datePicker.value).toEqual(undefined);
