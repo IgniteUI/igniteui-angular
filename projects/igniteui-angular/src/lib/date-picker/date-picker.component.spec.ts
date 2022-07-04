@@ -624,7 +624,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
-            fit('Should initialize and update all inputs properly', () => {
+            it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
                 datePicker.ngOnInit();
