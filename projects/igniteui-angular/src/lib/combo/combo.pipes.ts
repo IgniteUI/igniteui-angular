@@ -7,11 +7,14 @@ import { IComboFilteringOptions } from './combo.component';
 
 /** @hidden */
 @Pipe({
-    name: 'comboClean'
+    name: 'comboDisplay'
 })
-export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
+export class IgxComboDisplayPipe implements PipeTransform {
+    public transform(collection: any[], valueKey: any, displayKey: any) {
+        if (valueKey) {
+            return collection.map(e => e[displayKey] || e[displayKey] === 0 ? e : { [displayKey]: e[valueKey], [valueKey]: e[valueKey] });
+        }
+        return collection;
     }
 }
 

@@ -429,10 +429,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         if (this.displayKey !== null && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
+            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey] ? e[this.displayKey] : e[this.valueKey])[0];
         }
 
-        return newSelection[0] || '';
+        return newSelection[0]?.toString() || '';
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
