@@ -1955,8 +1955,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 fieldName: dim.memberName,
                 strategy: DefaultPivotSortingStrategy.instance()
             }];
-            const sorted = DataUtil.sort(cloneArray(entries, true), expressions, this.sortStrategy, this.gridAPI.grid);
-            currentFields = new Map(sorted);
+            currentFields = this.sortColumnFields(fields, expressions);
         }
         currentFields.forEach((value) => {
             let shouldGenerate = true;
@@ -2058,6 +2057,24 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             cols.push(ref.instance);
         });
         return cols;
+    }
+
+    private sortColumnFields(fields: Map<string, any>, expressions: any): Map<string,any> {
+        const keys = Array.from(fields.keys());
+        keys.forEach(key => {
+            const value = fields.get(key);
+            if (value.children.size > 0) {
+                value.children = this.sortColumnFields(value.children, expressions);
+            }
+        });
+        const values = Array.from(fields.values());
+        const shouldSortEntries = expressions.findIndex(x => x.fieldName === values[0].dimension.memberName) != -1 && values.length > 1;
+        if (shouldSortEntries) {
+            const entries = Array.from(fields.entries());
+            const sorted = new Map<string,any>(DataUtil.sort(cloneArray(entries, true), expressions, this.sortStrategy, this.gridAPI.grid));
+            return sorted;
+        }
+        return fields;
     }
 
     /**
