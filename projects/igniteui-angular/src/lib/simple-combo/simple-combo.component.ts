@@ -402,10 +402,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        this.selectionChanging.emit(args);
+        // additional checks for 'undefined' as initially both args.newSelection and args.oldSelection are undefined
+        if (args.newSelection !== args.oldSelection ||
+            (args.newSelection === undefined && newSelection?.size > 0) ||
+            (newSelection?.size === 0 && oldSelectionAsArray.length > 0)) {
+            this.selectionChanging.emit(args);
+        }
         if (!args.cancel) {
-            let argsSelection = args.newSelection !== undefined
-                && args.newSelection !== null
+            let argsSelection = newSelection?.size > 0
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
