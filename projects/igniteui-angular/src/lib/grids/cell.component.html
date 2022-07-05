@@ -71,34 +71,37 @@
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
                 [(ngModel)]="editValue"
                 [igxFocus]="true"
+                [formControlName]="column.field"
             />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
                 [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControlName]="column.field"
             />
         </igx-input-group>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'boolean'">
+    <ng-container *ngIf="column.dataType === 'boolean'" [formGroup]="formGroup">
         <igx-checkbox
             [checked]="editValue"
             (change)="editValue = $event.checked"
             [igxFocus]="true"
             [disableRipple]="true"
+            [formControlName]="column.field"
         ></igx-checkbox>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'date'">
+    <ng-container *ngIf="column.dataType === 'date'" [formGroup]="formGroup">
         <igx-date-picker
             [style.width.%]="100"
             [outlet]="grid.outlet"
@@ -106,10 +109,11 @@
             [locale]="grid.locale"
             [(value)]="editValue"
             [igxFocus]="true"
+            [formControlName]="column.field"
         >
         </igx-date-picker>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'time'">
+    <ng-container *ngIf="column.dataType === 'time'" [formGroup]="formGroup">
         <igx-time-picker
             [style.width.%]="100"
             [outlet]="grid.outlet"
@@ -118,16 +122,17 @@
             [inputFormat]="column.defaultTimeFormat"
             [(value)]="editValue"
             [igxFocus]="true"
+            [formControlName]="column.field"
             >
         </igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
-        <igx-input-group>
-            <input type="text" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
+        <igx-input-group [formGroup]="formGroup">
+            <input type="text" [formControlName]="column.field" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
@@ -135,18 +140,20 @@
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControlName]="column.field"
             />
             <igx-suffix *ngIf="!grid.currencyPositionLeft" >{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup" >
             <input
                 igxInput
                 [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControlName]="column.field"
             />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>

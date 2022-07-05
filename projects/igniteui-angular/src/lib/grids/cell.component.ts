@@ -28,6 +28,7 @@ import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
+import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -68,6 +69,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @Input()
     public column: ColumnType;
+
+
+    public get formGroup() {
+        return this.grid.rowFromGroup;
+    }
 
     /**
      * @hidden
@@ -721,6 +727,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
+        }
+        // check if control for this field is already added.
+        const existingControl = this.formGroup.get(this.column.field);
+        if (!existingControl) {
+            // TODO get validators described on column.
+            const control = new FormControl(this.editValue, [
+                Validators.required]);
+            this.formGroup.addControl(this.column.field, control);
         }
     }
 
