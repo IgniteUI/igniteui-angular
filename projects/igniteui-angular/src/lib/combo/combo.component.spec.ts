@@ -881,7 +881,7 @@ describe('igxCombo', () => {
             
             const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
-            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
             tick();
