@@ -154,6 +154,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Output()
     public valuesChange = new EventEmitter<IValuesChange>();
 
+
+    /**
+     * Gets the sorting expressions generated for the dimensions.
+     *
+     * @example
+     * ```typescript
+     * const expressions = this.grid.dimensionsSortingExpressions;
+     * ```
+     */
+    public get dimensionsSortingExpressions() {
+        const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
+        const dimensionsSortingExpressions = PivotSortUtil.generateDimensionSortingExpressions(allEnabledDimensions);
+        return dimensionsSortingExpressions;
+    }
+
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
@@ -1651,9 +1666,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             dim.childLevel.sortDirection = dimension.sortDirection;
             dim = dim.childLevel;
         }
-        const dimensionsSortingExpressions = PivotSortUtil.generateDimensionSortingExpressions(this.rowDimensions)
         this.pipeTrigger++;
-        this.dimensionsSortingExpressionsChange.emit(dimensionsSortingExpressions);
+        this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
