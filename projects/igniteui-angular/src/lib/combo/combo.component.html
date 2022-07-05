@@ -10,7 +10,7 @@
     </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly
             [attr.placeholder]="placeholder" [disabled]="disabled"
-            role="combobox" aria-haspopup="listbox" aria-readonly="true"
+            role="combobox" aria-haspopup="listbox"
             [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
             [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
             (blur)="onBlur()" />

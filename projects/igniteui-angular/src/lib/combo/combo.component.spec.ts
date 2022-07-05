@@ -863,7 +863,6 @@ describe('igxCombo', () => {
         it('should render aria attributes properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
-            expect(input.nativeElement.getAttribute('aria-readonly')).toMatch('true');
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
             expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
             expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
