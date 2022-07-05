@@ -881,7 +881,12 @@ describe('igxCombo', () => {
             
             const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
-            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            tick();
+            fixture.detectChanges();
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
         }));
         it('should render aria-expanded attribute properly', fakeAsync(() => {
             expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');

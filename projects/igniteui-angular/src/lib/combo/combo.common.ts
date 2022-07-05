@@ -72,6 +72,7 @@ export interface IgxComboBase {
     select(item: any): void;
     select(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
     deselect(...args: [] | [itemIDs: any[], event?: Event]): void;
+    setActiveDescendant(): void;
 }
 
 let NEXT_ID = 0;
@@ -942,8 +943,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public toggle(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
-        if (this.collapsed){
-            this.activeDescendant = this.dropdown.focusedItem?.id || '';
+        if (!this.collapsed){
+            this.setActiveDescendant();
         }
     }
 
@@ -958,7 +959,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public open(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.open(overlaySettings);
-        this.activeDescendant = this.dropdown.focusedItem?.id || '';
+        this.setActiveDescendant();
     }
 
     /**
@@ -1133,6 +1134,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
                 this.valid = IgxComboState.INITIAL;
             }
         }
+    }
+
+    /** @hidden @internal */
+    public setActiveDescendant() : void  {
+        this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
     /** @hidden @internal */
