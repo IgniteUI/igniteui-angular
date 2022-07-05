@@ -2,16 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 14.1.0
-
-### General
-
-- `IgxPivotGrid` - added a `filterDimension` API to filter a given dimension runtime:
-
-```
-pivotGrid.filterDimension(this.pivotConfigHierarchy.rows[0], new Set(['Value']), IgxStringFilteringOperand.instance().condition('in'));
-```
-
 ## 14.0.0
 
 ### General
