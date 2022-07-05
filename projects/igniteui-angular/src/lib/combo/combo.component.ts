@@ -28,7 +28,7 @@ import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboCleanPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboDisplayPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -457,7 +457,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
-        IgxComboCleanPipe,
+        IgxComboDisplayPipe,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
@@ -467,7 +467,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboGroupingPipe, // TODO: create common ng module
         IgxComboFilteringPipe,
-        IgxComboCleanPipe,
+        IgxComboDisplayPipe,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,

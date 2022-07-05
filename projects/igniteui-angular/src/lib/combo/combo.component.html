@@ -51,7 +51,7 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboClean:valueKey:displayKey
+            | comboDisplay:valueKey:displayKey
             | comboFiltering:filterValue:displayKey:filteringOptions:filterable
             | comboGrouping:groupKey:valueKey
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
