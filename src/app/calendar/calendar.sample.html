@@ -12,6 +12,11 @@
             <div class="calendar-sample">
                 <h4 class="sample-title">Default Calendar</h4>
                 <div class="calendar-sample-buttons">
+                    <button igxButton="raised" igxRipple (click)="changeLocale('fr-FR')">Change locale to France</button>
+                    <button igxButton="raised" igxRipple (click)="changeLocale('en-US')">Change locale to English</button>
+                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+
                     <button igxButton="raised" igxRipple (click)="select()">Select</button>
                     <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
                     <br>
