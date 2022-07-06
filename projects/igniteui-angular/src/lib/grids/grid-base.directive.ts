@@ -444,9 +444,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public rowStyles = null;
 
-    @Input()
-    public rowFromGroup = new FormGroup({});
-
     /**
      * Gets/Sets the primary key.
      *
@@ -500,6 +497,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
+    public onFormGroupCreate = new EventEmitter<FormGroup>();
 
     /**
      * Emitted when a cell is selected.

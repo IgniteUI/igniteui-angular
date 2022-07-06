@@ -447,7 +447,6 @@ export interface GridType extends IGridDataBindable {
     processedExpandedFlatData?: any[] | null;
     processedRecords?: Map<any, ITreeGridRecord>;
     treeGroupArea?: any;
-    rowFromGroup: FormGroup;
 
     activeNodeChange: EventEmitter<IActiveNodeChangeEventArgs>;
     gridKeydown: EventEmitter<IGridKeydownEventArgs>;
@@ -487,6 +486,7 @@ export interface GridType extends IGridDataBindable {
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
+    onFormGroupCreate: EventEmitter<FormGroup>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;

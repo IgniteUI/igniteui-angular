@@ -162,3 +162,12 @@
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+<ng-container *ngTemplateOutlet="defaultError"></ng-container>
+<ng-template #defaultError>
+    <div *ngIf="formGroup?.get(column?.field)?.invalid && (formGroup.get(column?.field).dirty || formGroup.get(column?.field).touched)"
+    class="alert alert-danger">
+        <div *ngIf="formGroup.get(column?.field).errors?.['required']">
+            This is required.
+        </div>
+        </div>
+</ng-template>

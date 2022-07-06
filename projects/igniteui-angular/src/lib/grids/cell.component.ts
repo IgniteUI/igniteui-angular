@@ -72,7 +72,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
 
     public get formGroup() {
-        return this.grid.rowFromGroup;
+        return this.grid.crudService.row?.rowFormGroup;
     }
 
     /**
@@ -727,12 +727,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
-        }
-        // check if control for this field is already added.
-        const existingControl = this.formGroup.get(this.column.field);
-        if (!existingControl) {
-            const control = new FormControl(this.editValue, this.column.validators);
-            this.formGroup.addControl(this.column.field, control);
         }
     }
 

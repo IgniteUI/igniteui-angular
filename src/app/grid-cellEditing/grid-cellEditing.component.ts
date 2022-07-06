@@ -4,6 +4,7 @@ import { data, dataWithoutPK } from '../shared/data';
 import {
     IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
 } from 'igniteui-angular';
+import { FormGroup } from '@angular/forms';
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
@@ -45,6 +46,9 @@ export class GridCellEditingComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
+    }
+
+    public formCreateHandler(formGr: FormGroup) {
     }
 
     public addRow() {

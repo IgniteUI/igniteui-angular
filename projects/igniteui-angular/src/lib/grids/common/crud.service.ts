@@ -4,13 +4,21 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '.
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { copyDescriptors, isEqual } from '../../core/utils';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export class IgxEditRow {
     public transactionState: any;
     public state: any;
     public newData: any;
+    public rowFormGroup = new FormGroup({});
 
-    constructor(public id: any, public index: number, public data: any, public grid: GridType) { }
+    constructor(public id: any, public index: number, public data: any, public grid: GridType) {
+        for (const col of grid.columns) {
+            const field = col.field;
+            const control = new FormControl(this.data[field], col.validators);
+            this.rowFormGroup.addControl(field, control);
+        }
+     }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
@@ -286,6 +294,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
         if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
             if (!this.row) {
                 this.createRow(this.cell);
+                this.grid.onFormGroupCreate.emit(this.row.rowFormGroup);
             }
             const rowArgs = this.row.createEditEventArgs(false, event);
 
