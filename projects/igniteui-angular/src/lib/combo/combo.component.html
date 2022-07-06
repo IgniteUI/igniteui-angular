@@ -56,11 +56,11 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
         [attr.aria-activedescendant]="this.activeDescendant">
-        <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
+        <igx-combo-item [itemHeight]='itemHeight' *igxFor="let item of data
             | comboFiltering:filterValue:displayKey:filteringOptions:filterable
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-            [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
+            [value]="item" [isHeader]="item.isHeader" [index]="rowIndex" [role]="item.isHeader? 'group' : 'option'">
             <ng-container *ngIf="item.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
