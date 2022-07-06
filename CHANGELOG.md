@@ -3,6 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 14.0.0
+
+- Added additional theme properties for the `IgxCalendar` so that is easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
+
+
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 
 ### New Features
