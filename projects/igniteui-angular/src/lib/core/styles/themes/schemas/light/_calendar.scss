@@ -32,7 +32,12 @@
 /// @prop {Map} month-hover-current-text-color [color: ('secondary', 500)]- The text color for the current/selected month on hover.
 ///
 /// @prop {Map} date-selected-background [color: ('secondary', 500)] - The background color for the selected date.
+/// @prop {Map} date-selected-background [color: ('grays', 100, .18)] - The background color for the selected date.
+/// @prop {Map} date-selected-background [color: ('grays', 100, .18)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [contrast-color: ('secondary', 500)] - The text color for the selected date.
+/// @prop {Map} date-selected-text-color [contrast-color: ('grays', 100)] - The text color for the selected date.
+/// @prop {Map} date-selected-text-color [contrast-color: ('grays', 100)] - The text color for the selected date.
+///
 /// @prop {Map} date-current-text-color [color: ('secondary', 500)] - The text color for the current date.
 /// @prop {Map} date-current-bg-color [color: (transparent)] - The background color for the current date.
 /// @prop {Map} date-current-bg-hover-color [color: ('secondary', 500)] - The hover background color for the current date.
@@ -139,8 +144,24 @@ $light-calendar: extend(
             color: ('secondary', 500)
         ),
 
+        date-selected-hover-background: (
+            color: ('grays', 100, .18)
+        ),
+
+        date-selected-focus-background: (
+            color: ('grays', 100, .18)
+        ),
+
         date-selected-text-color: (
             contrast-color: ('secondary', 500)
+        ),
+
+        date-selected-hover-text-color: (
+            contrast-color: ('grays', 100)
+        ),
+
+        date-selected-focus-text-color: (
+            contrast-color: ('grays', 100)
         ),
 
         date-current-text-color: (

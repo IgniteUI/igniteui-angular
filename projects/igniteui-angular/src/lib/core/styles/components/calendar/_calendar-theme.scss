@@ -52,7 +52,11 @@
 /// @param {Color} $year-hover-text-color [null] - The year hover text color.
 ///
 /// @param {Color} $date-selected-background [null] - The background color for the selected date.
+/// @param {Color} $date-selected-hover-background [null] - The hover background color for the selected date.
+/// @param {Color} $date-selected-focus-background [null] - The focus background color for the selected date.
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
+/// @param {Color} $date-selected-hover-text-color [null] - The hover text color for the selected date.
+/// @param {Color} $date-selected-focus-text-color [null] - The focus text color for the selected date.
 ///
 /// @param {Color} $date-current-text-color [null] - The text color for the current date.
 /// @param {Color} $date-current-bg-color [null] - The background color for the current date.
@@ -115,7 +119,11 @@
     $month-hover-background: null,
 
     $date-selected-background: null,
+    $date-selected-hover-background: null,
+    $date-selected-focus-background: null,
     $date-selected-text-color: null,
+    $date-selected-hover-text-color: null,
+    $date-selected-focus-text-color: null,
 
     $date-current-text-color: null,
     $date-current-bg-color: null,
@@ -188,6 +196,14 @@
 
     @if not($date-selected-text-color) and $date-selected-background {
         $date-selected-text-color: $content-background;
+    }
+
+    @if not($date-selected-hover-text-color) and $date-selected-hover-background {
+        $date-selected-hover-text-color: text-contrast($date-selected-hover-background);
+    }
+
+    @if not($date-selected-focus-text-color) and $date-selected-focus-background {
+        $date-selected-focus-text-color: text-contrast($date-selected-focus-background);
     }
 
     @if not($date-hover-background) and $content-background {
@@ -313,7 +329,11 @@
         month-hover-background: $month-hover-background,
 
         date-selected-background: $date-selected-background,
+        date-selected-hover-background: $date-selected-hover-background,
+        date-selected-focus-background: $date-selected-focus-background,
         date-selected-text-color: $date-selected-text-color,
+        date-selected-hover-text-color: $date-selected-hover-text-color,
+        date-selected-focus-text-color: $date-selected-focus-text-color,
 
         date-current-text-color: $date-current-text-color,
         date-current-bg-color: $date-current-bg-color,
@@ -708,8 +728,22 @@
     }
 
     %cal-value--selected--hover {
+        %cal-value-content{
+            color: var-get($theme, 'date-selected-hover-text-color');
+        }
+
         %cal-value-content::after {
-            background: color($palette, 'grays', 100, .18);
+            background: var-get($theme, 'date-selected-hover-background');
+        }
+    }
+
+    %cal-value--selected--focus {
+        %cal-value-content {
+            color: var-get($theme, 'date-selected-focus-text-color');
+        }
+
+        %cal-value-content::after {
+            background: var-get($theme, 'date-selected-focus-background');
         }
     }
 

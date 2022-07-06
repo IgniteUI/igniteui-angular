@@ -88,9 +88,12 @@
         @include e(date, 'selected') {
             @extend %cal-value--selected !optional;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 @extend %cal-value--selected--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--selected--focus !optional;
             }
         }
 
