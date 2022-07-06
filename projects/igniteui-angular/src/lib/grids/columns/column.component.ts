@@ -51,6 +51,7 @@ import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
+import { Validator } from '@angular/forms';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -90,6 +91,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get field(): string {
         return this._field;
     }
+
+
+    /**
+     * Sets/gets the validators used when editing cell from this column.
+     * ```typescript
+     * let validators = this.column.validators;
+     * ```
+     * ```html
+     * <igx-column [validators] = "validatorsArray"></igx-column>
+     * ```
+     */
+    public validators: Validator[] = [];
+
     /**
      * Sets/gets the `header` value.
      * ```typescript

@@ -11,9 +11,11 @@ import {
     IgxFilterCellTemplateDirective,
     IgxSummaryTemplateDirective
 } from './templates.directive';
+import { IgxColumnRequiredValidator } from './validators.directive';
 
 @NgModule({
     declarations: [
+        IgxColumnRequiredValidator,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
@@ -26,6 +28,7 @@ import {
         IgxColumnLayoutComponent
     ],
     exports: [
+        IgxColumnRequiredValidator,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,

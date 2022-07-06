@@ -118,6 +118,7 @@ export interface ColumnType {
     headerGroup: any;
     // TYPE
     headerCell: any;
+    validators: any[];
 
     headerTemplate: TemplateRef<any>;
     collapsibleIndicatorTemplate?: TemplateRef<any>;
