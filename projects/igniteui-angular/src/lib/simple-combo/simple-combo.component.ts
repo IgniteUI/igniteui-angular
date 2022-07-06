@@ -305,7 +305,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public onBlur(): void {
-        if (this.collapsed) {
+        if (this.collapsed && !this.selectedItem) {
             this.clearOnBlur();
         }
         super.onBlur();
@@ -417,6 +417,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             }
             this._onChangeCallback(args.newSelection);
             this._updateInput = true;
+        } else if (this.isRemote) {
+            this.registerRemoteEntries(newSelectionAsArray, false);
         }
     }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-reactive-form',
@@ -8,15 +8,15 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class ReactiveFormSampleComponent {
     public genres = [];
-    public user: FormGroup;
+    public user: UntypedFormGroup;
 
-    constructor(fb: FormBuilder) {
+    constructor(fb: UntypedFormBuilder) {
         this.user = fb.group({
             // date: ['', Validators.required],
             date: ['', { validators: Validators.required, updateOn: 'blur' }],
             dateTime: ['', Validators.required],
             email: ['', Validators.required],
-            fullName: new FormControl('', Validators.required),
+            fullName: new UntypedFormControl('', Validators.required),
             genres: [''],
             movie: ['', Validators.required],
             phone: ['']

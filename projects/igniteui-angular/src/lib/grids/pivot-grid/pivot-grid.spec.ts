@@ -526,6 +526,61 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
         }));
 
+        it('should render correct auto-widths for dimensions with no width', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.data = [{
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+            }];
+            fixture.detectChanges();
+
+            // there should be just 1 dimension column and 2 value columns and they should auto-fill the available space
+            expect(pivotGrid.columns.length).toBe(3);
+            const dimColumn = pivotGrid.columns.find(x => x.field === 'Bulgaria');
+            expect(dimColumn.width).toBe((pivotGrid.calcWidth - pivotGrid.featureColumnsWidth()) + 'px');
+            const unitPriceCol = pivotGrid.columns.find(x => x.field === 'Bulgaria-UnitPrice');
+            const unitsSoldCol = pivotGrid.columns.find(x => x.field === 'Bulgaria-UnitsSold');
+            expect(unitPriceCol.width).toBe(parseInt(dimColumn.width, 10) / 2 + 'px');
+            expect(unitsSoldCol.width).toBe(parseInt(dimColumn.width, 10) / 2 + 'px');
+
+            // change data to have many columns so that they no longer fit in the grid
+            pivotGrid.data = [{
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+            }, {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'USA', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Spain', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Italy', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Greece', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Uruguay', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Mexico', Date: '01/01/2021', UnitsSold: 282
+            }
+            ];
+            fixture.detectChanges();
+
+            // all should take density default min-width (200 for default density) as they exceed the size of the grid
+            const colGroups = pivotGrid.columns.filter(x => x.columnGroup);
+            const childCols = pivotGrid.columns.filter(x => !x.columnGroup);
+            expect(colGroups.every(x => x.width === '400px')).toBeTrue();
+            expect(childCols.every(x => x.width === '200px')).toBeTrue();
+        });
+
         it('should render correct grid with noop strategies', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.data = [
@@ -1030,6 +1085,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedExpressions: ISortingExpression[] = [
                     { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
@@ -1038,7 +1094,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1054,6 +1110,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
+                expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
             });
 
             it('should sort on column for single row dimension.', () => {
