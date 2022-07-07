@@ -9,7 +9,7 @@
                     {{val | date}}
                 </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column field="OrderDate2" required width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
@@ -24,7 +24,7 @@
     </igx-column> -->
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
-    <igx-column required field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column required appForbiddenName='bob' field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
 
     </igx-column>
     <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">

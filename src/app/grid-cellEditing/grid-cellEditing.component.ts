@@ -1,16 +1,31 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Directive, Input, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from '../shared/data';
 
 import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
+    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity, IgxColumnComponent, IgxColumnValidator
 } from 'igniteui-angular';
-import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
+
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const forbidden = nameRe.test(control.value);
       return forbidden ? {forbiddenName: {value: control.value}} : null;
     };
+  }
+
+  @Directive({
+    selector: '[appForbiddenName]',
+    providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
+  })
+  export class ForbiddenValidatorDirective extends IgxColumnValidator {
+    @Input('appForbiddenName') 
+    public forbiddenName = '';
+  
+    validate(control: AbstractControl): ValidationErrors | null {
+      return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
+                                : null;
+    }
   }
 
 @Component({
@@ -57,9 +72,9 @@ export class GridCellEditingComponent {
     }
 
     public formCreateHandler(formGr: FormGroup) {
-        // add to existing
-       const prodName = formGr.get('ProductName');
-       prodName.addValidators(forbiddenNameValidator(/bob/i))
+        // add a validator
+    //    const prodName = formGr.get('ProductName');
+    //    prodName.addValidators(forbiddenNameValidator(/bob/i))
     }
 
     public addRow() {
