@@ -4,7 +4,15 @@ import { data, dataWithoutPK } from '../shared/data';
 import {
     IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
 } from 'igniteui-angular';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const forbidden = nameRe.test(control.value);
+      return forbidden ? {forbiddenName: {value: control.value}} : null;
+    };
+  }
+
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
@@ -49,6 +57,9 @@ export class GridCellEditingComponent {
     }
 
     public formCreateHandler(formGr: FormGroup) {
+        // add to existing
+       const prodName = formGr.get('ProductName');
+       prodName.addValidators(forbiddenNameValidator(/bob/i))
     }
 
     public addRow() {

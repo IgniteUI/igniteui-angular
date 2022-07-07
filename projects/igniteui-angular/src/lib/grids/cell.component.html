@@ -168,6 +168,7 @@
 <ng-template #defaultError>
     <div [style.width]="column?.width" style="background-color: #fed3d3;
     color: #820000;">
+        Validation error.
         <div *ngIf="formGroup.get(column?.field).errors?.['required']">
             This field is required.
         </div>
