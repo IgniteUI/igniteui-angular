@@ -13,7 +13,12 @@
     OnDestroy,
     OnChanges,
     SimpleChanges,
-    Inject
+    Inject,
+    ContentChildren,
+    ViewChildren,
+    QueryList,
+    AfterContentInit,
+    AfterViewInit
 } from '@angular/core';
 import { formatPercent } from '@angular/common';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -29,6 +34,10 @@ import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxTooltipComponent } from '../directives/tooltip/tooltip.component';
+import { IgxTooltipDirective } from '../directives/tooltip';
+import { AutoPositionStrategy, VerticalAlignment } from '../services/public_api';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -49,7 +58,7 @@ import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
     /**
      * @hidden
      * @internal
@@ -58,6 +67,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get isEmptyAddRowCell() {
         return this.intRow.addRowUI && (this.value === undefined || this.value === null);
     }
+
+    @ViewChildren('error', {read: IgxToggleDirective})
+    public errorToggles: QueryList<IgxToggleDirective>;
 
     /**
      * Gets the column of the cell.
@@ -728,6 +740,26 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
         }
+     
+    }
+
+    public ngAfterViewInit(){
+        this.errorToggles.changes.subscribe(() => {
+            if (this.errorToggles.length > 0) {
+                this.errorToggles.toArray()[0].toggle(
+                    {
+                        target: this.nativeElement,
+                        closeOnOutsideClick: false,
+                        closeOnEscape: false,
+                        modal: false,
+                        positionStrategy: new AutoPositionStrategy({
+                            verticalDirection: VerticalAlignment.Top,
+                            verticalStartPoint: VerticalAlignment.Top
+                        })
+                    }
+                );
+            }
+        });
     }
 
     /**

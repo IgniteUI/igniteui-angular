@@ -30,10 +30,7 @@
         </ng-template>
     </igx-column>
     <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
-        <ng-template igxCellEditor let-cell="cell">
-            <input name="units" [(ngModel)]="cell.value" style="color: black" />
-        </ng-template>
-    </igx-column>
+      </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
     </igx-column>
     <igx-paginator></igx-paginator>

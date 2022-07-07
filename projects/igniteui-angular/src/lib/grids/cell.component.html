@@ -162,12 +162,14 @@
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+<div igxToggle #error *ngIf="editMode && formGroup?.get(column?.field)?.invalid && (formGroup.get(column?.field).dirty || formGroup.get(column?.field).touched)">
 <ng-container *ngTemplateOutlet="defaultError"></ng-container>
+</div>
 <ng-template #defaultError>
-    <div *ngIf="formGroup?.get(column?.field)?.invalid && (formGroup.get(column?.field).dirty || formGroup.get(column?.field).touched)"
-    class="alert alert-danger">
+    <div [style.width]="column?.width" style="background-color: #fed3d3;
+    color: #820000;">
         <div *ngIf="formGroup.get(column?.field).errors?.['required']">
-            This is required.
+            This field is required.
         </div>
         </div>
 </ng-template>
