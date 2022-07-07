@@ -55,7 +55,8 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
+        <igx-combo-item  [role]="item.isHeader? 'group' : 'option'" [singleMode]="true"
+        [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
             | comboClean
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
