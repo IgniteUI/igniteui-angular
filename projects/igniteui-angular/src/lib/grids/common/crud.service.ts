@@ -557,6 +557,8 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             } else {
                 this.createCell(cell);
+                this.createRow(this.cell);
+                this.grid.onFormGroupCreate.emit(this.row.rowFormGroup);
                 this.beginCellEdit(event);
             }
         }
