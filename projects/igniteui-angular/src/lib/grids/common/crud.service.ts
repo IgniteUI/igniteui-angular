@@ -93,6 +93,7 @@ export interface IgxAddRowParent {
 export class IgxCell {
     public primaryKey: any;
     public state: any;
+    public row: IgxEditRow;
 
     constructor(
         public id,
@@ -101,7 +102,9 @@ export class IgxCell {
         public value: any,
         public editValue: any,
         public rowData: any,
-        public grid: GridType) { }
+        public grid: GridType) {
+            this.row = new IgxEditRow(id, rowIndex, rowData, grid);
+         }
 
     public castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -557,8 +560,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             } else {
                 this.createCell(cell);
-                this.createRow(this.cell);
-                this.grid.onFormGroupCreate.emit(this.row.rowFormGroup);
+                this.grid.onFormGroupCreate.emit(this.cell.row.rowFormGroup);
                 this.beginCellEdit(event);
             }
         }

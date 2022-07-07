@@ -162,7 +162,7 @@
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-<div igxToggle #error *ngIf="editMode && formGroup?.get(column?.field)?.invalid && (formGroup.get(column?.field).dirty || formGroup.get(column?.field).touched)">
+<div igxToggle #error *ngIf="editMode && isInvalid">
 <ng-container *ngTemplateOutlet="defaultError"></ng-container>
 </div>
 <ng-template #defaultError>

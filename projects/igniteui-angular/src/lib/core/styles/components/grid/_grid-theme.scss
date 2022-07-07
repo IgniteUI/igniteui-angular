@@ -1393,6 +1393,9 @@
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
     }
+    %grid-cell--invalid {
+        box-shadow: inset 0 0 0 rem(2px) color($palette, 'error', 500) !important;
+    }
 
     %grid-cell--pinned-selected,
     %grid-cell--selected {

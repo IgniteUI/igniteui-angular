@@ -84,7 +84,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
 
     public get formGroup() {
-        return this.grid.crudService.row?.rowFormGroup;
+        const isRowEdit = this.grid.crudService.rowEditing;
+        return isRowEdit ? this.grid.crudService.row?.rowFormGroup : this.grid.crudService.cell?.row.rowFormGroup;
     }
 
     /**
@@ -438,6 +439,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('attr.aria-readonly')
     public get readonly(): boolean {
         return !this.editable;
+    }
+
+    @HostBinding('class.igx-grid__td--invalid')
+    public get isInvalid() {
+        const isRowEdit = this.grid.crudService.rowEditing;
+        return (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
     }
 
     public get gridRowSpan(): number {

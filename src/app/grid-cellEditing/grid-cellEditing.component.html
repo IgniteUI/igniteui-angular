@@ -25,9 +25,7 @@
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
     <igx-column required field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
-        <ng-template igxCell let-cell="cell">
-            <button> {{cell.value}}</button>
-        </ng-template>
+
     </igx-column>
     <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
       </igx-column>
