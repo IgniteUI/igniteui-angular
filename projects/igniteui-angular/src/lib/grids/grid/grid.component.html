@@ -154,6 +154,7 @@
     </div>
 
     <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
+    <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 </div>
 
 
@@ -270,5 +271,4 @@
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
