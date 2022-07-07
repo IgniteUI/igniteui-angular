@@ -152,6 +152,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public cellTemplate: TemplateRef<any>;
 
     @Input()
+    public cellValidationErrorTemplate: TemplateRef<any>;
+
+    @Input()
     public pinnedIndicator: TemplateRef<any>;
 
     /**

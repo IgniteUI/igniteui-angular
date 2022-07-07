@@ -179,6 +179,9 @@ export class GridCellEditingComponent {
         const secColumn = this.gridWithoutPK.getColumnByName('OrderDate');
         this.gridWithoutPK.moveColumn(column, secColumn);
     }
+    public checkValid(cell) {
+        debugger;
+    }
     public updateSelectedCell() {
         let newValue;
         const selectedCell = this.gridWithoutPK.selectedCells[0];

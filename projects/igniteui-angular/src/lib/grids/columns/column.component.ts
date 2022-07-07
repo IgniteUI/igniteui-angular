@@ -44,7 +44,8 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective,
-    IgxSummaryTemplateDirective
+    IgxSummaryTemplateDirective,
+    IgxCellValidationErrorDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
@@ -862,6 +863,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    @ContentChild(IgxCellValidationErrorDirective, { read: IgxCellValidationErrorDirective })
+    protected cellValidationErrorTemplate: IgxCellValidationErrorDirective;
+    /**
+     * @hidden
+     */
     @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
     protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
     /**
@@ -1162,6 +1168,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set summaryTemplate(template: TemplateRef<any>) {
         this._summaryTemplate = template;
     }
+
+        /** 
+     * Returns a reference to the `errorTemplate`.
+     * ```typescript
+     * let errorTemplate = this.column.errorTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public get validationErrorTemplate(): TemplateRef<any> {
+        return this._errorTemplate;
+    }
+
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
@@ -1616,6 +1635,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    protected _errorTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
     protected _headerTemplate: TemplateRef<any>;
     /**
      * @hidden
@@ -1733,6 +1756,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
+        }
+        if (this.cellValidationErrorTemplate) {
+            this._errorTemplate = this.cellValidationErrorTemplate.template;
         }
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;

@@ -24,8 +24,12 @@
     </igx-column> -->
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
-    <igx-column required appForbiddenName='bob' field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
-
+    <igx-column appForbiddenName='bob' field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+        <ng-template igxCellValidationError let-cell='cell'>
+            <div *ngIf="cell.formGroup?.get(cell.column?.field).errors">
+                Bob has no soul.
+            </div>
+        </ng-template>
     </igx-column>
     <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
       </igx-column>

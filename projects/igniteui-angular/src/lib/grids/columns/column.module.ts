@@ -7,6 +7,7 @@ import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective,
     IgxSummaryTemplateDirective
@@ -19,6 +20,7 @@ import { IgxColumnRequiredValidator } from './validators.directive';
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
+        IgxCellValidationErrorDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -32,6 +34,7 @@ import { IgxColumnRequiredValidator } from './validators.directive';
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
+        IgxCellValidationErrorDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,

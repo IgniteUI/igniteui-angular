@@ -117,6 +117,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate"
+        [cellValidationErrorTemplate]="col.validationErrorTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
         [cellSelectionMode]="grid.cellSelection"
