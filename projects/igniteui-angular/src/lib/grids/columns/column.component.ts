@@ -1122,7 +1122,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public get grid(): IgxGridBaseDirective {
-        return this.gridAPI.grid;
+        return this._grid ?? this.gridAPI.grid;
+    }
+    /**
+     * @hidden @internal
+     */
+    public set grid(val: IgxGridBaseDirective) {
+        this._grid = val;
     }
     /**
      * Returns a reference to the `bodyTemplate`.
@@ -1657,6 +1663,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     private _field: string;
+    private _grid: IgxGridBaseDirective;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 

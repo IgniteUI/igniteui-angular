@@ -430,8 +430,9 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const rootGridColumns = '[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false}]';
         const childGridColumns = '[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false}]';
         const initialState = HelperFunctions.buildStateString(grid, 'columns', rootGridColumns, childGridColumns);
-        const newColumns = '[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"Product Name","resizable":false,"searchable":true,"disableHiding":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"ID","resizable":false,"searchable":true,"disableHiding":true}]';
-        const newColumnsState = HelperFunctions.buildStateString(grid, 'columns', newColumns, newColumns);
+        const newRootGridColumns = '[{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false}]';
+        const newChildGridColumns = '[{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":true,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":true,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":true,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":true,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":false}]';
+        const newColumnsState = HelperFunctions.buildStateString(grid, 'columns', newRootGridColumns, newChildGridColumns);
         fix.detectChanges();
         let gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(initialState);
@@ -442,12 +443,15 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
         HelperFunctions.verifyColumns(JSON.parse(newColumnsState).columns, gridState);
-        // const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
-        // gridsCollection.forEach(childGrid => {
-        //     HelperFunctions.verifyColumns(childGrid.grid.columns, childGrid.state);
-        // });
-        // gridState = state.getState(true, ['columns', 'rowIslands']);
-        // expect(gridState).toBe(newColumnsState);
+        const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState as IGridState);
+        gridsCollection.forEach(childGrid => {
+            const childGridNewState = HelperFunctions.getChildGridState(JSON.parse(newColumnsState), childGrid.rowIslandID, childGrid.parentRowID);
+            const childGridNewColumnsState = childGridNewState ? childGridNewState.columns : [];
+            HelperFunctions.verifyColumns(childGridNewColumnsState, childGrid.state);
+        });
+
+        gridState = state.getState(true, ['columns', 'rowIslands']);
+        expect(gridState).toBe(newColumnsState);
     }));
 });
 
@@ -508,7 +512,7 @@ class HelperFunctions {
                     const parentRowId = this.getParentRowID(chGrid);
                     const rowIslandState = state.rowIslands.find(st => st.id === rowIslandComponent.id && st.parentRowID === parentRowId);
                     if (rowIslandState) {
-                        const childGridState = { grid: chGrid, state: rowIslandState.state };
+                        const childGridState = { grid: chGrid, state: rowIslandState.state, rowIslandID: rowIslandState.id, parentRowID: parentRowId};
                         gridStatesCollection.push(childGridState);
                     }
                 });
@@ -516,6 +520,14 @@ class HelperFunctions {
         }
         return gridStatesCollection;
     }
+
+    public static getChildGridState(state, rowIslandID, parentRowID): any {
+        const childGridState = state.rowIslands?.find(
+            st => st.id === rowIslandID && st.parentRowID === parentRowID
+        );
+        return childGridState?.state;
+    }
+
 
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
         expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
