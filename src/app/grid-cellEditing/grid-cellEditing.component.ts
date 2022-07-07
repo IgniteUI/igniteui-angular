@@ -77,6 +77,18 @@ export class GridCellEditingComponent {
     //    prodName.addValidators(forbiddenNameValidator(/bob/i))
     }
 
+    public cellEdit(evt) {
+        if (!evt.isValid) {
+            evt.cancel = true;
+        }
+    }
+
+    public rowEdit(evt) {
+        if (!evt.isValid) {
+            evt.cancel = true;
+        }
+    }
+
     public addRow() {
         this.gridWithPK.addRow({
             ProductID: 21,
@@ -181,6 +193,7 @@ export class GridCellEditingComponent {
     }
     public checkValid(cell) {
         debugger;
+        return cell.formGroup?.get(cell.column?.field).errors?.['appForbiddenName'];
     }
     public updateSelectedCell() {
         let newValue;

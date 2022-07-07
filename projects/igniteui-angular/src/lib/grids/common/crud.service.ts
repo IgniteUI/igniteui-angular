@@ -28,6 +28,7 @@ export class IgxEditRow {
             cancel: false,
             owner: this.grid,
             isAddRow: false,
+            isValid: this.rowFormGroup.valid,
             event
         };
         if (includeNewValue) {
@@ -115,6 +116,7 @@ export class IgxCell {
     }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
+        const row = this.grid.crudService.row ?? this.row;
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -123,6 +125,7 @@ export class IgxCell {
             cancel: false,
             column: this.column,
             owner: this.grid,
+            isValid: row.rowFormGroup.get(this.column.field).valid,
             event
         };
         if (includeNewValue) {
@@ -135,6 +138,7 @@ export class IgxCell {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
+        const row = this.grid.crudService.row ?? this.row;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -142,6 +146,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
             oldValue: this.value,
+            isValid: row.rowFormGroup.get(this.column.field).valid,
             newValue: value,
             column: this.column,
             owner: this.grid,
