@@ -55,10 +55,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
     }
 
     protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
-        const isColumn = PivotUtil.flatten(this.pivotConfiguration.columns).find(dim => dim.memberName === this.dimension.memberName);
-        const objectToExtractFrom = isColumn ? obj[1].records ?  obj[1].records[0] : obj[0] : obj;
-        const dim = isColumn ? obj[1].dimension : this.dimension;
-        let resolvedValue = typeof objectToExtractFrom === 'object' ? PivotUtil.extractValueFromDimension(dim, objectToExtractFrom) : objectToExtractFrom;
+        let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {
             const date = parseDate(resolvedValue);
