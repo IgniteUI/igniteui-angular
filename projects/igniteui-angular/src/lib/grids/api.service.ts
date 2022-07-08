@@ -5,7 +5,7 @@ import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridServiceType, GridType, IFieldValid, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
@@ -145,7 +145,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const validity: IFieldValid[] = [{
+            field: cell.column.field,
+            valid: args.isValid
+        }];
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue), validity);
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -196,8 +200,15 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (hasSummarized) {
             grid.summaryService.removeSummaries(args.rowID);
         }
+        const validityArray: IFieldValid[] = [];
+        Object.keys(row.rowFormGroup.controls).forEach(key => {
+            validityArray.push({
+                field: key,
+                valid: row.rowFormGroup.controls[key].valid
+            });
+        });
 
-        this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
+        this.updateData(grid, row.id, data[index], args.oldValue, args.newValue, validityArray);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
@@ -545,12 +556,13 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowCurrentValue Current value of the row as it is with applied previous transactions
      * @param rowNewValue New value of the row
      */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }, validity?) {
         if (grid.transactions.enabled) {
             const transaction: Transaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
-                newValue: rowNewValue
+                newValue: rowNewValue,
+                validity: validity
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {

@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { IFieldValid } from '../../grids/common/grid.interface';
 
 export enum TransactionType {
     ADD = 'add',
@@ -19,6 +20,7 @@ export interface Transaction {
     id: any;
     type: TransactionType;
     newValue: any;
+    validity?: IFieldValid[];
 }
 
 /**
@@ -33,6 +35,7 @@ export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
+    validity?: IFieldValid[];
 }
 
 export interface Action<T extends Transaction> {

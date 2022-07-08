@@ -5,6 +5,7 @@ import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
+import { LayoutSampleComponent } from 'src/app/layout/layout.sample';
 
 interface GridStyleCSSProperty {
     [prop: string]: any;
@@ -307,6 +308,22 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
             const value = resolveNestedPath(transaction?.value ?? {}, field);
             return transaction && transaction.value && (value || value === 0 || value === false);
         }
+    }
+}
+
+@Pipe({ name: 'transactionInvalidState' })
+export class IgxGridTransactionInvalidStatePipe implements PipeTransform {
+
+    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
+        const transactionLog = transactions.getTransactionLog(row_id);
+        if (transactionLog && transactionLog.length) {
+            const last = transactionLog[transactionLog.length - 1];
+            const val = last.validity.find(x => x.field === field);
+            if (val) {
+                return !val.valid;
+            }
+        }
+        return false;
     }
 }
 

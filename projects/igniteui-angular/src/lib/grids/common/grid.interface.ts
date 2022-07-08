@@ -202,6 +202,11 @@ export interface ColumnType {
     populateVisibleIndexes?(): void;
 }
 
+export interface IFieldValid {
+    field: string;
+    valid: boolean;
+}
+
 export interface GridServiceType {
 
     grid: GridType;
