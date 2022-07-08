@@ -3,7 +3,7 @@ import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
-import { IComboFilteringOptions } from './combo.component';
+import { IComboFilteringOptions, IComboFilteringStrategy } from './combo.component';
 
 /** @hidden */
 @Pipe({
@@ -20,7 +20,7 @@ export class IgxComboCleanPipe implements PipeTransform {
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], searchValue: any, displayKey: any,
+    public transform(collection: any[], filterStrategy: IComboFilteringStrategy, searchValue: any, displayKey: any,
         filteringOptions: IComboFilteringOptions, shouldFilter = false) {
         if (!collection) {
             return [];
@@ -28,14 +28,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
         if (!searchValue || !shouldFilter) {
             return collection;
         } else {
-            const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
-            if (displayKey != null) {
-                return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
-                    e[displayKey]?.toString().toLowerCase().includes(searchTerm));
-            } else {
-                return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                    e.toString().toLowerCase().includes(searchTerm));
-            }
+            return filterStrategy.filter(collection, searchValue, displayKey, filteringOptions, shouldFilter);
         }
     }
 }

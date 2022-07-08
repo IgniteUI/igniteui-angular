@@ -42,6 +42,36 @@ export interface IComboFilteringOptions {
     caseSensitive: boolean;
 }
 
+export interface IComboFilteringStrategy {
+    filter(data: any[], searchValue: any, displayKey: any, filteringOptions: IComboFilteringOptions, valueKey: any): any[];
+}
+
+export class ComboFilteringStrategy implements IComboFilteringStrategy {
+    public filter(data: any[], searchValue: any, displayKey: any, filteringOptions: IComboFilteringOptions): any[] {
+        const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+        if (displayKey != null) {
+            return data.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
+                e[displayKey]?.toString().toLowerCase().includes(searchTerm));
+        } else {
+            return data.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
+                e.toString().toLowerCase().includes(searchTerm));
+        }
+    }
+}
+
+export class AdvancedFilteringStrategy implements IComboFilteringStrategy {
+    public filter(data: any[], searchValue: any, displayKey: any, filteringOptions: IComboFilteringOptions, valueKey: any): any[] {
+        const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+        if (displayKey != null) {
+            return data.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
+                e[displayKey]?.toString().toLowerCase().includes(searchTerm));
+        } else {
+            return data.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
+                e.toString().toLowerCase().includes(searchTerm));
+        }
+    }
+}
+
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
