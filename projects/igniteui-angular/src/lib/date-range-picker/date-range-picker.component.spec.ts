@@ -20,7 +20,7 @@ import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api'
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { IgxPickersCommonModule } from '../date-common/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
-import { IgxCalendarComponent } from '../calendar/public_api';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AnimationService } from '../services/animation/animation';
@@ -142,7 +142,7 @@ describe('IgxDateRangePicker', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform);
+            mockCalendar = new IgxCalendarComponent(platform, 'en');
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
             } as any;
@@ -150,7 +150,7 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
             // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -168,7 +168,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit valueChange on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
             // dateRange.calendar = calendar;
             spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -229,7 +229,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
             dateRange.ngOnInit();
 
             // dateRange.calendar = calendar;
@@ -280,7 +280,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -1355,6 +1355,46 @@ describe('IgxDateRangePicker', () => {
                 expect(AutoPositionStrategy.prototype.position)
                     .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
                         jasmine.anything(), dateRange.element.nativeElement);
+            }));
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.locale = 'en';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(0);
+
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                expect(dateRange.weekStart).toEqual(5);
+
+                dateRange.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const locale = 'en-US';
+                dateRange.locale = locale;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual(locale);
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                dateRange.locale = 'frrr';
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual('en-US');
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
         });
     });

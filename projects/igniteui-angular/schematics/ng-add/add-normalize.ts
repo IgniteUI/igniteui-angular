@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Tree } from '@angular-devkit/schematics';
 import { addPackageToPkgJson } from '../utils/dependency-handler';
 import { JsonArray, workspaces } from '@angular-devkit/core';
-import { ProjectType } from '../utils/util';
+import { getDefaultProjectFromWorkspace, ProjectType } from '../utils/util';
 
 const resetPackage = { 'minireset.css': '~0.0.4' };
 
@@ -14,7 +14,7 @@ export const scssImport =
 
 
 export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tree): boolean => {
-    const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
+    const project = getDefaultProjectFromWorkspace(workspace);
     let addPackage;
     const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
     const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));

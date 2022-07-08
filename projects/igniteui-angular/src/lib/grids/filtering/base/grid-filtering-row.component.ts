@@ -32,6 +32,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ExpressionUI } from '../excel-style/common';
 import { ColumnType } from '../../common/grid.interface';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 /**
  * @hidden
