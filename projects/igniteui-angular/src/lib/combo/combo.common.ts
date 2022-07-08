@@ -42,6 +42,9 @@ import {
 import {
     IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
 } from './public_api';
+import {
+    ComboFilteringStrategy, IComboFilteringStrategy
+} from './combo.component';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -385,6 +388,24 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public set groupSortingDirection(val: SortingDirection) {
         this._groupSortingDirection = val;
     }
+
+    
+    /**
+     * Gets/Sets the filtering strategy of the combo.
+     *
+     * @example
+     * ```html
+     *  <igx-comb #combo [data]="localData" [filterStrategy]="filterStrategy"></igx-combo>
+     * ```
+     */
+     @Input()
+     public get filterStrategy(): IComboFilteringStrategy {
+         return this._filterStrategy;
+     }
+ 
+     public set filterStrategy(classRef: IComboFilteringStrategy) {
+         this._filterStrategy = classRef;
+     }
 
     /**
      * An @Input property that set aria-labelledby attribute
@@ -867,6 +888,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
+    protected _filterStrategy: IComboFilteringStrategy = new ComboFilteringStrategy();
     
     public abstract dropdown: IgxComboDropDownComponent;
 
