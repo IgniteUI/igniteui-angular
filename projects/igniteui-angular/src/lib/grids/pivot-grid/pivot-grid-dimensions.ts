@@ -101,6 +101,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
 
         this.dataType = GridColumnDataType.Date;
+        inBaseDimension.dataType = GridColumnDataType.Date;
 
         const baseDimension = options.fullDate ? inBaseDimension : null;
         const monthDimensionDef: IPivotDimension = {
@@ -110,7 +111,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
                 return recordValue ? new Date(recordValue).toLocaleString('default', { month: 'long' }) : rec['Months'];
             },
             enabled: true,
-            dataType: GridColumnDataType.Date,
             childLevel: baseDimension
         };
         const monthDimension = options.months ? monthDimensionDef : baseDimension;
@@ -122,7 +122,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
                 return recordValue ? `Q` + Math.ceil((new Date(recordValue).getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
-            dataType: GridColumnDataType.Date,
             childLevel: monthDimension
         };
         const quarterDimension = options.quarters ? quarterDimensionDef : monthDimension;
@@ -134,7 +133,6 @@ export class IgxPivotDateDimension implements IPivotDimension {
                 return recordValue ? (new Date(recordValue)).getFullYear().toString() : rec['Years'];
             },
             enabled: true,
-            dataType: GridColumnDataType.Date,
             childLevel: quarterDimension
         };
         const yearsDimension = options.years ? yearsDimensionDef : quarterDimension;
