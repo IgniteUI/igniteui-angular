@@ -200,7 +200,6 @@ describe('IgxTimePicker', () => {
         it('should properly initialize w/ ngControl', () => {
             const mockSub = jasmine.createSpyObj<Subscription>('mockSub', ['unsubscribe']);
             spyOn(mockNgControl.statusChanges, 'subscribe').and.returnValue(mockSub);
-            debugger
             timePicker.ngOnInit();
             timePicker.ngAfterViewInit();
             expect(mockNgControl.statusChanges.subscribe).toHaveBeenCalledTimes(1);

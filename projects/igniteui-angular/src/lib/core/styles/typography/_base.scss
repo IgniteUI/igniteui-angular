@@ -278,10 +278,10 @@
 @mixin font-var($name, $type-style, $prefix: null) {
     $ff: var(--igx-font-family);
     $fz: map.get($type-style, 'font-size');
+    $fw: map.get($type-style, 'font-weight');
 
     // unused for now
     $fs: map.get($type-style, 'font-style');
-    $fw: map.get($type-style, 'font-weight');
     $lh: map.get($type-style, 'line-height');
     $tt: map.get($type-style, 'text-transform');
     $ls: map.get($type-style, 'letter-spacing');
@@ -290,6 +290,6 @@
 
     @include css-vars((
         'name': $prefix,
-        #{$name}: #{$fz} #{$ff},
+        #{$name}: #{$fw $fz $ff},
     ));
 }

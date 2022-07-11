@@ -2,8 +2,22 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 14.1.0
+
+- `igxPivotGrid`
+    - Add option to template the pivot value chip content:
+    ```
+    <ng-template igxPivotValueChip let-value>
+            {{ value.member }}
+    </ng-template>
+    ``` 
+
 ## 14.0.0
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
+- `IgxDropDown`
+    - The `label` attribute has been changed to `aria-labelledby` and can be set by a latterly added input property `labelledBy`.
 
 ### New Features
 
