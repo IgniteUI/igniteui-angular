@@ -10,7 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - The `label` attribute has been changed to `aria-labelledby` and can be set by a latterly added input property `labelledBy`.
 
 ### New Features
-
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
 
 ### General
 - Updating dependency to Angular 14
