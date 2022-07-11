@@ -42,7 +42,6 @@ export interface IComboFilteringOptions {
     caseSensitive: boolean;
 }
 
-
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
