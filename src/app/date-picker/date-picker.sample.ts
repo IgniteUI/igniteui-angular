@@ -24,4 +24,12 @@ export class DatePickerSampleComponent {
 
     public disabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date1, this.date2, this.date3] }];
     public specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date5, this.date6, this.date7] }];
+
+    public changeLocale(locale: string) {
+        this.datePicker.locale = locale;
+    }
+
+    public changeWeekStart(value: number) {
+        this.datePicker.weekStart = value;
+    }
 }

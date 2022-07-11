@@ -64,16 +64,6 @@ let NEXT_ID = 0;
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
-    /**
-     * Gets/Sets on which day the week starts.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker [weekStart]="4" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -485,6 +475,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -724,6 +715,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */

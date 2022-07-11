@@ -5,6 +5,13 @@
                 <h5>Without forms</h5>
                 <p>Default range picker</p>
                 <igx-date-range-picker mode="dialog"></igx-date-range-picker>
+                <div class="date-picker-sample-buttons">
+                    <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+                    <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
+                    <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                    <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+                </div>
+                <igx-date-range-picker  #dr1 mode="dialog"></igx-date-range-picker>
 
                 <p>Drop down single input with custom suffix</p>
                 <igx-date-range-picker>

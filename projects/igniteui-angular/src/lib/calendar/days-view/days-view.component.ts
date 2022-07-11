@@ -8,7 +8,8 @@ import {
     QueryList,
     HostBinding,
     DoCheck,
-    OnInit
+    OnInit,
+    Inject, LOCALE_ID
 } from '@angular/core';
 import { ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -138,9 +139,9 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     constructor(
         public daysNavService: IgxDaysViewNavigationService,
-        protected platform: PlatformUtil
+        protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: any
     ) {
-        super(platform);
+        super(platform, _localeId);
     }
 
     /**
