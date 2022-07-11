@@ -108,6 +108,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
         });
 
+        it('should allow setting custom chip value template', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.valueChipTemplate = fixture.componentInstance.chipValueTemplate;
+            fixture.detectChanges();
+
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+            let content = valueChip.querySelector('.igx-chip__content');
+            expect(content.textContent.trim()).toBe('UnitsSold');
+        });
+
         it('should apply formatter and dataType from measures', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.width = '1500px';

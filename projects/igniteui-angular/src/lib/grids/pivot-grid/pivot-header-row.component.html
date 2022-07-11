@@ -97,7 +97,7 @@
                                     <igx-icon>functions</igx-icon>
                                     <igx-icon>arrow_drop_down</igx-icon>
                                 </div>
-                                {{value.aggregate.key}}({{value.displayName || value.member}})
+                                <ng-container *ngTemplateOutlet="grid.valueChipTemplate ? grid.valueChipTemplate : valueChipDefaultTemplate; context: { $implicit: value }"></ng-container>
                             </igx-chip>
                             <ng-container *ngIf='last'>
                             <span [style.visibility]='"hidden"' class="igx-grid__tr-pivot--chip_drop_indicator"
@@ -235,3 +235,7 @@
         </igx-chip>
     </igx-chips-area>
 </div>
+
+<ng-template #valueChipDefaultTemplate let-value>
+    {{value.aggregate.key}}({{value.displayName || value.member}})
+</ng-template>
