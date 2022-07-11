@@ -25,7 +25,14 @@ export class GridValidationSampleComponent {
     public gridWithTransaction: IgxGridComponent;
 
     public commit() {
-        this.gridWithTransaction.transactions.commit(this.transactionData);
+        const invalidTransactions = this.gridWithTransaction.transactions.getTransactionLog().filter(x => x.validity.some(x => x.valid === false));
+        if (invalidTransactions.length > 0) {
+           if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
+            this.gridWithTransaction.transactions.commit(this.transactionData);
+           }
+        } else {
+            this.gridWithTransaction.transactions.commit(this.transactionData);
+        }
     }
 
     public cellEdit(evt) {
