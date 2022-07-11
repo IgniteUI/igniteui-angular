@@ -1,9 +1,9 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
-import { IComboFilteringOptions, IComboFilteringStrategy } from './combo.component';
+import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
+import { IComboFilteringOptions } from './combo.component';
 
 /** @hidden */
 @Pipe({
@@ -20,16 +20,19 @@ export class IgxComboCleanPipe implements PipeTransform {
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], filterStrategy: IComboFilteringStrategy, searchValue: any, displayKey: any,
-        filteringOptions: IComboFilteringOptions, shouldFilter = false) {
+    public transform(
+        collection: any[],
+        filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[],
+        searchValue: any,
+        filteringOptions: IComboFilteringOptions,
+        filterable: boolean = true) {
         if (!collection) {
             return [];
         }
-        if (!searchValue || !shouldFilter) {
+        if (!filterable) {
             return collection;
-        } else {
-            return filterStrategy.filter(collection, searchValue, displayKey, filteringOptions, shouldFilter);
         }
+        return filterFunction(collection, searchValue, filteringOptions.caseSensitive);
     }
 }
 

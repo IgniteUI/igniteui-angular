@@ -41,9 +41,6 @@ import {
 import {
     IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
 } from './public_api';
-import {
-    ComboFilteringStrategy, IComboFilteringStrategy
-} from './combo.component';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -387,22 +384,21 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this._groupSortingDirection = val;
     }
 
-    
     /**
-     * Gets/Sets the filtering strategy of the combo.
+     * Gets/Sets the custom filtering function of the combo.
      *
      * @example
      * ```html
-     *  <igx-comb #combo [data]="localData" [filterStrategy]="filterStrategy"></igx-combo>
+     *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
      * ```
      */
      @Input()
-     public get filterStrategy(): IComboFilteringStrategy {
-         return this._filterStrategy;
+     public get filterFunction(): (collection: any[], searchValue: any, caseSensitive: boolean) => any[] {
+         return this._customFilterFunction || this._defaultFilterFunction;
      }
  
-     public set filterStrategy(classRef: IComboFilteringStrategy) {
-         this._filterStrategy = classRef;
+     public set filterFunction(value: (collection: any[], searchValue: any, caseSensitive: boolean) => any[]) {
+         this._customFilterFunction = value;
      }
 
     /**
@@ -883,6 +879,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
+    /** @hidden @internal */
+    public activeDescendant = '';
 
     protected _data = [];
     protected _value = '';
@@ -896,6 +894,21 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected destroy$ = new Subject<any>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
+    protected _defaultFilterFunction = (collection: any[], searchValue: any, matchCase: boolean): any[] => {
+        if (!searchValue) {
+            return collection;
+        }
+        const searchTerm = matchCase ? searchValue.trim() : searchValue.toLowerCase().trim();
+        if (this.displayKey != null) {
+            return collection.filter(e => matchCase ?
+                e[this.displayKey]?.includes(searchTerm) :
+                e[this.displayKey]?.toString().toLowerCase().includes(searchTerm));
+        } else {
+            return collection.filter(e => matchCase ?
+                e.includes(searchTerm) :
+                e.toString().toLowerCase().includes(searchTerm));
+        }
+    }
 
     private _type = null;
     private _dataType = '';
