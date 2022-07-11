@@ -764,8 +764,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                         outlet: this.grid.outlet,
                         modal: false,
                         positionStrategy: new AutoPositionStrategy({
-                            verticalDirection: VerticalAlignment.Top,
-                            verticalStartPoint: VerticalAlignment.Top
+                            // verticalDirection: VerticalAlignment.Top,
+                            // verticalStartPoint: VerticalAlignment.Top
                         })
                     }
                 );

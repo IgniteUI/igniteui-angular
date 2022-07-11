@@ -100,6 +100,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const appRoutes: Routes = [
     {
@@ -359,6 +360,10 @@ const appRoutes: Routes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridValidation',
+        component: GridValidationSampleComponent
     },
     {
         path: 'buttonGroup',
