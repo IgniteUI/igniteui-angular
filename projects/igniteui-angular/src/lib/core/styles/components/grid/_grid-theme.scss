@@ -1397,6 +1397,10 @@
         box-shadow: inset 0 0 0 rem(2px) color($palette, 'error', 500) !important;
     }
 
+    %grid-cell--invalidInline {
+        box-shadow: inset 0 0 0 rem(2px) color($palette, 'error', 500) !important;
+    }
+
     %grid-cell--pinned-selected,
     %grid-cell--selected {
         color: var-get($theme, 'cell-selected-text-color');

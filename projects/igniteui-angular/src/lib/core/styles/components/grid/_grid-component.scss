@@ -234,6 +234,10 @@
         @include e(td, $m: invalid) {
             @extend %grid-cell--invalid !optional;
         }
+    
+        @include e(td, $m: invalidInline) {
+            @extend %grid-cell--invalidInline !optional;
+        }
 
         @include e(td, $m: column-selected) {
             @extend %grid-cell--column-selected !optional;

@@ -444,7 +444,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return !this.editable;
     }
 
-    @HostBinding('class.igx-grid__td--invalid')
+    @HostBinding('class.igx-grid__td--invalidInline')
     public get isInvalid() {
         const isRowEdit = this.grid.crudService.rowEditing;
         return (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
