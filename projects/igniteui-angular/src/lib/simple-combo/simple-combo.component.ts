@@ -137,11 +137,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.stopPropagation();
             this.open();
         } else {
-            if (this.virtDir.igxForOf.length > 0) {
+            if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
                 this.dropdown.navigateFirst();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
-                this.addItem.element.nativeElement.focus();
+                this.addItem?.element.nativeElement.focus();
             }
         }
     }
@@ -305,7 +305,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public onBlur(): void {
-        if (this.collapsed) {
+        if (this.collapsed && !this.selectedItem) {
             this.clearOnBlur();
         }
         super.onBlur();
