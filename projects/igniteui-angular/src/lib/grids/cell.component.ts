@@ -26,7 +26,7 @@ import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType, Validity } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -756,6 +756,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public ngAfterViewInit(){
         this.errorToggles.changes.subscribe(() => {
             if (this.errorToggles.length > 0) {
+                // error ocurred
                 this.errorToggles.toArray()[0].toggle(
                     {
                         target: this.nativeElement,
@@ -770,6 +771,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                     }
                 );
             }
+            this.grid.validationStatusChange.emit(
+                {
+                    formGroup: this.formGroup,
+                    value: this.editValue,
+                    state: this.errorToggles.length > 0 ? Validity.Invalid : Validity.Valid
+                }
+            );
         });
     }
 

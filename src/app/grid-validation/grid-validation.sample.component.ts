@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxGridComponent, IgxTransactionService } from 'igniteui-angular';
+import { IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -46,6 +46,10 @@ export class GridValidationSampleComponent {
         // can add validators here 
         //    const prodName = formGr.get('ProductName');
         //    prodName.addValidators(forbiddenNameValidator(/bob/i));
+    }
+
+    public validationChange(evtArgs: IValidationStatus){
+        console.log(evtArgs);
     }
 }
 
