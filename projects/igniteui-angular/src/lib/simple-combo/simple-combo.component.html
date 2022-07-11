@@ -58,7 +58,7 @@
         <igx-combo-item  [role]="item.isHeader? 'group' : 'option'" [singleMode]="true"
         [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
             | comboClean
-            | comboFiltering:filterValue:displayKey:filteringOptions:true
+            | comboFiltering:filterFunction:filterValue:filteringOptions
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
