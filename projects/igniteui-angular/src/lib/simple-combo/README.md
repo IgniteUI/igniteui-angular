@@ -292,6 +292,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
 | `selected`              | Get current selection state.                       | `Array<any>`                |
+| `filteringOptions`      | Configures the way combo items will be filtered    | IComboFilteringOptions      |
 | `filterFunction`        | Gets/Sets the custom filtering function of the combo | `(collection: any[], searchValue: any, caseSensitive: boolean) => any[]` |
 
 

@@ -1,35 +1,33 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import {
+    FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, ReactiveFormsModule,
-    FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
-import {
-    IgxComboComponent,
-    IgxComboModule,
-    IComboSelectionChangingEventArgs,
-    IComboSearchInputEventArgs,
-    IComboItemAdditionEvent
-} from './combo.component';
-import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboAddItemComponent } from './combo-add-item.component';
-import { IgxComboFilteringPipe } from './combo.pipes';
-import { IgxInputState } from '../directives/input/input.directive';
-import { IForOfState } from '../directives/for-of/for_of.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IgxComboState } from './combo.common';
+import { IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxInputState } from '../directives/input/input.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
+import { IgxIconService } from '../icon/public_api';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
+import { IgxComboItemComponent } from './combo-item.component';
+import { IComboFilteringOptions, IgxComboState } from './combo.common';
+import {
+    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent,
+    IgxComboModule
+} from './combo.component';
+import { IgxComboFilteringPipe } from './combo.pipes';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2689,14 +2687,14 @@ describe('igxCombo', () => {
             combo.close();
             tick();
             fixture.detectChanges();
-            // set filter function to search only on valueKyes
-            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                 if (!collection) return [];
                 if (!searchValue) return collection;
-                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
-                return collection.filter(i => combo.filteringOptions.caseSensitive ?
-                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
-                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
                 }
             combo.open();
             tick();
@@ -2708,11 +2706,12 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
-            combo.filterFunction = null;
+            combo.filterFunction = undefined;
+            combo.filteringOptions = undefined;
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0);
         }));
-        it('Should update filtering when custom filterFunction is provided and filteringOptions are changed', fakeAsync(() => {
+        it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
             combo.open();
             tick();
             fixture.detectChanges();
@@ -2726,14 +2725,14 @@ describe('igxCombo', () => {
             combo.close();
             tick();
             fixture.detectChanges();
-            // set filter function to search only on valueKyes
-            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
                 if (!collection) return [];
                 if (!searchValue) return collection;
-                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
-                return collection.filter(i => combo.filteringOptions.caseSensitive ?
-                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
-                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
                 }
             combo.open();
             tick();
@@ -2745,11 +2744,11 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
-            combo.filteringOptions = { caseSensitive: true };
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { caseSensitive: true });
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0);
         }));
-        it('Should update filtering when custom filterFunction is provided and filterable is changed', fakeAsync(() => {
+        it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
             combo.open();
             tick();
             fixture.detectChanges();
@@ -2763,15 +2762,7 @@ describe('igxCombo', () => {
             combo.close();
             tick();
             fixture.detectChanges();
-            // set filter function to search only on valueKyes
-            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
-                if (!collection) return [];
-                if (!searchValue) return collection;
-                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
-                return collection.filter(i => combo.filteringOptions.caseSensitive ?
-                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
-                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
-                }
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
             combo.open();
             tick();
             fixture.detectChanges();
@@ -2787,7 +2778,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0);
 
-            combo.filterable = false;
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
         }));

@@ -99,7 +99,10 @@
                 <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
                 </button>
                 <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
-                <button igxButton="raised" igxRipple (click)="changeFiltering()">Change Filtering</button>
+            </div>
+            <div class="btn-container">
+                <igx-switch (change)="changeFiltering($event)" >Use custom filter function</igx-switch>
+                <igx-switch (change)="changeFilteringKey($event)" >Filter by group key</igx-switch>
             </div>
         </div>
         <ng-template #customItemTemplate let-display let-key="valueKey">

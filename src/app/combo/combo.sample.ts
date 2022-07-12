@@ -1,12 +1,24 @@
-import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangingEventArgs,
-    DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
-    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy, IgxSimpleComboComponent
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    ButtonGroupAlignment,
+    ConnectedPositioningStrategy,
+    DisplayDensity,
+    ElasticPositionStrategy,
+    GlobalPositionStrategy,
+    HorizontalAlignment,
+    IChangeSwitchEventArgs,
+    IComboSelectionChangingEventArgs,
+    IgxComboComponent,
+    IgxSimpleComboComponent,
+    OverlaySettings,
+    scaleInCenter,
+    scaleOutCenter,
+    VerticalAlignment
 } from 'igniteui-angular';
-import { ButtonGroupAlignment } from 'igniteui-angular';
-import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
-import { UntypedFormGroup, Validators, UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
+import { IComboFilteringOptions } from 'projects/igniteui-angular/src/lib/combo/combo.common';
+import { take } from 'rxjs/operators';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -23,7 +35,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
     @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
     private simpleCombo;
-    private hasCustomFilter = false;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -185,25 +196,32 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         console.log(event);
     }
 
-    public changeFiltering() {
-        if (this.hasCustomFilter) {
-            this.igxCombo.filterFunction = null;
-            this.simpleCombo.filterFunction = null;
-        } else {
+    public changeFiltering(e: IChangeSwitchEventArgs) {
+        if (e.checked) {
             this.igxCombo.filterFunction = this.customFilterFunction;
             this.simpleCombo.filterFunction = this.customFilterFunction;
+        } else {
+            this.igxCombo.filterFunction = undefined;
+            this.simpleCombo.filterFunction = undefined;
         }
-
-        this.hasCustomFilter = !this.hasCustomFilter;
     }
 
-    private customFilterFunction = (collection: any[], filterValue: any) => {
+    public changeFilteringKey(e: IChangeSwitchEventArgs) {
+        if (e.checked) {
+            this.igxCombo.filteringOptions.filteringKey = 'region';
+            this.simpleCombo.filteringOptions.filteringKey = 'region';
+        } else {
+            this.igxCombo.filteringOptions.filteringKey = undefined;
+            this.simpleCombo.filteringOptions.filteringKey = undefined;
+        }
+    }
+
+    private customFilterFunction = (collection: any[], filterValue: any, filteringOptions: IComboFilteringOptions) => {
         if (!filterValue) {
             return collection;
         }
-        const searchTerm = this.igxCombo.filteringOptions.caseSensitive ? filterValue.trim() : filterValue.toLowerCase().trim();
-        return collection.filter(i => this.igxCombo.filteringOptions.caseSensitive ?
-            i[this.igxCombo.displayKey]?.includes(searchTerm) || i[this.igxCombo.groupKey]?.includes(searchTerm) :
-            i[this.igxCombo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[this.igxCombo.groupKey]?.toString().toLowerCase().includes(searchTerm))
-    }
+        const searchTerm = filteringOptions.caseSensitive ? filterValue.trim() : filterValue.toLowerCase().trim();
+        return collection.filter(i => filteringOptions.caseSensitive ?
+            i[filteringOptions.filteringKey]?.includes(searchTerm) || i[this.igxCombo.groupKey]?.includes(searchTerm) :
+            i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm) || i[this.igxCombo.groupKey]?.toString().toLowerCase().includes(searchTerm))    }
 }

@@ -39,9 +39,7 @@ import {
     IgxComboAddItemDirective, IgxComboClearIconDirective, IgxComboEmptyDirective,
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
-import {
-    IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
-} from './public_api';
+import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -113,6 +111,16 @@ export enum IgxComboState {
      */
     INVALID = IgxInputState.INVALID
 }
+
+    /** The filtering criteria to be applied on data search */
+    export interface IComboFilteringOptions {
+        /** Defines filtering case-sensitivity */
+        caseSensitive: boolean;
+        /** Defines whether filtering is allowed */
+        filterable: boolean;
+        /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
+        filteringKey?: string;
+    }
 
 @Directive()
 export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, OnInit, DoCheck,
@@ -395,13 +403,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
      @Input()
-     public get filterFunction(): (collection: any[], searchValue: any, caseSensitive: boolean) => any[] {
-         return this._customFilterFunction;
-     }
- 
-     public set filterFunction(value: (collection: any[], searchValue: any, caseSensitive: boolean) => any[]) {
-         this._customFilterFunction = value;
-     }
+     public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
      * An @Input property that set aria-labelledby attribute
@@ -858,12 +860,29 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     /** @hidden @internal */
     public defaultFallbackGroup = 'Other';
     /** @hidden @internal */
-    public filteringOptions: IComboFilteringOptions = {
-        caseSensitive: false
-    };
-    /** @hidden @internal */
     public activeDescendant = '';
 
+    /**
+     * Configures the way combo items will be filtered.
+     *
+     * ```typescript
+     * // get
+     * let myFilteringOptions = this.combo.filteringOptions;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [filteringOptions]='myFilteringOptions'></igx-combo>
+     * ```
+     */
+
+     @Input()
+     public get filteringOptions(): IComboFilteringOptions {
+         return this._filteringOptions || this._defaultFilteringOptions;
+     }
+     public set filteringOptions(value: IComboFilteringOptions) {
+         this._filteringOptions = value;
+     }
     protected _data = [];
     protected _value = '';
     protected _groupKey = '';
@@ -883,8 +902,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-    private _customFilterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[] = null;
-
+    private _filteringOptions: IComboFilteringOptions;
+    private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false, filterable: true };
     public abstract dropdown: IgxComboDropDownComponent;
 
     public abstract selectionChanging: EventEmitter<any>;
@@ -1160,7 +1179,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public toggleCaseSensitive() {
-        this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
+        this.filteringOptions = Object.assign({}, this.filteringOptions, { caseSensitive: !this.filteringOptions.caseSensitive });
     }
 
     protected onStatusChanged = () => {
