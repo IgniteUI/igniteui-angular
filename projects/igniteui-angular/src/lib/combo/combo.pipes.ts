@@ -20,18 +20,38 @@ export class IgxComboCleanPipe implements PipeTransform {
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
+    private displayKey: any;
+    private _defaultFilterFunction = (collection: any[], searchValue: any, matchCase: boolean): any[] => {
+        if (!searchValue) {
+            return collection;
+        }
+        const searchTerm = matchCase ? searchValue.trim() : searchValue.toLowerCase().trim();
+        if (this.displayKey != null) {
+            return collection.filter(e => matchCase ?
+                e[this.displayKey]?.includes(searchTerm) :
+                e[this.displayKey]?.toString().toLowerCase().includes(searchTerm));
+        } else {
+            return collection.filter(e => matchCase ?
+                e.includes(searchTerm) :
+                e.toString().toLowerCase().includes(searchTerm));
+        }
+    }
+
     public transform(
         collection: any[],
         filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[],
         searchValue: any,
         filteringOptions: IComboFilteringOptions,
-        filterable: boolean = true) {
+        filterable: boolean,
+        displayKey: any) {
         if (!collection) {
             return [];
         }
         if (!filterable) {
             return collection;
         }
+        this.displayKey = displayKey;
+        filterFunction = filterFunction ?? this._defaultFilterFunction;
         return filterFunction(collection, searchValue, filteringOptions.caseSensitive);
     }
 }
