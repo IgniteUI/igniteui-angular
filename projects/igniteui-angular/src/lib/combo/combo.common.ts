@@ -867,7 +867,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-    
+
     public abstract dropdown: IgxComboDropDownComponent;
 
     public abstract selectionChanging: EventEmitter<any>;
@@ -1168,8 +1168,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         }
         // map keys vs. filter data to retain the order of the selected items
         return keys.map(key => isNaN(key) && key !== undefined && typeof key !== 'string' ?
-            this.data.find(entry => isNaN(entry[this.valueKey]) && entry[this.valueKey] !== undefined) :
-            this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
+                this.data.find(entry => isNaN(entry[this.valueKey]) && entry[this.valueKey] !== undefined && typeof entry[this.valueKey] !== 'string') :
+                this.data.find(entry => entry[this.valueKey] === key))
+        .filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
