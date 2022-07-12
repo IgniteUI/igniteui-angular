@@ -32,7 +32,6 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
 export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
     protected static _instance: DefaultPivotSortingStrategy = null;
     protected dimension;
-    protected pivotConfiguration: IPivotConfiguration;
     public static instance(): DefaultPivotSortingStrategy {
         return this._instance || (this._instance = new this());
     }
@@ -48,7 +47,6 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);
-        this.pivotConfiguration = grid.pivotConfiguration;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
         return this.arraySort(data, cmpFunc);
