@@ -2693,6 +2693,122 @@ describe('igxCombo', () => {
             expect(combo.searchValue).toEqual('Test');
             cancelSub.unsubscribe();
         });
+        it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            // set filter function to search only on valueKyes
+            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => combo.filteringOptions.caseSensitive ?
+                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
+                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filterFunction = null;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filteringOptions are changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            // set filter function to search only on valueKyes
+            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => combo.filteringOptions.caseSensitive ?
+                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
+                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filteringOptions = { caseSensitive: true };
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filterable is changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            // set filter function to search only on valueKyes
+            combo.filterFunction = (collection: any[], searchValue: any): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = combo.filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => combo.filteringOptions.caseSensitive ?
+                    i[combo.displayKey]?.includes(searchTerm) || i[combo.groupKey]?.includes(searchTerm) :
+                    i[combo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[combo.groupKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'value not in the list';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.filterable = false;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {
