@@ -2726,7 +2726,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
-            combo.filterFunction = null;
+            combo.filterFunction = undefined;
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0);
         }));

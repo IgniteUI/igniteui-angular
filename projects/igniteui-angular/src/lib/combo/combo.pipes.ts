@@ -6,9 +6,7 @@ import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IComboFilteringOptions } from './combo.component';
 
 /** @hidden */
-@Pipe({
-    name: 'comboClean'
-})
+@Pipe({ name: 'comboClean' })
 export class IgxComboCleanPipe implements PipeTransform {
     public transform(collection: any[]) {
         return collection.filter(e => !!e);
@@ -16,34 +14,17 @@ export class IgxComboCleanPipe implements PipeTransform {
 }
 
 /** @hidden */
-@Pipe({
-    name: 'comboFiltering'
-})
+@Pipe({ name: 'comboFiltering' })
 export class IgxComboFilteringPipe implements PipeTransform {
     private displayKey: any;
-    private _defaultFilterFunction = (collection: any[], searchValue: any, matchCase: boolean): any[] => {
-        if (!searchValue) {
-            return collection;
-        }
-        const searchTerm = matchCase ? searchValue.trim() : searchValue.toLowerCase().trim();
-        if (this.displayKey != null) {
-            return collection.filter(e => matchCase ?
-                e[this.displayKey]?.includes(searchTerm) :
-                e[this.displayKey]?.toString().toLowerCase().includes(searchTerm));
-        } else {
-            return collection.filter(e => matchCase ?
-                e.includes(searchTerm) :
-                e.toString().toLowerCase().includes(searchTerm));
-        }
-    }
 
-    public transform(
+    public transform (
         collection: any[],
-        filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[],
         searchValue: any,
+        displayKey: any,
         filteringOptions: IComboFilteringOptions,
         filterable: boolean,
-        displayKey: any) {
+        filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[] = defaultFilterFunction) {
         if (!collection) {
             return [];
         }
@@ -51,8 +32,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
             return collection;
         }
         this.displayKey = displayKey;
-        filterFunction = filterFunction ?? this._defaultFilterFunction;
-        return filterFunction(collection, searchValue, filteringOptions.caseSensitive);
+        return filterFunction.call(this, collection, searchValue, filteringOptions.caseSensitive);
     }
 }
 
@@ -94,3 +74,20 @@ export class IgxComboGroupingPipe implements PipeTransform {
         return data;
     }
 }
+
+function defaultFilterFunction (collection: any[], searchValue: any, matchCase: boolean): any[] {
+    if (!searchValue) {
+        return collection;
+    }
+    const searchTerm = matchCase ? searchValue.trim() : searchValue.toLowerCase().trim();
+    if (this.displayKey != null) {
+        return collection.filter(e => matchCase ?
+            e[this.displayKey]?.includes(searchTerm) :
+            e[this.displayKey]?.toString().toLowerCase().includes(searchTerm));
+    } else {
+        return collection.filter(e => matchCase ?
+            e.includes(searchTerm) :
+            e.toString().toLowerCase().includes(searchTerm));
+    }
+}
+

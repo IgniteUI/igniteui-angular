@@ -393,13 +393,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
      @Input()
-     public get filterFunction(): (collection: any[], searchValue: any, caseSensitive: boolean) => any[] {
-         return this._customFilterFunction;
-     }
- 
-     public set filterFunction(value: (collection: any[], searchValue: any, caseSensitive: boolean) => any[]) {
-         this._customFilterFunction = value;
-     }
+     public filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[];
 
     /**
      * An @Input property that set aria-labelledby attribute

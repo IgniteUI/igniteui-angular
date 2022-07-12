@@ -187,8 +187,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public changeFiltering() {
         if (this.hasCustomFilter) {
-            this.igxCombo.filterFunction = null;
-            this.simpleCombo.filterFunction = null;
+            this.igxCombo.filterFunction = undefined;
+            this.simpleCombo.filterFunction = undefined;
         } else {
             this.igxCombo.filterFunction = this.customFilterFunction;
             this.simpleCombo.filterFunction = this.customFilterFunction;
