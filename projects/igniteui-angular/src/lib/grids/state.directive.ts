@@ -19,6 +19,8 @@ import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
+import { IPivotConfiguration } from './pivot-grid/pivot-grid.interface';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -36,6 +38,7 @@ export interface IGridState {
     expansion?: any[];
     rowIslands?: IGridStateCollection[];
     id?: string;
+    pivotConfiguration?: IPivotConfiguration;
 }
 
 export interface IGridStateCollection {
@@ -59,6 +62,7 @@ export interface IGridStateOptions {
     expansion?: boolean;
     rowIslands?: boolean;
     moving?: boolean;
+    pivotConfiguration?: boolean;
 }
 
 export interface IColumnState {
@@ -91,7 +95,7 @@ export type GridFeatures = keyof IGridStateOptions;
 interface Feature {
     getFeatureState: (context: IgxGridStateDirective) => IGridState;
     restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | boolean | ISortingExpression[] |
-        IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
+        IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
 @Directive({
@@ -314,7 +318,7 @@ export class IgxGridStateDirective {
         },
         rowPinning: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const pinned = context.currGrid.pinnedRows.map(x => x.key);
+                const pinned = context.currGrid.pinnedRows?.map(x => x.key);
                 return { rowPinning: pinned };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
@@ -386,6 +390,16 @@ export class IgxGridStateDirective {
                     grid = grid.parent;
                 }
                 return grid.gridAPI.getParentRowId(childGrid);
+            }
+        },
+        pivotConfiguration: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
+                return { pivotConfiguration: config };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any): void {
+                const config: IPivotConfiguration = state;
+                (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             }
         }
     };

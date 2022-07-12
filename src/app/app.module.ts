@@ -160,6 +160,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { PivotGridStateSampleComponent } from './pivot-grid copy/pivot-grid-state.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -298,6 +299,7 @@ const components = [
     GridLocalizationSampleComponent,
     PivotGridSampleComponent,
     PivotGridHierarchySampleComponent,
+    PivotGridStateSampleComponent,
     PivotGridNoopSampleComponent,
     IgxStepperSampleComponent
 ];
