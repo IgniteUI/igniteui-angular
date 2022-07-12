@@ -879,8 +879,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
-    /** @hidden @internal */
-    public activeDescendant = '';
 
     protected _data = [];
     protected _value = '';
