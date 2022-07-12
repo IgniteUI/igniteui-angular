@@ -84,14 +84,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
 
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
-            expect(grid.columnList.length).toEqual(4, 'Invalid number of columns initialized');
+            expect(grid.columns.length).toEqual(4, 'Invalid number of columns initialized');
             expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columnList.first.dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 1).dataType)
+            expect(grid.columns[0].dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
+            expect(grid.columns.find((col) => col.index === 1).dataType)
                 .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 2).dataType)
+            expect(grid.columns.find((col) => col.index === 2).dataType)
                 .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columnList.last.dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
+            expect(grid.columns[grid.columns.length - 1].dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         }));
 
@@ -109,6 +109,18 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(column.sortable).toEqual(true);
             });
         }));
+
+        it('should initialize a grid and allow changing columns runtime with ngFor', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.detectChanges();
+            // reverse order of ngFor bound collection
+            fix.componentInstance.columns.reverse();
+            fix.detectChanges();
+            // check order
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[0].field).toBe('value');
+            expect(grid.columns[1].field).toBe('index');
+        });
 
         it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
@@ -1140,9 +1152,10 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
             await wait(100);
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
@@ -1152,8 +1165,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();
             expect(defaultHeightNum).toBe(330);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
         });
 
         it(`should render grid with correct height when parent container's height is set

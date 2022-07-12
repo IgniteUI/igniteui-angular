@@ -150,6 +150,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public readonly data: any[] | null;
     public readonly filteredData: any[];
 
+    protected _childColumns = [];
+
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;
@@ -291,7 +293,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-        this.childColumns.reset(topCols);
+        this._childColumns = topCols;
+        this.updateColumns(this._childColumns);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             Promise.resolve().then(() => {
                 this.updateColumnList();
@@ -300,7 +303,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
         // handle column changes so that they are passed to child grid instances when columnChange is emitted.
         this.ri_columnListDiffer.diff(this.childColumns);
-        this.childColumns.toArray().forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this._childColumns.forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
@@ -398,18 +401,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             }
             return false;
         });
-        this.childColumns.reset(topCols);
-
-        if (this.parentIsland) {
-            this.parentIsland.columnList.notifyOnChanges();
-        } else {
-            this.rootGrid.columnList.notifyOnChanges();
-        }
-
-        this.rowIslandAPI.getChildGrids().forEach((grid: IgxHierarchicalGridComponent) => {
-            grid.createColumnsList(this.childColumns.toArray());
+        this._childColumns = topCols;
+        this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
+            (grid as any).createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {
-                grid.updateOnRender = true;
+                (grid as any).updateOnRender = true;
             }
         });
     }
