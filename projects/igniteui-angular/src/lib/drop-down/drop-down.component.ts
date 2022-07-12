@@ -122,6 +122,15 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @Input()
     public allowItemsFocus = false;
 
+    /**
+     * An @Input property that set aria-labelledby attribute
+     * ```html
+     * <igx-drop-down [labelledby]="labelId"></igx-drop-down>
+     * ```
+     */
+    @Input()
+    public labelledBy: string;
+
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     protected virtDir: IgxForOfDirective<any>;
 

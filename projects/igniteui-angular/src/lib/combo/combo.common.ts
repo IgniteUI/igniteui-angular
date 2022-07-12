@@ -6,6 +6,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    forwardRef,
     HostBinding,
     HostListener,
     Inject,
@@ -30,7 +31,7 @@ import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/inputGroupType';
-import { IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, OverlaySettings } from '../services/public_api';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
@@ -71,6 +72,7 @@ export interface IgxComboBase {
     select(item: any): void;
     select(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
     deselect(...args: [] | [itemIDs: any[], event?: Event]): void;
+    setActiveDescendant(): void;
 }
 
 let NEXT_ID = 0;
@@ -391,34 +393,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     @Input()
-    @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy: string;
 
     /** @hidden @internal */
     @HostBinding('class.igx-combo')
     public cssClass = 'igx-combo'; // Independent of display density for the time being
-
-    /** @hidden @internal */
-    @HostBinding(`attr.role`)
-    public role = 'combobox';
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-expanded')
-    public get ariaExpanded(): boolean {
-        return !this.dropdown.collapsed;
-    }
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-haspopup')
-    public get hasPopUp() {
-        return 'listbox';
-    }
-
-    /** @hidden @internal */
-    @HostBinding('attr.aria-owns')
-    public get ariaOwns() {
-        return this.dropdown.id;
-    }
 
     /**
      * An @Input property that enabled/disables combo. The default is `false`.
@@ -695,6 +674,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public clearIconTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
+
+    /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })
     public inputGroup: IgxInputGroupComponent;
 
@@ -862,6 +844,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
+    /** @hidden @internal */
+    public activeDescendant = '';
+
 
     protected _data = [];
     protected _value = '';
@@ -882,7 +867,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-
+    
     public abstract dropdown: IgxComboDropDownComponent;
 
     public abstract selectionChanging: EventEmitter<any>;
@@ -958,6 +943,9 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public toggle(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
+        if (!this.collapsed){
+            this.setActiveDescendant();
+        }
     }
 
     /**
@@ -971,6 +959,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public open(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.open(overlaySettings);
+        this.setActiveDescendant();
     }
 
     /**
@@ -1145,6 +1134,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
                 this.valid = IgxComboState.INITIAL;
             }
         }
+    }
+
+    /** @hidden @internal */
+    public setActiveDescendant() : void  {
+        this.activeDescendant = this.dropdown.focusedItem?.id || '';
     }
 
     /** @hidden @internal */

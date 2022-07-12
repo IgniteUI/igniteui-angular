@@ -18,11 +18,15 @@ import { IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregati
     <ng-template #emptyTemplate>
         <span>Custom empty template.</span>
     </ng-template>
+    <ng-template #chipValue let-value>
+     {{value.member}}
+    </ng-template>
     `
 })
 export class IgxPivotGridTestBaseComponent {
     public defaultExpand = true;
     @ViewChild('emptyTemplate', { read: TemplateRef, static: true }) public emptyTemplate: TemplateRef<any>;
+    @ViewChild('chipValue', { read: TemplateRef, static: true }) public chipValueTemplate: TemplateRef<any>;
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
     @ViewChild('selector', { read: IgxPivotDataSelectorComponent, static: true}) public dataSelector: IgxPivotDataSelectorComponent;
     public data;
