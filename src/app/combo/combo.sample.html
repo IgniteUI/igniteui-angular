@@ -15,7 +15,7 @@
             <div>
                 <h5 class="sample-title">Simple Combo in Template Form</h5>
                 <form>
-                    <igx-simple-combo class="input-container" [placeholder]="'Locations'" name="anyName"
+                    <igx-simple-combo #simpleCombo class="input-container" [placeholder]="'Locations'" name="anyName"
                         #comboModel="ngModel" [(ngModel)]="singleValue" minlength="2" required [data]="items"
                         [displayKey]="valueKeyVar" [disabled]="isDisabled" [valueKey]="valueKeyVar"
                         [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
@@ -99,6 +99,7 @@
                 <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
                 </button>
                 <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
+                <button igxButton="raised" igxRipple (click)="changeFiltering()">Change Filtering</button>
             </div>
         </div>
         <ng-template #customItemTemplate let-display let-key="valueKey">

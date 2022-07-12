@@ -322,6 +322,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `valid`               | gets if control is valid, when used in a form     | boolean                     |
 | `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |
 | `autoFocusSearch`     | controls whether the search input should be focused when the combo is opened | boolean |
+| `filterFunction`      | Gets/Sets the custom filtering function of the combo | `(collection: any[], searchValue: any, caseSensitive: boolean) => any[]` |
 
 ### Getters
 | Name                     | Description                                       | Type                        |

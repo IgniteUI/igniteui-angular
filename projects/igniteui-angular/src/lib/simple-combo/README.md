@@ -291,7 +291,8 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `ariaLabelledBy`        | Defines label ID related to combo.                 | `boolean`                     |
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
-| `selected`                | Get current selection state.                       | `Array<any>`                |
+| `selected`              | Get current selection state.                       | `Array<any>`                |
+| `filterFunction`        | Gets/Sets the custom filtering function of the combo | `(collection: any[], searchValue: any, caseSensitive: boolean) => any[]` |
 
 
 ### Methods

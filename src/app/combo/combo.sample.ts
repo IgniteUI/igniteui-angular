@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
 import { IgxComboComponent, IComboSelectionChangingEventArgs,
     DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
-    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy, IgxSimpleComboComponent
 } from 'igniteui-angular';
 import { ButtonGroupAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
@@ -21,6 +21,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private comboRef: ElementRef;
     @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
+    @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
+    private simpleCombo;
+    private hasCustomFilter = false;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -180,5 +183,27 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
         console.log(event);
+    }
+
+    public changeFiltering() {
+        if (this.hasCustomFilter) {
+            this.igxCombo.filterFunction = undefined;
+            this.simpleCombo.filterFunction = undefined;
+        } else {
+            this.igxCombo.filterFunction = this.customFilterFunction;
+            this.simpleCombo.filterFunction = this.customFilterFunction;
+        }
+
+        this.hasCustomFilter = !this.hasCustomFilter;
+    }
+
+    private customFilterFunction = (collection: any[], filterValue: any) => {
+        if (!filterValue) {
+            return collection;
+        }
+        const searchTerm = this.igxCombo.filteringOptions.caseSensitive ? filterValue.trim() : filterValue.toLowerCase().trim();
+        return collection.filter(i => this.igxCombo.filteringOptions.caseSensitive ?
+            i[this.igxCombo.displayKey]?.includes(searchTerm) || i[this.igxCombo.groupKey]?.includes(searchTerm) :
+            i[this.igxCombo.displayKey]?.toString().toLowerCase().includes(searchTerm) || i[this.igxCombo.groupKey]?.toString().toLowerCase().includes(searchTerm))
     }
 }

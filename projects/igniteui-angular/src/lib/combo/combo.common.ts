@@ -385,6 +385,17 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
+     * Gets/Sets the custom filtering function of the combo.
+     *
+     * @example
+     * ```html
+     *  <igx-comb #combo [data]="localData" [filterFunction]="filterFunction"></igx-combo>
+     * ```
+     */
+     @Input()
+     public filterFunction: (collection: any[], searchValue: any, caseSensitive: boolean) => any[];
+
+    /**
      * An @Input property that set aria-labelledby attribute
      * ```html
      * <igx-combo [ariaLabelledBy]="'label1'">
