@@ -583,7 +583,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             grid.sortingOptions = {mode: 'single'};
             fixture.detectChanges();
-            debugger;
 
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('unfold_more');
 

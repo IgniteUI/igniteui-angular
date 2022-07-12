@@ -108,6 +108,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
         });
 
+        it('should allow setting custom chip value template', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.valueChipTemplate = fixture.componentInstance.chipValueTemplate;
+            fixture.detectChanges();
+
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+            let content = valueChip.querySelector('.igx-chip__content');
+            expect(content.textContent.trim()).toBe('UnitsSold');
+        });
+
         it('should apply formatter and dataType from measures', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.width = '1500px';
@@ -1085,6 +1096,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedExpressions: ISortingExpression[] = [
                     { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
@@ -1093,7 +1105,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1109,6 +1121,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
+                expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
             });
 
             it('should sort on column for single row dimension.', () => {
