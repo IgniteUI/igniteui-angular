@@ -396,7 +396,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
      @Input()
      public get filterFunction(): (collection: any[], searchValue: any, caseSensitive: boolean) => any[] {
-         return this._customFilterFunction || this._defaultFilterFunction;
+         return this._customFilterFunction;
      }
  
      public set filterFunction(value: (collection: any[], searchValue: any, caseSensitive: boolean) => any[]) {
@@ -876,21 +876,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected destroy$ = new Subject<any>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
-    protected _defaultFilterFunction = (collection: any[], searchValue: any, matchCase: boolean): any[] => {
-        if (!searchValue) {
-            return collection;
-        }
-        const searchTerm = matchCase ? searchValue.trim() : searchValue.toLowerCase().trim();
-        if (this.displayKey != null) {
-            return collection.filter(e => matchCase ?
-                e[this.displayKey]?.includes(searchTerm) :
-                e[this.displayKey]?.toString().toLowerCase().includes(searchTerm));
-        } else {
-            return collection.filter(e => matchCase ?
-                e.includes(searchTerm) :
-                e.toString().toLowerCase().includes(searchTerm));
-        }
-    }
 
     private _type = null;
     private _dataType = '';

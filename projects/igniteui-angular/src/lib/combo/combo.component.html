@@ -57,7 +57,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
         [attr.aria-activedescendant]="this.activeDescendant">
         <igx-combo-item [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboFiltering:filterFunction:filterValue:filteringOptions:filterable
+            | comboFiltering:filterFunction:filterValue:filteringOptions:filterable:displayKey
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex" [role]="item.isHeader? 'group' : 'option'">
