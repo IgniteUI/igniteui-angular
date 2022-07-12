@@ -24,6 +24,7 @@ import { IgxPivotRowDimensionContentComponent } from "./pivot-row-dimension-cont
 import { IgxPivotRowDimensionHeaderGroupComponent } from "./pivot-row-dimension-header-group.component";
 import { IgxPivotRowDimensionHeaderComponent } from "./pivot-row-dimension-header.component";
 import { IgxPivotRowComponent } from "./pivot-row.component";
+import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 
 /**
  * @hidden
@@ -47,6 +48,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxFilterPivotItemsPipe,
         IgxPivotGridCellStyleClassesPipe,
         IgxPivotDataSelectorComponent,
+        IgxPivotValueChipTemplateDirective,
     ],
     exports: [
         IgxGridModule,
@@ -67,6 +69,7 @@ import { IgxPivotRowComponent } from "./pivot-row.component";
         IgxFilterPivotItemsPipe,
         IgxPivotGridCellStyleClassesPipe,
         IgxPivotDataSelectorComponent,
+        IgxPivotValueChipTemplateDirective,
     ],
     imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule, IgxListModule, IgxAccordionModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
