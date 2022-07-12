@@ -27,7 +27,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
         if (!collection) {
             return [];
         }
-        if (!filteringOptions.filterable || !searchValue?.trim()) {
+        if (!filteringOptions.filterable) {
             return collection;
         }
         filteringOptions.filteringKey = filteringOptions.filteringKey ?? displayKey;
@@ -75,7 +75,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
 }
 
 function defaultFilterFunction (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] {
-    if (!searchValue) {
+    if (!searchValue?.trim()) {
         return collection;
     }
     const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();

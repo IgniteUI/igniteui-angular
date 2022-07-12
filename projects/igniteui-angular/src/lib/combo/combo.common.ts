@@ -1211,11 +1211,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.comboAPI.valueKey === null) {
             return keys;
         }
-        // map keys vs. filter data to retain the order of the selected items
 
-        return keys.map(key => isNaN(key) && key !== undefined && typeof key !== 'string' ?
-            this.data.find(entry => isNaN(entry[this.valueKey]) && entry[this.valueKey] !== undefined) :
-            this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
+        const isNaNvalue = (key: any): boolean => (isNaN(key) && key !== undefined && typeof key !== 'string') ?? false;
+
+        // map keys vs. filter data to retain the order of the selected items
+        return keys.map(key => isNaNvalue(key)
+            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
+            : this.data.find(entry => entry[this.valueKey] === key))
+        .filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
