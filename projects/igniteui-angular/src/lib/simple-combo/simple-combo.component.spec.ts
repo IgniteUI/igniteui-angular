@@ -1125,7 +1125,7 @@ describe('IgxSimpleCombo', () => {
             expect(item1.nativeElement.textContent.trim()).toEqual('item1');
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('item1');
+            expect(combo.comboInput.value).toBe('item1');
 
             combo.open();
             fixture.detectChanges();
@@ -1133,7 +1133,7 @@ describe('IgxSimpleCombo', () => {
             expect(item2.nativeElement.textContent.trim()).toEqual('item2');
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('item2');
+            expect(combo.comboInput.value).toBe('item2');
 
             combo.open();
             fixture.detectChanges();
@@ -1141,7 +1141,7 @@ describe('IgxSimpleCombo', () => {
             expect(item3.nativeElement.textContent.trim()).toEqual('item3');
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('item3');
+            expect(combo.comboInput.value).toBe('item3');
 
             combo.open();
             fixture.detectChanges();
@@ -1149,7 +1149,7 @@ describe('IgxSimpleCombo', () => {
             expect(item4.nativeElement.textContent.trim()).toEqual('item4');
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('item4');
+            expect(combo.comboInput.value).toBe('item4');
 
             combo.open();
             fixture.detectChanges();
@@ -1157,7 +1157,64 @@ describe('IgxSimpleCombo', () => {
             expect(item5.nativeElement.textContent.trim()).toEqual('item5');
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('item5');
+            expect(combo.comboInput.value).toBe('item5');
+        });
+
+        it('should use displayKey as display text when both displayKey and valueKey are falsy' , () => {
+            fixture = TestBed.createComponent(ComboModelBindingComponent);
+            fixture.detectChanges();
+
+            combo = fixture.componentInstance.combo;
+            combo.valueKey = 'key';
+            combo.displayKey = 'value';
+            combo.data = [
+                { key: false, value: false },
+                { key: NaN, value: NaN },
+                { key: null, value: null },
+                { key: '', value: '' },
+                { key: undefined, value: undefined },
+            ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0];
+            expect(item1.nativeElement.textContent.trim()).toEqual('false');
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toBe('false');
+
+            combo.open();
+            fixture.detectChanges();
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            expect(item4.nativeElement.textContent.trim()).toEqual('NaN');
+            item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toBe('NaN');
+
+            // null, undefined and empty string by default are displayed as empty string in dropdown and input field
+            combo.open();
+            fixture.detectChanges();
+            const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+            expect(item2.nativeElement.textContent.trim()).toEqual('');
+            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toBe('');
+
+            combo.open();
+            fixture.detectChanges();
+            const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item3.nativeElement.textContent.trim()).toEqual('');
+            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toBe('');
+
+            combo.open();
+            fixture.detectChanges();
+            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+            expect(item5.nativeElement.textContent.trim()).toEqual('');
+            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toBe('');
         });
     });
 
