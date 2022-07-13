@@ -304,14 +304,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onBlur(): void {
-        if (this.collapsed && !this.selectedItem) {
-            this.clearOnBlur();
-        }
-        super.onBlur();
-    }
-
-    /** @hidden @internal */
     public onFocus(): void {
         this._internalFilter = this.comboInput.value || '';
     }
@@ -402,10 +394,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        // additional checks for 'undefined' as initially both args.newSelection and args.oldSelection are undefined
-        if (args.newSelection !== args.oldSelection ||
-            (args.newSelection === undefined && newSelection?.size > 0) ||
-            (newSelection?.size === 0 && oldSelectionAsArray.length > 0)) {
+        // additional checks when selecting and clearing an item with valueKey=undefined
+        // as the event should emit when args.newSelection differs from args.oldSelection
+        // however in this case both args.newSelection and args.oldSelection are 'undefined'
+        if (args.newSelection !== args.oldSelection
+            || args.newSelection === undefined && newSelection?.size > 0
+            || newSelection?.size === 0 && oldSelectionAsArray.length > 0) {
             this.selectionChanging.emit(args);
         }
         if (!args.cancel) {
@@ -449,7 +443,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clearOnBlur(): void {
         const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null || !this.selectedItem) {
+        if (filtered === undefined || filtered === null) {
             this.clearAndClose();
             return;
         }
