@@ -7005,15 +7005,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if(!this.hasColumnsToAutosize) return;
         const vState = this.headerContainer.state;
         let colResized = false;
-        const columnsInView = this.pinnedColumns.concat(this.unpinnedColumns.slice(vState.startIndex, vState.startIndex + vState.chunkSize));
+        const unpinnedInView = this.headerContainer.igxGridForOf.slice(vState.startIndex, vState.startIndex + vState.chunkSize).flatMap(x => x.columnGroup ? x.allChildren : x);
+        const columnsInView = this.pinnedColumns.concat(unpinnedInView);
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths = [];
                 if (col._cells.length !== this.rowList.length) {
                     this.rowList.forEach(x => x.cdr.detectChanges());
                 }
-                col._cells.forEach((cell) => cellsContentWidths.push(cell.nativeElement.offsetWidth));
-                cellsContentWidths.push(col.headerCell.nativeElement.offsetWidth);
+                const cells = this._dataRowList.map(x => x.cells.find(x => x.column === col));
+                cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const max = Math.max(...cellsContentWidths);
+                if (max === 0) {
+                    // cells not in DOM yet...
+                    continue;
+                }
+                const header = this.headerCellList.find( x=> x.column === col);
+                cellsContentWidths.push(header.nativeElement.offsetWidth);
                 let maxSize =  Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;

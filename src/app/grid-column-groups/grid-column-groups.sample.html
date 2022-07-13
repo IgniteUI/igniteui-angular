@@ -10,56 +10,21 @@
                 <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <igx-column [resizable]="true"  field="Missing"></igx-column>
-        <igx-column-group header="General Information" title="General Company Information" [collapsible]="true" [expanded]="true" [hidden]="true">
-            <igx-column [filterable]="false" [hidden]="true" [sortable]="true" [resizable]="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false"></igx-column>
-            <igx-column  field="Missing"></igx-column>
-            <igx-column-group header="Person Details" [collapsible]="true" [expanded]="false" [visibleWhenCollapsed]="true">
-                <igx-column [visibleWhenCollapsed]="false" [hidden]="true" [filterable]="true" [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
-                <igx-column [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
+        <igx-grid #grid [data]="data" displayDensity="compact">
+            <igx-column-group header="Address Information">
+                <igx-column-group header="Location">
+                    <igx-column [width]="'auto'" field="Country"></igx-column>
+                    <igx-column [width]="'auto'" field="Region"></igx-column>
+                    <igx-column [width]="'auto'" field="City"></igx-column>
+                    <igx-column [width]="'auto'" field="Address"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="Contact Information">
+                    <igx-column [width]="'auto'" field="Phone"></igx-column>
+                    <igx-column [width]="'auto'" field="Fax"></igx-column>
+                    <igx-column [width]="'auto'" field="PostalCode"></igx-column>
+                </igx-column-group>
             </igx-column-group>
-            <ng-template igxCollapsibleIndicator let-column="column" #ind >
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
-            </ng-template>
-        </igx-column-group>
-        <igx-column [hidden]="s" [resizable]="true" field="ID" [editable]="true"></igx-column>
-        <igx-column-group header="Address Information" [(collapsible)]='s' [expanded]='true'>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Region" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="City" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Address" [visibleWhenCollapsed]= 'false'></igx-column>
-            <igx-column [filterable]="true" [editable]="true" [sortable]="true" [visibleWhenCollapsed]= 'true'  field="FullAddress"></igx-column>
-        </igx-column-group>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column  field="Missing"></igx-column>
-        <igx-column-group header="Address Information">
-            <igx-column-group header="Location">
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Region"></igx-column>
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="City"></igx-column>
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Address"></igx-column>
-            </igx-column-group>
-            <igx-column-group header="Contact Information">
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone"></igx-column>
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax"></igx-column>
-                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="PostalCode"></igx-column>
-            </igx-column-group>
-        </igx-column-group>
-        <igx-column-group header="Contact Information">
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone"></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax"></igx-column>
-            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="PostalCode"></igx-column>
-        </igx-column-group>
+        </igx-grid>
     </igx-grid>
     <span igxButton (click)="log()">Pin first group</span>
     <span igxButton (click)="pinGroup()">Toggle visibleWhenCollapsed - Person Details</span>
