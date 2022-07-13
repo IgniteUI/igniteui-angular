@@ -7013,7 +7013,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (col._cells.length !== this.rowList.length) {
                     this.rowList.forEach(x => x.cdr.detectChanges());
                 }
-                const cells = this._dataRowList.map(x => x.cells.find(x => x.column === col));
+                const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
                 const max = Math.max(...cellsContentWidths);
                 if (max === 0) {
