@@ -28,7 +28,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IgxComboState } from './combo.common';
+import { IComboFilteringOptions, IgxComboState } from './combo.common';
 import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -2693,6 +2693,115 @@ describe('igxCombo', () => {
             expect(combo.searchValue).toEqual('Test');
             cancelSub.unsubscribe();
         });
+        it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filterFunction = undefined;
+            combo.filteringOptions = undefined;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { caseSensitive: true });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'value not in the list';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {
