@@ -1,35 +1,33 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import {
+    FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, ReactiveFormsModule,
-    FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
-import {
-    IgxComboComponent,
-    IgxComboModule,
-    IComboSelectionChangingEventArgs,
-    IComboSearchInputEventArgs,
-    IComboItemAdditionEvent
-} from './combo.component';
-import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboAddItemComponent } from './combo-add-item.component';
-import { IgxComboFilteringPipe } from './combo.pipes';
-import { IgxInputState } from '../directives/input/input.directive';
-import { IForOfState } from '../directives/for-of/for_of.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IgxComboState } from './combo.common';
+import { IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxInputState } from '../directives/input/input.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
+import { IgxIconService } from '../icon/public_api';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
+import { IgxComboItemComponent } from './combo-item.component';
+import { IComboFilteringOptions, IgxComboState } from './combo.common';
+import {
+    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent,
+    IgxComboModule
+} from './combo.component';
+import { IgxComboFilteringPipe } from './combo.pipes';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -49,11 +47,8 @@ const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
-const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
-const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
-const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
@@ -2678,6 +2673,115 @@ describe('igxCombo', () => {
             expect(combo.searchValue).toEqual('Test');
             cancelSub.unsubscribe();
         });
+        it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filterFunction = undefined;
+            combo.filteringOptions = undefined;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { caseSensitive: true });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'value not in the list';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {
