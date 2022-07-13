@@ -58,10 +58,16 @@ export class PivotGridStateSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            {
-                memberName: 'Date',
-                enabled: true
-            },
+            new IgxPivotDateDimension(
+                {
+                    memberName: 'Date',
+                    enabled: true
+                },
+                {
+                    months: true,
+                    quarters: true
+                }
+            ),
         ],
         rows: [
             {
@@ -143,8 +149,9 @@ export class PivotGridStateSampleComponent {
     }
 
     public onValueInit(value: IPivotValue) {
-        if (!value.aggregate.aggregator) {
-            value.aggregate.aggregator = value.member === 'UnitsSold' ? IgxPivotNumericAggregate.sum : IgxTotalSaleAggregate.totalSale;
+        // Needed only for custom aggregators, formatter or styles.
+        if (value.member === 'AmountOfSale') {
+            value.aggregate.aggregator = IgxTotalSaleAggregate.totalSale;
         }
     }
 
