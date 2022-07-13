@@ -985,7 +985,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public set pinned(value: boolean) {
         if (this._pinned !== value) {
-            if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
+            const isAutoWidth = this.width && typeof this.width === 'string' && this.width === 'fit-content';
+            if (this.grid && this.width && (isAutoWidth || !isNaN(parseInt(this.width, 10)))) {
                 if (value) {
                     this.pin();
                 } else {
