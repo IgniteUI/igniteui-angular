@@ -1051,7 +1051,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBeFalsy();
         });
 
-        it('should empty and invalid item values', () => {
+        it('should empty any invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
             combo.data = [
@@ -1096,6 +1096,49 @@ describe('IgxSimpleCombo', () => {
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe(undefined);
+        });
+
+        it('should select unique falsy item values', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            // Does not work with null and undefined values in the simple combo case. In the regular combo, those are supported.
+            combo.data = [
+                { field: null, value: null },
+                { field: 'true', value: true },
+                { field: 'false', value: false },
+                { field: 'empty', value: '' },
+                { field: 'empty', value: undefined }
+            ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            expect(item2).toBeDefined();
+
+            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('true');
+            expect(combo.selection).toEqual([ true ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+            expect(item3).toBeDefined();
+
+            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('false');
+            expect(combo.selection).toEqual([ false ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
+
+            item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('empty');
+            expect(combo.selection).toEqual([ '' ]);
         });
     });
 

@@ -22,6 +22,16 @@
                         <label igxLabel>States</label>
                         <igx-hint>Please select the state you've visited</igx-hint>
                     </igx-simple-combo>
+                    <igx-combo [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
+                        required [data]="uniqueFalsyData" displayKey="field" [disabled]="isDisabled" valueKey="value">
+                        <label igxLabel>Falsy unique values</label>
+                        <igx-hint>Select a unique falsy value</igx-hint>
+                    </igx-combo>
+                    <igx-simple-combo [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
+                        required [data]="uniqueFalsyData" displayKey="field" [disabled]="isDisabled" valueKey="value">
+                        <label igxLabel>Null, undefined not supported</label>
+                        <igx-hint>Select a unique falsy value</igx-hint>
+                    </igx-simple-combo>
                 </form>
                 <button igxButton (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
                 <button igxButton (click)="values1 = []">Clear values </button>
