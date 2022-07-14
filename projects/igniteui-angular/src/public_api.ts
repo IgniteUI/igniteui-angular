@@ -32,7 +32,7 @@ export * from './lib/directives/template-outlet/template_outlet.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip';
 export * from './lib/directives/date-time-editor/public_api';
-export { IgxWebComponentInteropModule } from './lib/directives/webcomponent-interop/webcomponent-interop.directive';
+export * from './lib/directives/webcomponent-interop/forms-control.directive';
 
 /**
  * Data operations

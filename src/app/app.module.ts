@@ -12,7 +12,7 @@ import {
     IgxListModule,
     IgxTextSelectionModule,
     IgxPivotGridModule,
-    IgxWebComponentInteropModule
+    IgxFormsControlModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -335,7 +335,7 @@ const components = [
         IgxDateTimeEditorModule,
         IgxButtonModule,
         IgxPivotGridModule,
-        IgxWebComponentInteropModule
+        IgxFormsControlModule
     ],
     providers: [
         LocalService,

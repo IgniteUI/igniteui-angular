@@ -17,12 +17,12 @@ import { takeUntil } from 'rxjs/operators';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => IgxWebComponentInteropDirective),
+            useExisting: forwardRef(() => IgxFormsControlDirective),
             multi: true
         }
     ]
 })
-export class IgxWebComponentInteropDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class IgxFormsControlDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     /** @hidden @internal */
     public onChange: any = () => { };
     /** @hidden @internal */
@@ -93,7 +93,7 @@ export class IgxWebComponentInteropDirective implements ControlValueAccessor, Af
 }
 
 @NgModule({
-    declarations: [IgxWebComponentInteropDirective],
-    exports: [IgxWebComponentInteropDirective]
+    declarations: [IgxFormsControlDirective],
+    exports: [IgxFormsControlDirective]
 })
-export class IgxWebComponentInteropModule { }
+export class IgxFormsControlModule { }
