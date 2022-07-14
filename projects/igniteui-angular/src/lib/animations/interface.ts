@@ -21,4 +21,6 @@ export interface IAnimationParams {
     rotateZ?: number;
     startHeight?: string;
     endHeight?: string;
+    startPadding?: string;
+    endPadding?: string;
 }

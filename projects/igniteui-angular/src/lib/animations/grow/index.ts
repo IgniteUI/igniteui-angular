@@ -1,17 +1,19 @@
 import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
-import { EaseOut, EaseIn } from '../easings';
+import { EaseIn, EaseOut } from '../easings';
 import { IAnimationParams } from '../interface';
 
 const base: AnimationMetadata[] = [
     style({
         opacity: `{{ startOpacity }}`,
-        height: `{{ startHeight }}`
+        height: `{{ startHeight }}`,
+        paddingBlock: `{{ startPadding }}`
     }),
     animate(
         `{{duration}} {{delay}} {{easing}}`,
         style({
             opacity: `{{ endOpacity }}`,
-            height: `{{ endHeight }}`
+            height: `{{ endHeight }}`,
+            paddingBlock: `{{ endPadding }}`
         })
     )
 ];
@@ -23,7 +25,9 @@ const baseParams: IAnimationParams = {
     startOpacity: 0,
     endOpacity: 1,
     startHeight: '',
-    endHeight: ''
+    endHeight: '',
+    startPadding: '',
+    endPadding: '',
 };
 
 const growVerIn: AnimationReferenceMetadata = animation(base, {
@@ -33,7 +37,9 @@ const growVerIn: AnimationReferenceMetadata = animation(base, {
         startOpacity: 0,
         endOpacity: 1,
         startHeight: '0px',
-        endHeight: '*'
+        endHeight: '*',
+        startPadding: '0px',
+        endPadding: '*'
     }
 });
 
@@ -44,7 +50,9 @@ const growVerOut: AnimationReferenceMetadata = animation(base, {
         startOpacity: 1,
         endOpacity: 0,
         startHeight: '*',
-        endHeight: '0px'
+        endHeight: '0px',
+        startPadding: '*',
+        endPadding: '0px'
     }
 });
 
