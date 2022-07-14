@@ -1010,6 +1010,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public get allDimensions() {
         const config = this._pivotConfiguration;
+        if (!config) return [];
         return (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
 
@@ -2144,7 +2145,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         dimensions.forEach(dim => {
             this.dimensionInit.emit(dim);
         });
-        const values = pivotConfig.values;
+        const values = pivotConfig?.values;
         values?.forEach(val => {
             this.valueInit.emit(val);
         });
