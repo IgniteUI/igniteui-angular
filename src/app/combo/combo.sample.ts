@@ -42,6 +42,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public genres = [];
     public user: FormGroup;
+    public uniqueFalsyData: any [];
     private overlaySettings: OverlaySettings[] = [null, null, null, null];
     private initialItemTemplate: TemplateRef<any> = null;
 
@@ -89,6 +90,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };
+
+        this.uniqueFalsyData = [
+            { field: null, value: null },
+            { field: 'true', value: true },
+            { field: 'false', value: false },
+            { field: 'empty', value: '' },
+            { field: 'undefined', value: undefined }
+        ];
+
         const keys = Object.keys(division);
         for (const key of keys) {
             division[key].map((e) => {

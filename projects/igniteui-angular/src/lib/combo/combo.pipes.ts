@@ -6,19 +6,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sor
 import { IComboFilteringOptions } from './combo.component';
 
 /** @hidden */
-@Pipe({
-    name: 'comboClean'
-})
-export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
-    }
-}
-
-/** @hidden */
-@Pipe({
-    name: 'comboFiltering'
-})
+@Pipe({ name: 'comboFiltering' })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
         filteringOptions: IComboFilteringOptions, shouldFilter = false) {
