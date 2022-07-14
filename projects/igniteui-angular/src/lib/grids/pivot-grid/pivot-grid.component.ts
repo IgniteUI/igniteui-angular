@@ -23,7 +23,8 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef
+    ApplicationRef,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -71,6 +72,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -178,6 +180,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
+
+    /**
+    * @hidden @internal
+    */
+    @ContentChild(IgxPivotValueChipTemplateDirective, { read: IgxPivotValueChipTemplateDirective })
+    protected valueChipTemplateDirective: IgxPivotValueChipTemplateDirective;
+
+    /**
+     * Gets/Sets a custom template for the value chips.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [valueChipTemplate]="myTemplate"><igx-pivot-grid>
+     * ```
+     */
+     @Input()
+     public valueChipTemplate: TemplateRef<any>;
 
     @Input()
     /**
@@ -935,6 +954,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             this.setupColumns();
         });
+        if (this.valueChipTemplateDirective) {
+            this.valueChipTemplate = this.valueChipTemplateDirective.template;
+        }
     }
 
     /**
