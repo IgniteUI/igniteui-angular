@@ -170,7 +170,7 @@ export class IgxGridStateDirective {
         },
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const gridColumns: IColumnState[] = context.currGrid.columnList.map((c) => ({
+                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
                     pinned: c.pinned,
                     sortable: c.sortable,
                     filterable: c.filterable,
@@ -229,6 +229,9 @@ export class IgxGridStateDirective {
                     }
                 });
                 context.grid.updateColumns(newColumns);
+                newColumns.forEach(col => {
+                    (context.grid as any).columnInit.emit(col);
+                });
             }
         },
         groupBy: {
@@ -492,13 +495,11 @@ export class IgxGridStateDirective {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
         const columns = 'columns';
-        this.grid.columnList.changes.pipe(delay(0), take(1)).subscribe(() => {
-            this.featureKeys = this.featureKeys.filter(f => f !== columns);
-            this.restoreFeatures(state);
-        });
         this.applyFeatures(features);
         if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
             this.getFeature(columns).restoreFeatureState(this, state[columns]);
+            this.featureKeys = this.featureKeys.filter(f => f !== columns);
+            this.restoreFeatures(state);
         } else {
             this.restoreFeatures(state);
         }
@@ -550,8 +551,8 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columnList.length > 0) {
-                    dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
+                if (this.currGrid.columns.length > 0) {
+                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 } else {
