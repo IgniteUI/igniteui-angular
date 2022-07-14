@@ -123,7 +123,8 @@ export class IgxGridStateDirective {
         rowPinning: true,
         expansion: true,
         moving: true,
-        rowIslands: true
+        rowIslands: true,
+        pivotConfiguration: true
     };
     private FEATURES = {
         sorting:  {
