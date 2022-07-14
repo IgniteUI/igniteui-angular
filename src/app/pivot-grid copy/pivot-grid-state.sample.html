@@ -7,9 +7,10 @@
             #grid1
             [igxGridState]="options"
             (valueInit)='onValueInit($event)'
+            (dimensionInit)='onDimensionInit($event)'
             [data]="origData"
             [width]="'100%'"
-            [height]="'100%'"
+            [height]="'800px'"
             [displayDensity]="gridDensity"
             [superCompactMode]="true"
             [defaultExpandState]="true"

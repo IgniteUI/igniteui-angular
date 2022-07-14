@@ -71,9 +71,14 @@ export class PivotGridStateSampleComponent {
         ],
         rows: [
             {
-                memberName: 'City',
+                memberName: 'AllCities',
+                memberFunction: () => 'All',
                 enabled: true,
-                width: '100px'
+                childLevel: {
+                    memberName: 'City',
+                    enabled: true,
+                    width: '100px'
+                }
             },
             {
                 memberName: 'SellerName',
@@ -131,9 +136,8 @@ export class PivotGridStateSampleComponent {
         }];
 
 
-    public options : IGridStateOptions = {
-        pivotConfiguration: true,
-        columns: false
+    public options: IGridStateOptions = {
+        pivotConfiguration: true
     };
     @ViewChild(IgxGridStateDirective, { static: true })
     public state!: IgxGridStateDirective;
@@ -152,6 +156,12 @@ export class PivotGridStateSampleComponent {
         // Needed only for custom aggregators, formatter or styles.
         if (value.member === 'AmountOfSale') {
             value.aggregate.aggregator = IgxTotalSaleAggregate.totalSale;
+        }
+    }
+
+    public onDimensionInit(dim: IPivotDimension) {
+        if (dim.memberName === 'AllCities') {
+            dim.memberFunction = () => 'All';
         }
     }
 

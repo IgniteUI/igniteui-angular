@@ -11,6 +11,44 @@ All notable changes for each version of this project will be documented in this 
             {{ value.member }}
     </ng-template>
     ``` 
+    - Add support for usage with igxGridState to persist state of the pivotConfiguration with an additional `pivotConfiguration` option:
+
+    ```html
+     <igx-pivot-grid
+            #grid1
+            [igxGridState]="options" ...
+    ```
+
+    ```
+        public options : IGridStateOptions = {
+        pivotConfiguration: true
+    };
+    ```
+
+    One known issue of the igxGridState directive is that it cannot store functions as the state is stored as string.
+    As a result any custom functions set to `memberFunction`, `aggregator`, `formatter`, `styles` etc. will not be stored. Restoring any of these can be achieved with code on application level. 
+    Hence we have also exposed 2 new events:
+        - `dimensionInit` - emits when a dimension from the configuration is being initialized.
+        - `valueInit` - emits when a value from the configuration is being initialized.
+    Which can be used to set back any custom functions you have in the configuration.
+    The default aggregator function, like the ones from `IgxPivotNumericAggregate`, `IgxPivotDateAggregate` etc.,  will be restored out of the box. However if you have any custom aggregators (or other custom functions) they need to be set back in the `valueInit`event, for example:
+    ```
+        public onValueInit(value: IPivotValue) {
+        if (value.member === 'AmountOfSale') {
+            value.aggregate.aggregator = IgxTotalSaleAggregate.totalSale;
+        }
+    }
+    ```
+    Same applies to any custom functions on the dimension, like `memberFunction`. If it is a custom function you can set it back on the `dimensionInit` event:
+
+    ```
+     public onDimensionInit(dim: IPivotDimension) {
+        if (dim.memberName === 'AllCities') {
+            dim.memberFunction = () => 'All';
+        }
+    }
+    ```
+
 ### New Features
 - `IgxCombo` and  `IgxSimpleComboComponent`
     - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.

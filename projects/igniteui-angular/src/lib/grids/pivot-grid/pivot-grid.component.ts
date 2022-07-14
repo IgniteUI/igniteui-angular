@@ -129,9 +129,30 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Output()
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
 
+
+    /**
+     * Emitted when the dimension is initialized.
+     * @remarks
+     * Emits the dimension that is about to be initialized.
+     * @example
+     * ```html
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
+     *              (dimensionInit)="dimensionInit($event)"></igx-pivot-grid>
+     * ```
+     */
     @Output()
     public dimensionInit = new EventEmitter<IPivotDimension>();
 
+    /**
+     * Emitted when the value is initialized.
+     * @remarks
+     * Emits the value that is about to be initialized.
+     * @example
+     * ```html
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
+     *              (valueInit)="valueInit($event)"></igx-pivot-grid>
+     * ```
+     */
     @Output()
     public valueInit = new EventEmitter<IPivotValue>();
 
