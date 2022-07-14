@@ -54,7 +54,7 @@ describe('IgxFormsControlDirective - ', () => {
         });
     }));
 
-    fit('Should reflect ngModel change from rating', fakeAsync(() => {
+    it('Should reflect ngModel change from rating', fakeAsync(() => {
         rating.setAttribute('value', '8');
         rating.dispatchEvent(new CustomEvent('igcChange', { detail: 8 }));
         fixture.detectChanges();
