@@ -60,6 +60,12 @@
                     </div>
                 </ng-template>
             </igx-date-picker>
+            <div class="date-picker-sample-buttons">
+                <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+                <button igxButton="raised" igxRipple (click)="changeLocale('en')">Change locale to English</button>
+                <button igxButton="raised" igxRipple (click)="changeWeekStart(5)">Change weekStart to Friday</button>
+                <button igxButton="raised" igxRipple (click)="changeWeekStart(0)">Change weekStart to Sunday</button>
+            </div>
         </div>
     </article>
 

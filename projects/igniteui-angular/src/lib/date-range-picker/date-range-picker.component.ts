@@ -99,37 +99,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public hideOutsideDays: boolean;
 
     /**
-     * The start day of the week.
-     *
-     * @remarks
-     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker [weekStart]="1"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public weekStart = WEEKDAYS.SUNDAY;
-
-    /**
-     * Locale settings used for value formatting and calendar.
-     *
-     * @remarks
-     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
-     * If a `locale` is set, it must be registered via `registerLocaleData`.
-     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
-     * If it is not registered, `Intl` will be used for formatting.
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker locale="jp"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public locale: string;
-
-    /**
      * A custom formatter function, applied on the selected or passed in date.
      *
      * @example
@@ -443,7 +412,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private onValidatorChange: () => void = noop;
 
     constructor(public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: any,
+        @Inject(LOCALE_ID) protected _localeId: string,
         protected platform: PlatformUtil,
         private _injector: Injector,
         private _moduleRef: NgModuleRef<any>,
@@ -452,6 +421,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -611,6 +581,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+
+        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden */
