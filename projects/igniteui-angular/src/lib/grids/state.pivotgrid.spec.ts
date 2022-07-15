@@ -143,12 +143,9 @@ describe('IgxPivotGridState - input properties #tGrid', () => {
         state.setState(stateString, 'pivotConfiguration');
         fixture.detectChanges();
 
-        pivotGrid.toggleRow('All Periods');
-        fixture.detectChanges();
-
         const rows = pivotGrid.rowList.toArray();
-        expect(rows.length).toBe(4);
-        const expectedHeaders = ['All Periods', '2012', '2013', '2011'];
+        expect(rows.length).toBe(1);
+        const expectedHeaders = ['All Periods'];
         const rowHeaders = fixture.debugElement.queryAll(
             By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
