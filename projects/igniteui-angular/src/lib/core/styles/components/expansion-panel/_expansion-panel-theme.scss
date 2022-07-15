@@ -109,6 +109,7 @@
         flex-direction: column;
         border-radius: border-radius(var-get($theme, 'border-radius'));
         overflow: hidden;
+        transition: margin 350ms $ease-out-quad;
     }
 
     %igx-expansion-panel__header-title {
@@ -127,18 +128,16 @@
         white-space: nowrap;
     }
 
-    %igx-title--no-ellipsis {
+    %igx-accordion {
         %igx-expansion-panel__header-title {
             @include line-clamp(4, true, true);
+
             white-space: initial;
             word-wrap: break-word;
         }
-    }
 
-    %igx-expanded-panel-margin {
-        igx-expansion-panel[aria-expanded='true'] {
+        %igx-expansion-panel--expanded {
             margin: var-get($theme, 'expanded-margin') 0;
-            transition: margin 350ms $ease-in-quad;
 
             &:first-of-type {
                 margin-top: 0;
@@ -147,10 +146,6 @@
             &:last-of-type {
                 margin-bottom: 0;
             }
-        }
-
-        igx-expansion-panel[aria-expanded='false'] {
-            transition: margin 350ms $ease-out-quad;
         }
     }
 
