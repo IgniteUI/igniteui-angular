@@ -73,6 +73,7 @@ import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-st
 import { PivotSortUtil } from './pivot-sort-util';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -230,6 +231,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         this.emitInitEvents(this._pivotConfiguration);
         if (!this._init) {
             this.setupColumns();
@@ -961,8 +963,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public ngOnInit() {
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
-        const config = this.pivotConfiguration;
-        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);
         super.ngOnInit();
     }
 
@@ -1719,6 +1719,28 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
+        if (dimensionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Filters a single `IPivotDimension`.
+     *
+     * @example
+     * ```typescript
+     * public filter() {
+     *      const set = new Set();
+     *      set.add('Value 1');
+     *      set.add('Value 2');
+     *      this.grid1.filterDimension(this.pivotConfigHierarchy.rows[0], set, IgxStringFilteringOperand.instance().condition('in'));
+     * }
+     * ```
+     */
+    public filterDimension(dimension: IPivotDimension, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree ) {
+        this.filteringService.filter(dimension.memberName, value, conditionOrExpressionTree);
+        const dimensionType = this.getDimensionType(dimension);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
