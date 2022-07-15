@@ -42,6 +42,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 
 let NEXT_ID = 0;
 
@@ -392,6 +393,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const id = this.id;
         return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
             pg.nativeElement.offsetParent?.id === id);
+    }
+
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() : IgxGridExcelStyleFilteringComponent {
+        return this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents.first :
+            super.excelStyleFilteringComponent;
     }
 
     /**
