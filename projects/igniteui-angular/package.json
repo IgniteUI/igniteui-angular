@@ -87,7 +87,7 @@
         "@angular/forms": "^14.0.0"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~14.0.1000"
+        "@igniteui/angular-schematics": "~14.0.1004-beta.0"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
