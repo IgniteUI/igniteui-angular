@@ -1,15 +1,13 @@
-import { Component, DebugElement, forwardRef, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dir } from 'console';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxFormsControlDirective, IgxFormsControlModule } from './forms-control.directive';
 
-fdescribe('IgxFormsControlDirective - ', () => {
+describe('IgxFormsControlDirective - ', () => {
 
     let fixture: ComponentFixture<any>;
     let directive: IgxFormsControlDirective;
