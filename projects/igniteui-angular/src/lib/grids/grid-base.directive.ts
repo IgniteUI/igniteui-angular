@@ -7034,6 +7034,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         }
         if (colResized) {
+            this.resetCachedWidths();
             this.cdr.detectChanges();
         }
     }
