@@ -26,6 +26,7 @@
 /// @property {Map} indicator-color [color: ('primary', 500)] - The color used for the active tab indicator.
 /// @property {Map} button-color [color: ('grays', 700)] - The color used for the button icon/text color.
 /// @property {Map} button-hover-color [color: ('grays', 900)] - The color used for the button icon/text color on hover.
+/// @property {Map} button-disabled-color [color: ('grays', 500)] - The color used for the disabled button icon/text.
 /// @property {Color} button-background [color: ('surface')] - The color used for the button background.
 /// @property {Map} button-hover-background [color: ('grays', 100)] - The color used for the button background on hover.
 /// @property {Map} border-color [transparent] - The color used for the tab items bottom border.
@@ -105,6 +106,10 @@ $light-tabs: extend(
             color: ('grays', 900)
         ),
 
+        button-disabled-color: (
+            color: ('grays', 500)
+        ),
+
         tab-ripple-color: (
             color: ('grays', 100)
         ),
@@ -130,6 +135,7 @@ $light-tabs: extend(
 /// @property {Map} item-disabled-icon-color [color: ('grays', 400)] - The color used for the disabled tab icon.
 /// @property {Map} button-color [color: ('grays', 500)] - The color used for the button icon/text color.
 /// @property {Map} button-hover-color [color: ('grays', 600)] - The color used for the button icon/text color on hover.
+/// @property {Map} button-disabled-color [color: ('grays', 400)] - The color used for the disabled button icon/text.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-tabs
@@ -161,6 +167,10 @@ $fluent-tabs: extend(
         button-hover-color: (
             color: ('grays', 600)
         ),
+
+        button-disabled-color: (
+            color: ('grays', 500)
+        ),
     )
 );
 
@@ -178,6 +188,7 @@ $fluent-tabs: extend(
 /// @property {map} button-background [color: ('surface')] - The color used for the button background.
 /// @property {Map} button-color [color: ('grays', 500)] - The color used for the button icon/text color.
 /// @property {Map} button-hover-color [color: ('grays', 600)] - The color used for the button icon/text color on hover.
+/// @property {Map} button-disabled-color [color: ('primary', 500, .5)] - The color used for the disabled button icon/text.
 /// @property {map} item-hover-background [color: ('surface')] - The background used for the tabs on hover.
 /// @property {map} item-active-background [color: ('surface')] - The color used for the active/focused tab background.
 /// @property {map} border-color [color: ('grays', 300)] - The color used for the tab items border.
@@ -208,6 +219,10 @@ $bootstrap-tabs: extend(
 
         item-hover-background: (
             color: ('surface')
+        ),
+
+        button-disabled-color: (
+            color: ('primary', 500, .5)
         ),
 
         item-active-background: (
@@ -268,6 +283,7 @@ $bootstrap-tabs: extend(
 /// @property {Map} item-active-color [color: ('grays', 900)] - The color used for the active tabs text.
 /// @property {Map} item-active-icon-color [color: ('primary', 400)] - The color used for the active tabs icon.
 /// @property {Map} indicator-color [color: ('primary', 400)] - The color used for the tabs borders.
+/// @property {Map} button-disabled-color [color: ('grays', 500)] - The color used for the disabled button icon/text.
 /// @property {Color} button-background [transparent] - The color used for the button background.
 /// @property {Color} button-hover-background [transparent] - The color used for the button background on hover.
 ///
@@ -302,6 +318,10 @@ $indigo-tabs: extend(
 
         indicator-color: (
             color: ('primary', 400)
+        ),
+
+        button-disabled-color: (
+            color: ('grays', 500)
         ),
 
         button-background: transparent,

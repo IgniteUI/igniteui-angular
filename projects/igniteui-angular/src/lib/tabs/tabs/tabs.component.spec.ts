@@ -1268,13 +1268,16 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             await wait(200);
 
+            const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
             const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+            expect(leftScrollButton.clientWidth).toBeTruthy();
             expect(rightScrollButton.clientWidth).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
             fixture.detectChanges();
             await wait(500);
 
+            expect(leftScrollButton.clientWidth).toBeFalsy();
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
     });
@@ -1286,12 +1289,15 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+        const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
+        expect(leftScrollButton.clientWidth).toBeTruthy();
         expect(rightScrollButton.clientWidth).toBeTruthy();
 
         fixture.componentInstance.contacts.splice(0, 1);
         fixture.detectChanges();
         await wait();
 
+        expect(leftScrollButton.clientWidth).toBeFalsy();
         expect(rightScrollButton.clientWidth).toBeFalsy();
     });
 
