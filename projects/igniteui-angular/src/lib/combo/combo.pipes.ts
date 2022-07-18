@@ -67,7 +67,7 @@ function defaultFilterFunction (collection: any[], searchValue: any, filteringOp
     if (!searchValue) {
         return collection;
     }
-    const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+    const searchTerm = filteringOptions.caseSensitive ? searchValue : searchValue.toLowerCase();
     if (filteringOptions.filteringKey != null) {
         return collection.filter(e => filteringOptions.caseSensitive ?
             e[filteringOptions.filteringKey]?.includes(searchTerm) :
