@@ -23,7 +23,8 @@ import {
     ViewContainerRef,
     Injector,
     NgModuleRef,
-    ApplicationRef
+    ApplicationRef,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -71,6 +72,8 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -173,6 +176,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
 
+    /**
+    * @hidden @internal
+    */
+    @ContentChild(IgxPivotValueChipTemplateDirective, { read: IgxPivotValueChipTemplateDirective })
+    protected valueChipTemplateDirective: IgxPivotValueChipTemplateDirective;
+
+    /**
+     * Gets/Sets a custom template for the value chips.
+     *
+     * @example
+     * ```html
+     * <igx-pivot-grid [valueChipTemplate]="myTemplate"><igx-pivot-grid>
+     * ```
+     */
+     @Input()
+     public valueChipTemplate: TemplateRef<any>;
+
     @Input()
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
@@ -184,6 +204,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         if (!this._init) {
             this.setupColumns();
         }
@@ -914,8 +935,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public ngOnInit() {
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
-        const config = this.pivotConfiguration;
-        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);
         super.ngOnInit();
     }
 
@@ -928,6 +947,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         Promise.resolve().then(() => {
             this.setupColumns();
         });
+        if (this.valueChipTemplateDirective) {
+            this.valueChipTemplate = this.valueChipTemplateDirective.template;
+        }
     }
 
     /**
@@ -1668,6 +1690,28 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
+        if (dimensionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Filters a single `IPivotDimension`.
+     *
+     * @example
+     * ```typescript
+     * public filter() {
+     *      const set = new Set();
+     *      set.add('Value 1');
+     *      set.add('Value 2');
+     *      this.grid1.filterDimension(this.pivotConfigHierarchy.rows[0], set, IgxStringFilteringOperand.instance().condition('in'));
+     * }
+     * ```
+     */
+    public filterDimension(dimension: IPivotDimension, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree ) {
+        this.filteringService.filter(dimension.memberName, value, conditionOrExpressionTree);
+        const dimensionType = this.getDimensionType(dimension);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }

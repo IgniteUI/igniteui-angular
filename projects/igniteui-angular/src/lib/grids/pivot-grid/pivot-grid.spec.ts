@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -106,6 +106,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
             // no rows, just empty message
             expect(pivotGrid.rowList.length).toBe(0);
             expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
+        });
+
+        it('should allow setting custom chip value template', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.valueChipTemplate = fixture.componentInstance.chipValueTemplate;
+            fixture.detectChanges();
+
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+            let content = valueChip.querySelector('.igx-chip__content');
+            expect(content.textContent.trim()).toBe('UnitsSold');
         });
 
         it('should apply formatter and dataType from measures', () => {
@@ -1117,6 +1128,51 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
                 expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
+            });
+
+            it('should apply correct sorting for IgxPivotDateDimension', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+
+                pivotGrid.pivotConfiguration.columns = [
+                    new IgxPivotDateDimension(
+                        {
+                            memberName: 'Date',
+                            memberFunction: (data) => {
+                                return data['Date'];
+                            },
+                            enabled: true,
+                            dataType: GridColumnDataType.Date
+                        },
+                        {
+                            total: false,
+                            years: false,
+                            quarters: false,
+                            months: false,
+                            fullDate: true
+                        }
+                    )
+                ];
+                pivotGrid.notifyDimensionChange(true);
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const colChip = headerRow.querySelector('igx-chip[id="Date"]');
+
+                //sort asc
+                colChip.click();
+                fixture.detectChanges();
+
+                let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                let expected = ['01/05/2019', '01/06/2020', '02/19/2020', '05/12/2020', '01/01/2021', '04/07/2021', '12/08/2021']
+                expect(colHeaders).toEqual(expected);
+
+                // sort desc
+                colChip.click();
+                fixture.detectChanges();
+
+                colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                expected = ['12/08/2021', '04/07/2021', '01/01/2021', '05/12/2020', '02/19/2020', '01/06/2020', '01/05/2019'];
+                expect(colHeaders).toEqual(expected);
             });
 
             it('should sort on column for single row dimension.', () => {
@@ -2450,6 +2506,78 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 0).nativeElement.innerText).toBe('Accessories/Plovdiv:undefined');
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 3).nativeElement.innerText).toBe('Accessories/London:293');
+        });
+
+        it('should allow filtering a dimension runtime.', () => {
+            const colValues = new Set();
+            colValues.add('US');
+            colValues.add('UK');
+            pivotGrid.filterDimension(pivotGrid.pivotConfiguration.columns[0], colValues, IgxStringFilteringOperand.instance().condition('in'));
+            expect(pivotGrid.columns.length).toBe(6);
+            expect(pivotGrid.columns.filter(x => x.columnGroup).map(x => x.field)).toEqual(['US', 'UK']);
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
+
+            const rowValues = new Set();
+            rowValues.add('Clothing');
+            pivotGrid.filterDimension(pivotGrid.pivotConfiguration.rows[1].childLevel, rowValues, IgxStringFilteringOperand.instance().condition('in'));
+            expect(pivotGrid.rowList.length).toBe(4);
+            const rowDimData = pivotGrid.rowList.map(x => (x as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
+            expect(rowDimData).toEqual([undefined, 'Clothing', undefined, 'Clothing']);
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
+        });
+
+        it('should update filtering on pivot configuration change.', () => {
+            fixture.detectChanges();
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
+            const filterColumnExpTree = new FilteringExpressionsTree(FilteringLogic.And);
+            filterColumnExpTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('in'),
+                    fieldName: 'City',
+                    searchVal: new Set(['Ciudad de la Costa'])
+                }
+            ];
+            const filterRowExpTree = new FilteringExpressionsTree(FilteringLogic.And);
+            filterRowExpTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('in'),
+                    fieldName: 'ProductCategory',
+                    searchVal: new Set(['Bikes'])
+                }
+            ];
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        memberName: 'City',
+                        enabled: true,
+                        filter: filterColumnExpTree
+                    }
+                ],
+                rows: [
+                    {
+                        memberName: 'ProductCategory',
+                        enabled: true,
+                        filter: filterRowExpTree
+                    }],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum'
+                        },
+                        enabled: true
+                    }
+                ]
+            };
+            fixture.detectChanges();
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
+
+            expect(pivotGrid.columns.length).toBe(1);
+            expect(pivotGrid.columns[0].field).toEqual('Ciudad de la Costa');
+            expect(pivotGrid.rowList.length).toBe(1);
+            expect(pivotGrid.rowList.toArray()[0].data.dimensionValues.get('ProductCategory')).toBe('Bikes');
         });
     });
 });
