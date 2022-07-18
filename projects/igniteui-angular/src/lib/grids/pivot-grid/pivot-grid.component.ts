@@ -231,8 +231,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
-        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         this.emitInitEvents(this._pivotConfiguration);
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         if (!this._init) {
             this.setupColumns();
         }

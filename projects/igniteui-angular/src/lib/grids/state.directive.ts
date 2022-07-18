@@ -403,35 +403,12 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
                 const config: IPivotConfiguration = state;
-                this.restoreValues(config, context.currGrid);
-                this.restoreDimensions(config, context.currGrid);
+                context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
+                context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             },
-            restoreValues(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
-                // restore aggregator func if it matches the default aggregators key and label
-                const values = config.values;
-                for (const value of values) {
-                    const aggregateList = value.aggregateList;
-                    const aggregators = PivotUtil.getAggregatorsForValue(value, grid);
-                    value.aggregate.aggregator = aggregators.find(x => x.key === value.aggregate.key && x.label === value.aggregate.label)?.aggregator;
-                    if (aggregateList) {
-                        for (const ag of aggregateList) {
-                            ag.aggregator = aggregators.find(x => x.key === ag.key && x.label === ag.label)?.aggregator;
-                        }
-                    }
-                }
-            },
-            restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
-                const collections = [config.rows, config.columns, config.filters];
-                for(const collection of collections) {
-                    for (let index = 0; index < collection?.length; index++) {
-                        const dim = collection[index];
-                        if((dim as any).inBaseDimension) {
-                            collection[index] = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
-                        }
-                    }
-                }
-            }
+            
+
         }
     };
 
@@ -578,6 +555,37 @@ export class IgxGridStateDirective {
         }
     }
 
+    private restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+        const collections = [config.rows, config.columns, config.filters];
+        for (const collection of collections) {
+            for (let index = 0; index < collection?.length; index++) {
+                const dim = collection[index];
+                if ((dim as any).inBaseDimension) {
+                    collection[index] = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+                }
+                // restore complex filters
+                if (dim.filter) {
+                    dim.filter = this.createExpressionsTreeFromObject(dim.filter as FilteringExpressionsTree);
+                }
+            }
+        }
+    }
+
+    private restoreValues(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+        // restore aggregator func if it matches the default aggregators key and label
+        const values = config.values;
+        for (const value of values) {
+            const aggregateList = value.aggregateList;
+            const aggregators = PivotUtil.getAggregatorsForValue(value, grid);
+            value.aggregate.aggregator = aggregators.find(x => x.key === value.aggregate.key && x.label === value.aggregate.label)?.aggregator;
+            if (aggregateList) {
+                for (const ag of aggregateList) {
+                    ag.aggregator = aggregators.find(x => x.key === ag.key && x.label === ag.label)?.aggregator;
+                }
+            }
+        }
+    }
+
     /**
      * This method builds a FilteringExpressionsTree from a provided object.
      */
@@ -596,7 +604,9 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columns.length > 0) {
+                if (this.currGrid instanceof IgxPivotGridComponent) {
+                    dataType = this.currGrid.allDimensions.find(x => x.memberName === expr.fieldName).dataType;
+                } else if (this.currGrid.columns.length > 0) {
                     dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;

@@ -122,6 +122,82 @@ describe('IgxPivotGridState - input properties #pivotGrid', () => {
 
     });
 
+    it('setState should correctly restore dimension sorting state from string.', () => {
+        const state = fixture.componentInstance.state;
+        const stateToRestore = `{ "pivotConfiguration" : {
+            "columns": [
+                { "memberName": "ProductCategory", "enabled": true, "sortDirection": 1 }
+            ],
+            "rows": [
+                { "memberName": "City", "enabled": true, "sortDirection": 2 }
+            ],
+            "values": [
+                { "member": "UnitsSold", "aggregate": { "key": "SUM", "label": "Sum" },
+                 "enabled": true
+                }
+                ]
+            }
+        }`;
+
+        state.setState(stateToRestore, 'pivotConfiguration');
+        fixture.detectChanges();
+
+        // check sorting
+
+        // rows
+        const expectedOrder = ['Yokohama', 'Sofia', 'Plovdiv', 'New York', 'London', 'Ciudad de la Costa'];
+        const rowHeaders = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+        expect(rowDimensionHeaders).toEqual(expectedOrder);
+
+        // columns
+        const colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+        const expected = ['Accessories', 'Bikes', 'Clothing', 'Components'];
+        expect(colHeaders).toEqual(expected);
+    });
+
+    it('setState should correctly restore excel style filtering.', () => {
+        const state = fixture.componentInstance.state;
+        const stateToRestore = `{ "pivotConfiguration" : {
+            "columns": [
+                { "memberName": "ProductCategory", "enabled": true }
+            ],
+            "rows": [
+                { "memberName": "City", "enabled": true,
+                    "filter" : {
+                        "filteringOperands":[
+                            {
+                                "filteringOperands":[
+                                    {
+                                        "condition": {"name":"in","isUnary":false,"iconName":"is-in","hidden":true},
+                                        "fieldName":"City","ignoreCase":true,"searchVal":["Sofia"]
+                                    }
+                                    ],
+                                    "operator":1,"fieldName":"City"
+                            }],
+                            "operator":0
+                    }
+                }
+            ],
+            "values": [
+                { "member": "UnitsSold", "aggregate": { "key": "SUM", "label": "Sum" },
+                 "enabled": true
+                }
+                ]
+            }
+        }`;
+
+        // set filtering
+        state.setState(stateToRestore, 'pivotConfiguration');
+        fixture.detectChanges();
+
+        const rowHeaders = fixture.debugElement.queryAll(
+            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
+        expect(rowDimensionHeaders).toEqual(['Sofia']);
+    });
+
     it('should successfully restore the IgxPivotDateDimension.', () => {
         const state = fixture.componentInstance.state;
         pivotGrid.pivotConfiguration.rows = [
