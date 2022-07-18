@@ -398,6 +398,9 @@ export class IgxGridStateDirective {
         pivotConfiguration: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
                 const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                    return { pivotConfiguration: undefined };
+                }
                 const dims =  [...(config.rows || []), ...(config.columns || []), ...(config.filters || [])];
                 const dateDimensions = dims.filter(x => context.isDateDimension(x));
                 dateDimensions?.forEach(dim => {
@@ -408,6 +411,9 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
                 const config: IPivotConfiguration = state;
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                    return;
+                }
                 context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
                 context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
