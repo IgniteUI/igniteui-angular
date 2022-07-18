@@ -291,7 +291,7 @@ export class PivotUtil {
     }
 
     public static buildExpressionTree(config: IPivotConfiguration) {
-        const allDimensions = (config.rows || []).concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
+        const allDimensions = (config?.rows || []).concat((config?.columns || [])).concat(config?.filters || []).filter(x => x !== null && x !== undefined);
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
 
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
