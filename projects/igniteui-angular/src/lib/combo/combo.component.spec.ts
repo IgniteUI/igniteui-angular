@@ -873,7 +873,7 @@ describe('igxCombo', () => {
             expect(searchInput.nativeElement.getAttribute('role')).toEqual('searchbox');
             expect(searchInput.nativeElement.getAttribute('aria-label')).toEqual('search');
             expect(searchInput.nativeElement.getAttribute('aria-autocomplete')).toEqual('list');
-            
+
             const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
             expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
@@ -2087,11 +2087,12 @@ describe('igxCombo', () => {
             combo.valueKey = 'value';
             combo.displayKey = 'field';
             combo.data = [
-                { field: 'null', value: null },
-                { field: 'true', value: true },
+                { field: '0', value: 0 },
                 { field: 'false', value: false },
-                { field: 'empty', value: '' },
-                { field: 'empty', value: undefined }
+                { field: '', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
             ];
 
             combo.open();
@@ -2101,8 +2102,8 @@ describe('igxCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null');
-            expect(combo.selection).toEqual([ null ]);
+            expect(combo.value).toBe('0');
+            expect(combo.selection).toEqual([ 0 ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2111,8 +2112,8 @@ describe('igxCombo', () => {
 
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null, true');
-            expect(combo.selection).toEqual([ null, true ]);
+            expect(combo.value).toBe('0, false');
+            expect(combo.selection).toEqual([ 0, false ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2121,8 +2122,8 @@ describe('igxCombo', () => {
 
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null, true, false');
-            expect(combo.selection).toEqual([ null, true, false ]);
+            expect(combo.value).toBe('0, false, ');
+            expect(combo.selection).toEqual([ 0, false, '' ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2131,8 +2132,8 @@ describe('igxCombo', () => {
 
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null, true, false, empty');
-            expect(combo.selection).toEqual([ null, true, false, '' ]);
+            expect(combo.value).toBe('0, false, , undefined');
+            expect(combo.selection).toEqual([ 0, false, '', undefined ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2141,8 +2142,18 @@ describe('igxCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null, true, false, empty, empty');
-            expect(combo.selection).toEqual([ null, true, false, '', undefined ]);
+            expect(combo.value).toBe('0, false, , undefined, null');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            expect(item6).toBeDefined();
+
+            item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined, null, NaN');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null, NaN ]);
         });
         it('should prevent selection when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
