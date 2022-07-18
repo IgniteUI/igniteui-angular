@@ -10,17 +10,26 @@ describe('IgxSelectionAPIService', () => {
         expect(() => service.set(undefined, new Set())).toThrowError('Invalid value for component id!');
     });
 
-    // This test is no longer valid. Unique falsy values are selectable
-    // it('call add_item method with undefined itemID', () => {
-    //     const componentId = 'id1';
-    //     service.set(componentId, new Set());
-    //     expect(() => service.add_item(componentId, undefined)).toThrowError('Invalid value for item id!');
-    // });
-
-    it('call add_item method with itemID=0', () => {
+    it('call add_item method with falsy itemID', () => {
         const componentId = 'id1';
         service.set(componentId, new Set());
-        const newSelection = service.add_item(componentId, 0);
-        expect(newSelection.has(0)).toBe(true);
+
+        const selection1 = service.add_item(componentId, 0);
+        expect(selection1.has(0)).toBe(true);
+
+        const selection2 = service.add_item(componentId, false);
+        expect(selection2.has(false)).toBe(true);
+
+        const selection3 = service.add_item(componentId, null);
+        expect(selection3.has(null)).toBe(true);
+
+        const selection4 = service.add_item(componentId, undefined);
+        expect(selection4.has(undefined)).toBe(true);
+
+        const selection5 = service.add_item(componentId, '');
+        expect(selection5.has('')).toBe(true);
+
+        const selection6 = service.add_item(componentId, NaN);
+        expect(selection6.has(NaN)).toBe(true);
     });
 });
