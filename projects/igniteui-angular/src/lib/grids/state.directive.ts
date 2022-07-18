@@ -20,8 +20,7 @@ import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
-import { IPivotConfiguration } from './pivot-grid/pivot-grid.interface';
-import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
+import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 
@@ -399,6 +398,12 @@ export class IgxGridStateDirective {
         pivotConfiguration: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
                 const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
+                const dims =  [...(config.rows || []), ...(config.columns || []), ...(config.filters || [])];
+                const dateDimensions = dims.filter(x => context.isDateDimension(x));
+                dateDimensions?.forEach(dim => {
+                    // do not serialize the grid resource strings. This would pollute the object with unnecessary data.
+                    (dim as IgxPivotDateDimension).resourceStrings = {};
+                });
                 return { pivotConfiguration: config };
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
@@ -555,13 +560,17 @@ export class IgxGridStateDirective {
         }
     }
 
+    /**
+     * This method restores complex objects in the pivot dimensions
+     * Like the IgxPivotDateDimension and filters.
+     */
     private restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
         const collections = [config.rows, config.columns, config.filters];
         for (const collection of collections) {
             for (let index = 0; index < collection?.length; index++) {
                 const dim = collection[index];
-                if ((dim as any).inBaseDimension) {
-                    collection[index] = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+                if (this.isDateDimension(dim)) {
+                   this.restoreDateDimension(dim as IgxPivotDateDimension);
                 }
                 // restore complex filters
                 if (dim.filter) {
@@ -571,6 +580,35 @@ export class IgxGridStateDirective {
         }
     }
 
+
+    /**
+     * This method restores the IgxPivotDateDimension with its default functions and resource strings.
+     */
+    private restoreDateDimension(dim: IgxPivotDateDimension) {
+        const dateDim = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+        // restore functions and resource strings
+        dim.resourceStrings = dateDim.resourceStrings;
+        dim.memberFunction = dateDim.memberFunction;
+        let currDim: IPivotDimension = dim;
+        let originDim: IPivotDimension = dateDim;
+        while (currDim.childLevel) {
+            currDim = currDim.childLevel;
+            originDim = originDim.childLevel;
+            currDim.memberFunction = originDim.memberFunction;
+        }
+    }
+
+    /**
+     * Returns if this is a IgxPivotDateDimension.
+     */
+    private isDateDimension(dim: IPivotDimension) {
+        return (dim as any).inBaseDimension;
+    }
+
+    /**
+     * This method restores complex objects in the pivot values.
+     * Like the default aggregator methods.
+     */
     private restoreValues(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
         // restore aggregator func if it matches the default aggregators key and label
         const values = config.values;
