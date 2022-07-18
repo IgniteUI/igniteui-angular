@@ -1120,14 +1120,24 @@ describe('IgxSimpleCombo', () => {
         it('should select unique falsy item values', () => {
             combo.valueKey = 'value';
             combo.displayKey = 'field';
-            // Does not work with null and undefined values in the simple combo case. In the regular combo, those are supported.
             combo.data = [
-                { field: null, value: null },
-                { field: 'true', value: true },
+                { field: '0', value: 0 },
                 { field: 'false', value: false },
-                { field: 'empty', value: '' },
-                { field: 'empty', value: undefined }
+                { field: '', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
             ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0];
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0');
+            expect(combo.selection).toEqual([ 0 ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1136,8 +1146,8 @@ describe('IgxSimpleCombo', () => {
 
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('true');
-            expect(combo.selection).toEqual([ true ]);
+            expect(combo.value).toBe('false');
+            expect(combo.selection).toEqual([ false ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1146,8 +1156,8 @@ describe('IgxSimpleCombo', () => {
 
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('false');
-            expect(combo.selection).toEqual([ false ]);
+            expect(combo.value).toBe('');
+            expect(combo.selection).toEqual([ '' ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1156,8 +1166,28 @@ describe('IgxSimpleCombo', () => {
 
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('empty');
-            expect(combo.selection).toEqual([ '' ]);
+            expect(combo.value).toBe('undefined');
+            expect(combo.selection).toEqual([ undefined ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+            expect(item5).toBeDefined();
+
+            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('null');
+            expect(combo.selection).toEqual([ null ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            expect(item6).toBeDefined();
+
+            item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('NaN');
+            expect(combo.selection).toEqual([ NaN ]);
         });
     });
 
