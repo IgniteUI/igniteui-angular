@@ -2578,8 +2578,8 @@ describe('igxCombo', () => {
 
             addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.selection).toEqual(['New']);
-            expect(combo.comboInput.nativeElement.value).toEqual('New');
+            expect(combo.selection).toEqual(['New ']);
+            expect(combo.comboInput.nativeElement.value).toEqual('New ');
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
