@@ -57,6 +57,8 @@ $dark-fluent-calendar: extend($fluent-calendar, $dark-base-calendar);
 /// @prop {Map} picker-text-color [contrast-color: ('surface')]- The idle picker month/year color.
 /// @prop {Map} date-selected-text-color [contrast-color: ('secondary', 600)] - The text color for the selected date.
 /// @prop {Map} date-current-text-color [contrast-color: 'surface'] - The text color for the current date.
+/// @prop {Map} date-current-hover-text-color [color: ('surface')] - The hover text color for the current date.
+/// @prop {Map} date-current-focus-text-color [color: ('surface')] - The focus text color for the current date.
 /// @prop {Map} week-number-background [('grays', 300, .2)] - The background color of the week number column.
 /// @prop {Map} date-selected-hover-text-color [contrast-color: ('surface')] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-text-color [contrast-color: ('surface')] - The focus text color for the selected date.
@@ -69,14 +71,6 @@ $dark-bootstrap-calendar: extend(
     (
         content-background: (
             color: ('grays', 50)
-        ),
-
-        date-selected-hover-text-color: (
-            contrast-color: ('surface')
-        ),
-
-        date-selected-focus-text-color: (
-            contrast-color: ('surface')
         ),
 
         picker-background-color: (
@@ -95,7 +89,23 @@ $dark-bootstrap-calendar: extend(
             contrast-color: ('secondary', 600)
         ),
 
+        date-selected-hover-text-color: (
+            contrast-color: ('surface')
+        ),
+
+        date-selected-focus-text-color: (
+            contrast-color: ('surface')
+        ),
+
         date-current-text-color: (
+            contrast-color: 'surface'
+        ),
+
+        date-current-hover-text-color: (
+            contrast-color: 'surface'
+        ),
+
+        date-current-focus-text-color: (
             contrast-color: 'surface'
         ),
 
@@ -122,6 +132,10 @@ $dark-bootstrap-calendar: extend(
 /// @prop {Map} month-hover-current-text-color [color: ('primary', 300)]- The text color for the current/selected month on hover.
 /// @prop {Map} date-selected-hover-text-color [contrast-color: ('surface')] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-text-color [contrast-color: ('surface')] - The focus text color for the selected date.
+/// @prop {Map} date-current-hover-text-color [color: ('primary', 200)] - The hover text color for the current date.
+/// @prop {Map} date-current-focus-text-color [color: ('grays', 100)] - The focus text color for the current date.
+/// @prop {Map} date-current-hover-bg-color [color: ('grays', 100)] - The hover background color for the current date.
+/// @prop {Map} date-current-focus-bg-color [color: ('grays', 100)] - The focus background color for the current date.
 /// @requires {function} extend
 /// @requires $indigo-calendar
 /// @requires $dark-base-calendar
@@ -131,6 +145,22 @@ $dark-indigo-calendar: extend(
     (
         content-text-color: (
             contrast-color: ('surface')
+        ),
+
+        date-current-hover-bg-color: (
+            color: ('grays', 100)
+        ),
+
+        date-current-focus-bg-color: (
+            color: ('grays', 100)
+        ),
+
+        date-current-hover-text-color: (
+            color: ('primary', 200)
+        ),
+
+        date-current-focus-text-color: (
+            color: ('primary', 200)
         ),
 
         inactive-text-color: (
