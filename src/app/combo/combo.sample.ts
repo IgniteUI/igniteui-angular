@@ -92,11 +92,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         };
 
         this.uniqueFalsyData = [
-            { field: null, value: null },
+            { field: 'null', value: null },
             { field: 'true', value: true },
             { field: 'false', value: false },
             { field: 'empty', value: '' },
-            { field: 'undefined', value: undefined }
+            { field: 'undefined', value: undefined },
+            { field: 'NaN', value: NaN }
         ];
 
         const keys = Object.keys(division);

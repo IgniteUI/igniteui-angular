@@ -991,7 +991,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (!this.searchValue) {
             return;
         }
-        const newValue = this.searchValue.trim();
+        const newValue = this.searchValue;
         const addedItem = this.displayKey ? {
             [this.valueKey]: newValue,
             [this.displayKey]: newValue
@@ -1143,8 +1143,14 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.comboAPI.valueKey === null) {
             return keys;
         }
+
+        const isNaNvalue = (key: any): boolean => (isNaN(key) && key !== undefined && typeof key !== 'string') ?? false;
+
         // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
+        return keys.map(key => isNaNvalue(key)
+            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
+            : this.data.find(entry => entry[this.valueKey] === key))
+        .filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
