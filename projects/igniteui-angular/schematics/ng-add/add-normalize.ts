@@ -16,8 +16,8 @@ export const scssImport =
 export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tree): boolean => {
     const projects = getProjectsFromWorkspace(workspace);
     let status = false;
+    let addPackage;
     projects.forEach(project => {
-        let addPackage;
         const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
         const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));
         if (!styleExt) {
@@ -53,12 +53,12 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
             default:
                 break;
         }
-
-        if (addPackage) {
-            const name = Object.keys(resetPackage)[0];
-            status = addPackageToPkgJson(host, name, resetPackage[name], 'dependencies');
-        }
     });
+
+    if (addPackage) {
+        const name = Object.keys(resetPackage)[0];
+        status = addPackageToPkgJson(host, name, resetPackage[name], 'dependencies');
+    }
 
     return status;
 };

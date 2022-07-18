@@ -157,24 +157,19 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
     const projects = getProjectsFromWorkspace(workspace);
-    for (let project of projects.values()) {
-        for (const pkg of Object.keys(pkgJson.dependencies)) {
-            const version = pkgJson.dependencies[pkg];
-            const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
-            if (!entry || entry.target === PackageTarget.NONE) {
-                continue;
-            }
-            switch (pkg) {
-                case 'hammerjs':
-                    logIncludingDependency(context, pkg, version);
-                    addPackageToPkgJson(tree, pkg, version, entry.target);
-                    await addHammerToConfig(project, tree, 'build', context);
-                    await addHammerToConfig(project, tree, 'test', context);
-                    break;
-                default:
-                    logIncludingDependency(context, pkg, version);
-                    addPackageToPkgJson(tree, pkg, version, entry.target);
-                    break;
+
+    for (const pkg of Object.keys(pkgJson.dependencies)) {
+        const version = pkgJson.dependencies[pkg];
+        const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
+        if (!entry || entry.target === PackageTarget.NONE) {
+            continue;
+        }
+        logIncludingDependency(context, pkg, version);
+        addPackageToPkgJson(tree, pkg, version, entry.target);
+        if (pkg === 'hammerjs') {
+            for (let project of projects.values()) {
+                await addHammerToConfig(project, tree, 'build', context);
+                await addHammerToConfig(project, tree, 'test', context);
             }
         }
     }
