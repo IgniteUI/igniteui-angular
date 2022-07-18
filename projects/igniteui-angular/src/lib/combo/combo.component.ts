@@ -36,12 +36,6 @@ import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
-/** The filtering criteria to be applied on data search */
-export interface IComboFilteringOptions {
-    /** Defines filtering case-sensitivity */
-    caseSensitive: boolean;
-}
-
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
@@ -124,13 +118,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
+     * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
+     * 
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
      * <igx-combo [filterable]="false">
      * ```
      */
     @Input()
-    public filterable = true;
+    public get filterable(): boolean {
+        return this.filteringOptions.filterable;
+    }
+    public set filterable(value: boolean) {
+        this.filteringOptions = Object.assign({}, this.filteringOptions, { filterable: value });
+    }
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -171,7 +172,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this.filterable ? this._filteredData : this.data;
+        return this.filteringOptions.filterable ? this._filteredData : this.data;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -203,7 +204,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get displaySearchInput(): boolean {
-        return this.filterable || this.allowCustomValues;
+        return this.filteringOptions.filterable || this.allowCustomValues;
     }
 
     /**
