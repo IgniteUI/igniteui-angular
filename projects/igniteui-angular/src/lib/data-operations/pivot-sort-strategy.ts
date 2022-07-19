@@ -1,6 +1,6 @@
 import { parseDate } from '../core/utils';
 import { PivotGridType } from '../grids/common/grid.interface';
-import { IPivotGridRecord } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotConfiguration, IPivotGridRecord } from '../grids/pivot-grid/pivot-grid.interface';
 import { PivotUtil } from '../grids/pivot-grid/pivot-util';
 import { GridColumnDataType } from './data-util';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
