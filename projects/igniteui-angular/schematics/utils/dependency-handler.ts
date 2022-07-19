@@ -1,7 +1,7 @@
 import { workspaces } from '@angular-devkit/core';
 import { SchematicContext, Rule, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
-import { createHost, getProjectsFromWorkspace } from './util';
+import { createHost } from './util';
 
 export enum PackageTarget {
     DEV = 'devDependencies',
@@ -156,7 +156,6 @@ const addHammerToConfig =
 const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
-    const projects = getProjectsFromWorkspace(workspace);
 
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
@@ -167,10 +166,10 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
         logIncludingDependency(context, pkg, version);
         addPackageToPkgJson(tree, pkg, version, entry.target);
         if (pkg === 'hammerjs') {
-            for (let project of projects.values()) {
+            workspace.projects.forEach(async (project) => {
                 await addHammerToConfig(project, tree, 'build', context);
                 await addHammerToConfig(project, tree, 'test', context);
-            }
+            });
         }
     }
     await workspaces.writeWorkspace(workspace, workspaceHost);
