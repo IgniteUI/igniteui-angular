@@ -233,7 +233,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim() && this.selectionService.get(this.id).size > 0) {
+        if (!this.comboInput.value.trim() && this.selectionService.size(this.id) > 0) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
@@ -399,9 +399,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         // however in this case both args.newSelection and args.oldSelection are 'undefined'
         if (args.newSelection !== args.oldSelection
             || args.newSelection === undefined && newSelection?.size > 0
-            || newSelection?.size === 0 && oldSelectionAsArray.length > 0) {
+            || args.oldSelection === undefined && oldSelectionAsArray.length > 0) {
             this.selectionChanging.emit(args);
         }
+        // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
             let argsSelection = newSelection?.size > 0
                 ? args.newSelection
@@ -443,7 +444,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clearOnBlur(): void {
         const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null) {
+        if (filtered === undefined || filtered === null || this.selectionService.size(this.id) === 0) {
             this.clearAndClose();
             return;
         }
@@ -456,11 +457,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
     }
 
-    private getElementVal(element: any): any | null {
-        if (!element) {
-            return null;
-        }
-
+    private getElementVal(element: any): string {
         const elementVal = this.displayKey ? element[this.displayKey] : element;
         return String(elementVal);
     }
