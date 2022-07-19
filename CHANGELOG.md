@@ -74,6 +74,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridEditingActions`
     - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
 
+- `IgxTabs`
+    - **Behavioral Change** - Both scroll buttons are displayed when the tabs are not fully visible. When there is no tabs to be scrolled in one of the directions the corresponding scroll button is disabled.
+
 - Locale settings
     - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
     - `IColumnPipeArgs` interface now expose a `weekStart` property to control the first week of day in calendar used in the grid for editing and filtering

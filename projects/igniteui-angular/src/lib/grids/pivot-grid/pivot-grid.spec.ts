@@ -1130,6 +1130,46 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
             });
 
+            it('should apply sorting for dimension via column chip when dimension has memberFunction', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.columns = [{
+                    memberName: 'Country',
+                    memberFunction: (data) => {
+                        const len = data['Country'].length;
+                        return data['Country'];
+                    },
+                    enabled: true
+                }];
+                pivotGrid.notifyDimensionChange(true);
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const colChip = headerRow.querySelector('igx-chip[id="Country"]');
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                let expected = ['Bulgaria', 'USA', 'Uruguay'];
+                expect(colHeaders).toEqual(expected);
+
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                expected = ['Uruguay', 'USA', 'Bulgaria'];
+                expect(colHeaders).toEqual(expected);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
+                expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
+            });
+
             it('should apply correct sorting for IgxPivotDateDimension', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
 
