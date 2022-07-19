@@ -92,6 +92,12 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     public cssClass = 'igx-expansion-panel';
 
     /**
+     * @hidden
+     */
+    @HostBinding('class.igx-expansion-panel--expanded')
+    private opened = false;
+
+    /**
      * @hidden @internal
      */
     @HostBinding('attr.aria-expanded')
@@ -244,6 +250,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (args.cancel === true) {
             return;
         }
+        this.opened = false;
         this.playCloseAnimation(
             this.body?.element,
             () => {
@@ -275,6 +282,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
             return;
         }
         this.collapsed = false;
+        this.opened = true;
         this.collapsedChange.emit(false);
         this.cdr.detectChanges();
         this.playOpenAnimation(
