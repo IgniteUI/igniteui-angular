@@ -166,10 +166,10 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
         logIncludingDependency(context, pkg, version);
         addPackageToPkgJson(tree, pkg, version, entry.target);
         if (pkg === 'hammerjs') {
-            workspace.projects.forEach(async (project) => {
+            for (let project of workspace.projects.values()) {
                 await addHammerToConfig(project, tree, 'build', context);
                 await addHammerToConfig(project, tree, 'test', context);
-            });
+            }
         }
     }
     await workspaces.writeWorkspace(workspace, workspaceHost);
