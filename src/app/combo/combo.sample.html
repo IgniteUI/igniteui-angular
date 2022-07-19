@@ -23,12 +23,12 @@
                         <igx-hint>Please select the state you've visited</igx-hint>
                     </igx-simple-combo>
                     <igx-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
-                        required [data]="uniqueFalsyData" displayKey="field" [disabled]="isDisabled" valueKey="value">
+                        required [data]="uniqueFalsyData" displayKey="field" valueKey="value" [disabled]="isDisabled">
                         <label igxLabel>Falsy unique values (combo)</label>
                         <igx-hint>Select a unique falsy value</igx-hint>
                     </igx-combo>
                     <igx-simple-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
-                        required [data]="uniqueFalsyData" displayKey="field" [disabled]="isDisabled" valueKey="value">
+                        required [data]="uniqueFalsyData" displayKey="field" valueKey="value" [disabled]="isDisabled">
                         <label igxLabel>Falsy unique values (simple-combo)</label>
                         <igx-hint>Select a unique falsy value</igx-hint>
                     </igx-simple-combo>

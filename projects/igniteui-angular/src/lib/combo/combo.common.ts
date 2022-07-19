@@ -26,7 +26,7 @@ import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
@@ -1045,11 +1045,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (!this.searchValue) {
             return;
         }
-        const newValue = this.searchValue;
         const addedItem = this.displayKey ? {
-            [this.valueKey]: newValue,
-            [this.displayKey]: newValue
-        } : newValue;
+            [this.valueKey]: this.searchValue,
+            [this.displayKey]: this.searchValue
+        } : this.searchValue;
         if (this.groupKey) {
             Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
@@ -1202,8 +1201,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.comboAPI.valueKey === null) {
             return keys;
         }
-
-        const isNaNvalue = (key: any): boolean => (isNaN(key) && key !== undefined && typeof key !== 'string') ?? false;
 
         // map keys vs. filter data to retain the order of the selected items
         return keys.map(key => isNaNvalue(key)
