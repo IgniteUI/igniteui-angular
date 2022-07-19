@@ -17,8 +17,8 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
     const projects = getProjectsFromWorkspace(workspace);
     let status = false;
     let addPackage;
+    const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
     projects.forEach(project => {
-        const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
         const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));
         if (!styleExt) {
             return;
