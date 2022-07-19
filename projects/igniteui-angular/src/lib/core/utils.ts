@@ -210,6 +210,15 @@ export const isEqual = (obj1, obj2): boolean => {
 };
 
 /**
+ * Checks if provided variable is the value NaN
+ *
+ * @param value Value to check
+ * @returns true if provided variable is NaN
+ * @hidden
+ */
+ export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
+
+/**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
  *
