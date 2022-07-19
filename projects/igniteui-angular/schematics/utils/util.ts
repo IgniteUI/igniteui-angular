@@ -22,12 +22,3 @@ export const createHost = (tree: Tree): workspaces.WorkspaceHost => ({
 
     isFile: async (path: string): Promise<boolean> => tree.exists(path)
 });
-
-export const getDefaultProject = async (tree: Tree) => {
-    const { workspace } = await workspaces.readWorkspace(tree.root.path, createHost(tree));
-    return getDefaultProjectFromWorkspace(workspace);
-};
-
-export const getDefaultProjectFromWorkspace = (workspace: workspaces.WorkspaceDefinition): workspaces.ProjectDefinition => {
-    return workspace.projects.get(workspace.extensions['defaultProject'] as string) || workspace.projects.values().next().value;
-};
