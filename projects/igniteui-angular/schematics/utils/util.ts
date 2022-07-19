@@ -22,7 +22,3 @@ export const createHost = (tree: Tree): workspaces.WorkspaceHost => ({
 
     isFile: async (path: string): Promise<boolean> => tree.exists(path)
 });
-
-export const getProjectsFromWorkspace = (workspace: workspaces.WorkspaceDefinition): workspaces.ProjectDefinitionCollection => {
-    return workspace.projects;
-};
