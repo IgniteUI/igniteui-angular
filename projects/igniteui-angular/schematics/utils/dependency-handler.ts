@@ -1,7 +1,7 @@
 import { workspaces } from '@angular-devkit/core';
 import { SchematicContext, Rule, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
-import { createHost, getDefaultProjectFromWorkspace } from './util';
+import { createHost } from './util';
 
 export enum PackageTarget {
     DEV = 'devDependencies',
@@ -156,24 +156,20 @@ const addHammerToConfig =
 const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
-    const defaultProject = getDefaultProjectFromWorkspace(workspace);
+
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
         if (!entry || entry.target === PackageTarget.NONE) {
             continue;
         }
-        switch (pkg) {
-            case 'hammerjs':
-                logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, entry.target);
-                await addHammerToConfig(defaultProject, tree, 'build', context);
-                await addHammerToConfig(defaultProject, tree, 'test', context);
-                break;
-            default:
-                logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, entry.target);
-                break;
+        logIncludingDependency(context, pkg, version);
+        addPackageToPkgJson(tree, pkg, version, entry.target);
+        if (pkg === 'hammerjs') {
+            await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
+                await addHammerToConfig(project, tree, 'build', context);
+                await addHammerToConfig(project, tree, 'test', context);
+            }));
         }
     }
     await workspaces.writeWorkspace(workspace, workspaceHost);
