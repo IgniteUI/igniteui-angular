@@ -5,14 +5,6 @@ import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sor
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 
 /** @hidden */
-@Pipe({ name: 'comboClean' })
-export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
-    }
-}
-
-/** @hidden */
 @Pipe({ name: 'comboFiltering' })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(
@@ -75,7 +67,7 @@ function defaultFilterFunction (collection: any[], searchValue: any, filteringOp
     if (!searchValue) {
         return collection;
     }
-    const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+    const searchTerm = filteringOptions.caseSensitive ? searchValue : searchValue.toLowerCase();
     if (filteringOptions.filteringKey != null) {
         return collection.filter(e => filteringOptions.caseSensitive ?
             e[filteringOptions.filteringKey]?.includes(searchTerm) :
