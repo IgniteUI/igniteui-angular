@@ -1,41 +1,22 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter,
-    HostBinding, Input, NgModule, OnInit, Output, Renderer2,
-    ViewChild,
-    TemplateRef,
-    ContentChild,
-    OnDestroy,
-    HostListener,
-    ViewChildren,
-    QueryList,
-    ChangeDetectorRef,
-    OnChanges,
-    NgZone,
-    AfterContentInit,
-    SimpleChanges
+    AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
+    HostBinding, HostListener, Input, NgModule, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { EditorProvider } from '../core/edit-provider';
-import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject, merge, Observable, timer, noop } from 'rxjs';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import {
-    SliderHandle,
-    IgxThumbFromTemplateDirective,
-    IgxThumbToTemplateDirective,
-    IRangeSliderValue,
-    IgxSliderType,
-    ISliderValueChangeEventArgs,
-    TicksOrientation,
-    TickLabelsOrientation,
-    IgxTickLabelTemplateDirective
-} from './slider.common';
-import { IgxThumbLabelComponent } from './label/thumb-label.component';
-import { IgxTicksComponent } from './ticks/ticks.component';
-import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import { EditorProvider } from '../core/edit-provider';
 import { resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
+import { IgxThumbLabelComponent } from './label/thumb-label.component';
+import {
+    IgxSliderType, IgxThumbFromTemplateDirective,
+    IgxThumbToTemplateDirective, IgxTickLabelTemplateDirective, IRangeSliderValue, ISliderValueChangeEventArgs, SliderHandle, TickLabelsOrientation, TicksOrientation
+} from './slider.common';
+import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
+import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import { IgxTicksComponent } from './ticks/ticks.component';
 
 let NEXT_ID = 0;
 
@@ -1320,9 +1301,9 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        const intervalStep = `1.5px, calc(${interval * Math.sqrt(2)}% - 1.5px)`;
+        const intervalStep = `0, ${interval * Math.sqrt(2)}%`;
         this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', intervalStep);
-        
+
         if (!this.continuous && interval === null) {
             this.renderer.setStyle(this.ticks.nativeElement, 'visibility', 'hidden');
         }

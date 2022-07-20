@@ -17,7 +17,7 @@
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
 /// @param {Color} $track-hover-color [null] - The color of the track on hover.
-/// 
+///
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
 /// @param {Color} $thumb-border-color [null] - The thumb border color.
@@ -66,7 +66,7 @@
     $base-track-hover-color: null,
     $disabled-base-track-color: null,
     $disabled-fill-track-color: null,
-    
+
     $tick-label-color: null,
     $tick-color: null,
 ) {
@@ -241,7 +241,8 @@
 
         @if $variant == 'material' {
             height: rem(4px);
-            top: rem(1px);
+            top: 50%;
+            transform: translateY(-50%);
         }
     }
 
@@ -360,11 +361,24 @@
 
     %igx-slider-track-steps {
         position: absolute;
+        display: flex;
         width: 100%;
-        height: rem(2px);
+        height: rem(4px);
         opacity: .85;
         transition: opacity .2s ease-out;
-        top: rem($steps-top-position);
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+
+        svg {
+            clip-path: inset(0 rem(3px) 0 rem(3px));
+        }
+
+        line {
+            stroke: currentColor;
+            stroke-width: rem(3px);
+            stroke-linecap: round;
+        }
     }
 
     %igx-slider__tick-labels--top-bottom {
@@ -431,12 +445,7 @@
         height: rem($thumb-size);
         outline-style: none;
         top: -#{rem($thumb-radius)};
-        margin-left: -#{rem($thumb-radius)};
-
-        [dir='rtl'] & {
-            margin: initial;
-            margin-right: -#{rem($thumb-radius)};
-        }
+        margin-inline-start: -#{rem($thumb-radius)};
 
         &:hover div::after {
             opacity: .12;
@@ -492,17 +501,12 @@
         min-width: $thumb-label-width;
         opacity: 0;
 
-        [dir='rtl'] & {
-            left: initial;
-            right: -50%;
-        }
-
         &::after {
             content: '';
             position: absolute;
             top: 85%;
-            border-left: rem(10px) solid transparent;
-            border-right: rem(10px) solid transparent;
+            border-inline-start: rem(10px) solid transparent;
+            border-inline-end: rem(10px) solid transparent;
             border-top: rem(10px) solid var-get($theme, 'label-background-color');
         }
     }
@@ -517,7 +521,7 @@
             content: '';
             width: rem($thumb-size);
             height: rem($thumb-size);
-            left: #{rem($thumb-radius) - math.div(rem($thumb-size), 2)};
+            inset-inline-start: #{rem($thumb-radius) - math.div(rem($thumb-size), 2)};
             top: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             margin-inline-start: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             background: var-get($theme, 'thumb-color');
