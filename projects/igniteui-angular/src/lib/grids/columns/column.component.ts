@@ -487,6 +487,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             if (typeof (value) === 'number' || value.match(/^[0-9]*$/)) {
                 value = value + 'px';
             }
+            if (value === 'fit-content') {
+                value = 'auto';
+            }
             this._width = value;
             if (this.grid) {
                 this.cacheCalcWidth();
