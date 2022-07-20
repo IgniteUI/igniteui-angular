@@ -1264,22 +1264,6 @@ export class IgxSliderComponent implements
         return Math.max(Math.min(value, max), min);
     }
 
-    private generateTickMarks(color: string, interval: number) {
-        return interval !== null ? `repeating-linear-gradient(
-            ${'to left'},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        ), repeating-linear-gradient(
-            ${'to right'},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        )` : interval;
-    }
-
     private positionHandler(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
         const percent = `${this.valueToFraction(position) * 100}%`;
         const dir = this._dir.rtl ? 'right' : 'left';
@@ -1336,9 +1320,12 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        const renderCallbackExecution = !this.continuous ? this.generateTickMarks(
-            'var(--igx-slider-track-step-color, var(--track-step-color, white))', interval) : null;
-        this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
+        const intervalStep = `1.5px, calc(${interval * Math.sqrt(2)}% - 1.5px)`;
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', intervalStep);
+        
+        if (!this.continuous && interval === null) {
+            this.renderer.setStyle(this.ticks.nativeElement, 'visibility', 'hidden');
+        }
     }
 
     private showSliderIndicators() {
