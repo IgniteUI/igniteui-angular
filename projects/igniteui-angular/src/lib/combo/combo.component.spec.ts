@@ -28,7 +28,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IgxComboState } from './combo.common';
+import { IComboFilteringOptions, IgxComboState } from './combo.common';
 import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -1050,7 +1050,7 @@ describe('igxCombo', () => {
         });
         it(`should not render search input if both 'allowCustomValues' and 'filterable' are false`, () => {
             combo.allowCustomValues = false;
-            combo.filterable = false;
+            combo.filteringOptions.filterable = false;
             expect(combo.displaySearchInput).toBeFalsy();
             combo.toggle();
             fixture.detectChanges();
@@ -2103,6 +2103,78 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(0);
         });
+        it('should select unique falsy item values', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            combo.data = [
+                { field: '0', value: 0 },
+                { field: 'false', value: false },
+                { field: '', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
+            ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0');
+            expect(combo.selection).toEqual([ 0 ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            expect(item2).toBeDefined();
+
+            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false');
+            expect(combo.selection).toEqual([ 0, false ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+            expect(item3).toBeDefined();
+
+            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, ');
+            expect(combo.selection).toEqual([ 0, false, '' ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
+
+            item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined');
+            expect(combo.selection).toEqual([ 0, false, '', undefined ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+            expect(item5).toBeDefined();
+
+            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined, null');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            expect(item6).toBeDefined();
+
+            item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined, null, NaN');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null, NaN ]);
+        });
         it('should prevent selection when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
             combo.toggle();
@@ -2526,8 +2598,8 @@ describe('igxCombo', () => {
 
             addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.selection).toEqual(['New']);
-            expect(combo.comboInput.nativeElement.value).toEqual('New');
+            expect(combo.selection).toEqual(['New ']);
+            expect(combo.comboInput.nativeElement.value).toEqual('New ');
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2693,6 +2765,115 @@ describe('igxCombo', () => {
             expect(combo.searchValue).toEqual('Test');
             cancelSub.unsubscribe();
         });
+        it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filterFunction = undefined;
+            combo.filteringOptions = undefined;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { caseSensitive: true });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'value not in the list';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {

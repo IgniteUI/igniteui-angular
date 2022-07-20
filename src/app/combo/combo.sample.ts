@@ -1,12 +1,23 @@
-import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangingEventArgs,
-    DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
-    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
-} from 'igniteui-angular';
-import { ButtonGroupAlignment } from 'igniteui-angular';
-import { take } from 'rxjs/operators';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    ButtonGroupAlignment,
+    ConnectedPositioningStrategy,
+    DisplayDensity,
+    ElasticPositionStrategy,
+    GlobalPositionStrategy,
+    HorizontalAlignment,
+    IChangeSwitchEventArgs,
+    IComboSelectionChangingEventArgs,
+    IgxComboComponent,
+    IgxSimpleComboComponent,
+    OverlaySettings,
+    scaleInCenter,
+    scaleOutCenter,
+    VerticalAlignment } from 'igniteui-angular';
 import { cloneDeep } from 'lodash';
-import { UntypedFormGroup, Validators, UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
+import { IComboFilteringOptions } from 'projects/igniteui-angular/src/lib/combo/combo.common';
+import { take } from 'rxjs/operators';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -21,6 +32,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private comboRef: ElementRef;
     @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
+    @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
+    private simpleCombo;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -42,6 +55,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public genres = [];
     public user: UntypedFormGroup;
+    public uniqueFalsyData: any [];
     private overlaySettings: OverlaySettings[] = [null, null, null, null];
     private initialItemTemplate: TemplateRef<any> = null;
 
@@ -89,6 +103,16 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };
+
+        this.uniqueFalsyData = [
+            { field: 'null', value: null },
+            { field: 'true', value: true },
+            { field: 'false', value: false },
+            { field: 'empty', value: '' },
+            { field: 'undefined', value: undefined },
+            { field: 'NaN', value: NaN }
+        ];
+
         const keys = Object.keys(division);
         for (const key of keys) {
             division[key].map((e) => {
@@ -180,5 +204,35 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
         console.log(event);
+    }
+
+    public changeFiltering(e: IChangeSwitchEventArgs) {
+        if (e.checked) {
+            this.igxCombo.filterFunction = this.customFilterFunction;
+            this.simpleCombo.filterFunction = this.customFilterFunction;
+        } else {
+            this.igxCombo.filterFunction = undefined;
+            this.simpleCombo.filterFunction = undefined;
+        }
+    }
+
+    public changeFilteringKey(e: IChangeSwitchEventArgs) {
+        if (e.checked) {
+            this.igxCombo.filteringOptions.filteringKey = 'region';
+            this.simpleCombo.filteringOptions.filteringKey = 'region';
+        } else {
+            this.igxCombo.filteringOptions.filteringKey = undefined;
+            this.simpleCombo.filteringOptions.filteringKey = undefined;
+        }
+    }
+
+    private customFilterFunction = (collection: any[], filterValue: any, filteringOptions: IComboFilteringOptions) => {
+        if (!filterValue) {
+            return collection;
+        }
+        const searchTerm = filteringOptions.caseSensitive ? filterValue.trim() : filterValue.toLowerCase().trim();
+        return collection.filter(i => filteringOptions.caseSensitive ?
+            i[filteringOptions.filteringKey]?.includes(searchTerm) || i[this.igxCombo.groupKey]?.includes(searchTerm) :
+            i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm) || i[this.igxCombo.groupKey]?.toString().toLowerCase().includes(searchTerm))
     }
 }
