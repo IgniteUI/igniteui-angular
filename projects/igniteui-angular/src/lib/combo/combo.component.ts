@@ -28,7 +28,7 @@ import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboCleanPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -119,7 +119,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /**
      * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
-     * 
+     *
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
      * <igx-combo [filterable]="false">
@@ -355,9 +355,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
-        if (itemID === null || itemID === undefined) {
-            return;
-        }
         if (select) {
             this.select([itemID], false, event);
         } else {
@@ -451,7 +448,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
-        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,
@@ -468,7 +464,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
-        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,
