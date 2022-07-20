@@ -1291,6 +1291,7 @@ export class IgxSliderComponent implements
     private setTickInterval() {
         let interval;
         const trackProgress = 100;
+
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
             interval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
@@ -1301,12 +1302,8 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        const intervalStep = `0, ${interval * Math.sqrt(2)}%`;
-        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', intervalStep);
-
-        if (!this.continuous && interval === null) {
-            this.renderer.setStyle(this.ticks.nativeElement, 'visibility', 'hidden');
-        }
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${interval * Math.sqrt(2)}%`);
+        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || interval === null ? 'hidden' : 'visible');
     }
 
     private showSliderIndicators() {

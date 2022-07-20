@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By, HammerModule } from '@angular/platform-browser';
-import { IgxSliderComponent, IgxSliderModule } from './slider.component';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DIR_DOCUMENT, IgxDirectionality } from '../services/direction/directionality';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
-import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxSliderType, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
+import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 
 declare let Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
@@ -1179,36 +1179,37 @@ describe('IgxSlider', () => {
 
         it('should draw tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps > svg > line');
+            fixture.detectChanges();
 
             // Slider steps <= 1. No marks should be drawn;
-            expect(ticks.style.background).toBeFalsy();
+            expect(ticks.style.visibility).toEqual('hidden');
 
             // Slider steps > 1. Should draw tick marks;
             fixture.componentInstance.slider.step = 10;
             fixture.detectChanges();
 
-            expect(ticks.style.background).toBeTruthy();
+            expect(ticks.style.visibility).toEqual('visible');
         });
 
         it('should hide tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             fixture.detectChanges();
 
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps > svg > line');
             const slider = fixture.componentInstance.slider;
 
-            expect(ticks.style.background).toBeFalsy();
+            expect(ticks.style.visibility).toEqual('hidden');
 
             slider.step = 10;
             fixture.detectChanges();
 
-            expect(ticks.style.background).toBeTruthy();
+            expect(ticks.style.visibility).toEqual('visible');
 
             slider.continuous = true;
             fixture.detectChanges();
 
-            expect(ticks.style.background).toBeFalsy();
+            expect(ticks.style.visibility).toEqual('hidden');
         });
 
         it(`When setting min and max value for range slider,
