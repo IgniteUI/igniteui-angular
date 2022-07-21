@@ -10,6 +10,7 @@
 /// @type {Map}
 /// @property {Map} track-color [color: ('secondary', 500)] - The color of the track.
 /// @property {Map} track-step-color [color: 'surface'] - The color of the track steps.
+/// @property {Number} track-step-size [rem(3px)] - The size of the track steps.
 /// @property {Map} track-hover-color [color: ('secondary', 400)] - The color of the track on hover.
 ///
 /// @property {Map} thumb-color [color: ('secondary', 500)] - The color of the thumb.
@@ -40,6 +41,8 @@ $light-slider: (
     track-step-color: (
         color: 'surface'
     ),
+
+    track-step-size: rem(3px),
 
     track-hover-color: (
         color: ('secondary', 400)
