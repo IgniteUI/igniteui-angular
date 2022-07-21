@@ -16,6 +16,7 @@
 ///
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
+/// @param {Number} $track-step-size [null] - The size of the track steps.
 /// @param {Color} $track-hover-color [null] - The color of the track on hover.
 ///
 /// @param {Color} $thumb-color [null] - The color of the thumb.
@@ -52,6 +53,7 @@
 
     $track-color: null,
     $track-step-color: null,
+    $track-step-size: null,
     $track-hover-color: null,
     $thumb-color: null,
     $thumb-focus-color: null,
@@ -90,6 +92,7 @@
         palette: $palette,
         track-color: $track-color,
         track-step-color: $track-step-color,
+        track-step-size: $track-step-size,
         track-hover-color: $track-hover-color,
         thumb-color: $thumb-color,
         thumb-focus-color: $thumb-focus-color,
@@ -368,7 +371,7 @@
         transition: opacity .2s ease-out;
         top: 50%;
         transform: translateY(-50%);
-        color: white;
+        color: var-get($theme, 'track-step-color');
 
         svg {
             clip-path: inset(0 rem(3px) 0 rem(3px));
@@ -376,7 +379,7 @@
 
         line {
             stroke: currentColor;
-            stroke-width: rem(3px);
+            stroke-width: var-get($theme, 'track-step-size');
             stroke-linecap: round;
         }
     }
