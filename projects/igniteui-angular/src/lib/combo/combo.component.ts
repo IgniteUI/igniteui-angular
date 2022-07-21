@@ -28,19 +28,13 @@ import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboCleanPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-
-/** The filtering criteria to be applied on data search */
-export interface IComboFilteringOptions {
-    /** Defines filtering case-sensitivity */
-    caseSensitive: boolean;
-}
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -124,13 +118,20 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public autoFocusSearch = true;
 
     /**
+     * @deprecated in version 14.0.0. Use the IComboFilteringOptions.filterable
+     *
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
      * <igx-combo [filterable]="false">
      * ```
      */
     @Input()
-    public filterable = true;
+    public get filterable(): boolean {
+        return this.filteringOptions.filterable;
+    }
+    public set filterable(value: boolean) {
+        this.filteringOptions = Object.assign({}, this.filteringOptions, { filterable: value });
+    }
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -171,7 +172,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
-        return this.filterable ? this._filteredData : this.data;
+        return this.filteringOptions.filterable ? this._filteredData : this.data;
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
@@ -203,7 +204,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public get displaySearchInput(): boolean {
-        return this.filterable || this.allowCustomValues;
+        return this.filteringOptions.filterable || this.allowCustomValues;
     }
 
     /**
@@ -354,9 +355,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
-        if (itemID === null || itemID === undefined) {
-            return;
-        }
         if (select) {
             this.select([itemID], false, event);
         } else {
@@ -450,7 +448,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
-        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,
@@ -467,7 +464,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
-        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,

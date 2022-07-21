@@ -71,6 +71,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -154,6 +155,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Output()
     public valuesChange = new EventEmitter<IValuesChange>();
 
+
+    /**
+     * Gets the sorting expressions generated for the dimensions.
+     *
+     * @example
+     * ```typescript
+     * const expressions = this.grid.dimensionsSortingExpressions;
+     * ```
+     */
+    public get dimensionsSortingExpressions() {
+        const allEnabledDimensions = this.rowDimensions.concat(this.columnDimensions);
+        const dimensionsSortingExpressions = PivotSortUtil.generateDimensionSortingExpressions(allEnabledDimensions);
+        return dimensionsSortingExpressions;
+    }
+
     /** @hidden @internal */
     @ViewChild(IgxPivotHeaderRowComponent, { static: true })
     public theadRow: IgxPivotHeaderRowComponent;
@@ -169,6 +185,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
+        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         if (!this._init) {
             this.setupColumns();
         }
@@ -899,8 +916,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public ngOnInit() {
         // pivot grid always generates columns automatically.
         this.autoGenerate = true;
-        const config = this.pivotConfiguration;
-        this.filteringExpressionsTree = PivotUtil.buildExpressionTree(config);
         super.ngOnInit();
     }
 
@@ -1651,9 +1666,30 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             dim.childLevel.sortDirection = dimension.sortDirection;
             dim = dim.childLevel;
         }
-        const dimensionsSortingExpressions = PivotSortUtil.generateDimensionSortingExpressions(this.rowDimensions)
         this.pipeTrigger++;
-        this.dimensionsSortingExpressionsChange.emit(dimensionsSortingExpressions);
+        this.dimensionsSortingExpressionsChange.emit(this.dimensionsSortingExpressions);
+        if (dimensionType === PivotDimensionType.Column) {
+            this.setupColumns();
+        }
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Filters a single `IPivotDimension`.
+     *
+     * @example
+     * ```typescript
+     * public filter() {
+     *      const set = new Set();
+     *      set.add('Value 1');
+     *      set.add('Value 2');
+     *      this.grid1.filterDimension(this.pivotConfigHierarchy.rows[0], set, IgxStringFilteringOperand.instance().condition('in'));
+     * }
+     * ```
+     */
+    public filterDimension(dimension: IPivotDimension, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree ) {
+        this.filteringService.filter(dimension.memberName, value, conditionOrExpressionTree);
+        const dimensionType = this.getDimensionType(dimension);
         if (dimensionType === PivotDimensionType.Column) {
             this.setupColumns();
         }
@@ -1835,9 +1871,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         let columns = [];
         const data = this.gridAPI.filterDataByExpressions(this.filteringExpressionsTree);
         this.dimensionDataColumns = this.generateDimensionColumns();
+        const flattenedColumnsWithSorting = PivotUtil.flatten(this.columnDimensions).filter(dim => dim.sortDirection);
+        const expressions =  flattenedColumnsWithSorting.length > 0? PivotSortUtil.generateDimensionSortingExpressions(flattenedColumnsWithSorting) : [];
+        let sortedData = data;
+        if (expressions.length > 0) {
+            sortedData = DataUtil.sort(cloneArray(data), expressions, this.sortStrategy, this);    
+        }
         let fieldsMap;
         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
-            const fields = this.generateDataFields(data);
+            const fields = this.generateDataFields(sortedData);
             if (fields.length === 0) return;
             const rowFields = PivotUtil.flatten(this.pivotConfiguration.rows).map(x => x.memberName);
             const keyFields = Object.values(this.pivotKeys);
@@ -1847,13 +1889,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             fieldsMap = this.generateFromData(filteredFields);
         } else {
             fieldsMap = PivotUtil.getFieldsHierarchy(
-                data,
+                sortedData,
                 this.columnDimensions,
                 PivotDimensionType.Column,
                 this.pivotKeys
             );
         }
-        columns = this.generateColumnHierarchy(fieldsMap, data);
+        columns = this.generateColumnHierarchy(fieldsMap, sortedData);
         this._autoGeneratedCols = columns;
         // reset expansion states if any are stored.
         this.columnGroupStates.forEach((value, key) => {
@@ -1931,19 +1973,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             });
             return columns;
         }
-        const first = fields.keys().next().value;
-        const dim: IPivotDimension = fields.get(first).dimension;
         let currentFields = fields;
-        if (dim && dim.sortDirection) {
-            const entries = Array.from(fields.entries());
-            const expressions = [{
-                dir: dim.sortDirection,
-                fieldName: dim.memberName,
-                strategy: DefaultPivotSortingStrategy.instance()
-            }];
-            const sorted = DataUtil.sort(cloneArray(entries, true), expressions, this.sortStrategy, this.gridAPI.grid);
-            currentFields = new Map(sorted);
-        }
         currentFields.forEach((value) => {
             let shouldGenerate = true;
             if (data.length === 0) {
