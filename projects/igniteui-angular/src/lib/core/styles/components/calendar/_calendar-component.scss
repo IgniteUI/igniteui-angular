@@ -65,9 +65,12 @@
         @include e(date) {
             @extend %cal-value !optional;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 @extend %cal-value--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--focus !optional;
             }
         }
 
@@ -88,14 +91,37 @@
         @include e(date, 'selected') {
             @extend %cal-value--selected !optional;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 @extend %cal-value--selected--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--selected--focus !optional;
             }
         }
 
         @include e(date, 'current') {
             @extend %cal-value--current !optional;
+
+            &:hover {
+                @extend %cal-value--current--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--current--focus !optional;
+            }
+        }
+
+        @include e(date, $mods: ('selected', 'current')) {
+            @extend %cal-value--selected--current !optional;
+
+            &:hover {
+                @extend %cal-value--selected--current--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--selected--current--focus !optional;
+            }
         }
 
         @include e(date, 'hidden') {
@@ -106,16 +132,15 @@
             @extend %cal-value--range !optional;
         }
 
-        @include e(date, $mods: ('selected', 'current')) {
-            @extend %cal-value--current--selected !optional;
-        }
-
         @include e(date, 'weekend') {
             @extend %cal-value--weekend !optional;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 @extend %cal-value--hover !optional;
+            }
+
+            &:focus {
+                @extend %cal-value--focus !optional;
             }
         }
 
