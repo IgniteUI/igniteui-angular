@@ -124,16 +124,6 @@
         %cal-value--current {
             color: var-get($theme, 'date-current-text-color');
         }
-
-        %cal-value--hover {
-            %cal-value-content::after {
-                background: var-get($theme, 'date-hover-background');
-            }
-
-            &%cal-value--selected %cal-value-content::after {
-                background: var-get($theme, 'date-selected-background');
-            }
-        }
     }
 
     %date-picker--vertical {

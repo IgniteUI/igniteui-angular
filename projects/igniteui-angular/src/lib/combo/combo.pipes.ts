@@ -1,42 +1,26 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
-import { IComboFilteringOptions } from './combo.component';
+import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 
 /** @hidden */
-@Pipe({
-    name: 'comboClean'
-})
-export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
-    }
-}
-
-/** @hidden */
-@Pipe({
-    name: 'comboFiltering'
-})
+@Pipe({ name: 'comboFiltering' })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], searchValue: any, displayKey: any,
-        filteringOptions: IComboFilteringOptions, shouldFilter = false) {
+    public transform(
+        collection: any[],
+        searchValue: any,
+        displayKey: any,
+        filteringOptions: IComboFilteringOptions,
+        filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[] = defaultFilterFunction) {
         if (!collection) {
             return [];
         }
-        if (!searchValue || !shouldFilter) {
+        if (!filteringOptions.filterable) {
             return collection;
-        } else {
-            const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
-            if (displayKey != null) {
-                return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
-                    e[displayKey]?.toString().toLowerCase().includes(searchTerm));
-            } else {
-                return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                    e.toString().toLowerCase().includes(searchTerm));
-            }
         }
+        filteringOptions.filteringKey = filteringOptions.filteringKey ?? displayKey;
+        return filterFunction(collection, searchValue, filteringOptions);
     }
 }
 
@@ -76,5 +60,21 @@ export class IgxComboGroupingPipe implements PipeTransform {
             }
         }
         return data;
+    }
+}
+
+function defaultFilterFunction (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] {
+    if (!searchValue) {
+        return collection;
+    }
+    const searchTerm = filteringOptions.caseSensitive ? searchValue : searchValue.toLowerCase();
+    if (filteringOptions.filteringKey != null) {
+        return collection.filter(e => filteringOptions.caseSensitive ?
+            e[filteringOptions.filteringKey]?.includes(searchTerm) :
+            e[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm));
+    } else {
+        return collection.filter(e => filteringOptions.caseSensitive ?
+            e.includes(searchTerm) :
+            e.toString().toLowerCase().includes(searchTerm));
     }
 }
