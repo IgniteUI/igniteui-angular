@@ -774,7 +774,7 @@
         }
     }
 
-    %cal-value--focus, {
+    %cal-value--focus {
         %cal-value-content::after {
             background: var-get($theme, 'date-focus-background');
         }
