@@ -1547,9 +1547,9 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
     </igx-grid>`
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
+    public allowFiltering = false;
     public data = SampleTestData.excelFilteringData();
     public formatter = (value: any) => `** ${value} **`;
-    public allowFiltering = false;
 }
 
 @Component({
