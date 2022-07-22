@@ -289,7 +289,7 @@
             @if $bootstrap-theme {
                 background: color($palette, 'error');
                 border-color: color($palette, 'error');
-                color: to-opaque(color($palette, 'grays', 100));
+                color: color($palette, 'grays', 100);
             } @else {
                 color: color($palette, 'error');
             }
