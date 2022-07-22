@@ -5731,6 +5731,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event) {
+        if (event.path?.map(el => el.tagName).includes('IGX-GRID-FILTERING-ROW') ||
+            event.path?.map(el => el.tagName).includes('IGX-GRID-FILTERING-CELL')) {
+            return;
+        }
+
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         let selectedData;
