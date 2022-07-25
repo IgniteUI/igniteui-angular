@@ -16,20 +16,26 @@
 ///
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
+/// @param {Number} $track-step-size [null] - The size of the track steps.
+/// @param {Color} $track-hover-color [null] - The color of the track on hover.
+///
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
+/// @param {Color} $thumb-border-color [null] - The thumb border color.
+/// @param {Color} $thumb-border-focus-color [null] - The thumb border color when focused.
+/// @param {Color} $thumb-disabled-border-color [null] - The thumb border color when it's disabled.
+/// @param {Color} $disabled-thumb-color [null] - The thumb color when its disabled.
 ///
 /// @param {Color} $label-background-color [null] - The background color of the bubble label.
 /// @param {Color} $label-text-color [null] - The text color of the bubble label.
 ///
-/// @param {Color} $disabled-thumb-color [null] - The thumb color when its disabled.
 /// @param {Color} $base-track-color [null] - The base background color of the track.
+/// @param {Color} $base-track-hover-color [null] - The base background color of the track on hover.
 /// @param {Color} $disabled-base-track-color [null] - The base background color of the track when is disabled.
+/// @param {Color} $disabled-fill-track-color [null] - The base background color of the fill track when is disabled.
 ///
 /// @param {Color} $tick-label-color [null] - The color of the tick label.
-/// @param {Color} $tick-label-color--tall [null] - The color of the tall tick label .
 /// @param {Color} $tick-color [null] - The background-color of the tick.
-/// @param {Color} $tick-color--tall [null] - The background-color of the tall tick.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -38,7 +44,7 @@
 /// @requires text-contrast
 ///
 /// @example scss Set custom track and thumb on colors
-///   $my-slider-theme: slider-theme($thumb-on-color: black, $track-on-color: yellow);
+///   $my-slider-theme: slider-theme($thumb-color: black, $track-color: yellow);
 ///   // Pass the theme to the slider component mixin
 ///   @include slider($my-slider-theme);
 @function slider-theme(
@@ -47,24 +53,24 @@
 
     $track-color: null,
     $track-step-color: null,
+    $track-step-size: null,
+    $track-hover-color: null,
     $thumb-color: null,
     $thumb-focus-color: null,
-
+    $thumb-border-color: null,
+    $thumb-border-focus-color: null,
+    $thumb-disabled-border-color: null,
+    $disabled-thumb-color: null,
     $label-background-color: null,
     $label-text-color: null,
 
-    $disabled-thumb-color: null,
     $base-track-color: null,
-    $disabled-base-track-color: null,
-    $thumb-border-color: null,
-    $thumb-disabled-border-color: null,
-    $track-hover-color: null,
-    $thumb-hover-color: null,
     $base-track-hover-color: null,
+    $disabled-base-track-color: null,
+    $disabled-fill-track-color: null,
+
     $tick-label-color: null,
-    $tick-label-color-tall: null,
     $tick-color: null,
-    $tick-color-tall: null,
 ) {
     $name: 'igx-slider';
     $slider-schema: ();
@@ -86,22 +92,22 @@
         palette: $palette,
         track-color: $track-color,
         track-step-color: $track-step-color,
+        track-step-size: $track-step-size,
         track-hover-color: $track-hover-color,
         thumb-color: $thumb-color,
-        thumb-hover-color: $thumb-hover-color,
         thumb-focus-color: $thumb-focus-color,
+        thumb-border-color: $thumb-border-color,
+        thumb-border-focus-color: $thumb-border-focus-color,
+        thumb-disabled-border-color: $thumb-disabled-border-color,
+        disabled-thumb-color: $disabled-thumb-color,
         label-background-color: $label-background-color,
         label-text-color: $label-text-color,
-        disabled-thumb-color: $disabled-thumb-color,
         base-track-color: $base-track-color,
-        disabled-base-track-color: $disabled-base-track-color,
-        thumb-border-color: $thumb-border-color,
-        thumb-disabled-border-color: $thumb-disabled-border-color,
         base-track-hover-color: $base-track-hover-color,
+        disabled-base-track-color: $disabled-base-track-color,
+        disabled-fill-track-color: $disabled-fill-track-color,
         tick-label-color: $tick-label-color,
-        tick-label-color-tall: $tick-label-color-tall,
         tick-color: $tick-color,
-        tick-color-tall: $tick-color-tall,
     ));
 }
 
@@ -112,30 +118,43 @@
 @mixin slider($theme) {
     @include css-vars($theme);
 
+    $palette: map.get($theme, 'palette');
     $variant: map.get($theme, variant);
 
-    $slider-height: 48px;
+    $slider-height: rem(48px);
+    $ripple-size: rem(40px);
+    $ripple-radius: math.div($ripple-size, 2);
+    $thumb-label-width: rem(40px);
+    $thumb-label-height: rem(30px);
 
     $slider-track-height: map.get((
-        material: 2px,
+        material: 6px,
         fluent: 4px,
-        bootstrap: 5px,
+        bootstrap: 8px,
         indigo-design: 2px
     ), $variant);
 
     $slider-outline-width: map.get((
-        material: 3px,
+        material: 0,
         fluent: 0,
         bootstrap: 3px,
         indigo-design: 3px
     ), $variant);
 
-    // Slide ticks
-    $tick-push: rem(4px);
+    // Slider ticks
     $base-tick-height: rem(8px);
     $tick-height: $base-tick-height;
     $tick-height--tall: $base-tick-height * 2;
     $tick-width: rem(2px);
+
+    // Slider Thumb
+    $thumb-size: map.get((
+        material: 20px,
+        fluent: 16px,
+        bootstrap: 16px,
+        indigo-design: 14px
+    ), $variant);
+    $thumb-radius: math.div($thumb-size, 2);
 
     $thumb-border-width: map.get((
         material: 0,
@@ -144,10 +163,13 @@
         indigo-design: 0
     ), $variant);
 
-    // Slider Thumb
-    $slider-thumb-width: 40px;
-    $slider-thumb-height: $slider-thumb-width;
-    $slider-thumb-radius: math.div($slider-thumb-width, 2);
+    // Slider Steps
+    $steps-top-position: map.get((
+        material: 2px,
+        fluent: 1px,
+        bootstrap: 3px,
+        indigo-design: 0
+    ), $variant);
 
     // Slider Label
     $slider-label-width: 36px;
@@ -155,27 +177,13 @@
     $slider-label-radius: math.div($slider-label-width, 2);
     $slider-label-padding: 0 rem(2px);
 
-    $switch-display: map.get((
-        material: block,
-        fluent: none,
-        bootstrap: none,
-        indigo-design: none,
-    ), $variant);
-
-    $dot-size: map.get((
-        material: 12px,
-        fluent: 16px,
-        bootstrap: 14px,
-        indigo-design: 14px
-    ), $variant);
-
     %igx-slider-display {
         display: flex;
         position: relative;
         // Z-index 0 is needed to set the stacking context for the inner elements with z-index.
         // https://github.com/IgniteUI/igniteui-angular/issues/11597
         z-index: 0;
-        height: rem($slider-height);
+        height: $slider-height;
         flex-grow: 1;
         align-items: center;
         transition: all .2s $ease-out-quad;
@@ -185,29 +193,23 @@
                 background: var-get($theme, 'track-hover-color');
             }
 
-            %igx-slider-track {
+            %igx-slider-track-inactive {
                 background: var-get($theme, 'base-track-hover-color');
             }
 
-            %igx-slider-thumb__dot {
-                &::before {
-                    border-color: var-get($theme, 'track-hover-color');
+            @if $variant == 'fluent'{
+                %igx-slider-thumb__dot::before {
+                    border-color: var-get($theme, 'thumb-focus-color');
                 }
             }
         }
     }
 
     %igx-slider-disabled {
-        &:hover {
-            %igx-slider-track--disabled {
-                background: var-get($theme, 'disabled-base-track-color');
-            }
+        pointer-events: none;
 
-            %igx-slider-thumb__dot {
-                &::before {
-                    border-color: var-get($theme, 'thumb-disabled-border-color');
-                }
-            }
+        %igx-slider-track-inactive {
+            background: var-get($theme, 'disabled-base-track-color');
         }
     }
 
@@ -224,42 +226,61 @@
         position: relative;
         width: 100%;
         height: rem($slider-track-height);
-        background: var-get($theme, 'base-track-color');
-        transition: background .2s $ease-out-quad;
+        overflow: hidden;
+        border-radius: border-radius(rem(32px));
+
+        @if $variant == 'indigo-design' {
+            border-radius: initial;
+        }
     }
 
-    %igx-slider-track--disabled {
-        background: var-get($theme, 'disabled-base-track-color');
+    %igx-slider-track-inactive {
+        position: absolute;
+        width: 100%;
+        height: inherit;
+        background: var-get($theme, 'base-track-color');
+        transition: background .2s $ease-out-quad;
+        border-radius: inherit;
+
+        @if $variant == 'material' {
+            height: rem(4px);
+            top: 50%;
+            transform: translateY(-50%);
+        }
     }
 
     %igx-slider-track-fill {
         position: absolute;
         width: 100%;
-        height: inherit;
         background: var-get($theme, 'track-color');
         transform-origin: left center;
         transform: scaleX(0);
+        border-radius: inherit;
+        height: inherit;
 
         [dir='rtl'] & {
             transform-origin: right center;
         }
+
+        @if $variant == 'bootstrap' {
+            display: none;
+        }
     }
 
     %igx-slider-track-fill--disabled {
-        visibility: hidden;
+        background: var-get($theme, 'disabled-fill-track-color');
     }
 
     %igx-slider__ticks {
         width: 100%;
         display: flex;
         position: absolute;
-        top: $tick-push;
+        bottom: 0;
         justify-content: space-between;
-        z-index: -1;
 
         &%igx-slider__ticks--top {
-            bottom: $tick-push;
-            top: auto;
+            bottom: auto;
+            top: 0;
             align-items: flex-end;
         }
     }
@@ -316,12 +337,10 @@
     %igx-slider__ticks-group--tall {
         %igx-slider__ticks-tick {
             height: $tick-height--tall;
-            background: var-get($theme, 'tick-color-tall');
         }
 
         %igx-slider__ticks-label {
             top: calc(#{$tick-height--tall} + #{$tick-height});
-            color: var-get($theme, 'tick-label-color-tall');
         }
     }
 
@@ -345,18 +364,24 @@
 
     %igx-slider-track-steps {
         position: absolute;
+        display: flex;
         width: 100%;
-        height: rem($slider-track-height);
-        // TODO Remove after making sure that this does not break anything
-        //background-size: 100% em($slider-track-height);
-        //background-color: var-get($theme, 'track-step-color');
-        //opacity: .85;
-        transition: opacity .2s $ease-out-quad;
-        z-index: 1;
-    }
+        height: rem(4px);
+        opacity: .85;
+        transition: opacity .2s ease-out;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var-get($theme, 'track-step-color');
 
-    %igx-slider-track-steps--disabled {
-        visibility: hidden;
+        svg {
+            clip-path: inset(0 rem(3px) 0 rem(3px));
+        }
+
+        line {
+            stroke: currentColor;
+            stroke-width: var-get($theme, 'track-step-size');
+            stroke-linecap: round;
+        }
     }
 
     %igx-slider__tick-labels--top-bottom {
@@ -394,7 +419,6 @@
             display: block;
         }
 
-
         %igx-slider__ticks-label {
             writing-mode: vertical-rl;
             transform: translate(-50%) rotate(180deg);
@@ -420,28 +444,27 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        width: $slider-thumb-width;
-        height: $slider-thumb-height;
+        width: rem($thumb-size);
+        height: rem($thumb-size);
         outline-style: none;
-        top: -#{rem($slider-thumb-radius)};
-        margin-left: -#{rem($slider-thumb-radius)};
+        top: -#{rem($thumb-radius)};
+        margin-inline-start: -#{rem($thumb-radius)};
 
-        [dir='rtl'] & {
-            margin: initial;
-            margin-right: -#{rem($slider-thumb-radius)};
+        &:hover div::after {
+            opacity: .12;
+            transform: scale(1);
         }
 
         &:focus div::after {
             opacity: .18;
-            /* 32 / 40 */
-            transform: scale(.8);
+            transform: scale(1);
         }
 
         &:focus div::before {
             box-shadow: 0 0 0 rem($slider-outline-width) var-get($theme, 'thumb-focus-color');
 
-            @if $variant == 'fluent' {
-                border-color: var-get($theme, 'thumb-focus-color') !important;
+            @if $variant == 'bootstrap' {
+                border-color: var-get($theme, 'thumb-border-focus-color');
             }
         }
     }
@@ -462,109 +485,70 @@
 
     %igx-label-display {
         position: absolute;
+        pointer-events: none;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        height: $slider-thumb-height;
-        outline-style: none;
-        top: -#{rem($slider-thumb-radius)};
-        margin: 0 auto;
+        top: calc(((#{$thumb-label-height}) + rem(20px)) * -1);
+        height: $thumb-label-height;
     }
 
     %igx-slider-thumb-label__container {
-        position: relative;
+        border-radius: rem(2px);
         display: flex;
         align-items: center;
         justify-content: center;
-        flex: 0 0 auto;
-        top: -#{rem($slider-thumb-height - 4px)};
-        left: -50%;
-        pointer-events: none;
-        min-width: rem($slider-label-width);
-        height: rem($slider-label-height);
-        padding: $slider-label-padding;
-        border-radius: border-radius(rem($slider-label-radius));
-        margin: 0 auto;
-        line-height: rem(18px);
-        color: var-get($theme, 'label-text-color');
+        white-space: nowrap;
+        margin-inline-start: -50%;
+        padding: 0 rem(2px);
         background: var-get($theme, 'label-background-color');
+        color: var-get($theme, 'label-text-color');
+        min-width: $thumb-label-width;
         opacity: 0;
-        border-color: var-get($theme, 'label-background-color') transparent transparent;
-        // transition: opacity .1s $ease-out-quad;
-        z-index: -1;
-
-        [dir='rtl'] & {
-            left: initial;
-            right: -50%;
-        }
 
         &::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 50%;
-            margin-left: -#{$slider-label-radius};
-            width: rem($slider-label-width);
-            height: $slider-label-height;
-            border-radius: 0 $slider-label-radius $slider-label-radius;
-            background: inherit;
-            transform: rotate(-135deg);
-            z-index: -1;
-        }
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: rem(40px);
-            left: calc(50% - 1px);
-            border-left: 1px solid;
-            border-right: 1px solid;
-            border-top: rem(14px) solid;
-            border-color: inherit;
+            top: 85%;
+            border-inline-start: rem(10px) solid transparent;
+            border-inline-end: rem(10px) solid transparent;
+            border-top: rem(10px) solid var-get($theme, 'label-background-color');
         }
     }
 
     %igx-slider-thumb__dot {
         position: relative;
         inset-inline-start: 0;
-        padding: rem(20px);
         pointer-events: none;
-
-        &:hover::after {
-            opacity: .12;
-            /* 32 / 40 */
-            transform: scale(.8);
-        }
 
         &::before {
             position: absolute;
             content: '';
-            width: rem($dot-size);
-            height: rem($dot-size);
-            left: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
-            top: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
+            width: rem($thumb-size);
+            height: rem($thumb-size);
+            inset-inline-start: #{rem($thumb-radius) - math.div(rem($thumb-size), 2)};
+            top: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
+            margin-inline-start: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             background: var-get($theme, 'thumb-color');
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
-            transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
-            border-radius: border-radius(rem($slider-thumb-radius));
+            border-radius: border-radius(rem($thumb-radius));
         }
 
-        &::after {
-            display: $switch-display;
-            position: absolute;
-            content: '';
-            width: rem($slider-thumb-width);
-            height: rem($slider-thumb-height);
-            background: var-get($theme, 'thumb-color');
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transform: scale(0);
-            transform-origin: center center;
-            transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
-            border-radius: border-radius(50%);
+        @if $variant == 'material' {
+            &::after {
+                position: absolute;
+                content: '';
+                width: $ripple-size;
+                height: $ripple-size;
+                background: var-get($theme, 'thumb-color');
+                top: calc(50% - #{$ripple-radius});
+                inset-inline-start: calc(50% - #{$ripple-radius});
+                opacity: 0;
+                transform: scale(0);
+                transform-origin: center center;
+                transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
+                border-radius: border-radius(50%);
+                overflow: hidden;
+            }
         }
     }
 
@@ -574,21 +558,14 @@
         &::before {
             background: var-get($theme, 'disabled-thumb-color');
             border-color: var-get($theme, 'thumb-disabled-border-color');
-            border-radius: border-radius(rem($slider-thumb-radius));
-        }
-    }
-
-    %igx-slider-thumb__dot--active {
-        &::before {
-            border-radius: 0 $slider-thumb-radius $slider-thumb-radius;
+            border-radius: border-radius(rem($thumb-radius));
         }
     }
 
     %igx-slider-thumb__dot--pressed {
         &::after {
             opacity: .24 !important;
-            /* 48 / 40 */
-            transform: scale(1.2) !important;
+            transform: scale(1) !important;
         }
     }
 
