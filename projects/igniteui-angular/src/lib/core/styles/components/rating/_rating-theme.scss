@@ -13,11 +13,14 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null] - sets the color for the label.
-/// @param {Color} $idle-symbol-color [null] - sets the idle color for the symbol when it is a plane text.
-/// @param {Color} $selected-symbol-color [null] - sets the color in selected state for the symbol when it is a plane text.
+/// @param {Number} $symbol-size [null] - the size of the symbols.
+/// @param {Color} $symbol-empty-color [null] - sets the idle color for the symbol when it is a plane text.
+/// @param {Color} $symbol-full-color [null] - sets the color in selected state for the symbol when it is a plane text.
+/// @param {Color} $symbol-empty-filter [null] - the filter(s) used for the empty symbol.
+/// @param {Color} $symbol-full-filter [null] - the filter(s) used for the filled symbol.
 /// @param {Color} $disabled-label-color [null] - sets the color for the label in disabled state.
-/// @param {Color} $disabled-idle-symbols-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
-/// @param {Color} $disabled-selected-symbols-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
+/// @param {Color} $disabled-empty-symbols-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @param {Color} $disabled-full-symbols-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
 ///
 /// @requires $light-schema
 /// @requires extend
@@ -51,32 +54,28 @@
 @mixin rating($theme) {
     @include css-vars($theme: $theme, $prefix: ignore);
 
-    igc-rating::part(symbol) {
-        filter: none;
+    :root {
+        --symbol-size: var-get($theme, 'symbol-size');
+        --symbol-full-color: var-get($theme, 'symbol-full-color');
+        --symbol-empty-color: var-get($theme, 'symbol-empty-color');
+        --symbol-full-filter: var-get($theme, 'symbol-full-filter');
+        --symbol-empty-filter: var-get($theme, 'symbol-empty-filter');
     }
 
     igc-rating::part(label) {
         color: var-get($theme, 'label-color');
     }
 
-    igc-rating::part(symbols-wrapper) {
-        color: var-get($theme, 'idle-symbol-color');
-    }
-
-    igc-rating::part(symbols-wrapper selected) {
-        color: var-get($theme, 'selected-symbols-color');
-    }
-
     igc-rating[disabled]::part(label) {
         color: var-get($theme, 'disabled-label-color');
     }
 
-    igc-rating[disabled]::part(symbols-wrapper) {
-        color: var-get($theme, 'disabled-idle-symbols-color')
+    igc-rating[disabled]::part(symbol empty) {
+        color: var-get($theme, 'disabled-empty-symbols-color')
     }
 
-    igc-rating[disabled]::part(symbols-wrapper selected) {
-        color: var-get($theme, 'disabled-selected-symbols-color');
+    igc-rating[disabled]::part(symbol full) {
+        color: var-get($theme, 'disabled-full-symbols-color');
     }
 }
 

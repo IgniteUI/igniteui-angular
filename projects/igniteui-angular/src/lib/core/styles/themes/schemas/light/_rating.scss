@@ -7,16 +7,19 @@
 ////
 ///
 /// @property {Map} label-color [color: ('grays', 700)] - sets the color for the label.
-/// @property {Map} idle-symbol-color [color: ('grays', 900)] - sets the idle color for the symbol when it is a plane text.
-/// @property {Map} selected-symbol-color [color: ('primary')] - sets the color in selected state for the symbol when it is a plane text.
+/// @property {Number} symbol-size [rem(36px)] - the size of the symbols.
+/// @property {Map} symbol-empty-color [color: ('grays', 900)] - sets the idle color for the symbol when it is a plane text.
+/// @property {Map} symbol-full-color [color: ('primary')] - sets the color in selected state for the symbol when it is a plane text.
+/// @property {Color} symbol-empty-filter [grayscale(100%) opacity(50%)] - the filter(s) used for the empty symbol.
+/// @property {Color} symbol-full-filter [grayscale(50%)] - the filter(s) used for the filled symbol.
 /// @property {Map} disabled-label-color [color: ('grays', 400)] - sets the color for the label in disabled state.
-/// @property {Map} disabled-idle-symbols-color [color: ('grays', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
-/// @property {Map} disabled-selected-symbols-color [color: ('grays', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
-///
+/// @property {Map} disabled-empty-symbols-color [color: ('grays', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @property {Map} disabled-full-symbols-color [color: ('grays', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
+/// 
 /// Generates a light rating schema.
 /// @type {Map}
 ///
-///
+/// 
 /// @see $default-palette
 
 $light-rating: (
@@ -26,23 +29,35 @@ $light-rating: (
         color: ('grays', 700)
     ),
 
-    idle-symbol-color: (
+    symbol-size: (
+        rem(36px)
+    ),
+
+    symbol-empty-color: (
         color: ('grays', 900)
     ),
 
-    selected-symbols-color: (
+    symbol-full-color: (
         color: ('primary')
+    ),
+
+    symbol-empty-filter: (
+        grayscale(100%) opacity(50%)
+    ),
+
+    symbol-full-filter: (
+        grayscale(100%)
     ),
 
     disabled-label-color: (
         color: ('grays', 400)
     ),
 
-    disabled-idle-symbols-color: (
+    disabled-empty-symbols-color: (
         color: ('grays', 400)
     ),
 
-    disabled-selected-symbols-color: (
+    disabled-full-symbols-color: (
         color: ('grays', 600)
     ),
 
@@ -67,11 +82,11 @@ $fluent-rating: extend($light-rating, (
         color: ('grays', 400)
     ),
 
-    disabled-idle-symbols-color: (
+    disabled-empty-symbols-color: (
         color: ('grays', 200)
     ),
 
-    disabled-selected-symbols-color: (
+    disabled-full-symbols-color: (
         color: ('grays', 500)
     ),
 ));
