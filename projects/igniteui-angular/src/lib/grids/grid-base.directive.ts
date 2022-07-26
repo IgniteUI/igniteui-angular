@@ -5609,8 +5609,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event) {
-        if (event.path?.map(el => el.tagName).includes('IGX-GRID-FILTERING-ROW') ||
-            event.path?.map(el => el.tagName).includes('IGX-GRID-FILTERING-CELL')) {
+        const eventPathElements = event.composedPath().map(el => el.tagName?.toLowerCase());
+        if (eventPathElements.includes('igx-grid-filtering-row') ||
+            eventPathElements.includes('igx-grid-filtering-cell')) {
             return;
         }
 
