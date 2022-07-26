@@ -19,6 +19,8 @@ All notable changes for each version of this project will be documented in this 
 - Added the `IgxFormsControl` directive that, when imported, seamlessly attaches to the form components from the Ignite UI for WebComponents package, such as `<igc-rating>` and allows using them in Angular forms with support for `ngModel` binding.
 
 ## 14.0.0
+
+- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 - `IgxCombo` and  `IgxSimpleComboComponent`
     - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
