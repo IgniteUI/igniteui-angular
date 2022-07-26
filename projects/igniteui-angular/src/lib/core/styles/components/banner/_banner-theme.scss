@@ -76,23 +76,34 @@
         compact: rem(8)
     );
 
-    %igx-banner,
+    %igx-banner-host {
+        igx-expansion-panel-body {
+            padding: 0;
+        }
+    }
+
+    %igx-banner__actions,
+    %igx-banner__actions > igx-banner-actions,
     %igx-banner__illustration,
     %igx-banner__message {
         display: flex;
+    }
+
+    %igx-banner__illustration,
+    %igx-banner__message {
         align-items: center;
     }
 
     %igx-banner {
-        padding-inline-start: 0;
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        grid-gap: 8px;
+        padding-inline-start: calc(#{map.get($banner-padding, 'comfortable') * 2});
         padding-inline-end: map.get($banner-padding, 'comfortable');
         padding-block-start: map.get($banner-padding, 'comfortable');
         padding-block-end: map.get($banner-padding, 'comfortable');
         background: var-get($theme, 'banner-background');
-        align-items: center;
-        position: relative;
-        flex-wrap: wrap;
-        justify-content: flex-end;
     }
 
     %igx-banner__illustration {
@@ -100,7 +111,6 @@
         width: rem(40);
         min-width: rem(40);
         height: rem(40);
-        margin-inline-start: rem(16);
         color: var-get($theme, 'banner-illustration-color');
     }
 
@@ -117,7 +127,6 @@
     %igx-banner__text {
         color: var-get($theme, 'banner-message-color');
         flex: 1 0 0%;
-        margin-inline-start: rem(24);
 
         > * {
             margin-block-start: 0 !important;
@@ -125,28 +134,32 @@
     }
 
     %igx-banner--cosy {
-        padding: map.get($banner-padding, 'cosy');
+        padding-inline-start: calc(#{map.get($banner-padding, 'cosy') * 2});
+        padding-inline-end: map.get($banner-padding, 'cosy');
+        padding-block-start: map.get($banner-padding, 'cosy');
+        padding-block-end: map.get($banner-padding, 'cosy');
     }
 
     %igx-banner--compact {
-        padding: map.get($banner-padding, 'compact');
+        padding-inline-start: calc(#{map.get($banner-padding, 'compact') * 2});
+        padding-inline-end: map.get($banner-padding, 'compact');
+        padding-block-start: map.get($banner-padding, 'compact');
+        padding-block-end: map.get($banner-padding, 'compact');
     }
 
     %igx-banner__message {
-        min-width: rem(220);
+        min-width: rem(150px);
         flex: 1 0 0%;
-        margin-inline-end: rem(90);
+        gap: rem(16px);
     }
 
-    %igx-banner__row {
-        display: flex;
-    }
-
-    %igx-banner__actions {
-        display: flex;
-        flex-direction: column;
+    %igx-banner__actions,
+    %igx-banner__actions > igx-banner-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: flex-end;
         align-self: flex-end;
-        justify-content: center;
+        gap: rem(8px);
         min-height: rem(40);
     }
 }

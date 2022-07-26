@@ -63,7 +63,6 @@
     }
 
     @include b(igx-accordion) {
-        @extend %igx-title--no-ellipsis !optional;
-        @extend %igx-expanded-panel-margin !optional;
+        @extend %igx-accordion !optional;
     }
 }

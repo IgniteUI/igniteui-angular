@@ -9,7 +9,4 @@ projects: IgniteUI/16
 ---
 
 ## Question  
-I have an issue with "x" and I'm not sure if I'm doing it right.
-
- * igniteui-angular version: 
- * browser: 
+For questions, please use the `Discussions` tab of the repository!

@@ -1014,7 +1014,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        grid.columnList.get(0).width = '500px';
+        grid.columns[0].width = '500px';
         fix.detectChanges();
         const groupRows = grid.groupsRowList.toArray();
         groupRows[0].toggle();
@@ -1951,7 +1951,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
         fix.detectChanges();
 
-        expect(grid.columnList.get(0).width).toEqual('550px');
+        expect(grid.columns[0].width).toEqual('550px');
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
@@ -2905,7 +2905,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.columnList.get(0).header = 'Custom Header Text';
+        grid.columns[0].header = 'Custom Header Text';
         tick();
         fix.detectChanges();
 
