@@ -5731,9 +5731,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event) {
-        const eventPathElements = event.composedPath().map(el => el.tagName?.toLowerCase());
-        if (eventPathElements.includes('igx-grid-filtering-row') ||
-            eventPathElements.includes('igx-grid-filtering-cell')) {
+        if (this.isFilterInput(event)) {
             return;
         }
 
@@ -7465,6 +7463,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const rec = this.dataView[dataViewIndex];
         return !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData &&
             !this.isGhostRecordAtIndex(dataViewIndex);
+    }
+
+    private isFilterInput(event) {
+        const eventComposedPath = event.composedPath ? event.composedPath() : [];
+        if (!eventComposedPath.length) {
+            let target = event.target;
+            while (target.parentNode !== null) {
+                eventComposedPath.push(target);
+                target = target.parentNode;
+            }
+        }
+
+        const eventPathElements = eventComposedPath.map(el => el.tagName?.toLowerCase());
+
+        return eventPathElements.includes('igx-grid-filtering-row') || eventPathElements.includes('igx-grid-filtering-cell');
     }
 
     /**
