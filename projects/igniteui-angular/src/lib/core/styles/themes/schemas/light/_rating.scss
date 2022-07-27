@@ -15,11 +15,11 @@
 /// @property {Map} disabled-label-color [color: ('grays', 400)] - sets the color for the label in disabled state.
 /// @property {Map} disabled-empty-symbols-color [color: ('grays', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
 /// @property {Map} disabled-full-symbols-color [color: ('grays', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
-/// 
+///
 /// Generates a light rating schema.
 /// @type {Map}
 ///
-/// 
+///
 /// @see $default-palette
 
 $light-rating: (
