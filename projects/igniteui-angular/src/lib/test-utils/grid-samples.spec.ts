@@ -1536,7 +1536,7 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
 
 @Component({
     template: `
-    <igx-grid [data]="data" height="500px" width="500px">
+    <igx-grid [data]="data" height="500px" width="500px" [allowFiltering]="allowFiltering">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [editable]="true" [header]="'ProductNameHeader'"
             [formatter]="formatter"></igx-column>
@@ -1547,6 +1547,7 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
     </igx-grid>`
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
+    public allowFiltering = false;
     public data = SampleTestData.excelFilteringData();
     public formatter = (value: any) => `** ${value} **`;
 }
