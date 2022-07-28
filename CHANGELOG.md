@@ -16,7 +16,7 @@ All notable changes for each version of this project will be documented in this 
     - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
     - `filteringOptions` are extended and now contains `filterable` and `filteringKey` properties. Setting `filterable` determines whether combo will be filterable. By default filtering is done over the data value when they are primitive, or over the field of the values equal to `displayKey`. `filteringKey` allows to filter data by any data related key.
     - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
-- Added the `IgxFormsControl` directive that, when imported, seamlessly attaches to the form components from the Ignite UI for WebComponents package, such as `<igc-rating>` and allows using them in Angular forms with support for `ngModel` binding.
+- Added the `IgxFormsControl` directive that, when imported, seamlessly attaches to the form components from the Ignite UI for WebComponents package, such as `<igc-rating>` and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives.
 
 ## 14.0.0
 

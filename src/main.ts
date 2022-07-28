@@ -33,5 +33,3 @@ if (environment.hmr) {
 } else {
     bootstrap().catch(err => console.log(err));
 }
-
-defineComponents(IgcRatingComponent);

@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
+
+defineComponents(IgcRatingComponent);
+
 
 @Component({
     selector: 'app-rating-sample',

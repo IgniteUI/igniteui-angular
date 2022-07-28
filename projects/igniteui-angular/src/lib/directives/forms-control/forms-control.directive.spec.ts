@@ -42,19 +42,21 @@ describe('IgxFormsControlDirective - ', () => {
             directive.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
             // value setter
-            expect(directive.value).toBeUndefined();
-            directive.value = 8;
-            expect(directive.onChange).toHaveBeenCalledWith(8);
-            expect(directive.value).toBe(8);
+            expect(elementRef.nativeElement.value).toBeUndefined();
+            directive.writeValue(8);
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledTimes(0);
             expect(elementRef.nativeElement.value).toBe(8);
+
+            // listening for value change
+            directive.listenForValueChange(5);
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(5);
 
             // setDisabledState
             directive.setDisabledState(true);
             expect(renderer2Mock.setProperty).toHaveBeenCalledWith(elementRef.nativeElement, 'disabled', true);
 
             // OnTouched callback
-            directive.ngAfterViewInit();
-            elementRef.nativeElement.dispatchEvent(new Event('blur'));
+            directive.onBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
     });
@@ -84,12 +86,12 @@ describe('IgxFormsControlDirective - ', () => {
             fixture.detectChanges();
         }));
 
-        it('Should properly init for igc-rating.', fakeAsync(() => {
+        it('Should properly init for igc-rating.', async () => {
             directive = fixture.componentInstance.directive;
             expect(directive).toBeTruthy();
-        }));
+        });
 
-        it('Should reflect ngModel change to rating', fakeAsync(() => {
+        it('Should reflect ngModel change to rating', async () => {
             input.nativeElement.value = 8;
             input.nativeElement.dispatchEvent(new Event('input'));
             fixture.detectChanges();
@@ -97,9 +99,9 @@ describe('IgxFormsControlDirective - ', () => {
                 fixture.detectChanges();
                 expect(rating.value).toEqual(8);
             });
-        }));
+        });
 
-        it('Should reflect ngModel change from rating', fakeAsync(() => {
+        it('Should reflect ngModel change from rating', async () => {
             rating.setAttribute('value', '8');
             rating.dispatchEvent(new CustomEvent('igcChange', { detail: 8 }));
             fixture.detectChanges();
@@ -107,7 +109,7 @@ describe('IgxFormsControlDirective - ', () => {
                 fixture.detectChanges();
                 expect(input.nativeElement.value).toEqual('8');
             });
-        }));
+        });
     });
 });
 
