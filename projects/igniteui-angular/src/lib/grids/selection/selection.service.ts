@@ -40,9 +40,9 @@ export class IgxGridSelectionService {
     private pointerEventInGridBody = false;
 
     private allRowsSelected: boolean;
+    private _lastSelectedNode: ISelectionNode;
     private _ranges: Set<string> = new Set<string>();
     private _selectionRange: Range;
-    private _lastSelectedNode: ISelectionNode;
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -758,7 +758,8 @@ export class IgxGridSelectionService {
         this.pointerEventInGridBody = false;
         document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
-        if (event.target.tagName.toLowerCase() !== 'igx-grid-cell') {
+        const targetTagName = event.target.tagName.toLowerCase();
+        if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
             this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected);
         }
     };
