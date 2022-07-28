@@ -11,7 +11,6 @@
                 </span>
             </div>
             <div class="igx-banner__actions">
-                <div class="igx-banner__row">
                     <ng-container *ngIf="useDefaultTemplate">
                         <button igxButton="flat" igxRipple (click)="close()">
                             Dismiss
@@ -20,7 +19,6 @@
                     <ng-container *ngIf="!useDefaultTemplate">
                         <ng-content select="igx-banner-actions"></ng-content>
                     </ng-container>
-                </div>
             </div>
         </div>
     </igx-expansion-panel-body>

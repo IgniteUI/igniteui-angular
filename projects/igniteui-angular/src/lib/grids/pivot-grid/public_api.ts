@@ -10,3 +10,4 @@ export * from './pivot-row-dimension-content.component';
 export * from './pivot-row-dimension-header-group.component';
 export * from './pivot-data-selector.component';
 export * from './pivot-row-dimension-header.component';
+export * from './pivot-grid.directives';

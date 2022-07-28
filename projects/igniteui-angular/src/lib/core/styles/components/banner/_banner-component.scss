@@ -10,6 +10,10 @@
 ////
 
 @mixin component {
+    @include b(igx-banner-host) {
+        @extend %igx-banner-host !optional;
+    }
+
     @include b(igx-banner) {
         $this: bem--selector-to-string(&);
         @include register-component(
@@ -45,14 +49,6 @@
 
         @include e(actions) {
             @extend %igx-banner__actions !optional;
-        }
-
-        @include m(vertical) {
-            @extend %igx-banner--vertical !optional;
-        }
-
-        @include e(banner__row) {
-            @extend %igx-banner__row !optional;
         }
 
         @include m(cosy) {
