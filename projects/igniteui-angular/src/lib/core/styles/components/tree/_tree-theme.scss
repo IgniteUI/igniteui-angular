@@ -127,6 +127,8 @@
     %tree-display {
         display: block;
         z-index: 0;
+        height: 100%;
+        overflow-y: auto;
     }
 
     %tree-node,
