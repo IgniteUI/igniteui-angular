@@ -18,13 +18,11 @@
 
 1. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/issues/8097)
 2. Rework default sorting/filtering strategy's and their methods to be grid agnostic [#10922](https://github.com/IgniteUI/igniteui-angular/issues/10922) 
-3. 
-4. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
-5. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
-6. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
-7. 
-8. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481) 
-9. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
+3. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+4. Getting only one sort and one filter event after changing the state of grid using setState function [#8064](https://github.com/IgniteUI/igniteui-angular/issues/8064)
+5. Grid Cell Merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514) 
+6. Classes to indicate position of auto overlay [#9481](https://github.com/IgniteUI/igniteui-angular/issues/9481) 
+7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 
 # Previous Milestone
 
