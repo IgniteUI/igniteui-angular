@@ -36,11 +36,10 @@
       </igx-grid-toolbar-actions>
     </igx-grid-toolbar>
 
-    <!-- <igx-column field="ProductID" data-type="number"></igx-column>
+    <igx-column field="ProductID" data-type="number"></igx-column>
     <igx-column field="ProductName"></igx-column>
     <igx-column field="CategoryName"></igx-column>
     <igx-column field="InStock" data-type="number"></igx-column>
-    <igx-column field="ImageUrl"></igx-column> -->
 
     <igx-paginator per-page="10"></igx-paginator>
   </igx-grid>
@@ -50,19 +49,21 @@
   <script src="assets/data/nw-products.js"></script>
   <script>
     grid1.data = northwindProducts;
-    let columns = [
-        { field: 'ProductID', header: 'Product Id', dataType: 'number' },
-        { field: 'ProductName', sortable: true },
-        { field: 'CategoryName', sortable: true, groupable: true },
-        { field: 'InStock', dataType: 'number' }
-    ];
-    grid1.columns = columns;
+    document.addEventListener('DOMContentLoaded', () => {
+        let columns = [
+            { field: 'ProductID', header: 'Product Id', dataType: 'number' },
+            { field: 'ProductName', sortable: true },
+            { field: 'CategoryName', sortable: true, groupable: true },
+            { field: 'InStock', dataType: 'number' }
+        ];
+        grid1.columns = columns;
+    });
 
     function changeColumns() {
         let columns = [
-            { field: 'ProductID', dataType: 'number' },
-            { field: 'ProductName' },
-            { field: 'CategoryName' }
+            { field: 'ProductID', dataType: 'number', resizable: true },
+            { field: 'ProductName', resizable: true },
+            { field: 'CategoryName', resizable: true }
         ];
         grid1.columns = columns;
     }
@@ -76,117 +77,120 @@
   <script src="assets/data/tree-grid-ds.js"></script>
   <script>
     treegrid1.data = treeGridDS;
-    columns = [
-        { field: 'id', header: 'Product Id', dataType: 'number' },
-        { field: 'tasks', sortable: true },
-        { field: 'start', dataType: 'date', sortable: true, groupable: true },
-        { field: 'finish', dataType: 'date' }
-    ];
-    treegrid1.columns = columns;
+    document.addEventListener('DOMContentLoaded', () => {
+        treegrid1.columns = [
+            { field: 'id', header: 'Product Id', dataType: 'number' },
+            { field: 'tasks', sortable: true },
+            { field: 'start', dataType: 'date', sortable: true, groupable: true },
+            { field: 'finish', dataType: 'date' }
+        ];
+    });
   </script>
   <!-- END IgxTreeGridComponent -->
 
-  <!-- <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-  </igx-hierarchical-grid> -->
+  <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+  </igx-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->
   <igx-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igx-pivot-grid>
 
   <script src="assets/data/pivot-data.js"></script>
   <script>
-    const clear = (el) => el === 0 || Boolean(el);
-    pivotgrid1.pivotConfiguration = {
-        columns: [
-            {
-                memberName: 'Country',
-                enabled: true
-            }
-        ],
-        rows: [
-            {
-                memberName: 'City',
-                enabled: true
-            }
-        ],
-        values: [
-            {
-                member: 'UnitsSold',
-                aggregate: {
-                    key: 'SUM',
-                    aggregator: (data) => data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0,
-                    label: 'Sum'
-                },
-                enabled: true,
-                styles: {
-                    upFont: (rowData, columnKey) => rowData[columnKey] > 300,
-                    downFont: (rowData, columnKey) => rowData[columnKey] <= 300
-                },
-                // dataType: 'currency',
-                formatter: (value) => value ? value + '$' : undefined
-            },
-            {
-                member: 'AmountOfSale',
-                displayName: 'Amount of Sale',
-                aggregate: {
-                    key: 'SUM',
-                    aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
-                    label: 'Sum of Sale'
-                },
-                aggregateList: [{
-                    key: 'SUM',
-                    aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
-                    label: 'Sum of Sale'
-                }, {
-                    key: 'MIN',
-                    aggregator: (members, data) => {
-                        let min = 0;
-                        if (data.length === 1) {
-                            min = data[0].UnitPrice * data[0].UnitsSold;
-                        } else if (data.length > 1) {
-                            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
-                            min = mappedData.reduce((a, b) => Math.min(a, b));
-                        }
-                        return min;
+    document.addEventListener('DOMContentLoaded', () => {
+        const clear = (el) => el === 0 || Boolean(el);
+        pivotgrid1.pivotConfiguration = {
+            columns: [
+                {
+                    memberName: 'Country',
+                    enabled: true
+                }
+            ],
+            rows: [
+                {
+                    memberName: 'City',
+                    enabled: true
+                }
+            ],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (data) => data.length && data.filter(clear).length ? data.filter(clear).reduce((a, b) => +a + +b) : 0,
+                        label: 'Sum'
                     },
-                    label: 'Minimum of Sale'
-                }, {
-                    key: 'MAX',
-                    aggregator: (members, data) => {
-                        let max = 0;
-                        if (data.length === 1) {
-                            max = data[0].UnitPrice * data[0].UnitsSold;
-                        } else if (data.length > 1) {
-                            const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
-                            max = mappedData.reduce((a, b) => Math.max(a,b));
-                        }
-                        return max;
+                    enabled: true,
+                    styles: {
+                        upFont: (rowData, columnKey) => rowData[columnKey] > 300,
+                        downFont: (rowData, columnKey) => rowData[columnKey] <= 300
                     },
-                    label: 'Maximum of Sale'
-                }],
-                enabled: true,
-                dataType: 'currency',
-                styles: {
-                    upFont1: (rowData, columnKey) => rowData[columnKey] > 50,
-                    downFont1: (rowData, columnKey) => rowData[columnKey] <= 50
+                    // dataType: 'currency',
+                    formatter: (value) => value ? value + '$' : undefined
                 },
-            }
-        ],
-        filters: [
-            {
-                memberName: 'SellerName',
-                enabled: true,
-                //filter: this.filterExpTree
-            }
-        ]
-    };
+                {
+                    member: 'AmountOfSale',
+                    displayName: 'Amount of Sale',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
+                        label: 'Sum of Sale'
+                    },
+                    aggregateList: [{
+                        key: 'SUM',
+                        aggregator: (members, data) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0),
+                        label: 'Sum of Sale'
+                    }, {
+                        key: 'MIN',
+                        aggregator: (members, data) => {
+                            let min = 0;
+                            if (data.length === 1) {
+                                min = data[0].UnitPrice * data[0].UnitsSold;
+                            } else if (data.length > 1) {
+                                const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+                                min = mappedData.reduce((a, b) => Math.min(a, b));
+                            }
+                            return min;
+                        },
+                        label: 'Minimum of Sale'
+                    }, {
+                        key: 'MAX',
+                        aggregator: (members, data) => {
+                            let max = 0;
+                            if (data.length === 1) {
+                                max = data[0].UnitPrice * data[0].UnitsSold;
+                            } else if (data.length > 1) {
+                                const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
+                                max = mappedData.reduce((a, b) => Math.max(a,b));
+                            }
+                            return max;
+                        },
+                        label: 'Maximum of Sale'
+                    }],
+                    enabled: true,
+                    dataType: 'currency',
+                    styles: {
+                        upFont1: (rowData, columnKey) => rowData[columnKey] > 50,
+                        downFont1: (rowData, columnKey) => rowData[columnKey] <= 50
+                    },
+                }
+            ],
+            filters: [
+                {
+                    memberName: 'SellerName',
+                    enabled: true,
+                    //filter: this.filterExpTree
+                }
+            ]
+        };
+    });
     pivotgrid1.data = pivotData;
   </script>
   <!-- END IgxPivotGridComponent -->
 
   <script src="assets/data/projects-hgrid.js"></script>
-  <!-- <script>
+  <script>
     let hgrid = document.getElementById('hgrid1');
     hgrid.data = hgridData;
-  </script> -->
+  </script>
 </body>
 </html>

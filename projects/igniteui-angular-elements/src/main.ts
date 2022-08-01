@@ -10,3 +10,13 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+// const grid1 = document.querySelector("igx-grid");
+// const grid2 = document.querySelector(".grid2") as IgxGridElement;
+// grid1.rowSelection = 'multiple';
+// grid1.reflow() // <-- wrong, prob due to being prop-like in the interface, better WithProps TODO?
+// grid2.rowSelection = 'single';
+
+// const treeGrid = document.querySelector("igx-tree-grid");
+// treeGrid.childDataKey // <-- doc w/ angular example :(
+// treeGrid.reflow() // <-- wrong, better WithProps TODO?
