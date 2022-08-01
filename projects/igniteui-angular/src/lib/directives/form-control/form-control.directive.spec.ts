@@ -5,12 +5,12 @@ import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgcFormsDirective, IgcFormsModule } from './forms.directive';
+import { IgcFormControlDirective, IgcFormsModule } from './form-control.directive';
 
-describe('IgxFormsControlDirective - ', () => {
+describe('IgcFormControlDirective - ', () => {
 
     let fixture: ComponentFixture<any>;
-    let directive: IgcFormsDirective;
+    let directive: IgcFormControlDirective;
     let input: DebugElement;
     let rating: IgcRatingComponent;
 
@@ -37,7 +37,7 @@ describe('IgxFormsControlDirective - ', () => {
         ]);
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            directive = new IgcFormsDirective(elementRef, renderer2Mock);
+            directive = new IgcFormControlDirective(elementRef, renderer2Mock);
             directive.registerOnChange(mockNgControl.registerOnChangeCb);
             directive.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -81,12 +81,12 @@ describe('IgxFormsControlDirective - ', () => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));
-            rating = fixture.debugElement.query(By.directive(IgcFormsDirective)).nativeElement;
+            rating = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
             tick();
             fixture.detectChanges();
         }));
 
-        it('Should properly init for igc-rating.', async () => {
+        it('Should properly init for igc-rating.', () => {
             directive = fixture.componentInstance.directive;
             expect(directive).toBeTruthy();
         });
@@ -95,20 +95,18 @@ describe('IgxFormsControlDirective - ', () => {
             input.nativeElement.value = 8;
             input.nativeElement.dispatchEvent(new Event('input'));
             fixture.detectChanges();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                expect(rating.value).toEqual(8);
-            });
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(rating.value).toEqual(8);
         });
 
         it('Should reflect ngModel change from rating', async () => {
             rating.setAttribute('value', '8');
             rating.dispatchEvent(new CustomEvent('igcChange', { detail: 8 }));
             fixture.detectChanges();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                expect(input.nativeElement.value).toEqual('8');
-            });
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toEqual('8');
         });
     });
 });
@@ -123,8 +121,8 @@ describe('IgxFormsControlDirective - ', () => {
 })
 class IgxFormsControlComponent {
 
-    @ViewChild(IgcFormsDirective, { static: true })
-    public directive: IgcFormsDirective;
+    @ViewChild(IgcFormControlDirective, { static: true })
+    public directive: IgcFormControlDirective;
 
     public model = {
         Name: 'BMW M3',

@@ -1,6 +1,6 @@
-# igcFormsDirective
+# igcFormControlDirective
 
-The `IgcForms` directive is designed to attach to form `igc-` elements from Ignite UI for WebComponents and provide `ValueAccessor` implementation so that they can be used in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives.
+The `IgcFormControl` directive is designed to attach to form `igc-` elements from Ignite UI for WebComponents and provide `ValueAccessor` implementation so that they can be used in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives.
 
 The directive doesn't require a specific attribute and instead uses the element's name. This means that users only need to import it for it to take effect.
 
