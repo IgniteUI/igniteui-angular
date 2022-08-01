@@ -13,7 +13,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsDirective } from './common';
-import { GridType } from '../common/grid.interface';
+import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 
 
@@ -21,6 +21,7 @@ import { IgxToolbarToken } from './token';
  * Provides a context-aware container component for UI operations for the grid components.
  *
  * @igxModule IgxGridToolbarModule
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent
  *
  */
 @Component({
@@ -49,7 +50,16 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
      * information check the toolbar topic.
      */
     @Input()
-    public grid: GridType;
+    public get grid() {
+        if (this._grid) {
+            return this._grid;
+        }
+        return this.api.grid;
+    }
+
+    public set grid(value: GridType) {
+        this._grid = value;
+    }
 
     /** Returns the native DOM element of the toolbar component */
     public get nativeElement() {
@@ -94,6 +104,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
 
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(IGX_GRID_SERVICE_BASE) private api: GridServiceType,
         private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
