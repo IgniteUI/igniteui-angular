@@ -352,7 +352,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
                 return firstRowIndex + precedingSummaryRows + this.index;
             }
         }
-        return this.index + ((this.grid.page || 0) * (this.grid.perPage || 0));
+        return this.index + (this.grid.page * this.grid.perPage);
     }
 
     /**
