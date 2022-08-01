@@ -13,12 +13,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => IgxFormsControlDirective),
+            useExisting: forwardRef(() => IgcFormsDirective),
             multi: true
         }
     ]
 })
-export class IgxFormsControlDirective implements ControlValueAccessor {
+export class IgcFormsDirective implements ControlValueAccessor {
     /** @hidden @internal */
     private onChange: any = () => { };
     /** @hidden @internal */
@@ -64,7 +64,7 @@ export class IgxFormsControlDirective implements ControlValueAccessor {
 }
 
 @NgModule({
-    declarations: [IgxFormsControlDirective],
-    exports: [IgxFormsControlDirective]
+    declarations: [IgcFormsDirective],
+    exports: [IgcFormsDirective]
 })
-export class IgxFormsControlModule { }
+export class IgcFormsModule { }

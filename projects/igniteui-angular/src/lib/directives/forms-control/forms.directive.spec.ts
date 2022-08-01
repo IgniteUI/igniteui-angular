@@ -5,12 +5,12 @@ import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxFormsControlDirective, IgxFormsControlModule } from './forms-control.directive';
+import { IgcFormsDirective, IgcFormsModule } from './forms.directive';
 
 describe('IgxFormsControlDirective - ', () => {
 
     let fixture: ComponentFixture<any>;
-    let directive: IgxFormsControlDirective;
+    let directive: IgcFormsDirective;
     let input: DebugElement;
     let rating: IgcRatingComponent;
 
@@ -37,7 +37,7 @@ describe('IgxFormsControlDirective - ', () => {
         ]);
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            directive = new IgxFormsControlDirective(elementRef, renderer2Mock);
+            directive = new IgcFormsDirective(elementRef, renderer2Mock);
             directive.registerOnChange(mockNgControl.registerOnChangeCb);
             directive.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -69,7 +69,7 @@ describe('IgxFormsControlDirective - ', () => {
                     IgxFormsControlComponent
                 ],
                 imports: [
-                    IgxFormsControlModule,
+                    IgcFormsModule,
                     ReactiveFormsModule,
                     FormsModule
                 ]
@@ -81,7 +81,7 @@ describe('IgxFormsControlDirective - ', () => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));
-            rating = fixture.debugElement.query(By.directive(IgxFormsControlDirective)).nativeElement;
+            rating = fixture.debugElement.query(By.directive(IgcFormsDirective)).nativeElement;
             tick();
             fixture.detectChanges();
         }));
@@ -123,8 +123,8 @@ describe('IgxFormsControlDirective - ', () => {
 })
 class IgxFormsControlComponent {
 
-    @ViewChild(IgxFormsControlDirective, { static: true })
-    public directive: IgxFormsControlDirective;
+    @ViewChild(IgcFormsDirective, { static: true })
+    public directive: IgcFormsDirective;
 
     public model = {
         Name: 'BMW M3',
