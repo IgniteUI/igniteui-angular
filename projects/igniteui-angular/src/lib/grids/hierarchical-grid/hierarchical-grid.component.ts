@@ -41,6 +41,7 @@ import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 
 let NEXT_ID = 0;
 
@@ -233,6 +234,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     providers: [
         IgxGridCRUDService,
         IgxGridSelectionService,
+        IgxColumnResizingService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,

@@ -71,6 +71,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -101,6 +102,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxGridCRUDService,
         IgxGridSummaryService,
         IgxGridSelectionService,
+        IgxColumnResizingService,
         GridBaseAPIService,
         { provide: IGX_GRID_BASE, useExisting: IgxPivotGridComponent },
         { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
