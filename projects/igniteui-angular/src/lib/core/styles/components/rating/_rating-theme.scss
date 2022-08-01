@@ -58,6 +58,10 @@
         color: var-get($theme, 'label-color');
     }
 
+    igc-rating::part(value-label) {
+        color: color(map.get($theme, 'palette'), 'grays', 900);
+    }
+    
     igc-rating[disabled]::part(label),
     igc-rating[disabled]::part(value-label) {
         color: var-get($theme, 'disabled-label-color');
@@ -66,6 +70,8 @@
     igc-rating[disabled] {
         --symbol-empty-color: var(--disabled-empty-symbol-color);
         --symbol-full-color: var(--disabled-full-symbol-color);
+        --symbol-empty-filter: grayscale(100%) opacity(50%);
+        --symbol-full-filter: grayscale(50%);
     }
 }
 

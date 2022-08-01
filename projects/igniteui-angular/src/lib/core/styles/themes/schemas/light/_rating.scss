@@ -40,11 +40,11 @@ $light-rating: (
     ),
 
     symbol-empty-filter: (
-        grayscale(100%) opacity(50%)
+        grayscale(1)
     ),
 
     symbol-full-filter: (
-        grayscale(100%)
+        grayscale(0)
     ),
 
     disabled-label-color: (
@@ -64,7 +64,6 @@ $light-rating: (
 /// Generates a fluent rating schema.
 /// @type {Map}
 /// @property {Map} label-color [color: ('grays', 900)] - sets the color for the label.
-/// @property {Map} disabled-label-color [color: ('grays', 400)] - sets the color for the label in disabled state.
 /// @property {Map} disabled-idle-symbols-color [color: ('grays', 200)] - sets the idle color for the symbol in disabled state when it is a plane text.
 /// @property {Map} disabled-selected-symbols-color [color: ('grays', 500)] - sets the color for the symbol in selected/disabled state when it is a plane text.
 /// @requires {function} extend
@@ -74,10 +73,6 @@ $fluent-rating: extend($light-rating, (
 
     label-color: (
         color: ('grays', 900)
-    ),
-
-    disabled-label-color: (
-        color: ('grays', 400)
     ),
 
     disabled-empty-symbols-color: (
