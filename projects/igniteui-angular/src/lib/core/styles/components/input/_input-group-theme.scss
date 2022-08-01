@@ -177,7 +177,7 @@
     @if not($border-border-radius) {
         $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
     }
-    
+
     @if not($search-border-radius) {
         $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
     }
@@ -324,6 +324,10 @@
 
         textarea {
             overflow: auto;
+        }
+
+        input[type='number'] {
+            -moz-appearance: textfield;
         }
 
         // Don't show the number spinner
