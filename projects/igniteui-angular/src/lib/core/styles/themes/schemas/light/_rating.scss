@@ -29,16 +29,14 @@ $light-rating: (
         color: ('grays', 700)
     ),
 
-    symbol-size: (
-        rem(36px)
-    ),
+    symbol-size: null,
 
     symbol-empty-color: (
-        color: ('grays', 900)
+        color: ('grays', 600)
     ),
 
     symbol-full-color: (
-        color: ('primary')
+        color: ('warn')
     ),
 
     symbol-empty-filter: (
@@ -53,12 +51,12 @@ $light-rating: (
         color: ('grays', 400)
     ),
 
-    disabled-empty-symbols-color: (
+    disabled-empty-symbol-color: (
         color: ('grays', 400)
     ),
 
-    disabled-full-symbols-color: (
-        color: ('grays', 600)
+    disabled-full-symbol-color: (
+        color: ('warn', 500, .38)
     ),
 
 );

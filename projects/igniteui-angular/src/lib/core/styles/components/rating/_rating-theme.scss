@@ -19,8 +19,8 @@
 /// @param {Color} $symbol-empty-filter [null] - the filter(s) used for the empty symbol.
 /// @param {Color} $symbol-full-filter [null] - the filter(s) used for the filled symbol.
 /// @param {Color} $disabled-label-color [null] - sets the color for the label in disabled state.
-/// @param {Color} $disabled-empty-symbols-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
-/// @param {Color} $disabled-full-symbols-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
+/// @param {Color} $disabled-empty-symbol-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @param {Color} $disabled-full-symbol-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
 ///
 /// @requires $light-schema
 /// @requires extend
@@ -54,28 +54,18 @@
 @mixin rating($theme) {
     @include css-vars($theme: $theme, $prefix: ignore);
 
-    :root {
-        --symbol-size: var-get($theme, 'symbol-size');
-        --symbol-full-color: var-get($theme, 'symbol-full-color');
-        --symbol-empty-color: var-get($theme, 'symbol-empty-color');
-        --symbol-full-filter: var-get($theme, 'symbol-full-filter');
-        --symbol-empty-filter: var-get($theme, 'symbol-empty-filter');
-    }
-
     igc-rating::part(label) {
         color: var-get($theme, 'label-color');
     }
 
-    igc-rating[disabled]::part(label) {
+    igc-rating[disabled]::part(label),
+    igc-rating[disabled]::part(value-label) {
         color: var-get($theme, 'disabled-label-color');
     }
 
-    igc-rating[disabled]::part(symbol empty) {
-        color: var-get($theme, 'disabled-empty-symbols-color')
-    }
-
-    igc-rating[disabled]::part(symbol full) {
-        color: var-get($theme, 'disabled-full-symbols-color');
+    igc-rating[disabled] {
+        --symbol-empty-color: var(--disabled-empty-symbol-color);
+        --symbol-full-color: var(--disabled-full-symbol-color);
     }
 }
 
