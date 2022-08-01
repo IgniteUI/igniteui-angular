@@ -165,8 +165,6 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 // Paginator selector
 const PAGINATOR_SELECTOR = 'igx-paginator';
-// Toolbar selector
-const TOOLBAR_SELECTOR = 'igx-toolbar';
 
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
@@ -1386,7 +1384,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     @ContentChildren(IgxGridToolbarComponent)
-    public toolbarComponents: QueryList<IgxGridToolbarComponent>;
+    public toolbar: QueryList<IgxGridToolbarComponent>;
 
     /** @hidden @internal */
     @ContentChildren(IgxPaginatorComponent)
@@ -1397,6 +1395,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('igxFilteringOverlayOutlet', { read: ViewContainerRef, static: true })
+    public anchor: ViewContainerRef;
 
     /**
      * @hidden @internal
@@ -2813,14 +2817,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.paginationComponents?.first;
     }
 
-    /** @hidden @internal */
-    public get toolbar() {
-        if (!this.toolbarComponents?.first) {
-            return this.elementRef.nativeElement.querySelector(TOOLBAR_SELECTOR);
-        }
-        return this.toolbarComponents?.first;
-    }
-
     /**
      * @hidden @internal
      */
@@ -3473,16 +3469,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
-        this.toolbarComponents.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
+        this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setUpPaginator();
         });
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
-        }
-        if (this.toolbar) {
-            (this.toolbar as IgxGridToolbarComponent).grid = this;
         }
     }
 
@@ -6647,9 +6640,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected getToolbarHeight(): number {
         let toolbarHeight = 0;
-        if (this.toolbar) {
-            const element = this.toolbar instanceof Element ? this.toolbar : this.toolbar.nativeElement;
-            toolbarHeight = this.getComputedHeight(element);
+        if (this.toolbar.first) {
+            toolbarHeight = this.getComputedHeight(this.toolbar.first.nativeElement);
         }
         return toolbarHeight;
     }
