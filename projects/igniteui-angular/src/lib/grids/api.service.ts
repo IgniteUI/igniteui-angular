@@ -147,7 +147,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const data = this.getRowData(cell.id.rowID);
         const validity: IFieldValid[] = [{
             field: cell.column.field,
-            valid: args.isValid
+            valid: args.isValid,
+            formGroup: cell.row.rowFormGroup
         }];
         this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue), validity);
         if (this.grid.primaryKey === cell.column.field) {
@@ -204,7 +205,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         Object.keys(row.rowFormGroup.controls).forEach(key => {
             validityArray.push({
                 field: key,
-                valid: row.rowFormGroup.controls[key].valid
+                valid: row.rowFormGroup.controls[key].valid,
+                formGroup: row.rowFormGroup
             });
         });
 

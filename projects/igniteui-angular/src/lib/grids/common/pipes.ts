@@ -311,22 +311,6 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'transactionInvalidState' })
-export class IgxGridTransactionInvalidStatePipe implements PipeTransform {
-
-    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
-        const transactionLog = transactions.getTransactionLog(row_id);
-        if (transactionLog && transactionLog.length) {
-            const last = transactionLog[transactionLog.length - 1];
-            const val = last.validity.find(x => x.field === field);
-            if (val) {
-                return !val.valid;
-            }
-        }
-        return false;
-    }
-}
-
 @Pipe({ name: 'columnFormatter' })
 export class IgxColumnFormatterPipe implements PipeTransform {
 

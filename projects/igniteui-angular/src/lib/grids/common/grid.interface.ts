@@ -205,6 +205,7 @@ export interface ColumnType {
 export interface IFieldValid {
     field: string;
     valid: boolean;
+    formGroup: FormGroup;
 }
 
 export interface IValidationStatus {

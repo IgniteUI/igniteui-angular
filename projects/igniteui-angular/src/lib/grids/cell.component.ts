@@ -33,11 +33,9 @@ import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
-import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxTooltipComponent } from '../directives/tooltip/tooltip.component';
 import { IgxTooltipDirective } from '../directives/tooltip';
-import { AutoPositionStrategy, VerticalAlignment } from '../services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -68,8 +66,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return this.intRow.addRowUI && (this.value === undefined || this.value === null);
     }
 
-    @ViewChildren('error', {read: IgxToggleDirective})
-    public errorToggles: QueryList<IgxToggleDirective>;
+    @ViewChildren('error', {read: IgxTooltipDirective})
+    public errorTooltip: QueryList<IgxTooltipDirective>;
+
+    @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
+    public errorIcon: IgxIconComponent;
 
     /**
      * Gets the column of the cell.
@@ -85,7 +86,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     public get formGroup() {
         const isRowEdit = this.grid.crudService.rowEditing;
-        return isRowEdit ? this.grid.crudService.row?.rowFormGroup : this.grid.crudService.cell?.row.rowFormGroup;
+        const formGroup = isRowEdit ? this.grid.crudService.row?.rowFormGroup : this.grid.crudService.cell?.row.rowFormGroup;
+        return formGroup || this.validity?.formGroup;
     }
 
     /**
@@ -444,10 +446,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return !this.editable;
     }
 
-    @HostBinding('class.igx-grid__td--invalidInline')
+    @HostBinding('class.igx-grid__td--invalid')
     public get isInvalid() {
         const isRowEdit = this.grid.crudService.rowEditing;
-        return (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
+        const isInvalidInEditMode = (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
+        return isInvalidInEditMode || (!!this.validity ? !this.validity.valid : false);
+    }
+
+    private get validity() {
+        const transactionLog =  this.grid.transactions.getTransactionLog(this.row.key);
+        if (transactionLog && transactionLog.length) {
+            const last = transactionLog[transactionLog.length - 1];
+            const val = last.validity.find(x => x.field === this.column.field);
+           return val;
+        }
     }
 
     public get gridRowSpan(): number {
@@ -754,31 +766,38 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     }
 
     public ngAfterViewInit(){
-        this.errorToggles.changes.subscribe(() => {
-            if (this.errorToggles.length > 0) {
+        this.errorTooltip.changes.subscribe(() => {
+            if (this.errorTooltip.length > 0) {
                 // error ocurred
-                this.errorToggles.toArray()[0].toggle(
-                    {
-                        target: this.nativeElement,
-                        closeOnOutsideClick: false,
-                        closeOnEscape: false,
-                        outlet: this.grid.outlet,
-                        modal: false,
-                        positionStrategy: new AutoPositionStrategy({
-                            // verticalDirection: VerticalAlignment.Top,
-                            // verticalStartPoint: VerticalAlignment.Top
-                        })
-                    }
-                );
+                this.cdr.detectChanges();
+                this.toggleErrorTooltip();
             }
             this.grid.validationStatusChange.emit(
                 {
                     formGroup: this.formGroup,
                     value: this.editValue,
-                    state: this.errorToggles.length > 0 ? Validity.Invalid : Validity.Valid
+                    state: this.errorTooltip.length > 0 ? Validity.Invalid : Validity.Valid
                 }
             );
         });
+    }
+
+    private toggleErrorTooltip() {
+        const tooltip = this.errorTooltip.toArray()[0];
+        tooltip.toggle(
+            {
+                target: this.errorIcon.el.nativeElement,
+                closeOnOutsideClick: true,
+                excludeFromOutsideClick: [ this.nativeElement ],
+                closeOnEscape: false,
+                outlet: this.grid.outlet,
+                modal: false,
+                positionStrategy: new AutoPositionStrategy({
+                    horizontalStartPoint: HorizontalAlignment.Center,
+                    horizontalDirection: HorizontalAlignment.Center
+                })
+            }
+        );
     }
 
     /**
@@ -900,6 +919,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
+    public focusout = () => {
+        const tooltip = this.errorTooltip.toArray()[0];
+        if (tooltip) {
+            tooltip.close();
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
@@ -943,6 +973,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
 
+
+        if (this.isInvalid) {
+            this.toggleErrorTooltip();
+        }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
             this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
@@ -1051,6 +1085,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
+        this.nativeElement.addEventListener('focusout', this.focusout);
     }
 
     private removePointerListeners(selection) {
@@ -1059,6 +1094,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+        this.nativeElement.removeEventListener('focusout', this.focusout);
     }
 
     private getCellType(useRow?: boolean): CellType {

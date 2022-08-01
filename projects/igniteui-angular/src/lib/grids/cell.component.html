@@ -98,16 +98,18 @@
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-<div igxToggle #error *ngIf="editMode && isInvalid">
-    <div [style.width]="column?.width" style="background-color: #fed3d3;
-    color: #820000;">
-        <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: { cell: this }"></ng-container>
+<ng-container *ngIf="isInvalid">
+    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef">error</igx-icon>
+    <div igxTooltip #error #tooltipRef="tooltip">
+        <div [style.width]="'max-content'">
+            <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: { cell: this }"></ng-container>
+        </div>
     </div>
-</div>
-<ng-template #defaultError>
+</ng-container>
 
+<ng-template #defaultError>
     Validation error.
-    <div *ngIf="formGroup.get(column?.field).errors?.['required']">
+    <div *ngIf="formGroup?.get(column?.field).errors?.['required']">
         This field is required.
     </div>
 </ng-template>
