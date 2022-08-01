@@ -27,6 +27,11 @@ export class IgxPaginatorTemplateDirective {
     @HostBinding('class.igx-paginator-content')
     public cssClass = 'igx-paginator-content';
 }
+
+/**
+ * Paginator component description
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
+ */
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
