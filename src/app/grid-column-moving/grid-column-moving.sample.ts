@@ -20,10 +20,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public density: DisplayDensity = 'comfortable';
     public displayDensities;
     public pagingEnabled = true;
+    public show = true;
 
     public mchData = [
         /* eslint-disable max-len */
-        { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
+        { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545', records: [{}] },
         { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
         { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner', Address: 'Mataderos 2312', City: 'México D.F.', Region: null, PostalCode: '05023', Country: 'Mexico', Phone: '(5) 555-3932', Fax: null },
         { ID: 'AROUT', CompanyName: 'Around the Horn', ContactName: 'Thomas Hardy', ContactTitle: 'Sales Representative', Address: '120 Hanover Sq.', City: 'London', Region: null, PostalCode: 'WA1 1DP', Country: 'UK', Phone: '(171) 555-7788', Fax: '(171) 555-6750' },
@@ -93,6 +94,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'Contract', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'boolean' }
         ];
+    }
+
+    public reverseColumn() {
+        this.columns.reverse();
+        this.grid1.cdr.detectChanges();
     }
 
     public selectDensity(event) {

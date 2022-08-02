@@ -41,6 +41,8 @@ import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 
 let NEXT_ID = 0;
 
@@ -238,6 +240,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
+        IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
         IgxRowIslandAPIService
@@ -392,6 +395,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             pg.nativeElement.offsetParent?.id === id);
     }
 
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() : IgxGridExcelStyleFilteringComponent {
+        return this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents.first :
+            super.excelStyleFilteringComponent;
+    }
+
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
      * ```typescript
@@ -481,7 +491,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
+        const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, column.field);
         }
@@ -571,21 +581,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngOnInit();
     }
 
-    public ngDoCheck() {
-        if (this._cdrRequestRepaint && !this._init) {
-            this.updateSizes();
-        }
-        super.ngDoCheck();
-    }
-
     /**
      * @hidden
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
-        this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
-
+        this.zone.runOutsideAngular(() => {
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
+            this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
+        });
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
@@ -734,7 +738,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, columnField);
         }
@@ -754,7 +758,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getCellByKey(rowSelector: any, columnField: string): CellType {
         const row = this.getRowByKey(rowSelector);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
             return new IgxGridCell(this, row.index, columnField);
         }
@@ -1008,28 +1012,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     relatedGrid.updateOnRender = false;
                 }
             });
-
-            const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid: IgxHierarchicalGridComponent) => {
-                if (grid.isPercentWidth) {
-                    grid.notifyChanges(true);
-                }
-                grid.updateScrollPosition();
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public updateScrollPosition() {
-        const vScr = this.verticalScrollContainer.getScroll();
-        const hScr = this.headerContainer.getScroll();
-        if (vScr) {
-            vScr.scrollTop = this.scrollTop;
-        }
-        if (hScr) {
-            hScr.scrollLeft = this.scrollLeft;
         }
     }
 
@@ -1065,15 +1047,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 
+    protected resizeNotifyHandler() {
+        // do not trigger reflow if element is detached or if it is child grid.
+        if (this.document.contains(this.nativeElement) && !this.parent) {
+            this.notifyChanges(true);
+        }
+    }
+
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
+    protected initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
+            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
     }
@@ -1082,18 +1071,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected setupColumns() {
         if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
             this.createColumnsList(this.parentIsland.childColumns.toArray());
+        } else {
+            super.setupColumns();
         }
-        super.setupColumns();
+    }
+
+    protected getColumnList() {
+        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
+        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        if (colsArray.length > 0) {
+            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
+            return topCols;
+        } else {
+           return this.columnList.toArray()
+        }
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         Promise.resolve().then(() => {
             this.updateColumnList();
-            const cols = change.filter(c => c.grid === this);
-            if (cols.length > 0 || this.autoGenerate) {
-                this.columnList.reset(cols);
-                super.onColumnsChanged(this.columnList);
-            }
         });
     }
 
@@ -1104,16 +1101,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return super._shouldAutoSize(renderedHeight);
     }
 
-    private updateSizes() {
-        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
-            this.reflow();
-
-            this.gridAPI.getChildGrids(false).forEach((grid: IgxHierarchicalGridComponent) => {
-                grid.updateSizes();
-            });
-        }
-    }
-
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
@@ -1121,8 +1108,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const colLength = this.columnList.length;
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-            this.columnList.reset(topCols);
-            if (recalcColSizes && this.columnList.length !== colLength) {
+            this.updateColumns(topCols);
+            if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
         }
@@ -1140,10 +1127,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
 
     private hg_verticalScrollHandler(event) {
-        this.scrollTop = event.target.scrollTop;
+        this.scrollTop = this.verticalScrollContainer.scrollPosition;
     }
     private hg_horizontalScrollHandler(event) {
-        this.scrollLeft = event.target.scrollLeft;
+        this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }
 

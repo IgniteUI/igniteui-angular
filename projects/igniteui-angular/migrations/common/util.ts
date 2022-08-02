@@ -100,7 +100,7 @@ export const tryInstallPackage = (context: SchematicContext, packageManager: str
         context.logger.debug(`Installing ${pkg} via ${packageManager}.`);
         switch (packageManager) {
             case 'yarn':
-                execSync(`${packageManager} add ${pkg} --no-lock-file`, { stdio: 'ignore' });
+                execSync(`${packageManager} add ${pkg}`, { stdio: 'ignore' });
                 break;
             case 'npm':
                 execSync(`${packageManager} i ${pkg} --no-save --no-audit`, { stdio: 'ignore' });
@@ -108,7 +108,7 @@ export const tryInstallPackage = (context: SchematicContext, packageManager: str
         }
         context.logger.debug(`${pkg} installed successfully.`);
     } catch (e) {
-        context.logger.warn(`Could not install ${pkg}.`, JSON.parse(e));
+        context.logger.warn(`Could not install ${pkg}.`, e);
     }
 };
 
@@ -126,7 +126,7 @@ export const tryUninstallPackage = (context: SchematicContext, packageManager: s
         context.logger.debug(`${pkg} uninstalled successfully.`);
     } catch (e) {
         context.logger
-            .warn(`Could not uninstall ${pkg}, you may want to uninstall it manually.`, JSON.parse(e));
+            .warn(`Could not uninstall ${pkg}, you may want to uninstall it manually.`, e);
     }
 };
 

@@ -11,7 +11,9 @@ import {
     FilteringExpressionsTree,
     FilteringLogic,
     IgxStringFilteringOperand,
-    PivotDimensionType
+    PivotDimensionType,
+    IPivotGridRecord,
+    IPivotGridColumn
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -35,7 +37,7 @@ export class IgxTotalSaleAggregate {
             max = data[0].UnitPrice * data[0].UnitsSold;
         } else if (data.length > 1) {
             const mappedData = data.map(x => x.UnitPrice * x.UnitsSold);
-            max = mappedData.reduce((a, b) => Math.max(a,b));
+            max = mappedData.reduce((a, b) => Math.max(a, b));
         }
         return max;
     };
@@ -82,7 +84,6 @@ export class PivotGridSampleComponent {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
-            width: '25%',
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
@@ -104,13 +105,14 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[1]
-        ],
-        rows: [
             {
                 memberName: 'City',
                 enabled: true,
+                width: '100px'
             },
+        ],
+        rows: [
+            
             this.dimensions[2],
             {
                 memberName: 'SellerName',
@@ -128,11 +130,13 @@ export class PivotGridSampleComponent {
                 },
                 enabled: true,
                 styles: {
-                    upFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] > 300,
-                    downFont: (rowData: any, columnKey: any): boolean => rowData[columnKey] <= 300
+                    upFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) > 300,
+                    downFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) <= 300
                 },
                 // dataType: 'currency',
-                formatter: (value) => value ? value + '$' : undefined
+                formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => {
+                    return value ? value + '$' : undefined;
+                }
             },
             {
                 member: 'AmountOfSale',
@@ -275,25 +279,25 @@ export class PivotGridSampleComponent {
     }
 
     public setRowDimWidth(rowDimIndex, widthValue) {
-        const newPivotConfig = {...this.pivotConfigHierarchy};
+        const newPivotConfig = { ...this.pivotConfigHierarchy };
         newPivotConfig.rows[rowDimIndex].width = widthValue;
 
         this.grid1.pivotConfiguration = newPivotConfig;
     }
 
-    public remove(){
-        this.grid1.removeDimension({memberName: 'test', enabled: true});
+    public remove() {
+        this.grid1.removeDimension({ memberName: 'test', enabled: true });
     }
 
-    public toggle(){
+    public toggle() {
         this.grid1.toggleDimension(this.pivotConfigHierarchy.filters[0]);
     }
 
-    public move(){
-        this.grid1.moveDimension({memberName: 'test', enabled: true}, PivotDimensionType.Filter, 0);
+    public move() {
+        this.grid1.moveDimension({ memberName: 'test', enabled: true }, PivotDimensionType.Filter, 0);
     }
 
-    public insert(){
+    public insert() {
         this.grid1.insertDimensionAt({
             memberName: 'Country',
             enabled: true
@@ -301,35 +305,79 @@ export class PivotGridSampleComponent {
     }
 
 
-    public removeVal(){
-        this.grid1.removeValue({member: 'test', enabled: true, aggregate: {
-            key: 'SUM',
-            aggregator: IgxPivotNumericAggregate.sum,
-            label: 'Sum'
-        } });
+    public removeVal() {
+        this.grid1.removeValue({
+            member: 'test', enabled: true, aggregate: {
+                key: 'SUM',
+                aggregator: IgxPivotNumericAggregate.sum,
+                label: 'Sum'
+            }
+        });
     }
 
-    public toggleVal(){
-        this.grid1.toggleValue({member: 'test', enabled: true, aggregate: {
-            key: 'SUM',
-            aggregator: IgxPivotNumericAggregate.sum,
-            label: 'Sum'
-        } });
+    public toggleVal() {
+        this.grid1.toggleValue({
+            member: 'test', enabled: true, aggregate: {
+                key: 'SUM',
+                aggregator: IgxPivotNumericAggregate.sum,
+                label: 'Sum'
+            }
+        });
     }
 
-    public moveVal(){
-        this.grid1.moveValue({member: 'test', enabled: true, aggregate: {
-            key: 'SUM',
-            aggregator: IgxPivotNumericAggregate.sum,
-            label: 'Sum'
-        } }, 0);
+    public moveVal() {
+        this.grid1.moveValue({
+            member: 'test', enabled: true, aggregate: {
+                key: 'SUM',
+                aggregator: IgxPivotNumericAggregate.sum,
+                label: 'Sum'
+            }
+        }, 0);
     }
 
-    public insertVal(){
-        this.grid1.insertValueAt({member: 'test', enabled: true, aggregate: {
-            key: 'SUM',
-            aggregator: IgxPivotNumericAggregate.sum,
-            label: 'Sum'
-        } }, 0);
+    public insertVal() {
+        this.grid1.insertValueAt({
+            member: 'test', enabled: true, aggregate: {
+                key: 'SUM',
+                aggregator: IgxPivotNumericAggregate.sum,
+                label: 'Sum'
+            }
+        }, 0);
+    }
+
+    public filterDim() {
+        const set = new Set();
+        set.add('New York');
+        // for excel-style filters, condition is 'in' and value is a Set of values.
+        this.grid1.filterDimension(this.pivotConfigHierarchy.columns[0], set, IgxStringFilteringOperand.instance().condition('in'));
+    }
+
+    public newConfig() {
+        this.pivotConfigHierarchy = {
+            columns: [
+                {
+                    memberName: 'City',
+                    enabled: true,
+                },
+            ],
+            rows: [
+                {
+                    memberName: 'SellerName',
+                    enabled: true,
+                    filter: this.filterExpTree
+                }
+            ],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                }
+            ]
+        };
     }
 }

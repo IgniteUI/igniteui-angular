@@ -1,34 +1,25 @@
+<igx-ticks
+    *ngIf="showTicks && showTopTicks"
+    ticksOrientation="top"
+    [primaryTicks]="primaryTicks"
+    [secondaryTicks]="secondaryTicks"
+    [primaryTickLabels]="primaryTickLabels"
+    [secondaryTickLabels]="secondaryTickLabels"
+    [tickLabelsOrientation]="tickLabelsOrientation"
+    [labelsViewEnabled]="labelsViewEnabled"
+    [labels]="labels | spreadTickLabels:secondaryTicks"
+    [tickLabelTemplateRef]="tickLabelTemplateRef"
+    [minValue]="minValue"
+    [maxValue]="maxValue">
+</igx-ticks>
 <div class="igx-slider__track">
-    <igx-ticks
-        *ngIf="showTicks && showTopTicks"
-        ticksOrientation="top"
-        [primaryTicks]="primaryTicks"
-        [secondaryTicks]="secondaryTicks"
-        [primaryTickLabels]="primaryTickLabels"
-        [secondaryTickLabels]="secondaryTickLabels"
-        [tickLabelsOrientation]="tickLabelsOrientation"
-        [labelsViewEnabled]="labelsViewEnabled"
-        [labels]="labels | spreadTickLabels:secondaryTicks"
-        [tickLabelTemplateRef]="tickLabelTemplateRef"
-        [minValue]="minValue"
-        [maxValue]="maxValue"></igx-ticks>
-
+    <div class="igx-slider__track-inactive"></div>
     <div #track class="igx-slider__track-fill"></div>
-    <div #ticks class="igx-slider__track-steps"></div>
-
-    <igx-ticks
-        *ngIf="showTicks && showBottomTicks"
-        ticksOrientation="bottom"
-        [primaryTicks]="primaryTicks"
-        [secondaryTicks]="secondaryTicks"
-        [primaryTickLabels]="primaryTickLabels"
-        [secondaryTickLabels]="secondaryTickLabels"
-        [tickLabelsOrientation]="tickLabelsOrientation"
-        [labelsViewEnabled]="labelsViewEnabled"
-        [labels]="labels | spreadTickLabels:secondaryTicks"
-        [tickLabelTemplateRef]="tickLabelTemplateRef"
-        [minValue]="minValue"
-        [maxValue]="maxValue"></igx-ticks>
+    <div class="igx-slider__track-steps">
+        <svg width="100%" height="100%">
+          <line #ticks x1="0" y1="2" x2="100%" y2="2"></line>
+        </svg>
+    </div>
 </div>
 <div class="igx-slider__thumbs">
     <igx-thumb-label
@@ -83,3 +74,17 @@
         [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>
+<igx-ticks
+    *ngIf="showTicks && showBottomTicks"
+    ticksOrientation="bottom"
+    [primaryTicks]="primaryTicks"
+    [secondaryTicks]="secondaryTicks"
+    [primaryTickLabels]="primaryTickLabels"
+    [secondaryTickLabels]="secondaryTickLabels"
+    [tickLabelsOrientation]="tickLabelsOrientation"
+    [labelsViewEnabled]="labelsViewEnabled"
+    [labels]="labels | spreadTickLabels:secondaryTicks"
+    [tickLabelTemplateRef]="tickLabelTemplateRef"
+    [minValue]="minValue"
+    [maxValue]="maxValue">
+</igx-ticks>

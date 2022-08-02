@@ -43,6 +43,35 @@ export class IgxTreeSelectMarkerDirective {
 export class IgxTreeExpandIndicatorDirective {
 }
 
+/**
+ * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
+ *
+ * @igxModule IgxTreeModule
+ * @igxKeywords tree
+ * @igxTheme igx-tree-theme
+ * @igxGroup Grids & Lists
+ *
+ * @remark
+ * The Angular Tree Component allows users to represent hierarchical data in a tree-view structure, 
+ * maintaining parent-child relationships, as well as to define static tree-view structure without a corresponding data model. 
+ * Its primary purpose is to allow end-users to visualize and navigate within hierarchical data structures. 
+ * The Ignite UI for Angular Tree Component also provides load on demand capabilities, item activation, 
+ * bi-state and cascading selection of items through built-in checkboxes, built-in keyboard navigation and more.
+ *
+ * @example
+ * ```html
+ * <igx-tree>
+ *   <igx-tree-node>
+ *      I am a parent node 1
+ *      <igx-tree-node>
+ *          I am a child node 1
+ *      </igx-tree-node>
+ *      ...
+ *   </igx-tree-node>
+ *	 ...
+ * </igx-tree>
+ * ```
+ */
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',

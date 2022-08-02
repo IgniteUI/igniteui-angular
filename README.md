@@ -1,4 +1,10 @@
-# Ignite UI for Angular - from Infragistics
+![ignite-ui-logo-flames](https://user-images.githubusercontent.com/52001020/173773052-e8fd2806-2631-47a8-838d-1eabdaa4afce.svg)
+
+
+<h1 align="center">
+  Ignite UI for Angular - from Infragistics 
+</h1>
+
 
 ![Node.js CI](https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg)
 [![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
@@ -32,8 +38,17 @@ There are many ways in which you can [participate](https://github.com/IgniteUI/i
  - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
  - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
  - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
+## Browser Support
 
-### Angular Data Grid Overview
+![chrome_48x48](https://user-images.githubusercontent.com/2188411/168109445-fbd7b217-35f9-44d1-8002-1eb97e39cdc6.png) | ![firefox_48x48](https://user-images.githubusercontent.com/2188411/168109465-e46305ee-f69f-4fa5-8f4a-14876f7fd3ca.png) | ![edge_48x48](https://user-images.githubusercontent.com/2188411/168109472-a730f8c0-3822-4ae6-9f54-785a66695245.png) | ![opera_48x48](https://user-images.githubusercontent.com/2188411/168109520-b6865a6c-b69f-44a4-9948-748d8afd687c.png) | ![safari_48x48](https://user-images.githubusercontent.com/2188411/168109527-6c58f2cf-7386-4b97-98b1-cfe0ab4e8626.png) | ![ie_48x48](https://user-images.githubusercontent.com/2188411/168135931-ce5259bb-5b26-4003-8b89-dbee3d4f247c.png)
+--- | --- | --- | --- | --- |:---:|
+Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11* |
+
+\* *IE 11 is only supported in Ignite UI for Angular < 13.0.0*
+
+## Overview
+
+### Angular Data Grid
 
 The Ignite UI for [Angular Data Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid) equips you with all the necessary features for manipulating and visualizing tabular data in a series of rows and columns with ease. You can find powerful grid elements for no-lag scrolling while rendering and going through millions of data points.
 
@@ -41,7 +56,7 @@ Built for optimization and speed, our [Angular grid](https://www.infragistics.co
 
 #### [View running Grid samples here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
 
-### Angular Charts & Graphs Overview
+### Angular Charts & Graphs
 
 Ignite UI for Angular arrives with an extensive library of data visualizations that enable stunning, interactive charts and dashboards for your modern web and mobile apps. All of them are designed to work flawlessly on every modern browser and provide complete touch as well as interactivity. Our comprehensive [Angular Charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/chart-overview) component supports more than 65 chart types that let you display all sorts of data representations and statistics. And with the rich and easy-to-use API, you can plot various types of charts.
 
@@ -181,7 +196,7 @@ npm run build:style
 npm run build:lib
 ```
 
-You can find the build ouput under `dist/igniteui-angular`.
+You can find the build output under `dist/igniteui-angular`.
 
 ## Running the tests
 

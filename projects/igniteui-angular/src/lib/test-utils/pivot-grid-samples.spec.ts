@@ -2,7 +2,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { IgxPivotDataSelectorComponent } from '../grids/pivot-grid/pivot-data-selector.component';
 import { IgxPivotNumericAggregate } from '../grids/pivot-grid/pivot-grid-aggregate';
 import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
-import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot-grid.interface';
+import { IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from '../grids/pivot-grid/pivot-grid.interface';
 
 @Component({
     template: `
@@ -18,11 +18,15 @@ import { IPivotConfiguration, PivotAggregation } from '../grids/pivot-grid/pivot
     <ng-template #emptyTemplate>
         <span>Custom empty template.</span>
     </ng-template>
+    <ng-template #chipValue let-value>
+     {{value.member}}
+    </ng-template>
     `
 })
 export class IgxPivotGridTestBaseComponent {
     public defaultExpand = true;
     @ViewChild('emptyTemplate', { read: TemplateRef, static: true }) public emptyTemplate: TemplateRef<any>;
+    @ViewChild('chipValue', { read: TemplateRef, static: true }) public chipValueTemplate: TemplateRef<any>;
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
     @ViewChild('selector', { read: IgxPivotDataSelectorComponent, static: true}) public dataSelector: IgxPivotDataSelectorComponent;
     public data;
@@ -114,8 +118,8 @@ export class IgxPivotGridTestBaseComponent {
             filters: []
         };
     }
-    public callback = (rowData: any, columnKey: any) => rowData[columnKey] >= 5;
-    public callback1 = (rowData: any, columnKey: any) => rowData[columnKey] < 5;
+    public callback = (rowData: IPivotGridRecord, columnData: IPivotGridColumn) => rowData.aggregationValues.get(columnData.field) >= 5;
+    public callback1 = (rowData: IPivotGridRecord, columnData: IPivotGridColumn) => rowData.aggregationValues.get(columnData.field) < 5;
 }
 
 @Component({

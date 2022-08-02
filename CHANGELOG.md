@@ -2,7 +2,75 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 14.1.0
+
+- `igxPivotGrid`
+    - Add option to template the pivot value chip content:
+    ```
+    <ng-template igxPivotValueChip let-value>
+            {{ value.member }}
+    </ng-template>
+    ``` 
+### New Features
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
+    - `filteringOptions` are extended and now contains `filterable` and `filteringKey` properties. Setting `filterable` determines whether combo will be filterable. By default filtering is done over the data value when they are primitive, or over the field of the values equal to `displayKey`. `filteringKey` allows to filter data by any data related key.
+    - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
+- Added support for restoring filtering expressions with custom filtering operands for the `IgxGridStateDirective`.
+
+## 14.0.0
+
+- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
+- `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
+- `IgxDropDown`
+    - The `label` attribute has been changed to `aria-labelledby` and can be set by a latterly added input property `labelledBy`.
+
+### New Features
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
+
+### General
+- Updating dependency to Angular 14
+- `Migrations`
+    - Migrations now support Yarn berry (version 2+)
+
+- `IgxGridEditingActions`
+    - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
+
+- `IgxTabs`
+    - **Behavioral Change** - Both scroll buttons are displayed when the tabs are not fully visible. When there is no tabs to be scrolled in one of the directions the corresponding scroll button is disabled.
+
+- Locale settings
+    - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+    - `IColumnPipeArgs` interface now expose a `weekStart` property to control the first week of day in calendar used in the grid for editing and filtering
+    - `locale` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will now default to globall Angular application locale, if not set.
+    - `weekStart` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will default to the default first day for the current component `locale`, if not set.
+
 ## 13.2.0
+
+### General
+
+- `IgxPivotGrid`
+    - **Breaking Change** - Changing the `IPivotValue`'s `formatter` and `styles` functions optional parameters, example:
+    ```
+        formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
+    ```
+    First optional parameter `rowData` is now of type `IPivotGridRecord` and contains more contextual information on the dimension and aggregation values. Previously it contained just the aggregation data object. Old usage can be updated as follows, from:
+    ```
+        formatter: (value: any, rowData: any) => rowData['someField'];
+    ```
+    to:
+
+    ```
+        formatter: (value: any, rowData: IPivotGridRecord) => rowData.aggregationValues.get('someField');
+    ```
+    Also an additional optional `columnData` parameter can be added, which contains information on the column dimensions.
+
+- `IgxExpansionPanel`
+    - Changed the expansion panel layout, adding padding to the header and content elements.
+
 
 ### New palette
 
@@ -15,6 +83,10 @@ A new fluent light and dark palettes that use the default fluent colors - `$ligh
     - **Behavioral Change** - sorting and grouping expressions are now working separately; If grouping/sorting expressions are in a conflict, grouping expressions take precedence. You can read more about that in our official documentation.
 - `IgxSlider`
     - support for double value binding in slider of type RANGE through newly exposed `lowerValue` and `upperValue`
+
+- `IgxDrag`
+    - **Behavioral Change** - support for window scroll when dragging element to its edges
+    - new *scrollContainer* property that can specify specific element that should be scrolled instead of window for custom solutions.
 ## 13.1.0
 
 ### New Features

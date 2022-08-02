@@ -893,10 +893,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
         this._updateScrollOffset();
-        this.contentSizeChange.emit();
+        if (scrollable !== this.isScrollable()) {
+            this.scrollbarVisibilityChanged.emit();
+        } else {
+            this.contentSizeChange.emit();
+        }
     }
 
     /**
@@ -1312,8 +1317,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected _recalcOnContainerChange() {
-        this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-        this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();

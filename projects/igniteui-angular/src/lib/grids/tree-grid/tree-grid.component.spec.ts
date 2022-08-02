@@ -171,7 +171,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             const expectedColumns = [...Object.keys(grid.data[0])];
 
-            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         });
@@ -184,7 +184,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
 
             // Employees shouldn't be in the columns
-            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         });
