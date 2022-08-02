@@ -7,6 +7,9 @@ import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { ColumnType, GridType } from '../common/grid.interface';
+import { ISortingExpression } from '../../data-operations/sorting-strategy';
+import { IgxDataRecordSorting } from '../common/strategy';
+import { FilterUtil } from '../../data-operations/filtering-strategy';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
@@ -225,6 +228,24 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
     }
 
     public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
+        let records = this.filterTreeDataByExpressions(expressionsTree);
+        const data = [];
+
+        this.getFlatDataFromFilteredRecords(records, data);
+
+        return data;
+    }
+
+    public sortDataByExpressions(data: ITreeGridRecord[], expressions: ISortingExpression[]) {
+        const records: ITreeGridRecord[] = DataUtil.sort(
+            cloneArray(data),
+            expressions,
+            this.grid.sortStrategy ?? new IgxDataRecordSorting(),
+            this.grid);
+        return records.map(r => r.data);
+    }
+
+    public filterTreeDataByExpressions(expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
         let records = this.grid.rootRecords;
 
         if (expressionsTree.filteringOperands.length) {
@@ -232,13 +253,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
                 expressionsTree,
                 strategy: this.grid.filterStrategy ?? new TreeGridFilteringStrategy()
             };
-            records = DataUtil.filter(cloneArray(records), state, this.grid);
+            records = FilterUtil.filter(cloneArray(records), state, this.grid);
         }
 
-        const data = [];
-        this.getFlatDataFromFilteredRecords(records, data);
-
-        return data;
+        return records;
     }
 
     protected update_row_in_array(value: any, rowID: any, index: number) {
@@ -308,7 +326,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
         for (const record of records) {
             if (!record.isFilteredOutParent) {
-                data.push(record.data);
+                data.push(record);
             }
             this.getFlatDataFromFilteredRecords(record.children, data);
         }

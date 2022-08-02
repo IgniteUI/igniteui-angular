@@ -1,9 +1,0 @@
-{
-    "$schema": "../../common/schema/theme-props.schema.json",
-    "changes": [{
-            "name": "$disable-shadow",
-            "remove": true,
-            "owner": "igx-badge-theme"
-        }
-    ]
-}

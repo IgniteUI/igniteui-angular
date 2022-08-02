@@ -30,13 +30,13 @@
 /// @requires text-contrast
 ///
 /// @example scss Change the summaries background nad labels color
-///   $my-summary-theme: igx-grid-summary-theme(
+///   $my-summary-theme: grid-summary-theme(
 ///     $background-color: black,
 ///     $label-color: white
 ///   );
-///   // Pass the theme to the igx-grid-filtering component mixin
-///   @include igx-grid-summary($my-summary-theme);
-@function igx-grid-summary-theme(
+///   // Pass the theme to the grid-summary component mixin
+///   @include grid-summary($my-summary-theme);
+@function grid-summary-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -95,12 +95,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires var-get
-@mixin igx-grid-summary($theme) {
-    @include igx-css-vars($theme);
+@mixin grid-summary($theme) {
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

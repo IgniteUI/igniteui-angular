@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -554,7 +554,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, true);
         });
 
-        it('Moving: Verify that expanded state is preserved when move column group', () => {
+        it('Moving: Verify that expanded state is preserved when move column group', fakeAsync(() => {
             const generalInf = GridFunctions.getColGroup(grid, 'General Information');
 
             expect(addressInf.expanded).toBeTruthy();
@@ -562,22 +562,25 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(generalInf.visibleIndex).toBe(1);
 
             grid.moveColumn(generalInf, addressInf, DropPosition.AfterDropTarget);
+            tick();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeTruthy();
             expect(generalInf.collapsible).toBeFalsy();
             expect(generalInf.visibleIndex).toBe(3);
             addressInf.expanded = false;
+            tick();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
             grid.moveColumn(generalInf, addressInf, DropPosition.BeforeDropTarget);
+            tick();
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
             expect(generalInf.collapsible).toBeFalsy();
             expect(generalInf.visibleIndex).toBe(1);
-        });
+        }));
 
         it('Moving: Verify moving column inside the group', () => {
             const postalCode = grid.getColumnByName('PostalCode');

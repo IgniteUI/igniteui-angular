@@ -1,4 +1,5 @@
 import { IBaseEventArgs } from '../core/utils';
+import { GridType } from '../grids/common/grid.interface';
 
 export enum SortingDirection {
     None = 0,
@@ -21,12 +22,13 @@ export interface ISortingStrategy {
         ignoreCase: boolean,
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
-        isTime?: boolean
+        isTime?: boolean,
+        grid?: GridType
     ) => any[];
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
-    private static _instance: DefaultSortingStrategy = null;
+    protected static _instance: DefaultSortingStrategy = null;
 
     protected constructor() { }
 
@@ -73,8 +75,8 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         isDate: boolean,
         isTime: boolean
     ) {
-        let a = valueResolver(obj1, key, isDate, isTime);
-        let b = valueResolver(obj2, key, isDate, isTime);
+        let a = valueResolver.call(this, obj1, key, isDate, isTime);
+        let b = valueResolver.call(this, obj2, key, isDate, isTime);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;

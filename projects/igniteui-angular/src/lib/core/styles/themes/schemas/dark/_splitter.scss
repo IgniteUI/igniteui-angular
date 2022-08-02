@@ -9,24 +9,24 @@
 
 /// Generates a dark splitter schema.
 /// @type {Map}
-/// @property {Map} bar-color [igx-color: ('grays', 50)] - The background color of the bar.
-/// @property {Map} handle-color [igx-color: ('grays', 800)] - The color for the bar drag handle.
-/// @property {Map} expander-color [igx-color: ('grays', 800)] - The color for the arrow expander's.
+/// @property {Map} bar-color [color: ('grays', 50)] - The background color of the bar.
+/// @property {Map} handle-color [color: ('grays', 800)] - The color for the bar drag handle.
+/// @property {Map} expander-color [color: ('grays', 800)] - The color for the arrow expander's.
 /// @requires {function} extend
 /// @requires $light-splitter
 $dark-splitter: extend(
     $light-splitter,
     (
         bar-color: (
-            igx-color: ('grays', 50)
+            color: ('grays', 50)
         ),
 
         handle-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         expander-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
     )
 );
@@ -43,19 +43,19 @@ $dark-bootstrap-splitter: $bootstrap-splitter;
 
 /// Generates a dark indigo splitter schema.
 /// @type {Map}
-/// @property {Map} handle-color [igx-color: 'surface'] - The color for the bar drag handle.
-/// @property {Map} expander-color [igx-color: 'surface'] - The color for the bar drag handle.
+/// @property {Map} handle-color [color: 'surface'] - The color for the bar drag handle.
+/// @property {Map} expander-color [color: 'surface'] - The color for the bar drag handle.
 /// @requires {function} extend
 /// @requires $indigo-splitter
 $dark-indigo-splitter: extend(
     $indigo-splitter,
     (
         handle-color: (
-            igx-color: 'surface',
+            color: 'surface',
         ),
 
         expander-color: (
-            igx-color: 'surface',
+            color: 'surface',
         ),
     )
 );

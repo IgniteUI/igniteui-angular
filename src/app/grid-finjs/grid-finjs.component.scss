@@ -4,10 +4,7 @@
         align-items: center;
 
         igx-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-            margin-left: 4px;
+            --igx-icon-size: 16px;
         }
     }
 

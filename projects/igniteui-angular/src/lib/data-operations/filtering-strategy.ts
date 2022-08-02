@@ -1,38 +1,46 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { resolveNestedPath, parseDate } from '../core/utils';
-import { GridType } from '../grids/common/grid.interface';
+import { resolveNestedPath, parseDate, formatDate, formatCurrency } from '../core/utils';
+import { ColumnType, GridType } from '../grids/common/grid.interface';
+import { GridColumnDataType } from './data-util';
+import { SortingDirection } from './sorting-strategy';
+import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
+import { IFilteringState } from './filtering-state.interface';
 
 const DateType = 'date';
 const DateTimeType = 'dateTime';
 const TimeType = 'time';
 
+export class FilterUtil {
+    public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
+        if (!state.strategy) {
+            state.strategy = new FilteringStrategy();
+        }
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
+    }
+}
+
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
+    getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree) : Promise<IgxFilterItem[]>;
 }
 
-export class NoopFilteringStrategy implements IFilteringStrategy {
-    private static _instance: NoopFilteringStrategy = null;
-
-    private constructor() {  }
-
-    public static instance() {
-        return this._instance || (this._instance = new NoopFilteringStrategy());
-    }
-
-    public filter(data: any[], _: IFilteringExpressionsTree, __?: IFilteringExpressionsTree): any[] {
-        return data;
-    }
+export interface IgxFilterItem {
+    value: any;
+    label?: string;
+    children?: IgxFilterItem[];
 }
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+    // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
+    // protected
     public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
@@ -71,21 +79,119 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return true;
     }
 
+    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+
+        let data = column.grid.gridAPI.filterDataByExpressions(tree);
+        data = column.grid.gridAPI.sortDataByExpressions(data,
+            [{ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase }]);
+
+        const columnField = column.field;
+        let filterItems: IgxFilterItem[] = data.map(record => {
+            let value = resolveNestedPath(record, columnField);
+            const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
+
+            value = applyFormatter ?
+                column.formatter(value, record) :
+                value;
+
+            return {
+                value,
+                label: this.getFilterItemLabel(column, value, !applyFormatter, record)
+            };
+        });
+        filterItems = this.getUniqueFilterItems(column, filterItems);
+
+        return Promise.resolve(filterItems);
+    }
+
+    protected getFilterItemLabel(column: ColumnType, value: any, applyFormatter: boolean, data: any) {
+        if (column.formatter) {
+            if (applyFormatter) {
+                return column.formatter(value, data);
+            }
+            return value;
+        }
+
+        const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
+        const locale = column.grid.locale;
+
+        switch (column.dataType) {
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+            case GridColumnDataType.Time:
+                return formatDate(value, format, locale, timezone);
+            case GridColumnDataType.Currency:
+                return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+            case GridColumnDataType.Number:
+                return formatNumber(value, locale, digitsInfo);
+            case GridColumnDataType.Percent:
+                return formatPercent(value, locale, digitsInfo);
+            default:
+                return value;
+        }
+    }
+
+    protected getUniqueFilterItems(column: ColumnType, filterItems: IgxFilterItem[]) {
+        const filteredUniqueValues = filterItems.reduce((map, item) => {
+            let key = item.value;
+
+            if (column.dataType === GridColumnDataType.String && column.filteringIgnoreCase) {
+                key = key?.toString().toLowerCase();
+            } else if (column.dataType === GridColumnDataType.DateTime) {
+                key = item.value?.toString();
+                item.value = key ? new Date(key) : key;
+            } else if (column.dataType === GridColumnDataType.Time) {
+                const date = key ? new Date(key) : key;
+                key = date ? new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds()) : key;
+                item.value = key ? new Date(key) : key;
+            } else if (column.dataType === GridColumnDataType.Date) {
+                const date = key ? new Date(key) : key;
+                key = date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString() : key;
+                item.value = date;
+            }
+
+            return map.has(key) ? map : map.set(key, item)
+        }, new Map());
+        const uniqueValues = Array.from(filteredUniqueValues.values());
+
+        return uniqueValues;
+    }
+
+    protected shouldFormatFilterValues(_column: ColumnType): boolean {
+        return false;
+    }
+
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
 
     protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridType): any;
 }
 
+export class NoopFilteringStrategy extends BaseFilteringStrategy {
+    protected getFieldValue(rec: any, _fieldName: string) {
+        return rec;
+    }
+    private static _instance: NoopFilteringStrategy = null;
+
+    public static instance() {
+        return this._instance || (this._instance = new NoopFilteringStrategy());
+    }
+
+    public filter(data: any[], _: IFilteringExpressionsTree, __?: IFilteringExpressionsTree): any[] {
+        return data;
+    }
+}
+
+
 export class FilteringStrategy extends BaseFilteringStrategy {
-    private static _instace: FilteringStrategy = null;
+    private static _instance: FilteringStrategy = null;
 
     constructor() {
         super();
     }
 
     public static instance() {
-        return this._instace || (this._instace = new this());
+        return this._instance || (this._instance = new this());
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,
@@ -107,9 +213,14 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+        const column = grid?.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, fieldName);
-        value = value && (isDate || isTime) ? parseDate(value) : value;
+
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value, rec) :
+            value && (isDate || isTime) ? parseDate(value) : value;
+
         return value;
     }
 }
@@ -124,18 +235,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         super();
     }
 
-    /** @hidden */
-    public shouldApplyFormatter(fieldName: string): boolean {
-        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
-    }
-
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
-        const column = grid.getColumnByName(fieldName);
-        let value = resolveNestedPath(rec, fieldName);
-
-        value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value, rec) : value && (isDate || isTime) ? parseDate(value) : value;
-
-        return value;
+    protected shouldFormatFilterValues(column: ColumnType): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }

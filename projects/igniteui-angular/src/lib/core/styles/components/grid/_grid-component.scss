@@ -199,6 +199,10 @@
             @extend %igx-grid__tr--inner !optional;
         }
 
+        @include e(tr, $m: header) {
+            @extend %igx-grid__tr--header !optional;
+        }
+
         @include e(tr, $m: group) {
             @extend %grid-row--group !optional;
         }
@@ -217,10 +221,6 @@
 
         @include e(td) {
             @extend %grid-cell-display !optional;
-        }
-
-        @include e(td, $m: tree-cell ) {
-            @extend %igx-grid__td--tree-cell !optional;
         }
 
         @include e(td, $m: active) {
@@ -538,15 +538,81 @@
             }
         }
 
-        @for $i from 1 through 25 {
-            @include e(tree-cell, $m: padding-level-#{$i}) {
-                @extend %igx-grid__tree-cell--padding-level-#{$i} !optional;
-            }
+        // Pivot start
+        @include e(pivot, $m: 'super-compact') {
+            @extend %igx-grid__pivot--super-compact !optional
+        }
+
+        @include e(tr-pivot) {
+            @extend %igx-grid__tr-pivot !optional
+        }
+
+        @include e(pivot-filter-toggle) {
+            @extend %igx-grid__pivot-filter-toggle !optional
+        }
+
+        @include e(pivot-empty-chip-area) {
+            @extend %igx-grid__pivot-empty-chip-area !optional
         }
 
 
+
+        @include e(tr-pivot, $m: 'row-area') {
+            @extend %igx-grid__tr-pivot--row-area !optional
+        }
+
+        @include e(tr-pivot, $m: 'filter-container') {
+            @extend %igx-grid__tr-pivot--filter-container !optional
+        }
+
+        @include e(tr-pivot, $m: 'chip_drop_indicator') {
+            @extend %igx-grid__tr-pivot--chip_drop_indicator !optional
+        }
+
+        @include e(tr-pivot, $m: 'drop-row-area') {
+            @extend %igx-grid__tr-pivot--drop-row-area !optional
+        }
+
+        @include e(tr-pivot, $m: 'filter') {
+            @extend %igx-grid__tr-pivot--filter !optional
+        }
+
+        @include e(tr-pivot-group) {
+            @extend %igx-grid__tr-pivot-group !optional
+        }
+
+        @include e(tr-header-row) {
+            @extend %igx-grid__tr-header-row !optional;
+        }
+
+        @include e(tr-pivot, $m: 'columnDimensionLeaf') {
+            @extend %igx-grid__tr-pivot--columnDimensionLeaf !optional
+        }
+
+        @include e(tr-pivot, $m: 'columnMultiRowSpan') {
+            @extend %igx-grid__tr-pivot--columnMultiRowSpan !optional
+        }
+
+        @include e(tr-pivot-toggle-icons) {
+            @extend %igx-grid__tr-pivot-toggle-icons !optional;
+        }
+        // pivot end
+
         @include m(cosy) {
             @extend %grid-display !optional;
+            @extend %grid-display-cosy !optional;
+
+            @include e(tr-pivot) {
+                @extend %igx-grid__tr-pivot--cosy !optional
+            }
+
+            @include e(tr-pivot, $m: 'row-area') {
+                @extend %igx-grid__tr-pivot--row-area--cosy !optional
+            }
+
+            @include e(tr-pivot, $m: 'filter') {
+                @extend %igx-grid__tr-pivot--filter--cosy !optional
+            }
 
             @include e(drag-indicator) {
                 @extend %igx-grid__drag-indicator--cosy !optional;
@@ -623,12 +689,6 @@
                 }
             }
 
-            @for $i from 1 through 25 {
-                @include e(tree-cell, $m: padding-level-#{$i}) {
-                    @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
-                }
-            }
-
             @include e(td, $m: pinned-chip) {
                 @extend %grid-cell--pinned-chip--cosy !optional;
             }
@@ -636,6 +696,19 @@
 
         @include m(compact) {
             @extend %grid-display !optional;
+            @extend %grid-display-compact !optional;
+
+            @include e(tr-pivot) {
+                @extend %igx-grid__tr-pivot--compact !optional
+            }
+
+            @include e(tr-pivot, $m: 'row-area') {
+                @extend %igx-grid__tr-pivot--row-area--compact !optional
+            }
+
+            @include e(tr-pivot, $m: 'filter') {
+                @extend %igx-grid__tr-pivot--filter--compact !optional
+            }
 
             @include e(drag-indicator) {
                 @extend %igx-grid__drag-indicator--compact !optional;
@@ -709,12 +782,6 @@
 
                 @include e(group-row, $m: padding-level-#{$i}) {
                     @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
-                }
-            }
-
-            @for $i from 1 through 25 {
-                @include e(tree-cell, $m: padding-level-#{$i}) {
-                    @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
                 }
             }
 

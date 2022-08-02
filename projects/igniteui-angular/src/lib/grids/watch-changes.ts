@@ -74,7 +74,6 @@ export function notifyChanges(repaint = false) {
 
 
         const originalSetter = propDesc ? propDesc.set : null;
-
         propDesc.get = propDesc.get || (function(this) {
             return this[privateKey];
         });
@@ -83,7 +82,7 @@ export function notifyChanges(repaint = false) {
             if (originalSetter) {
                 originalSetter.call(this, newValue);
                 if (this.grid) {
-                    this.grid.notifyChanges(repaint);
+                    this.grid.notifyChanges(repaint && !this.grid.isPivot);
                 }
             } else {
                 if (newValue === this[key]) {
@@ -91,7 +90,7 @@ export function notifyChanges(repaint = false) {
                 }
                 this[privateKey] = newValue;
                 if (this.grid) {
-                    this.grid.notifyChanges(repaint);
+                    this.grid.notifyChanges(repaint && !this.grid.isPivot);
                 }
             }
         };

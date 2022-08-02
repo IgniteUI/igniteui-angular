@@ -1,0 +1,876 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "igx-palette",
+            "replaceWith": "palette",
+            "type": "function"
+        },
+        {
+            "name": "igx-color",
+            "replaceWith": "color",
+            "type": "function"
+        },
+        {
+            "name": "igx-contrast-color",
+            "replaceWith": "contrast-color",
+            "type": "function"
+        },
+        {
+            "name": "igx-elevations",
+            "replaceWith": "elevations",
+            "type": "function"
+        },
+        {
+            "name": "igx-elevation",
+            "replaceWith": "elevation",
+            "type": "function"
+        },
+        {
+            "name": "igx-color-from-var",
+            "replaceWith": "color-from-var",
+            "type": "function"
+        },
+        {
+            "name": "igx-generate-series-colors",
+            "replaceWith": "generate-series-colors",
+            "type": "function"
+        },
+        {
+            "name": "igx-action-strip-theme",
+            "replaceWith": "action-strip-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-avatar-theme",
+            "replaceWith": "avatar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-badge-theme",
+            "replaceWith": "badge-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-banner-theme",
+            "replaceWith": "banner-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-bottom-nav-theme",
+            "replaceWith": "bottom-nav-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-button-group-theme",
+            "replaceWith": "button-group-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-button-theme",
+            "replaceWith": "button-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-calendar-theme",
+            "replaceWith": "calendar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-card-theme",
+            "replaceWith": "card-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-carousel-theme",
+            "replaceWith": "carousel-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-category-chart-theme",
+            "replaceWith": "category-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-data-chart-theme",
+            "replaceWith": "data-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-doughnut-chart-theme",
+            "replaceWith": "doughnut-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-financial-chart-theme",
+            "replaceWith": "financial-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-funnel-chart-theme",
+            "replaceWith": "funnel-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-linear-gauge-theme",
+            "replaceWith": "linear-gauge-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-radial-gauge-theme",
+            "replaceWith": "radial-gauge-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-geo-map-theme",
+            "replaceWith": "geo-map-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-bullet-graph-theme",
+            "replaceWith": "bullet-graph-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-pie-chart-theme",
+            "replaceWith": "pie-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-shape-chart-theme",
+            "replaceWith": "shape-chart-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-sparkline-theme",
+            "replaceWith": "sparkline-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-checkbox-theme",
+            "replaceWith": "checkbox-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-chip-theme",
+            "replaceWith": "chip-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-column-actions-theme",
+            "replaceWith": "column-actions-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-combo-theme",
+            "replaceWith": "combo-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-date-range-picker-theme",
+            "replaceWith": "date-range-picker-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-dialog-theme",
+            "replaceWith": "dialog-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-divider-theme",
+            "replaceWith": "divider-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-dock-manager-theme",
+            "replaceWith": "dock-manager-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-drop-down-theme",
+            "replaceWith": "drop-down-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-expansion-panel-theme",
+            "replaceWith": "expansion-panel-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-grid-summary-theme",
+            "replaceWith": "grid-summary-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-grid-toolbar-theme",
+            "replaceWith": "grid-toolbar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-grid-theme",
+            "replaceWith": "grid-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-highlight-theme",
+            "replaceWith": "highlight-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-icon-theme",
+            "replaceWith": "icon-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-input-group-theme",
+            "replaceWith": "input-group-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-list-theme",
+            "replaceWith": "list-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-navbar-theme",
+            "replaceWith": "navbar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-navdrawer-theme",
+            "replaceWith": "navdrawer-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-overlay-theme",
+            "replaceWith": "overlay-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-paginator-theme",
+            "replaceWith": "paginator-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-progress-linear-theme",
+            "replaceWith": "progress-linear-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-progress-circular-theme",
+            "replaceWith": "progress-circular-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-radio-theme",
+            "replaceWith": "radio-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-ripple-theme",
+            "replaceWith": "ripple-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-scrollbar-theme",
+            "replaceWith": "scrollbar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-slider-theme",
+            "replaceWith": "slider-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-snackbar-theme",
+            "replaceWith": "snackbar-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-splitter-theme",
+            "replaceWith": "splitter-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-stepper-theme",
+            "replaceWith": "stepper-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-switch-theme",
+            "replaceWith": "switch-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-tabs-theme",
+            "replaceWith": "tabs-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-time-picker-theme",
+            "replaceWith": "time-picker-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-toast-theme",
+            "replaceWith": "toast-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-tooltip-theme",
+            "replaceWith": "tooltip-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-tree-theme",
+            "replaceWith": "tree-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-watermark-theme",
+            "replaceWith": "watermark-theme",
+            "type": "function"
+        },
+        {
+            "name": "igx-type-style",
+            "replaceWith": "type-style",
+            "type": "function"
+        },
+        {
+            "name": "igx-type-scale",
+            "replaceWith": "type-scale",
+            "type": "function"
+        },
+        {
+            "name": "igx-type-scale-category",
+            "replaceWith": "type-scale-category",
+            "type": "function"
+        },
+        {
+            "name": "igx-palette-vars",
+            "replaceWith": "palette-vars",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-elevation-vars",
+            "replaceWith": "elevation-vars",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-color-classes",
+            "replaceWith": "color-classes",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-css-vars",
+            "replaceWith": "css-vars",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-card-typography",
+            "replaceWith": "card-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-scope",
+            "replaceWith": "scope",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-action-strip",
+            "replaceWith": "action-strip",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-avatar",
+            "replaceWith": "avatar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-badge",
+            "replaceWith": "badge",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-banner",
+            "replaceWith": "banner",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-banner-typography",
+            "replaceWith": "banner-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-bottom-nav",
+            "replaceWith": "bottom-nav",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-bottom-nav-typography",
+            "replaceWith": "bottom-nav-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-button-group",
+            "replaceWith": "button-group",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-button",
+            "replaceWith": "button",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-button-typography",
+            "replaceWith": "button-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-calendar",
+            "replaceWith": "calendar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-calendar-typography",
+            "replaceWith": "calendar-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-card",
+            "replaceWith": "card",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-card-typography",
+            "replaceWith": "card-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-carousel",
+            "replaceWith": "carousel",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-category-chart-typography",
+            "replaceWith": "category-chart-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-data-chart-typography",
+            "replaceWith": "data-chart-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-financial-chart-typography",
+            "replaceWith": "financial-chart-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-funnel-chart-typography",
+            "replaceWith": "funnel-chart-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-gauge-typography",
+            "replaceWith": "gauge-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-graph-typography",
+            "replaceWith": "graph-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-shape-chart-typography",
+            "replaceWith": "shape-chart-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-checkbox",
+            "replaceWith": "checkbox",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-checkbox-typography",
+            "replaceWith": "checkbox-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-chip",
+            "replaceWith": "chip",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-chip-typography",
+            "replaceWith": "chip-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-column-actions",
+            "replaceWith": "column-actions",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-column-actions-typography",
+            "replaceWith": "column-actions-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-combo",
+            "replaceWith": "combo",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-date-picker",
+            "replaceWith": "date-picker",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-date-range-picker",
+            "replaceWith": "date-range-picker",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-date-range-typography",
+            "replaceWith": "date-range-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-dialog",
+            "replaceWith": "dialog",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-dialog-typography",
+            "replaceWith": "dialog-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-divider",
+            "replaceWith": "divider",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-dock-manager",
+            "replaceWith": "dock-manager",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-dock-manager-typography",
+            "replaceWith": "dock-manager-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-drop-down",
+            "replaceWith": "drop-down",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-drop-down-typography",
+            "replaceWith": "drop-down-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-expansion-panel",
+            "replaceWith": "expansion-panel",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-expansion-panel-typography",
+            "replaceWith": "expansion-panel-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-grid-summary",
+            "replaceWith": "grid-summary",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-grid-toolbar",
+            "replaceWith": "grid-toolbar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-grid",
+            "replaceWith": "grid",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-highlight",
+            "replaceWith": "highlight",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-icon",
+            "replaceWith": "icon",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-input-group",
+            "replaceWith": "input-group",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-input-group-typography",
+            "replaceWith": "input-group-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-list",
+            "replaceWith": "list",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-list-typography",
+            "replaceWith": "list-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-navbar",
+            "replaceWith": "navbar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-navbar-typography",
+            "replaceWith": "navbar-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-navdrawer",
+            "replaceWith": "navdrawer",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-navdrawer-typography",
+            "replaceWith": "navdrawer-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-overlay",
+            "replaceWith": "overlay",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-paginator",
+            "replaceWith": "paginator",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-progress-linear",
+            "replaceWith": "progress-linear",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-progress-circular",
+            "replaceWith": "progress-circular",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-radio",
+            "replaceWith": "radio",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-radio-typography",
+            "replaceWith": "radio-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-ripple",
+            "replaceWith": "ripple",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-scrollbar",
+            "replaceWith": "scrollbar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-slider",
+            "replaceWith": "slider",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-slider-typography",
+            "replaceWith": "slider-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-snackbar",
+            "replaceWith": "snackbar",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-snackbar-typography",
+            "replaceWith": "snackbar-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-splitter",
+            "replaceWith": "splitter",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-stepper",
+            "replaceWith": "stepper",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-stepper-typography",
+            "replaceWith": "stepper-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-switch",
+            "replaceWith": "switch",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-switch-typography",
+            "replaceWith": "switch-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tabs",
+            "replaceWith": "tabs",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tabs-typography",
+            "replaceWith": "tabs-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-time-picker",
+            "replaceWith": "time-picker",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-time-picker-typography",
+            "replaceWith": "time-picker-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-toast",
+            "replaceWith": "toast",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-toast-typography",
+            "replaceWith": "toast-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tooltip",
+            "replaceWith": "tooltip",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tooltip-typography",
+            "replaceWith": "tooltip-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tree",
+            "replaceWith": "tree",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-tree-typography",
+            "replaceWith": "tree-typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-watermark",
+            "replaceWith": "watermark",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-core",
+            "replaceWith": "core",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-theme",
+            "replaceWith": "theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-dark-theme",
+            "replaceWith": "dark-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-fluent-light-theme",
+            "replaceWith": "fluent-light-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-fluent-dark-theme",
+            "replaceWith": "fluent-dark-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-bootstrap-light-theme",
+            "replaceWith": "bootstrap-light-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-bootstrap-dark-theme",
+            "replaceWith": "bootstrap-dark-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-indigo-light-theme",
+            "replaceWith": "indigo-light-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-indigo-dark-theme",
+            "replaceWith": "indigo-dark-theme",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-font-var",
+            "replaceWith": "font-var",
+            "type": "mixin"
+        },
+        {
+            "name": "_igx-typography-styles",
+            "replaceWith": "_typography-styles",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-typography",
+            "replaceWith": "typography",
+            "type": "mixin"
+        },
+        {
+            "name": "igx-background-color",
+            "replaceWith": "background-color",
+            "type": "variable"
+        },
+        {
+            "name": "igx-foreground-color",
+            "replaceWith": "foreground-color",
+            "type": "variable"
+        },
+        {
+            "name": "igx-elevations",
+            "replaceWith": "elevations",
+            "type": "variable"
+        },
+        {
+            "name": "igx-elevation",
+            "replaceWith": "elevation",
+            "type": "variable"
+        },
+        {
+            "name": "igx-light-theme",
+            "replaceWith": "light-theme",
+            "type": "function"
+        }
+
+    ]
+}

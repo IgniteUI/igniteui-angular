@@ -53,14 +53,13 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 /// @requires luminance
 ///
 /// @example scss Change the list background color
-///   $my-list-theme: igx-list-theme($background: black);
-///   // Pass the theme to the igx-list component mixin
-///   @include igx-list($my-list-theme);
-@function igx-list-theme(
+///   $my-list-theme: list-theme($background: black);
+///   // Pass the theme to the list component mixin
+///   @include list($my-list-theme);
+@function list-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -100,14 +99,6 @@
     }
 
     $theme: apply-palette($list-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($list-schema, 'border-radius')), 0, 24px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($list-schema, 'item-border-radius')), 0, 24px
-    );
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -223,6 +214,14 @@
         $item-subtitle-color-active: $item-text-color-active;
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($item-border-radius) {
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -255,11 +254,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-list($theme) {
-    @include igx-css-vars($theme);
+@mixin list($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
@@ -308,14 +307,11 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background');
-        height: 100%;
-        overflow: hidden;
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         z-index: 0;
         border-radius: var-get($theme, 'border-radius');
-
-        @if $bootstrap-theme {
-            border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-        }
     }
 
     %igx-list--empty {
@@ -354,6 +350,14 @@
         border-radius: var-get($theme, 'item-border-radius');
         color: var-get($theme, 'item-text-color');
         background: var-get($theme, 'item-background');
+
+        @if $bootstrap-theme {
+            border-bottom: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
 
         &:hover {
             color: var-get($theme, 'item-text-color-hover');
@@ -597,8 +601,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-list-typography(
+/// @requires {mixin} type-style
+@mixin list-typography(
     $type-scale,
     $categories: (
         header: 'overline',
@@ -613,26 +617,26 @@
     $subtitle: map.get($categories, 'subtitle');
 
     %igx-list-header {
-        @include igx-type-style($type-scale, $header) {
+        @include type-style($type-scale, $header) {
             margin: 0;
         }
     }
 
     %igx-list-item {
-        @include igx-type-style($type-scale, $item) {
+        @include type-style($type-scale, $item) {
             margin: 0;
         }
     }
 
     %igx-list__item-lines,
     %igx-list__item-line-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin: 0;
         }
     }
 
     %igx-list__item-line-subtitle {
-        @include igx-type-style($type-scale, $subtitle) {
+        @include type-style($type-scale, $subtitle) {
             margin: 0;
         }
     }

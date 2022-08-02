@@ -87,9 +87,9 @@
 /// @prop {String} overline.letter-spacing [rem(1.5px)]
 /// @prop {String} overline.line-height [rem(16px)]
 /// @prop {String} overline.text-transform [uppercase]
-/// @requires igx-type-scale
+/// @requires type-scale
 /// @see $material-type-scale
-$default-type-scale: igx-type-scale() !default;
+$default-type-scale: type-scale() !default;
 
 /// @alias default-type-scale
 /// @see $default-type-scale

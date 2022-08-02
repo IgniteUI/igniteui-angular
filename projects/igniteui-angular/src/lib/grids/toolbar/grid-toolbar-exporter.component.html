@@ -1,16 +1,17 @@
-<div class="igx-grid-toolbar__dropdown" id="btnExport">
-    <button [title]="grid?.resourceStrings.igx_grid_toolbar_exporter_button_tooltip" [disabled]="isExporting"
-        igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btn (click)="toggle(btn, toggleRef)">
-        <igx-icon>import_export</igx-icon>
-        <span #ref>
-            <ng-content></ng-content>
-        </span>
-        <span *ngIf="!ref.childNodes.length">
-            {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
-        </span>
-        <igx-icon>arrow_drop_down</igx-icon>
-    </button>
+<button [title]="grid?.resourceStrings.igx_grid_toolbar_exporter_button_tooltip" [disabled]="isExporting"
+    igxButton="outlined" type="button" [displayDensity]="grid.displayDensity" igxRipple #btn (click)="toggle(btn, toggleRef)">
 
+    <igx-icon>import_export</igx-icon>
+    <span #ref>
+        <ng-content></ng-content>
+    </span>
+    <span *ngIf="!ref.childNodes.length">
+        {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
+    </span>
+    <igx-icon>arrow_drop_down</igx-icon>
+</button>
+
+<div class="igx-grid-toolbar__dropdown" id="btnExport">
     <ul class="igx-grid-toolbar__dd-list" igxToggle #toggleRef="toggle">
         <li *ngIf="exportExcel" #btnExportExcel id="btnExportExcel"
             class="igx-grid-toolbar__dd-list-items" igxRipple (click)="export('excel', toggleRef)">

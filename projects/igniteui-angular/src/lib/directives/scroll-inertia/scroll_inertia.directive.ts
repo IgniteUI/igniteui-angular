@@ -138,6 +138,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
 
+        if (evt.composedPath && this.didChildScroll(evt, scrollDeltaX, scrollDeltaY)) {
+            return;
+        }
+
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
             const nextLeft = this._startX + scrollDeltaX * scrollStep;
             if (!smoothing) {
@@ -184,6 +188,42 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 evt.stopPropagation();
             }
         }
+    }
+
+    /**
+     * @hidden
+     * Checks if the wheel event would have scrolled an element under the display container
+     * in DOM tree so that it can correctly be ignored until that element can no longer be scrolled.
+     */
+    protected didChildScroll(evt, scrollDeltaX, scrollDeltaY): boolean {
+        const path = evt.composedPath();
+        let i = 0;
+        while (i < path.length && path[i].localName !== 'igx-display-container') {
+            const e = path[i++];
+            if (e.scrollHeight > e.clientHeight) {
+                const overflowY = window.getComputedStyle(e)['overflow-y'];
+                if (overflowY === 'auto' || overflowY === 'scroll') {
+                    if (scrollDeltaY > 0 && e.scrollHeight - Math.abs(Math.round(e.scrollTop)) !== e.clientHeight) {
+                        return true;
+                    }
+                    if (scrollDeltaY < 0 && e.scrollTop !== 0) {
+                        return true;
+                    }
+                }
+            }
+            if (e.scrollWidth > e.clientWidth) {
+                const overflowX = window.getComputedStyle(e)['overflow-x'];
+                if (overflowX === 'auto' || overflowX === 'scroll') {
+                    if (scrollDeltaX > 0 && e.scrollWidth - Math.abs(Math.round(e.scrollLeft)) !== e.clientWidth) {
+                        return true;
+                    }
+                    if (scrollDeltaX < 0 && e.scrollLeft !== 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**

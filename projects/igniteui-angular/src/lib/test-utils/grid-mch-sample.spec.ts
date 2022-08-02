@@ -47,7 +47,7 @@ export class OneGroupThreeColsGridComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px">
+    <igx-grid #grid [data]="data" height="500px" [hideGroupedColumns]="hideGroupedColumns">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
             <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="CompanyName"></igx-column>
@@ -82,6 +82,8 @@ export class ColumnGroupTestComponent {
     public emptyColGroup: IgxColumnGroupComponent;
 
     public data = SampleTestData.contactInfoDataFull();
+
+    public hideGroupedColumns = false;
 }
 
 @Component({

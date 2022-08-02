@@ -1,21 +1,13 @@
 import {
-    Directive,
-    NgModule,
-    Input,
-    QueryList,
-    Output,
-    EventEmitter,
     AfterContentInit,
-    ContentChildren,
-    OnDestroy,
-    HostBinding
+    ContentChildren, Directive, EventEmitter, HostBinding, Input, NgModule, OnDestroy, Output, QueryList
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '../../radio/radio.component';
-import { IgxRippleModule } from '../ripple/ripple.directive';
-import { takeUntil } from 'rxjs/operators';
 import { noop, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
+import { IChangeRadioEventArgs, IgxRadioComponent, RadioLabelPosition } from '../../radio/radio.component';
+import { IgxRippleModule } from '../ripple/ripple.directive';
 
 /**
  * Determines the Radio Group alignment
@@ -381,9 +373,17 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     private _initRadioButtons() {
         if (this.radioButtons) {
-            const props = { name: this._name, labelPosition: this._labelPosition, disabled: this._disabled, required: this._required };
+            const props = { name: this._name, required: this._required };
             this.radioButtons.forEach((button) => {
                 Object.assign(button, props);
+
+                if(button.disabled === undefined) {
+                    button.disabled = this._disabled;
+                }
+
+                if(button.labelPosition === undefined) {
+                    button.labelPosition = this._labelPosition;
+                }
 
                 if (button.value === this._value) {
                     button.checked = true;

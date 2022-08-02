@@ -969,6 +969,23 @@ export class FileContentData {
         return this.createData();
     }
 
+    public get emptyTreeGridWithExportedHeaders() {
+        this._sharedStringsData =
+        `count="5" uniqueCount="5"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si>`;
+
+        this._tableData = `ref="A1:E2" totalsRowShown="0">
+        <autoFilter ref="A1:E1"/><tableColumns count="5"><tableColumn id="1" name="ID"/><tableColumn id="2" name="ParentID"/><tableColumn id="3" name="Name"/><tableColumn id="4" name="JobTitle"/><tableColumn id="5" name="Age"/></tableColumns>`;
+
+        this._worksheetData = `
+        <dimension ref="A1:E1"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
     public get gridProductsWithFormatter() {
         this._sharedStringsData =
             `count="45" uniqueCount="35"><si><t>Product ID</t></si><si><t>ProductName</t></si><si><t>InStock</t></si><si><t>UnitsInStock</t></si><si><t>OrderDate</t></si><si><t>Chai</t></si><si><t>true</t></si><si><t>2760.00</t></si><si><t>Mon Mar 21 2005</t></si><si><t>Aniseed Syrup</t></si><si><t>false</t></si><si><t>198.00</t></si><si><t>Tue Jan 15 2008</t></si><si><t>Chef Antons Cajun Seasoning</t></si><si><t>52.00</t></si><si><t>Sat Nov 20 2010</t></si><si><t>Grandmas Boysenberry Spread</t></si><si><t>0.00</t></si><si><t>Thu Oct 11 2007</t></si><si><t>Uncle Bobs Dried Pears</t></si><si><t>Fri Jul 27 2001</t></si><si><t>Northwoods Cranberry Sauce</t></si><si><t>1098.00</t></si><si><t>Thu May 17 1990</t></si><si><t>Queso Cabrales</t></si><si><t>Thu Mar 03 2005</t></si><si><t>Tofu</t></si><si><t>7898.00</t></si><si><t>Sat Sep 09 2017</t></si><si><t>Teatime Chocolate Biscuits</t></si><si><t>6998.00</t></si><si><t>Thu Dec 25 2025</t></si><si><t>Chocolate</t></si><si><t>20000.00</t></si><si><t>Thu Mar 01 2018</t></si>`;
@@ -1371,6 +1388,20 @@ export class FileContentData {
         return this.createData();
     }
 
+    public get exportEmptyGridWithMultiColumnHeadersData() {
+        this._sharedStringsData =
+            `count="12" uniqueCount="12"><si><t>ID</t></si><si><t>General Information</t></si><si><t>Address Information</t></si><si><t>Personal Details</t></si><si><t>Location</t></si><si><t>Contact Information</t></si><si><t>ContactName</t></si><si><t>ContactTitle</t></si><si><t>Country</t></si><si><t>Phone</t></si><si><t>Fax</t></si><si><t>PostalCode</t></si>`;
+
+        this._worksheetData =
+            `<dimension ref="A1:G5"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="7" width="15" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" /><c r="D1" t="s"><v>2</v></c><c r="E1" /><c r="F1" /><c r="G1" /></row><row r="2"><c r="B2" t="s"><v>3</v></c><c r="C2" /><c r="D2" t="s"><v>4</v></c><c r="E2" t="s"><v>5</v></c><c r="F2" /><c r="G2" /></row><row r="3"><c r="B3" t="s"><v>6</v></c><c r="C3" t="s"><v>7</v></c><c r="D3" t="s"><v>8</v></c><c r="E3" t="s"><v>9</v></c><c r="F3" t="s"><v>10</v></c><c r="G3" t="s"><v>11</v></c></row></sheetData><mergeCells count="6"> <mergeCell ref="A1:A3" /> <mergeCell ref="B1:C1" /> <mergeCell ref="D1:G1" /> <mergeCell ref="B2:C2" /> <mergeCell ref="D2:D2" /> <mergeCell ref="E2:G2" /></mergeCells>`;
+
+        return this.createData();
+    }
+
     public get exportHierarchicalDataWithFrozenHeaders() {
         this._sharedStringsData =
             `count="106" uniqueCount="57"><si><t>Artist</t></si><si><t>Debut</t></si><si><t>GrammyNominations</t></si><si><t>GrammyAwards</t></si><si><t>Naomí Yepes</t></si><si><t>Album</t></si><si><t>Launch Date</t></si><si><t>Billboard Review</t></si><si><t>US Billboard 200</t></si><si><t>Pushing up daisies</t></si><si><t>No.</t></si><si><t>Title</t></si><si><t>Released</t></si><si><t>Genre</t></si><si><t>Wood Shavifdsafdsafsangs Forever</t></si><si><t>*fdasfsa</t></si><si><t>Wood Shavifdsafdsafsavngs Forever</t></si><si><t>*vxzvczx</t></si><si><t>Wfdsafsaings Forever</t></si><si><t>*fdsacewwwqwq</t></si><si><t>Wood Shavings Forever</t></si><si><t>*rewqrqcxz</t></si><si><t>Pushing up daisies - Deluxe</t></si><si><t>Wood Shavings Forever - Remix</t></si><si><t>Punk</t></si><si><t>Utopia</t></si><si><t>SANTORINI</t></si><si><t>Hip-Hop</t></si><si><t>HEARTBEAT</t></si><si><t>OVERSEAS</t></si><si><t>Wish You Were Here</t></si><si><t>Zoom</t></si><si><t>Do You?</t></si><si><t>No Photos</t></si><si><t>Tour</t></si><si><t>Started on</t></si><si><t>Location</t></si><si><t>Headliner</t></si><si><t>Faithful Tour</t></si><si><t>Sep 12</t></si><si><t>Worldwide</t></si><si><t>NO</t></si><si><t>Country</t></si><si><t>Tickets Sold</t></si><si><t>Attendants</t></si><si><t>Belgium</t></si><si><t>USA</t></si><si><t>Babila Ebwélé</t></si><si><t>Fahrenheit</t></si><si><t>Show Out</t></si><si><t>Mood Swings</t></si><si><t>Scenario</t></si><si><t>Astroworld</t></si><si><t>Jul 21</t></si><si><t>Bulgaria</t></si><si><t>Romania</t></si><si><t>Chloe</t></si>`;
@@ -1478,6 +1509,19 @@ export class FileContentData {
             <sheetFormatPr defaultRowHeight="15" outlineLevelRow="1" x14ac:dyDescent="0.25"/>
             <cols><col min="1" max="15" width="20" customWidth="1"/></cols>
             <sheetData><row r="1"><c r="A1" s="3" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v></c></row><row r="3" outlineLevel="1" hidden="1"><c r="B3" s="3" t="s"><v>2</v></c><c r="C3" s="3" /><c r="D3" s="3" /><c r="E3" s="3" t="s"><v>3</v></c><c r="F3" s="3" /><c r="G3" s="3" /><c r="H3" s="3" /><c r="I3" s="3" /><c r="J3" s="3" /></row><row r="4" outlineLevel="1" hidden="1"><c r="B4" s="3" t="s"><v>0</v></c><c r="C4" s="3" t="s"><v>4</v></c><c r="D4" s="3" /><c r="E4" s="3" t="s"><v>5</v></c><c r="F4" s="3" /><c r="G4" s="3" /><c r="H4" s="3" /><c r="I4" s="3" t="s"><v>6</v></c><c r="J4" s="3" /></row><row r="5" outlineLevel="1" hidden="1"><c r="B5" t="s" s="3"><v>0</v></c><c r="C5" t="s" s="3"><v>7</v></c><c r="D5" t="s" s="3"><v>8</v></c><c r="E5" t="s" s="3"><v>9</v></c><c r="F5" t="s" s="3"><v>10</v></c><c r="G5" t="s" s="3"><v>11</v></c><c r="H5" t="s" s="3"><v>12</v></c><c r="I5" t="s" s="3"><v>13</v></c><c r="J5" t="s" s="3"><v>14</v></c></row><row r="6" outlineLevel="1" hidden="1"><c r="B6" t="s"><v>15</v></c><c r="C6" t="s"><v>16</v></c><c r="D6" t="s"><v>17</v></c><c r="E6" t="s"><v>18</v></c><c r="F6" t="s"><v>19</v></c><c r="G6" t="s"><v>20</v></c><c r="H6" t="s"><v>21</v></c><c r="I6" t="s"><v>22</v></c><c r="J6" t="s"><v>23</v></c></row><row r="7" outlineLevel="1" hidden="1"><c r="B7" t="s"><v>24</v></c><c r="C7" t="s"><v>25</v></c><c r="D7" t="s"><v>17</v></c><c r="E7" t="s"><v>26</v></c><c r="F7" t="s"><v>19</v></c><c r="G7" t="s"><v>27</v></c><c r="H7" t="s"><v>21</v></c><c r="I7" t="s"><v>28</v></c><c r="J7" s="1"/></row></sheetData><mergeCells count="6"> <mergeCell ref="B3:D3" /> <mergeCell ref="E3:J3" /> <mergeCell ref="B4:B5" /> <mergeCell ref="C4:D4" /> <mergeCell ref="E4:H4" /> <mergeCell ref="I4:J4" /></mergeCells>`;
+
+        return this.createData();
+    }
+
+    public get exportEmptyMultiColumnHeadersDataWithExportedHeaders() {
+        this._sharedStringsData =
+            `count="15" uniqueCount="15"><si><t>CustomerID</t></si><si><t>General Information</t></si><si><t>Address Information</t></si><si><t>CompanyName</t></si><si><t>Personal Details</t></si><si><t>Location</t></si><si><t>Contact Information</t></si><si><t>ContactName</t></si><si><t>ContactTitle</t></si><si><t>Address</t></si><si><t>City</t></si><si><t>PostalCode</t></si><si><t>Country</t></si><si><t>Phone</t></si><si><t>Fax</t></si>`;
+
+        this._worksheetData =
+            `<sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="10" width="20" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" s="3" t="s"><v>0</v></c><c r="B1" s="3" t="s"><v>1</v></c><c r="C1" s="3" /><c r="D1" s="3" /><c r="E1" s="3" t="s"><v>2</v></c><c r="F1" s="3" /><c r="G1" s="3" /><c r="H1" s="3" /><c r="I1" s="3" /><c r="J1" s="3" /></row><row r="2"><c r="B2" s="3" t="s"><v>3</v></c><c r="C2" s="3" t="s"><v>4</v></c><c r="D2" s="3" /><c r="E2" s="3" t="s"><v>5</v></c><c r="F2" s="3" /><c r="G2" s="3" /><c r="H2" s="3" /><c r="I2" s="3" t="s"><v>6</v></c><c r="J2" s="3" /></row><row r="3"><c r="C3" s="3" t="s"><v>7</v></c><c r="D3" s="3" t="s"><v>8</v></c><c r="E3" s="3" t="s"><v>9</v></c><c r="F3" s="3" t="s"><v>10</v></c><c r="G3" s="3" t="s"><v>11</v></c><c r="H3" s="3" t="s"><v>12</v></c><c r="I3" s="3" t="s"><v>13</v></c><c r="J3" s="3" t="s"><v>14</v></c></row></sheetData><mergeCells count="7"> <mergeCell ref="A1:A3" /> <mergeCell ref="B1:D1" /> <mergeCell ref="E1:J1" /> <mergeCell ref="B2:B3" /> <mergeCell ref="C2:D2" /> <mergeCell ref="E2:H2" /> <mergeCell ref="I2:J2" /></mergeCells>`;
 
         return this.createData();
     }

@@ -83,42 +83,42 @@
 
 $_primary: #09f;
 $_secondary: #97c;
-$_palette: igx-palette($_primary, $_secondary);
+$_palette: palette($_primary, $_secondary);
 $theme-palette: $_palette;
 
 @include describe('Palette operations') {
-    @include describe('igx-color') {
+    @include describe('color') {
         @include it('should return a value of type color w/ palette as only argument')  {
-            $value: igx-color($_palette);
+            $value: color($_palette);
             @include assert-equal(type-of($value), color);
         }
 
         @include it('should return a value of type color w/ palette and color as only arguments')  {
-            $value: igx-color($_palette, 'secondary');
+            $value: color($_palette, 'secondary');
             @include assert-equal($value, $_secondary);
         }
 
         @include it('should return a value of type color w/ all arguments passed')  {
-            $value: igx-color($_palette, 'secondary', 500);
+            $value: color($_palette, 'secondary', 500);
             @include assert-equal($value, $_secondary);
         }
     }
 
-    @include describe('igx-color') {
+    @include describe('color') {
         @include it('should return a value of type string as CSS var w/o arguments')  {
-            $value: igx-color();
+            $value: color();
             @include assert-equal(type-of($value), string);
             @include assert-equal($value, hsla(var(--igx-primary-500), var(--igx-primary-a)));
         }
 
         @include it('should return a value of type string as CSS var w/ color as only argument')  {
-            $value: igx-color($color: secondary);
+            $value: color($color: secondary);
             @include assert-equal(type-of($value), string);
             @include assert-equal($value, hsla(var(--igx-secondary-500), var(--igx-secondary-a)));
         }
 
         @include it('should return a value of type string as CSS var w/ color and variant as only arguments')  {
-            $value: igx-color($color: secondary, $variant: 'A400');
+            $value: color($color: secondary, $variant: 'A400');
             @include assert-equal(type-of($value), string);
             @include assert-equal($value, hsla(var(--igx-secondary-A400), var(--igx-secondary-a)));
         }
@@ -127,23 +127,23 @@ $theme-palette: $_palette;
 
 @include describe('Themes') {
     $simple-color: (
-        igx-color: primary
+        color: primary
     );
 
     $complex-color: (
-        igx-color: primary,
+        color: primary,
         rgba: 1,
         to-opaque: #222
     );
 
     $deep-color: (
-        igx-color: (grays, 300),
+        color: (grays, 300),
         to-opaque: (
-            igx-color: (grays, 900),
+            color: (grays, 900),
             rgba: .28,
             text-contrast: (),
             to-opaque: (
-                igx-color: surface,
+                color: surface,
             )
         )
     );

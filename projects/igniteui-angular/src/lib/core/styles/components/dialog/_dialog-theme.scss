@@ -27,14 +27,13 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
-/// @requires round-borders
+/// @requires elevation
 ///
 /// @example scss Change the background color
-///   $my-dialog-theme: igx-dialog-theme($background: black);
+///   $my-dialog-theme: dialog-theme($background: black);
 ///   // Pass the theme to the igx-dialog component mixin
-///   @include igx-dialog($my-dialog-theme);
-@function igx-dialog-theme(
+///   @include dialog($my-dialog-theme);
+@function dialog-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -60,10 +59,6 @@
 
     $theme: apply-palette($dialog-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($dialog-schema, 'border-radius')), 0 , 36px
-    );
-
     @if not($title-color) and $background{
         $title-color: text-contrast($background);
     }
@@ -76,7 +71,11 @@
 
     @if not($shadow) {
         $elevation: map.get($dialog-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: elevation($elevations, $elevation);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (
@@ -93,15 +92,16 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-dialog($theme) {
-    @include igx-css-vars($theme);
+@mixin dialog($theme) {
+    @include css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    $variant: map.get($theme, variant);
+    $variant: map.get($theme, variant); 
+    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
 
     $dialog-min-width: map.get((
         material: rem(280px),
@@ -129,8 +129,6 @@
         bootstrap: rem(16px),
         indigo-design: rem(8px),
     ), $variant);
-
-    $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
 
     %igx-dialog-display {
         outline-style: none;
@@ -171,6 +169,9 @@
     %igx-dialog-content {
         color: var-get($theme, 'message-color');
         padding: $dialog-message-padding;
+        // The 2 rules below are related to https://github.com/IgniteUI/igniteui-angular/issues/11300
+        position: relative;
+        z-index: 0;
     }
 
     %igx-dialog-message {
@@ -209,8 +210,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'h6', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-dialog-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin dialog-typography($type-scale, $categories: (
     title: 'h6',
     content: 'body-1')
 ) {
@@ -218,13 +219,13 @@
     $content: map.get($categories, 'content');
 
     %igx-dialog-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin: 0;
         }
     }
 
     %igx-dialog-content {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin: 0;
         }
 

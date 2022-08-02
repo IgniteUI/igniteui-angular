@@ -866,6 +866,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _data = [];
     protected _value = '';
     protected _groupKey = '';
+    protected _searchValue = '';
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
@@ -877,7 +878,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     private _type = null;
     private _dataType = '';
-    private _searchValue = '';
     private _itemHeight = null;
     private _itemsMaxHeight = null;
     private _overlaySettings: OverlaySettings;
@@ -1183,14 +1183,19 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        return value?.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
+        if (this.ngControl) {
+            if (this.ngControl.control.validator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
+            } else {
+                // P.M. 18 May 2022: IgxCombo's asterisk not removed when removing required validator dynamically in reactive form #11543
+                this.inputGroup.isRequired = false;
+            }
         }
     }
 

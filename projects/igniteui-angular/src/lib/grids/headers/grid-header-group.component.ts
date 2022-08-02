@@ -324,7 +324,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         this.column.applySelectableClass = false;
     }
 
-    private get activeNode() {
+    protected get activeNode() {
         return {
             row: -1, column: this.column.visibleIndex, level: this.column.level,
             mchCache: { level: this.column.level, visibleIndex: this.column.visibleIndex },

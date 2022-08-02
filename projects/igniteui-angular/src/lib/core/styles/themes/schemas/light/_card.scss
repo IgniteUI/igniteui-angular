@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/card' as *;
 @use '../elevation/card' as *;
 
 ////
@@ -10,164 +9,161 @@
 
 /// Generates a light card schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: 'surface']- The card background color.
-/// @prop {Map} header-text-color [igx-color: ('grays', 900)] - The text color of the card title.
-/// @prop {Map} subtitle-text-color [igx-color: ('grays', 700)] - The text color of the card subtitle.
-/// @prop {Map} content-text-color [igx-color: ('grays', 700)] - The text color of the card content.
-/// @prop {Map} actions-text-color [igx-color: ('grays', 700)] - The text color of the card buttons.
-/// @prop {Map} outline-color [igx-color: ('grays', 400, .54)] - The outline color of an outlined type card.
+/// @prop {Map} background [color: 'surface']- The card background color.
+/// @prop {Map} header-text-color [color: ('grays', 900)] - The text color of the card title.
+/// @prop {Map} subtitle-text-color [color: ('grays', 700)] - The text color of the card subtitle.
+/// @prop {Map} content-text-color [color: ('grays', 700)] - The text color of the card content.
+/// @prop {Map} actions-text-color [color: ('grays', 700)] - The text color of the card buttons.
+/// @prop {Map} outline-color [color: ('grays', 400, .54)] - The outline color of an outlined type card.
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [.17] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-card
 /// @requires {Map} $default-elevation-card
 /// @see $default-palette
 $light-card: extend(
-    $default-shape-card,
     $default-elevation-card,
     (
         variant: 'material',
 
         background: (
-            igx-color: 'surface'
+            color: 'surface'
         ),
 
         header-text-color: (
-            igx-color: ('grays', 900),
+            color: ('grays', 900),
         ),
 
         subtitle-text-color: (
-            igx-color: ('grays', 700)
+            color: ('grays', 700)
         ),
 
         content-text-color: (
-            igx-color: ('grays', 700),
+            color: ('grays', 700),
         ),
 
         actions-text-color: (
-            igx-color: ('grays', 700),
+            color: ('grays', 700),
         ),
 
         outline-color: (
-            igx-color: ('grays', 400, .54)
-        )
+            color: ('grays', 400, .54)
+        ),
+
+        border-radius: rem(4px)
     )
 );
 
 /// Generates a fluent card schema.
 /// @type {Map}
-/// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
+/// @prop {Map} outline-color [color: ('grays', 200)] - The outline color of an outlined type card.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [2px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $fluent-shape-card
 /// @requires {Map} $fluent-elevation-card
 $fluent-card: extend(
     $light-card,
-    $fluent-shape-card,
     $fluent-elevation-card,
     (
         variant: 'fluent',
 
         outline-color: (
-            igx-color: ('grays', 200)
+            color: ('grays', 200)
         ),
+
+        border-radius: rem(2px)
     )
 );
 
 /// Generates a bootstrap card schema.
 /// @type {Map}
-/// @prop {Color} background [igx-color: ('grays', 50)]- The card background color.
-/// @prop {Map} outline-color [igx-color: ('grays', 300)] - The outline color of an outlined type card.
-/// @prop {Map} header-text-color [igx-color: ('grays', 900)] - The text color of the card title.
-/// @prop {Map} subtitle-text-color [igx-color: ('grays', 800)] - The text color of the card subtitle.
-/// @prop {Map} content-text-color [igx-color: ('grays', 800)] - The text color of the card content.
-/// @prop {Map} actions-text-color [igx-color: ('grays', 900)] - The text color of the card buttons.
+/// @prop {Map} background [contrast-color: ('grays', 900)]- The card background color.
+/// @prop {Map} outline-color [color: ('grays', 300)] - The outline color of an outlined type card.
+/// @prop {Map} header-text-color [color: ('grays', 900)] - The text color of the card title.
+/// @prop {Map} subtitle-text-color [color: ('grays', 800)] - The text color of the card subtitle.
+/// @prop {Map} content-text-color [color: ('grays', 800)] - The text color of the card content.
+/// @prop {Map} actions-text-color [color: ('grays', 900)] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $bootstrap-shape-card
 /// @requires {Map} $bootstrap-elevation-card
 $bootstrap-card: extend(
     $light-card,
-    $bootstrap-shape-card,
     $bootstrap-elevation-card,
     (
         variant: 'bootstrap',
 
         background: (
-            igx-color: ('grays', 50)
+            contrast-color: ('grays', 900)
         ),
 
         outline-color: (
-            igx-color: ('grays', 300)
+            color: ('grays', 300)
         ),
 
         header-text-color: (
-            igx-color: ('grays', 900)
+            color: ('grays', 900)
         ),
 
         subtitle-text-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         content-text-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         actions-text-color: (
-            igx-color: ('grays', 900)
+            color: ('grays', 900)
         ),
     )
 );
 
 /// Generates an indigo card schema.
 /// @type {Map}
-/// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
-/// @prop {Map} header-text-color [igx-color: ('grays', 900)] - The text color of the card title.
-/// @prop {Map} subtitle-text-color [igx-color: ('grays', 500)] - The text color of the card subtitle.
-/// @prop {Map} content-text-color [igx-color: ('grays', 700)] - The text color of the card content.
-/// @prop {Map} actions-text-color [igx-color: ('grays', 600)] - The text color of the card buttons.
+/// @prop {Map} outline-color [color: ('grays', 400)] - The outline color of an outlined type card.
+/// @prop {Map} header-text-color [color: ('grays', 900)] - The text color of the card title.
+/// @prop {Map} subtitle-text-color [color: ('grays', 500)] - The text color of the card subtitle.
+/// @prop {Map} content-text-color [color: ('grays', 700)] - The text color of the card content.
+/// @prop {Map} actions-text-color [color: ('grays', 600)] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [4] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [6] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [3px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-card
-/// @requires {Map} $indigo-shape-card
 /// @requires {Map} $indigo-elevation-card
 $indigo-card: extend(
     $light-card,
-    $indigo-shape-card,
     $indigo-elevation-card,
     (
         variant: 'indigo-design',
 
         outline-color: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         ),
 
         header-text-color: (
-            igx-color: ('grays', 900)
+            color: ('grays', 900)
         ),
 
         subtitle-text-color: (
-            igx-color: ('grays', 500)
+            color: ('grays', 500)
         ),
 
         content-text-color: (
-            igx-color: ('grays', 700)
+            color: ('grays', 700)
         ),
 
         actions-text-color: (
-            igx-color: ('grays', 600)
+            color: ('grays', 600)
         ),
+
+        border-radius: rem(3px)
     )
 );
-

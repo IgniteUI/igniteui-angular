@@ -8,11 +8,11 @@
 
 /// Generates a light overlay schema.
 /// @type {Map}
-/// @property {Map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
+/// @property {Map} background-color [color: ('grays', 500)] - The background color used for modal overlays.
 /// @see $default-palette
 $light-overlay: (
     background-color: (
-        igx-color: ('grays', 500, .54)
+        color: ('grays', 500, .54)
     )
 );
 

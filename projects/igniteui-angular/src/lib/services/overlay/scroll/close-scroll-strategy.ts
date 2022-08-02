@@ -1,4 +1,5 @@
 import { IgxOverlayService } from '../overlay';
+import { OverlayInfo } from '../utilities';
 import { ScrollStrategy } from './scroll-strategy';
 
 /**
@@ -10,19 +11,16 @@ export class CloseScrollStrategy extends ScrollStrategy {
     private _id: string;
     private initialScrollTop: number;
     private initialScrollLeft: number;
-    private cumulativeScrollTop: number;
-    private cumulativeScrollLeft: number;
     private _threshold: number;
     private _initialized = false;
     private _sourceElement: Element;
     private _scrollContainer: HTMLElement;
+    private _overlayInfo: OverlayInfo;
 
     constructor(scrollContainer?: HTMLElement) {
         super();
         this._scrollContainer = scrollContainer;
         this._threshold = 10;
-        this.cumulativeScrollTop = 0;
-        this.cumulativeScrollLeft = 0;
     }
 
     /** @inheritdoc */
@@ -34,6 +32,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._id = id;
         this._document = document;
         this._initialized = true;
+        this._overlayInfo = overlayService.getOverlayById(id);
     }
 
     /** @inheritdoc */
@@ -42,22 +41,8 @@ export class CloseScrollStrategy extends ScrollStrategy {
             this._scrollContainer.addEventListener('scroll', this.onScroll);
             this._sourceElement = this._scrollContainer;
         } else {
-            this._document.addEventListener('scroll', this.onScroll);
-            if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
-                this._sourceElement = document.documentElement as Element;
-            } else if (document.body.scrollHeight > document.body.clientHeight) {
-                this._sourceElement = document.body as Element;
-            }
+            this._document.addEventListener('scroll', this.onScroll, true);
         }
-
-        if (!this._sourceElement) {
-            return;
-        }
-
-        this.cumulativeScrollTop = 0;
-        this.cumulativeScrollLeft = 0;
-        this.initialScrollTop = this._sourceElement.scrollTop;
-        this.initialScrollLeft = this._sourceElement.scrollLeft;
     }
 
     /** @inheritdoc */
@@ -66,27 +51,24 @@ export class CloseScrollStrategy extends ScrollStrategy {
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll);
         } else {
-            this._document.removeEventListener('scroll', this.onScroll);
+            this._document.removeEventListener('scroll', this.onScroll, true);
         }
         this._sourceElement = null;
-        this.cumulativeScrollTop = 0;
-        this.cumulativeScrollLeft = 0;
-        this.initialScrollTop = 0;
-        this.initialScrollLeft = 0;
         this._initialized = false;
     }
 
-    private onScroll = () => {
+    private onScroll = (ev: Event) => {
         if (!this._sourceElement) {
-            return;
+            this._sourceElement = ev.target as any;
+            this.initialScrollTop = this._sourceElement.scrollTop;
+            this.initialScrollLeft = this._sourceElement.scrollLeft;
         }
 
-        this.cumulativeScrollTop += this._sourceElement.scrollTop;
-        this.cumulativeScrollLeft += this._sourceElement.scrollLeft;
-
-        if (Math.abs(this.cumulativeScrollTop - this.initialScrollTop) > this._threshold ||
-            Math.abs(this.cumulativeScrollLeft - this.initialScrollLeft) > this._threshold) {
-            this._document.removeEventListener('scroll', this.onScroll, true);
+        if (this._overlayInfo.elementRef.nativeElement.contains(this._sourceElement)) {
+            return;
+        }
+        if (Math.abs(this._sourceElement.scrollTop - this.initialScrollTop) > this._threshold ||
+            Math.abs(this._sourceElement.scrollLeft - this.initialScrollLeft) > this._threshold) {
             this._overlayService.hide(this._id);
         }
     };

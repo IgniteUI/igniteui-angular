@@ -18,7 +18,7 @@
 /// @param {color} $focus-color [null] - The color used for focused splitter bar.
 /// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
 ///
-@function igx-splitter-theme(
+@function splitter-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -41,12 +41,6 @@
 
     $theme: apply-palette($splitter-schema, $palette);
 
-    $border-radius-handle: round-borders(
-        if($border-radius, $border-radius, map.get($splitter-schema, 'border-radius')), 0, 2px
-    );
-
-    $theme: apply-palette($splitter-schema, $palette);
-
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);
     }
@@ -55,24 +49,28 @@
         $expander-color: text-contrast($bar-color);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
         bar-color: $bar-color,
         handle-color: $handle-color,
         expander-color: $expander-color,
-        border-radius: $border-radius-handle,
+        border-radius: $border-radius,
         focus-color: $focus-color,
         size: $size
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-splitter($theme) {
-    @include igx-css-vars($theme);
+@mixin splitter($theme) {
+    @include css-vars($theme);
     $splitter-color: var-get($theme, 'bar-color');
     $hitbox-size: 4px;
     $debug-hitbox: false;

@@ -160,7 +160,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }
     });
 
-    it('should reflect the column in the DOM based on its index', () => {
+    it('should reflect the column in the DOM based on its index', fakeAsync(() => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
@@ -176,6 +176,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
         // Swap columns
         grid.moveColumn(grid.columnList.first, grid.columnList.last);
+        tick();
         fix.detectChanges();
 
         expect(grid.columnList.first.field).toMatch('IsEmployed');
@@ -184,7 +185,7 @@ describe('IgxGrid - Column properties #grid', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');
         expect(headers[1].nativeElement.textContent).toMatch('Name');
-    });
+    }));
 
     it('should support adding and removing columns through a declared iterable', fakeAsync(/** columnList.changes rAF */() => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);

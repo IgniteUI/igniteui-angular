@@ -241,7 +241,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * this.myToggle.close();
      * ```
      */
-    public close() {
+    public close(event?: Event) {
         //  if toggle is collapsed do nothing
         //  if there is close animation do nothing, toggle will close anyway
         const info = this.overlayService.getOverlayById(this._overlayId);
@@ -250,7 +250,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        this.overlayService.hide(this._overlayId);
+        this.overlayService.hide(this._overlayId, event);
     }
 
     /**

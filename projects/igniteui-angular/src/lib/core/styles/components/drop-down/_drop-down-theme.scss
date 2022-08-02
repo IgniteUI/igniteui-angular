@@ -49,9 +49,8 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
-/// @requires round-borders
-@function igx-drop-down-theme(
+/// @requires elevation
+@function drop-down-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -97,14 +96,6 @@
     }
 
     $theme: apply-palette($drop-down-schema, $palette);
-
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($drop-down-schema, 'border-radius')), 0, 20px
-    );
-
-    $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map.get($drop-down-schema, 'item-border-radius')), 0, 20px
-    );
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -170,7 +161,15 @@
 
     @if not($shadow) {
         $elevation: map.get($drop-down-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: elevation($elevations, $elevation);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($item-border-radius) {
+        $item-border-radius: border-radius(map.get($theme, 'item-border-radius'));
     }
 
     @return extend($theme, (
@@ -201,11 +200,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-drop-down($theme) {
-    @include igx-css-vars($theme);
+@mixin drop-down($theme) {
+    @include css-vars($theme);
 
     $item-height: (
         comfortable: rem(40px),
@@ -489,8 +488,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-drop-down-typography(
+/// @requires {mixin} type-style
+@mixin drop-down-typography(
     $type-scale,
     $categories: (
         header: 'overline',
@@ -504,13 +503,13 @@
 
     %igx-drop-down__header,
     %igx-drop-down__group > label {
-        @include igx-type-style($type-scale, $header) {
+        @include type-style($type-scale, $header) {
             margin: 0;
         }
     }
 
     %igx-drop-down__item {
-        @include igx-type-style($type-scale, $item) {
+        @include type-style($type-scale, $item) {
             margin: 0;
         }
     }

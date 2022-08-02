@@ -1,0 +1,290 @@
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'sass:map';
+@use 'sass:meta';
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+@function pivot-data-selector-theme(
+    $palette: null,
+    $schema: $light-schema,
+    $background: null
+) {
+    $name: 'igx-pivot-data-selector';
+    $selector: '.igx-pivot-data-selector';
+    $pivot-data-selector-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $pivot-data-selector-schema: map.get($schema, $name);
+    } @else {
+        $pivot-data-selector-schema: $schema;
+    }
+
+    $theme: apply-palette($pivot-data-selector-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} css-vars
+/// @requires {mixin} ellipsis
+/// @requires rem
+/// @requires var-get
+@mixin pivot-data-selector($theme) {
+    @include css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    $chip-height-material: (
+        comfortable: rem(22px),
+        cosy: rem(20px),
+        compact: rem(18px)
+    );
+
+    $chip-item-padding: 0 rem(2px);
+    $panel-padding: em(4px, 16px);
+
+    %selector-base {
+        display: flex;
+        flex-direction: column;
+        max-width: rem(280px);
+        background: var-get($theme, 'background');
+        z-index: 0;
+
+        > igx-input-group {
+            flex: 0 1 auto;
+        }
+
+        igx-display-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        > igx-list {
+            igx-display-container {
+                padding: rem(4px);
+            }
+
+            igx-list-item {
+                display: flex;
+                min-height: rem(28px);
+            }
+
+            %cbx-label {
+                font-size: rem(13px);
+            }
+        }
+
+        %form-group-input--box {
+            transform: none;
+        }
+
+        %form-group-prefix,
+        %form-group-prefix--cosy,
+        %form-group-prefix--compact {
+            padding-#{$right}: rem(16px) !important;
+            box-sizing: content-box;
+        }
+
+        %form-group-bundle-main--box,
+        %form-group-bundle-main--box-cosy,
+        %form-group-bundle-main--box-compact {
+            padding-top: 0 !important;
+        }
+
+        %igx-expanded-panel-margin {
+            igx-expansion-panel[aria-expanded='true'] {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        }
+
+        %igx-expansion-panel__body {
+            position: relative;
+            height: rem(128px);
+            font-size: rem(14px);
+            padding: $panel-padding;
+            overflow-y: auto;
+
+            > igx-list {
+                height: auto;
+            }
+        }
+
+        %igx-expansion-panel__header-icon--start {
+            margin-#{$right}: rem(8px);
+        }
+
+        %igx-expansion-panel__header-title {
+            display: flex;
+
+            > h6 {
+                font-size: rem(12px);
+            }
+        }
+    }
+
+    %selector-filter {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        igx-list {
+            display: flex;
+            flex-direction: column;
+            padding: rem(8px) rem(4px);
+            min-height: 186px;
+            max-height: 208px;
+            overflow-y: auto;
+        }
+
+        igx-list-item {
+            display: flex;
+        }
+
+        igx-checkbox + span {
+            margin-#{$left}: rem(8px);
+            line-height: rem(28px);
+        }
+    }
+
+    %selector-header,
+    %selector-header-extra {
+        display: flex;
+        align-items: center;
+    }
+
+    %igx-expansion-panel__header-inner {
+        background: var-get($theme, 'header-color');
+        padding: $panel-padding;
+
+        .dragOver & {
+            background: color($color: 'grays', $variant: 300);
+            box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
+        }
+    }
+
+    %selector-header-extra {
+        igx-icon {
+            padding: 0 rem(8px);
+            box-sizing: content-box;
+        }
+
+        %igx-chip__item {
+            height: map.get($chip-height-material, 'comfortable');
+        }
+
+        %igx-chip__item--cosy {
+            height: map.get($chip-height-material, 'cosy');
+        }
+
+        %igx-chip__item--compact {
+            height: map.get($chip-height-material, 'compact');
+        }
+
+        %igx-chip__content {
+            padding: $chip-item-padding;
+        }
+    }
+
+    %selector-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: rem(32px);
+        width: 100%;
+
+        .igx-drag--push & {
+            padding-top: rem(32px);
+        }
+    }
+
+    %selector-item-ghost {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: rem(14px);
+        background: color($color: 'surface');
+        min-height: rem(32px);
+        height: auto;
+        padding: 0 rem(2px) 0 rem(4px);
+        cursor: grabbing;
+        box-shadow: elevation($elevations, 24);
+        border: 1px solid color($color: 'grays', $variant: 100);
+        border-radius: border-radius(rem(2px));
+        z-index: 10;
+    }
+
+    %selector-base,
+    %selector-item-ghost {
+        igx-icon {
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
+        }
+    }
+
+    %selector-item-ghost-text {
+        display: flex;
+        align-items: center;
+
+        igx-icon {
+            margin-inline-end: rem(8px);
+        }
+    }
+
+    %selector-item-ghost--no-drop {
+        cursor: no-drop;
+    }
+
+    %selector-item-text {
+        @include ellipsis();
+        max-width: calc(100% - 18px + 8px);
+    }
+
+    %selector-item-text,
+    %selector-action-sort,
+    %selector-action-filter,
+    %selector-action-move,
+    %selector-action-summary {
+        user-select: none;
+    }
+
+    %selector-action-sort,
+    %selector-action-summary,
+    %selector-action-filter {
+        cursor: pointer;
+    }
+
+    %selector-action-move {
+        cursor: grab;
+    }
+
+    %selector-item-start {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 0 1 100%;
+        margin-inline-end: rem(8px);
+        overflow: hidden;
+    }
+
+    %selector-item-end {
+        display: flex;
+
+        igx-icon + igx-icon {
+            margin-#{$left}: rem(8px);
+        }
+    }
+}

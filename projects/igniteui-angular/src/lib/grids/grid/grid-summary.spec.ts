@@ -614,13 +614,14 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
-            it('Moving: should move summaries when move column', () => {
+            it('Moving: should move summaries when move column', fakeAsync(() => {
                 grid.moving = true;
                 const colUnitsInStock = grid.getColumnByName('UnitsInStock');
                 const colProductID = grid.getColumnByName('ProductID');
                 fix.detectChanges();
 
                 grid.moveColumn(colUnitsInStock, colProductID, DropPosition.BeforeDropTarget);
+                tick();
                 fix.detectChanges();
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
@@ -631,7 +632,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['10']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
-            });
+            }));
 
             it('Hiding: should hide summary row when a column which has summary is hidded', fakeAsync(() => {
                 grid.getColumnByName('ProductName').hasSummary = false;

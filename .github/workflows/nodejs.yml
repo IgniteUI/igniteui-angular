@@ -53,3 +53,7 @@ jobs:
         uses: coverallsapp/github-action@v1.1.2
         with:
             github-token: ${{ github.token }}
+      - name: Build TypeDoc & SassDoc
+        run: |
+            npm run build:typedoc:en:production
+            npm run build:sassdoc:en:production

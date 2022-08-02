@@ -1,0 +1,30 @@
+<ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped"
+    [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForSizePropName]='"calcPixelWidth"'
+    [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth'
+    [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+    <igx-grid-cell #cell class="igx-grid__td igx-grid__td--fw"
+        [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
+        [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+        [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+        [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+        [ngClass]="this.getCellClass(col) | igxCellStyleClasses:data[col.field]:pivotAggregationData:col.field:viewIndex:grid.pipeTrigger"
+        [ngStyle]="col.cellStyles | igxCellStyles:pivotAggregationData[col.field]:pivotAggregationData:col.field:viewIndex:grid.pipeTrigger"
+        [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)" [column]="col"
+        [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
+        [style.min-height.px]="cellHeight" [rowData]="pivotAggregationData" [style.min-width]="col.width" [style.max-width]="col.width"
+        [style.flex-basis]="col.width" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
+        [value]="pivotAggregationData[col.field] | dataMapper:col.field:grid.pipeTrigger:pivotAggregationData[col.field]:col.hasNestedPath"
+        [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
+        [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
+    </igx-grid-cell>
+</ng-template>
+
+<ng-template #rowSelectorBaseTemplate>
+    <div class="igx-grid__cbx-padding">
+        <igx-checkbox [tabindex]="-1" [readonly]="true" [checked]="selected" [disableRipple]="true" [disabled]="deleted"
+            [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel">
+        </igx-checkbox>
+    </div>
+</ng-template>
+

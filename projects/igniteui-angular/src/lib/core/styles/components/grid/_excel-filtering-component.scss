@@ -17,6 +17,22 @@
             @extend %igx-excel-filter__loading !optional;
         }
 
+        @include e(tree) {
+            @extend %igx-excel-filter__tree !optional;
+        }
+
+        @include e(empty) {
+            @extend %igx-excel-filter__empty !optional;
+        }
+
+        @include e(tree-alike) {
+            @extend %igx-excel-filter__tree-alike !optional;
+        }
+
+        @include e(tree-alike-item) {
+            @extend %igx-excel-filter__tree-alike-item !optional;
+        }
+
         @include e(menu) {
             @extend %grid-excel-menu !optional;
         }
@@ -60,10 +76,6 @@
 
         @include e(move) {
             @extend %grid-excel-move !optional;
-        }
-
-        @include e(move-buttons) {
-            @extend %grid-excel-move__buttons !optional;
         }
 
         @include e(actions) {

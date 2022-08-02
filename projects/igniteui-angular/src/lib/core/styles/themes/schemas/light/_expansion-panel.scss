@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/expansion-panel' as *;
 
 ////
 /// @group schemas
@@ -9,56 +8,58 @@
 
 /// Generates a light expansion panel schema.
 /// @type {Map}
-/// @prop {Map} header-background [igx-color: ('surface')] - The panel header background color.
-/// @prop {Map} body-background [igx-color: ('surface')] - The panel body background color.
-/// @prop {Map} header-focus-background [igx-color: ('grays', 100)] - The panel header focus background color.
-/// @prop {Map} header-title-color [igx-color: ('grays', 800)] - The panel header title text color.
-/// @prop {Map} header-description-color [igx-color: ('grays', 600)] - The panel header description text color.
-/// @prop {Map} header-icon-color [igx-color: ('grays', 800)] - The panel header icon color.
-/// @prop {Map} body-color [igx-color: ('grays', 800)] - The panel body text color.
-/// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
+/// @prop {Map} header-background [color: ('surface')] - The panel header background color.
+/// @prop {Map} body-background [color: ('surface')] - The panel body background color.
+/// @prop {Map} header-focus-background [color: ('grays', 100)] - The panel header focus background color.
+/// @prop {Map} header-title-color [color: ('grays', 800)] - The panel header title text color.
+/// @prop {Map} header-description-color [color: ('grays', 600)] - The panel header description text color.
+/// @prop {Map} header-icon-color [color: ('grays', 800)] - The panel header icon color.
+/// @prop {Map} body-color [color: ('grays', 800)] - The panel body text color.
+/// @prop {Map} disabled-color [color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius used for expansion-panel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} expanded-margin [8px] - The expansion panel margin in expanded state when positioned inside accordion.
 ///
 /// @requires {function} extend
-/// @requires {Map} $default-shape-expansion-panel
 /// @see $default-palette
 $light-expansion-panel: extend(
-    $default-shape-expansion-panel,
     (
+        variant: 'material',
+
         header-background: (
-            igx-color: ('surface')
+            color: ('surface')
         ),
 
         body-background: (
-            igx-color: ('surface')
+            color: ('surface')
         ),
 
         header-focus-background: (
-            igx-color: ('grays', 100)
+            color: ('grays', 100)
         ),
 
         header-title-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         header-description-color: (
-            igx-color: ('grays', 600)
+            color: ('grays', 600)
         ),
 
         header-icon-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         body-color: (
-            igx-color: ('grays', 800)
+            color: ('grays', 800)
         ),
 
         disabled-color: (
-            igx-color: ('grays', 500)
+            color: ('grays', 500)
         ),
 
-        expanded-margin: rem(8px)
+        expanded-margin: rem(8px),
+
+        border-radius: rem(0)
     )
 );
 
@@ -66,53 +67,71 @@ $light-expansion-panel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $light-expansion-panel
-$fluent-expansion-panel: extend($light-expansion-panel);
+$fluent-expansion-panel: extend(
+    $light-expansion-panel,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap expansion panel schema.
 /// @type {Map}
+/// @prop {Map} header-background [contrast-color: ('grays', 900)] - The panel header background color.
+/// @prop {Map} body-background [contrast-color: ('grays', 900)] - The panel body background color.
 /// @prop {Number} border-radius [0] - The border radius used for expansion-panel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-expansion-panel
-/// @requires {Map} $bootstrap-shape-expansion-panel
 $bootstrap-expansion-panel: extend(
     $light-expansion-panel,
-    $bootstrap-shape-expansion-panel
+    (
+        variant: 'bootstrap',
+
+        header-background: (
+            contrast-color: ('grays', 900)
+        ),
+
+        body-background: (
+            contrast-color: ('grays', 900)
+        ),
+    )
 );
 
 // Generates an indigo expansion panel schema.
 /// @type {Map}
-/// @prop {Map} header-focus-background [igx-color: ('primary', 500, .15)] - The panel header focus background color.
-/// @prop {Map} header-title-color [igx-color: ('grays', 900)] - The panel header title text color.
-/// @prop {Map} header-description-color [igx-color: ('grays', 700)] - The panel header description text color.
-/// @prop {Map} header-icon-color [igx-color: ('grays', 600)] - The panel header icon color.
-/// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The panel disabled text color.
+/// @prop {Map} header-focus-background [color: ('primary', 500, .15)] - The panel header focus background color.
+/// @prop {Map} header-title-color [color: ('grays', 900)] - The panel header title text color.
+/// @prop {Map} header-description-color [color: ('grays', 700)] - The panel header description text color.
+/// @prop {Map} header-icon-color [color: ('grays', 600)] - The panel header icon color.
+/// @prop {Map} disabled-color [color: ('grays', 400)] - The panel disabled text color.
 /// @prop {Number} border-radius [3px] - The border radius used for expansion-panel. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-expansion-panel
-/// @requires {Map} $indigo-shape-expansion-panel
 $indigo-expansion-panel: extend(
     $light-expansion-panel,
-    $indigo-shape-expansion-panel,
     (
+        variant: 'indigo-design',
+
         header-title-color: (
-            igx-color: ('grays', 900)
+            color: ('grays', 900)
         ),
 
         header-description-color: (
-            igx-color: ('grays', 700)
+            color: ('grays', 700)
         ),
 
         header-icon-color: (
-            igx-color: ('grays', 600)
+            color: ('grays', 600)
         ),
 
         header-focus-background: (
-            igx-color: ('primary', 500, .15),
+            color: ('primary', 500, .15),
         ),
 
         disabled-color: (
-            igx-color: ('grays', 400)
-        )
+            color: ('grays', 400)
+        ),
+
+        border-radius: rem(3px)
     )
 );

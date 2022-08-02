@@ -20,25 +20,66 @@ $dark-input-group: $base-dark-input-group;
 
 /// Generates a dark fluent input-group schema based on a mix of $fluent-input-group and $base-dark-input-group.
 /// @type {Map}
-/// @prop {Map} input-prefix-background [igx-color: ('grays', 100)] - The background color of an input prefix of type line, box and border.
-/// @prop {Map} input-suffix-background [igx-color: ('grays', 100)] - The background color of an input sufix of type line, box and border.
+/// @prop {Map} input-prefix-background [color: ('grays', 100)] - The background color of an input prefix of type line, box and border.
+/// @prop {Map} input-suffix-background [color: ('grays', 100)] - The background color of an input sufix of type line, box and border.
+/// @prop {Map} box-background [color: ('grays', 100)] - The background color of an input group of type box.
+/// @prop {Map} border-color [color: ('grays', 500)] - The border color for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} focused-border-color [color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
 /// @requires {function} extend
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
 $dark-fluent-input-group: extend(
-    $fluent-input-group,
     $base-dark-input-group,
+    $fluent-input-group,
     (
         input-prefix-background: (
-            igx-color: ('grays', 50)
+            color: ('grays', 100)
         ),
 
         input-suffix-background: (
-            igx-color: ('grays', 50)
+            color: ('grays', 100)
         ),
 
         box-background: (
-            igx-color: ('grays', 50),
+            color: ('grays', 100),
+        ),
+
+        border-color: (
+            color: ('grays', 300)
+        ),
+
+        hover-border-color: (
+            color: ('grays', 500)
+        ),
+
+        focused-border-color: (
+            color: ('grays', 500)
+        ),
+
+        disabled-border-color: (
+            color: ('grays', 300)
+        ),
+
+        idle-bottom-line-color: (
+            color: ('grays', 400)
+        ),
+
+        hover-bottom-line-color: (
+            color: ('grays', 600)
+        ),
+
+        focused-bottom-line-color: (
+            color: ('primary', 600)
+        ),
+
+        interim-bottom-line-color: (
+            color: ('primary', 500, .12),
+        ),
+
+        disabled-bottom-line-color: (
+            color: ('grays', 400)
         ),
     )
 );
@@ -50,18 +91,18 @@ $dark-fluent-input-group: extend(
 /// @requires $base-dark-input-group
 $dark-bootstrap-input-group: extend(
     $base-dark-input-group,
-    $bootstrap-input-group
+    $bootstrap-input-group,
 );
 
 /// Generates an dark indigo input-group schema
 /// @type {Map}
-/// @prop {Map} success-secondary-color [igx-color: ('success', 500, .7)] - The success color used in the valid state.
-/// @prop {Map} warning-secondary-color [igx-color: ('warn', 500, .7)] - The warning color used in the warning state.
-/// @prop {Map} error-secondary-color [igx-color: ('error', 500, .7)] - The error color used in the error state.
-/// @prop {Map} $idle-secondary-color [igx-contrast-color: ('surface')] - The label color in the idle state.
-/// @prop {Map} $filled-secondary-color [igx-contrast-color: ('surface')] - The label color in the filled state.
-/// @prop {Map} $focused-secondary-color [igx-contrast-color: ('surface')] - The label color in the focused state.
-/// @prop {Map} focused-bottom-line-color [igx-contrast-color: ('surface')] - The bottom line and border colors in the focused state.
+/// @prop {Map} success-secondary-color [color: ('success', 500, .7)] - The success color used in the valid state.
+/// @prop {Map} warning-secondary-color [color: ('warn', 500, .7)] - The warning color used in the warning state.
+/// @prop {Map} error-secondary-color [color: ('error', 500, .7)] - The error color used in the error state.
+/// @prop {Map} $idle-secondary-color [contrast-color: ('surface')] - The label color in the idle state.
+/// @prop {Map} $filled-secondary-color [contrast-color: ('surface')] - The label color in the filled state.
+/// @prop {Map} $focused-secondary-color [contrast-color: ('surface')] - The label color in the focused state.
+/// @prop {Map} focused-bottom-line-color [contrast-color: ('surface')] - The bottom line and border colors in the focused state.
 /// @requires {function} extend
 /// @requires $indigo-input-group
 /// @see $default-palette
@@ -71,31 +112,31 @@ $dark-indigo-input-group: extend(
         search-background: transparent,
 
         success-secondary-color: (
-            igx-color: ('success', 500, .7)
+            color: ('success', 500, .7)
         ),
 
         warning-secondary-color: (
-            igx-color: ('warn', 500, .7)
+            color: ('warn', 500, .7)
         ),
 
         error-secondary-color: (
-            igx-color: ('error', 500, .7),
+            color: ('error', 500, .7),
         ),
 
         idle-secondary-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         filled-secondary-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         focused-secondary-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
 
         focused-bottom-line-color: (
-            igx-contrast-color: ('surface')
+            contrast-color: ('surface')
         ),
     )
 );

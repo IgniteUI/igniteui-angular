@@ -15,7 +15,7 @@
             "node_modules/@types"
         ],
         "lib": [
-            "es2017",
+            "es2019",
             "dom"
         ],
         "paths": {
@@ -31,17 +31,11 @@
     "exclude": [
         "dist",
         "projects/igniteui-angular/migrations/",
-        "projects/igniteui-angular/schematics/"
+        "projects/igniteui-angular/schematics/",
+        "projects/igniteui-angular/cypress/",
+        "cypress/",
+        "e2e/"
     ],
-    "typedocOptions": {
-        "out": "dist/igniteui-angular/docs/typescript",
-        "exclude": "**/*.spec.ts",
-        "theme":  "node_modules/ig-typedoc-theme/dist",
-        "excludePrivate": true,
-        "excludeProtected": true,
-        "name": "Ignite UI for Angular",
-        "readme": "none"
-    },
     "angularCompilerOptions": {
         "generateDeepReexports": true,
         "strictTemplates": true,

@@ -1,5 +1,5 @@
 <ng-container *ngIf="grid.rendered$ | async">
-    <button [title]="grid?.resourceStrings.igx_grid_toolbar_pinning_button_tooltip" #btn igxButton="outlined"
+    <button [title]="grid?.resourceStrings.igx_grid_toolbar_pinning_button_tooltip" #btn igxButton="outlined" type="button"
         name="btnColumnPinning" (click)="toggle(btn, ref, actions)" [displayDensity]="grid.displayDensity">
         <igx-icon family="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
         <span>{{ grid.pinnedColumnsCount }}</span>

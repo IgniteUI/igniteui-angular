@@ -23,25 +23,38 @@ $dark-fluent-scrollbar: $fluent-scrollbar;
 
 /// Generates a dark bootstrap scrollbar schema.
 /// @type {Map}
+/// @property {Map} thumb-background [color: ('grays', 50)] - The background color used for the thumb.
+/// @property {Color} track-background [color: ('grays', 50, .3)] - The background color used for the track.
 /// @requires {function} extend
 /// @requires $light-scrollbar
-$dark-bootstrap-scrollbar: $bootstrap-scrollbar;
+$dark-bootstrap-scrollbar: extend(
+    $bootstrap-scrollbar,
+    (
+        thumb-background: (
+            color: ('grays', 50)
+        ),
+
+        track-background: (
+            color: ('grays', 50, .3)
+        ),
+    )
+);
 
 /// Generates a dark indigo scrollbar schema.
 /// @type {Map}
-/// @property {Map} thumb-background [igx-color: ('grays', 200)] - The background color used for the thumb.
-/// @property {Color} track-background [igx-color: ('surface')] - The background color used for the track.
+/// @property {Map} thumb-background [color: ('grays', 100)] - The background color used for the thumb.
+/// @property {Color} track-background [color: ('grays', 50)] - The background color used for the track.
 /// @requires {function} extend
 /// @requires $indigo-scrollbar
 $dark-indigo-scrollbar: extend(
     $indigo-scrollbar,
     (
         thumb-background: (
-            igx-color: ('grays', 200)
+            color: ('grays', 100)
         ),
 
         track-background: (
-            igx-color: ('surface')
+            color: ('grays', 50)
         ),
     )
 );

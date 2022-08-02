@@ -124,9 +124,8 @@
 /// @requires text-contrast
 /// @requires to-opaque
 /// @requires extend
-/// @requires igx-elevation
-/// @requires round-borders
-@function igx-grid-theme(
+/// @requires elevation
+@function grid-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -235,7 +234,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
     $grid-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -245,10 +244,6 @@
     }
 
     $theme: apply-palette($grid-schema, $palette);
-
-    $drop-area-border-radius: round-borders(
-        if($drop-area-border-radius, $drop-area-border-radius, map.get($grid-schema, 'drop-area-border-radius')), 0, 16px
-    );
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -265,7 +260,7 @@
     }
 
     @if $header-background and meta.type-of($header-background) == 'color' {
-        $header-background: to-opaque($header-background, igx-color($palette, 'surface'));
+        $header-background: to-opaque($header-background, color($palette, 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -456,12 +451,16 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: igx-elevation($elevations, $grid-elevation);
+        $grid-shadow: elevation($elevations, $grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: igx-elevation($elevations, $drag-elevation);
+        $drag-shadow: elevation($elevations, $drag-elevation);
+    }
+
+    @if not($drop-area-border-radius) {
+        $drop-area-border-radius: border-radius(map.get($theme, 'drop-area-border-radius'));
     }
 
     @return extend($theme, (
@@ -577,15 +576,15 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} ellipsis
 /// @requires {mixin} excel-filtering
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires color
+/// @requires contrast-color
 /// @requires rem
 /// @requires var-get
-@mixin igx-grid($theme) {
-    @include igx-css-vars($theme);
+@mixin grid($theme) {
+    @include css-vars($theme);
 
     @include scale-in-ver-center();
 
@@ -621,7 +620,7 @@
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
-    $grid-cell-pinned-border-color: igx-color($palette, 'grays', 300);
+    $grid-cell-pinned-border-color: color($palette, 'grays', 300);
 
     $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
@@ -630,16 +629,26 @@
         color: var-get($theme, 'pinned-border-color')
     );
 
+    $padding-comfortable: rem(24px);
+    $padding-cosy: rem(16px);
+    $padding-compact: rem(12px);
+
     $grid-header-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 $padding-comfortable,
+        cosy: 0 $padding-cosy,
+        compact: 0 $padding-compact
+    );
+
+    $pivot-row-aria-padding: (
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
     );
 
     $grid-cbx-padding: (
-        comfortable: rem(24px),
-        cosy: rem(16px),
-        compact: rem(12px)
+        comfortable: $padding-comfortable,
+        cosy: $padding-cosy,
+        compact: $padding-compact
     );
 
     $cbx-padding: map.get($grid-cbx-padding, 'comfortable');
@@ -710,6 +719,8 @@
     }
 
     %grid-display {
+        --igx-tree-indent-size: #{rem(24px)};
+
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
@@ -727,6 +738,14 @@
         %cbx-display {
             min-width: $cbx-size;
         }
+    }
+
+    %grid-display-cosy {
+        --igx-tree-indent-size: #{rem(16px)};
+    }
+
+    %grid-display-compact {
+        --igx-tree-indent-size: #{rem(12px)};
     }
 
     %grid-caption {
@@ -974,7 +993,7 @@
 
     %grid-thead-thumb {
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid var-get($theme, 'header-border-color');
+        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tfoot-thumb {
@@ -982,12 +1001,12 @@
         top: 0;
         #{$right}: 0;
         background: var-get($theme, 'header-background');
-        border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
+        border-#{$left}: rem(1px) solid var-get($theme, 'header-border-color');
     }
 
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
-        border-#{$left}: 1px solid var-get($theme, 'row-border-color');
+        border-#{$left}: rem(1px) solid var-get($theme, 'row-border-color');
         position: relative;
     }
 
@@ -1041,7 +1060,7 @@
         }
 
         &%igx-grid__tr--ghost {
-            @include igx-css-vars((
+            @include css-vars((
                 name: 'igx-grid-row',
                 row-ghost-background: map.get($theme, 'row-ghost-background'),
                 row-drag-color: map.get($theme, 'row-drago-color')
@@ -1065,11 +1084,12 @@
         z-index: 4;
         cursor: move;
         border-#{$right}: 1px solid transparent;
+        background-clip: border-box;
 
         igx-icon {
-            width: $drag-icon-size;
-            height: $drag-icon-size;
-            font-size: $drag-icon-size;
+            width: var(--igx-icon-size, #{$drag-icon-size});
+            height: var(--igx-icon-size, #{$drag-icon-size});
+            font-size: var(--igx-icon-size, #{$drag-icon-size});
         }
     }
 
@@ -1135,19 +1155,19 @@
         justify-content: center;
 
         igx-icon {
-            height: rem(18px);
-            width: rem(18px);
-            font-size: rem(18px);
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-icon--error {
-            color: igx-color($palette, 'grays', 500);
+            color: color($palette, 'grays', 500);
         }
     }
 
     %igx-grid__td--bool-true {
         %igx-icon--success {
-            color: igx-color($palette, 'grays', 700);
+            color: color($palette, 'grays', 700);
         }
     }
 
@@ -1193,6 +1213,11 @@
     %igx-grid__tr--inner {
         display: flex;
         background: inherit;
+    }
+
+    %igx-grid__tr--header {
+        display: flex;
+        align-items: center;
     }
 
     %igx-grid__tr--add-animate {
@@ -1327,6 +1352,11 @@
         background-clip: border-box !important;
     }
 
+    // This is no longer being extended and is left
+    // here for reference purposes only. It seems setting
+    // overflow: hidden on the cell prevents drag and selection
+    // of the cell.
+    // See github issue #9821
     %igx-grid__td--tree-cell {
         overflow: hidden;
     }
@@ -1426,7 +1456,7 @@
     %igx-grid__tr--deleted {
         %grid-cell-text {
             font-style: italic;
-            color: igx-color(map.get($theme, 'palette'), 'error');
+            color: color(map.get($theme, 'palette'), 'error');
             text-decoration: line-through;
         }
     }
@@ -1611,9 +1641,9 @@
             display: flex;
 
             igx-icon {
-                width: rem(15px);
-                height: rem(15px);
-                font-size: rem(15px);
+                width: var(--igx-icon-size, #{rem(15px)});
+                height: var(--igx-icon-size, #{rem(15px)});
+                font-size: var(--igx-icon-size, #{rem(15px)});
             }
 
             &::after {
@@ -1659,7 +1689,16 @@
     %igx-grid-th--selectable {
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
-        opacity: if($variant != 'indigo-design', .7, 1);
+
+        @if $variant != 'indigo-design' {
+            opacity: .7;
+
+            &%grid__drag-ghost-image {
+                opacity: 1;
+            }
+        } @else {
+            opacity: 1;
+        }
 
         .sort-icon {
             color: var-get($theme, 'header-selected-text-color');
@@ -1744,6 +1783,9 @@
 
     %igx-grid-th--filtrable-sortable {
         .sort-icon {
+            cursor: pointer;
+            opacity: .7;
+
             &:hover {
                 opacity: 1;
             }
@@ -1751,7 +1793,6 @@
     }
 
     .sort-icon {
-        opacity: 0;
         transition: all 250ms ease-in-out;
     }
 
@@ -1783,6 +1824,7 @@
         align-items: center;
         background: inherit;
         z-index: 4;
+        background-clip: border-box;
     }
 
     %cbx-padding {
@@ -1859,7 +1901,11 @@
     }
 
     %grid-summaries-patch {
-        background: inherit;
+        @if $bootstrap-theme {
+            background: color($palette, 'grays', 100);
+        } @else {
+            background: inherit;
+        }
         position: relative;
         z-index: 1;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
@@ -2063,9 +2109,9 @@
 
         igx-icon {
             color: var-get($theme, 'group-label-icon');
-            width: rem(16px);
-            height: rem(16px);
-            font-size: rem(16px);
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
     }
 
@@ -2145,6 +2191,7 @@
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
+        background-clip: border-box;
 
         &::after {
             content: '';
@@ -2212,9 +2259,9 @@
         margin: 0 rem(4px);
 
         igx-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 16px;
+            width: var(--igx-icon-size, #{rem(16px)});
+            height: var(--igx-icon-size, #{rem(16px)});
+            font-size: var(--igx-icon-size, #{rem(16px)});
         }
 
         @include if-rtl() {
@@ -2299,7 +2346,7 @@
 
         igx-icon {
             color: var-get($theme, 'expand-icon-color');
-            width: $indicator-icon-width;
+            width: var(--igx-icon-size, #{$indicator-icon-width});
         }
 
         &:hover,
@@ -2376,47 +2423,33 @@
 
     @for $i from 1 through 10 {
         %igx-grid__row-indentation--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'comfortable')};
             }
         }
 
         %igx-grid__row-indentation-cosy--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-cosy--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'cosy')};
             }
         }
 
         %igx-grid__row-indentation-compact--level-#{$i} {
-            padding-#{$left}: calc(#{$i*map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+            padding-#{$left}: calc(#{$i * map.get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
             %igx-grid__grouping-indicator {
-                padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
+                padding-#{$left}: #{$i * map.get($grid-grouping-indicator-padding, 'compact')};
             }
-        }
-    }
-
-    @for $i from 1 through 25 {
-        %igx-grid__tree-cell--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'comfortable')};
-        }
-
-        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'cosy')};
-        }
-
-        %igx-grid__tree-cell-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map.get($grid-grouping-indicator-padding, 'compact')};
         }
     }
 
@@ -2494,9 +2527,9 @@
         visibility: visible;
 
         igx-icon {
-            width: 18px;
-            height: 18px;
-            font-size: 18px;
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
 
         %igx-badge-display {
@@ -2564,7 +2597,7 @@
         }
 
         igx-prefix:focus {
-            color: igx-color(map.get($theme, 'palette'), 'secondary');
+            color: color(map.get($theme, 'palette'), 'secondary');
         }
 
         igx-suffix  {
@@ -2572,7 +2605,7 @@
                 outline-style: none;
 
                 &:focus {
-                    color: igx-color($palette, 'secondary');
+                    color: color($palette, 'secondary');
                 }
 
                 + igx-icon {
@@ -2722,6 +2755,7 @@
         cursor: pointer;
         z-index: 3;
         color: var-get($theme, 'expand-icon-color');
+        background-clip: border-box;
 
         &:focus {
             outline: none;
@@ -2767,6 +2801,7 @@
         background: inherit;
         border-#{$right}: 1px solid var-get($theme, 'header-border-color');
         z-index: 3;
+        background-clip: border-box;
 
         igx-icon {
             display: flex;
@@ -2860,5 +2895,187 @@
             border-#{$right}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
         }
     }
-}
 
+    // Pivot grid
+    %igx-grid__pivot--super-compact {
+        %grid-cell-display,
+        %grid-cell-header {
+            padding: 0 rem(4px) !important;
+            min-height: rem(24px) !important;
+            height: rem(24px);
+        }
+
+        %grid-cell-header {
+            > * {
+                line-height: normal;
+                align-self: initial;
+                max-height: 100%;
+            }
+        }
+    }
+
+
+    %grid-thead--pivot {
+        display: flex;
+
+        %grid-thead--virtualizationWrapper {
+            border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        }
+    }
+
+    %grid-thead--virtualizationWrapper {
+        height: 100%;
+    }
+
+    %grid-thead--virtualizationContainer {
+        overflow: visible;
+        height: 100%;
+    }
+
+    %igx-grid__tr-pivot {
+        display: flex;
+        align-items: center;
+        background: inherit;
+        overflow: hidden;
+        z-index: 3;
+        height: map.get($grid-header-height, 'comfortable');
+
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+            padding: map.get($grid-header-padding, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+            padding: map.get($grid-header-padding, 'compact');
+        }
+
+        padding: map.get($grid-header-padding, 'comfortable');
+        background-clip: border-box !important;
+        border-#{$left}: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+
+        igx-chips-area {
+            flex-wrap: nowrap;
+            width: auto;
+
+            > * {
+                margin-#{$right}: rem(4px);
+            }
+
+            &:last-child {
+                margin-#{$right}: 0;
+            }
+        }
+    }
+
+    %igx-grid__pivot-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+
+        > igx-badge {
+            position: absolute;
+            top: rem(-4px);
+            left: 60%;
+            width: rem(18px);
+            min-width: rem(18px);
+            height: rem(18px);
+            font-size: rem(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+
+    %igx-grid__pivot-empty-chip-area {
+        line-height: normal;
+        font-size: rem(14px);
+        margin-right: 0 !important;
+    }
+
+    %igx-grid__tr-pivot--row-area {
+        height: auto !important;
+        align-items: flex-end;
+        padding-bottom: map.get($pivot-row-aria-padding, 'comfortable');
+
+        &--cosy{
+            padding-bottom: map.get($pivot-row-aria-padding, 'cosy');
+        }
+
+        &--compact{
+            padding-bottom: map.get($pivot-row-aria-padding, 'compact');
+        }
+
+        border-#{$left}: 0;
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot--filter-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %igx-grid__tr-pivot--chip_drop_indicator {
+        width: 2px;
+        background: var-get($theme, 'resize-line-color');
+    }
+
+    %igx-grid__tr-pivot--drop-row-area {
+        flex-grow: 1;
+    }
+
+    %igx-grid__tr-pivot--filter {
+        height: map.get($grid-header-height, 'comfortable');
+
+        &--cosy {
+            height: map.get($grid-header-height, 'cosy');
+        }
+
+        &--compact {
+            height: map.get($grid-header-height, 'compact');
+        }
+
+        border-left: 0;
+        border-right: 0;
+        border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    }
+
+    %igx-grid-thead__wrapper--pivot {
+        border-bottom: 0;
+    }
+
+    %igx-grid__tr-pivot-group {
+        flex: 1;
+    }
+
+    %igx-grid__tr-pivot-toggle-icons {
+        display: inline-flex !important;
+    }
+
+    %igx-grid__tr-pivot--columnDimensionLeaf {
+        box-shadow: none;
+
+        igx-grid-header {
+            border: none;
+        }
+    }
+
+    %igx-grid__tr-pivot--columnMultiRowSpan {
+        igx-grid-header {
+            > * {
+                visibility: hidden;
+            }
+        }
+    }
+
+    %igx-grid__tr-header-row {
+        igx-pivot-row-dimension-header-group {
+            igx-pivot-row-dimension-header {
+                align-items: center;
+            }
+        }
+    }
+    // Pivot grid END
+}

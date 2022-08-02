@@ -590,16 +590,18 @@ describe('IgxGrid - search API #grid - ', () => {
             verifyActiveHighlight(0);
         }));
 
-        it('Active highlight should be preserved when a column is moved', () => {
+        it('Active highlight should be preserved when a column is moved', fakeAsync(() => {
             grid.findNext('casey');
 
             const columns = grid.columnList.toArray();
             grid.moveColumn(columns[0], columns[1]);
+            tick();
+            fix.detectChanges();
 
             const highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
-        });
+        }));
 
         it('Should exit edit mode and search a cell', () => {
             const cell = grid.getCellByColumn(0, 'Name');

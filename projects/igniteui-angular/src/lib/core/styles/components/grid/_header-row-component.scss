@@ -24,6 +24,10 @@
             }
         }
 
+        @include e(wrapper, $m: 'pivot') {
+            @extend %igx-grid-thead__wrapper--pivot !optional;
+        }
+
         @include e(title) {
             @extend %grid-cell-display !optional;
             @extend %grid-cell-header !optional;
@@ -68,6 +72,18 @@
             @include e(title) {
                 @extend %grid-thead-title--cosy !optional;
             }
+        }
+
+        @include m(pivot) {
+            @extend %grid-thead--pivot !optional;
+        }
+
+        @include m(virtualizationWrapper) {
+            @extend %grid-thead--virtualizationWrapper !optional;
+        }
+
+        @include m(virtualizationContainer) {
+            @extend %grid-thead--virtualizationContainer !optional;
         }
     }
 

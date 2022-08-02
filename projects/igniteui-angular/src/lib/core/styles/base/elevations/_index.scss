@@ -2,6 +2,7 @@
 @use 'sass:math';
 @use 'sass:meta';
 @use 'sass:string';
+@use 'sass:list';
 @use '../variables' as *;
 @use '../utilities' as *;
 
@@ -10,12 +11,33 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+@function _transform-levels($levels) {
+    $result: ();
+    $x: var(--igx-elevation-factor, 1);
+
+    @each $k, $v in $levels {
+        $l: ();
+
+        @each $d in $v {
+            @if meta.type-of($d) != color and $d != 0 {
+                $l: list.append($l, calc($x * $d));
+            } @else {
+                $l: list.append($l, $d);
+            }
+        }
+
+        $result: map.merge($result, ($k: $l));
+    }
+
+    @return $result;
+}
+
 /// Level 1 - Umbra Shadows
 /// @access private
 /// @param {Color} $color - The color used to generate umbra shadows.
 /// @returns {Map} Returns a map of 24 shadow elevations with the umbra color.
 @function _l1-shadows($color) {
-    @return (
+    @return _transform-levels((
         1: 0 1px 3px 0 $color,
         2: 0 1px 5px 0 $color,
         3: 0 1px 8px 0 $color,
@@ -40,7 +62,7 @@
         22: 0 10px 14px -6px $color,
         23: 0 11px 14px -7px $color,
         24: 0 11px 15px -7px $color
-    );
+    ));
 }
 
 /// Level 2 - Penumbra Shadows
@@ -48,7 +70,7 @@
 /// @param {Color} $color - The color used to generate penumbra shadows.
 /// @returns {Map} Returns a map of 24 shadow elevations with the penumbra color.
 @function _l2-shadows($color) {
-    @return (
+    @return _transform-levels((
         1: 0 1px 1px 0 $color,
         2: 0 2px 2px 0 $color,
         3: 0 3px 4px 0 $color,
@@ -73,7 +95,7 @@
         22: 0 22px 35px 3px $color,
         23: 0 23px 36px 3px $color,
         24: 0 24px 38px 3px $color
-    );
+    ));
 }
 
 /// Level 3 - Ambient Shadows
@@ -81,7 +103,7 @@
 /// @param {Color} $color - The color used to generate ambient shadows.
 /// @returns {Map} Returns a map of 24 shadow elevations with the ambient color.
 @function _l3-shadows($color) {
-    @return (
+    @return _transform-levels((
         1: 0 2px 1px -1px $color,
         2: 0 3px 1px -2px $color,
         3: 0 3px 3px -2px $color,
@@ -106,7 +128,7 @@
         22: 0 8px 42px 7px $color,
         23: 0 9px 44px 8px $color,
         24: 0 9px 46px 8px $color
-    );
+    ));
 }
 
 /// Returns shadow based on elevation, umbra, penumbra, and ambient shadow colors.
@@ -130,7 +152,7 @@
 /// @param {Color} $color-1 - The umbra shadow color.
 /// @param {Color} $color-2 - The penumbra shadow color.
 /// @param {Color} $color-3 - The ambient shadow color.
-@function igx-elevations($color-1, $color-2, $color-3) {
+@function elevations($color-1, $color-2, $color-3) {
     $result: ('0': none);
 
     @for $i from 1 through 24 {
@@ -146,19 +168,19 @@
 /// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
 /// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
 /// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
-/// @requires igx-elevations
-$igx-elevations: igx-elevations(
+/// @requires elevations
+$elevations: elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),
     rgba(0, 0, 0, .08)
 ) !default;
 
-/// Returns an igx elevation from an igx-elevations produced map.
+/// Returns an igx elevation from an elevations produced map.
 /// @access public
-/// @param {Map} $elevations [null] - The igx-elevations map to extract the elevation from.
+/// @param {Map} $elevations [null] - The elevations map to extract the elevation from.
 /// @param {number} $elevation [0] - The elevation level from 0 to 24.
 /// @returns {String} Returns a box-shadow value.
-@function igx-elevation($elevations: null, $elevation: 0) {
+@function elevation($elevations: null, $elevation: 0) {
     @if meta.type-of($elevation) != number or not math.is-unitless($elevation) {
         @error '$elevation must be a number';
     }
@@ -173,4 +195,3 @@ $igx-elevations: igx-elevations(
 
     @return map.get($elevations, #{$elevation});
 }
-

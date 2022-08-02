@@ -1,0 +1,13 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "position",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        }
+    ]
+}

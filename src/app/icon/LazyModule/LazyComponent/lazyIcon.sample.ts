@@ -12,7 +12,7 @@ export class LazyIconSampleComponent implements OnInit {
     // Used for testing the provided HttpsInterceptor
     // with lazy loaded modules
     public ngOnInit() {
-        this.httpClient.get('../../../../assets/images/card/avatars/alicia_keys.jpg').subscribe((req) => {
+        this.httpClient.get('../../../../assets/images/card/avatars/alicia_keys.jpg', { responseType: 'blob' }).subscribe((req) => {
             console.log(req);
         });
     }

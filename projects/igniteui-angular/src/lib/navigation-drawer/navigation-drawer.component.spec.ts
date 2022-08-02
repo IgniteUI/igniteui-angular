@@ -444,7 +444,7 @@ describe('Navigation Drawer', () => {
         }).catch((reason) => Promise.reject(reason));
     }));
 
-    it('should update width from css or property', async (done) => {
+    it('should update width from css or property', async () => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>
@@ -484,10 +484,9 @@ describe('Navigation Drawer', () => {
         await wait(200);
 
         expect(fixture.componentInstance.navDrawer.drawer.style.width).toBe('350px');
-        done();
     });
 
-    it('should update pin based on window width (pinThreshold)', async (done) => {
+    it('should update pin based on window width (pinThreshold)', async () => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
         TestBed.overrideComponent(TestComponentPin, {
             set: {
@@ -539,7 +538,6 @@ describe('Navigation Drawer', () => {
         await fixture.whenStable();
         expect(fixture.componentInstance.navDrawer.pin).toBe(true, 'Should re-pin on window resize over threshold');
         expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on re-pin');
-        done();
     });
 
     it('should get correct window width', (done) => {

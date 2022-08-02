@@ -15,7 +15,7 @@
                         <igx-avatar igxListThumbnail [src]="item.avatar" [roundShape]="true"></igx-avatar>
                         <p igxListLineTitle>{{item.text}}</p>
                         <span igxListLineSubTitle>{{item.phone}}</span>
-                        <igx-icon igxListAction [color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>
+                        <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>
                 </igx-list-item>
             </igx-list>
             <igx-toast #toast></igx-toast>
@@ -37,7 +37,7 @@
                         <igx-avatar igxListThumbnail [src]="item.avatar" [roundShape]="true"></igx-avatar>
                             <p igxListLineTitle>{{item.text}}</p>
                             <span igxListLineSubTitle>{{item.phone}}</span>
-                        <igx-icon igxListAction [color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>
+                        <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>
                 </igx-list-item>
             </igx-list>
             <igx-toast #toast></igx-toast>

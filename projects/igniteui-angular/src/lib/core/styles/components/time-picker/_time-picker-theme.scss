@@ -37,18 +37,17 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
-/// @requires igx-elevation
+/// @requires elevation
 /// @requires extend
-/// @requires round-borders
 ///
 /// @example scss Change the background and text colors in  time picker
-///   $my-time-picker-theme: igx-time-picker-theme(
+///   $my-time-picker-theme: time-picker-theme(
 ///     $text-color: white,
 ///     $background-color: black
 ///   );
-///   // Pass the theme to the igx-time-picker component mixin
-///   @include igx-time-picker($my-time-picker-theme);
-@function igx-time-picker-theme(
+///   // Pass the theme to the time-picker component mixin
+///   @include time-picker($my-time-picker-theme);
+@function time-picker-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -82,14 +81,6 @@
 
     $theme: apply-palette($time-picker-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($time-picker-schema, 'border-radius')), 0, 20px
-    );
-
-    $active-item-border-radius: round-borders(
-        if($active-item-border-radius, $active-item-border-radius, map.get($time-picker-schema, 'active-item-border-radius')), 0, 20px
-    );
-
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
     }
@@ -122,12 +113,20 @@
 
     @if not($modal-shadow) {
         $elevation: map.get($time-picker-schema, 'modal-elevation');
-        $modal-shadow: igx-elevation($elevations, $elevation);
+        $modal-shadow: elevation($elevations, $elevation);
     }
 
     @if not($dropdown-shadow) {
         $elevation: map.get($time-picker-schema, 'dropdown-elevation');
-        $dropdown-shadow: igx-elevation($elevations, $elevation);
+        $dropdown-shadow: elevation($elevations, $elevation);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($active-item-border-radius) {
+        $active-item-border-radius: border-radius(map.get($theme, 'active-item-border-radius'));
     }
 
     @return extend($theme, (
@@ -152,11 +151,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-time-picker($theme) {
-    @include igx-css-vars($theme);
+@mixin time-picker($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -348,8 +347,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-time-period: 'subtitle-1', header-hour: 'h4', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-time-picker-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin time-picker-typography($type-scale, $categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',
     content: 'body-1')
@@ -359,20 +358,19 @@
     $content: map.get($categories, 'content');
 
     %time-picker__header-ampm {
-        @include igx-type-style($type-scale, $time-period);
+        @include type-style($type-scale, $time-period);
     }
 
     %time-picker__header-hour {
-        @include igx-type-style($type-scale, $header-hour) {
+        @include type-style($type-scale, $header-hour) {
             margin-top: 0;
         }
     }
 
     %time-picker__column {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin-top: 0;
             margin-bottom: 0;
         }
     }
 }
-

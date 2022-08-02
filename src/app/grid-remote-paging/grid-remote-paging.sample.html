@@ -1,5 +1,6 @@
 <div class="dark-grid">
-    <igx-grid igxPreventDocumentScroll #grid1 [data]="data | async" width="100%" height="540px">
+    <igx-grid igxPreventDocumentScroll #grid1 [data]="data | async" width="100%" height="540px" [batchEditing]="true"
+              [pagingMode]="mode">
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
         <igx-column field="QuantityPerUnit"></igx-column>

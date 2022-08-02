@@ -20,15 +20,14 @@
 /// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @requires extend
-/// @requires round-borders
 /// @requires apply-palette
 /// @requires text-contrast
 ///
 /// @example scss Change the background and icon colors in action strip
-///   $my-action-strip-theme: igx-action-strip-theme($background: black);
-///   // Pass the theme to the igx-action-strip component mixin
-///   @include igx-action-strip($my-action-strip-theme);
-@function igx-action-strip-theme(
+///   $my-action-strip-theme: action-strip-theme($background: black);
+///   // Pass the theme to the action-strip component mixin
+///   @include action-strip($my-action-strip-theme);
+@function action-strip-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -49,12 +48,12 @@
 
     $theme: apply-palette($action-strip-schema, $palette);
 
-    $actions-border-radius: round-borders(
-        if($actions-border-radius, $actions-border-radius, map.get($action-strip-schema, 'actions-border-radius')), 0, 24px
-    );
-
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
+    }
+
+    @if not($actions-border-radius) {
+        $actions-border-radius: border-radius(map.get($theme, 'actions-border-radius'));
     }
 
     @return extend($theme, (
@@ -69,11 +68,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-action-strip($theme) {
-    @include igx-css-vars($theme);
+@mixin action-strip($theme) {
+    @include css-vars($theme);
 
     $padding: (
         comfortable: 0 rem(24px),
@@ -108,9 +107,9 @@
             height: rem(28px);
 
             igx-icon {
-                width: rem(14px);
-                height: rem(14px);
-                font-size: rem(14px);
+                width: var(--igx-icon-size, #{rem(14px)});
+                height: var(--igx-icon-size, #{rem(14px)});
+                font-size: var(--igx-icon-size, #{rem(14px)});
             }
         }
     }
@@ -138,9 +137,9 @@
         }
 
         igx-icon {
-            font-size: rem(18px);
-            width: rem(18px);
-            height: rem(18px);
+            width: var(--igx-icon-size, rem(18px));
+            height: var(--igx-icon-size, rem(18px));
+            font-size: var(--igx-icon-size, rem(18px));
         }
 
         igx-icon + [igxLabel] {
@@ -161,10 +160,10 @@
     }
 
     %igx-action-strip__menu-item--danger {
-        color: igx-color(map.get($theme, 'palette'), 'error');
+        color: color(map.get($theme, 'palette'), 'error');
 
         &:hover {
-            color: igx-color(map.get($theme, 'palette'), 'error');
+            color: color(map.get($theme, 'palette'), 'error');
         }
     }
 

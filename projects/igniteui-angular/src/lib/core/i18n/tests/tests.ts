@@ -3,15 +3,15 @@ import * as path from 'path';
 
 const i18nProductPath = path.join(__dirname, '../');
 const i18nLanguagesPath = path.join(__dirname, '../../../../../../igniteui-angular-i18n/src/i18n');
-const errors = [];
+const errors: string[] = [];
 
 class i18nTests {
     public runTests(): void {
         this.i18nFilesMatchForAllLanguages();
     }
 
-    public getDirectories = srcPath => fs.readdirSync(srcPath).filter(file => fs.statSync(path.join(srcPath, file)).isDirectory());
-    public getFiles = srcPath => fs.readdirSync(srcPath).filter(file => fs.statSync(path.join(srcPath, file)).isFile());
+    public getDirectories = (srcPath: string) => fs.readdirSync(srcPath).filter(file => fs.statSync(path.join(srcPath, file)).isDirectory());
+    public getFiles = (srcPath: string) => fs.readdirSync(srcPath).filter(file => fs.statSync(path.join(srcPath, file)).isFile());
 
     public i18nFilesMatchForAllLanguages(): void {
         this.getDirectories(i18nLanguagesPath).forEach(dir => {

@@ -58,7 +58,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public get viewIndex(): number {
-        return this.index + (this.grid.paginator?.page || 0 ) * (this.grid.paginator?.perPage || 0);
+        return this.index + (this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0);
     }
 
     /**
@@ -80,7 +80,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public get hasChildren() {
-        return  !!this.grid.childLayoutKeys.length;
+        return !!this.grid.childLayoutKeys.length;
     }
 
     /**
@@ -91,10 +91,10 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         return this.grid && this.grid.highlightedRowID === this.key;
     }
 
-   /**
-    * @hidden
-    */
-   public expanderClick(event) {
+    /**
+     * @hidden
+     */
+    public expanderClick(event) {
         event.stopPropagation();
         this.toggle();
     }
@@ -109,7 +109,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (this.added) {
             return;
         }
-        this.endEdit(this.grid.rootGrid);
+        // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
+        // this.endEdit(this.grid.rootGrid);
         this.grid.gridAPI.set_row_expansion_state(this.key, !this.expanded);
         this.grid.cdr.detectChanges();
     }
@@ -153,7 +154,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (grid.gridAPI.crudService.cellInEditMode) {
             grid.gridAPI.crudService.endEdit();
         }
-        grid.hgridAPI.getChildGrids(true).forEach(g => {
+        grid.gridAPI.getChildGrids(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
                 g.gridAPI.crudService.endEdit();
             }

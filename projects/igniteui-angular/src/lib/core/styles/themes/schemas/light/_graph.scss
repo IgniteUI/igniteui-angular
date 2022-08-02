@@ -8,68 +8,68 @@
 
 /// Generates a light graph schema.
 /// @type {Map}
-/// @prop {Color} backing-brush [(igx-color: 'surface', darken: 5%)] - Sets the brush to use to fill the backing of the bullet graph.
-/// @prop {Color} backing-outline [(igx-color: 'surface', darken: 8%)] - Sets the brush to use for the outline of the backing.
+/// @prop {Color} backing-brush [(color: 'surface', darken: 5%)] - Sets the brush to use to fill the backing of the bullet graph.
+/// @prop {Color} backing-outline [(color: 'surface', darken: 8%)] - Sets the brush to use for the outline of the backing.
 /// @prop {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
-/// @prop {Color} font-brush [(igx-contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the label font.
-/// @prop {Color} minor-tick-brush [(igx-contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the minor tickmarks.
+/// @prop {Color} font-brush [(contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the label font.
+/// @prop {Color} minor-tick-brush [(contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the minor tickmarks.
 /// @prop {Number} minor-tick-thickness [null] - Stroke thickness to use when rendering minor ticks.
 /// @prop {List} range-brushes [series] - Sets a collection of brushes to be used as the palette for bullet graph ranges.
 /// @prop {List} range-outlines [series] - Sets a collection of brushes to be used as the palette for bullet graph outlines.
-/// @prop {Color} scale-background-brush [(igx-color: 'primary')] - Sets the background brush for the scale.
-/// @prop {Color} scale-background-outline [(igx-color: 'surface')] - Sets the background outline for the scale.
+/// @prop {Color} scale-background-brush [(color: 'primary')] - Sets the background brush for the scale.
+/// @prop {Color} scale-background-outline [(color: 'surface')] - Sets the background outline for the scale.
 /// @prop {Number} scale-background-thickness [null] - Sets the background outline thickness for the scale.
 /// @prop {Number} target-value-breadth [null] - Sets the breadth of the target value element.
-/// @prop {Color} target-value-brush [igx-color('grays', 800)] - Sets the brush to use when rendering the fill of the comparative marker.
+/// @prop {Color} target-value-brush [color('grays', 800)] - Sets the brush to use when rendering the fill of the comparative marker.
 /// @prop {Color} target-value-outline [null] - Sets the brush to use when rendering the outline of the target value.
 /// @prop {Number} target-value-thickness [null] - Sets the stroke thickness of the outline of the target value bar.
-/// @prop {Color} tick-brush [(igx-contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the major tickmarks.
+/// @prop {Color} tick-brush [(contrast-color: 'surface', rgba: .62)] - Sets the brush to use for the major tickmarks.
 /// @prop {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
-/// @prop {Color} value-brush [(igx-color: ('grays', 800))] - Sets the brush to use for the actual value element.
+/// @prop {Color} value-brush [(color: ('grays', 800))] - Sets the brush to use for the actual value element.
 /// @prop {Color} value-outline [null] - Sets the brush to use for the outline of actual value element.
 /// @prop {Number} value-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
 /// @see $default-palette
 $light-graph: (
     'backing-brush': (
-        igx-color: 'surface',
+        color: 'surface',
         darken: 5%
     ),
     'backing-outline': (
-        igx-color: 'surface',
+        color: 'surface',
         darken: 8%
     ),
     'backing-stroke-thickness': null,
     'font-brush': (
-        igx-contrast-color: 'surface',
+        contrast-color: 'surface',
         rgba: .62
     ),
     'minor-tick-brush': (
-        igx-contrast-color: 'surface',
+        contrast-color: 'surface',
         rgba: .62
     ),
     'minor-tick-thickness': null,
     'range-brushes': series,
     'range-outlines': series,
     'scale-background-brush': (
-        igx-color: 'primary',
+        color: 'primary',
     ),
     'scale-background-outline': (
-        igx-color: 'surface',
+        color: 'surface',
     ),
     'scale-background-thickness': null,
     'target-value-breadth': null,
     'target-value-brush': (
-        igx-color: ('grays', 800),
+        color: ('grays', 800),
     ),
     'target-value-outline': null,
     'target-value-thickness': null,
     'tick-brush': (
-        igx-contrast-color: 'surface',
+        contrast-color: 'surface',
         rgba: .62
     ),
     'tick-stroke-thickness': null,
     'value-brush': (
-        igx-color: ('grays', 800),
+        color: ('grays', 800),
     ),
     'value-outline': null,
     'value-stroke-thickness': null,

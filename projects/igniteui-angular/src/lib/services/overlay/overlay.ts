@@ -412,8 +412,8 @@ export class IgxOverlayService implements OnDestroy {
             document,
             true,
             info.settings.target);
+        this.addModalClasses(info);
         if (info.settings.positionStrategy.settings.openAnimation) {
-            this.buildAnimationPlayers(info);
             this.playOpenAnimation(info);
         } else {
             //  to eliminate flickering show the element just before opened fires
@@ -536,6 +536,7 @@ export class IgxOverlayService implements OnDestroy {
         if (eventArgs.cancel) {
             return;
         }
+        this.removeModalClasses(info);
         if (info.settings.positionStrategy.settings.closeAnimation) {
             this.playCloseAnimation(info, event);
         } else {
@@ -736,7 +737,6 @@ export class IgxOverlayService implements OnDestroy {
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
         info.visible = true;
-        this.addModalClasses(info);
         info.openAnimationPlayer.play();
     }
 
@@ -764,7 +764,6 @@ export class IgxOverlayService implements OnDestroy {
 
         this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
-        this.removeModalClasses(info);
         info.closeAnimationPlayer.play();
     }
 

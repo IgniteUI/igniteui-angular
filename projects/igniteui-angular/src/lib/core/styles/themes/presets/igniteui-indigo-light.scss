@@ -1,5 +1,5 @@
 @use '../../themes' as *;
 
-@include igx-core();
-@include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
-@include igx-indigo-light-theme($light-indigo-palette);
+@include core();
+@include typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
+@include indigo-light-theme($light-indigo-palette);

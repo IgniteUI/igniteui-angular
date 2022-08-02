@@ -342,6 +342,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * @hidden
+     */
+    protected get isRTL() {
+        const dir = window.getComputedStyle(this.dc.instance._viewContainer.element.nativeElement).getPropertyValue('direction');
+        return dir === 'rtl';
+    }
+
     protected get sizesCache(): number[] {
         return this._sizesCache;
     }
@@ -414,7 +422,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-            this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
+            if (!this.scrollComponent || this.scrollComponent.destroyed) {
+                this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
+            }
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
             this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
@@ -590,7 +601,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition = nextScroll;
+            this.scrollPosition = this.isRTL ? -nextScroll : nextScroll;
         } else {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             if (nextScroll > maxVirtScrollTop) {
@@ -611,7 +622,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public scrollNext() {
-        const scr = Math.ceil(this.scrollPosition);
+        const scr = Math.abs(Math.ceil(this.scrollPosition));
         const endIndex = this.getIndexAt(scr + parseInt(this.igxForContainerSize, 10), this.sizesCache);
         this.scrollTo(endIndex);
     }
@@ -636,7 +647,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollNextPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition += parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition += this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             this.addScrollTop(parseInt(this.igxForContainerSize, 10));
         }
@@ -651,7 +662,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollPrevPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.scrollPosition -= parseInt(this.igxForContainerSize, 10);
+            this.scrollPosition -= this.isRTL ? -parseInt(this.igxForContainerSize, 10) : parseInt(this.igxForContainerSize, 10);
         } else {
             const containerSize = (parseInt(this.igxForContainerSize, 10));
             this.addScrollTop(-containerSize);
@@ -722,6 +733,34 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * Returns the index of the element at the specified offset.
+     * ```typescript
+     * this.parentVirtDir.getIndexAtScroll(100);
+     * ```
+     */
+    public getIndexAtScroll(scrollOffset: number) {
+        return this.getIndexAt(scrollOffset, this.sizesCache);
+    }
+    /**
+     * Returns whether the target index is outside the view.
+     * ```typescript
+     * this.parentVirtDir.isIndexOutsideView(10);
+     * ```
+     */
+    public isIndexOutsideView(index: number) {
+        const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
+        this._embeddedViews.map(view =>
+            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling)[index - this.state.startIndex] : null;
+        const rowHeight = this.getSizeAt(index);
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
+        const endTopOffset = targetNode ? targetNode.offsetTop + rowHeight + containerOffset : containerSize + rowHeight;
+        return !targetNode || targetNode.offsetTop < Math.abs(containerOffset)
+            || containerSize && endTopOffset - containerSize > 5;
+    }
+
+
+    /**
      * @hidden
      * Function that recalculates and updates cache sizes.
      */
@@ -736,7 +775,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
-                const h = rNode.offsetHeight || parseInt(this.igxForItemSize, 10);
+                const height = window.getComputedStyle(rNode).getPropertyValue('height');
+                const h = parseFloat(height) || parseInt(this.igxForItemSize, 10);
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
@@ -853,10 +893,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
         this._updateScrollOffset();
-        this.contentSizeChange.emit();
+        if (scrollable !== this.isScrollable()) {
+            this.scrollbarVisibilityChanged.emit();
+        } else {
+            this.contentSizeChange.emit();
+        }
     }
 
     /**
@@ -996,9 +1041,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         const prevStartIndex = this.state.startIndex;
+        const scrLeft = event.target.scrollLeft;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(event.target.scrollLeft);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(event.target.scrollLeft));
+        if (scrLeft < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1115,20 +1166,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected initSizesCache(items: any[]): number {
         let totalSize = 0;
         let size = 0;
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            this.igxForSizePropName : 'height';
+        const dimension = this.igxForSizePropName || 'height';
         let i = 0;
         this.sizesCache = [];
         this.heightCache = [];
         this.sizesCache.push(0);
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
-            if (dimension === 'height') {
-                // cols[i][dimension] = parseInt(this.igxForItemSize, 10) || 0;
-                size = parseInt(this.igxForItemSize, 10) || 0;
+            size = this._getItemSize(items[i], dimension);
+            if (this.igxForScrollOrientation === 'vertical') {
                 this.heightCache.push(size);
-            } else {
-                size = this._getItemSize(items[i], dimension);
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
@@ -1359,6 +1406,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
     }
 
+    protected _getItemSize(item, dimension: string): number {
+        const dim = item ? item[dimension] : null;
+        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
+    }
+
     private _updateVScrollOffset() {
         let scrollOffset = 0;
         let currentScrollTop = this.scrollPosition;
@@ -1380,19 +1432,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
 
-    private _getItemSize(item, dimension: string): number {
-        const dim = item[dimension];
-        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
-    }
 
-    private _adjustScrollPositionAfterSizeChange(sizeDiff) {
+    protected _adjustScrollPositionAfterSizeChange(sizeDiff) {
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
-            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const offset = this.igxForScrollOrientation === 'horizontal' ?
+             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.left, 10) :
+             parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const newSize = this.sizesCache[this.state.startIndex] - offset;
-            this.scrollPosition = newSize === this.scrollPosition ? newSize + 1 : newSize;
+            this.scrollPosition = newSize;
+            if (this.scrollPosition !== newSize) {
+                this.scrollComponent.scrollAmount = newSize;
+            }
         }
     }
 
@@ -1427,6 +1480,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.igxForOf = value;
     }
 
+    @Input()
+    public igxGridForOfUniqueSizeCache = false;
+
+    @Input()
+    public igxGridForOfVariableSizes = true;
+
     public get igxGridForOf() {
         return this.igxForOf;
     }
@@ -1436,10 +1495,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @internal
      */
     public get sizesCache(): number[] {
-        if (this.syncService.isMaster(this)) {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            if (this.igxGridForOfUniqueSizeCache || this.syncService.isMaster(this)) {
+                return this._sizesCache;
+            }
+            return this.syncService.sizesCache(this.igxForScrollOrientation);
+        } else {
             return this._sizesCache;
         }
-        return this.syncService.sizesCache(this.igxForScrollOrientation);
     }
     /**
      * @hidden
@@ -1450,7 +1513,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected get itemsDimension() {
-        return this.igxForScrollOrientation === 'horizontal' ? this.igxForSizePropName : 'height';
+        return this.igxForSizePropName || 'height';
+    }
+
+    public recalcUpdateSizes() {
+        if (this.igxGridForOfVariableSizes) {
+            super.recalcUpdateSizes();
+        }
     }
 
     /**
@@ -1540,8 +1609,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
                 this.syncService.setMaster(this);
                 this.igxForContainerSize = args.containerSize;
-                this._updateSizeCache(changes);
+                const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
+                if (sizeDiff) {
+                    this._adjustScrollPositionAfterSizeChange(sizeDiff);
+                }
                 this._updateScrollOffset();
                 this.dataChanged.emit();
             }
@@ -1572,16 +1644,21 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             return;
         }
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
-        this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
+        if (scrollAmount < 0) {
+            // RTL
+            this.dc.instance._viewContainer.element.nativeElement.style.left = scrollOffset + 'px';
+        } else {
+            // LTR
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+        }
     }
 
     protected getItemSize(item) {
         let size = 0;
-        const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            this.igxForSizePropName : 'height';
-        if (dimension === 'height') {
-            size = parseInt(this.igxForItemSize, 10) || 0;
+        const dimension = this.igxForSizePropName  || 'height';
+        if (this.igxForScrollOrientation === 'vertical') {
+            size =  this._getItemSize(item, dimension);
             if (item && item.summaries) {
                 size = item.max;
             } else if (item && item.groups && item.height) {
@@ -1594,7 +1671,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected initSizesCache(items: any[]): number {
-        if (!this.syncService.isMaster(this)) {
+        if (!this.syncService.isMaster(this) && this.igxForScrollOrientation === 'horizontal') {
             const masterSizesCache = this.syncService.sizesCache(this.igxForScrollOrientation);
             return masterSizesCache[masterSizesCache.length - 1];
         }
@@ -1607,7 +1684,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const count = this.isRemote ? this.totalItemCount : items.length;
         for (i; i < count; i++) {
             size = this.getItemSize(items[i]);
-            if (this.itemsDimension === 'height') {
+            if (this.igxForScrollOrientation === 'vertical') {
                 this.heightCache.push(size);
             }
             totalSize += size;
@@ -1618,8 +1695,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     protected _updateSizeCache(changes: IterableChanges<T> = null) {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.initSizesCache(this.igxForOf);
-            return;
+            const oldSize = this.sizesCache[this.sizesCache.length - 1];
+            const newSize = this.initSizesCache(this.igxForOf);
+            const diff = oldSize - newSize;
+            return diff;
         }
 
         const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
@@ -1647,6 +1726,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
             });
         }
+        return diff;
     }
 
     protected handleCacheChanges(changes: IterableChanges<T>) {
@@ -1744,10 +1824,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * @hidden
      */
     protected _calcMaxChunkSize(): number {
-        if (this.syncService.isMaster(this)) {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            if (this.syncService.isMaster(this)) {
+                return super._calcMaxChunkSize();
+            }
+            return this.syncService.chunkSize(this.igxForScrollOrientation);
+        } else {
             return super._calcMaxChunkSize();
         }
-        return this.syncService.chunkSize(this.igxForScrollOrientation);
+
     }
 }
 
@@ -1763,7 +1848,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         HVirtualHelperComponent,
         VirtualHelperBaseDirective
     ],
-    entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective, IgxGridForOfDirective],
     imports: [IgxScrollInertiaModule, CommonModule]
 })

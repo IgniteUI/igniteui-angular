@@ -1,0 +1,11 @@
+<div class="sample-flex-row">
+    <span>Dimensions:</span>
+
+    <igx-combo #combo class="combo" [itemsMaxHeight]="250" (selectionChanging)="handleChange($event)"
+        [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected"
+        placeholder="Dimension(s)" searchPlaceholder="Search...">
+    </igx-combo>
+</div>
+<igx-pivot-grid   [superCompactMode]="true" #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)' [defaultExpandState]='true'>
+</igx-pivot-grid>
+

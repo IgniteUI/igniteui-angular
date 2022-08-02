@@ -29,14 +29,13 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
-/// @requires round-borders
+/// @requires elevation
 ///
 /// @example scss Set a custom background color
-///   $my-snackbar-theme: igx-snackbar-theme($background: white);
-///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-snackbar($my-snackbar-theme);
-@function igx-snackbar-theme(
+///   $my-snackbar-theme: snackbar-theme($background: white);
+///   // Pass the theme to the snackbar component mixin
+///   @include snackbar($my-snackbar-theme);
+@function snackbar-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -58,10 +57,6 @@
 
     $theme: apply-palette($snackbar-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($snackbar-schema, 'border-radius')), 0, 24px
-    );
-
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
     }
@@ -72,7 +67,11 @@
 
     @if not($shadow) {
         $elevation: map.get($snackbar-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: elevation($elevations, $elevation);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (
@@ -87,14 +86,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires rem
 /// @requires var-get
-@mixin igx-snackbar($theme) {
-    @include igx-css-vars($theme);
+@mixin snackbar($theme) {
+    @include css-vars($theme);
     @include fade-in();
-
-    // @debug $theme;
 
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
@@ -153,11 +150,11 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-snackbar-typography($type-scale, $categories: (text: 'body-2')) {
+/// @requires {mixin} type-style
+@mixin snackbar-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map.get($categories, 'text');
 
     %igx-snackbar-message {
-        @include igx-type-style($type-scale, $text);
+        @include type-style($type-scale, $text);
     }
 }

@@ -49,6 +49,7 @@ export class OverlaySampleComponent implements OnInit {
     public closeOnOutsideClick = true;
     public modal = true;
     public useOutlet = false;
+    public hasAnimation = true;
     public animationLength = 300; // in ms
 
     private xAddition = 0;
@@ -347,6 +348,10 @@ export class OverlaySampleComponent implements OnInit {
                 = `${this.animationLength}ms`;
             (this._overlaySettings.positionStrategy.settings.closeAnimation.options.params as IAnimationParams).duration
                 = `${this.animationLength}ms`;
+            if (!this.hasAnimation) {
+                this._overlaySettings.positionStrategy.settings.openAnimation = null;
+                this._overlaySettings.positionStrategy.settings.closeAnimation = null;
+            }
         }
         this.igxDropDown.toggle(this._overlaySettings);
     }

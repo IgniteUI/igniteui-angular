@@ -28,7 +28,7 @@ import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboCleanPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -448,6 +448,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
+        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,
@@ -464,6 +465,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         IgxComboDropDownComponent,
         IgxComboEmptyDirective,
         IgxComboFilteringPipe,
+        IgxComboCleanPipe,
         IgxComboFooterDirective,
         IgxComboGroupingPipe,
         IgxComboHeaderDirective,

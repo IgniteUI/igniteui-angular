@@ -31,17 +31,16 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevation
-/// @requires round-borders
+/// @requires elevation
 ///
 /// @example scss Change the background and content text colors in card
-///   $my-card-theme: igx-card-theme(
+///   $my-card-theme: card-theme(
 ///     $background: #fff,
 ///     $content-text-color: rgba(0, 0, 0, .8)
 ///   );
-///   // Pass the theme to the igx-card component mixin
-///   @include igx-card($my-card-theme);
-@function igx-card-theme(
+///   // Pass the theme to the card component mixin
+///   @include card($my-card-theme);
+@function card-theme(
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
@@ -67,10 +66,6 @@
 
     $theme: apply-palette($card-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($card-schema, 'border-radius')),0 ,24px
-    );
-
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
     }
@@ -95,12 +90,16 @@
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($card-schema, 'resting-elevation');
-        $resting-shadow: igx-elevation($elevations, $resting-elevation);
+        $resting-shadow: elevation($elevations, $resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map.get($card-schema, 'hover-elevation');
-        $hover-shadow: igx-elevation($elevations, $hover-elevation);
+        $hover-shadow: elevation($elevations, $hover-elevation);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (
@@ -120,11 +119,11 @@
 
 /// Card Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires em
 /// @requires var-get
-@mixin igx-card($theme) {
-    @include igx-css-vars($theme);
+@mixin card($theme) {
+    @include css-vars($theme);
 
     $variant: map.get($theme, 'variant');
     $not-material-theme: $variant != 'material';
@@ -383,8 +382,8 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'h6', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-card-typography($type-scale, $categories: (
+/// @requires {mixin} type-style
+@mixin card-typography($type-scale, $categories: (
     title: 'h6',
     title-small: 'subtitle-2',
     subtitle: 'subtitle-2',
@@ -396,25 +395,25 @@
     $content: map.get($categories, 'content');
 
     %igx-card-header-title {
-        @include igx-type-style($type-scale, $title) {
+        @include type-style($type-scale, $title) {
             margin: 0;
         }
     }
 
     %igx-card-header-title--small {
-        @include igx-type-style($type-scale, $title-small) {
+        @include type-style($type-scale, $title-small) {
             margin: 0;
         }
     }
 
     %igx-card-header-subtitle {
-        @include igx-type-style($type-scale, $subtitle) {
+        @include type-style($type-scale, $subtitle) {
             margin: 0;
         }
     }
 
     %igx-card-content > p {
-        @include igx-type-style($type-scale, $content) {
+        @include type-style($type-scale, $content) {
             margin: 0;
         }
     }

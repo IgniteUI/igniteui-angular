@@ -22,10 +22,10 @@
 /// @requires extend
 ///
 /// @example scss Change the icon color
-///   $my-icon-theme: igx-icon-theme($color: orange);
-///   // Pass the theme to the igx-icon component mixin
-///   @include igx-icon($my-icon-theme);
-@function igx-icon-theme(
+///   $my-icon-theme: icon-theme($color: orange);
+///   // Pass the theme to the icon component mixin
+///   @include icon($my-icon-theme);
+@function icon-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -53,11 +53,12 @@
     ));
 }
 
+// stylelint-disable font-family-no-missing-generic-family-keyword
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-icon($theme) {
-    @include igx-css-vars($theme);
+@mixin icon($theme) {
+    @include css-vars($theme);
 
     $igx-icon-font-size: var-get($theme, 'size');
 
@@ -75,14 +76,19 @@
             height: inherit;
             fill: currentColor;
         }
+
+        &[igxPrefix].material-icons,
+        &[igxSuffix].material-icons {
+            font-family: 'Material Icons';
+        }
     }
 
     %igx-icon--success {
-        color: igx-color(map.get($theme, 'palette'), 'success');
+        color: color(map.get($theme, 'palette'), 'success');
     }
 
     %igx-icon--error {
-        color: igx-color(map.get($theme, 'palette'), 'error');
+        color: color(map.get($theme, 'palette'), 'error');
     }
 
     %igx-icon--inactive {

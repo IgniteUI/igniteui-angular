@@ -6,7 +6,7 @@
 
 /// Generates a light base sparkline schema.
 /// @type {Map}
-/// @prop {Color} brush [igx-color: ('primary', 500)] - Sets the sparkline brush.
+/// @prop {Color} brush [color: ('primary', 500)] - Sets the sparkline brush.
 /// @prop {Number} line-thickness [null] - Sets the line thickness of the sparkline.
 /// @prop {Color} marker-brush [null] - Sets the marker brush of the sparkline.
 /// @prop {Color} marker-size [null] - Sets the marker size of the sparkline.
@@ -29,7 +29,7 @@
 /// @see $default-palette
 $light-sparkline: (
     'brush': (
-        igx-color: ('primary', 500)
+        color: ('primary', 500)
     ),
     'line-thickness': null,
     'marker-brush': null,

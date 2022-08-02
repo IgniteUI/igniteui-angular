@@ -105,9 +105,10 @@ export class IgxTextSelectionDirective {
      * }
      * ```
      */
+
     public trigger() {
         if (this.selected && this.nativeElement.value.length) {
-            requestAnimationFrame(() => this.nativeElement.setSelectionRange(0, this.nativeElement.value.length));
+                this.nativeElement.select();
         }
     }
 }

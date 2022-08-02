@@ -30,10 +30,10 @@
 /// @requires extend
 /// @requires text-contrast
 /// @example scss Change the tree background
-///   $my-tree-theme: igx-tree-theme($background: magenta);
-///   // Pass the theme to the igx-tree component mixin
-///   @include igx-tree($my-tree-theme);
-@function igx-tree-theme(
+///   $my-tree-theme: tree-theme($background: magenta);
+///   // Pass the theme to the tree component mixin
+///   @include tree($my-tree-theme);
+@function tree-theme(
     $palette: null,
     $schema: $light-schema,
     $background: null,
@@ -95,10 +95,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-tree($theme) {
-    @include igx-css-vars($theme);
+@mixin tree($theme) {
+    @include css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -174,9 +174,9 @@
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
-            width: $icon-size;
-            height: $icon-size;
-            font-size: $icon-size;
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
         }
 
         &::after {
@@ -336,14 +336,14 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-tree-typography(
+/// @requires {mixin} type-style
+@mixin tree-typography(
     $type-scale,
     $categories: (label: 'body-2')
 ) {
     $text: map.get($categories, 'label');
 
     %node-content {
-        @include igx-type-style($type-scale, $text)
+        @include type-style($type-scale, $text)
     }
 }

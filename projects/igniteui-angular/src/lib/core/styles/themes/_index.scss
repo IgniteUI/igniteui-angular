@@ -17,31 +17,56 @@
 @forward '../components';
 
 /// Generates an Ignite UI for Angular global theme.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
-/// @param {Map} $elevations [$igx-elevations] - The elevation map to be used by all component themes.
+/// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 /// @requires $components
 /// @requires $theme-palette
-/// @requires $igx-elevations
+/// @requires $elevations
 /// @requires {function} is-component
-@mixin igx-theme(
+@mixin theme(
     $palette,
     $schema: $light-material-schema,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
-    $elevations: $igx-elevations,
+    $elevations: $elevations,
+    $wc: false
 ) {
     // Stores all excluded component styles
     $excluded: ();
+    $scope: if(is-root(), ':root', '&');
 
-    @include igx-palette-vars($palette, $contrast: true);
+    @include palette-vars($palette, $contrast: true);
+    @include elevation-vars($elevations);
 
-    @if $elevation {
-        @include igx-elevation-vars($elevations);
+    @if $wc {
+        @include palette-to-wc($palette);
+        @include elevations-to-wc($elevations);
+    }
+
+    @if $elevation == false {
+        #{$scope} {
+            --igx-elevation-factor: 0;
+
+            @if $wc {
+                --igc-elevation-factor: var(--igx-elevation-factor);
+            }
+        }
+    }
+
+    @if $roundness {
+        #{$scope} {
+            --igx-radius-factor: #{$roundness};
+
+            @if $wc {
+                --igc-radius-factor: var(--igx-radius-factor);
+            }
+        }
     }
 
     $theme-palette: $palette !global;
@@ -51,421 +76,368 @@
     }
 
     @if is-used('igx-ripple', $exclude) {
-        @include igx-ripple(igx-ripple-theme(
+        @include ripple(ripple-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-avatar', $exclude) {
-        @include igx-avatar(igx-avatar-theme(
+        @include avatar(avatar-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-action-strip', $exclude) {
-        @include igx-action-strip(igx-action-strip-theme(
+        @include action-strip(action-strip-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-badge', $exclude) {
-        @include igx-badge(igx-badge-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+        @include badge(badge-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-bottom-nav', $exclude) {
-        @include igx-bottom-nav(igx-bottom-nav-theme(
-            $schema: $schema,
-            $shadow: if($elevation == false, none, null),
+        @include bottom-nav(bottom-nav-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-button', $exclude) {
-        @include igx-button(igx-button-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
-            $focus-shadow: if($elevation == false, none, null),
+        @include button(button-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-button-group', $exclude) {
-        @include igx-button-group(igx-button-group-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, 'none', null),
+        @include button-group(button-group-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-banner', $exclude) {
-        @include igx-banner(igx-banner-theme(
-            $schema: $schema,
+        @include banner(banner-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-calendar', $exclude) {
-        @include igx-calendar(igx-calendar-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $date-border-radius: $roundness,
-            $month-border-radius: $roundness,
+        @include calendar(calendar-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-card', $exclude) {
-        @include igx-card(igx-card-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
+        @include card(card-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-carousel', $exclude) {
-        @include igx-carousel(igx-carousel-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $button-shadow: if($elevation == false, none, null),
+        @include carousel(carousel-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-splitter', $exclude) {
-        @include igx-splitter(igx-splitter-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include splitter(splitter-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('data-chart', $exclude) {
-        @include igx-css-vars(igx-data-chart-theme(
+        @include css-vars(data-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('doughnut-chart', $exclude) {
-        @include igx-css-vars(igx-doughnut-chart-theme(
+        @include css-vars(doughnut-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('linear-gauge', $exclude) {
-        @include igx-css-vars(igx-linear-gauge-theme(
+        @include css-vars(linear-gauge-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('radial-gauge', $exclude) {
-        @include igx-css-vars(igx-radial-gauge-theme(
+        @include css-vars(radial-gauge-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('financial-chart', $exclude) {
-        @include igx-css-vars(igx-financial-chart-theme(
+        @include css-vars(financial-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('bullet-graph', $exclude) {
-        @include igx-css-vars(igx-bullet-graph-theme(
+        @include css-vars(bullet-graph-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('category-chart', $exclude) {
-        @include igx-css-vars(igx-category-chart-theme(
+        @include css-vars(category-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('geo-map', $exclude) {
-        @include igx-css-vars(igx-geo-map-theme(
+        @include css-vars(geo-map-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('pie-chart', $exclude) {
-        @include igx-css-vars(igx-pie-chart-theme(
+        @include css-vars(pie-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('sparkline', $exclude) {
-        @include igx-css-vars(igx-sparkline-theme(
+        @include css-vars(sparkline-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('funnel-chart', $exclude) {
-        @include igx-css-vars(igx-funnel-chart-theme(
+        @include css-vars(funnel-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('shape-chart', $exclude) {
-        @include igx-css-vars(igx-shape-chart-theme(
+        @include css-vars(shape-chart-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('igx-checkbox', $exclude) {
-        @include igx-checkbox(igx-checkbox-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $border-radius-ripple: $roundness,
+        @include checkbox(checkbox-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-chip', $exclude) {
-        @include igx-chip(igx-chip-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $ghost-shadow: if($elevation == false, none, null),
+        @include chip(chip-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-column-actions', $exclude) {
-        @include igx-column-actions(igx-column-actions-theme(
+        @include column-actions(column-actions-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-combo', $exclude) {
-        @include igx-combo(igx-combo-theme(
+        @include combo(combo-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-date-picker', $exclude) {
-        @include igx-date-picker(igx-calendar-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include date-picker(calendar-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-date-range-picker', $exclude) {
-        @include igx-date-range-picker(igx-date-range-picker-theme(
+        @include date-range-picker(date-range-picker-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-dialog', $exclude) {
-        @include igx-dialog(igx-dialog-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+        @include dialog(dialog-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-divider', $exclude) {
-        @include igx-divider(igx-divider-theme(
+        @include divider(divider-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igc-dockmanager', $exclude) {
-        @include igc-dock-manager(igc-dock-manager-theme(
+        @include dock-manager(dock-manager-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-drop-down', $exclude) {
-        @include igx-drop-down(igx-drop-down-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+        @include drop-down(drop-down-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-expansion-panel', $exclude) {
-        @include igx-expansion-panel(igx-expansion-panel-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include expansion-panel(expansion-panel-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-grid', $exclude) {
-        @include igx-grid(igx-grid-theme(
-            $schema: $schema,
-            $drop-area-border-radius: $roundness,
-            $grid-shadow: if($elevation == false, none, null),
-            $drag-shadow: if($elevation == false, none, null),
+        @include grid(grid-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-grid-summary', $exclude) {
-        @include igx-grid-summary(igx-grid-summary-theme(
+        @include grid-summary(grid-summary-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-grid-toolbar', $exclude) {
-        @include igx-grid-toolbar(igx-grid-toolbar-theme(
+        @include grid-toolbar(grid-toolbar-theme(
+            $schema: $schema
+        ));
+    }
+
+    @if is-used('igx-pivot-data-selector', $exclude) {
+        @include pivot-data-selector(pivot-data-selector-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-highlight', $exclude) {
-        @include igx-highlight(igx-highlight-theme(
+        @include highlight(highlight-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-icon', $exclude) {
-        @include igx-icon(igx-icon-theme(
+        @include icon(icon-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-input-group', $exclude) {
-        @include igx-input-group(igx-input-group-theme(
-            $schema: $schema,
-            $box-border-radius: $roundness,
-            $border-border-radius: $roundness,
-            $search-border-radius: $roundness,
-            $search-resting-shadow: if($elevation == false, none, null),
-            $search-hover-shadow: if($elevation == false, none, null),
-            $search-disabled-shadow: if($elevation == false, none, null),
+        @include input-group(input-group-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-list', $exclude) {
-        @include igx-list(igx-list-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $item-border-radius: $roundness,
+        @include list(list-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-navbar', $exclude) {
-        @include igx-navbar(igx-navbar-theme(
-            $schema: $schema,
-            $shadow: if($elevation == false, none, null),
+        @include navbar(navbar-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-nav-drawer', $exclude) {
-        @include igx-navdrawer(igx-navdrawer-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $item-border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+        @include navdrawer(navdrawer-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-overlay', $exclude) {
-        @include igx-overlay(igx-overlay-theme(
+        @include overlay(overlay-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-paginator', $exclude) {
-        @include igx-paginator(igx-paginator-theme(
+        @include paginator(paginator-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-circular-bar', $exclude) {
-        @include igx-progress-circular(igx-progress-circular-theme(
+        @include progress-circular(progress-circular-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-linear-bar', $exclude) {
-        @include igx-progress-linear(igx-progress-linear-theme(
+        @include progress-linear(progress-linear-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-radio', $exclude) {
-        @include igx-radio(igx-radio-theme(
+        @include radio(radio-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-scrollbar', $exclude) {
-        @include igx-scrollbar(igx-scrollbar-theme(
+        @include scrollbar(scrollbar-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-slider', $exclude) {
-        @include igx-slider(igx-slider-theme(
+        @include slider(slider-theme(
             $schema: $schema
         ));
     }
 
     @if is-used('igx-snackbar', $exclude) {
-        @include igx-snackbar(igx-snackbar-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
-            $shadow: if($elevation == false, none, null),
+        @include snackbar(snackbar-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-switch', $exclude) {
-        @include igx-switch(igx-switch-theme(
+        @include switch(switch-theme(
             $schema: $schema,
-            $border-radius-track: $roundness,
-            $border-radius-thumb: $roundness,
-            $border-radius-ripple: $roundness,
-            $resting-shadow: if($elevation == false, none, null),
-            $hover-shadow: if($elevation == false, none, null),
-            $disabled-shadow: if($elevation == false, none, null),
         ));
     }
 
     @if is-used('igx-tabs', $exclude) {
-        @include igx-tabs(igx-tabs-theme(
-            $schema: $schema,
-            $disable-shadow: if($elevation == false, true, false),
+        @include tabs(tabs-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-stepper', $exclude) {
-        @include igx-stepper(igx-stepper-theme(
+        @include stepper(stepper-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('igx-toast', $exclude) {
-        @include igx-toast(igx-toast-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include toast(toast-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-tooltip', $exclude) {
-        @include igx-tooltip(igx-tooltip-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include tooltip(tooltip-theme(
+            $schema: $schema
         ));
     }
 
     @if is-used('igx-time-picker', $exclude) {
-        @include igx-time-picker(igx-time-picker-theme(
+        @include time-picker(time-picker-theme(
             $schema: $schema,
-            $border-radius: $roundness,
-            $active-item-border-radius: $roundness,
-            $modal-shadow: if($elevation == false, none, null),
-            $dropdown-shadow: if($elevation == false, none, null),
         ));
     }
 
     @if is-used('igx-tree', $exclude) {
-        @include igx-tree(igx-tree-theme(
+        @include tree(tree-theme(
             $schema: $schema,
         ));
     }
 
     @if is-used('igx-watermark', $exclude) {
-        @include igx-watermark(igx-watermark-theme(
-            $schema: $schema,
-            $border-radius: $roundness,
+        @include watermark(watermark-theme(
+            $schema: $schema
         ));
     }
 
@@ -475,29 +447,31 @@
 }
 
 /// Creates a global material theme that can be used with light backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-light-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $grays: igx-color($palette, 'grays');
-    $surface: igx-color($palette, 'surface');
+    $grays: color($palette, 'grays');
+    $surface: color($palette, 'surface');
 
-    $light-palette: igx-palette(
-        $primary: igx-color($palette, 'primary'),
-        $secondary: igx-color($palette, 'secondary'),
-        $info: igx-color($palette, 'info'),
-        $success: igx-color($palette, 'success'),
-        $warn: igx-color($palette, 'warn'),
-        $error: igx-color($palette, 'error'),
+    $light-palette: palette(
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #fff),
         $grays: if($grays != #9e9e9e, $grays, #000),
     );
 
-    @include igx-theme(
+    @include theme(
         $palette: $light-palette,
         $schema: $light-schema,
         $exclude: $exclude,
@@ -507,29 +481,31 @@
 }
 
 /// Creates a global material theme that can be used with dark backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-dark-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $grays: igx-color($palette, 'grays');
-    $surface: igx-color($palette, 'surface');
+    $grays: color($palette, 'grays');
+    $surface: color($palette, 'surface');
 
-    $dark-palette: igx-palette(
-        $primary: igx-color($palette, 'primary'),
-        $secondary: igx-color($palette, 'secondary'),
-        $info: igx-color($palette, 'info'),
-        $success: igx-color($palette, 'success'),
-        $warn: igx-color($palette, 'warn'),
-        $error: igx-color($palette, 'error'),
+    $dark-palette: palette(
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #222),
         $grays: if($grays != #9e9e9e, $grays, #fff),
     );
 
-    @include igx-theme(
+    @include theme(
         $palette: $dark-palette,
         $schema: $dark-schema,
         $exclude: $exclude,
@@ -539,20 +515,22 @@
 }
 
 /// Creates a global fluent theme that can be used with light backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-fluent-light-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin fluent-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
@@ -566,20 +544,22 @@
 }
 
 /// Creates a global fluent theme that can be used with dark backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-fluent-dark-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin fluent-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #222),
@@ -594,20 +574,22 @@
 
 
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-bootstrap-light-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
@@ -621,20 +603,22 @@
 }
 
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-bootstrap-dark-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #222),
@@ -648,20 +632,22 @@
 }
 
 /// Creates a global indigo theme that can be used with light backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-indigo-light-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin indigo-light-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
@@ -675,20 +661,22 @@
 }
 
 /// Creates a global indigo theme that can be used with dark backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-@mixin igx-indigo-dark-theme(
+/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+@mixin indigo-dark-theme(
     $palette,
     $exclude: (),
-    $roundness: null,
+    $roundness: 1,
     $elevation: true,
+    $wc: false,
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
-    @include igx-theme(
-        $palette: igx-palette(
+    @include theme(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #2a2b2f),

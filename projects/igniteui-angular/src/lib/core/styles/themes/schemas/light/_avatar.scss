@@ -1,5 +1,4 @@
 @use '../../../base' as *;
-@use '../shape/avatar' as *;
 
 ////
 /// @group schemas
@@ -9,23 +8,25 @@
 
 /// Generates a light avatar schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 400)]- The background color of the avatar.
-/// @prop {Map} color [igx-color: ('grays', 800)] - The text/icon color of the avatar.
+/// @prop {Map} background [color: ('grays', 400, .54)]- The background color of the avatar.
+/// @prop {Map} color [color: ('grays', 800, .96)] - The text/icon color of the avatar.
 /// @prop {Number} border-radius [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} size - The size of the avatar.
 /// @requires {function} extend
-/// @requires {Map} $_square-shape-avatar
 /// @see $default-palette
 $light-avatar: extend(
-    $square-shape-avatar,
     (
+        variant: 'material',
+
         background: (
-            igx-color: ('grays', 400, .54)
+            color: ('grays', 400, .54)
         ),
 
         color: (
-            igx-color: ('grays', 800, .96)
+            color: ('grays', 800, .96)
         ),
+
+        border-radius: rem(0)
     )
 );
 
@@ -42,15 +43,25 @@ $fluent-avatar: extend(
 
 /// Generates a bootstrap avatar schema.
 /// @type {Map}
-/// @prop {Number} border-radius [.25] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} background [color: ('grays', 400)]- The background color of the avatar.
+/// @prop {Map} color [contrast-color: ('grays', 400)] - The text/icon color of the avatar.
+/// @prop {Number} border-radius [4px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-avatar
-/// @requires {Map} $_bootstrap-shape-avatar
 $bootstrap-avatar: extend(
     $light-avatar,
-    $bootstrap-shape-avatar,
     (
         variant: 'bootstrap',
+
+        background: (
+            color: ('grays', 400)
+        ),
+
+        color: (
+            contrast-color: ('grays', 400)
+        ),
+
+        border-radius: rem(4px)
     )
 );
 

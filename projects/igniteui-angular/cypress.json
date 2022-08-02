@@ -1,0 +1,9 @@
+{
+  "integrationFolder": "projects/igniteui-angular/cypress/integration",
+  "supportFile": "projects/igniteui-angular/cypress/support/index.ts",
+  "videosFolder": "projects/igniteui-angular/cypress/videos",
+  "screenshotsFolder": "projects/igniteui-angular/cypress/screenshots",
+  "pluginsFile": "projects/igniteui-angular/cypress/plugins/index.ts",
+  "fixturesFolder": "projects/igniteui-angular/cypress/fixtures",
+  "baseUrl": "http://localhost:4200"
+}

@@ -1,6 +1,6 @@
-@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
-@import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-component';
-@import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme';
+@use '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities' as *;
+@use '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-component' as *;
+@use '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme' as *;
 
 igx-chip {
     margin: rem(4px);
@@ -38,7 +38,7 @@ igx-chip {
     display: flex;
     align-items: center;
     max-width: 640px;
-    border-bottom: 1px solid igx-color($default-palette, 'grays', 400);
+    border-bottom: 1px solid color($default-palette, 'grays', 400);
     min-height: 48px;
     flex-wrap: wrap;
 }
@@ -51,7 +51,7 @@ igx-chip {
     visibility: hidden;
 
     &.dragOver {
-        color: igx-color($default-palette, 'grays', 700);
-        background-color: igx-color($default-palette, 'grays', 200);
+        color: color($default-palette, 'grays', 700);
+        background-color: color($default-palette, 'grays', 200);
     }
 }

@@ -17,7 +17,7 @@
 /// @param {Number|String} $letter-spacing [null] - The letter spacing of the type style.
 /// @param {String} $text-transform [null] - The text-transform property of the type style.
 /// @returns {Map} - A map of all defined type style properties.
-@function igx-type-style(
+@function type-style(
     $font-family: null,
     $font-size: null,
     $font-weight: null,
@@ -56,22 +56,22 @@
 /// - caption
 /// - overline
 /// @access public
-/// @param {Map} $h1 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h1 elements and elements with `igx-font-h1` class.
-/// @param {Map} $h2 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h2 elements and elements with `igx-font-h2` class.
-/// @param {Map} $h3 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h3 elements and elements with `igx-font-h3` class.
-/// @param {Map} $h4 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h4 elements and elements with `igx-font-h4` class.
-/// @param {Map} $h5 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h5 elements and elements with `igx-font-h5` class.
-/// @param {Map} $h6 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h6 elements and elements with `igx-font-h6` class.
-/// @param {Map} $subtitle-1 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-subtitle-1` class.
-/// @param {Map} $subtitle-2 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-subtitle-2` class.
-/// @param {Map} $body-1 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-body-1` class.
-/// @param {Map} $body-2 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-body-2` class.
-/// @param {Map} $button [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-button` class.
-/// @param {Map} $caption [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-caption` class.
-/// @param {Map} $overline [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-overline` class.
-/// @requires igx-type-style
+/// @param {Map} $h1 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h1 elements and elements with `igx-font-h1` class.
+/// @param {Map} $h2 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h2 elements and elements with `igx-font-h2` class.
+/// @param {Map} $h3 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h3 elements and elements with `igx-font-h3` class.
+/// @param {Map} $h4 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h4 elements and elements with `igx-font-h4` class.
+/// @param {Map} $h5 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h5 elements and elements with `igx-font-h5` class.
+/// @param {Map} $h6 [null] - A map containing type style properties as produced by the type-style function. This type scale styles h6 elements and elements with `igx-font-h6` class.
+/// @param {Map} $subtitle-1 [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-subtitle-1` class.
+/// @param {Map} $subtitle-2 [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-subtitle-2` class.
+/// @param {Map} $body-1 [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-body-1` class.
+/// @param {Map} $body-2 [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-body-2` class.
+/// @param {Map} $button [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-button` class.
+/// @param {Map} $caption [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-caption` class.
+/// @param {Map} $overline [null] - A map containing type style properties as produces by the type-style function. This type scale styles elements with `igx-font-overline` class.
+/// @requires type-style
 /// @returns {Map} - A map of all defined type scales.
-@function igx-type-scale(
+@function type-scale(
     $h1: (),
     $h2: (),
     $h3: (),
@@ -89,7 +89,8 @@
 ) {
     $default-scale: (
         _meta: (variant: 'material'),
-        h1: igx-type-style(
+        h1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(96px),
             $font-weight: 300,
             $font-style: normal,
@@ -99,7 +100,8 @@
             $margin-top: rem(28px),
             $margin-bottom: rem(56px)
         ),
-        h2: igx-type-style(
+        h2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(60px),
             $font-weight: 300,
             $font-style: normal,
@@ -109,7 +111,8 @@
             $margin-top: rem(28px),
             $margin-bottom: rem(28px)
         ),
-        h3: igx-type-style(
+        h3: type-style(
+            $font-family: css-font-var,
             $font-size: rem(48px),
             $font-weight: 400,
             $font-style: normal,
@@ -119,7 +122,8 @@
             $margin-top: rem(28px),
             $margin-bottom: 0
         ),
-        h4: igx-type-style(
+        h4: type-style(
+            $font-family: css-font-var,
             $font-size: rem(34px),
             $font-weight: 400,
             $font-style: normal,
@@ -129,7 +133,8 @@
             $margin-top: rem(28px),
             $margin-bottom: 0
         ),
-        h5: igx-type-style(
+        h5: type-style(
+            $font-family: css-font-var,
             $font-size: rem(24px),
             $font-weight: 400,
             $font-style: normal,
@@ -139,7 +144,8 @@
             $margin-top: rem(28px),
             $margin-bottom: 0
         ),
-        h6: igx-type-style(
+        h6: type-style(
+            $font-family: css-font-var,
             $font-size: rem(20px),
             $font-weight: 600,
             $font-style: normal,
@@ -149,7 +155,8 @@
             $margin-top: 0,
             $margin-bottom: 0
         ),
-        subtitle-1: igx-type-style(
+        subtitle-1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(16px),
             $font-weight: 400,
             $font-style: normal,
@@ -157,7 +164,8 @@
             $line-height: rem(24px),
             $text-transform: none
         ),
-        subtitle-2: igx-type-style(
+        subtitle-2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 600,
             $font-style: normal,
@@ -165,7 +173,8 @@
             $line-height: rem(24px),
             $text-transform: none
         ),
-        body-1: igx-type-style(
+        body-1: type-style(
+            $font-family: css-font-var,
             $font-size: rem(16px),
             $font-weight: 400,
             $font-style: normal,
@@ -175,7 +184,8 @@
             $margin-top: rem(28px),
             $margin-bottom: rem(16)
         ),
-        body-2: igx-type-style(
+        body-2: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 400,
             $font-style: normal,
@@ -183,7 +193,8 @@
             $line-height: rem(20px),
             $text-transform: none
         ),
-        button: igx-type-style(
+        button: type-style(
+            $font-family: css-font-var,
             $font-size: rem(14px),
             $font-weight: 600,
             $font-style: normal,
@@ -191,7 +202,8 @@
             $line-height: rem(16px),
             $text-transform: uppercase
         ),
-        caption: igx-type-style(
+        caption: type-style(
+            $font-family: css-font-var,
             $font-size: rem(12px),
             $font-weight: 400,
             $font-style: normal,
@@ -199,7 +211,8 @@
             $line-height: rem(16px),
             $text-transform: none
         ),
-        overline: igx-type-style(
+        overline: type-style(
+            $font-family: css-font-var,
             $font-size: rem(10px),
             $font-weight: 400,
             $font-style: normal,
@@ -228,41 +241,41 @@
 }
 
 /// Get type scale category config.
-/// @param {Map} $scale - A type scale map reference as produces by igx-type-scale.
+/// @param {Map} $scale - A type scale map reference as produces by type-scale.
 /// @param {String} $category - The scale category you want config for. For instance - 'h1';
 /// @example scss Get the type scale category config for the `h1` scale.
-///   $h1-type-scale: igx-type-scale-category($default-type-scale, 'h1');
+///   $h1-type-scale: type-scale-category($default-type-scale, 'h1');
 /// @returns {Map} - The config map for the selected category in the type scale.
-@function igx-type-scale-category($scale, $category) {
+@function type-scale-category($scale, $category) {
     @return map.get($scale, $category);
 }
 
 /// Assigns type scale category config properties
 /// as style rules wherever this mixin is included.
-/// @param {Map} $scale - A type scale map reference as produces by igx-type-scale.
+/// @param {Map} $scale - A type scale map reference as produces by type-scale.
 /// @param {String} $category - The type scale category config you want to use as CSS style rules.
 /// @example scss Add the `h1` styles to custom CSS selector.
 ///   .fancy-h1 {
-///      @include igx-type-style($default-type-scale, 'h1');
+///      @include type-style($default-type-scale, 'h1');
 ///      font-family: 'GT Walsheim';
 ///      color: mediumvioletred;
 ///   }
-@mixin igx-type-style($scale, $category) {
+@mixin type-style($scale, $category) {
     $type-category: map.get($scale, $category);
     @each $key, $value in $type-category {
-        #{$key}: #{$value};
+        #{$key}: var(--igx-#{$category}-#{$key});
     }
     @content;
 }
 
 /// Transforms a type style map into a font style rule assigned to a css variable.
 /// @param {String} $name - The custom CSS variable name.
-/// @param {Map} $type-style - A type style map reference as produces by igx-type-style.
+/// @param {Map} $type-style - A type style map reference as produces by type-style.
 /// @param {String} $prefix [null] - Optional prefix.
 /// @example scss Assign the `h1` styles to custom CSS property using the CSS font shorthand syntax.
-///   $h1-style: igx-type-scale-category($type-scale, 'h1');
-///   @include igx-font-var('h1-font', $h1-style);
-@mixin igx-font-var($name, $type-style, $prefix: null) {
+///   $h1-style: type-scale-category($type-scale, 'h1');
+///   @include font-var('h1-font', $h1-style);
+@mixin font-var($name, $type-style, $prefix: null) {
     $fs: map.get($type-style, 'font-style');
     $fz: map.get($type-style, 'font-size');
     $fw: map.get($type-style, 'font-weight');
@@ -274,7 +287,7 @@
     $mt: map.get($type-style, 'margin-top');
     $mb: map.get($type-style, 'margin-bottom');
 
-    @include igx-css-vars((
+    @include css-vars((
         'name': $prefix,
         #{$name}: #{$fs $fw $fz}/#{$lh} inherit,
     ));

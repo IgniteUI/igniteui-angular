@@ -58,7 +58,7 @@
         | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (chunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template
                 [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) ? child_record_template : hierarchical_record_template))'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (viewCreated)='viewCreatedHandler($event)'
@@ -68,15 +68,15 @@
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:data:rowIndex:pipeTrigger" #row>
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
         <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData"
-                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:pipeTrigger"
-                [ngStyle]="rowStyles | igxGridRowStyles:data:rowIndex:pipeTrigger" #row #pinnedRow>
+                [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:false:rowData:pipeTrigger"
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>

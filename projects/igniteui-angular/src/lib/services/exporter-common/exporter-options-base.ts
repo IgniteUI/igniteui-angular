@@ -78,6 +78,17 @@ export abstract class IgxExporterOptionsBase {
      */
      public freezeHeaders = false;
 
+    /**
+     * Specifies whether the headers should be exported if there is no data.
+     * ```typescript
+     * let alwaysExportHeaders = this.exportOptions.alwaysExportHeaders;
+     * this.exportOptions.alwaysExportHeaders = false;
+     * ```
+     *
+     * @memberof IgxExporterOptionsBase
+     */
+     public alwaysExportHeaders = true;
+
     private _fileName: string;
 
     constructor(fileName: string, protected _fileExtension: string) {

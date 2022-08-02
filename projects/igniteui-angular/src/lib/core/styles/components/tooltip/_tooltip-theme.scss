@@ -24,13 +24,12 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the tooltip background
-///   $my-tooltip-theme: igx-tooltip-theme($background: magenta);
-///   // Pass the theme to the igx-tooltip component mixin
-///   @include igx-tooltip($my-checkbox-theme);
-@function igx-tooltip-theme(
+///   $my-tooltip-theme: tooltip-theme($background: magenta);
+///   // Pass the theme to the tooltip component mixin
+///   @include tooltip($my-checkbox-theme);
+@function tooltip-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -51,12 +50,12 @@
 
     $theme: apply-palette($tooltip-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($tooltip-schema, 'border-radius')), 0, 16px
-    );
-
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
+    }
+
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
     @return extend($theme, (
@@ -70,10 +69,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires var-get
-@mixin igx-tooltip($theme) {
-    @include igx-css-vars($theme);
+@mixin tooltip($theme) {
+    @include css-vars($theme);
 
     %tooltip-display {
         display: inline-flex;
@@ -106,8 +105,8 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires rem
-/// @requires {mixin} igx-type-style
-@mixin igx-tooltip-typography(
+/// @requires {mixin} type-style
+@mixin tooltip-typography(
     $type-scale,
     $categories: (text-desktop: null, text-mobile: 'body-2')
 ) {
@@ -115,12 +114,12 @@
     $text-mobile: map.get($categories, 'text-mobile');
 
     %tooltip--mobile {
-        @include igx-type-style($type-scale, $text-mobile);
+        @include type-style($type-scale, $text-mobile);
     }
 
     @if $text-desktop != null {
         %tooltip--desktop {
-            @include igx-type-style($type-scale, $text-desktop);
+            @include type-style($type-scale, $text-desktop);
         }
     } @else {
         %tooltip--desktop {

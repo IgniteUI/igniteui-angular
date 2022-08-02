@@ -19,20 +19,18 @@ import {
     ViewRef
 } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
+import { PlatformUtil, formatDate, formatCurrency } from '../../../core/utils';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
-import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
+import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
 import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { SortingDirection } from '../../../data-operations/sorting-strategy';
-
 
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
@@ -188,7 +186,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public uniqueValues = [];
+    public uniqueValues: IgxFilterItem[] = [];
     /**
      * @hidden @internal
      */
@@ -197,6 +195,10 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      * @hidden @internal
      */
     public overlayComponentId: string;
+    /**
+     * @hidden @internal
+     */
+    public isHierarchical = false;
 
     private _minHeight;
 
@@ -420,32 +422,10 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return selectableExpressionsCount === this.expressionsList.length;
     }
 
-    private areExpressionsValuesInTheList() {
-        if (this.column.dataType === GridColumnDataType.Boolean) {
-            return true;
-        }
-
-        if (this.filterValues.size === 1) {
-            const firstValue = this.filterValues.values().next().value;
-
-            if (!firstValue && firstValue !== 0) {
-                return true;
-            }
-        }
-
-        for (const expression of this.uniqueValues) {
-            const value = this.getExpressionValue(expression);
-            if (this.filterValues.has(value)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private populateColumnData() {
+        this.cdr.detectChanges();
+
         if (this.grid.uniqueColumnValuesStrategy) {
-            this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
         } else {
             this.renderColumnValuesFromData();
@@ -457,118 +437,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
 
         const prevColumn = this.column;
-        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (values: any[]) => {
             if (!this.column || this.column !== prevColumn) {
                 return;
             }
 
-            const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-                colVals.map(value => {
-                    const label = this.getFilterItemLabel(value);
-                    return { label, value };
-                }) : colVals;
+            const items = values.map(v => ({
+                value: v
+            }));
 
-            this.renderValues(columnValues);
-            this.loadingEnd.emit();
-        });
-    }
-
-    private shouldFormatValues() {
-        return this.column.formatter &&
-            (this.grid.filterStrategy instanceof FormattedValuesFilteringStrategy ||
-                this.grid.filterStrategy instanceof TreeGridFormattedValuesFilteringStrategy) &&
-            this.grid.filterStrategy.shouldApplyFormatter(this.column.field);
-    }
-
-    private renderColumnValuesFromData() {
-        const expressionsTree = this.getColumnFilterExpressionsTree();
-        // TODO: Check why we access the API service through the column ??
-        // const data = this.column.gridAPI.filterDataByExpressions(expressionsTree);
-        const data = this.grid.gridAPI.filterDataByExpressions(expressionsTree);
-
-        const shouldFormatValues = this.shouldFormatValues();
-        const columnField = this.column.field;
-        const columnValues = (this.column.dataType === GridColumnDataType.Date) ?
-            data.map(record => {
-                const value = (resolveNestedPath(record, columnField));
-                const label = this.getFilterItemLabel(value, true, record);
-                return { label, value };
-            }) : data.map(record => {
-                const value = resolveNestedPath(record, columnField);
-                return shouldFormatValues ? this.column.formatter(value, record) : value;
-            });
-
-        this.renderValues(columnValues);
-    }
-
-    private renderValues(columnValues: any[]) {
-        this.generateUniqueValues(columnValues);
-        this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
-        this.generateListData();
-    }
-
-    private generateUniqueValues(columnValues: any[]) {
-        if (this.column.dataType === GridColumnDataType.String && this.column.filteringIgnoreCase) {
-            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
-                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]), new Map());
-            this.uniqueValues = Array.from(filteredUniqueValues.values());
-        } else if (this.column.dataType === GridColumnDataType.DateTime) {
-            this.uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
-            this.uniqueValues.forEach((d, i) => this.uniqueValues[i] = d ? new Date(d) : d);
-        } else if (this.column.dataType === GridColumnDataType.Time) {
-            this.uniqueValues = Array.from(new Set(columnValues.map(v => {
-                if (v) {
-                    v = new Date(v);
-                    return new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds());
-                } else {
-                    return v;
-                }
-            })));
-            this.uniqueValues.forEach((d, i) => this.uniqueValues[i] = d ? new Date(d) : d);
-        } else {
-            this.uniqueValues = this.column.dataType === GridColumnDataType.Date ?
-                uniqueDates(columnValues) : Array.from(new Set(columnValues));
-        }
-    }
-
-    private generateFilterValues(isDateColumn: boolean = false) {
-        if (isDateColumn) {
-            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        new Date(v).toISOString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal]];
-            }, []));
-        } else if (this.column.dataType === GridColumnDataType.Time) {
-            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        typeof v === 'string' ? v : new Date(v).toLocaleTimeString())];
-                }
-                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal]];
-            }, []));
-        } else {
-            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-                if (e.expression.condition.name === 'in') {
-                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values())];
-                }
-                return [...arr, ...[e.expression.searchVal]];
-            }, []));
-        }
-    }
-
-    private generateListData() {
-        this.listData = new Array<FilterListItem>();
-        const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
-
-        if (this.column.dataType === GridColumnDataType.Boolean) {
-            this.addBooleanItems();
-        } else {
-            this.addItems(shouldUpdateSelection);
-        }
-
-        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            this.uniqueValues = this.column.sortStrategy.sort(items, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
             (obj, key) => {
                 let resolvedValue = obj[key];
                 if (this.column.dataType === GridColumnDataType.Time) {
@@ -582,8 +460,74 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                 return resolvedValue;
             });
 
-        if (this.containsNullOrEmpty) {
-            this.addBlanksItem(shouldUpdateSelection);
+            this.renderValues();
+            this.loadingEnd.emit();
+        });
+    }
+
+    private renderColumnValuesFromData() {
+        this.loadingStart.emit();
+
+        const expressionsTree = this.getColumnFilterExpressionsTree();
+        const promise = this.grid.filterStrategy.getFilterItems(this.column, expressionsTree);
+        promise.then((items) => {
+            this.isHierarchical = items.length > 0 && items.some(i => i.children && i.children.length > 0);
+            this.uniqueValues = items;
+            this.renderValues();
+            this.loadingEnd.emit();
+            this.sortingChanged.emit();
+        });
+    }
+
+    private renderValues() {
+        this.filterValues = this.generateFilterValues(this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime);
+        this.generateListData();
+    }
+
+    private generateFilterValues(isDateColumn: boolean = false) {
+        let filterValues;
+
+        if (isDateColumn) {
+            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
+                        new Date(v).toISOString())];
+                }
+                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal]];
+            }, []));
+        } else if (this.column.dataType === GridColumnDataType.Time) {
+            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
+                        typeof v === 'string' ? v : new Date(v).toLocaleTimeString())];
+                }
+                return [...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal]];
+            }, []));
+        } else {
+            filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [...arr, ...Array.from((e.expression.searchVal as Set<any>).values())];
+                }
+                return [...arr, ...[e.expression.searchVal]];
+            }, []));
+        }
+
+        return filterValues;
+    }
+
+    private generateListData() {
+        this.listData = new Array<FilterListItem>();
+        const shouldUpdateSelection = this.areExpressionsSelectable();
+
+        if (this.column.dataType === GridColumnDataType.Boolean) {
+            this.addBooleanItems();
+        } else {
+            this.addItems(shouldUpdateSelection);
+        }
+
+        if (!this.isHierarchical && this.containsNullOrEmpty) {
+            const blanksItem = this.generateBlanksItem(shouldUpdateSelection);
+            this.listData.unshift(blanksItem);
         }
 
         if (this.listData.length > 0) {
@@ -605,7 +549,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             if (operand instanceof FilteringExpressionsTree) {
                 const columnExprTree = operand as FilteringExpressionsTree;
                 if (columnExprTree.fieldName === this.column.field) {
-                    break;
+                    continue;
                 }
             }
             expressionsTree.filteringOperands.push(operand);
@@ -618,14 +562,15 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
         this.uniqueValues.forEach(element => {
+            const value = element.value;
             const filterListItem = new FilterListItem();
-            if (element !== undefined && element !== null && element !== '') {
+            if (value !== undefined && value !== null && value !== '') {
                 if (this.column.filteringExpressionsTree) {
-                    if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true')) {
+                    if (value === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
-                    } else if (element === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false')) {
+                    } else if (value === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
@@ -637,8 +582,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     filterListItem.isSelected = true;
                     filterListItem.isFiltered = true;
                 }
-                filterListItem.value = element;
-                filterListItem.label = element ?
+                filterListItem.value = value;
+                filterListItem.label = value ?
                     this.grid.resourceStrings.igx_grid_filter_true :
                     this.grid.resourceStrings.igx_grid_filter_false;
                 filterListItem.indeterminate = false;
@@ -651,17 +596,26 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
-        this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
-        const applyFormatter = !this.shouldFormatValues();
+        this.containsNullOrEmpty = false;
+        this.listData = this.generateFilterListItems(this.uniqueValues, shouldUpdateSelection);
+        this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
+    }
 
-        this.uniqueValues.forEach(element => {
-            const hasValue = (element !== undefined && element !== null && element !== ''
-                && this.column.dataType !== GridColumnDataType.Date)
-                || !!(element && element.label);
+    private generateFilterListItems(values: IgxFilterItem[], shouldUpdateSelection: boolean, parent?: FilterListItem) {
+        let filterListItems = [];
+        values?.forEach(element => {
+            const value = element.value;
+            const hasValue = value !== undefined && value !== null && value !== '';
 
             if (hasValue) {
                 const filterListItem = new FilterListItem();
+                filterListItem.parent = parent;
+                filterListItem.value = value;
+                filterListItem.label = element.label !== undefined ?
+                    element.label :
+                    this.getFilterItemLabel(value);
+                filterListItem.indeterminate = false;
                 filterListItem.isSelected = true;
                 filterListItem.isFiltered = true;
 
@@ -670,8 +624,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                     filterListItem.isFiltered = false;
 
                     if (shouldUpdateSelection) {
-                        const value = this.getExpressionValue(element);
-                        if (this.filterValues.has(value)) {
+                        const exprValue = this.getExpressionValue(value);
+                        if (this.filterValues.has(exprValue)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
                         }
@@ -680,13 +634,13 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
                         this.selectAllSelected = false;
                     }
                 }
-                filterListItem.value = this.getFilterItemValue(element);
-                filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
-                filterListItem.indeterminate = false;
-                this.listData.push(filterListItem);
+
+                filterListItem.children = this.generateFilterListItems(element.children ?? element.value?.children, shouldUpdateSelection, filterListItem);
+                filterListItems.push(filterListItem);
             }
         });
-        this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
+
+        return filterListItems;
     }
 
     private addSelectAllItem() {
@@ -700,7 +654,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.listData.unshift(selectAll);
     }
 
-    private addBlanksItem(shouldUpdateSelection) {
+    private generateBlanksItem(shouldUpdateSelection) {
         const blanks = new FilterListItem();
         if (this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {
@@ -721,19 +675,16 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         blanks.indeterminate = false;
         blanks.isSpecial = true;
         blanks.isBlanks = true;
-        this.listData.unshift(blanks);
+
+        return blanks;
     }
 
-    private getFilterItemLabel(element: any, applyFormatter: boolean = true, data?: any) {
-        if (element?.label) {
-            return element.label;
-        }
-
+    private getFilterItemLabel(value: any, applyFormatter: boolean = true, data?: any) {
         if (this.column.formatter) {
             if (applyFormatter) {
-                return this.column.formatter(element, data);
+                return this.column.formatter(value, data);
             }
-            return element;
+            return value;
         }
 
         const { display, format, digitsInfo, currencyCode, timezone } = this.column.pipeArgs;
@@ -743,36 +694,27 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             case GridColumnDataType.Date:
             case GridColumnDataType.DateTime:
             case GridColumnDataType.Time:
-                return formatDate(element, format, locale, timezone);
+                return formatDate(value, format, locale, timezone);
             case GridColumnDataType.Currency:
-                return formatCurrency(element, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+                return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
             case GridColumnDataType.Number:
-                return formatNumber(element, locale, digitsInfo);
+                return formatNumber(value, locale, digitsInfo);
             case GridColumnDataType.Percent:
-                return formatPercent(element, locale, digitsInfo);
+                return formatPercent(value, locale, digitsInfo);
             default:
-                return element;
+                return value;
         }
     }
 
-    private getFilterItemValue(element: any) {
+    private getExpressionValue(value: any): string {
         if (this.column.dataType === GridColumnDataType.Date) {
-            element = parseDate(element.value);
-        }
-        return element;
-    }
-
-    private getExpressionValue(element: any): string {
-        let value;
-        if (this.column.dataType === GridColumnDataType.Date) {
-            value = element && element.value ? new Date(element.value).toISOString() : element.value;
+            value = value ? new Date(value).toISOString() : value;
         } else if (this.column.dataType === GridColumnDataType.DateTime) {
-            value = element ? new Date(element).toISOString() : element;
+            value = value ? new Date(value).toISOString() : value;
         } else if (this.column.dataType === GridColumnDataType.Time) {
-            value = element ? new Date(element).toLocaleTimeString() : element;
-        } else {
-            value = element;
+            value = value ? new Date(value).toLocaleTimeString() : value;
         }
+
         return value;
     }
 }

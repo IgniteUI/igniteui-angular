@@ -170,6 +170,32 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(displayContainer.style.left, 10)).toEqual(0);
         });
+
+        it('should allow scroll in rtl direction.', () => {
+            fix.debugElement.nativeElement.dir = 'rtl';
+            fix.detectChanges();
+
+            fix.componentInstance.width = '500px';
+            fix.componentInstance.cols = [
+                { field: '1', width: 100 },
+                { field: '2', width: 200 },
+                { field: '3', width: 200 },
+                { field: '4', width: 200 },
+                { field: '5', width: 300 }
+            ];
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+            fix.componentInstance.scrollLeft(-50);
+            fix.detectChanges();
+            expect(parseInt(displayContainer.style.left, 10)).toEqual(50);
+
+            fix.componentInstance.scrollLeft(-250);
+            fix.detectChanges();
+            const state = fix.componentInstance.childVirtDirs.toArray()[0].state;
+            expect(state.startIndex).toBe(1);
+        });
+
     });
 
     describe('vertical virtual component', () => {
@@ -262,29 +288,6 @@ describe('IgxForOf directive -', () => {
             expect(errorMessage).toBe('');
         });
 
-        it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', () => {
-            fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
-            expect(() => {
-                fix.detectChanges();
-            }).not.toThrow();
-            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
-            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
-            expect(displayContainer).not.toBeNull();
-            expect(verticalScroller).not.toBeNull();
-
-            fix.componentInstance.height = '400px';
-            fix.detectChanges();
-            fix.componentInstance.height = '500px';
-            fix.detectChanges();
-
-            let rowsRendered = displayContainer.querySelectorAll('div');
-            expect(rowsRendered.length).toBe(0);
-            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
-            fix.detectChanges();
-            rowsRendered = displayContainer.querySelectorAll('div');
-            expect(rowsRendered.length).not.toBe(0);
-        });
-
         it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
@@ -351,6 +354,49 @@ describe('IgxForOf directive -', () => {
             await wait(200);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
+    });
+
+    describe('vertical virtual component no data', () => {
+        let fix: ComponentFixture<VerticalVirtualComponent>;
+        configureTestSuite();
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    VerticalVirtualNoDataComponent,
+                    VerticalVirtualComponent
+                ],
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
+        });
+
+        it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', () => {
+            expect(() => {
+                fix.detectChanges();
+            }).not.toThrow();
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
+            expect(displayContainer).not.toBeNull();
+            expect(verticalScroller).not.toBeNull();
+
+            fix.componentInstance.height = '400px';
+            fix.detectChanges();
+            fix.componentInstance.height = '500px';
+            fix.detectChanges();
+
+            let rowsRendered = displayContainer.querySelectorAll('div');
+            expect(rowsRendered.length).toBe(0);
+            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
+            fix.detectChanges();
+            rowsRendered = displayContainer.querySelectorAll('div');
+            expect(rowsRendered.length).not.toBe(0);
+        });
+
     });
 
     describe('vertical and horizontal virtual component', () => {

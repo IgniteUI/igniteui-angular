@@ -68,9 +68,6 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxGroupAreaDropDirective,
         IgxGroupByMetaPipe
     ],
-    entryComponents: [
-        IgxAdvancedFilteringDialogComponent
-    ],
     exports: [
         IgxGridCellComponent,
         IgxRowAddTextDirective,

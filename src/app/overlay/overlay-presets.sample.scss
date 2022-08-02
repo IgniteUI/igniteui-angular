@@ -1,12 +1,12 @@
 // Import the IgniteUI themes library first
 @use '../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$new-card-theme: igx-card-theme(
+$new-card-theme: card-theme(
     $background: royalblue
 );
 
 :host ::ng-deep{
-    @include igx-card($new-card-theme);
+    @include card($new-card-theme);
 }
 
 .sample-section{

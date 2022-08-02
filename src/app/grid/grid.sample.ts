@@ -15,7 +15,8 @@ import {
     IgxExcelExporterService,
     IgxStringFilteringOperand,
     DefaultSortingStrategy,
-    GridSelectionMode
+    GridSelectionMode,
+    VerticalAlignment
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
@@ -89,11 +90,11 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.localService.getData();
 
         this.localData = [
-            { ID: 1, Name: 'A' },
-            { ID: 2, Name: 'B' },
-            { ID: 3, Name: 'C' },
-            { ID: 4, Name: 'D' },
-            { ID: 5, Name: 'E' }
+            { ID: 1, Name: 'A', Date: new Date() },
+            { ID: 2, Name: 'B', Date: new Date() },
+            { ID: 3, Name: 'C', Date: new Date() },
+            { ID: 4, Name: 'D', Date: new Date() },
+            { ID: 5, Name: 'E', Date: new Date() }
         ];
 
         this.grid2.sortingExpressions = [];
@@ -118,7 +119,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public process() {
-        this.toast.position = 'bottom';
+        this.toast.positionSettings.verticalDirection = VerticalAlignment.Bottom;
         this.toast.open('Loading remote data');
         this.remoteService.getData(this.grid3.data, () => {
             this.toast.close();

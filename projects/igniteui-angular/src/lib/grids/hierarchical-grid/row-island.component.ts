@@ -41,7 +41,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
@@ -141,7 +141,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public rootGrid = null;
+    public rootGrid: GridType = null;
     public readonly data: any[] | null;
     public readonly filteredData: any[];
 
@@ -219,7 +219,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     constructor(
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
         protected transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
@@ -229,7 +229,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         moduleRef: NgModuleRef<any>,
-        factoryResolver: ComponentFactoryResolver,
         injector: Injector,
         appRef: ApplicationRef,
         navigation: IgxHierarchicalGridNavigationService,
@@ -254,7 +253,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             viewRef,
             appRef,
             moduleRef,
-            factoryResolver,
             injector,
             navigation,
             filteringService,
@@ -264,15 +262,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             localeId,
             platform
         );
-        this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
 
     /**
      * @hidden
      */
     public ngOnInit() {
-        this.filteringService.grid = this as any;
-        this.rootGrid = this.hgridAPI.grid;
+        this.filteringService.grid = this as GridType;
+        this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
     }
@@ -326,7 +323,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         if (this.parentIsland) {
             this.parentIsland.rowIslandAPI.registerChildRowIsland(this);
         } else {
-            this.rootGrid.hgridAPI.registerChildRowIsland(this);
+            this.rootGrid.gridAPI.registerChildRowIsland(this);
         }
         this._init = false;
 
@@ -364,11 +361,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         if (this.parentIsland) {
             this.getGridsForIsland(this.key).forEach(grid => {
                 this.cleanGridState(grid);
-                grid.hgridAPI.unsetChildRowIsland(this);
+                grid.gridAPI.unsetChildRowIsland(this);
             });
             this.parentIsland.rowIslandAPI.unsetChildRowIsland(this);
         } else {
-            this.rootGrid.hgridAPI.unsetChildRowIsland(this);
+            this.rootGrid.gridAPI.unsetChildRowIsland(this);
             this.cleanGridState(this.rootGrid);
         }
     }

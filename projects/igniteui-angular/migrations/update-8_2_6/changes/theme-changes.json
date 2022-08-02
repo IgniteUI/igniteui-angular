@@ -1,0 +1,41 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$button-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-hover-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-hover-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-focus-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$button-focus-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme",
+            "type": "property"
+        }
+    ]
+}

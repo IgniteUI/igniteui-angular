@@ -1,0 +1,35 @@
+<ng-template #defaultColumn>
+    <span class="igx-grid-th__group-title" [title]="title">{{column.header}}</span>
+</ng-template>
+
+<ng-template #defaultCollapseIndicator>
+    <igx-icon [attr.draggable]="false" >
+            {{column.expanded ? 'expand_more' : 'chevron_right'}} </igx-icon>
+</ng-template>
+
+<ng-container *ngIf="!column.columnGroup">
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
+    <igx-pivot-row-dimension-header
+        role="columnheader"
+        class="igx-grid-th--fw"
+        [id]="grid.id + '_' + column.field"
+        [ngClass]="column.headerClasses"
+        [ngStyle]="column.headerStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
+        [igxColumnMovingDrag]="column"
+        [ghostHost]="grid.outlet.nativeElement"
+        [attr.droppable]="true"
+        (pointerdown)="pointerdown($event)"
+        [igxColumnMovingDrop]="column"
+        [column]="column"
+        [density]="grid.displayDensity"
+    >
+    </igx-pivot-row-dimension-header>
+    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
+        [igxPivotResizeHandle]="column"
+        [igxPivotResizeHandleHeader]="this"
+        [attr.draggable]="false"
+        [style.cursor]="colResizingService.resizeCursor">
+    </span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
+</ng-container>

@@ -32,14 +32,14 @@ $bootstrap-icon: $light-icon;
 
 /// Generates an indigo icon schema.
 /// @type {Map}
-/// @property {Map} disabled-color [igx-color: ('grays', 400)] - The disabled icon color.
+/// @property {Map} disabled-color [color: ('grays', 400)] - The disabled icon color.
 /// @requires {function} extend
 /// @requires {Map} $light-icon
 $indigo-icon: extend(
     $light-icon,
     (
         disabled-color: (
-            igx-color: ('grays', 400)
+            color: ('grays', 400)
         )
     )
 );

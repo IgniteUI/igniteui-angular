@@ -21,10 +21,11 @@
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
+/// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
 /// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
-/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
+/// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $default-palette
@@ -36,7 +37,7 @@
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
-@function igx-checkbox-theme(
+@function checkbox-theme(
     $palette: null,
     $schema: $light-schema,
 
@@ -46,6 +47,7 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
+    $disabled-indeterminate-color: null,
     $disabled-color-label: null,
     $border-radius-ripple: null,
     $focus-outline-color: null
@@ -61,13 +63,13 @@
 
     $theme: apply-palette($checkbox-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map.get($checkbox-schema, 'border-radius')), 0, 10px
-    );
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
 
-    $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map.get($checkbox-schema, 'border-radius-ripple')), 0, 24px
-    );
+    @if not($border-radius-ripple) {
+        $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
+    }
 
     @return extend($theme, (
         name: $name,
@@ -77,6 +79,7 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
+        disabled-indeterminate-color: $disabled-indeterminate-color,
         disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple,
@@ -85,25 +88,25 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} hide-default
-/// @requires {mixin} igx-css-vars
+/// @requires {mixin} css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires {mixin} igx-ripple
-/// @requires igx-ripple-theme
+/// @requires {mixin} ripple
+/// @requires ripple-theme
 /// @requires rem
 /// @requires em
 /// @requires var-get
-@mixin igx-checkbox($theme) {
-    @include igx-css-vars($theme);
+@mixin checkbox($theme) {
+    @include css-vars($theme);
 
     @include scale-in-out($start-scale: .9);
 
     // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
     // It is under the name of $cbx-size
     $size: em(20px);
-    $size-bs: em(14px);
+    $size-bs: em(16px);
     $checkbox-radius: math.div($size, 2);
 
     $variant: map.get($theme, variant);
@@ -135,7 +138,7 @@
     $mark-stroke: map.get((
         material: 3,
         fluent: 1,
-        bootstrap: 2,
+        bootstrap: 3,
         indigo-design: 3,
     ), $variant);
 
@@ -152,7 +155,7 @@
     $ripple-size: em(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $ripple-theme: igx-ripple-theme(
+    $ripple-theme: ripple-theme(
         $schema: $light-schema,
         $color: var-get($theme, 'fill-color')
     );
@@ -229,31 +232,19 @@
         background: transparent;
 
         @if $bootstrap-theme {
-            %cbx-composite-mark {
-                stroke: var-get($theme, 'empty-color');
-            }
+            border-color: var-get($theme, 'disabled-color-label');
         }
     }
 
     %cbx-composite--x--disabled {
-        @if $bootstrap-theme {
-            background: transparent;
-        } @else {
+        background: var-get($theme, 'disabled-color');
+
+        &::after {
             background: var-get($theme, 'disabled-color');
         }
 
-        &::after {
-            @if $bootstrap-theme {
-                background: transparent;
-            } @else {
-                background: var-get($theme, 'disabled-color');
-            }
-        }
-
         @if $bootstrap-theme {
-            %cbx-composite-mark--x {
-                stroke: var-get($theme, 'empty-color');
-            }
+            border-color: var-get($theme, 'disabled-color');
         }
     }
 
@@ -278,6 +269,55 @@
         %cbx-composite-mark {
             top: $mark-offset;
             left: $mark-offset;
+        }
+
+        @if $variant == 'material' {
+            %cbx-composite--x--disabled {
+                border: var-get($theme, 'disabled-indeterminate-color');
+        
+                &::after {
+                    background: var-get($theme, 'disabled-indeterminate-color');
+                }
+            }
+        }
+
+        @if $variant == 'fluent' {
+            %cbx-composite-mark {
+                stroke: transparent;
+            }
+
+            %cbx-composite {
+                background: transparent;
+
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: calc($size / 2 - rem(6px));
+                    left: calc($size / 2 - rem(6px));
+                    width: rem(10px);
+                    height: rem(10px);
+                    border-radius: border-radius(rem(2px));
+                    border: rem(5px) solid var-get($theme, 'fill-color');
+                    z-index: 1;
+                }
+            }
+
+            %cbx-composite--x--disabled {
+                background: transparent;
+        
+                &::after {
+                    background: transparent;
+                }
+
+                &::before {
+                    border-color: var-get($theme, 'disabled-color');
+                    background: var-get($theme, 'disabled-color');
+                }
+            }
         }
     }
 
@@ -326,8 +366,8 @@
     }
 
     %cbx-ripple {
-        @include igx-ripple($ripple-theme);
-        @include igx-css-vars($ripple-theme);
+        @include ripple($ripple-theme);
+        @include css-vars($ripple-theme);
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
@@ -436,15 +476,15 @@
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} igx-type-style
-@mixin igx-checkbox-typography(
+/// @requires {mixin} type-style
+@mixin checkbox-typography(
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %cbx-label {
-        @include igx-type-style($type-scale, $label) {
+        @include type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;
         }

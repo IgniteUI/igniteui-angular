@@ -58,6 +58,7 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density'
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
+import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 
 let NEXT_ID = 0;
 
@@ -271,6 +272,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public loadingRows = new Set<any>();
 
+    protected _filterStrategy = new TreeGridFilteringStrategy();
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
@@ -393,8 +395,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
         // public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxHierarchicalTransactionFactory,
-        private _elementRef: ElementRef<HTMLElement>,
-        private _zone: NgZone,
+        _elementRef: ElementRef<HTMLElement>,
+        _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
@@ -402,7 +404,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         protected viewRef: ViewContainerRef,
         appRef: ApplicationRef,
         moduleRef: NgModuleRef<any>,
-        factoryResolver: ComponentFactoryResolver,
         injector: Injector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
@@ -415,7 +416,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef,factoryResolver, injector, navigation,
+            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 
@@ -632,7 +633,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (index === null || index < 0) {
             return this.beginAddRowById(null, asChild);
         }
-        return this.beginAddRowById(this.gridAPI.get_rec_id_by_index(index, this.dataView), asChild);
+        return this._addRowForIndex(index - 1, asChild);
     }
 
     /**
@@ -865,7 +866,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = data ?? this.dataView[index];
+        const dataIndex = this._getDataViewIndex(index);
+        const rec: any = data ?? this.dataView[dataIndex];
 
         if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this as any, index, rec.summaries, GridInstanceType.TreeGrid);
@@ -891,6 +893,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
+    protected generateDataFields(data: any[]): string[] {
+        return super.generateDataFields(data).filter(field => field !== this.childDataKey);
     }
 
     protected transactionStatusUpdate(event: StateUpdateEvent) {
