@@ -18,13 +18,13 @@ There are many ways in which you can [participate](https://github.com/IgniteUI/i
  - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
  - If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
 
-  - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
-  - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
-  - [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
-  - [Submitting pull requests](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#commit-message-conventions)
-  - [New feature development](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#new-feature-development)
-  - [Accessibility and Localization](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#accessibility-a11y)
-  - [Testing a PR](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#testing-a-pr)
+ - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
+ - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
+ - [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
+ - [Submitting pull requests](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#commit-message-conventions)
+ - [New feature development](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#new-feature-development)
+ - [Accessibility and Localization](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#accessibility-a11y)
+ - [Testing a PR](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#testing-a-pr)
 
 ### Feedback
  - Ask a question by starting [a discussion](https://github.com/IgniteUI/igniteui-angular/discussions) or submitting [an issue](https://github.com/IgniteUI/igniteui-angular/issues/new/choose)
