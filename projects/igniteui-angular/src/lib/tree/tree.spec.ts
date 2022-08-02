@@ -269,6 +269,27 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeExpanding.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
             });
+            it('Expand() should expand currently collapsing node', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                mockTreeService.expandedNodes.add(node);
+                mockTreeService.collapsingNodes.add(node);
+                node.expand();
+                expect(mockTree.nodeExpanding.emit).toHaveBeenCalledTimes(1);
+
+            });
+            it('Collapse() shouldn`t affect a currently collapsing node', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                mockTreeService.expandedNodes.add(node);
+                mockTreeService.collapsingNodes.add(node);
+                node.collapse();
+                expect(mockTree.nodeCollapsing.emit).toHaveBeenCalledTimes(0);
+            });
             it('Should call service expand/collapse methods when calling API state methods', () => {
                 const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
                     mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
@@ -506,6 +527,18 @@ describe('IgxTree #treeView', () => {
             it('Should apply proper node classes depending on tree displayDenisty', () => {
                 pending('Test not implemented');
             });
+
+            it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', fakeAsync(() => {
+                const expandingSpy = spyOn(tree.nodeExpanding, 'emit').and.callThrough();
+                const collapsingSpy = spyOn(tree.nodeCollapsing, 'emit').and.callThrough();
+                tree.nodes.first.collapse();
+                expect(expandingSpy).not.toHaveBeenCalled();
+
+                tree.nodes.first.expanded = true;
+
+                tree.nodes.first.expand();
+                expect(collapsingSpy).not.toHaveBeenCalled();
+            }));
 
             it('Should properly emit state toggle events', fakeAsync(() => {
                 // node event spies
