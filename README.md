@@ -16,6 +16,28 @@
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
+### Contributing
+There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
+
+ - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
+ - Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
+ - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
+ - If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
+
+ - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
+ - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
+ - [Coding guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
+ - [Submitting pull requests](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#commit-message-conventions)
+ - [New feature development](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#new-feature-development)
+ - [Accessibility and Localization](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#accessibility-a11y)
+ - [Testing a PR](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#testing-a-pr)
+
+### Feedback
+ - Ask a question by starting [a discussion](https://github.com/IgniteUI/igniteui-angular/discussions) or submitting [an issue](https://github.com/IgniteUI/igniteui-angular/issues/new/choose)
+ - Request a [new feature](https://github.com/IgniteUI/igniteui-angular/issues/new?assignees=&labels=%3Atoolbox%3A+feature-request&template=feature_request.md&title=)
+ - Upvote [popular feature requests](https://github.com/IgniteUI/igniteui-angular/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Atoolbox%3A+feature-request%22)
+ - [File an issue](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github)
+ - Reach out to us [through Discord](https://discord.gg/sBwHs5cJ)
 ## Browser Support
 
 ![chrome_48x48](https://user-images.githubusercontent.com/2188411/168109445-fbd7b217-35f9-44d1-8002-1eb97e39cdc6.png) | ![firefox_48x48](https://user-images.githubusercontent.com/2188411/168109465-e46305ee-f69f-4fa5-8f4a-14876f7fd3ca.png) | ![edge_48x48](https://user-images.githubusercontent.com/2188411/168109472-a730f8c0-3822-4ae6-9f54-785a66695245.png) | ![opera_48x48](https://user-images.githubusercontent.com/2188411/168109520-b6865a6c-b69f-44a4-9948-748d8afd687c.png) | ![safari_48x48](https://user-images.githubusercontent.com/2188411/168109527-6c58f2cf-7386-4b97-98b1-cfe0ab4e8626.png) | ![ie_48x48](https://user-images.githubusercontent.com/2188411/168135931-ce5259bb-5b26-4003-8b89-dbee3d4f247c.png)
