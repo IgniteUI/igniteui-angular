@@ -321,7 +321,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     @HostBinding('attr.title')
     public get title() {
-        if (this.editMode || this.cellTemplate) {
+        if (this.editMode || this.cellTemplate || this.errorShowing) {
             return '';
         }
 
@@ -781,6 +781,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             );
         });
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public errorShowing = false;
 
     private toggleErrorTooltip() {
         const tooltip = this.errorTooltip.toArray()[0];
