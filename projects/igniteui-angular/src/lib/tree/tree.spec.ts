@@ -587,6 +587,7 @@ describe('IgxTree #treeView', () => {
                 tick();
                 expect(expandingSpy).toHaveBeenCalledTimes(2);
                 expect(expandedSpy).toHaveBeenCalledTimes(1);
+                tree.nodes.first.expanded = true;
                 unsub$.next();
                 tree.nodeCollapsing.pipe(takeUntil(unsub$)).subscribe(e => {
                     e.cancel = true;
