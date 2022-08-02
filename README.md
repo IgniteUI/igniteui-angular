@@ -13,10 +13,10 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 ### Contributing
 There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
 
-- [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
-- Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
-- Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
-- If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
+ - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
+ - Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
+ - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
+ - If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
 
   - [How to build and run from source](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug)
   - The [development workflow](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#workflow), including debugging and running tests
