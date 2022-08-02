@@ -1399,6 +1399,9 @@
         
         > igx-icon {
             color: color($palette, 'error', 500);
+            width: var(--igx-icon-size, rem(18px));
+            height: var(--igx-icon-size, rem(18px));
+            font-size: var(--igx-icon-size, rem(18px));
         }
     }
 
