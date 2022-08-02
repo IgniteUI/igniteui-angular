@@ -291,12 +291,18 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsing.emit).toHaveBeenCalledTimes(0);
             });
             it('Should call service expand/collapse methods when calling API state methods', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
                 const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
                     mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
-                const emitSpy = spyOn(node, 'expandedChange');
+                node.expandedChange = jasmine.createSpyObj('emitter', ['emit'])
                 const openAnimationSpy = spyOn(node, 'playOpenAnimation');
                 const closeAnimationSpy = spyOn(node, 'playCloseAnimation');
                 const mockObj = jasmine.createSpyObj<any>('mockElement', ['focus']);
+                spyOn(mockTreeService, 'collapse').and.callThrough();
+                spyOn(mockTreeService, 'collapsing').and.callThrough();
+                spyOn(mockTreeService, 'expand').and.callThrough();
+                spyOn(node, 'expandedChange').and.callThrough();
                 const ingArgs = {
                     owner: mockTree,
                     cancel: false,
@@ -318,7 +324,7 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsing.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalledWith();
-                expect(emitSpy).not.toHaveBeenCalled();
+                expect(node.expandedChange).not.toHaveBeenCalled();
                 node.ngOnInit();
                 node.expand();
                 expect(openAnimationSpy).toHaveBeenCalledWith(mockObj);
@@ -328,6 +334,8 @@ describe('IgxTree #treeView', () => {
                 expect(mockTreeService.expand).toHaveBeenCalledWith(node, true);
                 expect(mockTreeService.expand).toHaveBeenCalledTimes(1);
                 node.openAnimationDone.emit();
+                expect(node.expandedChange.emit).toHaveBeenCalledTimes(1);
+                expect(node.expandedChange.emit).toHaveBeenCalledWith(true);
                 expect(mockTree.nodeExpanded.emit).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeExpanded.emit).toHaveBeenCalledWith(edArgs);
                 node.collapse();
@@ -340,6 +348,8 @@ describe('IgxTree #treeView', () => {
                 node.closeAnimationDone.emit();
                 expect(mockTreeService.collapse).toHaveBeenCalledTimes(1);
                 expect(mockTreeService.collapse).toHaveBeenCalledWith(node);
+                expect(node.expandedChange.emit).toHaveBeenCalledTimes(2);
+                expect(node.expandedChange.emit).toHaveBeenCalledWith(false);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledWith(edArgs);
                 spyOn(node, 'expand');
