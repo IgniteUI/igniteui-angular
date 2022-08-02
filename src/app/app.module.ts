@@ -67,7 +67,7 @@ import { ToastSampleComponent } from './toast/toast.sample';
 import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
-import { ForbiddenValidatorDirective, GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
@@ -160,7 +160,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
-import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
+import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const components = [
     AccordionSampleComponent,

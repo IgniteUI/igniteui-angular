@@ -1,8 +1,30 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
-import { FormGroup } from '@angular/forms';
+import { IgxColumnValidator, IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
+import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const forbidden = nameRe.test(control.value);
+      return forbidden ? {forbiddenName: {value: control.value}} : null;
+    };
+  }
+
+@Directive({
+    selector: '[appForbiddenName]',
+    providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
+  })
+  export class ForbiddenValidatorDirective extends IgxColumnValidator {
+    @Input('appForbiddenName') 
+    public forbiddenName = '';
+  
+    validate(control: AbstractControl): ValidationErrors | null {
+      return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
+                                : null;
+    }
+  }
+
 
 @Component({
     selector: 'app-grid-row-edit',

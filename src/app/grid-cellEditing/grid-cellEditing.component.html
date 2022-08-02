@@ -3,7 +3,7 @@
 <div class="density-chooser" style="margin-bottom: 16px">
     <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
-<igx-grid (cellEdit)='cellEdit($event)' (onFormGroupCreate)='formCreateHandler($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
@@ -24,7 +24,7 @@
     </igx-column> -->
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
-    <igx-column appForbiddenName='bob' field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
         <ng-template igxCellValidationError let-cell='cell'>
             <div *ngIf="cell.formGroup?.get(cell.column?.field).errors?.['forbiddenName']">
                 This name is forbidden.

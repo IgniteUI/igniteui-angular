@@ -1395,13 +1395,15 @@
     }
     %grid-cell--invalid {
         box-shadow: inset 0 0 0 rem(1px) color($palette, 'error', 500) !important;
-        justify-content: end;
-        
+        padding-right: rem(4px) !important;
         > igx-icon {
             color: color($palette, 'error', 500);
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
+        }
+        %grid-cell-text {
+            width: 100%;
         }
     }
 

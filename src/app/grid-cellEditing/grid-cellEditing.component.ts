@@ -7,26 +7,8 @@ import {
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
 
-export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const forbidden = nameRe.test(control.value);
-      return forbidden ? {forbiddenName: {value: control.value}} : null;
-    };
-  }
 
-  @Directive({
-    selector: '[appForbiddenName]',
-    providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
-  })
-  export class ForbiddenValidatorDirective extends IgxColumnValidator {
-    @Input('appForbiddenName') 
-    public forbiddenName = '';
-  
-    validate(control: AbstractControl): ValidationErrors | null {
-      return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
-                                : null;
-    }
-  }
+
 
 @Component({
     selector: 'app-grid-cellediting',
@@ -71,11 +53,7 @@ export class GridCellEditingComponent {
         this.selectionMode = GridSelectionMode.multiple;
     }
 
-    public formCreateHandler(formGr: FormGroup) {
-        // add a validator
-    //    const prodName = formGr.get('ProductName');
-    //    prodName.addValidators(forbiddenNameValidator(/bob/i))
-    }
+
 
     public cellEdit(evt) {
         if (!evt.isValid) {
