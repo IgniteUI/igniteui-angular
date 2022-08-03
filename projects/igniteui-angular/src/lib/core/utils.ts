@@ -776,11 +776,11 @@ const verticalAnimations: AnimationReferenceMetadata[] = [
 
 
 /**
- * Similar to Angular's formatDate. However it will not throw on `undefined | null` instead
+ * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
  * coalescing to an empty string.
  */
 export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value === '') {
         return '';
     }
     return _formatDate(value, format, locale, timezone);
