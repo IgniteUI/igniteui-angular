@@ -1,4 +1,4 @@
-import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition } from './enums';
+import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -367,6 +367,7 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
+    validationTrigger: GridValidationTrigger;
     pinning: IPinningConfig;
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;

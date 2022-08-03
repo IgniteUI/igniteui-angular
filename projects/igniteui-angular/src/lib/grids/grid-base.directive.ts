@@ -91,7 +91,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    GridValidationTrigger
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -1699,6 +1700,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get rowDraggable(): boolean {
         return this._rowDrag && this.hasVisibleColumns;
     }
+
+    /**
+     * Gets/Sets the trigger for validators used when editing the grid.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid validationTrigger='blur'></igx-grid>
+     * ```
+     */
+    @Input()
+    public validationTrigger: GridValidationTrigger = 'change';
 
 
     public set rowDraggable(val: boolean) {

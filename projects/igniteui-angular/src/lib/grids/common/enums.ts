@@ -19,6 +19,7 @@ export const GridSummaryCalculationMode = mkenum({
 });
 export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[keyof typeof GridSummaryCalculationMode];
 
+export type GridValidationTrigger = 'change' | 'blur' | 'submit';
 
 export type GridKeydownTargetType =
     'dataCell' |

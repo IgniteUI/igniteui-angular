@@ -15,7 +15,7 @@ export class IgxEditRow {
     constructor(public id: any, public index: number, public data: any, public grid: GridType) {
         for (const col of grid.columns) {
             const field = col.field;
-            const control = new FormControl(this.data[field], { updateOn: 'change' });
+            const control = new FormControl(this.data[field], { updateOn: grid.validationTrigger });
             control.addValidators(col.validators);
             this.rowFormGroup.addControl(field, control);
         }
@@ -140,6 +140,8 @@ export class IgxCell {
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const row = this.grid.crudService.row ?? this.row;
+        const formControl = row.rowFormGroup.get(this.column.field);
+        formControl.updateValueAndValidity();
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -147,7 +149,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
             oldValue: this.value,
-            isValid: row.rowFormGroup.get(this.column.field).valid,
+            isValid: formControl.valid,
             newValue: value,
             column: this.column,
             owner: this.grid,
