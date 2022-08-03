@@ -36,6 +36,7 @@ import { ISelectionNode } from './common/types';
 import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
+import { first } from 'rxjs/operators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -780,7 +781,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             if (this.errorTooltip.length > 0) {
                 // error ocurred
                 this.cdr.detectChanges();
-                this.toggleErrorTooltip();
+                this.openErrorTooltip();
             }
             this.grid.validationStatusChange.emit(
                 {
@@ -798,9 +799,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public errorShowing = false;
 
-    private toggleErrorTooltip() {
+    private openErrorTooltip() {
         const tooltip = this.errorTooltip.toArray()[0];
-        tooltip.toggle(
+        tooltip.open(
             {
                 target: this.errorIcon.el.nativeElement,
                 closeOnOutsideClick: true,
@@ -936,6 +937,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public focusout = () => {
+       this.closeErrorTooltip();
+    }
+
+    private closeErrorTooltip() {
         const tooltip = this.errorTooltip.toArray()[0];
         if (tooltip) {
             tooltip.close();
@@ -991,7 +996,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
 
         if (this.isInvalid) {
-            this.toggleErrorTooltip();
+            this.openErrorTooltip();
+            this.grid.activeNodeChange.pipe(first()).subscribe(() => {
+                this.closeErrorTooltip();
+            });
         }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
