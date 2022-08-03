@@ -445,8 +445,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get readonly(): boolean {
         return !this.editable;
     }
+    /** @hidden @internal */
+    @HostBinding('attr.aria-describedby')
+    public get describeBy() {
+        let id = this.grid.id + '_' + this.column.field;
+        if (this.isInvalid) {
+            id += '_' + this.row.index + '_error';
+        }
+        return id;
+    }
 
     @HostBinding('class.igx-grid__td--invalid')
+    @HostBinding('attr.aria-invalid')
     public get isInvalid() {
         const isRowEdit = this.grid.crudService.rowEditing;
         const isInvalidInEditMode = (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
