@@ -1,5 +1,4 @@
 import { enableProdMode } from '@angular/core';
-import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
