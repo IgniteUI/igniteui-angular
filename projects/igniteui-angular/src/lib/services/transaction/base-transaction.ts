@@ -111,7 +111,20 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public commit(_data: any[], _id?: any): void { }
+    public commit(_data: any[], _id?: any): void { 
+        this.clear(_id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public getInvalidTransactionLog(id?: any) {
+        let pending = [...this._pendingTransactions];
+        if (id !== undefined) {
+            pending = pending.filter(t => t.id === id);
+        }
+        return pending.filter(x => x.validity.some(x => x.valid === false));
+    }
 
     /**
      * @inheritdoc
@@ -132,9 +145,11 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public endPending(_commit: boolean): void {
-        this._isPending = false;
-        this._pendingStates.clear();
-        this._pendingTransactions = [];
+        if (_commit) {
+            this._isPending = false;
+            this._pendingStates.clear();
+            this._pendingTransactions = [];
+        }
     }
 
 

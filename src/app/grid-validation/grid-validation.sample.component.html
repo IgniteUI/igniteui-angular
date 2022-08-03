@@ -16,6 +16,7 @@
             </ng-template>
         </igx-column>
     </igx-grid>
+    <button (click)='commitNoTransactions()'>Commit</button>
     </article>
     <article class="grid-row-edit-wrapper">
         <h4>Grid with transactions</h4>
@@ -34,5 +35,5 @@
                 </ng-template>
             </igx-column>
         </igx-grid>
-        <button (click)='commit()'>Commit</button>
+        <button (click)='commitWithTransactions()'>Commit</button>
     </article>

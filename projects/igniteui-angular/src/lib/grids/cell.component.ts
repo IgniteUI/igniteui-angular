@@ -460,12 +460,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
         const isRowEdit = this.grid.crudService.rowEditing;
-        const isInvalidInEditMode = (isRowEdit && this.row.inEditMode || this.editMode) && this.formGroup?.get(this.column?.field)?.invalid;
+        const isInvalidInEditMode = (isRowEdit && this.row.inEditMode || this.editMode) &&
+            !this.formGroup?.get(this.column?.field)?.pristine &&
+            this.formGroup?.get(this.column?.field)?.invalid;
         return isInvalidInEditMode || (!!this.validity ? !this.validity.valid : false);
     }
 
     private get validity() {
-        const transactionLog =  this.grid.transactions.getTransactionLog(this.row.key);
+        const transactionLog =  this.grid.transactions.getInvalidTransactionLog(this.row.key);
         if (transactionLog && transactionLog.length) {
             const last = transactionLog[transactionLog.length - 1];
             const val = last.validity.find(x => x.field === this.column.field);

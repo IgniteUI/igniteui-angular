@@ -15,7 +15,8 @@ export class IgxEditRow {
     constructor(public id: any, public index: number, public data: any, public grid: GridType) {
         for (const col of grid.columns) {
             const field = col.field;
-            const control = new FormControl(this.data[field], col.validators);
+            const control = new FormControl(this.data[field], { updateOn: 'change' });
+            control.addValidators(col.validators);
             this.rowFormGroup.addControl(field, control);
         }
      }

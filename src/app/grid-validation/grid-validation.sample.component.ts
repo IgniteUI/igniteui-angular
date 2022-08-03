@@ -46,8 +46,11 @@ export class GridValidationSampleComponent {
     @ViewChild('gridTransactions', {read:  IgxGridComponent })
     public gridWithTransaction: IgxGridComponent;
 
-    public commit() {
-        const invalidTransactions = this.gridWithTransaction.transactions.getTransactionLog().filter(x => x.validity.some(x => x.valid === false));
+    @ViewChild('gridNoTransactions', {read:  IgxGridComponent })
+    public gridNoTransactions: IgxGridComponent;
+
+    public commitWithTransactions() {
+        const invalidTransactions = this.gridWithTransaction.transactions.getInvalidTransactionLog();
         if (invalidTransactions.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
@@ -55,6 +58,10 @@ export class GridValidationSampleComponent {
         } else {
             this.gridWithTransaction.transactions.commit(this.transactionData);
         }
+    }
+
+    public commitNoTransactions() {
+        this.gridNoTransactions.transactions.commit([]);
     }
 
     public cellEdit(evt) {

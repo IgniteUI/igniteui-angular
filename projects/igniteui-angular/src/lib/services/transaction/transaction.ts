@@ -104,6 +104,11 @@ export interface TransactionService<T extends Transaction, S extends State> {
      */
     undo(): void;
 
+     /**
+    * Returns invalid transactions.
+    */
+    getInvalidTransactionLog(id?: any): T[];
+
     /**
      * Applies the last undone transaction if any
      */
