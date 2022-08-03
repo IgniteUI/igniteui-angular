@@ -559,8 +559,14 @@ export class IgxGridStateDirective {
                 } else {
                     expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
-                expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
-                expressionsTree.filteringOperands.push(expr);
+
+                let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
+                                this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
+               
+                if (condition) {
+                    expr.condition = condition;
+                    expressionsTree.filteringOperands.push(expr);
+                } 
             }
         }
 
