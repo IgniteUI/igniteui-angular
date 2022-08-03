@@ -160,8 +160,8 @@
 
     %linear-indicator {
         width: 100%;
-        position: relative;
-        height: inherit;
+        position: absolute;
+        height: 100%;
     }
 
     %linear-indicator--striped {
@@ -182,27 +182,53 @@
         }
     }
 
-    %linear-indicator--indeterminate {
-        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) normal infinite);
-
+    %linear-indicator--indeterminate-secondary,
+    %linear-indicator--indeterminate-primary
+    {
+        transform-origin: top left;
         width: 100% !important;
+        height: inherit;
+        position: absolute;
+        background: transparent;
 
-        &::before {
-            position: absolute;
+        &::after {
             content: '';
+            position: absolute;
             top: 0;
-            width: 100%;
+            left: 0;
+            width: inherit;
             height: inherit;
-            background-color: inherit;
-            transform-origin: top right;
+            background: var-get($theme, 'fill-color-default');
+            backface-visibility: hidden;
         }
 
         [dir='rtl'] & {
             animation-direction: reverse;
 
-            &::before {
-                transform-origin: top left;
+            &::after {
+                transform-origin: top right;
             }
+        }
+    }
+
+    %linear-indicator--indeterminate-primary {
+        transform: scale3d(0, 1, 1);
+        animation: indeterminate-primary 2000ms infinite linear;
+        left: -145.166611%;
+
+        &::after {
+            animation: indeterminate-primary-scale 2000ms infinite linear;
+        }
+    }
+
+    %linear-indicator--indeterminate-secondary {
+        animation: indeterminate-secondary 2000ms infinite linear;
+        left: -54.888891%;
+
+        &::after {
+            animation: indeterminate-secondary-scale 2000ms infinite linear;
+            width: 100%;
+            height: inherit;
         }
     }
 
@@ -253,20 +279,100 @@
         display: none;
     }
 
-    @include keyframes('indeterminate-bar') {
+    $indeterminate-primary-translate-step-2: cubic-bezier(.5, 0, .701732, .495819);
+    $indeterminate-primary-translate-step-3: cubic-bezier(.302435, .381352, .55, .956352);
+
+    $indeterminate-primary-scale-step-2: cubic-bezier(.334731, .12482, .785844, 1);
+    $indeterminate-primary-scale-step-3: cubic-bezier(.06, .11, .6, 1);
+
+    $indeterminate-secondary-translate-step-1: cubic-bezier(.15, 0, .515058, .409685);
+    $indeterminate-secondary-translate-step-2: cubic-bezier(.31033, .284058, .8, .733712);
+    $indeterminate-secondary-translate-step-3: cubic-bezier(.4, .627035, .6, .902026);
+
+    $indeterminate-secondary-scale-step-1: cubic-bezier(.15, 0, .515058, .409685);
+    $indeterminate-secondary-scale-step-2: cubic-bezier(.31033, .284058, .8, .733712);
+    $indeterminate-secondary-scale-step-3: cubic-bezier(.4, .627035, .6, .902026);
+
+    @keyframes indeterminate-primary {
         0% {
-            transform: scaleX(0) translateX(-200%);
-            transform-origin: left;
+            transform: translateX(0);
         }
 
-        50% {
-            transform: scaleX(1) translateX(50%);
-            transform-origin: right;
+        20% {
+            animation-timing-function: $indeterminate-primary-translate-step-2;
+            transform: translateX(0);
+        }
+
+        59.15% {
+            animation-timing-function: $indeterminate-primary-translate-step-3;
+            transform: translateX(83.67142%);
         }
 
         100% {
-            transform: scaleX(0) translateX(200%);
-            transform-origin: right;
+            transform: translateX(200.611057%);
+        }
+    }
+
+    @keyframes indeterminate-primary-scale {
+        0% {
+            transform: scaleX(.08);
+        }
+
+        36.65% {
+            animation-timing-function: $indeterminate-primary-scale-step-2;
+            transform: scaleX(.08);
+        }
+
+        69.15% {
+            animation-timing-function: $indeterminate-primary-scale-step-2;
+            transform: scaleX(.661479);
+        }
+
+        100% {
+            transform: scaleX(.08);
+        }
+    }
+
+    @keyframes indeterminate-secondary {
+        0% {
+            animation-timing-function: $indeterminate-secondary-translate-step-1;
+            transform: translateX(0);
+        }
+
+        25% {
+            animation-timing-function: $indeterminate-secondary-translate-step-2;
+
+            transform: translateX(37.651913%);
+        }
+
+        48.35% {
+            animation-timing-function: $indeterminate-secondary-translate-step-3;
+            transform: translateX(84.386165%);
+        }
+
+        100% {
+            transform: translateX(160.277782%);
+        }
+    }
+
+    @keyframes indeterminate-secondary-scale {
+        0% {
+            animation-timing-function: $indeterminate-secondary-scale-step-1;
+            transform: scaleX(.08);
+        }
+
+        19.15% {
+            animation-timing-function: $indeterminate-secondary-scale-step-2;
+            transform: scaleX(.457104);
+        }
+
+        44.15% {
+            animation-timing-function: $indeterminate-secondary-scale-step-3;
+            transform: scaleX(.72796);
+        }
+
+        100% {
+            transform: scaleX(.08);
         }
     }
 }
