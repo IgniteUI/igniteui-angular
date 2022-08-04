@@ -1275,7 +1275,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
             if (!!elFromPoint?.shadowRoot) {
-                targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+                targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             } else if (targetElements.indexOf(elFromPoint) === -1) {
                 targetElements.push(elFromPoint);
             }
@@ -1312,13 +1312,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      * Traverse shadow dom in depth.
      */
-    protected getFromShadowRoot(elem, pageX, pageY) {
+    protected getFromShadowRoot(elem, pageX, pageY, parentDomElems) {
         const elementsFromPoint = elem.shadowRoot.elementsFromPoint(pageX, pageY);
-        let res = elementsFromPoint;
-        for (const elFromPoint of elementsFromPoint) {
+        const shadowElements = elementsFromPoint.filter(cur => parentDomElems.indexOf(cur) === -1);
+        let res = [];
+        for (const elFromPoint of shadowElements) {
             if (!!elFromPoint?.shadowRoot && elFromPoint.shadowRoot !== elem.shadowRoot) {
-                res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+                res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             }
+            res.push(elFromPoint);
         }
         return res;
     }
