@@ -147,6 +147,7 @@
         flex: 1 1 100%;
         flex-direction: column;
 
+        &[dir='rtl'],
         [dir='rtl'] & {
             %linear-bar {
                 transform: rotateY(180deg);
@@ -206,14 +207,6 @@
             height: inherit;
             background: var-get($theme, 'fill-color-default');
             backface-visibility: hidden;
-        }
-
-        [dir='rtl'] & {
-            animation-direction: reverse;
-
-            &::after {
-                transform-origin: top right;
-            }
         }
     }
 
