@@ -146,6 +146,12 @@
         width: 100%;
         flex: 1 1 100%;
         flex-direction: column;
+
+        [dir='rtl'] & {
+            %linear-bar {
+                transform: rotateY(180deg);
+            }
+        }
     }
 
     %linear-bar {
@@ -195,7 +201,7 @@
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            inset-inline-start: 0;
             width: inherit;
             height: inherit;
             background: var-get($theme, 'fill-color-default');
