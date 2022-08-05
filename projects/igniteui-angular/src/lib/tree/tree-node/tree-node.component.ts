@@ -396,7 +396,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected treeService: IgxTreeService,
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
-        @Inject(IgxAngularAnimationService)protected animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
@@ -643,6 +643,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public expand() {
+        if (this.expanded && !this.treeService.collapsingNodes.has(this)) {
+            return;
+        }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,
@@ -675,6 +678,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public collapse() {
+        if (!this.expanded || this.treeService.collapsingNodes.has(this)) {
+            return;
+        }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,
