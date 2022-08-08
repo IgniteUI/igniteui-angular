@@ -199,8 +199,26 @@
 
             @if $variant == 'fluent'{
                 %igx-slider-thumb__dot::before {
-                    border-color: var-get($theme, 'thumb-focus-color');
+                    border: rem($thumb-border-width) solid var-get($theme, 'thumb-focus-color');
                 }
+            }
+        }
+    }
+
+    @if $variant == 'fluent' {
+        %igx-slider-focused { 
+            %igx-slider-thumb__dot::after {
+                $focus-outline-offset: rem(2px);
+
+                position: absolute;
+                content: '';
+                pointer-events: none;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'thumb-border-focus-color');
+                width: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
+                height: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
             }
         }
     }
@@ -557,19 +575,6 @@
                 transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
                 border-radius: border-radius(50%);
                 overflow: hidden;
-            }
-        }
-
-        @if $variant == 'fluent' {
-            $focus-outline-offset: rem(2px);
-
-            &::after {
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                box-shadow: 0 0 0 rem(1px) var-get($theme, 'thumb-border-focus-color');
-                width: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
-                height: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
             }
         }
     }

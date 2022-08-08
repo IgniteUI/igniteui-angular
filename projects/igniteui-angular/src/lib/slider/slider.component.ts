@@ -153,6 +153,12 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
+    @HostBinding('class.igx-slider--focused')
+    public focused = false;
+
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-slider--disabled')
     public get disabledClass() {
         return this.disabled;
@@ -807,6 +813,7 @@ export class IgxSliderComponent implements
         this.showSliderIndicators();
 
         $event.preventDefault();
+        this.focused = false;
     }
 
 
@@ -840,6 +847,24 @@ export class IgxSliderComponent implements
     @HostListener('pan', ['$event'])
     public onPanListener($event) {
         this.update($event.srcEvent.clientX);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keyup', ['$event'])
+    public onKeyUp(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.tab', ['$event'])
+    public onKeyDown(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = false;
     }
 
     /**

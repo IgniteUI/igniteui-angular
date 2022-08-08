@@ -114,6 +114,7 @@ $light-slider: (
 /// @property {Map} thumb-focus-color [color: ('primary', 700)] - The focus outline color of the thumb.
 /// @property {Map} thumb-disabled-border-color [color: ('grays', 400)] - The thumb border color when it's disabled.
 /// @property {Map} disabled-thumb-color [color: ('surface', 500)] - The thumb color when its disabled.
+/// @property {Map} label-background-color [color: ('primary', 500)] - The background color of the bubble label.
 /// @property {Map} base-track-color [color: ('grays', 600)] - The base background color of the track.
 /// @property {Map} base-track-hover-color [color: ('grays', 600)] - The base background color of the track on hover.
 /// @property {Map} disabled-base-track-color [color: ('grays', 100)] - The base background color of the track when is disabled.
@@ -171,6 +172,10 @@ $fluent-slider: extend($light-slider, (
 
     disabled-fill-track-color: (
         color: ('grays', 500)
+    ),
+
+    label-background-color: (
+        color: ('primary', 500),
     ),
 ));
 
