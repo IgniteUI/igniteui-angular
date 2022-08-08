@@ -450,14 +450,16 @@
         top: -#{rem($thumb-radius)};
         margin-inline-start: -#{rem($thumb-radius)};
 
-        &:hover div::after {
-            opacity: .12;
-            transform: scale(1);
-        }
+        @if $variant == 'material' {
+            &:hover div::after {
+                opacity: .12;
+                transform: scale(1);
+            }
 
-        &:focus div::after {
-            opacity: .18;
-            transform: scale(1);
+            &:focus div::after {
+                opacity: .18;
+                transform: scale(1);
+            }
         }
 
         &:focus div::before {
@@ -465,6 +467,13 @@
 
             @if $variant == 'bootstrap' {
                 border-color: var-get($theme, 'thumb-border-focus-color');
+            }
+        }
+
+        @if $variant == 'fluent' {
+            &:focus div::after {
+                position: absolute;
+                content: '';
             }
         }
     }
@@ -550,6 +559,19 @@
                 overflow: hidden;
             }
         }
+
+        @if $variant == 'fluent' {
+            $focus-outline-offset: rem(2px);
+
+            &::after {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'thumb-border-focus-color');
+                width: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
+                height: calc(rem($thumb-size) + (#{$focus-outline-offset} * 2));
+            }
+        }
     }
 
     %igx-slider-thumb__dot--disabled {
@@ -563,9 +585,11 @@
     }
 
     %igx-slider-thumb__dot--pressed {
-        &::after {
-            opacity: .24 !important;
-            transform: scale(1) !important;
+        @if $variant == 'material' {
+            &::after {
+                opacity: .24 !important;
+                transform: scale(1) !important;
+            }
         }
     }
 

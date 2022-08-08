@@ -105,24 +105,26 @@ $light-slider: (
 
 /// Generates a fluent slider schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('grays', 700)] - The color of the track.
+/// @property {Map} track-color [color: ('grays', 800)] - The color of the track.
 /// @property {Color} track-step-color [white] - The color of the track steps.
 /// @property {Map} track-hover-color [color: ('primary', 500)] - The color of the track on hover.
 /// @property {Map} thumb-color [color: ('surface', 500)] - The color of the thumb.
 /// @property {Map} thumb-border-color [color: ('grays', 700)] - The thumb border color.
 /// @property {Map} thumb-border-focus-color [color: ('grays', 700)] - The thumb border color when focused.
-/// @property {Map} thumb-focus-color [color: ('primary', 500)] - The focus outline color of the thumb.
+/// @property {Map} thumb-focus-color [color: ('primary', 700)] - The focus outline color of the thumb.
 /// @property {Map} thumb-disabled-border-color [color: ('grays', 400)] - The thumb border color when it's disabled.
 /// @property {Map} disabled-thumb-color [color: ('surface', 500)] - The thumb color when its disabled.
-/// @property {Map} base-track-color [color: ('grays', 400)] - The base background color of the track.
-/// @property {Map} base-track-hover-color [color: ('primary', 500, .32)] - The base background color of the track on hover.
+/// @property {Map} base-track-color [color: ('grays', 600)] - The base background color of the track.
+/// @property {Map} base-track-hover-color [color: ('grays', 600)] - The base background color of the track on hover.
+/// @property {Map} disabled-base-track-color [color: ('grays', 100)] - The base background color of the track when is disabled.
+/// @property {Map} disabled-fill-track-color [color: ('grays', 500)] - The background color of the fill track when is disabled.
 /// @requires {function} extend
 /// @requires {Map} $light-slider
 $fluent-slider: extend($light-slider, (
     variant: 'fluent',
 
     track-color: (
-        color: ('grays', 700),
+        color: ('grays', 800),
     ),
 
     track-step-color: white,
@@ -144,7 +146,7 @@ $fluent-slider: extend($light-slider, (
     ),
 
     thumb-focus-color: (
-        color: ('primary', 500)
+        color: ('primary', 700)
     ),
 
     thumb-disabled-border-color: (
@@ -156,12 +158,20 @@ $fluent-slider: extend($light-slider, (
     ),
 
     base-track-color: (
-        color: ('grays', 400),
+        color: ('grays', 600),
     ),
 
     base-track-hover-color:  (
-        color: ('primary', 500, .32)
-    )
+        color: ('grays', 600)
+    ),
+
+    disabled-base-track-color: (
+        color: ('grays', 100)
+    ),
+
+    disabled-fill-track-color: (
+        color: ('grays', 500)
+    ),
 ));
 
 /// Generates a bootstrap slider schema.
