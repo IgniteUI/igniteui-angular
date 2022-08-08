@@ -934,8 +934,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._groupRowTemplate = this.groupTemplate.template;
         }
 
-        this.detailTemplate.changes.subscribe(() =>
-            this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
         if (this.hideGroupedColumns && this._columns && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
@@ -979,6 +977,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngOnInit() {
         super.ngOnInit();
+        this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
