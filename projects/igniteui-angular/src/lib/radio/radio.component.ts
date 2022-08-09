@@ -4,15 +4,16 @@ import {
     HostBinding,
     HostListener,
     Input,
+    OnDestroy,
     Output,
     ViewChild,
     ElementRef,
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { noop, Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { noop } from 'rxjs';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -50,9 +51,16 @@ let nextId = 0;
     selector: 'igx-radio',
     templateUrl: 'radio.component.html'
 })
-export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
+export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
     private static ngAcceptInputType_disabled: boolean | '';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject<boolean>();
+
     /**
      * Returns reference to native radio element.
      * ```typescript
@@ -335,6 +343,15 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     private _onChangeCallback: (_: any) => void = noop;
 
     constructor(private cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+     public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 
     /**
      * @hidden
