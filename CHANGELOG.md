@@ -17,13 +17,6 @@ All notable changes for each version of this project will be documented in this 
             {{ value.member }}
     </ng-template>
     ``` 
-
-- `igxGrid`
-	- Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
-	```
-	<column width='auto' ...>
-	```
-
     - Add support for usage with igxGridState to persist state of the pivotConfiguration with an additional `pivotConfiguration` option:
 
     ```html
@@ -61,6 +54,20 @@ All notable changes for each version of this project will be documented in this 
         }
     }
     ```
+    - `igxGridState`:
+    Exposed a `stateParsed` event to the state directive that can be used to additionally modify the grid state before it gets applied.
+
+    ```
+    this.state.stateParsed.subscribe(parsedState => {
+            parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance());
+        });
+    ```
+
+- `igxGrid`
+	- Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
+	```
+	<column width='auto' ...>
+	```
 
 ## 14.0.0
 
