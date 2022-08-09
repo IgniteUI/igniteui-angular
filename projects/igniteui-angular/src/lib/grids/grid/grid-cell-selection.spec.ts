@@ -897,6 +897,23 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
+
+        it('Should not throw an error when trying to do a drag selection that is started outside the grid', fakeAsync(() => {
+            let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
+            tick();
+            fix.detectChanges();
+            
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', cell.nativeElement);
+            tick();
+            fix.detectChanges();
+
+            expect(() => {
+                fix.detectChanges();
+            }).not.toThrow();
+        }));
     });
 
     describe('Keyboard navigation', () => {
