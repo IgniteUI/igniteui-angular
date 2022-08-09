@@ -129,6 +129,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
+import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 
@@ -289,6 +290,10 @@ const appRoutes: Routes = [
     {
         path: 'radio',
         component: RadioSampleComponent
+    },
+    {
+        path: 'rating',
+        component: RatingSampleComponent
     },
     {
         path: 'reactive',
