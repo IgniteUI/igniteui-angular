@@ -317,7 +317,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         this.radioButtons.changes.pipe(startWith(0), takeUntil(this.destroy$)).subscribe(() => {
             this.queryChange$.next();
             this.queryChange$.complete();
-            console.log(this._zone.hasPendingMicrotasks);
             setTimeout(() => this._initRadioButtons());
         });
     }
