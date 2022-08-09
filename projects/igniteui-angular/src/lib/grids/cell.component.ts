@@ -778,9 +778,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      
     }
 
-    public ngAfterViewInit(){
+    public ngAfterViewInit() {
         this.errorTooltip.changes.subscribe(() => {
-            if (this.errorTooltip.length > 0) {
+            if (this.errorTooltip.length > 0 && this.active) {
                 // error ocurred
                 this.cdr.detectChanges();
                 this.openErrorTooltip();
