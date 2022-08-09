@@ -1,7 +1,8 @@
 import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { first } from 'rxjs/operators';
+import { first, take } from 'rxjs/operators';
+import { NoopPivotDimensionsStrategy } from '../data-operations/pivot-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPivotGridPersistanceComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent } from '../test-utils/pivot-grid-samples.spec';
 import { IgxPivotAggregate, IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
@@ -256,5 +257,35 @@ describe('IgxPivotGridState #pivotGrid :', () => {
             By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
         expect(rowDimensionHeaders).toEqual(expectedHeaders);
+    });
+
+    it('should allow restoring noop strategies', () => {
+        const noopInstance = NoopPivotDimensionsStrategy.instance();
+        pivotGrid.pivotConfiguration.rowStrategy = noopInstance;
+        pivotGrid.pivotConfiguration.columnStrategy = noopInstance;
+        pivotGrid.data = [];
+        const state = fixture.componentInstance.state;
+        state.stateParsed.pipe(take(1)).subscribe(parsedState => {
+            parsedState.pivotConfiguration.rowStrategy = noopInstance;
+            parsedState.pivotConfiguration.columnStrategy = noopInstance;
+        });
+        const stateToRestore = `{ "pivotConfiguration" : {
+            "columns": [
+                { "memberName": "ProductCategory", "enabled": true }
+            ],
+            "rows": [
+                { "memberName": "City", "enabled": true },
+                { "memberName": "Country", "enabled": true }
+            ],
+            "values": [
+                ]
+            }
+        }`;
+
+        state.setState(stateToRestore, 'pivotConfiguration');
+        fixture.detectChanges();
+        fixture.detectChanges();
+        expect(pivotGrid.pivotConfiguration.rowStrategy).toBe(noopInstance);
+        expect(pivotGrid.pivotConfiguration.columnStrategy).toBe(noopInstance);
     });
 });
