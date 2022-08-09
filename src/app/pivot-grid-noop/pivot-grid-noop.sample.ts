@@ -1,9 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import {
+  IgxGridStateDirective,
   IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension,
   IPivotValue,
-  NoopPivotDimensionsStrategy
+  NoopPivotDimensionsStrategy,
+  NoopSortingStrategy
 } from 'igniteui-angular';
+import { take } from 'rxjs/operators';
 
 
 
@@ -29,6 +32,7 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
 
 export class PivotGridNoopSampleComponent {
   @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
+  public myStrategy = NoopSortingStrategy.instance();
   public pivotConfigHierarchy: IPivotConfiguration = {
     columnStrategy: NoopPivotDimensionsStrategy.instance(),
     rowStrategy: NoopPivotDimensionsStrategy.instance(),
@@ -150,5 +154,23 @@ export class PivotGridNoopSampleComponent {
       ]
     }
   ];
+
+  @ViewChild(IgxGridStateDirective, { static: true })
+  public state!: IgxGridStateDirective;
+
+  public saveState() {
+    const state = this.state.getState() as string;
+    window.sessionStorage.setItem('grid-state', state);
+}
+
+public restoreState() {
+    const state = window.sessionStorage.getItem('grid-state');
+    this.state.stateParsed.pipe(take(1)).subscribe(parsedState => {
+      parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance());
+      parsedState.pivotConfiguration.rowStrategy = NoopPivotDimensionsStrategy.instance();
+      parsedState.pivotConfiguration.columnStrategy = NoopPivotDimensionsStrategy.instance();
+  });
+    this.state.setState(state as string);
+}
 
 }
