@@ -1,10 +1,25 @@
-import { Component, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output,
-    ContentChild, AfterContentInit, ElementRef } from '@angular/core';
-import { AnimationBuilder } from '@angular/animations';
+import {
+    AfterContentInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Inject,
+    Input,
+    Output
+} from '@angular/core';
+import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+import { AnimationService } from '../services/animation/animation';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase,
-    IExpansionPanelEventArgs, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
+import {
+    IExpansionPanelCancelableEventArgs,
+    IExpansionPanelEventArgs,
+    IgxExpansionPanelBase,
+    IGX_EXPANSION_PANEL_COMPONENT
+} from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
 
 let NEXT_ID = 0;
@@ -75,6 +90,12 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     @HostBinding('class.igx-expansion-panel')
     public cssClass = 'igx-expansion-panel';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-expansion-panel--expanded')
+    private opened = false;
 
     /**
      * @hidden @internal
@@ -191,8 +212,11 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
-    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
-        super(builder);
+    constructor(
+        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
+        private cdr: ChangeDetectorRef,
+        private elementRef?: ElementRef) {
+        super(animationService);
     }
 
     /** @hidden */
@@ -226,6 +250,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (args.cancel === true) {
             return;
         }
+        this.opened = false;
         this.playCloseAnimation(
             this.body?.element,
             () => {
@@ -257,6 +282,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
             return;
         }
         this.collapsed = false;
+        this.opened = true;
         this.collapsedChange.emit(false);
         this.cdr.detectChanges();
         this.playOpenAnimation(

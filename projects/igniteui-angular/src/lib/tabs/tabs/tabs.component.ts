@@ -1,6 +1,7 @@
-import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { getResizeObserver, mkenum } from '../../core/utils';
+import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
+import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
@@ -14,8 +15,8 @@ export const IgxTabsAlignment = mkenum({
 
 /** @hidden */
 enum TabScrollButtonStyle {
-    Visible = 'visible',
-    Hidden = 'hidden',
+    Enabled = 'enabled',
+    Disabled = 'disabled',
     NotDisplayed = 'not_displayed'
 }
 
@@ -100,11 +101,11 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden */
     @ViewChild('scrollPrevButton')
-    public scrollPrevButton: ElementRef<HTMLElement>;
+    public scrollPrevButton: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @ViewChild('scrollNextButton')
-    public scrollNextButton: ElementRef<HTMLElement>;
+    public scrollNextButton: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @HostBinding('class.igx-tabs')
@@ -119,8 +120,12 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver: ResizeObserver;
 
-    constructor(builder: AnimationBuilder, cdr: ChangeDetectorRef, private ngZone: NgZone, public dir: IgxDirectionality) {
-        super(builder, cdr, dir);
+    constructor(
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
+        cdr: ChangeDetectorRef,
+        private ngZone: NgZone,
+        public dir: IgxDirectionality) {
+        super(animationService, cdr, dir);
     }
 
 
@@ -268,12 +273,12 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.setScrollButtonStyle(this.scrollNextButton.nativeElement, scrollNextButtonStyle);
     }
 
-    private setScrollButtonStyle(button: HTMLElement, buttonStyle: TabScrollButtonStyle) {
-        if (buttonStyle === TabScrollButtonStyle.Visible) {
-            button.style.visibility = 'visible';
+    private setScrollButtonStyle(button: HTMLButtonElement, buttonStyle: TabScrollButtonStyle) {
+        if (buttonStyle === TabScrollButtonStyle.Enabled) {
+            button.disabled = false;
             button.style.display = '';
-        } else if (buttonStyle === TabScrollButtonStyle.Hidden) {
-            button.style.visibility = 'hidden';
+        } else if (buttonStyle === TabScrollButtonStyle.Disabled) {
+            button.disabled = true;
             button.style.display = '';
         } else if (buttonStyle === TabScrollButtonStyle.NotDisplayed) {
             button.style.display = 'none';
@@ -288,9 +293,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             if (itemsContainerWidth - headerContainerWidth <= 1) {
                 return TabScrollButtonStyle.NotDisplayed;
             }
-            return TabScrollButtonStyle.Hidden;
+            return TabScrollButtonStyle.Disabled;
         } else {
-            return TabScrollButtonStyle.Visible;
+            return TabScrollButtonStyle.Enabled;
         }
     }
 
@@ -306,9 +311,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         }
 
         if (itemsContainerWidth > total) {
-            return TabScrollButtonStyle.Visible;
+            return TabScrollButtonStyle.Enabled;
         } else {
-            return TabScrollButtonStyle.Hidden;
+            return TabScrollButtonStyle.Disabled;
         }
     }
 

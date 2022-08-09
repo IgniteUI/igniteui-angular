@@ -84,7 +84,6 @@ export class PivotGridSampleComponent {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
-            width: '25%',
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
@@ -106,13 +105,14 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[1]
-        ],
-        rows: [
             {
                 memberName: 'City',
                 enabled: true,
+                width: '100px'
             },
+        ],
+        rows: [
+            
             this.dimensions[2],
             {
                 memberName: 'SellerName',
@@ -343,5 +343,41 @@ export class PivotGridSampleComponent {
                 label: 'Sum'
             }
         }, 0);
+    }
+
+    public filterDim() {
+        const set = new Set();
+        set.add('New York');
+        // for excel-style filters, condition is 'in' and value is a Set of values.
+        this.grid1.filterDimension(this.pivotConfigHierarchy.columns[0], set, IgxStringFilteringOperand.instance().condition('in'));
+    }
+
+    public newConfig() {
+        this.pivotConfigHierarchy = {
+            columns: [
+                {
+                    memberName: 'City',
+                    enabled: true,
+                },
+            ],
+            rows: [
+                {
+                    memberName: 'SellerName',
+                    enabled: true,
+                    filter: this.filterExpTree
+                }
+            ],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                }
+            ]
+        };
     }
 }

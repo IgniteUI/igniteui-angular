@@ -163,6 +163,9 @@ export class IgxBannerComponent implements IToggleView {
         return this.elementRef.nativeElement;
     }
 
+    @HostBinding('class')
+    public cssClass = 'igx-banner-host';
+
     /**
      * @hidden
      */

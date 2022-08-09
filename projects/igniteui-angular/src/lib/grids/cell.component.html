@@ -76,6 +76,8 @@
                 igxInput
                 [(ngModel)]="editValue"
                 [igxFocus]="true"
+                (compositionstart)="grid.crudService.isInCompositionMode = true"
+                (compositionend)="grid.crudService.isInCompositionMode = false"
             />
         </igx-input-group>
     </ng-container>
@@ -104,6 +106,7 @@
             [outlet]="grid.outlet"
             mode="dropdown"
             [locale]="grid.locale"
+            [weekStart]="column.pipeArgs.weekStart"
             [(value)]="editValue"
             [igxFocus]="true"
         >

@@ -1,27 +1,41 @@
-import { AnimationBuilder } from '@angular/animations';
 import {
-    Component, OnInit,
-    OnDestroy, Input, Inject, ViewChild, TemplateRef, QueryList, ContentChildren, Optional, SkipSelf,
-    HostBinding,
-    ElementRef,
     ChangeDetectorRef,
-    Output,
-    EventEmitter,
+    Component,
+    ContentChildren,
     Directive,
-    HostListener
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    QueryList,
+    SkipSelf,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import {
-    IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
-    IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IgxTreeSelectionType
-} from '../common';
-import { IgxTreeSelectionService } from '../tree-selection.service';
-import { IgxTreeNavigationService } from '../tree-navigation.service';
-import { IgxTreeService } from '../tree.service';
-import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
-import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { DisplayDensity } from '../../core/displayDensity';
+import { CurrentResourceStrings } from '../../core/i18n/resources';
+import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
+import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
+import { IgxAngularAnimationService } from '../../services/animation/angular-animation-service';
+import { AnimationService } from '../../services/animation/animation';
+import {
+    IgxTree,
+    IgxTreeNode,
+    IgxTreeSelectionType,
+    IGX_TREE_COMPONENT,
+    IGX_TREE_NODE_COMPONENT,
+    ITreeNodeTogglingEventArgs
+} from '../common';
+import { IgxTreeNavigationService } from '../tree-navigation.service';
+import { IgxTreeSelectionService } from '../tree-selection.service';
+import { IgxTreeService } from '../tree.service';
 
 // TODO: Implement aria functionality
 /**
@@ -382,11 +396,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected treeService: IgxTreeService,
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
-        protected builder: AnimationBuilder,
+        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
-        super(builder);
+        super(animationService);
     }
 
     /**
@@ -629,6 +643,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public expand() {
+        if (this.expanded && !this.treeService.collapsingNodes.has(this)) {
+            return;
+        }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,
@@ -661,6 +678,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public collapse() {
+        if (!this.expanded || this.treeService.collapsingNodes.has(this)) {
+            return;
+        }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,

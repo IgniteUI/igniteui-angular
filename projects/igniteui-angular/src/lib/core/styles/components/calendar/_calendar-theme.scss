@@ -52,11 +52,26 @@
 /// @param {Color} $year-hover-text-color [null] - The year hover text color.
 ///
 /// @param {Color} $date-selected-background [null] - The background color for the selected date.
+/// @param {Color} $date-selected-hover-background [null] - The hover background color for the selected date.
+/// @param {Color} $date-selected-focus-background [null] - The focus background color for the selected date.
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
+/// @param {Color} $date-selected-hover-foreground [null] - The hover text color for the selected date.
+/// @param {Color} $date-selected-focus-foreground [null] - The focus text color for the selected date.
 ///
+/// @param {Color} $date-hover-background [null] - The hover date background color.
+/// @param {Color} $date-focus-background [null] - The focus date background color.
 /// @param {Color} $date-current-text-color [null] - The text color for the current date.
 /// @param {Color} $date-current-bg-color [null] - The background color for the current date.
-/// @param {Color} $date-hover-background [null] - The hover date background color.
+/// @param {Color} $date-current-hover-background [null] - The hover background color for the current date.
+/// @param {Color} $date-current-focus-background [null] - The focus background color for the current date.
+/// @param {Color} $date-current-hover-foreground [null] - The hover text color for the current date.
+/// @param {Color} $date-current-focus-foreground [null] - The focus text color for the current date.
+/// @param {Color} $date-selected-current-background [null] - The background color for the selected/current date.
+/// @param {Color} $date-selected-current-hover-background [null] - The hover background color for the selected/current date.
+/// @param {Color} $date-selected-current-focus-background [null] - The focus background color for the selected/current date.
+/// @param {Color} $date-selected-current-foreground [null] - The text color for the selected/current date.
+/// @param {Color} $date-selected-current-hover-foreground [null] - The hover text color for the selected/current date.
+/// @param {Color} $date-selected-current-focus-foreground [null] - The focus text color for the selected/current date.
 ///
 /// @param {Color} $date-special-background [null] - The background color used for special dates.
 /// @param {Color} $date-special-text-color [null] - The text color used for special dates.
@@ -115,11 +130,27 @@
     $month-hover-background: null,
 
     $date-selected-background: null,
+    $date-selected-hover-background: null,
+    $date-selected-focus-background: null,
     $date-selected-text-color: null,
+    $date-selected-hover-foreground: null,
+    $date-selected-focus-foreground: null,
 
-    $date-current-text-color: null,
     $date-current-bg-color: null,
+    $date-current-text-color: null,
+    $date-current-hover-foreground: null,
+    $date-current-focus-foreground: null,
+    $date-current-hover-background: null,
+    $date-current-focus-background: null,
+    $date-selected-current-background: null,
+    $date-selected-current-foreground: null,
+    $date-selected-current-hover-background: null,
+    $date-selected-current-hover-foreground: null,
+    $date-selected-current-focus-background: null,
+    $date-selected-current-focus-foreground: null,
+
     $date-hover-background: null,
+    $date-focus-background: null,
 
     $date-special-background: null,
     $date-special-text-color: null,
@@ -187,7 +218,15 @@
     }
 
     @if not($date-selected-text-color) and $date-selected-background {
-        $date-selected-text-color: $content-background;
+        $date-selected-text-color: text-contrast($date-selected-background);
+    }
+
+    @if not($date-selected-hover-foreground) and $date-selected-hover-background {
+        $date-selected-hover-foreground: text-contrast($date-selected-hover-background);
+    }
+
+    @if not($date-selected-focus-foreground) and $date-selected-focus-background {
+        $date-selected-focus-foreground: text-contrast($date-selected-focus-background);
     }
 
     @if not($date-hover-background) and $content-background {
@@ -209,8 +248,32 @@
             $date-selected-background: $header-background;
         }
 
-        @if not($date-current-bg-color) and $header-background {
-            $date-current-bg-color: $header-background;
+        @if not($date-selected-current-background) and $date-selected-background {
+            $date-selected-current-background: $date-selected-background;
+        }
+
+        @if not($date-selected-current-hover-background) and $date-selected-hover-background {
+            $date-selected-current-hover-background: $date-selected-hover-background;
+        }
+
+        @if not($date-selected-current-focus-background) and $date-selected-focus-background {
+            $date-selected-current-focus-background: $date-selected-focus-background;
+        }
+
+        @if not($date-selected-text-color) and $header-background {
+            $date-selected-text-color: text-contrast($header-background);
+        }
+
+        @if not($date-current-text-color) and $header-background {
+            $date-current-text-color: $header-background;
+        }
+
+        @if not($date-current-hover-foreground) {
+            $date-current-hover-foreground: $date-current-text-color;
+        }
+
+        @if not($date-current-focus-foreground) {
+            $date-current-focus-foreground: $date-current-text-color;
         }
 
         @if not($year-hover-text-color) and $header-background {
@@ -226,10 +289,6 @@
                 $month-current-text-color: $header-background;
             }
         }
-    }
-
-    @if not($date-current-text-color) and $date-current-bg-color {
-        $date-current-text-color: $date-current-bg-color;
     }
 
     @if not($date-special-background) and $content-background {
@@ -315,9 +374,28 @@
         date-selected-background: $date-selected-background,
         date-selected-text-color: $date-selected-text-color,
 
-        date-current-text-color: $date-current-text-color,
+        date-selected-hover-background: $date-selected-hover-background,
+        date-selected-focus-background: $date-selected-focus-background,
+        date-selected-hover-foreground: $date-selected-hover-foreground,
+        date-selected-focus-foreground: $date-selected-focus-foreground,
+
         date-current-bg-color: $date-current-bg-color,
+        date-current-text-color: $date-current-text-color,
+
+        date-current-hover-background: $date-current-hover-background,
+        date-current-focus-background: $date-current-focus-background,
+        date-current-hover-foreground: $date-current-hover-foreground,
+        date-current-focus-foreground: $date-current-focus-foreground,
+
+        date-selected-current-background: $date-selected-current-background,
+        date-selected-current-hover-background: $date-selected-current-hover-background,
+        date-selected-current-focus-background: $date-selected-current-focus-background,
+        date-selected-current-foreground: $date-selected-current-foreground,
+        date-selected-current-hover-foreground: $date-selected-current-hover-foreground,
+        date-selected-current-focus-foreground: $date-selected-current-focus-foreground,
+
         date-hover-background: $date-hover-background,
+        date-focus-background: $date-focus-background,
 
         date-special-text-color: $date-special-text-color,
         date-special-background: $date-special-background,
@@ -386,20 +464,6 @@
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
-
-    $current-color-variant: map.get((
-        material: var-get($theme, 'date-selected-background'),
-        fluent: var-get($theme, 'date-current-bg-color'),
-        bootstrap: var-get($theme, 'date-current-bg-color'),
-        indigo-design: var-get($theme, 'date-selected-background'),
-    ), $variant);
-
-    $current-text-color-variant: map.get((
-        material: var-get($theme, 'date-selected-text-color'),
-        fluent: var-get($theme, 'date-current-text-color'),
-        bootstrap: var-get($theme, 'date-current-text-color'),
-        indigo-design: var-get($theme, 'date-selected-text-color'),
-    ), $variant);
 
     %cal-display {
         display: flex;
@@ -697,19 +761,103 @@
         }
     }
 
+    %cal-value--focus,
     %cal-value--hover {
         @if $bootstrap-theme {
             color: var-get($theme, 'date-selected-text-color');
         }
+    }
 
+    %cal-value--hover {
         %cal-value-content::after {
             background: var-get($theme, 'date-hover-background');
         }
     }
 
-    %cal-value--selected--hover {
+    %cal-value--focus {
         %cal-value-content::after {
-            background: color($palette, 'grays', 100, .18);
+            background: var-get($theme, 'date-focus-background');
+        }
+    }
+
+    %cal-value--selected--hover {
+        %cal-value-content{
+            color: var-get($theme, 'date-selected-hover-foreground');
+        }
+
+        %cal-value-content::after {
+            background: var-get($theme, 'date-selected-hover-background');
+        }
+    }
+
+    %cal-value--current {
+        %cal-value-content {
+            color: var-get($theme, 'date-current-text-color');
+            font-weight: $cal-value-fw ;
+            background: var-get($theme, 'date-current-bg-color');
+        }
+    }
+
+    %cal-value--current--hover {
+        %cal-value-content {
+            color: var-get($theme, 'date-current-hover-foreground');
+            background: var-get($theme, 'date-current-hover-background');
+
+            &::after {
+                background: var-get($theme, 'date-current-hover-background');
+            }
+        }
+    }
+
+    %cal-value--current--focus {
+        %cal-value-content {
+            color: var-get($theme, 'date-current-focus-foreground');
+            background: var-get($theme, 'date-current-focus-background');
+
+            &::after {
+                background: var-get($theme, 'date-current-focus-background');
+            }
+        }
+    }
+
+    %cal-value--selected--current {
+        %cal-value-content {
+            color: var-get($theme, 'date-selected-current-foreground');
+            background: var-get($theme, 'date-selected-current-background');
+
+            @if $variant == 'indigo-design' {
+                font-weight: 700;
+            }
+        }
+    }
+
+    %cal-value--selected--current--hover {
+        %cal-value-content {
+            color: var-get($theme, 'date-selected-current-hover-foreground');
+
+            &::after {
+                background: var-get($theme, 'date-selected-current-hover-background');
+            }
+        }
+    }
+
+    %cal-value--selected--current--focus {
+        %cal-value-content {
+            color: var-get($theme, 'date-selected-current-focus-foreground');
+
+            &::after {
+                background: var-get($theme, 'date-selected-current-focus-background');
+            }
+        }
+    }
+
+    %cal-value--selected--focus {
+        %cal-value-content {
+            color: var-get($theme, 'date-selected-focus-foreground');
+        }
+
+        %cal-value-content::after {
+            background: var-get($theme, 'date-selected-focus-background');
         }
     }
 
@@ -944,47 +1092,6 @@
         }
     }
 
-    %cal-value--current {
-        %cal-value-content {
-            color: var-get($theme, 'date-current-text-color');
-            font-weight: $cal-value-fw ;
-            background: var-get($theme, 'date-current-bg-color');
-
-            &:hover {
-                background: var-get($theme, 'date-current-bg-color');
-            }
-
-            &:focus {
-                background: var-get($theme, 'date-current-bg-color');
-            }
-
-            @if $variant == 'fluent' or 'bootstrap' {
-                &::after {
-                    opacity: .2;
-                }
-            }
-        }
-    }
-
-    %cal-value--current--selected {
-        %cal-value-content {
-            color: $current-text-color-variant;
-            background: $current-color-variant;
-
-            @if $variant == 'indigo-design' {
-                font-weight: 700;
-            }
-
-            &:hover {
-                background: $current-color-variant;
-            }
-
-            &:focus {
-                background: $current-color-variant;
-            }
-        }
-    }
-
     %cal-value--disabled {
         pointer-events: none;
         cursor: not-allowed;
@@ -1149,7 +1256,8 @@
     }
 
     %cal-value--label {
-        @include type-style($type-scale, $weekday-label)
+        @include type-style($type-scale, $weekday-label);
+        margin: 0;
     }
 
     %cal-value--year-current {

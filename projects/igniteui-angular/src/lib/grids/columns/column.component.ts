@@ -450,8 +450,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public get width(): string {
+        const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
+        if(isAutoWidth) {
+            if(!this.autoSize) {
+                return 'fit-content';
+            } else {
+                return this.autoSize + 'px';
+            }
+           
+        }
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
+
+    public autoSize: number;
 
     /**
      * Sets the `width` of the column.
@@ -475,6 +486,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             // host bindings are not px affixed so we need to ensure we affix simple number strings
             if (typeof (value) === 'number' || value.match(/^[0-9]*$/)) {
                 value = value + 'px';
+            }
+            if (value === 'fit-content') {
+                value = 'auto';
             }
             this._width = value;
             if (this.grid) {
@@ -974,7 +988,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public set pinned(value: boolean) {
         if (this._pinned !== value) {
-            if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
+            const isAutoWidth = this.width && typeof this.width === 'string' && this.width === 'fit-content';
+            if (this.grid && this.width && (isAutoWidth || !isNaN(parseInt(this.width, 10)))) {
                 if (value) {
                     this.pin();
                 } else {
@@ -1813,7 +1828,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize : 
+                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1841,7 +1857,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // Replace the old column with the new one.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize : 
+                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1854,7 +1871,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
                             ref: col,
-                            width: col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                            width: col.width === 'fit-content' ? col.autoSize : 
+                            col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2035,7 +2053,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
@@ -2114,7 +2132,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columnList.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
 
@@ -2136,7 +2154,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public move(index: number) {
         let target;
-        let columns = (this.grid.columnList as QueryList<IgxColumnComponent>).filter(c => c.visibleIndex > -1);
+        let columns = this.grid.columns.filter(c => c.visibleIndex > -1);
         // grid last visible index
         const li = columns.map(c => c.visibleIndex).reduce((a, b) => Math.max(a, b));
         const parent = this.parent;
@@ -2156,7 +2174,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         /* eslint-enable max-len */
         if (isPreceding) {
             columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
-            target = columns.find(c => c.level === this.level && c.visibleIndex + c.calcChildren() - this.calcChildren() === index);
+            target = columns.find(c => c.level === this.level && c.visibleIndex + (c as any).calcChildren() - this.calcChildren() === index);
         } else {
             columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
             target = columns.find(c => c.level === this.level && c.visibleIndex === index);
@@ -2397,9 +2415,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     protected cacheCalcWidth(): any {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        const isAutoWidth = colWidth && typeof colWidth === 'string' && colWidth === 'fit-content';
         if (isPercentageWidth) {
             this._calcWidth = parseFloat(colWidth) / 100 * this.grid.calcWidth;
-        } else if (!colWidth) {
+        } else if (!colWidth || isAutoWidth && !this.autoSize) {
             // no width
             this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
         } else {
