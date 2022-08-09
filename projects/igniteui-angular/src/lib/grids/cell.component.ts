@@ -37,6 +37,7 @@ import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
 import { first } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -85,7 +86,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public column: ColumnType;
 
 
-    public get formGroup() {
+    public get formGroup() : FormGroup {
         const isRowEdit = this.grid.crudService.rowEditing;
         const formGroup = isRowEdit ? this.grid.crudService.row?.rowFormGroup : this.grid.crudService.cell?.row.rowFormGroup;
         return formGroup || this.validity?.formGroup;
@@ -460,18 +461,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
         const isRowEdit = this.grid.crudService.rowEditing;
-        const isInvalidInEditMode = (isRowEdit && this.row.inEditMode || this.editMode) &&
-            !this.formGroup?.get(this.column?.field)?.pristine &&
-            this.formGroup?.get(this.column?.field)?.invalid;
-        return isInvalidInEditMode || (!!this.validity ? !this.validity.valid : false);
+        if (isRowEdit && this.row.inEditMode || this.editMode) {
+            return this.formGroup?.get(this.column?.field)?.invalid;
+        } else {
+           return !!this.validity ? !this.validity.valid : false;
+        }
     }
 
     private get validity() {
-        const transactionLog =  this.grid.transactions.getInvalidTransactionLog(this.row.key);
-        if (transactionLog && transactionLog.length) {
-            const last = transactionLog[transactionLog.length - 1];
-            const val = last.validity.find(x => x.field === this.column.field);
-           return val;
+        const state = this.grid.transactions.getState(this.row.key);
+        if (state && state.validity && state.validity.some(x => x.valid === false)) {
+           return state.validity.find(x => x.field === this.column.field);
         }
     }
 
