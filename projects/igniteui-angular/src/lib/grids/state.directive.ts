@@ -214,6 +214,7 @@ export class IgxGridStateDirective {
                     if (hasColumnGroup) {
                         const ref1 = groupFactory.create(context.viewRef.injector);
                         Object.assign(ref1.instance, colState);
+                        ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent);
                             columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
@@ -224,6 +225,7 @@ export class IgxGridStateDirective {
                     } else {
                         const ref = factory.create(context.viewRef.injector);
                         Object.assign(ref.instance, colState);
+                        ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
                             if (columnGroup) {
@@ -235,9 +237,9 @@ export class IgxGridStateDirective {
                         newColumns.push(ref.instance);
                     }
                 });
-                context.grid.updateColumns(newColumns);
+                context.currGrid.updateColumns(newColumns);
                 newColumns.forEach(col => {
-                    (context.grid as any).columnInit.emit(col);
+                    (context.currGrid as any).columnInit.emit(col);
                 });
             }
         },
@@ -536,17 +538,8 @@ export class IgxGridStateDirective {
      * The method that calls corresponding methods to restore features from the passed IGridState object.
      */
     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
-        // TODO Notify the grid that columnList.changes is triggered by the state directive
-        // instead of piping it like below
-        const columns = 'columns';
         this.applyFeatures(features);
-        if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
-            this.getFeature(columns).restoreFeatureState(this, state[columns]);
-            this.featureKeys = this.featureKeys.filter(f => f !== columns);
-            this.restoreFeatures(state);
-        } else {
-            this.restoreFeatures(state);
-        }
+        this.restoreFeatures(state);
     }
 
     private restoreFeatures(state: IGridState) {

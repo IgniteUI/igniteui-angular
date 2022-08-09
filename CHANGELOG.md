@@ -56,6 +56,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
 
 ## 14.0.0
+
+- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 - `IgxCombo` and  `IgxSimpleComboComponent`
     - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
@@ -73,6 +75,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridEditingActions`
     - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
+
+- `IgxTabs`
+    - **Behavioral Change** - Both scroll buttons are displayed when the tabs are not fully visible. When there is no tabs to be scrolled in one of the directions the corresponding scroll button is disabled.
 
 - Locale settings
     - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
