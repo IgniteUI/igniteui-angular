@@ -314,8 +314,8 @@ export class IgxGridSelectionService {
         return true;
     }
 
-    public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
-        if (this.dragMode || !this.pointerEventInGridBody) {
+    public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, firedOutsideGrid?: boolean): boolean {
+        if (this.dragMode || firedOutsideGrid) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
             this.mergeMap(this.selection, this.temp);
@@ -760,7 +760,7 @@ export class IgxGridSelectionService {
 
         const targetTagName = event.target.tagName.toLowerCase();
         if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
-            this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected);
+            this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);
         }
     };
 }
