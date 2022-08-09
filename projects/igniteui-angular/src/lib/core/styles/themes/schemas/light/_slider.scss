@@ -9,7 +9,7 @@
 /// Generates a light slider schema.
 /// @type {Map}
 /// @property {Map} track-color [color: ('secondary', 500)] - The color of the track.
-/// @property {Map} track-step-color [color: 'surface'] - The color of the track steps.
+/// @property {Color} track-step-color [color: ('secondary', 200)] - The color of the track steps.
 /// @property {Number} track-step-size [rem(3px)] - The size of the track steps.
 /// @property {Map} track-hover-color [color: ('secondary', 400)] - The color of the track on hover.
 ///
@@ -39,7 +39,7 @@ $light-slider: (
     ),
 
     track-step-color: (
-        color: 'surface'
+        color: ('secondary', 200)
     ),
 
     track-step-size: rem(3px),
@@ -106,6 +106,7 @@ $light-slider: (
 /// Generates a fluent slider schema.
 /// @type {Map}
 /// @property {Map} track-color [color: ('grays', 700)] - The color of the track.
+/// @property {Color} track-step-color [white] - The color of the track steps.
 /// @property {Map} track-hover-color [color: ('primary', 500)] - The color of the track on hover.
 /// @property {Map} thumb-color [color: ('surface', 500)] - The color of the thumb.
 /// @property {Map} thumb-border-color [color: ('grays', 700)] - The thumb border color.
@@ -123,6 +124,8 @@ $fluent-slider: extend($light-slider, (
     track-color: (
         color: ('grays', 700),
     ),
+
+    track-step-color: white,
 
     track-hover-color: (
         color: ('primary', 500)
@@ -209,6 +212,7 @@ $bootstrap-slider: extend(
 
 /// Generates an indigo slider schema.
 /// @type {Map}
+/// @property {Color} track-step-color [white] - The color of the track steps.
 /// @property {Map} track-hover-color [color: ('primary', 400)] - The color of the track on hover.
 /// @property {Map} base-track-color [color: ('grays', 400)] - The base background color of the track.
 /// @property {Map} base-track-hover-color [color: ('grays', 500)] - The base background color of the track on hover.
@@ -222,6 +226,8 @@ $indigo-slider: extend(
     $light-slider,
     (
         variant: 'indigo-design',
+
+        track-step-color: white,
 
         track-hover-color: (
             color: ('primary', 400)

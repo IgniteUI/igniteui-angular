@@ -15,7 +15,9 @@ export class SortingIndexPipe implements PipeTransform {
 export class IgxHeaderGroupWidthPipe implements PipeTransform {
 
     public transform(width: any, minWidth: any, hasLayout: boolean) {
-        return hasLayout ? '' : `${Math.max(parseFloat(width), minWidth)}px`;
+        const isFitContent = width === 'fit-content';
+        const isPercentage = typeof width === 'string' && width.indexOf('%') !== -1;
+        return hasLayout ? '' : isFitContent || isPercentage ? width : `${Math.max(parseFloat(width), minWidth)}px`;
     }
 }
 

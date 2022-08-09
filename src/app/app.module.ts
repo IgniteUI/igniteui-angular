@@ -12,7 +12,8 @@ import {
     IgxListModule,
     IgxTextSelectionModule,
     IgxPivotGridModule,
-    IgxQueryBuilderModule
+    IgxQueryBuilderModule,
+    IgcFormsModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -160,6 +161,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 
@@ -302,7 +304,8 @@ const components = [
     PivotGridHierarchySampleComponent,
     PivotGridNoopSampleComponent,
     IgxStepperSampleComponent,
-    QueryBuilderComponent
+    QueryBuilderComponent,
+    RatingSampleComponent
 ];
 
 @NgModule({
@@ -335,7 +338,8 @@ const components = [
         IgxDateTimeEditorModule,
         IgxButtonModule,
         IgxPivotGridModule,
-        IgxQueryBuilderModule
+        IgxQueryBuilderModule,
+        IgcFormsModule
     ],
     providers: [
         LocalService,
