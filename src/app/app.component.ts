@@ -554,6 +554,11 @@ export class AppComponent implements OnInit {
             link: '/pivot-noop',
             icon: 'view_column',
             name: 'Noop Pivot Grid'
+        },
+        {
+            link: '/query-builder',
+            icon: 'view_column',
+            name: 'Query Builder'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
