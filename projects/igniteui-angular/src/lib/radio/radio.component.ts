@@ -56,12 +56,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
     private static ngAcceptInputType_disabled: boolean | '';
 
     /**
-     * @hidden
-     * @internal
-     */
-    public destroy$ = new Subject<boolean>();
-
-    /**
      * Returns reference to native radio element.
      * ```typescript
      * let radioElement =  this.radio.nativeRadio;
@@ -322,6 +316,13 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @hidden
      */
     public inputId = `${this.id}-input`;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject<boolean>();
+
     /**
      * @hidden
      * @internal
