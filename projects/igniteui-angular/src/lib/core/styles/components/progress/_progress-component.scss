@@ -91,7 +91,11 @@
 
         @include m(indeterminate) {
             @include e(indicator) {
-                @extend %linear-indicator--indeterminate !optional;
+                @extend %linear-indicator--indeterminate-primary !optional;
+            }
+
+            @include e(indicator-secondary) {
+                @extend %linear-indicator--indeterminate-secondary !optional;
             }
 
             @include e(value) {
