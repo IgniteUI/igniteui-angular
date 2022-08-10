@@ -170,7 +170,7 @@ export class IgxGridStateDirective {
         },
         columns: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const gridColumns: IColumnState[] = context.currGrid.columnList.map((c) => ({
+                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
                     pinned: c.pinned,
                     sortable: c.sortable,
                     filterable: c.filterable,
@@ -207,6 +207,7 @@ export class IgxGridStateDirective {
                     if (hasColumnGroup) {
                         const ref1 = groupFactory.create(context.viewRef.injector);
                         Object.assign(ref1.instance, colState);
+                        ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref1.instance.parent);
                             columnGroup.children.reset([...columnGroup.children.toArray(), ref1.instance]);
@@ -217,6 +218,7 @@ export class IgxGridStateDirective {
                     } else {
                         const ref = factory.create(context.viewRef.injector);
                         Object.assign(ref.instance, colState);
+                        ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
                             const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.header === ref.instance.parent);
                             if (columnGroup) {
@@ -228,7 +230,10 @@ export class IgxGridStateDirective {
                         newColumns.push(ref.instance);
                     }
                 });
-                context.grid.updateColumns(newColumns);
+                context.currGrid.updateColumns(newColumns);
+                newColumns.forEach(col => {
+                    (context.currGrid as any).columnInit.emit(col);
+                });
             }
         },
         groupBy: {
@@ -489,19 +494,8 @@ export class IgxGridStateDirective {
      * The method that calls corresponding methods to restore features from the passed IGridState object.
      */
     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
-        // TODO Notify the grid that columnList.changes is triggered by the state directive
-        // instead of piping it like below
-        const columns = 'columns';
-        this.grid.columnList.changes.pipe(delay(0), take(1)).subscribe(() => {
-            this.featureKeys = this.featureKeys.filter(f => f !== columns);
-            this.restoreFeatures(state);
-        });
         this.applyFeatures(features);
-        if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
-            this.getFeature(columns).restoreFeatureState(this, state[columns]);
-        } else {
-            this.restoreFeatures(state);
-        }
+        this.restoreFeatures(state);
     }
 
     private restoreFeatures(state: IGridState) {
@@ -550,8 +544,8 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columnList.length > 0) {
-                    dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
+                if (this.currGrid.columns.length > 0) {
+                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 } else {

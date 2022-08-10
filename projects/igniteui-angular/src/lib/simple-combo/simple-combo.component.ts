@@ -233,7 +233,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim()) {
+        if (!this.comboInput.value.trim() && this.selectionService.size(this.id) > 0) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
@@ -301,14 +301,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public handleItemClick(): void {
         this.close();
         this.comboInput.focus();
-    }
-
-    /** @hidden @internal */
-    public onBlur(): void {
-        if (this.collapsed) {
-            this.clearOnBlur();
-        }
-        super.onBlur();
     }
 
     /** @hidden @internal */
@@ -388,7 +380,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return true;
         }
         const searchValue = this.searchValue || this.comboInput.value;
-        return !!searchValue && value.toString().toLowerCase().includes(searchValue.trim().toLowerCase());
+        return !!searchValue && value.toString().toLowerCase().includes(searchValue.toLowerCase());
     };
 
     protected setSelection(newSelection: any): void {
@@ -402,10 +394,17 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        this.selectionChanging.emit(args);
+        // additional checks when selecting and clearing an item with valueKey=undefined
+        // as the event should emit when args.newSelection differs from args.oldSelection
+        // however in this case both args.newSelection and args.oldSelection are 'undefined'
+        if (args.newSelection !== args.oldSelection
+            || args.newSelection === undefined && newSelection?.size > 0
+            || args.oldSelection === undefined && oldSelectionAsArray.length > 0) {
+            this.selectionChanging.emit(args);
+        }
+        // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = args.newSelection !== undefined
-                && args.newSelection !== null
+            let argsSelection = newSelection?.size > 0
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
@@ -432,7 +431,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
         }
 
-        return newSelection[0] || '';
+        return newSelection[0]?.toString() || '';
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
@@ -445,7 +444,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clearOnBlur(): void {
         const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null || !this.selectedItem) {
+        if (filtered === undefined || filtered === null || this.selectionService.size(this.id) === 0) {
             this.clearAndClose();
             return;
         }
@@ -458,13 +457,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
     }
 
-    private getElementVal(element: any): any | null {
-        if (!element) {
-            return null;
-        }
-
+    private getElementVal(element: any): string {
         const elementVal = this.displayKey ? element[this.displayKey] : element;
-        return (elementVal === 0 ? '0' : elementVal) || '';
+        return String(elementVal);
     }
 
     private clearAndClose(): void {
