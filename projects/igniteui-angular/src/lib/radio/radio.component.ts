@@ -349,15 +349,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @hidden
      * @internal
      */
-     public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     @HostListener('change', ['$event'])
     public _changed(event: Event){
         if(event instanceof Event){
@@ -382,6 +373,15 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
     @HostListener('click')
     public _clicked() {
         this.select();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**
