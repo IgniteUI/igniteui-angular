@@ -23,6 +23,7 @@ import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
+import { cloneArray, cloneValue } from '../core/utils';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -403,13 +404,17 @@ export class IgxGridStateDirective {
                 if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
                     return { pivotConfiguration: undefined };
                 }
-                const dims =  [...(config.rows || []), ...(config.columns || []), ...(config.filters || [])];
+                const configCopy = cloneValue(config);
+                configCopy.rows = cloneArray(config.rows, true);
+                configCopy.columns = cloneArray(config.columns, true);
+                configCopy.filters = cloneArray(config.filters, true);
+                const dims =  [...(configCopy.rows || []), ...(configCopy.columns || []), ...(configCopy.filters || [])];
                 const dateDimensions = dims.filter(x => context.isDateDimension(x));
                 dateDimensions?.forEach(dim => {
                     // do not serialize the grid resource strings. This would pollute the object with unnecessary data.
                     (dim as IgxPivotDateDimension).resourceStrings = {};
                 });
-                return { pivotConfiguration: config };
+                return { pivotConfiguration: configCopy };
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
                 const config: IPivotConfiguration = state;
