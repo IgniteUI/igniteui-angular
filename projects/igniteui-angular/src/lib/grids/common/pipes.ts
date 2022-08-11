@@ -5,7 +5,6 @@ import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
-import { LayoutSampleComponent } from 'src/app/layout/layout.sample';
 import { IgxTransactionService } from '../../services/public_api';
 
 interface GridStyleCSSProperty {
