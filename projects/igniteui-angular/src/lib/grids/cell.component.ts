@@ -479,11 +479,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--valid')
     public get isValidAfterEdit() {
         const formControl = this.formGroup?.get(this.column?.field);
-        return this.editMode && !formControl.invalid && formControl.dirty;
+        return this.editMode && formControl && !formControl.invalid && formControl.dirty;
     }
 
     private get validity() {
-        const state = this.grid.transactions.getState(this.row.key);
+        const state = this.grid.transactions.getState(this.intRow.key);
         if (state && state.validity && state.validity.some(x => x.valid === false)) {
            return state.validity.find(x => x.field === this.column.field);
         }
