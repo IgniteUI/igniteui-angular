@@ -118,6 +118,7 @@ export class IgxCell {
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const row = this.grid.crudService.row ?? this.row;
+        const formControl = row.rowFormGroup.get(this.column.field);
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -126,7 +127,7 @@ export class IgxCell {
             cancel: false,
             column: this.column,
             owner: this.grid,
-            isValid: row.rowFormGroup.get(this.column.field).valid,
+            isValid: formControl ? formControl.valid : true,
             event
         };
         if (includeNewValue) {
