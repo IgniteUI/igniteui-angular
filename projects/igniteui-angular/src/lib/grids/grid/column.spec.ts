@@ -17,7 +17,7 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForGridScroll } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
@@ -42,7 +42,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 GridAddColumnComponent,
                 IgxGridCurrencyColumnComponent,
                 IgxGridPercentColumnComponent,
-                IgxGridDateTimeColumnComponent
+                IgxGridDateTimeColumnComponent,
+                ResizableColumnsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         });
@@ -167,20 +168,20 @@ describe('IgxGrid - Column properties #grid', () => {
         const grid = fix.componentInstance.grid;
         let headers: DebugElement[];
 
-        expect(grid.columnList.first.field).toMatch('ID');
-        expect(grid.columnList.last.field).toMatch('Name');
+        expect(grid.columns[0].field).toMatch('ID');
+        expect(grid.columns[2].field).toMatch('Name');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('ID');
         expect(headers[2].nativeElement.textContent).toMatch('Name');
 
         // Swap columns
-        grid.moveColumn(grid.columnList.first, grid.columnList.last);
+        grid.moveColumn(grid.columns[0], grid.columns[2]);
         tick();
         fix.detectChanges();
 
-        expect(grid.columnList.first.field).toMatch('IsEmployed');
-        expect(grid.columnList.last.field).toMatch('ID');
+        expect(grid.columns[0].field).toMatch('IsEmployed');
+        expect(grid.columns[2].field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('IsEmployed');
@@ -229,7 +230,7 @@ describe('IgxGrid - Column properties #grid', () => {
         cityCol = grid.getColumnByName('City');
         expect(cityCol).not.toBeDefined();
 
-         // add to pinned area
+        // add to pinned area
         fix.componentInstance.columns.push({ field: 'City', width: 150, type: 'string', pinned: true });
         fix.detectChanges();
 
@@ -1148,6 +1149,128 @@ describe('IgxGrid - Column properties #grid', () => {
 
     });
 
+    describe('Auto-sizing with width auto: ', () => {
+        it('should auto-size column in view on init.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            expect(grid.columns[0].width).toBe('95px');
+            expect(grid.columns[1].width).toBe('207px');
+        }));
+
+        it('should auto-size within minWidth/maxWidth bounds', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', minWidth: '100px', maxWidth: '200px' },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            expect(grid.columns[0].width).toBe('100px');
+            expect(grid.columns[1].width).toBe('200px');
+        }));
+
+        it('should auto-size column when scrolled into view.', (async () => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto' },
+                { field: 'CompanyName', width: 'auto' },
+                { field: 'ContactName', width: 'auto' },
+                { field: 'ContactTitle', width: 'auto' },
+                { field: 'Address', width: 'auto' },
+                { field: 'City', width: 'auto' },
+                { field: 'Region', width: 'auto' },
+                { field: 'PostalCode', width: 'auto' },
+                { field: 'Phone', width: 'auto' },
+                { field: 'Fax', width: 'auto' }
+            ];
+            fix.detectChanges();
+            await wait();
+            const grid = fix.componentInstance.instance;
+            // initially no autoSize
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('fit-content');
+            // scroll last column in view
+            grid.navigateTo(0, 9);
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            // check size after it comes in view
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
+        }));
+
+        it('should auto-size correctly when cell has custom template', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            const grid = fix.componentInstance.instance;
+            fix.detectChanges();
+            const col = grid.columns[0];
+            col.bodyTemplate = fix.componentInstance.customTemplate;
+            fix.detectChanges();
+            tick();
+            expect(col.width).toBe('137px');
+        }));
+
+        it('should auto-size after an initially hidden column is shown.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', hidden: true },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const col = grid.columns[0];
+            expect(col.width).toBe('fit-content');
+            col.hidden = false;
+            fix.detectChanges();
+            tick();
+            expect(col.width).toBe('95px');
+        }));
+
+        it('should auto-size initially pinned column.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto', pinned: true },
+                { field: 'Address', minWidth: '100px', maxWidth: '200px', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const pinnedCol = grid.pinnedColumns[0];
+            expect(pinnedCol.width).toBe('97px');
+        }));
+
+        it('should auto-size columns added in view after grid is resized', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto' },
+                { field: 'CompanyName', width: 'auto' },
+                { field: 'ContactName', width: 'auto' },
+                { field: 'ContactTitle', width: 'auto' },
+                { field: 'Address', width: 'auto' },
+                { field: 'City', width: 'auto' },
+                { field: 'Region', width: 'auto' },
+                { field: 'PostalCode', width: 'auto' },
+                { field: 'Phone', width: 'auto' },
+                { field: 'Fax', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            const lastCol = grid.columns[grid.columns.length - 1];
+            expect(lastCol.width).toBe('fit-content');
+            // resize grid so that all columns are in view
+            grid.width = '1500px';
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+            const widths = grid.columns.map(x => x.width);
+            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+        }));
+    });
+
 });
 
 @Component({
@@ -1159,6 +1282,37 @@ export class ColumnsFromIterableComponent {
 
     public data = SampleTestData.personIDNameData();
     public columns = ['ID', 'Name'];
+}
+
+interface IColumnConfig {
+    field: string,
+    width: string,
+    minWidth?: string;
+    maxWidth?: string;
+    hidden?: boolean;
+    pinned?: boolean;
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
+    `
+    <ng-template #customTemplate let-value>
+    <button igxButton="raised">{{value}}</button>
+    </ng-template>
+    `
+})
+export class ResizableColumnsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    @ViewChild('customTemplate', { read: TemplateRef, static: true })
+    public customTemplate: TemplateRef<any>;
+
+    public data = SampleTestData.contactInfoData();
+    public columns: IColumnConfig[] = [
+        { field: 'ID', width: 'auto' },
+        { field: 'Address', minWidth: '100px', maxWidth: '400px', width: 'auto' }
+    ];
 }
 
 @Component({

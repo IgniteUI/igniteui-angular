@@ -1,3 +1,9 @@
-:host ::ng-deep igx-banner {
-    margin-bottom: 16px;
+:host,
+.sample-actions {
+    display: flex;
+    gap: 20px;
+}
+
+:host {
+    flex-direction: column;
 }

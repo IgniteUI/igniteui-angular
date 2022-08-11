@@ -88,4 +88,12 @@ export class CalendarSampleComponent implements OnInit {
     public deselect() {
         this.calendar.deselectDate();
     }
+
+    public changeLocale(locale: string) {
+        this.calendar.locale = locale;
+    }
+
+    public changeWeekStart(value: number) {
+        this.calendar.weekStart = value;
+    }
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilteringExpressionsTree, FilteringLogic, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
@@ -106,6 +106,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
             // no rows, just empty message
             expect(pivotGrid.rowList.length).toBe(0);
             expect(pivotGrid.tbody.nativeElement.textContent).toBe('Custom empty template.');
+        });
+
+        it('should allow setting custom chip value template', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.valueChipTemplate = fixture.componentInstance.chipValueTemplate;
+            fixture.detectChanges();
+
+            const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+            const valueChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
+            let content = valueChip.querySelector('.igx-chip__content');
+            expect(content.textContent.trim()).toBe('UnitsSold');
         });
 
         it('should apply formatter and dataType from measures', () => {
@@ -525,6 +536,61 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[0].componentInstance.column.minWidth).toBe(minWidthComf);
             expect(pivotGrid.rowList.first.cellHeight).toBe(cellHeightComf);
         }));
+
+        it('should render correct auto-widths for dimensions with no width', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid as IgxPivotGridComponent;
+            pivotGrid.data = [{
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+            }];
+            fixture.detectChanges();
+
+            // there should be just 1 dimension column and 2 value columns and they should auto-fill the available space
+            expect(pivotGrid.columns.length).toBe(3);
+            const dimColumn = pivotGrid.columns.find(x => x.field === 'Bulgaria');
+            expect(dimColumn.width).toBe((pivotGrid.calcWidth - pivotGrid.featureColumnsWidth()) + 'px');
+            const unitPriceCol = pivotGrid.columns.find(x => x.field === 'Bulgaria-UnitPrice');
+            const unitsSoldCol = pivotGrid.columns.find(x => x.field === 'Bulgaria-UnitsSold');
+            expect(unitPriceCol.width).toBe(parseInt(dimColumn.width, 10) / 2 + 'px');
+            expect(unitsSoldCol.width).toBe(parseInt(dimColumn.width, 10) / 2 + 'px');
+
+            // change data to have many columns so that they no longer fit in the grid
+            pivotGrid.data = [{
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Bulgaria', Date: '01/01/2021', UnitsSold: 282
+            }, {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'USA', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Spain', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Italy', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Greece', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Uruguay', Date: '01/01/2021', UnitsSold: 282
+            },
+            {
+                ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
+                Country: 'Mexico', Date: '01/01/2021', UnitsSold: 282
+            }
+            ];
+            fixture.detectChanges();
+
+            // all should take density default min-width (200 for default density) as they exceed the size of the grid
+            const colGroups = pivotGrid.columns.filter(x => x.columnGroup);
+            const childCols = pivotGrid.columns.filter(x => !x.columnGroup);
+            expect(colGroups.every(x => x.width === '400px')).toBeTrue();
+            expect(childCols.every(x => x.width === '200px')).toBeTrue();
+        });
 
         it('should render correct grid with noop strategies', () => {
             const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -1030,6 +1096,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const expectedExpressions: ISortingExpression[] = [
                     { dir: SortingDirection.Desc, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance() },
                     { dir: SortingDirection.Desc, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance() },
+                    { dir: SortingDirection.None, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
                 expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
             });
@@ -1038,7 +1105,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const colChip = headerRow.querySelector('igx-chip[id="Country"]');
-
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
                 // sort
                 colChip.click();
                 fixture.detectChanges();
@@ -1053,6 +1120,98 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
+                expect(colHeaders).toEqual(expected);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
+                expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
+            });
+
+            it('should apply sorting for dimension via column chip when dimension has memberFunction', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.columns = [{
+                    memberName: 'Country',
+                    memberFunction: (data) => {
+                        const len = data['Country'].length;
+                        return data['Country'];
+                    },
+                    enabled: true
+                }];
+                pivotGrid.notifyDimensionChange(true);
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const colChip = headerRow.querySelector('igx-chip[id="Country"]');
+                spyOn(pivotGrid.dimensionsSortingExpressionsChange, 'emit');
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                let expected = ['Bulgaria', 'USA', 'Uruguay'];
+                expect(colHeaders).toEqual(expected);
+
+                // sort
+                colChip.click();
+                fixture.detectChanges();
+
+                colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                expected = ['Uruguay', 'USA', 'Bulgaria'];
+                expect(colHeaders).toEqual(expected);
+                const expectedExpressions: ISortingExpression[] = [
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
+                    { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
+                ];
+                expect(pivotGrid.dimensionsSortingExpressionsChange.emit).toHaveBeenCalledWith(expectedExpressions);
+                expect(pivotGrid.dimensionsSortingExpressions).toEqual(expectedExpressions);
+            });
+
+            it('should apply correct sorting for IgxPivotDateDimension', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+
+                pivotGrid.pivotConfiguration.columns = [
+                    new IgxPivotDateDimension(
+                        {
+                            memberName: 'Date',
+                            memberFunction: (data) => {
+                                return data['Date'];
+                            },
+                            enabled: true,
+                            dataType: GridColumnDataType.Date
+                        },
+                        {
+                            total: false,
+                            years: false,
+                            quarters: false,
+                            months: false,
+                            fullDate: true
+                        }
+                    )
+                ];
+                pivotGrid.notifyDimensionChange(true);
+                fixture.detectChanges();
+
+                const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+                const colChip = headerRow.querySelector('igx-chip[id="Date"]');
+
+                //sort asc
+                colChip.click();
+                fixture.detectChanges();
+
+                let colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                let expected = ['01/05/2019', '01/06/2020', '02/19/2020', '05/12/2020', '01/01/2021', '04/07/2021', '12/08/2021']
+                expect(colHeaders).toEqual(expected);
+
+                // sort desc
+                colChip.click();
+                fixture.detectChanges();
+
+                colHeaders = pivotGrid.columns.filter(x => x.level === 0).map(x => x.header);
+                expected = ['12/08/2021', '04/07/2021', '01/01/2021', '05/12/2020', '02/19/2020', '01/06/2020', '01/05/2019'];
                 expect(colHeaders).toEqual(expected);
             });
 
@@ -2387,6 +2546,78 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 0).nativeElement.innerText).toBe('Accessories/Plovdiv:undefined');
             expect(pivotGrid.gridAPI.get_cell_by_index(0, 3).nativeElement.innerText).toBe('Accessories/London:293');
+        });
+
+        it('should allow filtering a dimension runtime.', () => {
+            const colValues = new Set();
+            colValues.add('US');
+            colValues.add('UK');
+            pivotGrid.filterDimension(pivotGrid.pivotConfiguration.columns[0], colValues, IgxStringFilteringOperand.instance().condition('in'));
+            expect(pivotGrid.columns.length).toBe(6);
+            expect(pivotGrid.columns.filter(x => x.columnGroup).map(x => x.field)).toEqual(['US', 'UK']);
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
+
+            const rowValues = new Set();
+            rowValues.add('Clothing');
+            pivotGrid.filterDimension(pivotGrid.pivotConfiguration.rows[1].childLevel, rowValues, IgxStringFilteringOperand.instance().condition('in'));
+            expect(pivotGrid.rowList.length).toBe(4);
+            const rowDimData = pivotGrid.rowList.map(x => (x as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
+            expect(rowDimData).toEqual([undefined, 'Clothing', undefined, 'Clothing']);
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
+        });
+
+        it('should update filtering on pivot configuration change.', () => {
+            fixture.detectChanges();
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
+            const filterColumnExpTree = new FilteringExpressionsTree(FilteringLogic.And);
+            filterColumnExpTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('in'),
+                    fieldName: 'City',
+                    searchVal: new Set(['Ciudad de la Costa'])
+                }
+            ];
+            const filterRowExpTree = new FilteringExpressionsTree(FilteringLogic.And);
+            filterRowExpTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('in'),
+                    fieldName: 'ProductCategory',
+                    searchVal: new Set(['Bikes'])
+                }
+            ];
+            pivotGrid.pivotConfiguration = {
+                columns: [
+                    {
+                        memberName: 'City',
+                        enabled: true,
+                        filter: filterColumnExpTree
+                    }
+                ],
+                rows: [
+                    {
+                        memberName: 'ProductCategory',
+                        enabled: true,
+                        filter: filterRowExpTree
+                    }],
+                values: [
+                    {
+                        member: 'UnitsSold',
+                        aggregate: {
+                            aggregator: IgxPivotNumericAggregate.sum,
+                            key: 'SUM',
+                            label: 'Sum'
+                        },
+                        enabled: true
+                    }
+                ]
+            };
+            fixture.detectChanges();
+            expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
+
+            expect(pivotGrid.columns.length).toBe(1);
+            expect(pivotGrid.columns[0].field).toEqual('Ciudad de la Costa');
+            expect(pivotGrid.rowList.length).toBe(1);
+            expect(pivotGrid.rowList.toArray()[0].data.dimensionValues.get('ProductCategory')).toBe('Bikes');
         });
     });
 });

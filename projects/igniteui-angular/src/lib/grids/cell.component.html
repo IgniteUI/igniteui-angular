@@ -48,8 +48,15 @@
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
-        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" [formControlName]="column.field" />
+        <igx-input-group displayDensity="compact" formGroup]="formGroup">
+            <input
+                igxInput
+                [(ngModel)]="editValue"
+                [igxFocus]="true"
+                [formControlName]="column.field"
+                (compositionstart)="grid.crudService.isInCompositionMode = true"
+                (compositionend)="grid.crudService.isInCompositionMode = false"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
@@ -63,8 +70,16 @@
             [disableRipple]="true" [formControlName]="column.field"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'" [formGroup]="formGroup">
-        <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown" [locale]="grid.locale"
-            [(value)]="editValue" [igxFocus]="true" [formControlName]="column.field">
+        <igx-date-picker
+            [style.width.%]="100"
+            [outlet]="grid.outlet"
+            mode="dropdown"
+            [locale]="grid.locale"
+            [weekStart]="column.pipeArgs.weekStart"
+            [(value)]="editValue"
+            [igxFocus]="true"
+            [formControlName]="column.field"
+        >
         </igx-date-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'time'" [formGroup]="formGroup">

@@ -73,7 +73,10 @@
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" />
+            <input igxInput [(ngModel)]="editValue" [igxFocus]="true"
+            (compositionstart)="grid.crudService.isInCompositionMode = true"
+            (compositionend)="grid.crudService.isInCompositionMode = false"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
@@ -99,6 +102,7 @@
             [outlet]="grid.outlet"
             mode="dropdown"
             [locale]="grid.locale"
+            [weekStart]="column.pipeArgs.weekStart"
             [(value)]="editValue"
             [igxFocus]="true"
         >

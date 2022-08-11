@@ -35,6 +35,7 @@
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $button-color [null] - The color used for the button icon/text color.
 /// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
+/// @param {Color} $button-disabled-color [null] - The color used for the disabled button icon/text.
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
 ///
@@ -78,6 +79,7 @@
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
+    $button-disabled-color: null,
     $tab-ripple-color: null,
     $button-ripple-color: null,
     $border-radius: null,
@@ -209,6 +211,7 @@
         button-background: $button-background,
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
+        button-disabled-color:$button-disabled-color,
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
@@ -344,8 +347,8 @@
             border: 0;
         }
 
-        &--hidden {
-            visibility: hidden;
+        &:disabled {
+            color: var-get($theme, 'button-disabled-color');
         }
 
         &--none {
@@ -529,7 +532,7 @@
         flex-direction: column;
         text-align: center;
 
-        > * {
+        > [igxtabheaderlabel] {
             @include line-clamp(2, true, true);
         }
 

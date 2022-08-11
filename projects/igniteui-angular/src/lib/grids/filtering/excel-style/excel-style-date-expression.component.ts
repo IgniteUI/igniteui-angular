@@ -4,6 +4,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxDatePickerComponent } from '../../../date-picker/public_api';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 /**
  * @hidden
@@ -32,5 +33,9 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
 
     public get inputTimePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_time_placeholder'];
+    }
+
+    public get weekStart(): number {
+        return getLocaleFirstDayOfWeek(this.grid.locale);
     }
 }

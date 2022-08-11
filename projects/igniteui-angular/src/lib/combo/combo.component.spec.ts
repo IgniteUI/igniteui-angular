@@ -1,35 +1,33 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import {
+    FormsModule, NgControl, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, ReactiveFormsModule,
-    FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
-import {
-    IgxComboComponent,
-    IgxComboModule,
-    IComboSelectionChangingEventArgs,
-    IComboSearchInputEventArgs,
-    IComboItemAdditionEvent
-} from './combo.component';
-import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboAddItemComponent } from './combo-add-item.component';
-import { IgxComboFilteringPipe } from './combo.pipes';
-import { IgxInputState } from '../directives/input/input.directive';
-import { IForOfState } from '../directives/for-of/for_of.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxIconService } from '../icon/public_api';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
-import { IgxComboState } from './combo.common';
+import { IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxInputState } from '../directives/input/input.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
+import { IgxIconService } from '../icon/public_api';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
+import { IgxComboItemComponent } from './combo-item.component';
+import { IComboFilteringOptions, IgxComboState } from './combo.common';
+import {
+    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent,
+    IgxComboModule
+} from './combo.component';
+import { IgxComboFilteringPipe } from './combo.pipes';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -49,11 +47,8 @@ const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
-const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
-const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUTGROUP_LABEL = 'igx-input-group__label';
-const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_SEARCHINPUT = 'input[name=\'searchInput\']';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
@@ -842,54 +837,12 @@ describe('igxCombo', () => {
             expect(combo.allowCustomValues).toEqual(false);
             expect(combo.cssClass).toEqual(CSS_CLASS_COMBO);
             expect(combo.type).toEqual('box');
-            expect(combo.role).toEqual('combobox');
         });
         it('should apply all appropriate classes on combo initialization', () => {
             const comboWrapper = fixture.nativeElement.querySelector(CSS_CLASS_COMBO);
             expect(comboWrapper).not.toBeNull();
-            expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Location');
-            expect(comboWrapper.attributes.getNamedItem('ng-reflect-value-key').nodeValue).toEqual('field');
-            expect(comboWrapper.attributes.getNamedItem('ng-reflect-group-key').nodeValue).toEqual('region');
-            expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
-            expect(comboWrapper.childElementCount).toEqual(2); // Input Group + Dropdown
-            expect(comboWrapper.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
-            expect(comboWrapper.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
-            expect(comboWrapper.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
-            expect(comboWrapper.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
-            expect(comboWrapper.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fixture.componentInstance.combo.dropdown.id);
+            expect(comboWrapper.classList.contains(CSS_CLASS_COMBO)).toBeTruthy();
             expect(comboWrapper.childElementCount).toEqual(2);
-
-            const inputGroupElement = comboWrapper.children[0];
-            expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
-            expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
-            expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
-            expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
-            expect(inputGroupElement.childElementCount).toEqual(3);
-
-            const inputGroupWrapper = inputGroupElement.children[0];
-            expect(inputGroupWrapper.classList.contains(CSS_CLASS_INPUTGROUP_WRAPPER)).toBeTruthy();
-            expect(inputGroupWrapper.childElementCount).toEqual(1);
-
-            const inputGroupBundle = inputGroupWrapper.children[0];
-            expect(inputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLE)).toBeTruthy();
-            expect(inputGroupBundle.childElementCount).toEqual(2);
-
-            const mainInputGroupBundle = inputGroupBundle.children[0];
-            expect(mainInputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_MAINBUNDLE)).toBeTruthy();
-            expect(mainInputGroupBundle.childElementCount).toEqual(1);
-
-            const inputElement = mainInputGroupBundle.children[0];
-            expect(inputElement.classList.contains('igx-input-group__input')).toBeTruthy();
-            expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
-            expect(inputElement.attributes['readonly']).toBeDefined();
-
-            const dropDownButton = inputGroupBundle.children[1];
-            expect(dropDownButton.classList.contains(CSS_CLASS_TOGGLEBUTTON)).toBeTruthy();
-            expect(dropDownButton.childElementCount).toEqual(1);
-
-            const inputGroupBorder = inputGroupElement.children[1];
-            expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
-            expect(inputGroupBorder.childElementCount).toEqual(0);
 
             const dropDownElement = comboWrapper.children[1];
             expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
@@ -902,17 +855,44 @@ describe('igxCombo', () => {
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
-        it('should render aria-expanded attribute properly', fakeAsync(() => {
-            const comboContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_COMBO);
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+        it('should render aria attributes properly', fakeAsync(() => {
+            expect(input.nativeElement.getAttribute('role')).toEqual('combobox');
+            expect(input.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
+            expect(input.nativeElement.getAttribute('aria-controls')).toEqual(combo.dropdown.listId);
+            expect(input.nativeElement.getAttribute('aria-labelledby')).toEqual(combo.placeholder);
+
+            const dropdown = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_DROPDOWN}`));
+            expect(dropdown.nativeElement.getAttribute('ng-reflect-labelled-by')).toEqual(combo.placeholder);
+
             combo.open();
             tick();
             fixture.detectChanges();
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('true');
+
+            const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+            expect(searchInput.nativeElement.getAttribute('role')).toEqual('searchbox');
+            expect(searchInput.nativeElement.getAttribute('aria-label')).toEqual('search');
+            expect(searchInput.nativeElement.getAttribute('aria-autocomplete')).toEqual('list');
+
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+            expect(list.nativeElement.getAttribute('aria-multiselectable')).toEqual('true');
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual('');
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            tick();
+            fixture.detectChanges();
+            expect(list.nativeElement.getAttribute('aria-activedescendant')).toEqual(combo.dropdown.focusedItem.id);
+        }));
+        it('should render aria-expanded attribute properly', fakeAsync(() => {
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('true');
             combo.close();
             tick();
             fixture.detectChanges();
-            expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+            expect(input.nativeElement.getAttribute('aria-expanded')).toMatch('false');
         }));
         it('should render placeholder values for inputs properly', () => {
             combo.toggle();
@@ -1050,7 +1030,7 @@ describe('igxCombo', () => {
         });
         it(`should not render search input if both 'allowCustomValues' and 'filterable' are false`, () => {
             combo.allowCustomValues = false;
-            combo.filterable = false;
+            combo.filteringOptions.filterable = false;
             expect(combo.displaySearchInput).toBeFalsy();
             combo.toggle();
             fixture.detectChanges();
@@ -1914,7 +1894,8 @@ describe('igxCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxComboSampleComponent
+                    IgxComboSampleComponent,
+                    IgxComboRemoteDataComponent
                 ],
                 imports: [
                     IgxComboModule,
@@ -2102,6 +2083,78 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(0);
         });
+        it('should select unique falsy item values', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            combo.data = [
+                { field: '0', value: 0 },
+                { field: 'false', value: false },
+                { field: '', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
+            ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0');
+            expect(combo.selection).toEqual([ 0 ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            expect(item2).toBeDefined();
+
+            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false');
+            expect(combo.selection).toEqual([ 0, false ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+            expect(item3).toBeDefined();
+
+            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, ');
+            expect(combo.selection).toEqual([ 0, false, '' ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
+
+            item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined');
+            expect(combo.selection).toEqual([ 0, false, '', undefined ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+            expect(item5).toBeDefined();
+
+            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined, null');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            expect(item6).toBeDefined();
+
+            item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0, false, , undefined, null, NaN');
+            expect(combo.selection).toEqual([ 0, false, '', undefined, null, NaN ]);
+        });
         it('should prevent selection when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
             combo.toggle();
@@ -2117,6 +2170,19 @@ describe('igxCombo', () => {
             simulateComboItemClick(0);
             expect(combo.selection.length).toEqual(0);
             expect(itemCheckbox[0].classList.contains(CSS_CLASS_ITME_CHECKBOX_CHECKED)).toBeFalsy();
+        });
+        it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
+            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
+            combo.toggle();
+            fixture.detectChanges();
+
+            simulateComboItemClick(0);
+            expect(combo.selection.length).toEqual(0);
+            expect((combo as any)._remoteSelection[0]).toBeUndefined();
         });
     });
     describe('Grouping tests: ', () => {
@@ -2512,8 +2578,8 @@ describe('igxCombo', () => {
 
             addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.selection).toEqual(['New']);
-            expect(combo.comboInput.nativeElement.value).toEqual('New');
+            expect(combo.selection).toEqual(['New ']);
+            expect(combo.comboInput.nativeElement.value).toEqual('New ');
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2679,6 +2745,115 @@ describe('igxCombo', () => {
             expect(combo.searchValue).toEqual('Test');
             cancelSub.unsubscribe();
         });
+        it('Should filter the data when custom filterFunction is provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filterFunction = undefined;
+            combo.filteringOptions = undefined;
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filterFunction is provided and filteringOptions.caseSensitive is changed', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.filterFunction = (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions): any[] => {
+                if (!collection) return [];
+                if (!searchValue) return collection;
+                const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+                return collection.filter(i => filteringOptions.caseSensitive ?
+                    i[filteringOptions.filteringKey]?.includes(searchTerm) :
+                    i[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm))
+                }
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { caseSensitive: true });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+        }));
+        it('Should update filtering when custom filteringOptions are provided', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.close();
+            tick();
+            fixture.detectChanges();
+            combo.filteringOptions = { caseSensitive: false, filterable: true, filteringKey: combo.groupKey };
+            combo.open();
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'new england';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+
+            combo.searchValue = 'value not in the list';
+            combo.handleInputChange();
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+
+            combo.filteringOptions = Object.assign({}, combo.filteringOptions, { filterable: false });
+            fixture.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {

@@ -430,6 +430,11 @@ export class AppComponent implements OnInit {
             name: 'Radio Group'
         },
         {
+            link: '/rating',
+            icon: 'star',
+            name: 'Rating'
+        },
+        {
             link: '/reactive',
             icon: 'web',
             name: 'Reactive Form'

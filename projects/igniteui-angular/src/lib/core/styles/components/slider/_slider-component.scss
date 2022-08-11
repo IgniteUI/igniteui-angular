@@ -26,6 +26,10 @@ $_igx-slider-thumbs: 'from' 'to';
             @extend %igx-slider-track !optional;
         }
 
+        @include e(track-inactive) {
+            @extend %igx-slider-track-inactive !optional;
+        }
+
         @include e(track-fill) {
             @extend %igx-slider-track-fill !optional;
         }
@@ -88,10 +92,6 @@ $_igx-slider-thumbs: 'from' 'to';
 
             @include e(track) {
                 @extend %igx-slider-track--disabled !optional;
-            }
-
-            @include e(track-steps) {
-                @extend %igx-slider-track-steps--disabled !optional;
             }
 
             @include e(track-fill) {

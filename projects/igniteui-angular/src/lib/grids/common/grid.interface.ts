@@ -674,6 +674,7 @@ export interface PivotGridType extends GridType {
     hasMultipleValues: boolean;
     excelStyleFilterMaxHeight: string;
     excelStyleFilterMinHeight: string;
+    valueChipTemplate: TemplateRef<any>;
 }
 export interface GridSVGIcon {
     name: string;

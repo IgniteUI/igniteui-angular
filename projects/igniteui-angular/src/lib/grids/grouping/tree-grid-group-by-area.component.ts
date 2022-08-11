@@ -32,7 +32,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     public set hideGroupedColumns(value: boolean) {
-        if (this.grid.columnList && this.expressions) {
+        if (this.grid.columns && this.expressions) {
             this.setColumnsVisibility(value);
         }
 
@@ -48,7 +48,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     public ngAfterContentInit(): void {
-        if (this.grid.columnList && this.expressions) {
+        if (this.grid.columns && this.expressions) {
             this.groupingDiffer = this.differs.find(this.expressions).create();
             this.updateColumnsVisibility();
         }
@@ -112,9 +112,9 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     private updateColumnsVisibility() {
-        if (this.groupingDiffer && this.grid.columnList && !this.grid.hasColumnLayouts) {
+        if (this.groupingDiffer && this.grid.columns && !this.grid.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.expressions);
-            if (changes && this.grid.columnList.length > 0) {
+            if (changes && this.grid.columns.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.grid.getColumnByName(rec.item.fieldName);
                     col.hidden = this.hideGroupedColumns;
@@ -128,7 +128,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     private setColumnsVisibility(value) {
-        if (this.grid.columnList.length > 0 && !this.grid.hasColumnLayouts) {
+        if (this.grid.columns.length > 0 && !this.grid.hasColumnLayouts) {
             this.expressions.forEach((expr) => {
                 const col = this.grid.getColumnByName(expr.fieldName);
                 col.hidden = value;
