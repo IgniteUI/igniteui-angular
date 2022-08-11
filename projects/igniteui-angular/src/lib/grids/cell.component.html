@@ -48,7 +48,7 @@
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
-        <igx-input-group displayDensity="compact" formGroup]="formGroup">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
                 [(ngModel)]="editValue"
