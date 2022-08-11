@@ -142,7 +142,6 @@ export class IgxCell {
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const row = this.grid.crudService.row ?? this.row;
         const formControl = row.rowFormGroup.get(this.column.field);
-        formControl.updateValueAndValidity();
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -150,7 +149,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
             oldValue: this.value,
-            isValid: formControl.valid,
+            isValid: formControl ? formControl.valid : true,
             newValue: value,
             column: this.column,
             owner: this.grid,
