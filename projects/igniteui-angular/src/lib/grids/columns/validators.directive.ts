@@ -15,19 +15,19 @@ export abstract class IgxColumnValidator extends Validators {
         }
     }
 
-    abstract validate(value : any) : ValidationErrors | null;
+    public abstract  validate(value : any) : ValidationErrors | null;
 }
 
 @Directive({
-    selector:
-        'igx-column[required]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[required]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => RequiredValidator),
         multi: true
     }]
 })
-export class IgxColumnRequiredValidator extends RequiredValidator {
+export class IgxColumnRequiredValidatorDirective extends RequiredValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -35,15 +35,15 @@ export class IgxColumnRequiredValidator extends RequiredValidator {
 }
 
 @Directive({
-    selector:
-        'igx-column[min]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[min]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => MinValidator),
         multi: true
     }]
 })
-export class IgxColumnMinValidator extends MinValidator {
+export class IgxColumnMinValidatorDirective extends MinValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -52,15 +52,15 @@ export class IgxColumnMinValidator extends MinValidator {
 
 
 @Directive({
-    selector:
-        'igx-column[max]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[max]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => MaxValidator),
         multi: true
     }]
 })
-export class IgxColumnMaxValidator extends MaxValidator {
+export class IgxColumnMaxValidatorDirective extends MaxValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -69,15 +69,15 @@ export class IgxColumnMaxValidator extends MaxValidator {
 
 
 @Directive({
-    selector:
-        'igx-column[email]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[email]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => EmailValidator),
         multi: true
     }]
 })
-export class IgxColumnEmailValidator extends EmailValidator {
+export class IgxColumnEmailValidatorDirective extends EmailValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -86,15 +86,15 @@ export class IgxColumnEmailValidator extends EmailValidator {
 
 
 @Directive({
-    selector:
-        'igx-column[minlength]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[minlength]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => MinLengthValidator),
         multi: true
     }]
 })
-export class IgxColumnMinLengthValidator extends MinLengthValidator {
+export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -102,15 +102,15 @@ export class IgxColumnMinLengthValidator extends MinLengthValidator {
 }
 
 @Directive({
-    selector:
-        'igx-column[maxlength]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[maxlength]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => MaxLengthValidator),
         multi: true
     }]
 })
-export class IgxColumMaxLengthValidator extends MaxLengthValidator {
+export class IgxColumMaxLengthValidatorDirective extends MaxLengthValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);
@@ -118,15 +118,15 @@ export class IgxColumMaxLengthValidator extends MaxLengthValidator {
 }
 
 @Directive({
-    selector:
-        'igx-column[pattern]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igx-column[pattern]',
     providers: [{
         provide: NG_VALIDATORS,
         useExisting: forwardRef(() => PatternValidator),
         multi: true
     }]
 })
-export class IgxColumPatternValidator extends PatternValidator {
+export class IgxColumPatternValidatorDirective extends PatternValidator {
     constructor(private column: IgxColumnComponent) {
         super();
         column.validators.push(this);

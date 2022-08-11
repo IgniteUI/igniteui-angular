@@ -19,7 +19,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     @Input('appForbiddenName') 
     public forbiddenName = '';
   
-    validate(control: AbstractControl): ValidationErrors | null {
+    public validate(control: AbstractControl): ValidationErrors | null {
       return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
                                 : null;
     }

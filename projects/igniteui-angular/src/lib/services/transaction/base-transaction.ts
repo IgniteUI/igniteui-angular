@@ -123,7 +123,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         if (id !== undefined) {
             pending = pending.filter(t => t.id === id);
         }
-        return pending.filter(x => x.validity.some(x => x.valid === false));
+        return pending.filter(x => x.validity.some(y => y.valid === false));
     }
 
     /**

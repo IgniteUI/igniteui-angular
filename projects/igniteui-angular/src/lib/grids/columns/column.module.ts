@@ -12,17 +12,19 @@ import {
     IgxFilterCellTemplateDirective,
     IgxSummaryTemplateDirective
 } from './templates.directive';
-import { IgxColumMaxLengthValidator, IgxColumnEmailValidator, IgxColumnMaxValidator, IgxColumnMinLengthValidator, IgxColumnMinValidator, IgxColumnRequiredValidator, IgxColumPatternValidator } from './validators.directive';
+import { IgxColumMaxLengthValidatorDirective, IgxColumnEmailValidatorDirective, IgxColumnMaxValidatorDirective,
+     IgxColumnMinLengthValidatorDirective, IgxColumnMinValidatorDirective, IgxColumnRequiredValidatorDirective,
+      IgxColumPatternValidatorDirective } from './validators.directive';
 
 @NgModule({
     declarations: [
-        IgxColumnRequiredValidator,
-        IgxColumnMinValidator,
-        IgxColumnMaxValidator,
-        IgxColumnMinLengthValidator,
-        IgxColumMaxLengthValidator, 
-        IgxColumnEmailValidator,
-        IgxColumPatternValidator,
+        IgxColumnRequiredValidatorDirective,
+        IgxColumnMinValidatorDirective,
+        IgxColumnMaxValidatorDirective,
+        IgxColumnMinLengthValidatorDirective,
+        IgxColumMaxLengthValidatorDirective, 
+        IgxColumnEmailValidatorDirective,
+        IgxColumPatternValidatorDirective,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
@@ -36,13 +38,13 @@ import { IgxColumMaxLengthValidator, IgxColumnEmailValidator, IgxColumnMaxValida
         IgxColumnLayoutComponent
     ],
     exports: [
-        IgxColumnRequiredValidator,
-        IgxColumnMinValidator,
-        IgxColumnMaxValidator,
-        IgxColumnMinLengthValidator,
-        IgxColumMaxLengthValidator, 
-        IgxColumnEmailValidator,
-        IgxColumPatternValidator,
+        IgxColumnRequiredValidatorDirective,
+        IgxColumnMinValidatorDirective,
+        IgxColumnMaxValidatorDirective,
+        IgxColumnMinLengthValidatorDirective,
+        IgxColumMaxLengthValidatorDirective, 
+        IgxColumnEmailValidatorDirective,
+        IgxColumPatternValidatorDirective,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
