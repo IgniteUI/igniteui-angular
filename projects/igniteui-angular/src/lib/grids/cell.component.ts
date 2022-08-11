@@ -457,6 +457,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return id;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
@@ -466,6 +470,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         } else {
            return !!this.validity ? !this.validity.valid : false;
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--valid')
+    public get isValidAfterEdit() {
+        const formControl = this.formGroup?.get(this.column?.field);
+        return this.editMode && !formControl.invalid && formControl.dirty;
     }
 
     private get validity() {

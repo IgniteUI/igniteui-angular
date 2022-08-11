@@ -235,8 +235,8 @@
             @extend %grid-cell--invalid !optional;
         }
     
-        @include e(td, $m: invalidInline) {
-            @extend %grid-cell--invalidInline !optional;
+        @include e(td, $m: valid) {
+            @extend %grid-cell--valid !optional;
         }
 
         @include e(td, $m: column-selected) {
