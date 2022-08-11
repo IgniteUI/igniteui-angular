@@ -4,7 +4,8 @@
             <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
         </div>
 
-        <igx-query-builder #queryBuilder>
+        <igx-query-builder #queryBuilder
+            [displayDensity]="this.density">
         </igx-query-builder>
         
     </div>

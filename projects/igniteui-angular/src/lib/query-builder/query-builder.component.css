@@ -3,13 +3,13 @@
     min-width: 660px;
     max-width: 720px;
     /* box-shadow: elevation($elevation: 12); */
-    border-radius: border-radius(rem(4px));
+    border-radius: 4px;
 }
 
 .igx-query-builder__header {
     display: flex;
     align-items: center;
-    padding: rem(16px); /*$vertical-space-comfortable; */
+    padding: 16px; /*$vertical-space-comfortable; */
     /* color: color($palette, 'grays', 700); */
 
     user-select: none;
@@ -26,28 +26,141 @@ h4,
     margin-inline-start: auto;
     pointer-events: none;
 }
+
 .igx-builder-legend__item {
     position: relative;
     display: inline-flex;
     align-items: center;
-    font-size: rem(12px);
-    margin-inline-start: rem(24px);
+    font-size: 12px;
+    margin-inline-start: 24px;
 }
 
 .igx-builder-legend__item--and::before {
     content: "";
-    width: rem(24px);
-    height: rem(24px);
-    border-radius: border-radius(rem(4px));
-    margin-inline-end: rem(8px);
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    /* border-radius: border-radius(rem(4px)); */
+    margin-inline-end: 8px;
     background: #4ca7e3;
+}
+
+.igx-builder-legend__item--and::before
++ .igx-builder-legend__item {
+    margin-inline-start: 24px;
 }
 
 .igx-builder-legend__item--or::before {
     content: "";
-    width: rem(24px);
-    height: rem(24px);
-    border-radius: border-radius(rem(4px));
-    margin-inline-end: rem(8px);
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    /* border-radius: border-radius(rem(4px)); */
+    margin-inline-end: 8px;
     background: #d35c92;
+}
+
+.igx-advanced-filter__main {
+    display: block;
+    padding: 16px;
+    overflow: auto;
+    min-height: 214px;
+    max-height: 468px;    
+}
+
+.igx-advanced-filter__main [igxButton] + [igxButton] {
+    margin-inline-start: 8px;
+}
+
+.igx-filter-tree {
+    display: flex;
+}
+
+.igx-filter-tree + .igx-filter-tree,
+.igx-filter-tree + .igx-filter-tree__expression-item,
+.igx-filter-tree + .igx-filter-tree__inputs {
+    margin-top: 16px;
+}
+
+.igx-filter-tree__line {
+    width: 8px;
+    min-width: 8px;
+    background-color: white;
+    margin-inline-end: 16px;
+    outline-style: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.igx-filter-tree__line--and {
+    background: #4ca7e3;
+}
+
+.igx-filter-tree__line--or {
+    background: #d35c92;
+}
+
+.igx-filter-tree__expression {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.igx-filter-tree__expression-item {
+    display: flex;
+    align-items: center;
+}
+
+.igx-filter-tree__expression-item + .igx-filter-tree,
+.igx-filter-tree__expression-item + .igx-filter-tree__inputs,
+.igx-filter-tree__expression-item + .igx-filter-tree__expression-item {
+    margin-top: 16px;
+}
+
+.igx-filter-tree__expression-column {
+    padding: 0 8px;
+}
+
+.igx-filter-tree__buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+
+    /* + %filter-tree,
+    + %filter-tree__expression-item,
+    + %filter-tree__inputs {
+        margin-top: $vertical-space-comfortable;
+    } */
+}
+
+.igx-filter-tree__inputs {
+    display: flex;
+    justify-content: space-between;
+
+    /* igx-select + igx-select,
+    igx-select + igx-input-group,
+    igx-select + igx-date-picker,
+    igx-input-group + igx-select {
+        margin-inline-start: rem(8px);
+    }
+
+    + %filter-tree,
+    + %filter-tree__expression-item {
+        margin-top: $vertical-space-comfortable;
+    } */
+}
+
+.igx-filter-tree__inputs-actions {
+    display: flex;
+    margin: 0 rem(8px);
+    align-items: center;
+
+    /* [igxButton] {
+        transition: none;
+    }
+
+    [igxButton] + [igxButton] {
+        margin-inline-start: rem(8px);
+    } */
 }
