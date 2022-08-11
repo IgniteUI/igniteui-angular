@@ -111,24 +111,24 @@
 
 <ng-template #defaultError>
     <div *ngIf="formGroup?.get(column?.field).errors?.['required']">
-        Field is required.
+        {{grid.resourceStrings.igx_grid_required_validation_error}}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['minlength']">
-        Field must be at least {{formGroup.get(column.field).errors.minlength.requiredLength}} characters long.
+        {{grid.resourceStrings.igx_grid_min_length_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.minlength.requiredLength }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['maxlength']">
-        Field must be at most {{formGroup.get(column.field).errors.maxlength.requiredLength}} characters long.
+        {{grid.resourceStrings.igx_grid_max_length_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.maxlength.requiredLength }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['min']">
-        Field must be more than {{formGroup.get(column.field).errors.min.min}}.
+        {{grid.resourceStrings.igx_grid_min_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.min.min }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['max']">
-        Field must be less than {{formGroup.get(column.field).errors.max.max}}.
+        {{grid.resourceStrings.igx_grid_max_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.max.max }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['email']">
-        Field must contain a valid email address.
+        {{grid.resourceStrings.igx_grid_email_validation_error }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['pattern']">
-        Field must match pattern {{formGroup.get(column.field).errors.pattern.requiredPattern}}.
+        {{grid.resourceStrings.igx_grid_pattern_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.pattern.requiredPattern }}
     </div>
 </ng-template>
