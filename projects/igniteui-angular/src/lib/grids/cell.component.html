@@ -110,8 +110,25 @@
 </ng-container>
 
 <ng-template #defaultError>
-    Validation error.
     <div *ngIf="formGroup?.get(column?.field).errors?.['required']">
-        This field is required.
+        Field is required.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['minlength']">
+        Field must be at least {{formGroup.get(column.field).errors.minlength.requiredLength}} characters long.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['maxlength']">
+        Field must be at most {{formGroup.get(column.field).errors.maxlength.requiredLength}} characters long.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['min']">
+        Field must be more than {{formGroup.get(column.field).errors.min.min}}.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['max']">
+        Field must be less than {{formGroup.get(column.field).errors.max.max}}.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['email']">
+        Field must contain a valid email address.
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['pattern']">
+        Field must match pattern {{formGroup.get(column.field).errors.pattern.requiredPattern}}.
     </div>
 </ng-template>

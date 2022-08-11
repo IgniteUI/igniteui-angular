@@ -12,11 +12,17 @@ import {
     IgxFilterCellTemplateDirective,
     IgxSummaryTemplateDirective
 } from './templates.directive';
-import { IgxColumnRequiredValidator } from './validators.directive';
+import { IgxColumMaxLengthValidator, IgxColumnEmailValidator, IgxColumnMaxValidator, IgxColumnMinLengthValidator, IgxColumnMinValidator, IgxColumnRequiredValidator, IgxColumPatternValidator } from './validators.directive';
 
 @NgModule({
     declarations: [
         IgxColumnRequiredValidator,
+        IgxColumnMinValidator,
+        IgxColumnMaxValidator,
+        IgxColumnMinLengthValidator,
+        IgxColumMaxLengthValidator, 
+        IgxColumnEmailValidator,
+        IgxColumPatternValidator,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
@@ -31,6 +37,12 @@ import { IgxColumnRequiredValidator } from './validators.directive';
     ],
     exports: [
         IgxColumnRequiredValidator,
+        IgxColumnMinValidator,
+        IgxColumnMaxValidator,
+        IgxColumnMinLengthValidator,
+        IgxColumMaxLengthValidator, 
+        IgxColumnEmailValidator,
+        IgxColumPatternValidator,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
