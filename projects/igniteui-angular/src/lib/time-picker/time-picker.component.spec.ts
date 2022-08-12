@@ -1719,6 +1719,21 @@ describe('IgxTimePicker', () => {
                 expect(inputGroupRequiredClass).not.toBeNull();
                 expect(asterisk).toBe('"*"');
             });
+
+            it('should set correct valid state when the form group is disabled', () => {
+                fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
+                fixture.detectChanges();
+                timePicker = fixture.componentInstance.timePicker;
+                fixture.detectChanges();
+
+                (fixture.componentInstance as IgxTimePickerReactiveFormComponent).markAsTouched();
+                fixture.detectChanges();
+                expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+
+                (fixture.componentInstance as IgxTimePickerReactiveFormComponent).disableForm();
+                fixture.detectChanges();
+                expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
+            })
         });
     });
 });
@@ -1806,5 +1821,14 @@ export class IgxTimePickerReactiveFormComponent {
     public addValidators() {
         this.form.get('time').setValidators(Validators.required);
         this.form.get('time').updateValueAndValidity();
+    }
+
+    public markAsTouched() {
+        this.form.get('time').markAsTouched();
+        this.form.get('time').updateValueAndValidity();
+    }
+
+    public disableForm() {
+        this.form.disable();
     }
 }
