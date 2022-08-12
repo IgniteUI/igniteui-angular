@@ -7,8 +7,10 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridColumnDataType } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand, IFilteringOperation, IgxDateTimeFilteringOperand
+} from '../data-operations/filtering-condition';
 import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
@@ -224,6 +226,9 @@ export class IgxGridStateDirective {
                     }
                 });
                 context.grid.updateColumns(newColumns);
+                newColumns.forEach(col => {
+                    (context.grid as any).columnInit.emit(col);
+                });
             }
         },
         groupBy: {
@@ -479,13 +484,11 @@ export class IgxGridStateDirective {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
         const columns = 'columns';
-        this.grid.columnList.changes.pipe(delay(0), take(1)).subscribe(() => {
-            this.featureKeys = this.featureKeys.filter(f => f !== columns);
-            this.restoreFeatures(state);
-        });
         this.applyFeatures(features);
         if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
             this.getFeature(columns).restoreFeatureState(this, state[columns]);
+            this.featureKeys = this.featureKeys.filter(f => f !== columns);
+            this.restoreFeatures(state);
         } else {
             this.restoreFeatures(state);
         }
@@ -537,8 +540,8 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columnList.length > 0) {
-                    dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
+                if (this.currGrid.columns.length > 0) {
+                    dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 } else {
@@ -575,6 +578,9 @@ export class IgxGridStateDirective {
                 break;
             case GridColumnDataType.Date:
                 filters = IgxDateFilteringOperand.instance();
+                break;
+            case GridColumnDataType.DateTime:
+                filters = IgxDateTimeFilteringOperand.instance();
                 break;
             case GridColumnDataType.String:
             default:

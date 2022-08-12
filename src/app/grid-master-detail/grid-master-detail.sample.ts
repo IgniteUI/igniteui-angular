@@ -23,7 +23,6 @@ export class GridMasterDetailSampleComponent implements OnInit {
         this.columns = [
             { dataType: 'string', field: 'ContactName', width: 200 },
             { dataType: 'string', field: 'CompanyName', width: 300 },
-            { dataType: 'string', field: 'Salary', width: 300 }
         ];
 
         this.data = [

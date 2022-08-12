@@ -462,11 +462,13 @@ describe('IgxGrid - Cell selection #grid', () => {
     describe('API', () => {
         let fix;
         let grid;
+        let detect;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            detect = () => grid.cdr.detectChanges();
         }));
 
         it('Should select a single cell', () => {
@@ -858,6 +860,43 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectedData.length).toBe(2);
             expect(selectedData[0]).toEqual({ Name: 'Monica Reyes' });
             expect(selectedData[1]).toEqual({ ID: 957 });
+        });
+
+        it('rangeSelected event should be emitted when pointer leaves active state outside grid\'s cells', () => {
+            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
+            detect();
+
+            expect(startCell.active).toBe(true);
+
+            for (let i = 3; i < 5; i++) {
+                const cell = grid.gridAPI.get_cell_by_index(i, grid.columnList.get(i - 1).field);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            }
+
+            for (let i = 3; i >= 0; i--) {
+                const cell = grid.gridAPI.get_cell_by_index(i, 'HireDate');
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            }
+
+            for (let i = 2; i >= 0; i--) {
+                const cell = grid.gridAPI.get_cell_by_index(0, grid.columnList.get(i).field);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            }
+
+            for (let i = 1; i < 4; i++) {
+                const cell = grid.gridAPI.get_cell_by_index(i, 'ID');
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            }
+
+            UIInteractions.simulatePointerOverElementEvent('pointerup', document.body);
+            detect();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
     });
 

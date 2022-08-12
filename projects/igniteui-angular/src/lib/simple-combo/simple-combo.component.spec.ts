@@ -12,7 +12,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxIconComponent, IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputState } from '../input-group/public_api';
+import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
@@ -882,21 +882,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(1);
         });
 
-        it('should clear the selection on tab/blur if the search text does not match any value', fakeAsync(() => {
+        it('should clear the selection on tab/blur if the search text does not match any value', () => {
             // allowCustomValues does not matter
             combo.select(combo.data[2][combo.valueKey]);
             fixture.detectChanges();
             expect(combo.selection.length).toBe(1);
             expect(input.nativeElement.value).toEqual('Massachusetts');
 
-            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            UIInteractions.simulateTyping('L', input, 13, 14);
+            const event = {
+                target: input.nativeElement,
+                key: 'L',
+                stopPropagation: () => { },
+                stopImmediatePropagation: () => { },
+                preventDefault: () => { }
+            };
+            combo.onArrowDown(new KeyboardEvent('keydown', { ...event }));
             fixture.detectChanges();
-            combo.onBlur();
-            tick();
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
             fixture.detectChanges();
             expect(input.nativeElement.value.length).toEqual(0);
             expect(combo.selection.length).toEqual(0);
-        }));
+        });
 
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
@@ -1063,7 +1070,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBeFalsy();
         });
 
-        it('should empty and invalid item values', () => {
+        it('should empty any invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
             combo.data = [
@@ -1108,6 +1115,79 @@ describe('IgxSimpleCombo', () => {
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe(undefined);
+        });
+
+        it('should select unique falsy item values', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            combo.data = [
+                { field: '0', value: 0 },
+                { field: 'false', value: false },
+                { field: '', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
+            ];
+
+            combo.open();
+            fixture.detectChanges();
+            const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0];
+            expect(item1).toBeDefined();
+
+            item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('0');
+            expect(combo.selection).toEqual([ 0 ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
+            expect(item2).toBeDefined();
+
+            item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('false');
+            expect(combo.selection).toEqual([ false ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+            expect(item3).toBeDefined();
+
+            item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('');
+            expect(combo.selection).toEqual([ '' ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+            expect(item4).toBeDefined();
+
+            item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('undefined');
+            expect(combo.selection).toEqual([ undefined ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[4];
+            expect(item5).toBeDefined();
+
+            item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('null');
+            expect(combo.selection).toEqual([ null ]);
+
+            combo.open();
+            fixture.detectChanges();
+            const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+            expect(item6).toBeDefined();
+
+            item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+            expect(combo.value).toBe('NaN');
+            expect(combo.selection).toEqual([ NaN ]);
         });
     });
 
