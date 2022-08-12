@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupModule, IgxInputState } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, UntypedFormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -25,6 +25,7 @@ import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AnimationService } from '../services/animation/animation';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
+
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -339,7 +340,8 @@ describe('IgxDateRangePicker', () => {
                     declarations: [
                         DateRangeTestComponent,
                         DateRangeDefaultComponent,
-                        DateRangeDisabledComponent
+                        DateRangeDisabledComponent,
+                        DateRangeReactiveFormComponent
                     ],
                     imports: [
                         CommonModule,
@@ -350,7 +352,8 @@ describe('IgxDateRangePicker', () => {
                         FormsModule,
                         NoopAnimationsModule,
                         IgxPickersCommonModule,
-                        IgxCalendarContainerModule
+                        IgxCalendarContainerModule,
+                        ReactiveFormsModule
                     ]
                 })
                     .compileComponents();
@@ -774,6 +777,21 @@ describe('IgxDateRangePicker', () => {
 
                 expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
             }));
+
+            it('should set correct valid state when the form group is disabled', () => {
+                const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+                fix.detectChanges();
+                const dateRangePicker = fix.componentInstance.dateRange;
+                fix.detectChanges();
+
+                fix.componentInstance.markAsTouched();
+                fix.detectChanges();
+                expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INVALID);
+
+                fix.componentInstance.disableForm();
+                fix.detectChanges();
+                expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INITIAL);
+            });
         });
 
         describe('Two Inputs', () => {
@@ -1566,3 +1584,30 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
+
+@Component({
+    template: `
+        <form class="wrapper" [formGroup]="form">
+        	<igx-date-range-picker formControlName="range">
+        		<label igxLabel>Range</label>
+        	</igx-date-range-picker>
+        </form>`
+})
+export class DateRangeReactiveFormComponent {
+    @ViewChild(IgxDateRangePickerComponent) public dateRange: IgxDateRangePickerComponent;
+
+    public form = this.fb.group({
+        range: ['', Validators.required],
+    });
+
+    constructor(private fb: UntypedFormBuilder) { }
+
+    public markAsTouched() {
+        this.form.get('range').markAsTouched();
+        this.form.get('range').updateValueAndValidity();
+    }
+
+    public disableForm() {
+        this.form.disable();
+    }
+}
