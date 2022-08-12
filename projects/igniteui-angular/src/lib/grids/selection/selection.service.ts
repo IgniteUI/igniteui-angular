@@ -42,6 +42,7 @@ export class IgxGridSelectionService {
     private allRowsSelected: boolean;
     private _ranges: Set<string> = new Set<string>();
     private _selectionRange: Range;
+    private _lastSelectedNode: ISelectionNode;
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -179,6 +180,8 @@ export class IgxGridSelectionService {
      * and the start node of the `state`.
      */
     public generateRange(node: ISelectionNode, state?: SelectionState): GridSelectionRange {
+        this._lastSelectedNode = node;
+
         if (!state) {
             return {
                 rowStart: node.row,
@@ -311,8 +314,8 @@ export class IgxGridSelectionService {
         return true;
     }
 
-    public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
-        if (this.dragMode) {
+    public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, firedOutsideGrid?: boolean): boolean {
+        if (this.dragMode || firedOutsideGrid) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
             this.mergeMap(this.selection, this.temp);
@@ -494,8 +497,8 @@ export class IgxGridSelectionService {
     public isPivotRowSelected(rowID): boolean {
         let contains = false;
         this.rowSelection.forEach(x => {
-            const correctRowId = rowID.replace(x,'');
-            if (rowID.includes(x) && (correctRowId === '' || correctRowId.startsWith('_')) ) {
+            const correctRowId = rowID.replace(x, '');
+            if (rowID.includes(x) && (correctRowId === '' || correctRowId.startsWith('_'))) {
                 contains = true;
                 return;
             }
@@ -751,8 +754,13 @@ export class IgxGridSelectionService {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
     }
 
-    private pointerOriginHandler = () => {
+    private pointerOriginHandler = (event) => {
         this.pointerEventInGridBody = false;
         document.body.removeEventListener('pointerup', this.pointerOriginHandler);
+
+        const targetTagName = event.target.tagName.toLowerCase();
+        if (targetTagName !== 'igx-grid-cell' && targetTagName !== 'igx-tree-grid-cell') {
+            this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);
+        }
     };
 }
