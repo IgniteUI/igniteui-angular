@@ -1393,9 +1393,10 @@
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
     }
+    
     %grid-cell--invalid {
         box-shadow: inset 0 0 0 rem(1px) color($palette, 'error', 500) !important;
-        padding-right: rem(4px) !important;
+        padding-inline-end: rem(4px) !important;
 
         > igx-icon {
             color: color($palette, 'error', 500);
@@ -1403,8 +1404,17 @@
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
         }
+        
         %grid-cell-text {
             width: 100%;
+        }
+
+        .igx-input-group__bundle {
+            &:focus-within {
+                &::after {
+                    border: none !important;
+                }
+            }
         }
     }
 
@@ -1512,6 +1522,10 @@
 
         .igx-input-group__bundle {
             border: none !important;
+        }
+
+        &.igx-grid__td--invalid {
+            padding-inline-end: rem(4px) !important;
         }
 
         igx-prefix,
