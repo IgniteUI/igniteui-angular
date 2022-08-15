@@ -286,7 +286,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     } else {
                         state.value = transaction.newValue;
                     }
-                    state.validity = transaction.validity;
+                    this.updateValidity(state, transaction);
             }
         } else {
             state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;

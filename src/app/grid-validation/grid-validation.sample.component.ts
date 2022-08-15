@@ -68,9 +68,9 @@ export class GridValidationSampleComponent {
 
     public cellEdit(evt) {
         // can cancel if there are validation errors
-        if (!evt.isValid && !this.rowEditNoTransactions) {
-            evt.cancel = true;
-        }
+        // if (!evt.isValid && !this.rowEditNoTransactions) {
+        //     evt.cancel = true;
+        // }
     }
 
     public formCreateHandler(formGr: FormGroup) {

@@ -35,7 +35,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public get enabled(): boolean {
-        return this._isPending;
+        return this._isPending || this.autoCommit;
     }
 
     /**
@@ -43,7 +43,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     public get autoCommit(): boolean {
         // transactions are auto-commited and reflect in the data. However changes and validation states are still stored until cleared.
-      return true;
+        return true;
     }
 
     /**
@@ -60,7 +60,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public add(transaction: T, recordRef?: any): void {
-        if (this._isPending) {
+        if (this.enabled) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
         }
@@ -119,7 +119,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public commit(_data: any[], _id?: any): void { 
+    public commit(_data: any[], _id?: any): void {
         this.clear(_id);
     }
 
@@ -176,11 +176,34 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
             } else {
                 state.value = transaction.newValue;
             }
+            this.updateValidity(state, transaction);
         } else {
             state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;
             states.set(transaction.id, state);
+            state.validity = transaction.validity;
         }
-        state.validity = transaction.validity;
+    }
+
+    /**
+     * Updates the validity state after update.
+     *
+     * @param state State to update value for
+     * @param transaction The transaction based on which to update.
+     */
+    protected updateValidity(state, transaction) {
+        // update validity
+        const objKeys = Object.keys(state.value);
+        objKeys.forEach(x => {
+            const currentState = state.validity.find(y => y.field === x);
+            const newState = transaction.validity.find(y => y.field === x);
+            if (currentState && newState) {
+                // update existing
+                currentState.formGroup = newState.formGroup;
+                currentState.valid = newState.valid;
+            } else if (!currentState) {
+                state.validity = state.validity.concat(transaction.validity);
+            }
+        });
     }
 
     /**
