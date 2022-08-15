@@ -41,6 +41,14 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
+    public get autoCommit(): boolean {
+        // transactions are auto-commited and reflect in the data. However changes and validation states are still stored until cleared.
+      return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
     protected _isPending = false;

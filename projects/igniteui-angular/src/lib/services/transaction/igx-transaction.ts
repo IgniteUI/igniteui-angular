@@ -24,6 +24,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
+    public get autoCommit(): boolean {
+        // transactions are stored and commited manually by the user.
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public get canRedo(): boolean {
         return this._redoStack.length > 0;
     }

@@ -53,6 +53,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                         data.splice(index, 1);
                     }
                 });
+                if (grid.transactions.autoCommit) {
+                    data = grid.data;
+                }
             } else {
                 data = grid.data;
             }
@@ -310,6 +313,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
+            if (grid.transactions.autoCommit) {
+                grid.data.push(rowData);
+            }
         } else {
             grid.data.push(rowData);
         }
@@ -323,6 +329,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (grid.transactions.enabled) {
                 const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 grid.transactions.add(transaction, grid.data[index]);
+                if (grid.transactions.autoCommit) {
+                    grid.data.splice(index, 1);
+                }
             } else {
                 grid.data.splice(index, 1);
             }
@@ -566,6 +575,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 validity: validity
             };
             grid.transactions.add(transaction, rowCurrentValue);
+            if (grid.transactions.autoCommit) {
+                mergeObjects(rowValueInDataSource, rowNewValue);
+            }
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }

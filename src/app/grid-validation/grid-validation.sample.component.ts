@@ -61,7 +61,9 @@ export class GridValidationSampleComponent {
     }
 
     public commitNoTransactions() {
+        console.log(this.data);
         this.gridNoTransactions.transactions.commit([]);
+        this.gridNoTransactions.markForCheck();
     }
 
     public cellEdit(evt) {
@@ -78,7 +80,7 @@ export class GridValidationSampleComponent {
     }
 
     public validationChange(evtArgs: IValidationStatus){
-        console.log(evtArgs);
+        //console.log(evtArgs);
     }
 }
 

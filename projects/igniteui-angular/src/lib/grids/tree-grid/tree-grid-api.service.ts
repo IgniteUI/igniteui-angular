@@ -296,6 +296,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
                 path
             };
             grid.transactions.add(transaction, rowCurrentValue);
+            if (grid.transactions.autoCommit) {
+                mergeObjects(rowValueInDataSource, rowNewValue);
+            }
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }

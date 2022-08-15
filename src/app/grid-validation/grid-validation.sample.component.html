@@ -31,6 +31,10 @@
                     </div>
                 </ng-template>
             </igx-column>
+            <igx-action-strip #actionStrip1>
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                <igx-grid-editing-actions></igx-grid-editing-actions>
+            </igx-action-strip>
         </igx-grid>
         <button (click)='commitWithTransactions()'>Commit</button>
     </article>

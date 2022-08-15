@@ -59,6 +59,10 @@ export interface HierarchicalState extends State {
 
 export interface TransactionService<T extends Transaction, S extends State> {
     /**
+     * Returns whether changes are automatically commited to the data without the need to explicitly.
+     */
+    autoCommit: boolean;
+    /**
      * Returns whether transaction is enabled for this service
      */
     readonly enabled: boolean;

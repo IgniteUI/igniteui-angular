@@ -5,7 +5,6 @@ import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
-import { IgxTransactionService } from '../../services/public_api';
 
 interface GridStyleCSSProperty {
     [prop: string]: any;
@@ -299,11 +298,11 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
     public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
-            if (rowCurrentState && transactions instanceof IgxTransactionService) {
+            if (rowCurrentState && !transactions.autoCommit) {
                 const value = resolveNestedPath(rowCurrentState, field);
                 return value !== undefined && value !== null;
             }
-        } else if (transactions instanceof IgxTransactionService) {
+        } else if (!transactions.autoCommit) {
             const transaction = transactions.getState(row_id);
             const value = resolveNestedPath(transaction?.value ?? {}, field);
             return transaction && transaction.value && (value || value === 0 || value === false);
