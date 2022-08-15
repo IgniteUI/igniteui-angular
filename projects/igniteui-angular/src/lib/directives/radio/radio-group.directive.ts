@@ -11,7 +11,7 @@ import {
     HostBinding
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, noop, Subject } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
 import { IChangeRadioEventArgs, IgxRadioComponent, RadioLabelPosition } from '../../radio/radio.component';
@@ -316,7 +316,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 
         this.radioButtons.changes.pipe(startWith(0), takeUntil(this.destroy$)).subscribe(() => {
             this.queryChange$.next();
-            this.queryChange$.complete();
             setTimeout(() => this._initRadioButtons());
         });
     }
@@ -397,9 +396,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
                     this._selected = button;
                 }
 
-                button.change.pipe(takeUntil(
-                    merge(this.destroy$, button.destroy$, this.queryChange$)
-                )).subscribe((ev) => this._selectedRadioButtonChanged(ev));
+                button.change.pipe(
+                    takeUntil(button.destroy$),
+                    takeUntil(this.destroy$),
+                    takeUntil(this.queryChange$)
+                ).subscribe((ev) => this._selectedRadioButtonChanged(ev));
             });
         }
     }
