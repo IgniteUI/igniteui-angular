@@ -1733,7 +1733,7 @@ describe('IgxTimePicker', () => {
                 (fixture.componentInstance as IgxTimePickerReactiveFormComponent).disableForm();
                 fixture.detectChanges();
                 expect((timePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
-            })
+            });
         });
     });
 });
