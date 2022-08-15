@@ -107,7 +107,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (editRow && id === this.intRow.key) {
             return editRow.rowFormGroup;
         } else {
-            return this.validity?.formGroup;
+            return this.validity?.formGroup ?? editRow?.rowFormGroup;
         }
     }
 
