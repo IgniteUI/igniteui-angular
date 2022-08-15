@@ -195,12 +195,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         const objKeys = Object.keys(state.value);
         objKeys.forEach(x => {
             const currentState = state.validity.find(y => y.field === x);
-            const newState = transaction.validity.find(y => y.field === x);
+            const newState = transaction.validity?.find(y => y.field === x);
             if (currentState && newState) {
                 // update existing
                 currentState.formGroup = newState.formGroup;
                 currentState.valid = newState.valid;
-            } else if (!currentState) {
+            } else if (!currentState && transaction.validity) {
                 state.validity = state.validity.concat(transaction.validity);
             }
         });
