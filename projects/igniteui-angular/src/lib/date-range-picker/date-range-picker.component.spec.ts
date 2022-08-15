@@ -3,8 +3,7 @@ import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } f
 import { IgxInputGroupModule, IgxInputState } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, FormControl } from '@angular/forms';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormsModule, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -1556,7 +1555,7 @@ export class DateRangeReactiveFormComponent {
         range: ['', Validators.required],
     });
 
-    constructor(private fb: UntypedFormBuilder) { }
+    constructor(private fb: FormBuilder) { }
 
     public markAsTouched() {
         this.form.get('range').markAsTouched();
