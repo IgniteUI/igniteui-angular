@@ -1522,6 +1522,10 @@
 
         .igx-input-group__bundle {
             border: none !important;
+
+            &::before {
+                content: none !important;
+            }
         }
 
         &.igx-grid__td--invalid {
