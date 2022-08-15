@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/utils/math' as *;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -69,6 +70,9 @@
 /// @requires var-get
 @mixin avatar($theme) {
     @include css-vars($theme);
+
+    // TODO: Remove
+    @debug to-fixed(3.14159);
 
     $size: map.get($theme, 'size');
     $small-size: rem(40px);
