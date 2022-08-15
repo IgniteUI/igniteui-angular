@@ -88,8 +88,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     public get formGroup() : FormGroup {
         const isRowEdit = this.grid.crudService.rowEditing;
-        const formGroup = isRowEdit ? this.grid.crudService.row?.rowFormGroup : this.grid.crudService.cell?.row.rowFormGroup;
-        return formGroup || this.validity?.formGroup;
+        const editRow = isRowEdit ? this.grid.crudService.row : this.grid.crudService.cell?.row;
+        if (editRow && editRow.id === this.intRow.key) {
+            return editRow.rowFormGroup;
+        } else {
+            return this.validity?.formGroup;
+        }
     }
 
     /**
