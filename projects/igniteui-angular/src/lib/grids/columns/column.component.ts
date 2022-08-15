@@ -99,9 +99,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * ```typescript
      * let validators = this.column.validators;
      * ```
-     * ```html
-     * <igx-column [validators] = "validatorsArray"></igx-column>
-     * ```
      */
     public validators: Validator[] = [];
 
