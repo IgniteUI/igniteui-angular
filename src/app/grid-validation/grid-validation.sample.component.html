@@ -22,7 +22,13 @@
             [width]="'1200px'" [height]="'800px'" >
             <igx-column appForbiddenName='bob'  minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [width]="c.width" [resizable]='true'>
-               
+                <ng-template igxCellValidationError let-cell='cell'>
+                    <ng-container *ngTemplateOutlet="cell.defaultErrorTemplate" >
+                    </ng-container>
+                    <div *ngIf="cell.formGroup?.get(cell.column?.field).errors?.['forbiddenName']">
+                        This name is forbidden.
+                    </div>
+                </ng-template>
             </igx-column>
             <igx-action-strip #actionStrip1>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>

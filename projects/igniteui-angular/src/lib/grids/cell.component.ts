@@ -68,11 +68,25 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return this.intRow.addRowUI && (this.value === undefined || this.value === null);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChildren('error', {read: IgxTooltipDirective})
     public errorTooltip: QueryList<IgxTooltipDirective>;
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
     public errorIcon: IgxIconComponent;
+
+    /**
+     * Gets the default error template.
+     */
+    @ViewChild('defaultError', { read: TemplateRef, static: true })
+    public defaultErrorTemplate: TemplateRef<any>;
 
     /**
      * Gets the column of the cell.
