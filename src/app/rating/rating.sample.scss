@@ -1,5 +1,7 @@
 .sample-content {
-    flex-flow: column nowrap;
+    display: grid;
+    row-gap: 16px;
+    column-gap: 16px;
 }
 
 .radio-sample {
