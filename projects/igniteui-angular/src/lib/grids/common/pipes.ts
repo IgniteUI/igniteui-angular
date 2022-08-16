@@ -298,11 +298,11 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
     public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
-            if (rowCurrentState && !transactions.autoCommit) {
+            if (rowCurrentState) {
                 const value = resolveNestedPath(rowCurrentState, field);
                 return value !== undefined && value !== null;
             }
-        } else if (!transactions.autoCommit) {
+        } else {
             const transaction = transactions.getState(row_id);
             const value = resolveNestedPath(transaction?.value ?? {}, field);
             return transaction && transaction.value && (value || value === 0 || value === false);

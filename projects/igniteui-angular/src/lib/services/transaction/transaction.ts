@@ -59,10 +59,6 @@ export interface HierarchicalState extends State {
 
 export interface TransactionService<T extends Transaction, S extends State> {
     /**
-     * Returns whether changes are automatically commited to the data without the need to explicitly.
-     */
-    autoCommit: boolean;
-    /**
      * Returns whether transaction is enabled for this service
      */
     readonly enabled: boolean;
@@ -94,6 +90,10 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
     add(transaction: T, recordRef?: any): void;
+
+    addValidation(transaction: T, recordRef?: any): void;
+    getAggregatedValidation(id: any): T;
+
 
     /**
      * Returns all recorded transactions in chronological order

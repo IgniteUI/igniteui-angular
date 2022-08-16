@@ -53,9 +53,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                         data.splice(index, 1);
                     }
                 });
-                if (grid.transactions.autoCommit) {
-                    data = grid.data;
-                }
             } else {
                 data = grid.data;
             }
@@ -304,18 +301,18 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, _parentID?: any) {
+    public addRowToData(rowData: any, _parentID?: any, validity?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
-
-        if (grid.transactions.enabled && !grid.transactions.autoCommit) {
-            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+        const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+        if (grid.transactions.enabled) {
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
         }
+        grid.transactions.addValidation({newValue: rowData, id: transactionId, type: TransactionType.ADD,  validity: validity});
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -323,7 +320,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         const grid = this.grid;
         if (index !== -1) {
-            if (grid.transactions.enabled && !grid.transactions.autoCommit) {
+            if (grid.transactions.enabled) {
                 const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 grid.transactions.add(transaction, grid.data[index]);
             } else {
@@ -561,20 +558,19 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowNewValue New value of the row
      */
     protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }, validity?) {
+        
+        const transaction: Transaction = {
+            id: rowID,
+            type: TransactionType.UPDATE,
+            newValue: rowNewValue,
+            validity: validity
+        };
         if (grid.transactions.enabled) {
-            const transaction: Transaction = {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: rowNewValue,
-                validity: validity
-            };
             grid.transactions.add(transaction, rowCurrentValue);
-            if (grid.transactions.autoCommit) {
-                mergeObjects(rowValueInDataSource, rowNewValue);
-            }
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
+        grid.transactions.addValidation(transaction, rowCurrentValue);
     }
 
 

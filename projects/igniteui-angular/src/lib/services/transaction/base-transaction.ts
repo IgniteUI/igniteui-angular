@@ -35,13 +35,8 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public get enabled(): boolean {
-        return this._isPending || this.autoCommit;
+        return this._isPending;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public autoCommit = true;
 
     /**
      * @inheritdoc
@@ -51,6 +46,10 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
+
+    protected _validationTransactions: T[] = [];
+    protected _validationStates: Map<any, S> = new Map();
+
     private _cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
@@ -92,6 +91,50 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return result;
     }
 
+    public addValidation(transaction: T, recordRef?: any): void {
+        this.updateValidationState(this._validationStates, transaction, recordRef);
+        this._validationTransactions.push(transaction);
+    }
+
+    public updateValidationState(states: Map<any, S>, transaction: T, recordRef?: any): void {
+        let state = states.get(transaction.id);
+        if (state) {
+            if (isObject(state.value)) {
+                mergeObjects(state.value, transaction.newValue);
+            } else {
+                state.value = transaction.newValue;
+            }
+            this.updateValidity(state, transaction);
+        } else {
+            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;
+            states.set(transaction.id, state);
+            state.validity = transaction.validity;
+        }
+    }
+
+    /**
+    * @inheritdoc
+    */
+    public getAggregatedValidationChanges(mergeChanges: boolean): T[] {
+        const result: T[] = [];
+        this._validationStates.forEach((state: S, key: any) => {
+            const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
+            result.push({ id: key, newValue: value, type: state.type, validity: state.validity } as T);
+        });
+        return result;
+    }
+
+        /**
+        * @inheritdoc
+        */
+         public getAggregatedValidation(id: any): any {
+            const state = this._validationStates.get(id);
+            if (!state) {
+                return null;
+            }
+            return state;
+        }
+
     /**
      * @inheritdoc
      */
@@ -124,7 +167,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public getInvalidTransactionLog(id?: any) {
-        let pending = [...this._pendingTransactions];
+        let pending = [...this._validationTransactions];
         if (id !== undefined) {
             pending = pending.filter(t => t.id === id);
         }
@@ -137,6 +180,8 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     public clear(_id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
+        this._validationStates.clear();
+        this._validationTransactions = [];
     }
 
     /**
@@ -144,26 +189,15 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     public startPending(): void {
         this._isPending = true;
-        this.autoCommit = false;
     }
 
     /**
      * @inheritdoc
      */
     public endPending(_commit: boolean): void {
-        if (this._isPending && !_commit) {
-            this._isPending = false;
-            this.autoCommit = true;
-            // reset last pending transaction.
-            const last = this._pendingTransactions.pop();
-            if (last) {
-                this._pendingStates.delete(last.id);
-            }
-        }
-        if (_commit) {
-            this._pendingStates.clear();
-            this._pendingTransactions = [];
-        }
+        this._isPending = false;
+        this._pendingStates.clear();
+        this._pendingTransactions = [];
     }
 
 
@@ -182,11 +216,9 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
             } else {
                 state.value = transaction.newValue;
             }
-            this.updateValidity(state, transaction);
         } else {
-            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;
+            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
-            state.validity = transaction.validity;
         }
     }
 
@@ -198,16 +230,13 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     protected updateValidity(state, transaction) {
         // update validity
-        const objKeys = Object.keys(state.value);
-        objKeys.forEach(x => {
-            const currentState = state.validity?.find(y => y.field === x);
-            const newState = transaction.validity?.find(y => y.field === x);
-            if (currentState && newState) {
-                // update existing
-                currentState.formGroup = newState.formGroup;
-                currentState.valid = newState.valid;
-            } else if (!currentState && transaction.validity) {
-                state.validity = (state.validity || []).concat(transaction.validity);
+        transaction.validity.forEach(validity => {
+            const existingState = state.validity.find(x => x.field === validity.field);
+            if (existingState) {
+                existingState.valid = validity.valid;
+                existingState.formGroup = validity.formGroup;
+            } else {
+                state.validity.push(validity);
             }
         });
     }

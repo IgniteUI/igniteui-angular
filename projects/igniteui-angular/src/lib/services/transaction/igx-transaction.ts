@@ -59,7 +59,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
-            result.push({ id: key, newValue: value, type: state.type, validity: state.validity } as T);
+            result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
@@ -268,7 +268,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                         states.delete(transaction.id);
                     } else if (state.type === TransactionType.UPDATE) {
                         state.value = transaction.newValue;
-                        state.validity = transaction.validity;
                         state.type = TransactionType.DELETE;
                     }
                     break;
@@ -283,10 +282,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     } else {
                         state.value = transaction.newValue;
                     }
-                    this.updateValidity(state, transaction);
             }
         } else {
-            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;
+            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
