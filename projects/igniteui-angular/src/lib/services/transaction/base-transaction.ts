@@ -207,7 +207,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
                 currentState.formGroup = newState.formGroup;
                 currentState.valid = newState.valid;
             } else if (!currentState && transaction.validity) {
-                state.validity = state.validity.concat(transaction.validity);
+                state.validity = (state.validity || []).concat(transaction.validity);
             }
         });
     }

@@ -309,13 +309,10 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         // If there is a row in edit - > commit and close
         const grid = this.grid;
 
-        if (grid.transactions.enabled) {
+        if (grid.transactions.enabled && !grid.transactions.autoCommit) {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
-            if (grid.transactions.autoCommit) {
-                grid.data.push(rowData);
-            }
         } else {
             grid.data.push(rowData);
         }
@@ -326,12 +323,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         const grid = this.grid;
         if (index !== -1) {
-            if (grid.transactions.enabled) {
+            if (grid.transactions.enabled && !grid.transactions.autoCommit) {
                 const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 grid.transactions.add(transaction, grid.data[index]);
-                if (grid.transactions.autoCommit) {
-                    grid.data.splice(index, 1);
-                }
             } else {
                 grid.data.splice(index, 1);
             }
