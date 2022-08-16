@@ -1723,6 +1723,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: false,
+                isValid: true,
                 event: jasmine.anything() as any
             });
         });
@@ -1762,7 +1763,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             });
 
             // Enter cell edit mode again
@@ -1786,7 +1788,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             });
         });
 
@@ -1841,7 +1844,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             });
         });
 
@@ -1871,7 +1875,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             });
         });
 
@@ -2155,7 +2160,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: newCellValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
@@ -2782,7 +2788,12 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' }}, grid.data[2]);
+            expect(trans.add).toHaveBeenCalledWith({ 
+                id: 3,
+                 type: 'update',
+                  newValue: { ProductName: 'Updated Cell' },
+                  validity: trans.getTransactionLog()[0].validity
+                }, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
 
