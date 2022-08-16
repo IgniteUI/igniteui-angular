@@ -16,13 +16,15 @@ All notable changes for each version of this project will be documented in this 
     <ng-template igxPivotValueChip let-value>
             {{ value.member }}
     </ng-template>
-    ``` 
+    ```
 
 - `igxGrid`
-	- Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
-	```
-	<column width='auto' ...>
-	```
+    - Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
+    ```
+    <column width='auto' ...>
+    ```
+
+- Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
 
 
 ## 14.0.0
