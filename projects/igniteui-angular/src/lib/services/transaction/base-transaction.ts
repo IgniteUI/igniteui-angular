@@ -97,6 +97,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     public updateValidationState(states: Map<any, S>, transaction: T, recordRef?: any): void {
+        if (!transaction) return;
         let state = states.get(transaction.id);
         if (state) {
             if (isObject(state.value)) {
