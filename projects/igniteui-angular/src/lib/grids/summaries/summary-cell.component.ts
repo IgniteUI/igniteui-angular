@@ -4,7 +4,7 @@ import {
     IgxSummaryResult
 } from './grid-summary';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
+import { formatCurrency, formatDate, formatNumber, formatPercent, getLocaleCurrencyCode, getLocaleCurrencySymbol } from '@angular/common';
 import { ISelectionNode } from '../common/types';
 import { ColumnType } from '../common/grid.interface';
 
@@ -143,7 +143,10 @@ export class IgxSummaryCellComponent {
                     const currencyCode = args.currencyCode
                         ? args.currencyCode
                         : getLocaleCurrencyCode(locale);
-                    return formatCurrency(summary.summaryResult, locale, args.display, currencyCode, args.digitsInfo);
+                    const currencySumbol = args.display
+                        ? args.display
+                        : getLocaleCurrencySymbol(locale);
+                    return formatCurrency(summary.summaryResult, locale, currencySumbol, currencyCode, args.digitsInfo);
                 case GridColumnDataType.Percent:
                     return formatPercent(summary.summaryResult, locale, args.digitsInfo);
             }
@@ -163,8 +166,8 @@ export class IgxSummaryCellComponent {
      */
     public isDateKindColumn(): boolean {
         return this.column.dataType === GridColumnDataType.Date ||
-            this.column.dataType === GridColumnDataType.DateTime ||
-            this.column.dataType === GridColumnDataType.Time;
+               this.column.dataType === GridColumnDataType.DateTime ||
+               this.column.dataType === GridColumnDataType.Time;
     }
 
     /**
