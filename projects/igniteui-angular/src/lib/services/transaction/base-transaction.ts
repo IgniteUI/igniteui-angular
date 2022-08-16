@@ -177,11 +177,17 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public clear(_id?: any): void {
+    public clear(id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
-        this._validationStates.clear();
-        this._validationTransactions = [];
+        if (id !== undefined) {
+            this._validationTransactions = this._validationTransactions.filter(t => t.id !== id);
+            this._validationStates.delete(id);
+        } else {
+            this._validationStates.clear();
+            this._validationTransactions = [];
+        }
+ 
     }
 
     /**
