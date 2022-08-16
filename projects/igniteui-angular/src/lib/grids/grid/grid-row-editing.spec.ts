@@ -126,7 +126,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Emit all events with proper arguments', () => {
             const row = grid.gridAPI.get_row_by_index(2);
-            const initialRowData = {...cell.row.data};
+            const initialRowData = { ...cell.row.data };
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.data, { ProductName: newCellValue });
 
@@ -196,7 +196,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 event: jasmine.anything() as any
             };
 
-             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith(rowEditExitArgs);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cellDebug);
@@ -499,7 +499,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            targetCell =  grid.gridAPI.get_cell_by_index(0, 'Test');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Test');
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1548,7 +1548,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             initialRow = grid.getRowByIndex(0);
-            initialData = {...initialRow.data};
+            initialData = { ...initialRow.data };
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));
@@ -1690,7 +1690,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.click();
 
-            const rowData = Object.assign({}, cell.row.data, {ProductName: 'New Name'});
+            const rowData = Object.assign({}, cell.row.data, { ProductName: 'New Name' });
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.data).not.toEqual(rowData);
@@ -2766,7 +2766,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData});
+            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData });
             expect(grid.data.length).toBe(10);
         });
 
@@ -2788,12 +2788,12 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ 
+            expect(trans.add).toHaveBeenCalledWith({
                 id: 3,
-                 type: 'update',
-                  newValue: { ProductName: 'Updated Cell' },
-                  validity: trans.getTransactionLog()[0].validity
-                }, grid.data[2]);
+                type: 'update',
+                newValue: { ProductName: 'Updated Cell' },
+                validity: trans.getTransactionLog()[0].validity
+            }, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
 
@@ -2813,7 +2813,12 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: updateRowData }, oldRowData);
+            expect(trans.add).toHaveBeenCalledWith({
+                id: 3,
+                type: 'update',
+                newValue: updateRowData,
+                validity: trans.getTransactionLog()[0].validity
+            }, oldRowData);
             expect(grid.data[2]).toBe(oldRowData);
         });
 
