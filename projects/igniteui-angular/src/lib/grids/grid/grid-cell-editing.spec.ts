@@ -563,7 +563,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             $destroyer.next(true);
         }));
 
-        it(`Should properly emit 'cellEditEnter' event`, () => {
+        fit(`Should properly emit 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = {...cell.row.data};
@@ -578,6 +578,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: false,
+                isValid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -598,6 +599,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
+                isValid: true,
                 cancel: false,
                 column: cell2.column,
                 owner: grid,
@@ -626,6 +628,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: true,
+                isValid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -658,7 +661,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeFalsy();
         });
 
-        it(`Should properly emit 'cellEditExit' event`, () => {
+        fit(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = {...cell.row.data};
@@ -676,6 +679,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 newValue: 'John Brown',
+                isValid: true,
                 oldValue: 'John Brown',
                 column: cell.column,
                 owner: grid,
@@ -698,6 +702,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 newValue: 20,
                 oldValue: 20,
+                isValid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -764,7 +769,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
+        fit(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
             const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
@@ -796,6 +801,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: true,
                 column: cell.column,
                 owner: grid,
+                isValid: true,
                 event: undefined
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
@@ -942,7 +948,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should properly emit 'cellEditExit' event`, () => {
+        fit(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = {...cell.row.data};
@@ -967,7 +973,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'New Name',
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
@@ -975,7 +982,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
         });
 
-        it(`Should properly emit 'cellEditDone' event`, () => {
+        fit(`Should properly emit 'cellEditDone' event`, () => {
             const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
             let cellArgs: IGridEditDoneEventArgs;
@@ -1004,7 +1011,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: firstNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
@@ -1028,7 +1036,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: secondNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
