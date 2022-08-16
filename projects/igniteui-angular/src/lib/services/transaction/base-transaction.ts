@@ -236,15 +236,20 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     protected updateValidity(state, transaction) {
         // update validity
-        transaction.validity.forEach(validity => {
-            const existingState = state.validity.find(x => x.field === validity.field);
-            if (existingState) {
-                existingState.valid = validity.valid;
-                existingState.formGroup = validity.formGroup;
-            } else {
-                state.validity.push(validity);
-            }
-        });
+        if (transaction.validity) {
+            transaction.validity.forEach(validity => {
+                const existingState = state.validity?.find(x => x.field === validity.field);
+                if (existingState) {
+                    existingState.valid = validity.valid;
+                    existingState.formGroup = validity.formGroup;
+                } else {
+                    if (!state.validity) {
+                        state.validity = [];
+                    }
+                    state.validity.push(validity);
+                }
+            });
+        }
     }
 
     /**
