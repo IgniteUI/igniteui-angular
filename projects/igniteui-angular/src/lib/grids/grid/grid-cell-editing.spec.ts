@@ -563,7 +563,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             $destroyer.next(true);
         }));
 
-        fit(`Should properly emit 'cellEditEnter' event`, () => {
+        it(`Should properly emit 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = {...cell.row.data};
@@ -661,7 +661,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeFalsy();
         });
 
-        fit(`Should properly emit 'cellEditExit' event`, () => {
+        it(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = {...cell.row.data};
@@ -769,7 +769,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        fit(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
+        it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
             const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
@@ -948,7 +948,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        fit(`Should properly emit 'cellEditExit' event`, () => {
+        it(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = {...cell.row.data};
@@ -982,7 +982,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
         });
 
-        fit(`Should properly emit 'cellEditDone' event`, () => {
+        it(`Should properly emit 'cellEditDone' event`, () => {
             const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
             let cellArgs: IGridEditDoneEventArgs;
