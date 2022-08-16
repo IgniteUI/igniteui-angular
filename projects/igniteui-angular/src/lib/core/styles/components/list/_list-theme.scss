@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -262,6 +263,36 @@
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
+
+    .igx-typography,
+    .ig-typography {
+        @if $variant == 'material' or $variant == 'indigo-design' {
+            @include list-typography();
+        }
+
+        @if $variant == 'fluent' {
+            @include list-typography($categories: (
+                item: 'caption',
+                title: 'caption',
+            ));
+        }
+
+        @if $variant == 'boostrap' {
+            @include list-typography($categories: (
+                item: 'body-2',
+                title: 'body-1',
+                subtitle: 'subtitle-1',
+                header: 'overline',
+            ));
+        }
+
+        @if $variant == 'indigo-design' {
+            @include list-typography($categories: (
+                header: 'overline',
+                subtitle: 'body-2'
+            ));
+        }
+    }
 
     $list-empty-padding: (
         comfortable: rem(16px),
@@ -556,11 +587,9 @@
 /// Uses the 'caption' and 'subtitle-1'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin list-typography(
-    $type-scale,
     $categories: (
         header: 'overline',
         item: 'subtitle-1',
@@ -574,26 +603,26 @@
     $subtitle: map.get($categories, 'subtitle');
 
     %igx-list-header {
-        @include type-style($type-scale, $header) {
+        @include typography.type-style($header) {
             margin: 0;
         }
     }
 
     %igx-list-item {
-        @include type-style($type-scale, $item) {
+        @include typography.type-style($item) {
             margin: 0;
         }
     }
 
     %igx-list__item-lines,
     %igx-list__item-line-title {
-        @include type-style($type-scale, $title) {
+        @include typography.type-style($title) {
             margin: 0;
         }
     }
 
     %igx-list__item-line-subtitle {
-        @include type-style($type-scale, $subtitle) {
+        @include typography.type-style($subtitle) {
             margin: 0;
         }
     }

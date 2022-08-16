@@ -80,7 +80,6 @@
     @include funnel-chart-typography($type-scale);
     @include gauge-typography();
     @include graph-typography();
-    @include input-group-typography($type-scale);
     @include navbar-typography($type-scale);
     @include navdrawer-typography($type-scale);
     @include pie-chart-typography($type-scale);
@@ -101,7 +100,6 @@
         @include calendar-typography($type-scale);
         @include dialog-typography($type-scale);
         @include drop-down-typography($type-scale);
-        @include list-typography($type-scale);
     }
 
     @if ($_variant == 'material' or $_variant == 'fluent') {
@@ -123,10 +121,6 @@
             label: 'body-2'
         ));
 
-        @include input-group-typography($type-scale, $categories: (
-            input-text: 'body-2'
-        ));
-
         @include navdrawer-typography($type-scale, $categories: (
             item: 'body-2',
             header: 'caption'
@@ -134,11 +128,6 @@
 
         @include navbar-typography($type-scale, $categories: (
             title: 'subtitle-2'
-        ));
-
-        @include list-typography($type-scale, $categories: (
-            item: 'caption',
-            title: 'caption',
         ));
 
         @include chip-typography($type-scale, $categories: (
@@ -185,20 +174,8 @@
             select-item: 'subtitle-1',
         ));
 
-        @include list-typography($type-scale, $categories: (
-            item: 'body-2',
-            title: 'body-1',
-            subtitle: 'subtitle-1',
-            header: 'overline',
-        ));
-
         @include checkbox-typography($type-scale, $categories: (
             label: 'body-2',
-        ));
-
-        @include input-group-typography($type-scale, $categories: (
-            helper-text: 'body-2',
-            input-text: 'body-1'
         ));
 
         @include navbar-typography($type-scale, $categories: (
@@ -224,23 +201,12 @@
             label: 'body-1',
         ));
 
-        @include input-group-typography($type-scale, $categories: (
-            input-text: 'body-1'
-        ));
-
-        @include list-typography($type-scale, $categories: (
-            header: 'overline',
-            subtitle: 'body-2'
-        ));
-
-
         @include expansion-panel-typography($type-scale, $categories: (
             body: 'body-1'
         ));
 
         @include dialog-typography($type-scale);
         @include drop-down-typography($type-scale);
-        @include list-typography($type-scale);
     }
 }
 
