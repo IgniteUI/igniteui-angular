@@ -8,7 +8,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo` and  `IgxSimpleComboComponent`
     - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
     - `filteringOptions` are extended and now contains `filterable` and `filteringKey` properties. Setting `filterable` determines whether combo will be filterable. By default filtering is done over the data value when they are primitive, or over the field of the values equal to `displayKey`. `filteringKey` allows to filter data by any data related key.
-    - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
 
 - `igxPivotGrid`
     - Add option to template the pivot value chip content:
@@ -16,13 +15,20 @@ All notable changes for each version of this project will be documented in this 
     <ng-template igxPivotValueChip let-value>
             {{ value.member }}
     </ng-template>
-    ``` 
+    ```
 
 - `igxGrid`
-	- Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
-	```
-	<column width='auto' ...>
-	```
+    - Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
+    ```
+    <column width='auto' ...>
+    ```
+    - Added support for restoring filtering expressions with custom filtering operands for the `IgxGridStateDirective`.
+
+- Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
+
+### General
+
+- **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
 
 
 ## 14.0.0
