@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
 import { IChangeRadioEventArgs, IgxRadioComponent, RadioLabelPosition } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
@@ -291,6 +291,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @internal
      */
     private destroy$ = new Subject<boolean>();
+    /**
+     * @hidden
+     * @internal
+     */
+    private queryChange$ = new Subject();
 
     /**
      * @hidden
@@ -301,8 +306,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized = true;
 
-        setTimeout(() => {
-            this._initRadioButtons();
+        this.radioButtons.changes.pipe(startWith(0), takeUntil(this.destroy$)).subscribe(() => {
+            this.queryChange$.next();
+            setTimeout(() => this._initRadioButtons());
         });
     }
 
@@ -390,7 +396,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
                     this._selected = button;
                 }
 
-                button.change.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._selectedRadioButtonChanged(ev));
+                button.change.pipe(
+                    takeUntil(button.destroy$),
+                    takeUntil(this.destroy$),
+                    takeUntil(this.queryChange$)
+                ).subscribe((ev) => this._selectedRadioButtonChanged(ev));
             });
         }
     }
