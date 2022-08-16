@@ -29,6 +29,4 @@ export class RatingSampleComponent {
         Name: 'Audi RS6',
         Rating: 8
     }];
-
-    public editing = false;
 }
