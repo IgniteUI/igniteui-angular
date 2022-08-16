@@ -99,7 +99,6 @@
     // Add theme type-scale specific quirks
     @if ($_variant == 'material') {
         @include calendar-typography($type-scale);
-        @include card-typography($type-scale);
         @include dialog-typography($type-scale);
         @include drop-down-typography($type-scale);
         @include list-typography($type-scale);
@@ -135,11 +134,6 @@
 
         @include navbar-typography($type-scale, $categories: (
             title: 'subtitle-2'
-        ));
-
-        @include card-typography($type-scale, $categories: (
-            title: 'subtitle-1',
-            subtitle: 'body-2',
         ));
 
         @include list-typography($type-scale, $categories: (
@@ -178,13 +172,6 @@
             header-date: 'h4',
             weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
             picker-date: 'subtitle-1',
-            content: 'body-1',
-        ));
-
-        @include card-typography($type-scale, $categories: (
-            title: 'h5',
-            title-small: 'subtitle-2',
-            subtitle: 'body-1',
             content: 'body-1',
         ));
 

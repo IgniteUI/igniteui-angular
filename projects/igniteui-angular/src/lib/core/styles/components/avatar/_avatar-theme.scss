@@ -1,4 +1,5 @@
 @use '../../../../../../../../node_modules/igniteui-theming/sass/utils/math' as *;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -44,7 +45,7 @@
         $avatar-schema: $schema;
     }
 
-    $theme: apply-palette($avatar-schema, $palette);
+    $theme: themes.digest-schema($avatar-schema);
 
     @if not($color) and $background {
         $color: text-contrast($background);
