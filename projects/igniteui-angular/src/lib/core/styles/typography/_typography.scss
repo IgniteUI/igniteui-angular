@@ -64,7 +64,6 @@
     }
 
     // Call the individual component styles with the type scale
-    @include excel-filtering-typography($type-scale);
     @include banner-typography($type-scale);
     @include bottom-nav-typography($type-scale);
     @include button-typography($type-scale);
