@@ -41,10 +41,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public get autoCommit(): boolean {
-        // transactions are auto-commited and reflect in the data. However changes and validation states are still stored until cleared.
-        return true;
-    }
+    public autoCommit = true;
 
     /**
      * @inheritdoc
@@ -147,14 +144,23 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      */
     public startPending(): void {
         this._isPending = true;
+        this.autoCommit = false;
     }
 
     /**
      * @inheritdoc
      */
     public endPending(_commit: boolean): void {
-        if (_commit) {
+        if (this._isPending && !_commit) {
             this._isPending = false;
+            this.autoCommit = true;
+            // reset last pending transaction.
+            const last = this._pendingTransactions.pop();
+            if (last) {
+                this._pendingStates.delete(last.id);
+            }
+        }
+        if (_commit) {
             this._pendingStates.clear();
             this._pendingTransactions = [];
         }
@@ -194,7 +200,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         // update validity
         const objKeys = Object.keys(state.value);
         objKeys.forEach(x => {
-            const currentState = state.validity.find(y => y.field === x);
+            const currentState = state.validity?.find(y => y.field === x);
             const newState = transaction.validity?.find(y => y.field === x);
             if (currentState && newState) {
                 // update existing

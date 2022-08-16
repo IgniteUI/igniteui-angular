@@ -24,10 +24,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public get autoCommit(): boolean {
-        // transactions are stored and commited manually by the user.
-        return false;
-    }
+    public autoCommit: boolean = false;
 
     /**
      * @inheritdoc
