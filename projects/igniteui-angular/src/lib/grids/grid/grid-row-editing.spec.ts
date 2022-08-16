@@ -1951,7 +1951,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);

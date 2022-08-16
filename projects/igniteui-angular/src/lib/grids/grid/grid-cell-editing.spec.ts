@@ -654,7 +654,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
@@ -738,7 +739,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
@@ -763,7 +765,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                isValid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
