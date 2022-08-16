@@ -145,8 +145,12 @@ export class IgxGridNavigationService {
             if (shouldClearSelection || (this.grid.cellSelection !== GridSelectionMode.multiple)) {
                 this.grid.clearCellSelection();
                 this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
-                    obj.target?.activate(event);
-                    this.grid.cdr.detectChanges();
+                    if(this.activeNode.row === obj.target.row.index) {
+                        obj.target?.activate(event);
+                        this.grid.cdr.detectChanges();
+                    } else {
+                        this.grid.navigateTo(this.activeNode.row, this.activeNode.column);
+                    }
                 });
             } else {
                 const range = {
