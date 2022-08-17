@@ -47,13 +47,13 @@
         }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
-    <ng-container *ngIf="column.dataType === 'string'">
-        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
+    <ng-container *ngIf="column.dataType === 'string'" [formGroup]="formGroup">
+        <igx-input-group displayDensity="compact" >
             <input
                 igxInput
-                [(ngModel)]="editValue"
+                
                 [igxFocus]="true"
-                [formControlName]="column.field"
+                [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
                 (compositionend)="grid.crudService.isInCompositionMode = false"
             />
@@ -61,13 +61,13 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" [step]="step" type="number"
-                [formControlName]="column.field" />
+            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            [formControl]="formControl" />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'" [formGroup]="formGroup">
         <igx-checkbox [checked]="editValue" (change)="editValue = $event.checked" [igxFocus]="true"
-            [disableRipple]="true" [formControlName]="column.field"></igx-checkbox>
+            [disableRipple]="true" [formControl]="formControl"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'" [formGroup]="formGroup">
         <igx-date-picker
@@ -78,34 +78,34 @@
             [weekStart]="column.pipeArgs.weekStart"
             [(value)]="editValue"
             [igxFocus]="true"
-            [formControlName]="column.field"
+            [formControl]="formControl"
         >
         </igx-date-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'time'" [formGroup]="formGroup">
         <igx-time-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown" [locale]="grid.locale"
             [inputFormat]="column.defaultTimeFormat" [(value)]="editValue" [igxFocus]="true"
-            [formControlName]="column.field">
+            [formControl]="formControl">
         </igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
         <igx-input-group [formGroup]="formGroup">
-            <input type="text" [formControlName]="column.field" igxInput
-                [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true" />
+            <input type="text" [formControl]="formControl" igxInput
+                [igxDateTimeEditor]="column.defaultDateTimeFormat"  [igxFocus]="true" />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" [step]="step" type="number"
-                [formControlName]="column.field" />
+            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            [formControl]="formControl" />
             <igx-suffix *ngIf="!grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" [step]="step" type="number"
-                [formControlName]="column.field" />
+            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            [formControl]="formControl" />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>
     </ng-container>

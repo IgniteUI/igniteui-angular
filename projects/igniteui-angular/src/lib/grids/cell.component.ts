@@ -36,7 +36,7 @@ import { ISelectionNode } from './common/types';
 import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
-import { first } from 'rxjs/operators';
+import { first, takeWhile } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 
 /**
@@ -500,6 +500,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         return this.editMode && formControl && !formControl.invalid && formControl.dirty;
     }
 
+    /**
+     * Gets the formControl responsible for value changes and validation for this cell.
+     */
+    public get formControl(){
+        return this.formGroup?.get(this.column.field);
+    }
+
     private get validity() {
         const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
         if (state && state.validity && state.validity.some(x => x.valid === false)) {
@@ -868,6 +875,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.editMode && changes.editMode.currentValue && this.formControl) {
+            // while in edit mode subscribe to value changes on the current form control and set to editValue
+            this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
+                this.editValue = value;
+            });
+        }
         if (changes.value && !changes.value.firstChange) {
             if (this.highlight) {
                 this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
