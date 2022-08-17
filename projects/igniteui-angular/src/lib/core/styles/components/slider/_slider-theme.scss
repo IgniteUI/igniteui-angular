@@ -122,11 +122,6 @@
     $palette: map.get($theme, 'palette');
     $variant: map.get($theme, variant);
 
-    .igx-typography,
-    .ig-typography {
-        @include slider-typography();
-    }
-
     $slider-height: rem(48px);
     $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);

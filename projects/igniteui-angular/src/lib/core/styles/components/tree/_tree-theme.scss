@@ -104,11 +104,6 @@
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
-    .igx-typography,
-    .ig-typography {
-        @include tree-typography();
-    }
-
     $node-indent: (
         comfortable: rem(24px),
         cosy: rem(16px),

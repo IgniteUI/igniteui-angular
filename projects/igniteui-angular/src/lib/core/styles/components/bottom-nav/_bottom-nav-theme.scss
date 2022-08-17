@@ -88,11 +88,6 @@
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @include bottom-nav-typography();
-    }
-
     $menu-height: rem(56px);
     $item-min-width: rem(80px);
     $item-max-width: rem(168px);

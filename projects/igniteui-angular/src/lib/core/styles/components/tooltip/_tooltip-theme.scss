@@ -75,11 +75,6 @@
 @mixin tooltip($theme) {
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @include tooltip-typography();
-    }
-
     %tooltip-display {
         display: inline-flex;
         justify-content: center;

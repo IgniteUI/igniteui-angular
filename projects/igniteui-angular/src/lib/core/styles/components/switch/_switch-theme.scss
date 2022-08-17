@@ -118,11 +118,11 @@
     @if not($border-radius-track) {
         $border-radius-track: border-radius(map.get($theme, 'border-radius-track'));
     }
-    
+
     @if not($border-radius-thumb) {
         $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb'));
     }
-    
+
     @if not($border-radius-ripple) {
         $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
     }
@@ -180,17 +180,6 @@
     @include scale-in-out($start-scale: .9);
 
     $variant: map.get($theme, variant);
-
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include switch-typography($categories: (
-                label: 'body-2'
-            ));
-        } @else {
-            @include switch-typography();
-        }
-    }
 
     $switch-width: map.get((
         material: 36px,

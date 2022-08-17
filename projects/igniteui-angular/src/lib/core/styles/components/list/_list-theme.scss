@@ -264,36 +264,6 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'material' or $variant == 'indigo-design' {
-            @include list-typography();
-        }
-
-        @if $variant == 'fluent' {
-            @include list-typography($categories: (
-                item: 'caption',
-                title: 'caption',
-            ));
-        }
-
-        @if $variant == 'boostrap' {
-            @include list-typography($categories: (
-                item: 'body-2',
-                title: 'body-1',
-                subtitle: 'subtitle-1',
-                header: 'overline',
-            ));
-        }
-
-        @if $variant == 'indigo-design' {
-            @include list-typography($categories: (
-                header: 'overline',
-                subtitle: 'body-2'
-            ));
-        }
-    }
-
     $list-empty-padding: (
         comfortable: rem(16px),
         cosy: rem(8px),

@@ -262,32 +262,6 @@
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'material' or $variant == 'indigo-design' {
-            @include input-group-typography();
-        }
-
-        @if $variant == 'fluent' {
-            @include input-group-typography($categories: (
-                input-text: 'body-2'
-            ));
-        }
-
-        @if $variant == 'boostrap' {
-            @include input-group-typography($categories: (
-                helper-text: 'body-2',
-                input-text: 'body-1'
-            ));
-        }
-
-        @if $variant == 'indigo-design' {
-            @include input-group-typography($categories: (
-                input-text: 'body-1'
-            ));
-        }
-    }
-
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
@@ -1388,9 +1362,9 @@
 
     %form-group-prefix-fluent,
     %form-group-suffix-fluent {
-        .igx-typography [igx-button],
-        .igx-typography igx-button,
-        .igx-typography button,
+        .ig-typography [igx-button],
+        .ig-typography igx-button,
+        .ig-typography button,
         button {
             border-radius: rem(1px) 0 0 rem(1px);
         }

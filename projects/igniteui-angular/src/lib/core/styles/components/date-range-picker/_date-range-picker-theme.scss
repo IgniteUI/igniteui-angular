@@ -45,11 +45,6 @@
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @include date-range-typography();
-    }
-
     $base-scale-size: (
         'comfortable': rem(16px),
         'cosy': rem(19px),

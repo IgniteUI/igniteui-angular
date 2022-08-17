@@ -99,19 +99,8 @@
 @mixin dialog($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant); 
+    $variant: map.get($theme, variant);
     $bootstrap-theme: map.get($theme, variant) == 'bootstrap';
-
-    .igx-typography,
-    .ig-typography {
-        @include dialog-typography();
-
-        @if $variant == 'bootstrap' {
-            @include dialog-typography($categories: (
-                title: 'h5',
-            ));
-        }
-    }
 
     $dialog-min-width: map.get((
         material: rem(280px),

@@ -250,17 +250,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
 
-    .igx-typography,
-    .ig-typography {
-        @include chip-typography();
-        
-        @if $variant == 'fluent' {
-            @include chip-typography($categories: (
-                text: 'subtitle-2'
-            ));
-        }
-    }
-
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
 
