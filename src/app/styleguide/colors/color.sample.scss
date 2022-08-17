@@ -33,7 +33,7 @@
 }
 
 .color-title {
-    @include type-style($type-scale, 'h6');
+    @include type-style('h6');
     text-transform: capitalize;
     line-height: 3rem;
     padding: 8px 16px;

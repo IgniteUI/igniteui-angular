@@ -1,16 +1,13 @@
-@use 'sass:map';
-@use 'sass:string';
-@use '../base' as *;
-@use 'base' as *;
-@use 'variables' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/utils/meta' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/typography/mixins' as theming;
+@use '../../../../../../../node_modules/igniteui-theming/sass/typography/presets' as presets;
 
 ////
 /// @group typography
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Import the typography mixins from component themes
-// with typography support.
+// Import the typography mixins from component themes with typography support.
 @use '../components/charts/category-chart-theme' as *;
 @use '../components/charts/data-chart-theme' as *;
 @use '../components/charts/financial-chart-theme' as *;
@@ -20,22 +17,21 @@
 @use '../components/charts/pie-chart-theme' as *;
 @use '../components/charts/shape-chart-theme' as *;
 
-/// @access private
-@mixin _typography-styles($font-family, $type-scale, $prefix: 'igx') {
-    $_variant: map.get(map.get($type-scale, '_meta'), 'variant');
+/// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
+/// The produces styles are based on the passed typeface and type scale.
+/// If omitted the $material-typeface and $material-type-scale will be used.
+/// @access public
+/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
+/// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by type-scale.
+@mixin typography($font-family: presets.$material-typeface, $type-scale: presets.$material-type-scale) {
+    $scope: if(is-root(), '.ig-typography', &);
 
-    font-family: var(--#{$prefix}-font-family);
-    font-size: $browser-context;
-    line-height: $browser-line-height;
-    font-size-adjust: 100%;
-
-    @if $prefix == 'igc' {
-        --#{$prefix}-font-family: var(--igx-font-family);
-    } @else {
-        --#{$prefix}-font-family: #{$font-family};
+    #{$scope} {
+        font-family: var(--ig-font-family);
     }
 
-    // Call the individual component styles with the type scale
+    @include theming.typography($font-family, $type-scale);
+    // Call the individual chart styles with the type scale
     @include category-chart-typography($type-scale);
     @include data-chart-typography($type-scale);
     @include financial-chart-typography($type-scale);
@@ -44,91 +40,4 @@
     @include graph-typography();
     @include pie-chart-typography($type-scale);
     @include shape-chart-typography($type-scale);
-}
-
-/// @access private
-/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
-/// @param {Map} $type-scale [] - A type scale map as produced by type-scale.
-/// @param {Map} $type-scale [] - A type scale map as produced by type-scale.
-/// @param {Map} $prefix [] - The prefix used for css variables and scoping.
-@mixin _typography($font-family, $type-scale, $prefix) {
-    @if (is-root()) {
-        // Use the BEM notation to create a link
-        // between the igx-typography class selector
-        // and all typographic elements.
-        @include b(#{$prefix}-typography) {
-            @include _typography-styles($font-family, $type-scale, $prefix);
-
-            // Maps type scale typographic categories
-            // to native elements.
-            $category-element-map: (
-                h1: 'h1',
-                h2: 'h2',
-                h3: 'h3',
-                h4: 'h4',
-                h5: 'h5',
-                h6: 'h6',
-                body-1: 'p',
-            );
-
-            /* stylelint-disable max-nesting-depth */
-            @each $category, $type-style in $type-scale {
-                @if $category != _meta {
-                    // Get the native element that uses typographic styles directly
-                    // as mapped in the $category-element-map
-                    $e: map.get($category-element-map, $category);
-
-                    // Add CSS variables to .igx-typography class selector
-                    @each $key, $value in $type-style {
-                        @if $key == 'font-family' and $value == 'css-font-var' {
-                            --#{$prefix}-#{$category}-#{$key}: var(--#{$prefix}-font-family);
-                        } @else {
-                            --#{$prefix}-#{$category}-#{$key}: #{$value};
-                        }
-                    }
-
-                    // Create a placeholder selector with styles for each
-                    // typographic style to be able to easily extend it
-                    // elsewhere.
-                    %#{$category} {
-                        @include type-style($type-scale, $category);
-                    }
-
-                    // Add native element typographic styles.
-                    @if $e != null {
-                        #{$e} {
-                            @extend %#{$category};
-                        }
-                    }
-
-                    // Add class selector typographic styles.
-                    @include e(#{$category}) {
-                        @extend %#{$category};
-                    }
-                }
-            }
-            /* stylint-enable max-nesting-depth */
-        }
-    } @else {
-        @include _typography-styles($font-family, $type-scale);
-    }
-}
-
-/// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
-/// The produces styles are based on the passed typeface and type scale.
-/// If omitted the $material-typeface and $material-type-scale will be used.
-/// @access public
-/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
-/// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by type-scale.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
-/// @requires $material-typeface
-/// @requires $material-type-scale
-/// @see $material-typeface
-/// @see $material-type-scale
-@mixin typography($font-family: $material-typeface, $type-scale: $material-type-scale, $wc: false) {
-    @include _typography($font-family, $type-scale, $prefix: 'igx');
-
-    @if $wc {
-        @include _typography($font-family, $type-scale, $prefix: 'igc');
-    }
 }

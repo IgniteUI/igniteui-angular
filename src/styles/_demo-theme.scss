@@ -1,6 +1,4 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
-@use '../../node_modules/igniteui-theming/sass/typography' as ig-typography;
-@use '../../node_modules/igniteui-theming/sass/typography/presets' as ig-typography-presets;
 @use '../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use 'variables' as *;
 @use 'mixins' as *;
@@ -18,7 +16,6 @@ body {
 
 @include core();
 @include typography($font-family: $typeface, $type-scale: $type-scale);
-@include ig-typography.typography($font-family: $typeface, $type-scale: ig-typography-presets.$material-type-scale);
 @include ig-color.palette(ig-color.palette(
     $primary: color($palette, 'primary'),
     $secondary: color($palette, 'secondary'),
