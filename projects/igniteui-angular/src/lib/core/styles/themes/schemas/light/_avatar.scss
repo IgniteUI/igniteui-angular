@@ -19,11 +19,11 @@ $light-avatar: extend(
         variant: 'material',
 
         background: (
-            color: (gray, 400, .54)
+            color: ('gray', 400, .54)
         ),
 
         color: (
-            color: (gray, 800, .96)
+            color: ('gray', 800, .96)
         ),
 
         border-radius: rem(0)
@@ -54,11 +54,11 @@ $bootstrap-avatar: extend(
         variant: 'bootstrap',
 
         background: (
-            color: (gray, 400)
+            color: ('gray', 400)
         ),
 
         color: (
-            contrast-color: (gray, 400)
+            contrast-color: ('gray', 400)
         ),
 
         border-radius: rem(4px)
