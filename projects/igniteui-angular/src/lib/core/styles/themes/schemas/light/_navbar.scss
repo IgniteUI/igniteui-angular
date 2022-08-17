@@ -43,7 +43,26 @@ $light-navbar: extend(
 /// Generates a fluent navbar schema.
 /// @type {Map}
 /// @requires {Map} $light-navbar
-$fluent-navbar: $light-navbar;
+$fluent-navbar: extend(
+    $light-navbar,
+    (
+        background: (
+            color: ('surface', 500)
+        ),
+
+        text-color: (
+            color: ('grays', 900)
+        ),
+
+        idle-icon-color: (
+            color: ('primary', 500)
+        ),
+
+        hover-icon-color: (
+            color: ('primary', 500)
+        ),
+    )
+);
 
 /// Generates a bootstrap navbar schema.
 /// @type {Map}
