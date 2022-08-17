@@ -54,7 +54,8 @@ describe('IgxPivotGridState #pivotGrid :', () => {
                 "values": [{
                     "member": "UnitsSold", "aggregate": { "key": "SUM", "label": "Sum" },
                     "enabled": true
-                }]
+                }],
+                "filters" : []
             }
         };
 
