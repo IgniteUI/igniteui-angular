@@ -250,7 +250,6 @@
 
 /// Adds typography styles for the igx-expansion-panel component.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'h5', description: 'subtitle-2', body: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin expansion-panel-typography($categories: (

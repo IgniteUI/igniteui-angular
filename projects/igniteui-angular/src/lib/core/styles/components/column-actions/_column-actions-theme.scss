@@ -119,7 +119,6 @@
 /// Uses the 'subtitle-1'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin column-actions-typography($categories: (title: 'subtitle-1')) {

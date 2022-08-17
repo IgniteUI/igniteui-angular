@@ -1237,7 +1237,6 @@
 /// Uses the 'h4', 'subtitle-1' and 'body-1'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin calendar-typography($categories: (

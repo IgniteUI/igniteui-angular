@@ -498,7 +498,6 @@
 /// Uses the 'caption' and 'subtitle-2'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin drop-down-typography(

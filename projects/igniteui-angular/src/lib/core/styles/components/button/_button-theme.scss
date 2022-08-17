@@ -1019,7 +1019,6 @@
 /// Adds typography styles for the igx-button component.
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin button-typography($categories: (text: 'button')) {

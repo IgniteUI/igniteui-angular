@@ -640,7 +640,6 @@
 /// Uses the 'body-2'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin chip-typography(

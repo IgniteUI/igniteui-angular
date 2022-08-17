@@ -402,7 +402,6 @@
 /// Uses the 'h5', 'subtitle-2' and 'body-2'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'h6', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin card-typography($categories: (

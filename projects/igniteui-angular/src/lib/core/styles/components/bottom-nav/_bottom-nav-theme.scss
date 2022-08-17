@@ -199,7 +199,6 @@
 /// Uses the 'caption'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin bottom-nav-typography($categories: (label: 'caption')) {
