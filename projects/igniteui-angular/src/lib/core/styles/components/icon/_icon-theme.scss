@@ -80,7 +80,7 @@
 
         &[igxPrefix].material-icons,
         &[igxSuffix].material-icons {
-            font-family: 'Material Icons';
+            font-family: 'Material Icons' !important;
         }
     }
 
