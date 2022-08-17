@@ -96,7 +96,15 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         this._validationTransactions.push(transaction);
     }
 
-    public updateValidationState(states: Map<any, S>, transaction: T, recordRef?: any): void {
+
+    /**
+     * Updates the provided validation states collection according to passed transaction and recordRef
+     *
+     * @param states States collection to apply the update to
+     * @param transaction Transaction to apply to the current state
+     * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
+     */
+    protected updateValidationState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         if (!transaction) return;
         let state = states.get(transaction.id);
         if (state) {
@@ -116,25 +124,24 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
     * @inheritdoc
     */
-    public getAggregatedValidationChanges(mergeChanges: boolean): T[] {
+    public getAggregatedValidationChanges(): T[] {
         const result: T[] = [];
         this._validationStates.forEach((state: S, key: any) => {
-            const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type, validity: state.validity } as T);
+            result.push({ id: key, newValue: state.value, type: state.type, validity: state.validity } as T);
         });
         return result;
     }
 
-        /**
-        * @inheritdoc
-        */
-         public getAggregatedValidation(id: any): any {
-            const state = this._validationStates.get(id);
-            if (!state) {
-                return null;
-            }
-            return state;
+    /**
+    * @inheritdoc
+    */
+    public getAggregatedValidationState(id: any): any {
+        const state = this._validationStates.get(id);
+        if (!state) {
+            return null;
         }
+        return state;
+    }
 
     /**
      * @inheritdoc
@@ -168,11 +175,11 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public getInvalidTransactionLog(id?: any) {
-        let pending = [...this._validationTransactions];
+        let validationTransactions = [...this._validationTransactions];
         if (id !== undefined) {
-            pending = pending.filter(t => t.id === id);
+            validationTransactions = validationTransactions.filter(t => t.id === id);
         }
-        return pending.filter(x => x.validity.some(y => y.valid === false));
+        return validationTransactions.filter(x => x.validity.some(y => y.valid === false));
     }
 
     /**
@@ -188,7 +195,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
             this._validationStates.clear();
             this._validationTransactions = [];
         }
- 
+
     }
 
     /**

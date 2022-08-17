@@ -501,7 +501,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     }
 
     private get validity() {
-        const state = this.grid.transactions.getAggregatedValidation(this.intRow.key);
+        const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
         if (state && state.validity && state.validity.some(x => x.valid === false)) {
            return state.validity.find(x => x.field === this.column.field);
         }
