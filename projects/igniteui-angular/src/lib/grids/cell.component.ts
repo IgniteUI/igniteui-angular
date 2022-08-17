@@ -37,7 +37,7 @@ import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
 import { first, takeWhile } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -503,8 +503,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Gets the formControl responsible for value changes and validation for this cell.
      */
-    public get formControl(){
-        return this.formGroup?.get(this.column.field);
+    public get formControl(): FormControl {
+        return this.formGroup?.get(this.column.field) as FormControl;
     }
 
     private get validity() {
