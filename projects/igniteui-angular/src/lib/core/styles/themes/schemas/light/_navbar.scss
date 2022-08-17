@@ -22,6 +22,8 @@
 $light-navbar: extend(
     $default-elevation-navbar,
     (
+        variant: 'material',
+
         background: (
             color: ('primary', 500)
         ),
@@ -43,7 +45,13 @@ $light-navbar: extend(
 /// Generates a fluent navbar schema.
 /// @type {Map}
 /// @requires {Map} $light-navbar
-$fluent-navbar: $light-navbar;
+/// @requires {function} extend
+$fluent-navbar: extend(
+    $light-navbar,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap navbar schema.
 /// @type {Map}
@@ -59,6 +67,8 @@ $bootstrap-navbar: extend(
     $light-navbar,
     $bootstrap-elevation-navbar,
     (
+        variant: 'bootstrap',
+
         background: (
             color: 'surface',
         ),
@@ -83,4 +93,9 @@ $bootstrap-navbar: extend(
 /// @requires {function} extend
 /// @requires {Map} $light-navbar
 /// @requires {Map} $indigo-elevation-navbar
-$indigo-navbar: extend($light-navbar, $indigo-elevation-navbar);
+$indigo-navbar: extend(
+    $light-navbar,
+    $indigo-elevation-navbar, (
+        variant: 'indigo-design',
+    )
+);
