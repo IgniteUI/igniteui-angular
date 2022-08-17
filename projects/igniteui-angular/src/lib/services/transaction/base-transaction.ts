@@ -91,6 +91,9 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return result;
     }
 
+    /**
+    * @inheritdoc
+    */
     public addValidation(transaction: T, recordRef?: any): void {
         this.updateValidationState(this._validationStates, transaction, recordRef);
         this._validationTransactions.push(transaction);
