@@ -11,46 +11,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Converts pixels to relative values (em).
-/// @access public
-/// @param {number|string} $pixels - The pixel value to be converted.
-/// @param {number|string} $context [$browser-context] - The base context to convert against.
-@function em($pixels, $context: $browser-context) {
-    @if (math.is-unitless($pixels)) {
-        $pixels: $pixels * 1px;
-    }
-    @if (math.is-unitless($context)) {
-        $context: $context * 1px;
-    }
-    @return math.div($pixels, $context) * 1em;
-}
-
-/// Pixels to root relative values (rem).
-/// @access public
-/// @param {number|string} $pixels - The pixel value to be converted.
-/// @param {number|string} $context [$browser-context] - The base context to convert against.
-@function rem($pixels, $context: $browser-context) {
-    @if (math.is-unitless($pixels)) {
-        $pixels: $pixels * 1px;
-    }
-    @if (math.is-unitless($context)) {
-        $context: $context * 1px;
-    }
-    @return math.div($pixels, $context) * 1rem;
-}
-
-/// Relative value(em/rem) to pixel.
-/// @access public
-/// @param {number|string} $num - The relative value to be converted.
-/// @param {number|string} $context [$browser-context] - The base context to convert against.
-@function px($num, $context: $browser-context) {
-    @if meta.type-of($num) == 'number' {
-        @return math.div($num, $num * 0 + 1) * 16px;
-    }
-
-    @return $num;
-}
-
 /// Calculates the linear channel value for a given sRGB color.
 /// @access private
 @function _lcv($value) {

@@ -4,14 +4,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// The default font size used globally.
-/// @type String
-$browser-context: 16px !default;
-
-/// The default line height used globally.
-/// @type String
-$browser-line-height: 27px !default;
-
 /// The global keyframes registry map.
 /// @type List
 $keyframes: () !default;

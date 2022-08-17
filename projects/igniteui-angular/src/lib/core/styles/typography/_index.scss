@@ -1,4 +1,4 @@
 @forward 'base';
-@forward 'variables';
 @forward 'typography';
-@forward 'scale-presets';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/typography/presets';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/typography/mixins' hide typography;

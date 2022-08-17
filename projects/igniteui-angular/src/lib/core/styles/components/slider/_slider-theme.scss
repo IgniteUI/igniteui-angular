@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -120,6 +121,11 @@
 
     $palette: map.get($theme, 'palette');
     $variant: map.get($theme, variant);
+
+    .igx-typography,
+    .ig-typography {
+        @include slider-typography();
+    }
 
     $slider-height: rem(48px);
     $ripple-size: rem(40px);
@@ -582,11 +588,9 @@
 /// Uses the 'caption'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin slider-typography(
-    $type-scale,
     $categories: (
         ticks-label: 'caption',
         thumb-label: 'caption',
@@ -596,10 +600,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include type-style($type-scale, $thumb-label)
+        @include typography.type-style($thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include type-style($type-scale, $ticks-label)
+        @include typography.type-style($ticks-label)
     }
 }
