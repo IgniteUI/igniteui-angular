@@ -22,18 +22,6 @@
 @use '../components/grid/excel-filtering-theme' as *;
 @use '../components/input/input-group-theme' as *;
 @use '../components/list/list-theme' as *;
-@use '../components/navbar/navbar-theme' as *;
-@use '../components/navdrawer/navdrawer-theme' as *;
-@use '../components/radio/radio-theme' as *;
-@use '../components/slider/slider-theme' as *;
-@use '../components/snackbar/snackbar-theme' as *;
-@use '../components/switch/switch-theme' as *;
-@use '../components/stepper/stepper-theme' as *;
-@use '../components/tabs/tabs-theme' as *;
-@use '../components/time-picker/time-picker-theme' as *;
-@use '../components/toast/toast-theme' as *;
-@use '../components/tooltip/tooltip-theme' as *;
-@use '../components/tree/tree-theme' as *;
 
 /// @access private
 @mixin _typography-styles($font-family, $type-scale, $prefix: 'igx') {
@@ -59,20 +47,8 @@
     @include gauge-typography();
     @include graph-typography();
     @include input-group-typography($type-scale);
-    @include navbar-typography($type-scale);
-    @include navdrawer-typography($type-scale);
     @include pie-chart-typography($type-scale);
-    @include radio-typography($type-scale);
     @include shape-chart-typography($type-scale);
-    @include slider-typography($type-scale);
-    @include snackbar-typography($type-scale);
-    @include switch-typography($type-scale);
-    @include stepper-typography($type-scale);
-    @include tabs-typography($type-scale);
-    @include time-picker-typography($type-scale);
-    @include toast-typography($type-scale);
-    @include tooltip-typography($type-scale);
-    @include tree-typography($type-scale);
 
     // Add theme type-scale specific quirks
     @if ($_variant == 'material') {
@@ -80,38 +56,8 @@
     }
 
     @if ($_variant == 'fluent') {
-        @include radio-typography($type-scale, $categories: (
-            label: 'body-2'
-        ));
-
-        @include switch-typography($type-scale, $categories: (
-            label: 'body-2'
-        ));
-
         @include input-group-typography($type-scale, $categories: (
             input-text: 'body-2'
-        ));
-
-        @include navdrawer-typography($type-scale, $categories: (
-            item: 'body-2',
-            header: 'caption'
-        ));
-
-        @include navbar-typography($type-scale, $categories: (
-            title: 'subtitle-2'
-        ));
-
-        @include list-typography($type-scale, $categories: (
-            item: 'caption',
-            title: 'caption',
-        ));
-
-        @include snackbar-typography($type-scale, $categories: (
-            text: 'caption'
-        ));
-
-        @include toast-typography($type-scale, $categories: (
-            text: 'caption'
         ));
     }
 
@@ -121,15 +67,6 @@
             title: 'body-1',
             subtitle: 'subtitle-1',
             header: 'overline',
-        ));
-
-        @include input-group-typography($type-scale, $categories: (
-            helper-text: 'body-2',
-            input-text: 'body-1'
-        ));
-
-        @include navbar-typography($type-scale, $categories: (
-            title: 'h5'
         ));
     }
 
@@ -142,8 +79,6 @@
             header: 'overline',
             subtitle: 'body-2'
         ));
-
-        @include list-typography($type-scale);
     }
 }
 
