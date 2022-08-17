@@ -1032,12 +1032,12 @@ describe('IgxDateRangePicker', () => {
                     const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                     fix.detectChanges();
                     const dateRangePicker = fix.componentInstance.dateRangeWithTwoInputs;
-    
+
                     fix.componentInstance.markAsTouched();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
                     expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
-    
+
                     fix.componentInstance.disableForm();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
