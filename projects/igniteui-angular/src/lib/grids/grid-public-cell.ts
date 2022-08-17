@@ -1,6 +1,7 @@
 import { CellType, ColumnType, GridType, RowType } from './common/grid.interface';
 import { ISelectionNode } from './common/types';
 import { resolveNestedPath } from '../core/utils';
+import { FormControl } from '@angular/forms';
 
 export class IgxGridCell implements CellType {
 
@@ -72,6 +73,14 @@ export class IgxGridCell implements CellType {
         if (this.isCellInEditMode()) {
             return this.grid.crudService.cell.editValue;
         }
+    }
+
+    /**
+     * Gets the formControl responsible for value changes and validation for this cell.
+     */
+    public get formControl(): FormControl {
+        const editRow = this.grid.crudService.row || this.grid.crudService.cell.row;
+        return editRow.rowFormGroup.get(this.column.field);
     }
 
     /**
