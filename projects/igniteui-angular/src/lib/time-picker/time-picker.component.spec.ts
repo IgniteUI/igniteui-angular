@@ -1715,11 +1715,10 @@ describe('IgxTimePicker', () => {
                 expect(asterisk).toBe('"*"');
             });
 
-            it('should set correct valid state when the form group is disabled', () => {
+            it('should set initial validity state when the form group is disabled', () => {
                 fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
-                fixture.detectChanges();
 
                 (fixture.componentInstance as IgxTimePickerReactiveFormComponent).markAsTouched();
                 fixture.detectChanges();

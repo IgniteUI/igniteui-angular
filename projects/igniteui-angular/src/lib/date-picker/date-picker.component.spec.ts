@@ -292,11 +292,10 @@ describe('IgxDatePicker', () => {
                 expect(asterisk).toBe('"*"');
             });
 
-            it('should set correct valid state when the form group is disabled', () => {
+            it('should set initial validity state when the form group is disabled', () => {
                 fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
-                fixture.detectChanges();
 
                 (fixture.componentInstance as IgxDatePickerReactiveFormComponent).markAsTouched();
                 fixture.detectChanges();
