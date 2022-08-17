@@ -773,11 +773,10 @@ describe('IgxDateRangePicker', () => {
                 expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
             }));
 
-            it('should set correct valid state when the form group is disabled', () => {
+            it('should set initial validity state when the form group is disabled', () => {
                 const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                 fix.detectChanges();
                 const dateRangePicker = fix.componentInstance.dateRange;
-                fix.detectChanges();
 
                 fix.componentInstance.markAsTouched();
                 fix.detectChanges();
@@ -800,7 +799,8 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent,
                         DateRangeDisabledComponent,
-                        DateRangeTwoInputsDisabledComponent
+                        DateRangeTwoInputsDisabledComponent,
+                        DateRangeReactiveFormComponent
                     ],
                     imports: [
                         CommonModule,
@@ -811,7 +811,8 @@ describe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         FormsModule,
                         NoopAnimationsModule,
-                        IgxIconModule
+                        IgxIconModule,
+                        ReactiveFormsModule
                     ]
                 })
                     .compileComponents();
@@ -1026,6 +1027,22 @@ describe('IgxDateRangePicker', () => {
                     expect((rangePicker as any).calendar.selectedDates.length).toBe(7);
                     flush();
                 }));
+
+                it('should set initial validity state when the form group is disabled', () => {
+                    const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+                    fix.detectChanges();
+                    const dateRangePicker = fix.componentInstance.dateRangeWithTwoInputs;
+    
+                    fix.componentInstance.markAsTouched();
+                    fix.detectChanges();
+                    expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
+                    expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
+    
+                    fix.componentInstance.disableForm();
+                    fix.detectChanges();
+                    expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
+                    expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INITIAL);
+                });
             });
 
             describe('Keyboard navigation', () => {
@@ -1543,23 +1560,39 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
 @Component({
     template: `
         <form class="wrapper" [formGroup]="form">
-        	<igx-date-range-picker formControlName="range">
+        	<igx-date-range-picker #range formControlName="range">
         		<label igxLabel>Range</label>
         	</igx-date-range-picker>
+            <igx-date-range-picker #twoInputs formControlName="twoInputs">
+                <igx-date-range-start>
+                    <input igxInput igxDateTimeEditor>
+                </igx-date-range-start>
+                <igx-date-range-end>
+                    <input igxInput igxDateTimeEditor>
+                </igx-date-range-end>
+            </igx-date-range-picker>
         </form>`
 })
 export class DateRangeReactiveFormComponent {
-    @ViewChild(IgxDateRangePickerComponent) public dateRange: IgxDateRangePickerComponent;
+    @ViewChild('range', {read: IgxDateRangePickerComponent}) public dateRange: IgxDateRangePickerComponent;
+    @ViewChild('twoInputs', {read: IgxDateRangePickerComponent}) public dateRangeWithTwoInputs: IgxDateRangePickerComponent;
 
     public form = this.fb.group({
         range: ['', Validators.required],
+        twoInputs: ['', Validators.required]
     });
 
     constructor(private fb: FormBuilder) { }
 
     public markAsTouched() {
-        this.form.get('range').markAsTouched();
-        this.form.get('range').updateValueAndValidity();
+        if (!this.form.valid) {
+            for (const key in this.form.controls) {
+                if (this.form.controls[key]) {
+                    this.form.controls[key].markAsTouched();
+                    this.form.controls[key].updateValueAndValidity();
+                }
+            }
+        }
     }
 
     public disableForm() {

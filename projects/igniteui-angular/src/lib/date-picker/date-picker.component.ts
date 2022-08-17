@@ -822,9 +822,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private onStatusChanged = () => {
-        if (this.disabled !== this._ngControl.disabled) {
-            this.disabled = this._ngControl.disabled;
-        }
+        this.disabled = this._ngControl.disabled;
         this.updateValidity();
         this.inputGroup.isRequired = this.required;
     };
