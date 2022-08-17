@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography/presets' as ig-typography-presets;
 @use '../../base' as *;
@@ -89,7 +90,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -176,7 +177,7 @@
         $calendar-schema: $schema;
     }
 
-    $theme: apply-palette($calendar-schema, $palette);
+    $theme: themes.digest-schema($calendar-schema);
     $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';

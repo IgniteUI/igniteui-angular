@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -30,7 +31,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
@@ -73,7 +74,7 @@
         $carousel-schema: $schema;
     }
 
-    $theme: apply-palette($carousel-schema, $palette);
+    $theme: themes.digest-schema($carousel-schema);
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');

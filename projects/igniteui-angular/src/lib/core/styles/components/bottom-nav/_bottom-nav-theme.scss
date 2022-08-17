@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -24,7 +25,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -53,7 +54,7 @@
         $bottom-nav-schema: $schema;
     }
 
-    $theme: apply-palette($bottom-nav-schema, $palette);
+    $theme: themes.digest-schema($bottom-nav-schema);
 
     @if not($idle-item-color) and $background {
         @if meta.type-of($background) == 'color' {

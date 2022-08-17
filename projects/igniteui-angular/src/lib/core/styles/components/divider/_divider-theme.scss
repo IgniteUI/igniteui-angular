@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -14,7 +15,7 @@
 /// @param {Color} $color [null] - The color of the divider. (Gradients are not supported for dashed dividers).
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// @example scss Change the color of the divider
@@ -35,7 +36,7 @@
         $divider-schema: $schema;
     }
 
-    $theme: apply-palette($divider-schema, $palette);
+    $theme: themes.digest-schema($divider-schema);
 
     @return extend($theme, (
         name: $name,

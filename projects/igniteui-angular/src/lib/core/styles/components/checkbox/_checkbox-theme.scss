@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../typography/base' as *;
@@ -31,7 +32,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// @example scss Change the checked fill color
@@ -62,7 +63,7 @@
         $checkbox-schema: $schema;
     }
 
-    $theme: apply-palette($checkbox-schema, $palette);
+    $theme: themes.digest-schema($checkbox-schema);
 
     @if not($border-radius) {
         $border-radius: border-radius(map.get($theme, 'border-radius'));

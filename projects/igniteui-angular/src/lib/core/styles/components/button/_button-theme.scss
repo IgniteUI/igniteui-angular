@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -44,7 +45,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -174,7 +175,7 @@
         }
 
         $themes: map.merge($themes, (
-            $_name: extend(apply-palette($_schema, $palette), (
+            $_name: extend(themes.digest-schema($_schema), (
                 name: $name,
                 background: $background,
                 foreground: $foreground,
