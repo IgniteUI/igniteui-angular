@@ -24,6 +24,14 @@ All notable changes for each version of this project will be documented in this 
 	<column width='auto' ...>
 	```
 
+    - Added reactive forms style validation for grid editing. This extends the [Angular's reactive forms](https://angular.io/guide/form-validation#validating-input-in-reactive-forms) validation functionality
+    You can configure it in 2 ways:
+        1. Via template-driven configuration on the `igx-column` of the grid.
+        2. Via reactive forms using the FormGroup exposed via the `onFormGroupCreate` event of the grid.
+
+    Edited cells wil enter an invalid state when validation fails, will be marked with `igx-grid__td--invalid` class and will display an error icon with additional error message. Cell will remain in that state until the value is edited to a valid value or the related transaction in the transaction service are commited or cleared.
+    Additional Apis have been exposed on the base transaction service to get transactions and states related to validity.
+
 
 ## 14.0.0
 
