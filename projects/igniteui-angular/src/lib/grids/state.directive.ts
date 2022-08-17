@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -19,6 +19,11 @@ import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
+import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
+import { PivotUtil } from './pivot-grid/pivot-util';
+import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
+import { cloneArray, cloneValue } from '../core/utils';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -36,6 +41,7 @@ export interface IGridState {
     expansion?: any[];
     rowIslands?: IGridStateCollection[];
     id?: string;
+    pivotConfiguration?: IPivotConfiguration;
 }
 
 export interface IGridStateCollection {
@@ -59,6 +65,7 @@ export interface IGridStateOptions {
     expansion?: boolean;
     rowIslands?: boolean;
     moving?: boolean;
+    pivotConfiguration?: boolean;
 }
 
 export interface IColumnState {
@@ -91,7 +98,7 @@ export type GridFeatures = keyof IGridStateOptions;
 interface Feature {
     getFeatureState: (context: IgxGridStateDirective) => IGridState;
     restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | boolean | ISortingExpression[] |
-        IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
+        IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | IPivotConfiguration | any[]) => void;
 }
 
 @Directive({
@@ -116,7 +123,8 @@ export class IgxGridStateDirective {
         rowPinning: true,
         expansion: true,
         moving: true,
-        rowIslands: true
+        rowIslands: true,
+        pivotConfiguration: true
     };
     private FEATURES = {
         sorting:  {
@@ -316,7 +324,7 @@ export class IgxGridStateDirective {
         },
         rowPinning: {
             getFeatureState: (context: IgxGridStateDirective): IGridState => {
-                const pinned = context.currGrid.pinnedRows.map(x => x.key);
+                const pinned = context.currGrid.pinnedRows?.map(x => x.key);
                 return { rowPinning: pinned };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
@@ -389,8 +397,48 @@ export class IgxGridStateDirective {
                 }
                 return grid.gridAPI.getParentRowId(childGrid);
             }
+        },
+        pivotConfiguration: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                    return { pivotConfiguration: undefined };
+                }
+                const configCopy = cloneValue(config);
+                configCopy.rows = cloneArray(config.rows, true);
+                configCopy.columns = cloneArray(config.columns, true);
+                configCopy.filters = cloneArray(config.filters, true);
+                const dims =  [...(configCopy.rows || []), ...(configCopy.columns || []), ...(configCopy.filters || [])];
+                const dateDimensions = dims.filter(x => context.isDateDimension(x));
+                dateDimensions?.forEach(dim => {
+                    // do not serialize the grid resource strings. This would pollute the object with unnecessary data.
+                    (dim as IgxPivotDateDimension).resourceStrings = {};
+                });
+                return { pivotConfiguration: configCopy };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any): void {
+                const config: IPivotConfiguration = state;
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                    return;
+                }
+                context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
+                context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
+                (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
+            },
+            
+
         }
     };
+
+    /**
+     *  Event emitted when set state is called with a string.
+     * Returns the parsed state object so that it can be further modified before applying to the grid.
+     * ```typescript
+     * this.state.stateParsed.subscribe(parsedState => parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance()});
+     * ```
+     */
+    @Output()
+    public stateParsed = new EventEmitter<IGridState>();
 
     /**
      *  An object with options determining if a certain feature state should be saved.
@@ -464,6 +512,7 @@ export class IgxGridStateDirective {
     public setState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
         if (typeof state === 'string') {
             state = JSON.parse(state) as IGridState;
+            this.stateParsed.emit(state)
         }
         this.state = state;
         this.currGrid = this.grid;
@@ -527,6 +576,70 @@ export class IgxGridStateDirective {
     }
 
     /**
+     * This method restores complex objects in the pivot dimensions
+     * Like the IgxPivotDateDimension and filters.
+     */
+    private restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+        const collections = [config.rows, config.columns, config.filters];
+        for (const collection of collections) {
+            for (let index = 0; index < collection?.length; index++) {
+                const dim = collection[index];
+                if (this.isDateDimension(dim)) {
+                   this.restoreDateDimension(dim as IgxPivotDateDimension);
+                }
+                // restore complex filters
+                if (dim.filter) {
+                    dim.filter = this.createExpressionsTreeFromObject(dim.filter as FilteringExpressionsTree);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * This method restores the IgxPivotDateDimension with its default functions and resource strings.
+     */
+    private restoreDateDimension(dim: IgxPivotDateDimension) {
+        const dateDim = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+        // restore functions and resource strings
+        dim.resourceStrings = dateDim.resourceStrings;
+        dim.memberFunction = dateDim.memberFunction;
+        let currDim: IPivotDimension = dim;
+        let originDim: IPivotDimension = dateDim;
+        while (currDim.childLevel) {
+            currDim = currDim.childLevel;
+            originDim = originDim.childLevel;
+            currDim.memberFunction = originDim.memberFunction;
+        }
+    }
+
+    /**
+     * Returns if this is a IgxPivotDateDimension.
+     */
+    private isDateDimension(dim: IPivotDimension) {
+        return (dim as any).inBaseDimension;
+    }
+
+    /**
+     * This method restores complex objects in the pivot values.
+     * Like the default aggregator methods.
+     */
+    private restoreValues(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+        // restore aggregator func if it matches the default aggregators key and label
+        const values = config.values;
+        for (const value of values) {
+            const aggregateList = value.aggregateList;
+            const aggregators = PivotUtil.getAggregatorsForValue(value, grid);
+            value.aggregate.aggregator = aggregators.find(x => x.key === value.aggregate.key && x.label === value.aggregate.label)?.aggregator;
+            if (aggregateList) {
+                for (const ag of aggregateList) {
+                    ag.aggregator = aggregators.find(x => x.key === ag.key && x.label === ag.label)?.aggregator;
+                }
+            }
+        }
+    }
+
+    /**
      * This method builds a FilteringExpressionsTree from a provided object.
      */
     private createExpressionsTreeFromObject(exprTreeObject: FilteringExpressionsTree): FilteringExpressionsTree {
@@ -544,7 +657,9 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.currGrid.columns.length > 0) {
+                if (this.currGrid instanceof IgxPivotGridComponent) {
+                    dataType = this.currGrid.allDimensions.find(x => x.memberName === expr.fieldName).dataType;
+                } else if (this.currGrid.columns.length > 0) {
                     dataType = this.currGrid.columns.find(c => c.field === expr.fieldName).dataType;
                 } else if (this.state.columns) {
                     dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;

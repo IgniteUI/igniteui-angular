@@ -131,6 +131,7 @@ import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.
 import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const appRoutes: Routes = [
@@ -626,7 +627,12 @@ const appRoutes: Routes = [
     {
         path: 'pivot-hierarchy',
         component: PivotGridHierarchySampleComponent
-    }, {
+    },
+    {
+        path: 'pivot-state',
+        component: PivotGridStateSampleComponent
+    },
+     {
         path: 'pivot-noop',
         component: PivotGridNoopSampleComponent
     },

@@ -162,6 +162,7 @@ import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const components = [
@@ -303,6 +304,7 @@ const components = [
     GridLocalizationSampleComponent,
     PivotGridSampleComponent,
     PivotGridHierarchySampleComponent,
+    PivotGridStateSampleComponent,
     PivotGridNoopSampleComponent,
     IgxStepperSampleComponent,
     RatingSampleComponent
