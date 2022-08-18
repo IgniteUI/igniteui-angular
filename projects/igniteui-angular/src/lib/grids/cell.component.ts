@@ -475,7 +475,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-errormessage')
     public get ariaErrorMessage() {
-        return this.grid.id + '_' + this.column.field + '_' + this.row.index + '_error';
+        return this.grid.id + '_' + this.column.field + '_' + this.intRow.index + '_error';
     }
 
     /**
