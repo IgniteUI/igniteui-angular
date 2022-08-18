@@ -36,7 +36,9 @@
     @include calendar-typography();
     @include card-typography($categories: (
         title: 'subtitle-1',
+        title-small: 'subtitle-2',
         subtitle: 'body-2',
+        content: 'body-2'
     ));
     @include checkbox-typography($categories: (
         label: 'body-2'
@@ -56,11 +58,14 @@
     ));
     @include excel-filtering-typography();
     @include input-group-typography($categories: (
+        helper-text: 'caption',
         input-text: 'body-2'
     ));
     @include list-typography($categories: (
+        header: 'overline',
         item: 'caption',
         title: 'caption',
+        subtitle: 'caption'
     ));
     @include navbar-typography($categories: (
         title: 'subtitle-2'
