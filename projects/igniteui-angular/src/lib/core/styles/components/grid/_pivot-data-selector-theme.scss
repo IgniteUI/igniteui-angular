@@ -1,3 +1,5 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -27,7 +29,7 @@
         $pivot-data-selector-schema: $schema;
     }
 
-    $theme: apply-palette($pivot-data-selector-schema, $palette);
+    $theme: themes.digest-schema($pivot-data-selector-schema);
 
     @return extend($theme, (
         name: $name,
@@ -134,10 +136,10 @@
         %igx-expansion-panel__header-inner {
             background: var-get($theme, 'header-color');
             padding: $panel-padding;
-    
+
             .dragOver & {
-                background: color($color: 'grays', $variant: 300);
-                box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
+                background: ig-color.color($color: 'gray', $variant: 300);
+                box-shadow: inset 0 0 0 1px ig-color.color($color: 'gray', $variant: 400);
             }
         }
     }
@@ -212,13 +214,13 @@
         align-items: center;
         justify-content: space-between;
         font-size: rem(14px);
-        background: color($color: 'surface');
+        background: ig-color.color($color: 'surface');
         min-height: rem(32px);
         height: auto;
         padding: 0 rem(2px) 0 rem(4px);
         cursor: grabbing;
         box-shadow: elevation($elevations, 24);
-        border: 1px solid color($color: 'grays', $variant: 100);
+        border: 1px solid ig-color.color($color: 'gray', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
     }

@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -60,7 +61,7 @@
         $grid-summary-schema: $schema;
     }
 
-    $theme: apply-palette($grid-summary-schema, $palette);
+    $theme: themes.digest-schema($grid-summary-schema);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
