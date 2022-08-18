@@ -333,6 +333,20 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.locale).toEqual('en-US');
                 expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
             }));
+
+            it('should set initial validity state when the form group is disabled', () => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).markAsTouched();
+                fixture.detectChanges();
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).disableForm();
+                fixture.detectChanges();
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
+            });
         });
 
         describe('Projected elements', () => {
@@ -1379,5 +1393,14 @@ export class IgxDatePickerReactiveFormComponent {
     public addValidators() {
         this.form.get('date').setValidators(Validators.required);
         this.form.get('date').updateValueAndValidity();
+    }
+
+    public markAsTouched() {
+        this.form.get('date').markAsTouched();
+        this.form.get('date').updateValueAndValidity();
+    }
+
+    public disableForm() {
+        this.form.disable();
     }
 }
