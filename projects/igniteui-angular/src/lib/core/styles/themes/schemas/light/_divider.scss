@@ -6,11 +6,11 @@
 
 /// Generates a light divider schema.
 /// @type {Map}
-/// @property {Map} color [color: ('grays', 300)] - The color used for the divider.
+/// @property {Map} color [color: ('gray', 300)] - The color used for the divider.
 /// @see $default-palette
 $light-divider: (
     color: (
-        color: ('grays', 300)
+        color: ('gray', 300)
     )
 );
 

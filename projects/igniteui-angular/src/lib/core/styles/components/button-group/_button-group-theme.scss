@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -40,7 +41,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -89,7 +90,7 @@
         $button-group-schema: $schema;
     }
 
-    $theme: apply-palette($button-group-schema, $palette);
+    $theme: themes.digest-schema($button-group-schema);
 
     $border: 1px solid map.get($theme, 'item-selected-border-color');
 

@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -50,7 +51,7 @@
 /// @param {Color} $text-color [null] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -72,7 +73,7 @@
         $dock-manager-schema: $schema;
     }
 
-    $theme: apply-palette($dock-manager-schema, $palette);
+    $theme: themes.digest-schema($dock-manager-schema);
 
     @return extend($theme, (name: $name), keywords($rest));
 }

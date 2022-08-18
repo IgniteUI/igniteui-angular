@@ -9,8 +9,8 @@
 /// Generates a light action-strip schema.
 /// @type {Map}
 /// @prop {Color} icon-color ["'currentColor'"] - The color used for the actions icons.
-/// @prop {Map} background [color: ('grays', 100] - The color used for the action strip component content background.
-/// @prop {Map} actions-background [color: ('grays', 200)] - The color used for actions background.
+/// @prop {Map} background [color: ('gray', 100] - The color used for the action strip component content background.
+/// @prop {Map} actions-background [color: ('gray', 200)] - The color used for actions background.
 /// @prop {Map} delete-action [color: ('error')] - The color used for the delete icon in action strip component.
 /// @prop {Number} actions-border-radius [24px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -20,11 +20,11 @@ $light-action-strip: extend(
         variant: 'material',
 
         actions-background: (
-            color: ('grays', 200),
+            color: ('gray', 200),
         ),
 
         background: (
-            color: ('grays', 100, .38)
+            color: ('gray', 100, .38)
         ),
 
         icon-color: "'currentColor'",

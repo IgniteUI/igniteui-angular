@@ -43,6 +43,8 @@
     @include dock-manager-typography();
     @include drop-down-typography();
     @include expansion-panel-typography($categories: (
+        title: 'h5',
+        description: 'subtitle-2',
         body: 'body-1'
     ));
     @include excel-filtering-typography();
