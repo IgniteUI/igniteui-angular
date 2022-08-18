@@ -49,10 +49,13 @@
     ));
     @include excel-filtering-typography();
     @include input-group-typography($categories: (
+        helper-text: 'caption',
         input-text: 'body-1'
     ));
     @include list-typography($categories: (
         header: 'overline',
+        item: 'subtitle-1',
+        title: 'subtitle-1',
         subtitle: 'body-2'
     ));
     @include navbar-typography();
