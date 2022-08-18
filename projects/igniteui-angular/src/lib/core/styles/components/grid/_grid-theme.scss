@@ -1,3 +1,5 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use './excel-filtering-theme' as *;
@@ -243,7 +245,7 @@
         $grid-schema: $schema;
     }
 
-    $theme: apply-palette($grid-schema, $palette);
+    $theme: themes.digest-schema($grid-schema);
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -260,7 +262,7 @@
     }
 
     @if $header-background and meta.type-of($header-background) == 'color' {
-        $header-background: to-opaque($header-background, color($palette, 'surface'));
+        $header-background: to-opaque($header-background, ig-color.color($palette, 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -626,7 +628,7 @@
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
-    $grid-cell-pinned-border-color: color($palette, 'grays', 300);
+    $grid-cell-pinned-border-color: ig-color.color($palette, 'gray', 300);
 
     $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
@@ -1167,13 +1169,13 @@
         }
 
         %igx-icon--error {
-            color: color($palette, 'grays', 500);
+            color: ig-color.color($palette, 'gray', 500);
         }
     }
 
     %igx-grid__td--bool-true {
         %igx-icon--success {
-            color: color($palette, 'grays', 700);
+            color: ig-color.color($palette, 'gray', 700);
         }
     }
 
@@ -1462,7 +1464,7 @@
     %igx-grid__tr--deleted {
         %grid-cell-text {
             font-style: italic;
-            color: color(map.get($theme, 'palette'), 'error');
+            color: ig-color.color(map.get($theme, 'palette'), 'error');
             text-decoration: line-through;
         }
     }
@@ -1908,7 +1910,7 @@
 
     %grid-summaries-patch {
         @if $bootstrap-theme {
-            background: color($palette, 'grays', 100);
+            background: ig-color.color($palette, 'gray', 100);
         } @else {
             background: inherit;
         }
@@ -2603,7 +2605,7 @@
         }
 
         igx-prefix:focus {
-            color: color(map.get($theme, 'palette'), 'secondary');
+            color: ig-color.color(map.get($theme, 'palette'), 'secondary');
         }
 
         igx-suffix  {
@@ -2611,7 +2613,7 @@
                 outline-style: none;
 
                 &:focus {
-                    color: color($palette, 'secondary');
+                    color: ig-color.color($palette, 'secondary');
                 }
 
                 + igx-icon {
