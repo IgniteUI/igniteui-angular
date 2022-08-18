@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -39,7 +40,7 @@
         $splitter-schema: $schema;
     }
 
-    $theme: apply-palette($splitter-schema, $palette);
+    $theme: themes.digest-schema($splitter-schema);
 
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);

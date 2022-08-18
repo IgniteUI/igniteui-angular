@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -16,7 +17,7 @@
 /// @param {Number | String} $size [null] - The size of the track.
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -41,7 +42,7 @@
         $scrollbar-schema: $schema;
     }
 
-    $theme: apply-palette($scrollbar-schema, $palette);
+    $theme: themes.digest-schema($scrollbar-schema);
 
     @return extend($theme, (
         name: $name,
@@ -85,4 +86,3 @@
         }
     }
 }
-

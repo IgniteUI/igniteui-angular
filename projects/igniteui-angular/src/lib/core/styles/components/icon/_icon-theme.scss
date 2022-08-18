@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -18,7 +19,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// @example scss Change the icon color
@@ -42,7 +43,7 @@
         $icon-schema: $schema;
     }
 
-    $theme: apply-palette($icon-schema, $palette);
+    $theme: themes.digest-schema($icon-schema);
 
     @return extend($theme, (
         name: $name,

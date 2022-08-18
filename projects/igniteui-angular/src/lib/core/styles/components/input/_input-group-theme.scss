@@ -1,3 +1,5 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -67,7 +69,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -145,7 +147,7 @@
         $input-group-schema: $schema;
     }
 
-    $theme: apply-palette($input-group-schema, $palette);
+    $theme: themes.digest-schema($input-group-schema);
 
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
@@ -874,7 +876,7 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: ig-color.color(null, 'gray', 800);
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -890,7 +892,7 @@
     }
 
     %fluent-label-disabled {
-        color: color(map.get($theme, 'palette'), 'grays', 500);
+        color: ig-color.color(null, 'gray', 500);
     }
 
     %fluent-label-filled {
@@ -898,7 +900,7 @@
     }
 
     %fluent-label-focused {
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: ig-color.color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
