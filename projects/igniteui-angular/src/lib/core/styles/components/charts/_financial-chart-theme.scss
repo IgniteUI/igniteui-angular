@@ -70,7 +70,6 @@
 /// @param {String} $zoom-slider-x-axis-major-stroke [null] - Gets or sets stroke brush of major gridlines on x-axis of the zoom slider pane.
 /// @param {Number} $zoom-slider-x-axis-major-stroke-thickness [null] - Gets or sets thickness of major gridlines on x-axis of the zoom slider pane.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -147,7 +146,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
     $title-margin-default: map.get($theme, 'title-margin');
     $subtitle-margin-default: map.get($theme, 'subtitle-margin');
     $x-axis-label-margin-default: map.get($theme, 'x-axis-label-margin');

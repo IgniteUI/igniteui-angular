@@ -1,5 +1,9 @@
+@forward '../../../../../../../node_modules/igniteui-theming/sass/typography/presets';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/typography' hide typography;
+@forward '../../../../../../../node_modules/igniteui-theming/sass/elevations';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/color';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/themes';
+@forward '../../../../../../../node_modules/igniteui-theming/sass/utils';
 @forward 'variables';
 @forward 'animations';
 @forward 'utilities';
-@forward '../../../../../../../node_modules/igniteui-theming/sass/typography/functions';
-@forward '../../../../../../../node_modules/igniteui-theming/sass/elevations';

@@ -55,7 +55,7 @@
 /// @requires {mixin} css-vars
 /// @requires var-get
 @mixin rating($theme) {
-    @include css-vars($theme: $theme, $prefix: ignore);
+    @include css-vars($theme: $theme);
 
     igc-rating::part(label) {
         color: var-get($theme, 'label-color');
@@ -64,7 +64,7 @@
     igc-rating::part(value-label) {
         color: ig-color.color(null, 'gray', 900);
     }
-    
+
     igc-rating[disabled]::part(label),
     igc-rating[disabled]::part(value-label) {
         color: var-get($theme, 'disabled-label-color');

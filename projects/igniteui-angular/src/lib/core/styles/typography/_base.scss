@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../base/utilities/mixins' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/themes/mixins' as *;
 
 /// Transforms a type style map into a font style rule assigned to a css variable.
 /// @param {String} $name - The custom CSS variable name.

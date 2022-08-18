@@ -32,7 +32,6 @@
 /// @param {Color} $value-outline [null] - Sets the brush to use for the outline of actual value element.
 /// @param {Number} $value-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -74,7 +73,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
 
     @return extend(
         $theme,

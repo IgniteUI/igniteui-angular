@@ -33,7 +33,6 @@
 /// @param {Color} $tick-brush [null] - Sets the color to use for the major tickmarks.
 /// @param {Number} $tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -55,7 +54,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
 
     @return extend(
         $theme,
@@ -87,7 +86,6 @@
 /// @param {Color} $needle-pivot-brush [null] - Sets the color of the needle pivot point.
 /// @param {Color} $needle-pivot-outline [null] - Sets the outline color of the needle pivot point.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -109,7 +107,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
 
     @return extend(
         $theme,

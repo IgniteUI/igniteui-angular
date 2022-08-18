@@ -1,4 +1,5 @@
-@use '../base/utilities/functions' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/color/functions' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/color/presets' as palettes;
 
 ////
 /// @group palettes
@@ -9,7 +10,7 @@
 /// @type Map
 /// @prop {Map} primary - The primary sub-palette created from the primary color.
 /// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
-/// @prop {Map} grays - The grays sub-palette. Included by default in every palette.
+/// @prop {Map} gray - The gray sub-palette. Included by default in every palette.
 /// @prop {Color} primary.100 [#a7d9fa] - The 100 variant of the `primary` color.
 /// @prop {Color} primary.200 [#6dbcf1] - The 200 variant of the `primary` color.
 /// @prop {Color} primary.300 [#3ca9f2] - The 300 variant of the `primary` color.
@@ -36,36 +37,31 @@
 /// @prop {Color} secondary.A200 [#f3348b] - The A200 variant of the `secondary` color.
 /// @prop {Color} secondary.A400 [#df0d6d] - The A400 variant of the `secondary` color.
 /// @prop {Color} secondary.A700 [#a2094f] - The A700 variant of the `primary` color.
-/// @prop {Color} grays.100 [rgba(0, 0, 0, .04)] - The 100 variant of the `grays` color.
-/// @prop {Color} grays.200 [rgba(0, 0, 0, .08)] - The 200 variant of the `grays` color.
-/// @prop {Color} grays.300 [rgba(0, 0, 0, .12)] - The 300 variant of the `grays` color.
-/// @prop {Color} grays.400 [rgba(0, 0, 0, .26)] - The 400 variant of the `grays` color.
-/// @prop {Color} grays.500 [rgba(0, 0, 0, .38)] - The 500 variant of the `grays` color.
-/// @prop {Color} grays.600 [rgba(0, 0, 0, .54)] - The 600 variant of the `grays` color.
-/// @prop {Color} grays.700 [rgba(0, 0, 0, .62)] - The 700 variant of the `grays` color.
-/// @prop {Color} grays.800 [rgba(0, 0, 0, .74)] - The 800 variant of the `grays` color.
-/// @prop {Color} grays.900 [rgba(0, 0, 0, .87)] - The 900 variant of the `grays` color.
+/// @prop {Color} gray.100 [rgba(0, 0, 0, .04)] - The 100 variant of the `gray` color.
+/// @prop {Color} gray.200 [rgba(0, 0, 0, .08)] - The 200 variant of the `gray` color.
+/// @prop {Color} gray.300 [rgba(0, 0, 0, .12)] - The 300 variant of the `gray` color.
+/// @prop {Color} gray.400 [rgba(0, 0, 0, .26)] - The 400 variant of the `gray` color.
+/// @prop {Color} gray.500 [rgba(0, 0, 0, .38)] - The 500 variant of the `gray` color.
+/// @prop {Color} gray.600 [rgba(0, 0, 0, .54)] - The 600 variant of the `gray` color.
+/// @prop {Color} gray.700 [rgba(0, 0, 0, .62)] - The 700 variant of the `gray` color.
+/// @prop {Color} gray.800 [rgba(0, 0, 0, .74)] - The 800 variant of the `gray` color.
+/// @prop {Color} gray.900 [rgba(0, 0, 0, .87)] - The 900 variant of the `gray` color.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
 /// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @requires palette
-$default-palette: palette($primary: #09f, $secondary: #e41c77) !default;
+$default-palette: palettes.$light-material-palette;
 
 /// @access private
-$default-dark-palette: palette(
-    $primary: color($default-palette, 'primary'),
-    $secondary: color($default-palette, 'secondary'),
-    $grays: #fff,
-    $surface: #222,
-) !default;
+$default-dark-palette: palettes.$dark-material-palette;
 
 /// Same as $default-palette.
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -77,11 +73,11 @@ $default-dark-palette: palette(
 /// @see $default-palette
 $light-palette: $default-palette;
 
-/// Same as $light-palette but with modified grays and surface colors.
+/// Same as $light-palette but with modified gray and surface colors.
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -106,7 +102,8 @@ $dark-material-palette: $default-dark-palette;
 /// @access private
 $green-palette: palette(
     $primary: #09f,
-    $secondary: #72da67
+    $secondary: #72da67,
+    $surface: #fff
 ) !default;
 
 /// @access private
@@ -114,14 +111,13 @@ $green-dark-palette: palette(
     $primary: color($green-palette, 'primary'),
     $secondary: color($green-palette, 'secondary'),
     $surface: #222,
-    $grays: #fff
 ) !default;
 
 /// Light green palette
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#72da67] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -135,7 +131,7 @@ $light-green-palette: $green-palette;
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#72da67] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -148,7 +144,8 @@ $dark-green-palette: $green-dark-palette;
 /// @access private
 $purple-palette: palette(
     $primary: #00b4d6,
-    $secondary: #514590
+    $secondary: #514590,
+    $surface: #fff
 ) !default;
 
 /// @access private
@@ -156,14 +153,13 @@ $purple-dark-palette: palette(
     $primary: color($purple-palette, 'primary'),
     $secondary: color($purple-palette, 'secondary'),
     $surface: #333,
-    $grays: #fff
 ) !default;
 
 /// Light purple palette
 /// @type Map
 /// @prop {Color} primary [#00b4d6] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#514590] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -177,7 +173,7 @@ $light-purple-palette: $purple-palette;
 /// @type Map
 /// @prop {Color} primary [#00b4d6] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#514590] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#333] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
@@ -191,6 +187,7 @@ $dark-purple-palette: $purple-dark-palette;
 $fluent-excel-palette: palette(
     $primary: #217346,
     $secondary: #217346,
+    $surface: #fff,
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
@@ -205,7 +202,6 @@ $fluent-excel-dark-palette: palette(
     $warn: color($fluent-excel-palette, 'warn'),
     $error: color($fluent-excel-palette, 'error'),
     $surface: #222,
-    $grays: #fff,
     $variant: 'fluent'
 ) !default;
 
@@ -213,7 +209,7 @@ $fluent-excel-dark-palette: palette(
 /// @type Map
 /// @prop {Color} primary [#217346] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#217346] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -227,7 +223,7 @@ $light-fluent-excel-palette: $fluent-excel-palette;
 /// @type Map
 /// @prop {Color} primary [#217346] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#217346] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -241,6 +237,7 @@ $dark-fluent-excel-palette: $fluent-excel-dark-palette;
 $fluent-word-palette: palette(
     $primary: #2b579a,
     $secondary: #2b579a,
+    $surface: #fff,
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
@@ -251,11 +248,10 @@ $fluent-word-palette: palette(
 $fluent-word-dark-palette: palette(
     $primary: color($fluent-word-palette, 'primary'),
     $secondary: color($fluent-word-palette, 'secondary'),
+    $surface: #222,
     $success: color($fluent-word-palette, 'success'),
     $warn: color($fluent-word-palette, 'warn'),
     $error: color($fluent-word-palette, 'error'),
-    $surface: #222,
-    $grays: #fff,
     $variant: 'fluent'
 ) !default;
 
@@ -263,7 +259,7 @@ $fluent-word-dark-palette: palette(
 /// @type Map
 /// @prop {Color} primary [#2b579a] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#2b579a] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -277,7 +273,7 @@ $light-fluent-word-palette: $fluent-word-palette;
 /// @type Map
 /// @prop {Color} primary [#2b579a] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#2b579a] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -291,6 +287,7 @@ $dark-fluent-word-palette: $fluent-word-dark-palette;
 $fluent-palette: palette(
     $primary: #0078d4,
     $secondary: #0078d4,
+    $surface: #fff,
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
@@ -305,7 +302,6 @@ $fluent-dark-palette: palette(
     $warn: color($fluent-palette, 'warn'),
     $error: color($fluent-palette, 'error'),
     $surface: #222,
-    $grays: #fff,
     $variant: 'fluent'
 ) !default;
 
@@ -313,7 +309,7 @@ $fluent-dark-palette: palette(
 /// @type Map
 /// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#000] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -327,7 +323,7 @@ $light-fluent-palette: $fluent-palette;
 /// @type Map
 /// @prop {Color} primary [#0078d4] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#0078d4] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
@@ -341,12 +337,12 @@ $dark-fluent-palette: $fluent-dark-palette;
 $bootstrap-palette: palette(
     $primary: #0d6efd,
     $secondary: #6c757d,
+    $surface: #f8f9fa,
     $info: #0dcaf0,
     $success: #198754,
     $warn: #ffc107,
     $error: #dc3545,
-    $surface: #f8f9fa,
-    $grays: #adb5bd,
+    $gray: #adb5bd,
     $variant: 'bootstrap'
 ) !default;
 
@@ -354,12 +350,12 @@ $bootstrap-palette: palette(
 $bootstrap-dark-palette: palette(
     $primary: color($bootstrap-palette, 'primary'),
     $secondary: color($bootstrap-palette, 'secondary'),
+    $surface: #212529,
     $info: color($bootstrap-palette, 'info'),
     $success: color($bootstrap-palette, 'success'),
     $warn: color($bootstrap-palette, 'warn'),
     $error: color($bootstrap-palette, 'error'),
-    $surface: #212529,
-    $grays: color($bootstrap-palette, 'grays'),
+    $gray: color($bootstrap-palette, 'gray'),
     $variant: 'bootstrap'
 ) !default;
 
@@ -367,7 +363,7 @@ $bootstrap-dark-palette: palette(
 /// @type Map
 /// @prop {Color} primary [#0d6efd] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#adb5bd] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#adb5bd] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#f8f9fa] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#0dcaf0] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#198754] - The `success` color. Default for every palette if not specified.
@@ -381,7 +377,7 @@ $light-bootstrap-palette: $bootstrap-palette;
 /// @type Map
 /// @prop {Color} primary [#0d6efd] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#adb5bd] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#adb5bd] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#212529] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#0dcaf0] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#198754] - The `success` color. Default for every palette if not specified.
@@ -395,7 +391,7 @@ $dark-bootstrap-palette: $bootstrap-dark-palette;
 /// @type Map
 /// @prop {Color} primary [#3f51b5] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#3f51b5] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#060716] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#060716] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#9208bc] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#689f38] - The `success` color. Default for every palette if not specified.
@@ -406,7 +402,7 @@ $dark-bootstrap-palette: $bootstrap-dark-palette;
 $light-indigo-palette: palette(
     $primary: #3f51b5,
     $secondary: #3f51b5,
-    $grays: hsl(236, 8%, 5%),
+    $gray: hsl(236, 8%, 5%),
     $surface: #fff,
     $info: #9208bc,
     $success: #689f38,
@@ -419,7 +415,7 @@ $light-indigo-palette: palette(
 /// @type Map
 /// @prop {Color} primary [#3f51b5] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#3f51b5] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} gray [#fff] - The base color for  the `gray` shades.
 /// @prop {Color} surface [#2a2b2f] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#9208bc] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#689f38] - The `success` color. Default for every palette if not specified.
@@ -435,13 +431,13 @@ $dark-indigo-palette: palette(
     $warn: color($light-indigo-palette, 'warn'),
     $error: color($light-indigo-palette, 'error'),
     $surface: #2a2b2f,
-    $grays: hsl(262, 8%, 98%),
+    $gray: hsl(262, 8%, 98%),
     $variant: 'indigo-design'
 ) !default;
 
 /// Global Overlay Color.
-/// Assigned to the 500 variant of the grays color form the current $default-palette.
+/// Assigned to the 500 variant of the gray color form the current $default-palette.
 /// @group palettes
 /// @type Color
 /// @requires color
-$overlay-color: color($default-palette, 'grays') !default;
+$overlay-color: color($default-palette, 'gray') !default;

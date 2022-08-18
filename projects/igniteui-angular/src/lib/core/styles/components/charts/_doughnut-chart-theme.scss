@@ -20,7 +20,6 @@
 /// @param {Color} $selected-slice-stroke [null] - Sets the stroke color of the selected slice.
 /// @param {Number} $selected-slice-stroke-thickness [null] - Sets the stroke thickness of the selected slice.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -52,7 +51,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
 
     @return extend(
         $theme,

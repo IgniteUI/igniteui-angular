@@ -52,7 +52,6 @@
 /// @param {Color} $y-axis-title-color [null] - Sets color of title on the Y-axis.
 /// @param {List} $y-axis-title-margin [null] - Sets the margin around the title on the Y-axis.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -111,7 +110,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
     $margin-default: map.get($theme, 'margin');
     $title-margin-default: map.get($theme, 'title-margin');
     $subtitle-margin-default: map.get($theme, 'subtitle-margin');

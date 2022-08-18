@@ -56,8 +56,6 @@
         }
     }
 
-    $theme-palette: $palette !global;
-
     @if list.length($exclude) > 0 {
         $excluded: is-component($exclude);
     }

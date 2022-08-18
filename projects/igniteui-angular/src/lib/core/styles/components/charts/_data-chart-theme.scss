@@ -24,7 +24,6 @@
 /// @param {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title. Valid options are 'left', 'center', and 'right';
 /// @param {String} $subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle. Valid options are 'left', 'center', and 'right';
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -58,7 +57,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
     $margin-default: map.get($theme, 'margin');
     $title-margin-default: map.get($theme, 'title-margin');
     $subtitle-margin-default: map.get($theme, 'subtitle-margin');

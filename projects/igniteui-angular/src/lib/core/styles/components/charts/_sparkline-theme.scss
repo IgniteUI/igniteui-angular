@@ -33,7 +33,6 @@
 /// @param {Color} $vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
 /// @param {Color} $normal-range-fill [null] - Sets the normal range brush of the sparkline.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -75,7 +74,7 @@
         $sparkline-schema: $schema;
     }
 
-    $theme: apply-palette($sparkline-schema, $palette);
+    $theme: digest-schema($sparkline-schema);
 
     @return extend(
         $theme,
