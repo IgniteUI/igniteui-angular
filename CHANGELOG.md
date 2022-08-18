@@ -15,6 +15,51 @@ All notable changes for each version of this project will be documented in this 
     <ng-template igxPivotValueChip let-value>
             {{ value.member }}
     </ng-template>
+    ``` 
+    - Add support for usage with igxGridState to persist state of the pivotConfiguration with an additional `pivotConfiguration` option:
+
+    ```html
+     <igx-pivot-grid
+            #grid1
+            [igxGridState]="options" ...
+    ```
+
+    ```
+        public options : IGridStateOptions = {
+        pivotConfiguration: true
+    };
+    ```
+
+    One known issue of the igxGridState directive is that it cannot store functions as the state is stored as string.
+    As a result any custom functions set to `memberFunction`, `aggregator`, `formatter`, `styles` etc. will not be stored. Restoring any of these can be achieved with code on application level. 
+    Hence we have also exposed 2 new events:
+        - `dimensionInit` - emits when a dimension from the configuration is being initialized.
+        - `valueInit` - emits when a value from the configuration is being initialized.
+    Which can be used to set back any custom functions you have in the configuration.
+    The default aggregator function, like the ones from `IgxPivotNumericAggregate`, `IgxPivotDateAggregate` etc.,  will be restored out of the box. However if you have any custom aggregators (or other custom functions) they need to be set back in the `valueInit`event, for example:
+    ```
+        public onValueInit(value: IPivotValue) {
+        if (value.member === 'AmountOfSale') {
+            value.aggregate.aggregator = IgxTotalSaleAggregate.totalSale;
+        }
+    }
+    ```
+    Same applies to any custom functions on the dimension, like `memberFunction`. If it is a custom function you can set it back on the `dimensionInit` event:
+
+    ```
+     public onDimensionInit(dim: IPivotDimension) {
+        if (dim.memberName === 'AllCities') {
+            dim.memberFunction = () => 'All';
+        }
+    }
+    ```
+    - `igxGridState`:
+    Exposed a `stateParsed` event to the state directive that can be used to additionally modify the grid state before it gets applied.
+
+    ```
+    this.state.stateParsed.subscribe(parsedState => {
+            parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance());
+        });
     ```
 
 - `igxGrid`
@@ -29,7 +74,6 @@ All notable changes for each version of this project will be documented in this 
 ### General
 
 - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
-
 
 ## 14.0.0
 
