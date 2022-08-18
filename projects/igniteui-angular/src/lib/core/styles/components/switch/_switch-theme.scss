@@ -103,17 +103,17 @@
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
-        $resting-shadow: elevation($elevation: $resting-elevation);
+        $resting-shadow: elevation($resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map.get($switch-schema, 'hover-elevation');
-        $hover-shadow: elevation($elevation: $hover-elevation);
+        $hover-shadow: elevation($hover-elevation);
     }
 
     @if not($disabled-shadow) {
         $disabled-elevation: map.get($switch-schema, 'disabled-elevation');
-        $disabled-shadow: elevation($elevation: $disabled-elevation);
+        $disabled-shadow: elevation($disabled-elevation);
     }
 
     @if not($border-radius-track) {

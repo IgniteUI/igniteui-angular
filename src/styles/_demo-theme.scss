@@ -1,7 +1,6 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 @use '../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../node_modules/igniteui-theming/sass/color/presets/' as ig-color-presets;
-@use '../../node_modules/igniteui-theming/sass/elevations/presets/' as ig-elevation-presets;
 @use 'variables' as *;
 @use 'mixins' as *;
 @use 'app-layout';
@@ -21,7 +20,6 @@ body {
 @include theme(
     $palette: ig-color-presets.$light-material-palette,
     $schema: $schema,
-    $elevations: ig-elevation-presets.$material-elevations
 );
 
 .dock {

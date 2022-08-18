@@ -74,7 +74,7 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background-color');
-        box-shadow: elevation(map.get($theme, 'elevations'), 8);
+        box-shadow: elevation(8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);

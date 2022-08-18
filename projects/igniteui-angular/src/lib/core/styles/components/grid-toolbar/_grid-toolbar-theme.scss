@@ -294,7 +294,7 @@
         background: var-get($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: elevation($elevation: 8);
+        box-shadow: elevation(8);
     }
 
     %igx-grid-toolbar__dd-list-items {

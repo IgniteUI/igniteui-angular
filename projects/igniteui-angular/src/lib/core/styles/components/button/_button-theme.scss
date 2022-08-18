@@ -152,22 +152,22 @@
 
         @if not($_resting-shadow) {
             $resting-elevation: map.get($_schema, 'resting-elevation');
-            $_resting-shadow: elevation($elevations, $resting-elevation);
+            $_resting-shadow: elevation($resting-elevation);
         }
 
         @if not($_hover-shadow) {
             $hover-elevation: map.get($_schema, 'hover-elevation');
-            $_hover-shadow: elevation($elevations, $hover-elevation);
+            $_hover-shadow: elevation($hover-elevation);
         }
 
         @if not($_focus-shadow) {
             $focus-elevation: map.get($_schema, 'focus-elevation');
-            $_focus-shadow: elevation($elevations, $focus-elevation);
+            $_focus-shadow: elevation($focus-elevation);
         }
 
         @if not($_active-shadow) {
             $active-elevation: map.get($_schema, 'active-elevation');
-            $_active-shadow: elevation($elevations, $active-elevation);
+            $_active-shadow: elevation($active-elevation);
         }
 
         @if not($_border-radius) {

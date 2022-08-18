@@ -162,15 +162,15 @@
     }
 
     @if not($search-resting-shadow) {
-        $search-resting-shadow: elevation($elevations, $search-resting-elevation);
+        $search-resting-shadow: elevation($search-resting-elevation);
     }
 
     @if not($search-hover-shadow) {
-        $search-hover-shadow: elevation($elevations, $search-hover-elevation);
+        $search-hover-shadow: elevation($search-hover-elevation);
     }
 
     @if not($search-disabled-shadow) {
-        $search-disabled-shadow: elevation($elevations, $search-disabled-elevation);
+        $search-disabled-shadow: elevation($search-disabled-elevation);
     }
 
     @if not($box-border-radius) {

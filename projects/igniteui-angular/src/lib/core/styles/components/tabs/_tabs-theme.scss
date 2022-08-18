@@ -103,8 +103,8 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
-    $tab-area-shadow: if($disable-shadow == true, none, elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, elevation($elevation: 4));
+    $tab-area-shadow: if($disable-shadow == true, none, elevation(1));
+    $buttons-shadow: if($disable-shadow == true, none, elevation(4));
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {

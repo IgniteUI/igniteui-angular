@@ -35,7 +35,7 @@
         min-width: 660px;
         max-width: 720px;
         background-color: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation($elevation: 12);
+        box-shadow: elevation(12);
         border-radius: border-radius(rem(4px));
     }
 

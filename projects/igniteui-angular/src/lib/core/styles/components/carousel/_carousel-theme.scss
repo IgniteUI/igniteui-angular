@@ -78,7 +78,7 @@
 
     @if not($button-shadow) {
         $button-elevation: map.get($carousel-schema, 'button-elevation');
-        $button-shadow: elevation($elevations, $button-elevation);
+        $button-shadow: elevation($button-elevation);
     }
 
     @if not($button-arrow-color) and $button-background {
@@ -263,7 +263,7 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: var-get($theme, 'indicator-border-color');
-            box-shadow: elevation($elevation: 1);
+            box-shadow: elevation(1);
             opacity: .7;
         }
 

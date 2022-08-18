@@ -59,7 +59,7 @@
 
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
-        $shadow: elevation($elevation: $elevation);
+        $shadow: elevation($elevation);
     }
 
     @if not($text-color) and $background {

@@ -219,7 +219,7 @@
         height: auto;
         padding: 0 rem(2px) 0 rem(4px);
         cursor: grabbing;
-        box-shadow: elevation($elevations, 24);
+        box-shadow: elevation(24);
         border: 1px solid ig-color.color($color: 'gray', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;

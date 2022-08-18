@@ -20,7 +20,7 @@ $_my-elevations: elevations(red, green, blue);
     @include it('should get an elevation as a CSS variable') {
         $expected: var(--igx-elevation-5);
 
-        $actual: elevation($elevation: 5);
+        $actual: elevation(5);
         @include assert-equal($actual, $expected);
     }
 }

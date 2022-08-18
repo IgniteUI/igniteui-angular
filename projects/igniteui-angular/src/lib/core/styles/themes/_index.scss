@@ -3,7 +3,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 @use '../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
-@use '../../../../../../../node_modules/igniteui-theming/sass/elevations/' as ig-elevations;
+@use '../../../../../../../node_modules/igniteui-theming/sass/elevations/presets' as elevations;
 
 @use 'sass:list';
 @use 'sass:string';
@@ -35,14 +35,14 @@
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $elevations: $elevations,
+    $elevations: elevations.$material-elevations,
 ) {
     // Stores all excluded component styles
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
     @include ig-color.palette($palette, $contrast: true);
-    @include ig-elevations.elevations($elevations);
+    @include elevations($elevations);
 
     @if $elevation == false {
         #{$scope} {

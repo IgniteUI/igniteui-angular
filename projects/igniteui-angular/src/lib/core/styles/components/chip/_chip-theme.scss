@@ -197,7 +197,7 @@
 
     @if not($ghost-shadow) {
         $ghost-elevation: map.get($chip-schema, 'ghost-elevation');
-        $ghost-shadow: elevation($elevations, $ghost-elevation);
+        $ghost-shadow: elevation($ghost-elevation);
     }
 
     @if not($border-radius) {

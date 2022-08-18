@@ -64,7 +64,7 @@
 
     @if not($shadow) {
         $elevation: map.get($bottom-nav-schema, 'elevation');
-        $shadow: elevation($elevations, $elevation);
+        $shadow: elevation($elevation);
     }
 
     @return extend($theme, (

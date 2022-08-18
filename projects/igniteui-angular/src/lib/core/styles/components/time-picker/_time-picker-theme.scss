@@ -115,12 +115,12 @@
 
     @if not($modal-shadow) {
         $elevation: map.get($time-picker-schema, 'modal-elevation');
-        $modal-shadow: elevation($elevations, $elevation);
+        $modal-shadow: elevation($elevation);
     }
 
     @if not($dropdown-shadow) {
         $elevation: map.get($time-picker-schema, 'dropdown-elevation');
-        $dropdown-shadow: elevation($elevations, $elevation);
+        $dropdown-shadow: elevation($elevation);
     }
 
     @if not($border-radius) {
