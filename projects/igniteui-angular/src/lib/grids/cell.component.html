@@ -144,6 +144,6 @@
         {{grid.resourceStrings.igx_grid_email_validation_error }}
     </div>
     <div *ngIf="formGroup?.get(column?.field).errors?.['pattern']">
-        {{grid.resourceStrings.igx_grid_pattern_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.pattern.requiredPattern }}
+        {{grid.resourceStrings.igx_grid_pattern_validation_error}}
     </div>
 </ng-template>
