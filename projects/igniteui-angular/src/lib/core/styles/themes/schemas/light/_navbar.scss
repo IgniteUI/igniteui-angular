@@ -42,12 +42,19 @@ $light-navbar: extend(
 
 /// Generates a fluent navbar schema.
 /// @type {Map}
+/// 
+/// @prop {Map} background [color: 'surface'] - The navbar background color.
+/// @prop {Map} text-color [color: ('grays', 900)] - The navbar text color.
+/// @prop {Map} idle-icon-color [color: ('primary', 500)] - The navbar idle icon color.
+/// @prop {Map} hover-icon-color [color: ('primary', 500)] - The navbar hover icon color.
+///
+/// @requires {function} extend
 /// @requires {Map} $light-navbar
 $fluent-navbar: extend(
     $light-navbar,
     (
         background: (
-            color: ('surface', 500)
+            color: 'surface'
         ),
 
         text-color: (
