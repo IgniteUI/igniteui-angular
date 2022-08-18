@@ -206,20 +206,7 @@
 /// @requires var-get
 @mixin drop-down($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, variant); 
-
-    .igx-typography,
-    .ig-typography {
-        @include drop-down-typography();
-
-        @if $variant == 'bootstrap' {
-            @include drop-down-typography($categories: (
-                header: 'body-1',
-                item: 'body-1',
-                select-item: 'body-1'
-            ));
-        }
-    }
+    $variant: map.get($theme, variant);
 
     $item-height: (
         comfortable: rem(40px),

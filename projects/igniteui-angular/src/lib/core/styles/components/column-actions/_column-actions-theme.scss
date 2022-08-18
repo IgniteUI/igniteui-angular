@@ -69,11 +69,6 @@
 @mixin column-actions($theme) {
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @include column-actions-typography();
-    }
-
     %column-actions-display {
         display: flex;
         flex-flow: column nowrap;

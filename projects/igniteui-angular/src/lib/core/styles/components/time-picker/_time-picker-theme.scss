@@ -161,11 +161,6 @@
     $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    .igx-typography,
-    .ig-typography {
-        @include time-picker-typography();
-    }
-
     $vertical-header-width: rem(168px);
 
     $picker-buttons-padding: map.get((

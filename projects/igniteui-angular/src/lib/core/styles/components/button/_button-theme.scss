@@ -225,11 +225,6 @@
 /// @requires rem
 /// @requires var-get
 @mixin button($theme) {
-    .igx-typography,
-    .ig-typography {
-        @include button-typography();
-    }
-
     $button-width: rem(88px);
 
     $variant: map.get($theme, variant);

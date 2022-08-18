@@ -337,11 +337,6 @@
 
     $variant: map.get($theme, variant);
 
-    .igx-typography,
-    .ig-typography {
-        @include stepper-typography();
-    }
-
     $indicator-size: map.get((
         material: rem(24px),
         fluent: rem(24px),

@@ -129,29 +129,6 @@
 
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'material' or $variant == 'indigo-design' {
-            @include card-typography();
-        }
-
-        @if $variant == 'fluent' {
-            @include card-typography($categories: (
-                title: 'subtitle-1',
-                subtitle: 'body-2',
-            ));
-        }
-
-        @if $variant == 'bootstrap' {
-            @include card-typography($categories: (
-                title: 'h5',
-                title-small: 'subtitle-2',
-                subtitle: 'body-1',
-                content: 'body-1',
-            ));
-        }
-    }
-
     $card-heading-padding: rem(16px);
     $card-heading-compact-padding: rem(16px, 16px);
     $card-content-padding: rem(14px);

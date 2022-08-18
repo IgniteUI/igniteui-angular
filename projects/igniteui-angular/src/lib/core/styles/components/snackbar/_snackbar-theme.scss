@@ -96,17 +96,6 @@
 
     $variant: map.get($theme, 'variant');
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include snackbar-typography($categories: (
-                text: 'caption'
-            ));
-        } @else {
-            @include snackbar-typography();
-        }
-    }
-
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
     $snackbar-button-left-margin: rem(24px);

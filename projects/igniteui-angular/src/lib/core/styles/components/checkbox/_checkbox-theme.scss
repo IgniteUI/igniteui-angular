@@ -103,25 +103,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'material' {
-            @include checkbox-typography();
-        }
-
-        @if $variant == 'bootstrap' or $variant == 'fluent' {
-            @include checkbox-typography($categories: (
-                label: 'body-2',
-            ));
-        }
-
-        @if $variant == 'indigo-design' {
-            @include checkbox-typography($categories: (
-                label: 'body-1',
-            ));
-        }
-    }
-
     @include scale-in-out($start-scale: .9);
 
     // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
@@ -286,7 +267,7 @@
         @if $variant == 'material' {
             %cbx-composite--x--disabled {
                 border: var-get($theme, 'disabled-indeterminate-color');
-        
+
                 &::after {
                     background: var-get($theme, 'disabled-indeterminate-color');
                 }
@@ -320,7 +301,7 @@
 
             %cbx-composite--x--disabled {
                 background: transparent;
-        
+
                 &::after {
                     background: transparent;
                 }

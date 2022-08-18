@@ -73,17 +73,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
 
-    .igx-typography,
-    .ig-typography {
-        @include banner-typography();
-
-        @if $variant == 'fluent' {
-            @include banner-typography($categories: (
-                message: 'caption'
-            ));
-        }
-    }
-
     $banner-padding: (
         comfortable: rem(8),
         cosy: rem(8),

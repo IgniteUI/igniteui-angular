@@ -1,0 +1,19 @@
+@use '../components/charts/category-chart-theme' as *;
+@use '../components/charts/data-chart-theme' as *;
+@use '../components/charts/financial-chart-theme' as *;
+@use '../components/charts/funnel-chart-theme' as *;
+@use '../components/charts/gauge-theme' as *;
+@use '../components/charts/graph-theme' as *;
+@use '../components/charts/pie-chart-theme' as *;
+@use '../components/charts/shape-chart-theme' as *;
+
+@mixin typography($type-scale) {
+    @include category-chart-typography($type-scale);
+    @include data-chart-typography($type-scale);
+    @include financial-chart-typography($type-scale);
+    @include funnel-chart-typography($type-scale);
+    @include gauge-typography();
+    @include graph-typography();
+    @include pie-chart-typography($type-scale);
+    @include shape-chart-typography($type-scale);
+}

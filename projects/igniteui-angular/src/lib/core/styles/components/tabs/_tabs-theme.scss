@@ -238,11 +238,6 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 
-    .igx-typography,
-    .ig-typography {
-        @include tabs-typography();
-    }
-
     $item-min-width: 90px;
     $item-max-width: 360px;
 
@@ -373,7 +368,7 @@
     %tabs-header-item {
         > * {
             margin-inline-start: map.get($icon-space, 'comfortable');
-    
+
             &:first-child {
                 margin-inline-start: 0;
             }
@@ -396,7 +391,7 @@
         color: var-get($theme, 'item-text-color');
         outline: 0;
 
-        igx-icon { 
+        igx-icon {
             color: var-get($theme, 'item-icon-color');
         }
 
