@@ -29,11 +29,11 @@ $dark-bootstrap-avatar: extend(
     $bootstrap-avatar,
     (
         background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         color: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
     )
 );
