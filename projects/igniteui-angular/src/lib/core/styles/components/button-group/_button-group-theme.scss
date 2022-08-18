@@ -1,4 +1,5 @@
 @use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -310,7 +311,7 @@
                 bottom: 0;
                 inset-inline-end: 0;
                 inset-inline-start: 0;
-                background: color($palette, 'grays', 500, .12);
+                background: ig-color.color($palette, 'gray', 500, .12);
             }
         }
     }
