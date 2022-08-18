@@ -72,7 +72,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
-    @ViewChildren('error', {read: IgxTooltipDirective})
+    @ViewChildren('error', { read: IgxTooltipDirective })
     public errorTooltip: QueryList<IgxTooltipDirective>;
 
     /**
@@ -100,7 +100,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public column: ColumnType;
 
 
-    public get formGroup() : FormGroup {
+    public get formGroup(): FormGroup {
         const isRowEdit = this.grid.crudService.rowEditing;
         const editRow = isRowEdit ? this.grid.crudService.row : this.grid.crudService.cell?.row;
         const id = isRowEdit ? editRow?.id : editRow?.id.rowID;
@@ -469,11 +469,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
     public get describeBy() {
-        let id = this.grid.id + '_' + this.column.field;
-        if (this.isInvalid) {
-            id += '_' + this.row.index + '_error';
-        }
-        return id;
+        return this.grid.id + '_' + this.column.field;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('attr.aria-errormessage')
+    public get ariaErrorMessage() {
+        return this.grid.id + '_' + this.column.field + '_' + this.row.index + '_error';
     }
 
     /**
@@ -486,7 +488,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.intRow.inEditMode || this.editMode) {
             return this.formGroup?.get(this.column?.field)?.invalid;
         } else {
-           return !!this.validity ? !this.validity.valid : false;
+            return !!this.validity ? !this.validity.valid : false;
         }
     }
 
@@ -510,7 +512,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private get validity() {
         const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
         if (state && state.validity && state.validity.some(x => x.valid === false)) {
-           return state.validity.find(x => x.field === this.column.field);
+            return state.validity.find(x => x.field === this.column.field);
         }
     }
 
@@ -814,7 +816,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
         }
-     
+
     }
 
     public ngAfterViewInit() {
@@ -846,7 +848,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             {
                 target: this.errorIcon.el.nativeElement,
                 closeOnOutsideClick: true,
-                excludeFromOutsideClick: [ this.nativeElement ],
+                excludeFromOutsideClick: [this.nativeElement],
                 closeOnEscape: false,
                 outlet: this.grid.outlet,
                 modal: false,
@@ -984,7 +986,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public focusout = () => {
-       this.closeErrorTooltip();
+        this.closeErrorTooltip();
     }
 
     private closeErrorTooltip() {

@@ -51,7 +51,7 @@
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
-                
+                [attr.aria-errormessage]="ariaErrorMessage"
                 [igxFocus]="true"
                 [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
@@ -61,7 +61,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
             [formControl]="formControl" />
         </igx-input-group>
     </ng-container>
@@ -90,21 +90,21 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
         <igx-input-group [formGroup]="formGroup">
-            <input type="text" [formControl]="formControl" igxInput
+            <input type="text" [attr.aria-errormessage]="ariaErrorMessage" [formControl]="formControl" igxInput
                 [igxDateTimeEditor]="column.defaultDateTimeFormat"  [igxFocus]="true" />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
-            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
             [formControl]="formControl" />
             <igx-suffix *ngIf="!grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput  [igxFocus]="true" [step]="step" type="number"
+            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
             [formControl]="formControl" />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>
