@@ -1141,12 +1141,12 @@
     %form-group-clear-icon {
         &:focus {
             border-radius: border-radius(rem(4px));
-            background-color: color($palette, 'primary', 500);
+            background-color: ig-color.color($palette, 'primary', 500);
             color: contrast-color($palette, 'primary', 500);
 
             @if $variant == 'material' {
                 background-color: transparent;
-                color: color($palette, 'secondary', 500);
+                color: ig-color.color($palette, 'secondary', 500);
             }
 
             @if $variant == 'fluent' {

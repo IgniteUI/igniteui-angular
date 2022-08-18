@@ -1,4 +1,5 @@
 @use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -158,10 +159,10 @@
     }
 
     %igx-action-strip__menu-item--danger {
-        color: color(map.get($theme, 'palette'), 'error');
+        color: ig-color.color(map.get($theme, 'palette'), 'error');
 
         &:hover {
-            color: color(map.get($theme, 'palette'), 'error');
+            color: ig-color.color(map.get($theme, 'palette'), 'error');
         }
     }
 

@@ -2,6 +2,8 @@
 /// @group themes
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+@use '../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
+@use '../../../../../../../node_modules/igniteui-theming/sass/elevations/' as ig-elevations;
 
 @use 'sass:list';
 @use 'sass:string';
@@ -23,7 +25,6 @@
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 /// @requires $components
 /// @requires $theme-palette
 /// @requires $elevations
@@ -35,37 +36,23 @@
     $roundness: 1,
     $elevation: true,
     $elevations: $elevations,
-    $wc: false
 ) {
     // Stores all excluded component styles
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
-    @include palette-vars($palette, $contrast: true);
-    @include elevation-vars($elevations);
-
-    @if $wc {
-        @include palette-to-wc($palette);
-        @include elevations-to-wc($elevations);
-    }
+    @include ig-color.palette($palette, $contrast: true);
+    @include ig-elevations.elevations($elevations);
 
     @if $elevation == false {
         #{$scope} {
-            --igx-elevation-factor: 0;
-
-            @if $wc {
-                --igc-elevation-factor: var(--igx-elevation-factor);
-            }
+            --ig-elevation-factor: 0;
         }
     }
 
     @if $roundness {
         #{$scope} {
-            --igx-radius-factor: #{$roundness};
-
-            @if $wc {
-                --igc-radius-factor: var(--igx-radius-factor);
-            }
+            --ig-radius-factor: #{$roundness};
         }
     }
 
@@ -454,27 +441,25 @@
 
 /// Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin light-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $grays: color($palette, 'grays');
-    $surface: color($palette, 'surface');
+    $gray: ig-color.color($palette, 'gray');
+    $surface: ig-color.color($palette, 'surface');
 
-    $light-palette: palette(
-        $primary: color($palette, 'primary'),
-        $secondary: color($palette, 'secondary'),
-        $info: color($palette, 'info'),
-        $success: color($palette, 'success'),
-        $warn: color($palette, 'warn'),
-        $error: color($palette, 'error'),
+    $light-palette: ig-color.palette(
+        $primary: ig-color.color($palette, 'primary'),
+        $secondary: ig-color.color($palette, 'secondary'),
+        $info: ig-color.color($palette, 'info'),
+        $success: ig-color.color($palette, 'success'),
+        $warn: ig-color.color($palette, 'warn'),
+        $error: ig-color.color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #fff),
-        $grays: if($grays != #9e9e9e, $grays, #000),
+        $gray: if($gray != #9e9e9e, $gray, #000),
     );
 
     @include theme(
@@ -489,26 +474,24 @@
 /// Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
 @mixin dark-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $grays: color($palette, 'grays');
-    $surface: color($palette, 'surface');
+    $gray: ig-color.color($palette, 'gray');
+    $surface: ig-color.color($palette, 'surface');
 
-    $dark-palette: palette(
-        $primary: color($palette, 'primary'),
-        $secondary: color($palette, 'secondary'),
-        $info: color($palette, 'info'),
-        $success: color($palette, 'success'),
-        $warn: color($palette, 'warn'),
-        $error: color($palette, 'error'),
+    $dark-palette: ig-color.palette(
+        $primary: ig-color.color($palette, 'primary'),
+        $secondary: ig-color.color($palette, 'secondary'),
+        $info: ig-color.color($palette, 'info'),
+        $success: ig-color.color($palette, 'success'),
+        $warn: ig-color.color($palette, 'warn'),
+        $error: ig-color.color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #222),
-        $grays: if($grays != #9e9e9e, $grays, #fff),
+        $gray: if($gray != #9e9e9e, $gray, #fff),
     );
 
     @include theme(
@@ -522,25 +505,23 @@
 
 /// Creates a global fluent theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin fluent-light-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
-            $grays: #000
+            $gray: #000
         ),
         $schema: $light-fluent-schema,
         $exclude: $exclude,
@@ -551,25 +532,23 @@
 
 /// Creates a global fluent theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin fluent-dark-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #222),
-            $grays: #fff
+            $gray: #fff
         ),
         $schema: $dark-fluent-schema,
         $exclude: $exclude,
@@ -581,25 +560,23 @@
 
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
-            $grays: #212529
+            $gray: #212529
         ),
         $schema: $light-bootstrap-schema,
         $exclude: $exclude,
@@ -610,25 +587,23 @@
 
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #222),
-            $grays: #fff
+            $gray: #fff
         ),
         $schema: $dark-bootstrap-schema,
         $exclude: $exclude,
@@ -639,25 +614,23 @@
 
 /// Creates a global indigo theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
-            $grays: #060716,
+            $gray: #060716,
         ),
         $schema: $light-indigo-schema,
         $exclude: $exclude,
@@ -668,25 +641,23 @@
 
 /// Creates a global indigo theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $wc [false] - Enable theming support for Ignite UI for Web Components
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
     $roundness: 1,
     $elevation: true,
-    $wc: false,
 ) {
-    $primary: color($palette, 'primary');
-    $secondary: color($palette, 'secondary');
-    $surface: color($palette, 'surface');
+    $primary: ig-color.color($palette, 'primary');
+    $secondary: ig-color.color($palette, 'secondary');
+    $surface: ig-color.color($palette, 'surface');
 
     @include theme(
-        $palette: palette(
+        $palette: ig-color.palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #2a2b2f),
-            $grays: #fff
+            $gray: #fff
         ),
         $schema: $dark-indigo-schema,
         $exclude: $exclude,
