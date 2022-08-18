@@ -17,7 +17,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-ope
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
 import { IgxIconModule } from '../icon/public_api';
@@ -28,6 +28,16 @@ import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 
+export interface IQueryBuilderField {
+    /** The field label */
+    label?: string;
+    /** The name of the data field */
+    fieldName: string;
+    /** The field data type */
+    dataType?: string;
+    /** The filter conditions for the specified field */
+    filteringConditions?: string[];
+}
 /**
  * @hidden
  */
@@ -409,12 +419,14 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
     private _grid: GridType;
+    private _fields: IQueryBuilderField[];
     private _filteringChange: Subscription;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
     };
+    
     private _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
@@ -496,11 +508,40 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
-     * @hidden @internal
+     * An @Input property that sets the fields.
      */
-    public get filterableColumns(): ColumnType[] {
-        return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
+     @Input()
+     public set fields(fields: IQueryBuilderField[]) {
+         this._fields = fields;
+ 
+         if (this._filteringChange) {
+             this._filteringChange.unsubscribe();
+         }
+ 
+         if (this._fields) {
+             //this._grid.filteringService.registerSVGIcons();
+ 
+             this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                 this.init();
+             });
+ 
+             this.init();
+         }
+     }
+
+     /**
+     * Returns the fields.
+     */
+    public get fields(): IQueryBuilderField[] {
+        return this._fields;
     }
+
+    // /**
+    //  * @hidden @internal
+    //  */
+    // public get filterableColumns(): ColumnType[] {
+    //     return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
+    // }
 
     /**
      * @hidden @internal
@@ -1240,6 +1281,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 @NgModule({
     declarations: [IgxQueryBuilderComponent],
     exports: [IgxQueryBuilderComponent],
-    imports: [CommonModule, FormsModule, IgxIconModule, IgxButtonModule, IgxSelectModule]
+    imports: [CommonModule, FormsModule, IgxIconModule, IgxButtonModule, IgxSelectModule, IgxToggleModule]
 })
 export class IgxQueryBuilderModule { }

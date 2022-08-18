@@ -164,3 +164,34 @@ h4,
         margin-inline-start: rem(8px);
     } */
 }
+
+igx-filter-contextual-menu {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    width: 196px;
+    background-color: white;
+    padding: 16px;
+    margin-inline-start: 16px;
+    border-radius: 4px;
+    border: 1px solid gainsboro;
+
+    /* > [igxButton] + [igxButton],
+    igx-buttongroup + [igxButton],
+    [igxButton] + igx-buttongroup {
+        margin-top: $vertical-space-comfortable;
+    }
+
+    > [igxButton]%filter-con-menu__close-btn + [igxButton],
+    [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
+        margin-top: 0;
+    }
+
+    [igxButton] > igx-icon + * {
+        margin-inline-start: 8px;
+    }
+
+    igx-buttongroup > * {
+        box-shadow: none;
+    } */
+}

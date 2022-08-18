@@ -16,6 +16,7 @@ export class QueryBuilderComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    public fields: Array<any>;
     public displayDensities;
     public density: DisplayDensity = 'comfortable';
     public advancedFilteringTree: FilteringExpressionsTree;
@@ -41,6 +42,21 @@ export class QueryBuilderComponent implements OnInit {
             { field: 'Phone', width: 150, resizable: true, type: 'string' },
             { field: 'Fax', width: 150, resizable: true, type: 'string' },
             { field: 'Contract', width: 150, resizable: true, type: 'boolean' }
+        ];
+        this.fields = [
+            { fieldName: 'ID', dataType: 'string' },
+            { fieldName: 'CompanyName', dataType: 'string'},
+            { fieldName: 'ContactName', dataType: 'string' },
+            { fieldName: 'Employees', dataType: 'number' },
+            { fieldName: 'ContactTitle', dataType: 'string' },
+            { fieldName: 'DateCreated', dataType: 'date' },
+            { fieldName: 'Address', dataType: 'string' },
+            { fieldName: 'City', dataType: 'string' },
+            { fieldName: 'Region', dataType: 'string' },
+            { fieldName: 'PostalCode', dataType: 'string' },
+            { fieldName: 'Phone', dataType: 'string' },
+            { fieldName: 'Fax', dataType: 'string' },
+            { fieldName: 'Contract', dataType: 'boolean' }
         ];
         this.data = [
             {

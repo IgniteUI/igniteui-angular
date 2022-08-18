@@ -163,8 +163,11 @@
                             [placeholder]="'Select column'"
                             [(ngModel)]="selectedColumn">
                             <!-- [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder" -->
-                    <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
+                    <!-- <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
                         {{column.header || column.field}}
+                    </igx-select-item> -->
+                    <igx-select-item *ngFor="let field of fields" [value]="field">
+                        {{field.label || filed.fieldName}}
                     </igx-select-item>
                 </igx-select>
 
