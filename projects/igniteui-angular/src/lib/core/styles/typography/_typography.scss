@@ -30,7 +30,7 @@
         .ig-typography {
             @include charts.typography($type-scale);
 
-            @if ($variant == 'material') {
+            @if ($variant == 'material' or $variant == null) {
                 @include material.typography();
             }
 
