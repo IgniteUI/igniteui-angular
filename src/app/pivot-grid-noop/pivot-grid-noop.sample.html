@@ -1,6 +1,11 @@
 <igx-pivot-grid
     #grid1
+    [igxGridState]="options"
     [data]="mockData"
+    [sortStrategy]='myStrategy'
     [pivotConfiguration]="pivotConfigHierarchy"
     height="500px">
 </igx-pivot-grid>
+<button igxButton="outlined" (click)="saveState()">SAVE STATE</button>
+<button igxButton="raised" (click)="restoreState()">RESTORE STATE(string)</button>
+<button igxButton="raised" (click)="restoreStateFromObject()">RESTORE STATE(object)</button>
