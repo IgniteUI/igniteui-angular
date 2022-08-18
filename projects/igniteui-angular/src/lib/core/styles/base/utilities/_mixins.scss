@@ -381,9 +381,9 @@
 /// Respects specificity and selector scopes.
 /// @access private
 /// @param {String} $parent - The selector to be used as top level scope.
-/// @example scss Apply mixin style rules only when '.igx-typography' selector is present.
+/// @example scss Apply mixin style rules only when '.ig-typography' selector is present.
 ///    @mixin card-typography {
-///       @includescope('.igx-typography') {
+///       @include scope('.ig-typography') {
 ///         // style rules...
 ///       }
 ///    }
@@ -394,7 +394,7 @@
 ///    }
 ///
 ///    // Generated CSS
-///    // .igx-typography .my-selector {
+///    // .ig-typography .my-selector {
 ///    //    ...styles rules as output by card-typography mixin
 ///    // }
 @mixin scope($parent) {

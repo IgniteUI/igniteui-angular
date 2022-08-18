@@ -166,18 +166,6 @@
 
     $variant: map.get($theme, variant);
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include navdrawer-typography($categories: (
-                item: 'body-2',
-                header: 'caption'
-            ));
-        } @else {
-            @include navdrawer-typography();
-        }
-    }
-
     %navdrawer-display {
         transition: flex-basis;
         transition-duration: .3s;

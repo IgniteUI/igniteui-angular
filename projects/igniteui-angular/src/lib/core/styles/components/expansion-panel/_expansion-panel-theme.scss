@@ -105,28 +105,6 @@
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include expansion-panel-typography($categories: (
-                title: 'subtitle-1',
-                description: 'body-2',
-                body: 'caption'
-            ));
-        }
-
-        @if $variant == 'bootstrap' {
-            @include expansion-panel-typography($categories: (
-                description: 'body-2',
-                body: 'body-1'
-            ));
-        }
-
-        @if $variant == 'material' or $variant == 'indigo-design' {
-            @include expansion-panel-typography();
-        }
-    }
-
     $panel-padding: rem(16px) rem(24px);
 
     %igx-expansion-panel {

@@ -1,21 +1,17 @@
-@use '../../../../../../../node_modules/igniteui-theming/sass/utils/meta' as *;
-@use '../../../../../../../node_modules/igniteui-theming/sass/typography/mixins' as theming;
-@use '../../../../../../../node_modules/igniteui-theming/sass/typography/presets' as presets;
-
 ////
 /// @group typography
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Import the typography mixins from component themes with typography support.
-@use '../components/charts/category-chart-theme' as *;
-@use '../components/charts/data-chart-theme' as *;
-@use '../components/charts/financial-chart-theme' as *;
-@use '../components/charts/funnel-chart-theme' as *;
-@use '../components/charts/gauge-theme' as *;
-@use '../components/charts/graph-theme' as *;
-@use '../components/charts/pie-chart-theme' as *;
-@use '../components/charts/shape-chart-theme' as *;
+@use 'sass:map';
+@use 'material';
+@use 'bootstrap';
+@use 'fluent';
+@use 'indigo';
+@use 'charts';
+@use '../../../../../../../node_modules/igniteui-theming/sass/utils/meta' as *;
+@use '../../../../../../../node_modules/igniteui-theming/sass/typography/mixins' as theming;
+@use '../../../../../../../node_modules/igniteui-theming/sass/typography/presets' as presets;
 
 /// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
 /// The produces styles are based on the passed typeface and type scale.
@@ -24,20 +20,33 @@
 /// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
 /// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by type-scale.
 @mixin typography($font-family: presets.$material-typeface, $type-scale: presets.$material-type-scale) {
-    $scope: if(is-root(), '.ig-typography', &);
+    $variant: map.get(map.get($type-scale, '_meta'), 'variant');
 
-    #{$scope} {
-        font-family: var(--ig-font-family);
+    @if is-root() {
+        :root {
+            font-family: var(--ig-font-family);
+        }
+
+        .ig-typography {
+            @include charts.typography($type-scale);
+
+            @if ($variant == 'material') {
+                @include material.typography();
+            }
+
+            @if ($variant == 'bootstrap') {
+                @include bootstrap.typography($type-scale);
+            }
+
+            @if ($variant == 'fluent') {
+                @include fluent.typography();
+            }
+
+            @if ($variant == 'indigo') {
+                @include indigo.typography();
+            }
+        }
     }
 
     @include theming.typography($font-family, $type-scale);
-    // Call the individual chart styles with the type scale
-    @include category-chart-typography($type-scale);
-    @include data-chart-typography($type-scale);
-    @include financial-chart-typography($type-scale);
-    @include funnel-chart-typography($type-scale);
-    @include gauge-typography();
-    @include graph-typography();
-    @include pie-chart-typography($type-scale);
-    @include shape-chart-typography($type-scale);
 }

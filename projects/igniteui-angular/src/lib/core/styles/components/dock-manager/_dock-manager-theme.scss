@@ -82,11 +82,6 @@
 /// @requires {mixin} css-vars
 @mixin dock-manager($theme) {
     @include css-vars($theme);
-
-    .igx-typography,
-    .ig-typography {
-        @include dock-manager-typography();
-    }
 }
 
 /// Adds typography styles for the dock manager component.

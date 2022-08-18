@@ -89,17 +89,6 @@
 
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include toast-typography($categories: (
-                text: 'caption'
-            ));
-        } @else {
-            @include toast-typography();
-        }
-    }
-
     $width: 52px;
     $margin: rem(42px) auto;
 

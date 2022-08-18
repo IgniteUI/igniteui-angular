@@ -25,11 +25,6 @@
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
 
-    .igx-typography,
-    .ig-typography {
-        @include excel-filtering-typography();
-    }
-
     $tree-node-indent: (
         comfortable: rem(16px),
         cosy: rem(8px),

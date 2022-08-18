@@ -96,25 +96,6 @@
     $variant: map.get($theme, 'variant');
     @include css-vars($theme);
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'material' or $variant == 'indigo-design' {
-            @include navbar-typography();
-        }
-
-        @if $variant == 'fluent' {
-            @include navbar-typography($categories: (
-                title: 'subtitle-2'
-            ));
-        }
-
-        @if $variant == 'bootstrap' {
-            @include navbar-typography($categories: (
-                title: 'h5'
-            ));
-        }
-    }
-
     $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
     $navbar-title-lh: rem(18px, 16px);

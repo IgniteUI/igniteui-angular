@@ -430,26 +430,6 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant != 'bootstrap' {
-            @include calendar-typography();
-        }
-
-        @if $variant == 'bootstrap' {
-            @include typography.type-style('calendar-labels', $check: false);
-            $calendar-labels: map.get(ig-typography-presets.$bootstrap-type-scale, 'calendar-labels');
-
-            @include calendar-typography($categories: (
-                header-year: 'subtitle-1',
-                header-date: 'h4',
-                weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
-                picker-date: 'subtitle-1',
-                content: 'body-1',
-            ));
-        }
-    }
-
     $cal-picker-padding: map.get((
         material: em(16px),
         fluent: em(16px),
@@ -1278,7 +1258,7 @@
     }
 
     %cal-value--label {
-        @include typography.type-style($weekday-label);
+        @include typography.type-style($weekday-label, false);
         margin: 0;
     }
 

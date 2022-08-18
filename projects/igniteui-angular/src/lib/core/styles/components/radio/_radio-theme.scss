@@ -96,17 +96,6 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    .igx-typography,
-    .ig-typography {
-        @if $variant == 'fluent' {
-            @include radio-typography($categories: (
-                label: 'body-2'
-            ));
-        } @else {
-            @include radio-typography();
-        }
-    }
-
     $size: map.get((
         material: em(20px),
         fluent: em(20px),
