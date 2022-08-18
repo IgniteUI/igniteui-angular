@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../typography/base' as *;
@@ -29,7 +30,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// Set light to true when the surrounding area is dark.
@@ -60,7 +61,7 @@
         $radio-schema: $schema;
     }
 
-    $theme: apply-palette($radio-schema, $palette);
+    $theme: themes.digest-schema($radio-schema);
 
     @return extend($theme, (
         name: $name,

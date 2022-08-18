@@ -10,8 +10,8 @@
 /// Generates a light toast schema.
 /// @type {Map}
 ///
-/// @prop {Map} background [color: ('grays', 700, .9)] - The background color used for the toast.
-/// @prop {Map} text-color [contrast-color: ('grays', 700)] - The text-color used for the toast.
+/// @prop {Map} background [color: ('gray', 700, .9)] - The background color used for the toast.
+/// @prop {Map} text-color [contrast-color: ('gray', 700)] - The text-color used for the toast.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the toast.
 /// @prop {Number} border-radius [26px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 ///
@@ -24,11 +24,11 @@ $light-toast: extend(
         variant: 'material',
 
         background: (
-            color: ('grays', 700, .9)
+            color: ('gray', 700, .9)
         ),
 
         text-color: (
-            contrast-color: ('grays', 700)
+            contrast-color: ('gray', 700)
         ),
 
         border-radius: rem(26px)
@@ -52,7 +52,7 @@ $fluent-toast: extend(
 /// Generates a bootstrap toast schema.
 /// @type {Map}
 /// @prop {Map} background [color: (color: ('surface')] - The background color used for the toast.
-/// @prop {Map} text-color [color: ('grays', 600)] - The text-color used for the toast.
+/// @prop {Map} text-color [color: ('gray', 600)] - The text-color used for the toast.
 /// @prop {Number} elevation [10] - The elevation level, between 0-24, to be used for the toast.
 /// @prop {Number} border-radius [4px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -69,7 +69,7 @@ $bootstrap-toast: extend(
         ),
 
         text-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         ),
 
         border-radius: rem(4px)

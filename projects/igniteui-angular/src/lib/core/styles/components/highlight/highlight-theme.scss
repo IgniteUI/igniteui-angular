@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -17,7 +18,7 @@
 /// @param {Color} $active-color [null] - The text color used for the highlight in its active state.
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -43,7 +44,7 @@
         $highlight-schema: $schema;
     }
 
-    $theme: apply-palette($highlight-schema, $palette);
+    $theme: themes.digest-schema($highlight-schema);
 
     @if not($resting-color) and $resting-background {
         $resting-color: text-contrast($resting-background);
@@ -81,4 +82,3 @@
         background: var-get($theme, 'active-background');
     }
 }
-

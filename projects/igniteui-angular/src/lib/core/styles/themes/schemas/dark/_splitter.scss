@@ -9,24 +9,24 @@
 
 /// Generates a dark splitter schema.
 /// @type {Map}
-/// @property {Map} bar-color [color: ('grays', 50)] - The background color of the bar.
-/// @property {Map} handle-color [color: ('grays', 800)] - The color for the bar drag handle.
-/// @property {Map} expander-color [color: ('grays', 800)] - The color for the arrow expander's.
+/// @property {Map} bar-color [color: ('gray', 50)] - The background color of the bar.
+/// @property {Map} handle-color [color: ('gray', 800)] - The color for the bar drag handle.
+/// @property {Map} expander-color [color: ('gray', 800)] - The color for the arrow expander's.
 /// @requires {function} extend
 /// @requires $light-splitter
 $dark-splitter: extend(
     $light-splitter,
     (
         bar-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         handle-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         expander-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
     )
 );
@@ -59,4 +59,3 @@ $dark-indigo-splitter: extend(
         ),
     )
 );
-

@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -27,7 +28,7 @@
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @example scss Change the tree background
@@ -59,7 +60,7 @@
         $tree-schema: $schema;
     }
 
-    $theme: apply-palette($tree-schema, $palette);
+    $theme: themes.digest-schema($tree-schema);
 
     @if not($foreground) and $background {
         $foreground: text-contrast($background);

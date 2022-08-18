@@ -1,3 +1,5 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -33,7 +35,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -79,7 +81,7 @@
         $navdrawer-schema: $schema;
     }
 
-    $theme: apply-palette($navdrawer-schema, $palette);
+    $theme: themes.digest-schema($navdrawer-schema);
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -263,7 +265,7 @@
 
     %overlay {
         opacity: 1;
-        background: color(map.get($theme, 'palette'), 'grays', 500, .54);
+        background: ig-color.color(null, 'gray', 500, .54);
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
