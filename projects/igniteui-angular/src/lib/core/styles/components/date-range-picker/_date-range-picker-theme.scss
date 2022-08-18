@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -29,7 +30,7 @@
         $date-range-schema: $schema;
     }
 
-    $theme: apply-palette($date-range-schema, $palette);
+    $theme: themes.digest-schema($date-range-schema);
 
     @return extend($theme, (
         name: $name,

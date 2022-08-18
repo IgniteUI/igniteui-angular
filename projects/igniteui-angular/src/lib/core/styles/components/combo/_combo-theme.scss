@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -17,7 +18,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 @function combo-theme(
     $palette: null,
@@ -35,7 +36,7 @@
         $combo-schema: $schema;
     }
 
-    $theme: apply-palette($combo-schema, $palette);
+    $theme: themes.digest-schema($combo-schema);
 
     @return extend($theme, (
         name: $name,

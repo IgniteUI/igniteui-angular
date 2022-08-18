@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -47,7 +48,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -96,7 +97,7 @@
         $drop-down-schema: $schema;
     }
 
-    $theme: apply-palette($drop-down-schema, $palette);
+    $theme: themes.digest-schema($drop-down-schema);
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);

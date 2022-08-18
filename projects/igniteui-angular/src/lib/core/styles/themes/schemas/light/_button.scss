@@ -15,8 +15,8 @@
 /// @prop {Color} focus-visible-border-color [transparent] - The focus-visible border color of the button.
 /// @prop {Color} active-border-color [transparent] - The active border color of the button.
 /// @prop {Color} disabled-border-color [transparent] - The disabled border color of the button.
-/// @prop {Map} disabled-background [color: ('grays', 300)] - The disabled background color of the button.
-/// @prop {Map} disabled-foreground [color: ('grays', 500)] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [color: ('gray', 300)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('gray', 500)] - The disabled foreground color of the button.
 $material-base-button: (
     variant: 'material',
 
@@ -30,11 +30,11 @@ $material-base-button: (
     disabled-border-color: transparent,
 
     disabled-background: (
-        color: ('grays', 300)
+        color: ('gray', 300)
     ),
 
     disabled-foreground: (
-        color: ('grays', 500)
+        color: ('gray', 500)
     ),
 );
 
@@ -110,7 +110,7 @@ $material-flat-button: extend(
 /// @prop {Map} focus-border-color [color: ('secondary', 500)] - The focus border color of an outlined button.
 /// @prop {Map} focus-visible-border-color [color: ('secondary', 500)] - The focus-visible border color of an outlined button.
 /// @prop {Map} active-border-color [color: ('secondary', 500)] - The active border color of an outlined button.
-/// @prop {Map} disabled-border-color [color: ('grays', 300)] - The disabled focused border color of an outlined button.
+/// @prop {Map} disabled-border-color [color: ('gray', 300)] - The disabled focused border color of an outlined button.
 /// @requires {function} extend
 /// @requires {Map} $material-flat-button
 $material-outlined-button: extend(
@@ -139,7 +139,7 @@ $material-outlined-button: extend(
         ),
 
         disabled-border-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
     )
 );
@@ -232,19 +232,19 @@ $material-fab-button: extend(
 
 /// @type {Map}
 /// @prop {Color} background [transparent] - The background color of the an icon button.
-/// @prop {Map} foreground [color: ('grays', 900)] - The icon color of an icon button.
-/// @prop {Map} hover-background [color: ('grays', 100)] - The hover background color of an icon button.
+/// @prop {Map} foreground [color: ('gray', 900)] - The icon color of an icon button.
+/// @prop {Map} hover-background [color: ('gray', 100)] - The hover background color of an icon button.
 /// @prop {Color} hover-foreground [transparent] - The hover icon color of an icon button.
-/// @prop {Map} focus-background [color: ('grays', 200] - The focus background color an icon button.
-/// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus icon color of an icon button.
-/// @prop {Map} focus-visible-background [color: ('grays', 200] - The focus-visible background color an icon button.
-/// @prop {Map} focus-visible-foreground [color: ('grays', 900)] - The focus-visible icon color of an icon button.
-/// @prop {Map} active-background [color: ('grays', 200] - The active background color an icon button.
-/// @prop {Map} active-foreground [color: ('grays', 900)] - The active icon color of an icon button.
+/// @prop {Map} focus-background [color: ('gray', 200] - The focus background color an icon button.
+/// @prop {Map} focus-foreground [color: ('gray', 900)] - The focus icon color of an icon button.
+/// @prop {Map} focus-visible-background [color: ('gray', 200] - The focus-visible background color an icon button.
+/// @prop {Map} focus-visible-foreground [color: ('gray', 900)] - The focus-visible icon color of an icon button.
+/// @prop {Map} active-background [color: ('gray', 200] - The active background color an icon button.
+/// @prop {Map} active-foreground [color: ('gray', 900)] - The active icon color of an icon button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color an icon button.
-/// @prop {Map} focus-border-color [color: ('grays', 400)] - The focus border color of the button.
-/// @prop {Map} focus-visible-border-color [color: ('grays', 400)] - The focus-visible border color of the button.
-/// @prop {Map} active-border-color [color: ('grays', 400)] - The active border color of the button.
+/// @prop {Map} focus-border-color [color: ('gray', 400)] - The focus border color of the button.
+/// @prop {Map} focus-visible-border-color [color: ('gray', 400)] - The focus-visible border color of the button.
+/// @prop {Map} active-border-color [color: ('gray', 400)] - The active border color of the button.
 /// @prop {Number} border-radius [20px] - The border radius used for the floating button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $material-base-button
@@ -258,51 +258,51 @@ $material-icon-button: extend(
         background: transparent,
 
         foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         hover-background: transparent,
 
         hover-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         focus-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-visible-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         focus-visible-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         active-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         active-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         disabled-background: transparent,
 
         active-border-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         focus-border-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         focus-visible-border-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         border-radius: rem(20px),
@@ -328,8 +328,8 @@ $light-button: (
 /// @type {Map}
 /// @requires {Map} $material-base-button
 /// @requires {Map} $flat-elevation-button
-/// @prop {Map} disabled-background [color: ('grays', 200)] - The disabled background color of the button.
-/// @prop {Map} disabled-foreground [color: ('grays', 400)] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [color: ('gray', 200)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [color: ('gray', 400)] - The disabled foreground color of the button.
 /// @requires {function} extend
 $fluent-base-button: extend(
     $material-base-button,
@@ -338,24 +338,24 @@ $fluent-base-button: extend(
         variant: 'fluent',
 
         disabled-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         disabled-foreground: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
     )
 );
 
 /// @type {Map}
-/// @prop {Map} focus-visible-border-color [color: ('grays', 800)] - The focus-visible border color of a flat button.
-/// @prop {Map} foreground [color: ('grays', 900)] - The idle text color of a flat button.
+/// @prop {Map} focus-visible-border-color [color: ('gray', 800)] - The focus-visible border color of a flat button.
+/// @prop {Map} foreground [color: ('gray', 900)] - The idle text color of a flat button.
 /// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
 /// @prop {Color} focus-background [transparent] - The focus background color of a flat button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible background color of a flat button.
-/// @prop {Color} focus-visible-foreground [color: ('grays', 800)] - The focus-visible text color of a flat button.
+/// @prop {Color} focus-visible-foreground [color: ('gray', 800)] - The focus-visible text color of a flat button.
 /// @prop {Map} hover-foreground [color: ('primary', 500)] - The hover text color of a flat button.
-/// @prop {Map} active-foreground [color: ('grays', 900)] - The active text color of a flat button.
+/// @prop {Map} active-foreground [color: ('gray', 900)] - The active text color of a flat button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color of a flat button.
 /// @prop {Number} border-radius [0] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-flat-button
@@ -366,7 +366,7 @@ $fluent-flat-button: extend(
     $fluent-base-button,
     (
         foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         hover-background: transparent,
@@ -375,7 +375,7 @@ $fluent-flat-button: extend(
         active-background: transparent,
 
         focus-visible-border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         hover-foreground: (
@@ -383,11 +383,11 @@ $fluent-flat-button: extend(
         ),
 
         focus-visible-foreground: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         active-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         disabled-background: transparent,
@@ -397,22 +397,22 @@ $fluent-flat-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} border-color [color: ('grays', 800)] - The border color of an outlined button.
-/// @prop {Map} hover-border-color [color: ('grays', 800)] - The hover border color of an outlined button.
-/// @prop {Map} focus-border-color [color: ('grays', 800)] - The focus border color of an outlined button.
-/// @prop {Map} focus-visible-border-color [color: ('grays', 800)] - The focus-visible border color of an outlined button.
-/// @prop {Map} active-border-color [color: ('grays', 800)] - The active border color of an outlined button.
-/// @prop {Map} foreground [color: ('grays', 900)] - The idle text color of an outlined button.
-/// @prop {Map} hover-background [color: ('grays', 100)] - The hover background color of an outlined button.
-/// @prop {Map} hover-foreground [color: ('grays', 900)] - The hover text color of an outlined button.
-/// @prop {Map} focus-background [color: ('grays', 100)] - The focus background color of an outlined button.
-/// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus text color of an outlined button.
+/// @prop {Map} border-color [color: ('gray', 800)] - The border color of an outlined button.
+/// @prop {Map} hover-border-color [color: ('gray', 800)] - The hover border color of an outlined button.
+/// @prop {Map} focus-border-color [color: ('gray', 800)] - The focus border color of an outlined button.
+/// @prop {Map} focus-visible-border-color [color: ('gray', 800)] - The focus-visible border color of an outlined button.
+/// @prop {Map} active-border-color [color: ('gray', 800)] - The active border color of an outlined button.
+/// @prop {Map} foreground [color: ('gray', 900)] - The idle text color of an outlined button.
+/// @prop {Map} hover-background [color: ('gray', 100)] - The hover background color of an outlined button.
+/// @prop {Map} hover-foreground [color: ('gray', 900)] - The hover text color of an outlined button.
+/// @prop {Map} focus-background [color: ('gray', 100)] - The focus background color of an outlined button.
+/// @prop {Map} focus-foreground [color: ('gray', 900)] - The focus text color of an outlined button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible background color of an outlined button.
-/// @prop {Map} focus-visible-foreground [color: ('grays', 900)] - The focus-visible text color of an outlined button.
-/// @prop {Map} active-background [color: ('grays', 100)] - The active background color of an outlined button.
-/// @prop {Map} active-foreground [color: ('grays', 900)] - The active text color of an outlined button.
-/// @prop {Map} disabled-background [color: ('grays', 200)] - The disabled background color of an outlined button.
-/// @prop {Map} disabled-foreground [color: ('grays', 400, .5)] - The disabled foreground color of an outlined button.
+/// @prop {Map} focus-visible-foreground [color: ('gray', 900)] - The focus-visible text color of an outlined button.
+/// @prop {Map} active-background [color: ('gray', 100)] - The active background color of an outlined button.
+/// @prop {Map} active-foreground [color: ('gray', 900)] - The active text color of an outlined button.
+/// @prop {Map} disabled-background [color: ('gray', 200)] - The disabled background color of an outlined button.
+/// @prop {Map} disabled-foreground [color: ('gray', 400, .5)] - The disabled foreground color of an outlined button.
 /// @prop {Number} border-radius [2px] - The border radius used for outlined button.
 /// @requires {Map} $material-outlined-button
 /// @requires {Map} $fluent-base-button
@@ -422,65 +422,65 @@ $fluent-outlined-button: extend(
     $fluent-base-button,
     (
         border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         hover-border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         focus-border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         focus-visible-border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         active-border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         hover-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         hover-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         focus-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-visible-background: transparent,
 
         focus-visible-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         active-background: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         active-foreground: (
-            contrast-color: ('grays', 300)
+            contrast-color: ('gray', 300)
         ),
 
         disabled-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         disabled-foreground: (
-            color: ('grays', 400, .5)
+            color: ('gray', 400, .5)
         ),
 
         border-radius: rem(2px)
@@ -488,11 +488,11 @@ $fluent-outlined-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} border-color [contrast-color: ('grays', 900)] - The border color of a raised button.
-/// @prop {Map} hover-border-color [contrast-color: ('grays', 900)] - The hover border color of a raised button.
-/// @prop {Map} focus-border-color [contrast-color: ('grays', 900)] - The focus border color of a raised button.
-/// @prop {Map} focus-visible-border-color [contrast-color: ('grays', 900)] - The focus-visible border color of a raised button.
-/// @prop {Map} active-border-color [contrast-color: ('grays', 900)] - The active border color of a raised button.
+/// @prop {Map} border-color [contrast-color: ('gray', 900)] - The border color of a raised button.
+/// @prop {Map} hover-border-color [contrast-color: ('gray', 900)] - The hover border color of a raised button.
+/// @prop {Map} focus-border-color [contrast-color: ('gray', 900)] - The focus border color of a raised button.
+/// @prop {Map} focus-visible-border-color [contrast-color: ('gray', 900)] - The focus-visible border color of a raised button.
+/// @prop {Map} active-border-color [contrast-color: ('gray', 900)] - The active border color of a raised button.
 /// @prop {Map} background [color: ('primary', 500)] - The background color of an raised button.
 /// @prop {Map} foreground [contrast-color: ('primary', 900] - The idle text color of a raised button.
 /// @prop {Map} hover-background [color: ('primary', 600)] - The hover background of a raised button.
@@ -515,23 +515,23 @@ $fluent-raised-button: extend(
     $fluent-base-button,
     (
         border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         hover-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         focus-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         focus-visible-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         active-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         background: (
@@ -579,11 +579,11 @@ $fluent-raised-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} border-color [contrast: ('grays', 900)] - The border color of a fab button.
-/// @prop {Map} hover-border-color [contrast-color: ('grays', 900)] - The hover border color of a fab button.
-/// @prop {Map} focus-border-color [contrast-color: ('grays', 900)] - The focus border color of a fab button.
-/// @prop {Map} focus-visible-border-color [contrast-color: ('grays', 900)] - The focus-visible border color of a fab button.
-/// @prop {Map} active-border-color [contrast-color: ('grays', 900)] - The active border color of a fab button.
+/// @prop {Map} border-color [contrast: ('gray', 900)] - The border color of a fab button.
+/// @prop {Map} hover-border-color [contrast-color: ('gray', 900)] - The hover border color of a fab button.
+/// @prop {Map} focus-border-color [contrast-color: ('gray', 900)] - The focus border color of a fab button.
+/// @prop {Map} focus-visible-border-color [contrast-color: ('gray', 900)] - The focus-visible border color of a fab button.
+/// @prop {Map} active-border-color [contrast-color: ('gray', 900)] - The active border color of a fab button.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
@@ -598,23 +598,23 @@ $fluent-fab-button: extend(
         selector: '[igxButton="fab"], .igx-button--fab',
 
         border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         hover-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         focus-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         focus-visible-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         active-border-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         border-radius: rem(14px)
@@ -623,21 +623,21 @@ $fluent-fab-button: extend(
 
 /// @type {Map}
 /// @prop {Color} border-color [transparent] - The border color of an icon button.
-/// @prop {Map} hover-border-color [color: ('grays', 500)] - The hover border color of an icon button.
-/// @prop {Map} focus-border-color [color: ('grays', 500)] - The focus border color of an icon button.
-/// @prop {Map} focus-visible-border-color [color: ('grays', 500)] - The focus-visible border color of an icon button.
-/// @prop {Map} active-border-color [color: ('grays', 500)] - The active border color of an icon button.
-/// @prop {Map} hover-background [color: ('grays', 200)] - The hover background color of an icon button.
+/// @prop {Map} hover-border-color [color: ('gray', 500)] - The hover border color of an icon button.
+/// @prop {Map} focus-border-color [color: ('gray', 500)] - The focus border color of an icon button.
+/// @prop {Map} focus-visible-border-color [color: ('gray', 500)] - The focus-visible border color of an icon button.
+/// @prop {Map} active-border-color [color: ('gray', 500)] - The active border color of an icon button.
+/// @prop {Map} hover-background [color: ('gray', 200)] - The hover background color of an icon button.
 /// @prop {Map} hover-foreground [contrast-color: ('primary')] - The hover text color of a an icon button.
 /// @prop {Color} focus-background [transparent] - The focus icon color of an icon button.
 /// @prop {Map} focus-foreground [contrast-color: ('primary')] - The focus text color of an icon button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible icon color of an icon button.
 /// @prop {Map} focus-visible-foreground [contrast-color: ('primary')] - The focus-visible text color of an icon button.
-/// @prop {Map} active-background [color: ('grays', 300)] - The active background color of an icon button.
+/// @prop {Map} active-background [color: ('gray', 300)] - The active background color of an icon button.
 /// @prop {Map} active-foreground [contrast-color: ('primary')] - The active text color of an icon button.
-/// @prop {Map} disabled-background [color: ('grays', 100)] - The disabled background color of an icon button.
-/// @prop {Map} disabled-foreground [color: ('grays', 400)] - The disabled foreground color of an icon button.
-/// @prop {Map} disabled-border-color [color: ('grays', 100), lighten: 35%] - The disabled focused border color of an icon button.
+/// @prop {Map} disabled-background [color: ('gray', 100)] - The disabled background color of an icon button.
+/// @prop {Map} disabled-foreground [color: ('gray', 400)] - The disabled foreground color of an icon button.
+/// @prop {Map} disabled-border-color [color: ('gray', 100), lighten: 35%] - The disabled focused border color of an icon button.
 /// @prop {Number} border-radius [0] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $material-icon-button
 /// @requires {Map} $fluent-base-button
@@ -651,11 +651,11 @@ $fluent-icon-button: extend(
         ),
 
         focus-visible-border-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         hover-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         hover-foreground: (
@@ -675,7 +675,7 @@ $fluent-icon-button: extend(
         ),
 
         active-background: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         active-foreground: (
@@ -683,15 +683,15 @@ $fluent-icon-button: extend(
         ),
 
         disabled-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         disabled-foreground: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         disabled-border-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         border-radius: rem(0)
@@ -1014,11 +1014,11 @@ $bootstrap-fab-button: extend(
 /// @prop {Color} foreground [color: ('primary', 500)] - The background color of a fab button.
 /// @prop {Color} hover-background [transparent] - The hover background color of an icon button.
 /// @prop {Map} hover-foreground [color: ('primary', 600)] - The hover text color of an icon button.
-/// @prop {Map} focus-background [color: ('grays', 100)] - The focus background color of an icon button.
+/// @prop {Map} focus-background [color: ('gray', 100)] - The focus background color of an icon button.
 /// @prop {Map} focus-foreground [color: ('primary', 600)] - The focus text color of an icon button.
-/// @prop {Map} focus-visible-background [color: ('grays', 100)] - The focus-visible background color of an icon button.
+/// @prop {Map} focus-visible-background [color: ('gray', 100)] - The focus-visible background color of an icon button.
 /// @prop {Map} focus-visible-foreground [color: ('primary', 600)] - The focus-visible text color of an icon button.
-/// @prop {Map} active-background [color: ('grays', 100)] - The active background color of an icon button.
+/// @prop {Map} active-background [color: ('gray', 100)] - The active background color of an icon button.
 /// @prop {Map} active-foreground [color: ('primary', 600)] - The active text color of an icon button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color of an outlined button.
 /// @prop {Map} disabled-foreground [color: ('primary', 100)] - The disabled foreground color of the button.
@@ -1041,21 +1041,21 @@ $bootstrap-icon-button: extend(
         ),
 
         focus-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
         focus-foreground: (
             color: ('primary', 600)
         ),
 
         focus-visible-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
         focus-visible-foreground: (
             color: ('primary', 600)
         ),
 
         active-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         active-foreground: (
@@ -1101,17 +1101,17 @@ $indigo-base-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} foreground [color: ('grays', 700)] - The idle text color of a flat button.
+/// @prop {Map} foreground [color: ('gray', 700)] - The idle text color of a flat button.
 /// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
-/// @prop {Map} hover-foreground [ color: ('grays', 900)] - The hover text color of a flat button.
+/// @prop {Map} hover-foreground [ color: ('gray', 900)] - The hover text color of a flat button.
 /// @prop {Color} focus-background [transparent] - The focus background color of a flat button.
-/// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus text color of a flat button.
+/// @prop {Map} focus-foreground [color: ('gray', 900)] - The focus text color of a flat button.
 /// @prop {Color} active-background [transparent] - The active background color of a flat button.
-/// @prop {Color} active-foreground [color: ('grays', 700)] - The active text color of a flat button.
+/// @prop {Color} active-foreground [color: ('gray', 700)] - The active text color of a flat button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible background color of a flat button.
-/// @prop {Map} focus-visible-foreground [color: ('grays', 900)] - The focus-visible text color of a flat button.
+/// @prop {Map} focus-visible-foreground [color: ('gray', 900)] - The focus-visible text color of a flat button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color of a flat button.
-/// @prop {Map} shadow-color [color: ('grays', 300)] - The shadow color of a flat button.
+/// @prop {Map} shadow-color [color: ('gray', 300)] - The shadow color of a flat button.
 /// @prop {Number} border-radius [20px] - The border radius used for flat button.
 /// @requires {Map} $material-flat-button
 /// @requires {Map} $indigo-base-button
@@ -1121,37 +1121,37 @@ $indigo-flat-button: extend(
     $indigo-base-button,
     (
         foreground: (
-            color: ('grays', 700),
+            color: ('gray', 700),
         ),
 
         hover-background: transparent,
 
         hover-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         focus-background: transparent,
 
 
         focus-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         active-background: transparent,
 
         active-foreground: (
-            color: ('grays', 700),
+            color: ('gray', 700),
         ),
 
         focus-visible-background: transparent,
 
 
         focus-visible-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         shadow-color: (
-            color: ('grays', 300),
+            color: ('gray', 300),
         ),
 
         disabled-background: transparent,
@@ -1162,21 +1162,21 @@ $indigo-flat-button: extend(
 
 /// @type {Map}
 /// @prop {Color} background [transparent] - The background color of a outlined button.
-/// @prop {Map} foreground [color: ('grays', 700)] - The idle text color of a outlined button.
-/// @prop {Map} hover-background [color: ('grays', 100)] - The hover background color of a outlined button.
-/// @prop {Map} hover-foreground [ color: ('grays', 900)] - The hover text color of a outlined button.
+/// @prop {Map} foreground [color: ('gray', 700)] - The idle text color of a outlined button.
+/// @prop {Map} hover-background [color: ('gray', 100)] - The hover background color of a outlined button.
+/// @prop {Map} hover-foreground [ color: ('gray', 900)] - The hover text color of a outlined button.
 /// @prop {Color} focus-background [transparent] - The focus background color of a outlined button.
-/// @prop {Map} focus-foreground [color: ('grays', 900)] - The focus text color of a outlined button.
+/// @prop {Map} focus-foreground [color: ('gray', 900)] - The focus text color of a outlined button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible background color of a outlined button.
-/// @prop {Map} focus-visible-foreground [color: ('grays', 900)] - The focus-visible text color of a outlined button.
-/// @prop {Map} border-color [color: 'grays'] - The border color of an outlined button.
-/// @prop {Map} hover-border-color [color: 'grays'] - The hover border color of a outlined button.
-/// @prop {Map} focus-border-color [color: 'grays'] - The focus border color of a outlined button.
-/// @prop {Map} focus-visible-border-color [color: 'grays'] - The focus-visible border color of a outlined button.
-/// @prop {Map} active-border-color [color: 'grays'] - The active border color of a outlined button.
+/// @prop {Map} focus-visible-foreground [color: ('gray', 900)] - The focus-visible text color of a outlined button.
+/// @prop {Map} border-color [color: 'gray'] - The border color of an outlined button.
+/// @prop {Map} hover-border-color [color: 'gray'] - The hover border color of a outlined button.
+/// @prop {Map} focus-border-color [color: 'gray'] - The focus border color of a outlined button.
+/// @prop {Map} focus-visible-border-color [color: 'gray'] - The focus-visible border color of a outlined button.
+/// @prop {Map} active-border-color [color: 'gray'] - The active border color of a outlined button.
 /// @prop {Color} active-background [transparent] - The active background color of a flat button.
-/// @prop {Color} active-foreground [color: ('grays', 900)] - The active text color of a flat button.
-/// @prop {Map} shadow-color [color: ('grays', 300)] - The shadow color of a outlined button.
+/// @prop {Color} active-foreground [color: ('gray', 900)] - The active text color of a flat button.
+/// @prop {Map} shadow-color [color: ('gray', 300)] - The shadow color of a outlined button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color of a outlined button.
 /// @prop {Number} border-radius [20px] - The border radius used for flat button.
 /// @requires {Map} $material-outlined-button
@@ -1189,58 +1189,58 @@ $indigo-outlined-button: extend(
         background: transparent,
 
         foreground: (
-            color: ('grays', 700),
+            color: ('gray', 700),
         ),
 
         hover-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         hover-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         focus-background: transparent,
 
         focus-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         focus-visible-background: transparent,
 
         focus-visible-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
         border-color: (
-            color: 'grays',
+            color: 'gray',
         ),
 
         hover-border-color: (
-            color: 'grays',
+            color: 'gray',
         ),
 
         focus-border-color: (
-            color: 'grays',
+            color: 'gray',
         ),
 
         focus-visible-border-color: (
-            color: 'grays',
+            color: 'gray',
         ),
 
         active-border-color: (
-            color: 'grays',
+            color: 'gray',
         ),
 
         active-background: transparent,
 
         active-foreground: (
-            color: ('grays', 900),
+            color: ('gray', 900),
         ),
 
 
         shadow-color: (
-            color: ('grays', 300),
+            color: ('gray', 300),
         ),
 
         disabled-background: transparent,
@@ -1250,14 +1250,14 @@ $indigo-outlined-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} foreground [color: ('grays', 50)] - The idle text color of a raised button.
+/// @prop {Map} foreground [color: ('gray', 50)] - The idle text color of a raised button.
 /// @prop {Map} hover-background [color: ('primary', 400)] - The hover background color of a raised button.
-/// @prop {Map} hover-foreground [ color: ('grays', 50)] - The hover text color of a raised button.
+/// @prop {Map} hover-foreground [ color: ('gray', 50)] - The hover text color of a raised button.
 /// @prop {Map} focus-background [color: ('primary', 400)] - The focus background color of a raised button.
-/// @prop {Map} focus-foreground [ color: ('grays', 50)] - The focus text color of a raised button.
+/// @prop {Map} focus-foreground [ color: ('gray', 50)] - The focus text color of a raised button.
 /// @prop {Map} focus-visible-background [color: ('primary', 400)] - The focus-visible background color of a raised button.
-/// @prop {Map} focus-visible-foreground [ color: ('grays', 50)] - The focus-visible text color of a raised button.
-/// @prop {Map} active-background [color: ('grays', 50)] - The active background color of a raised button.
+/// @prop {Map} focus-visible-foreground [ color: ('gray', 50)] - The focus-visible text color of a raised button.
+/// @prop {Map} active-background [color: ('gray', 50)] - The active background color of a raised button.
 /// @prop {Map} shadow-color [color: ('primary', 200)] - The shadow color of a raised button.
 /// @prop {Number} border-radius [20px] - The border radius used for flat button.
 /// @requires {Map} $material-raised-button
@@ -1268,7 +1268,7 @@ $indigo-raised-button: extend(
     $indigo-base-button,
     (
         foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         hover-background: (
@@ -1276,7 +1276,7 @@ $indigo-raised-button: extend(
         ),
 
         hover-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         focus-background: (
@@ -1284,7 +1284,7 @@ $indigo-raised-button: extend(
         ),
 
         focus-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         focus-visible-background: (
@@ -1292,11 +1292,11 @@ $indigo-raised-button: extend(
         ),
 
         focus-visible-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         active-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         shadow-color: (
@@ -1308,10 +1308,10 @@ $indigo-raised-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} foreground [ color: ('grays', 50)] - The idle text color of a fab button.
-/// @prop {Map} hover-foreground [ color: ('grays', 50)] - The hover text color of a fab button.
-/// @prop {Map} focus-foreground [ color: ('grays', 50)] - The focus text color of a fab button.
-/// @prop {Map} focus-visible-foreground [ color: ('grays', 50)] - The focus-visible text color of a fab button.
+/// @prop {Map} foreground [ color: ('gray', 50)] - The idle text color of a fab button.
+/// @prop {Map} hover-foreground [ color: ('gray', 50)] - The hover text color of a fab button.
+/// @prop {Map} focus-foreground [ color: ('gray', 50)] - The focus text color of a fab button.
+/// @prop {Map} focus-visible-foreground [ color: ('gray', 50)] - The focus-visible text color of a fab button.
 /// @prop {Number} border-radius [28px] - The border radius used for flat button.
 /// @requires {Map} $material-fab-button
 /// @requires {Map} $indigo-base-button
@@ -1325,19 +1325,19 @@ $indigo-fab-button: extend(
         selector: '[igxButton="fab"], .igx-button--fab',
 
         foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         hover-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         focus-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         focus-visible-foreground: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         border-radius: rem(28px)
@@ -1345,19 +1345,19 @@ $indigo-fab-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Map} foreground [ color: ('grays', 700)] - The idle text color of a fab button.
+/// @prop {Map} foreground [ color: ('gray', 700)] - The idle text color of a fab button.
 /// @prop {Color} hover-background [transparent] - The hover background color of a icon button.
-/// @prop {Map} hover-foreground [ color: ('grays', 900)] - The hover text color of a raised button.
+/// @prop {Map} hover-foreground [ color: ('gray', 900)] - The hover text color of a raised button.
 /// @prop {Color} focus-background [transparent] - The focus background color of a icon button.
-/// @prop {Map} focus-foreground [ color: ('grays', 900)] - The focus text color of a fab button.
+/// @prop {Map} focus-foreground [ color: ('gray', 900)] - The focus text color of a fab button.
 /// @prop {Color} focus-visible-background [transparent] - The focus-visible background color of a icon button.
-/// @prop {Map} focus-visible-foreground [ color: ('grays', 900)] - The focus-visible text color of a fab button.
+/// @prop {Map} focus-visible-foreground [ color: ('gray', 900)] - The focus-visible text color of a fab button.
 /// @prop {Color} active-background [transparent] - The active background color of a flat button.
-/// @prop {Color} active-foreground [color: ('grays', 900)] - The active text color of a flat button.
+/// @prop {Color} active-foreground [color: ('gray', 900)] - The active text color of a flat button.
 /// @prop {Color} disabled-background [transparent] - The disabled background color of a outlined button.
-/// @prop {Map} focus-border-color [color: ('grays' 300)] - The focus border color of the button.
-/// @prop {Map} focus-visible-border-color [color: ('grays' 300)] - The focus-visible border color of the button.
-/// @prop {Map} active-border-color [color: ('grays' 300)] - The active border color of the button.
+/// @prop {Map} focus-border-color [color: ('gray' 300)] - The focus border color of the button.
+/// @prop {Map} focus-visible-border-color [color: ('gray' 300)] - The focus-visible border color of the button.
+/// @prop {Map} active-border-color [color: ('gray' 300)] - The active border color of the button.
 /// @prop {Number} border-radius [20px] - The border radius used for flat button.
 /// @requires {Map} $material-icon-button
 /// @requires {Map} $indigo-base-button
@@ -1367,39 +1367,39 @@ $indigo-icon-button: extend(
     $indigo-base-button,
     (
         foreground: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         hover-background: transparent,
         hover-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-background: transparent,
         focus-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         focus-visible-background: transparent,
         focus-visible-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         active-background: transparent,
         active-foreground: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         disabled-background: transparent,
 
         focus-border-color: (
-            color: ('grays' 300)
+            color: ('gray' 300)
         ),
         focus-visible-border-color: (
-            color: ('grays' 300)
+            color: ('gray' 300)
         ),
         active-border-color: (
-            color: ('grays' 300)
+            color: ('gray' 300)
         ),
     )
 );
