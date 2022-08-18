@@ -43,7 +43,7 @@
             }
 
             @if ($variant == 'indigo') {
-                @include fluent.typography();
+                @include indigo.typography();
             }
         }
     }
