@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../typography/base' as *;
@@ -50,7 +51,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
@@ -97,7 +98,7 @@
         $tabs-schema: $schema;
     }
 
-    $theme: apply-palette($tabs-schema, $palette);
+    $theme: themes.digest-schema($tabs-schema);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';

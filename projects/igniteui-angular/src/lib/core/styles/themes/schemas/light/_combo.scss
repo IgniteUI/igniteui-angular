@@ -9,8 +9,8 @@
 /// Generates a light combo schema.
 /// @type {Map}
 /// @prop {Map} empty-list-background [color: 'surface'] - The combo list background color.
-/// @prop {Map} search-separator-border-color [color: ('grays', 500)] - The combo search box separator color.
-/// @prop {Map} empty-list-placeholder-color [color: ('grays', 700)] - The combo placeholder text color.
+/// @prop {Map} search-separator-border-color [color: ('gray', 500)] - The combo search box separator color.
+/// @prop {Map} empty-list-placeholder-color [color: ('gray', 700)] - The combo placeholder text color.
 /// @see $default-palette
 $light-combo: (
     empty-list-background: (
@@ -18,11 +18,11 @@ $light-combo: (
     ),
 
     search-separator-border-color: (
-        color: ('grays', 500),
+        color: ('gray', 500),
     ),
 
     empty-list-placeholder-color: (
-        color: ('grays', 700),
+        color: ('gray', 700),
     )
 );
 
@@ -35,8 +35,8 @@ $fluent-combo: $light-combo;
 /// Generates a bootstrap combo schema.
 /// @type {Map}
 /// @prop {Color} empty-list-background [color: ('surface')] - The combo list background color.
-/// @prop {Map} search-separator-border-color [color: ('grays', 400)] - The combo search box separator color.
-/// @prop {Map} empty-list-placeholder-color [color: ('grays', 600)] - The combo placeholder text color.
+/// @prop {Map} search-separator-border-color [color: ('gray', 400)] - The combo search box separator color.
+/// @prop {Map} empty-list-placeholder-color [color: ('gray', 600)] - The combo placeholder text color.
 /// @requires {function} extend
 /// @requires {Map} $light-combo
 $bootstrap-combo: extend(
@@ -47,11 +47,11 @@ $bootstrap-combo: extend(
         ),
 
         search-separator-border-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         empty-list-placeholder-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         )
     )
 );

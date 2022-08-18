@@ -1,3 +1,5 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -26,7 +28,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires extend
 /// @requires elevation
@@ -53,7 +55,7 @@
         $toast-schema: $schema;
     }
 
-    $theme: apply-palette($toast-schema, $palette);
+    $theme: themes.digest-schema($toast-schema);
 
     @if not($shadow) {
         $elevation: map.get($toast-schema, 'elevation');
@@ -102,7 +104,7 @@
     $border: map.get((
         'material': none,
         'fluent': none,
-        'bootstrap': 1px solid color($palette, 'grays', 300),
+        'bootstrap': 1px solid ig-color.color(null, 'gray', 300),
         'indigo-design': none
     ), $variant);
 

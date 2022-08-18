@@ -1,5 +1,5 @@
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
-
+@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../typography/base' as *;
 @use '../../themes/schemas/dark' as *;
@@ -80,8 +80,8 @@
         igx-icon {
             color: if(
                 $variant == 'indigo-design',
-                color($palette, 'warn', 500),
-                color($palette, 'secondary')
+                ig-color.color($palette, 'warn', 500),
+                ig-color.color($palette, 'secondary')
             );
         }
     }
@@ -97,14 +97,14 @@
         igx-buttongroup {
             --shadow: none;
             --item-background: #{var-get($theme, 'filtering-row-background')};
-            --item-hover-background: #{color($palette, 'grays', 100)};
-            --item-selected-background: #{color($palette, 'grays', 100)};
-            --item-text-color: #{color($palette, 'grays', 700)};
-            --item-hover-text-color: #{color($palette, 'grays', 800)};
+            --item-hover-background: #{ig-color.color($palette, 'gray', 100)};
+            --item-selected-background: #{ig-color.color($palette, 'gray', 100)};
+            --item-text-color: #{ig-color.color($palette, 'gray', 700)};
+            --item-hover-text-color: #{ig-color.color($palette, 'gray', 800)};
             --item-selected-text-color: #{if(
                 $variant == 'indigo-design',
-                contrast-color($palette, 'surface'),
-                color($palette, 'secondary', 500)
+                ig-color.contrast-color($palette, 'surface'),
+                ig-color.color($palette, 'secondary', 500)
             )};
             --item-border-color: transparent;
             --item-selected-border-color: transparent;
@@ -112,14 +112,14 @@
         }
 
         @include tree(tree-theme(
-            $background: color($palette, 'surface'),
-            $background-selected: color($palette, 'surface'),
-            $background-active: color($palette, 'surface'),
-            $background-active-selected: color($palette, 'surface'),
-            $foreground: contrast-color($palette, 'surface'),
-            $foreground-selected: contrast-color($palette, 'surface'),
-            $foreground-active: contrast-color($palette, 'surface'),
-            $foreground-active-selected: contrast-color($palette, 'surface'),
+            $background: ig-color.color($palette, 'surface'),
+            $background-selected: ig-color.color($palette, 'surface'),
+            $background-active: ig-color.color($palette, 'surface'),
+            $background-active-selected: ig-color.color($palette, 'surface'),
+            $foreground: ig-color.contrast-color($palette, 'surface'),
+            $foreground-selected: ig-color.contrast-color($palette, 'surface'),
+            $foreground-active: ig-color.contrast-color($palette, 'surface'),
+            $foreground-active-selected: ig-color.contrast-color($palette, 'surface'),
         ));
 
         .igx-tree-node__wrapper {
@@ -136,7 +136,7 @@
         display: flex;
         align-items: center;
         padding: rem(16px);
-        color: color($palette, 'grays', 700);
+        color: ig-color.color($palette, 'gray', 700);
     }
 
     %grid-excel-menu__header-actions {
@@ -186,7 +186,7 @@
         padding: rem(8px) rem(16px);
 
         header {
-            color: color($palette, 'grays', 700);
+            color: ig-color.color($palette, 'gray', 700);
             margin-bottom: rem(4px);
         }
 
@@ -204,7 +204,7 @@
         justify-content: space-between;
 
         header {
-            color: color($palette, 'grays', 700);
+            color: ig-color.color($palette, 'gray', 700);
             margin-inline-end: auto;
         }
     }
@@ -217,8 +217,8 @@
         igx-icon {
             color: if(
                 $variant == 'indigo-design',
-                color($palette, 'primary', 200),
-                color($palette, 'secondary')
+                ig-color.color($palette, 'primary', 200),
+                ig-color.color($palette, 'secondary')
             );
         }
     }
@@ -251,12 +251,12 @@
         justify-content: space-between;
         padding: rem(8px) rem(16px);
         cursor: pointer;
-        color: color($palette, 'grays', 700);
+        color: ig-color.color($palette, 'gray', 700);
         outline-style: none;
 
         &:hover,
         &:focus {
-            background: color($palette, 'grays', 100);
+            background: ig-color.color($palette, 'gray', 100);
         }
 
         [dir='rtl'] & {
@@ -267,7 +267,7 @@
     }
 
     %grid-excel-actions__action--disabled {
-        color: color($palette, 'grays', 400);
+        color: ig-color.color($palette, 'gray', 400);
         pointer-events: none;
     }
 
@@ -292,26 +292,26 @@
             border: 0;
 
             @if $bootstrap-theme {
-                border-top: 1px dashed color($palette, 'grays', 100);
-                border-bottom: 1px dashed color($palette, 'grays', 100);
+                border-top: 1px dashed ig-color.color($palette, 'gray', 100);
+                border-bottom: 1px dashed ig-color.color($palette, 'gray', 100);
             } @else {
-                border-top: 1px dashed color($palette, 'grays', 300);
-                border-bottom: 1px dashed color($palette, 'grays', 300);
+                border-top: 1px dashed ig-color.color($palette, 'gray', 300);
+                border-bottom: 1px dashed ig-color.color($palette, 'gray', 300);
             }
         }
 
         %igx-excel-filter__tree {
-            background: color($palette, 'surface');
+            background: ig-color.color($palette, 'surface');
             overflow-y: auto;
             margin: 0 rem(-16px);
             flex: 1;
 
             @if $bootstrap-theme {
-                border-top: 1px dashed color($palette, 'grays', 100);
-                border-bottom: 1px dashed color($palette, 'grays', 100);
+                border-top: 1px dashed ig-color.color($palette, 'gray', 100);
+                border-bottom: 1px dashed ig-color.color($palette, 'gray', 100);
             } @else {
-                border-top: 1px dashed color($palette, 'grays', 300);
-                border-bottom: 1px dashed color($palette, 'grays', 300);
+                border-top: 1px dashed ig-color.color($palette, 'gray', 300);
+                border-bottom: 1px dashed ig-color.color($palette, 'gray', 300);
             }
 
             igx-icon {
@@ -333,7 +333,7 @@
         }
 
         %igx-excel-filter__tree-alike {
-            background: color($palette, 'surface');
+            background: ig-color.color($palette, 'surface');
             display: flex;
             flex-direction: column;
             z-index: 1;
@@ -343,11 +343,11 @@
             display: flex;
             align-items: center;
             height: map.get($tree-node-height, 'comfortable');
-            background: color($palette, 'surface');
+            background: ig-color.color($palette, 'surface');
 
             &:hover,
             &:focus {
-                background: color($palette, 'grays', 200);
+                background: ig-color.color($palette, 'gray', 200);
             }
 
             > igx-checkbox {
@@ -528,9 +528,9 @@
 
     %grid-excel-menu__secondary-header {
         @if $bootstrap-theme {
-            border-bottom: 1px solid color($palette, 'grays', 100);
+            border-bottom: 1px solid ig-color.color($palette, 'gray', 100);
         } @else {
-            border-bottom: 1px solid color($palette, 'grays', 300);
+            border-bottom: 1px solid ig-color.color($palette, 'gray', 300);
         }
     }
 
@@ -541,9 +541,9 @@
 
     %grid-excel-menu__secondary-footer {
         @if $bootstrap-theme {
-            border-top: 1px dashed color($palette, 'grays', 100);
+            border-top: 1px dashed ig-color.color($palette, 'gray', 100);
         } @else {
-            border-top: 1px dashed color($palette, 'grays', 300);
+            border-top: 1px dashed ig-color.color($palette, 'gray', 300);
         }
 
         %grid-excel-filter__apply,

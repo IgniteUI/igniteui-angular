@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -51,7 +52,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires luminance
@@ -99,7 +100,7 @@
         $list-schema: $schema;
     }
 
-    $theme: apply-palette($list-schema, $palette);
+    $theme: themes.digest-schema($list-schema);
 
     @if not($header-background) and $background {
         $header-background: $background;

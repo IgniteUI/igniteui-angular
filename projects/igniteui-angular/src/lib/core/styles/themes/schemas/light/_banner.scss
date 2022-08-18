@@ -10,7 +10,7 @@
 /// @type {Map}
 /// @property {Map} banner-background [color: 'surface']- The background color used banner background.
 /// @property {Map} banner-message-color [contrast-color: 'surface']- The color used for banner label.
-/// @property {Map} banner-border-color [color: ('grays', 400)] - The border color used banner border.
+/// @property {Map} banner-border-color [color: ('gray', 400)] - The border color used banner border.
 /// @property {Map} banner-illustration-color [contrast-color: 'surface'] - The color used banner illustration.
 /// @see $default-palette
 $light-banner: (
@@ -25,7 +25,7 @@ $light-banner: (
     ),
 
     banner-border-color: (
-        color: ('grays', 400)
+        color: ('gray', 400)
     ),
 
     banner-illustration-color: (
@@ -41,9 +41,9 @@ $fluent-banner: extend($light-banner, (variant: 'fluent'));
 
 /// Generates a bootstrap banner schema.
 /// @type {Map}
-/// @property {Map} banner-background [contrast-color: ('grays', 900)] - The background color used banner background.
-/// @property {Map} banner-message-color [color: ('grays', 800)] - The color used for banner label.
-/// @property {Map} banner-illustration-color [color: ('grays', 800)] - The color used banner illustration.
+/// @property {Map} banner-background [contrast-color: ('gray', 900)] - The background color used banner background.
+/// @property {Map} banner-message-color [color: ('gray', 800)] - The color used for banner label.
+/// @property {Map} banner-illustration-color [color: ('gray', 800)] - The color used banner illustration.
 /// @requires {function} extend
 /// @requires {Map} $light-banner
 $bootstrap-banner: extend(
@@ -52,23 +52,23 @@ $bootstrap-banner: extend(
         variant: 'bootstrap',
 
         banner-background: (
-            contrast-color: ('grays', 900),
+            contrast-color: ('gray', 900),
         ),
 
         banner-message-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         banner-illustration-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         )
     )
 );
 
 /// Generates an indigo banner schema.
 /// @type {Map}
-/// @property {Map} banner-message-color [color: ('grays', 900)]- The color used for banner label.
-/// @property {Map} banner-illustration-color [color: ('grays', 600)] - The color used banner illustration.
+/// @property {Map} banner-message-color [color: ('gray', 900)]- The color used for banner label.
+/// @property {Map} banner-illustration-color [color: ('gray', 600)] - The color used banner illustration.
 /// @requires {function} extend
 /// @requires {Map} $light-banner
 $indigo-banner: extend(
@@ -77,11 +77,11 @@ $indigo-banner: extend(
         variant: 'indigo-design',
 
         banner-message-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         banner-illustration-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         )
     )
 );

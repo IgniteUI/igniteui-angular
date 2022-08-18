@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -20,7 +21,7 @@
 /// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @requires extend
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 ///
 /// @example scss Change the background and icon colors in action strip
@@ -46,7 +47,7 @@
         $action-strip-schema: $schema;
     }
 
-    $theme: apply-palette($action-strip-schema, $palette);
+    $theme: themes.digest-schema($action-strip-schema);
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);

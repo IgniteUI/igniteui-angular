@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -36,7 +37,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 /// @requires elevation
 /// @requires extend
@@ -80,7 +81,7 @@
         $time-picker-schema: $schema;
     }
 
-    $theme: apply-palette($time-picker-schema, $palette);
+    $theme: themes.digest-schema($time-picker-schema);
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);

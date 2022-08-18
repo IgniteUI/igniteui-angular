@@ -1,3 +1,4 @@
+@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -18,7 +19,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 ///
@@ -45,7 +46,7 @@
         $watermark-schema: $schema;
     }
 
-    $theme: apply-palette($watermark-schema, $palette);
+    $theme: themes.digest-schema($watermark-schema);
 
     @if not($color) and $link-background {
         $color: text-contrast($link-background);
