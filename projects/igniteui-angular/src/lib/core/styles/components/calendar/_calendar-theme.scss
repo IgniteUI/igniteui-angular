@@ -1257,7 +1257,7 @@
     }
 
     %cal-value--label {
-        @include typography.type-style($weekday-label);
+        @include typography.type-style($weekday-label, false);
         margin: 0;
     }
 
