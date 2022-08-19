@@ -1,4 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -59,7 +58,7 @@
         $linear-bar-schema: $schema;
     }
 
-    $theme: themes.digest-schema($linear-bar-schema);
+    $theme: digest-schema($linear-bar-schema);
 
     @return extend($theme, (
         name: $name,
@@ -414,7 +413,7 @@
         $circular-bar-schema: $schema;
     }
 
-    $theme: themes.digest-schema($circular-bar-schema);
+    $theme: digest-schema($circular-bar-schema);
 
     $progress-circle-color-start: map.get($theme, 'progress-circle-color');
     $progress-circle-color-end: map.get($theme, 'progress-circle-color');

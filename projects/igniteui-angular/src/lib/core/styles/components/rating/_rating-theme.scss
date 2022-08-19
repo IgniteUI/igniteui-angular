@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -46,7 +44,7 @@
         $rating-schema: $schema;
     }
 
-    $theme: themes.digest-schema($rating-schema);
+    $theme: digest-schema($rating-schema);
 
     @return extend($theme, (name: $name), keywords($rest));
 }
@@ -62,7 +60,7 @@
     }
 
     igc-rating::part(value-label) {
-        color: ig-color.color(null, 'gray', 900);
+        color: color(null, 'gray', 900);
     }
 
     igc-rating[disabled]::part(label),

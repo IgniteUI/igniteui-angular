@@ -1,4 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -42,7 +41,7 @@
         $scrollbar-schema: $schema;
     }
 
-    $theme: themes.digest-schema($scrollbar-schema);
+    $theme: digest-schema($scrollbar-schema);
 
     @return extend($theme, (
         name: $name,

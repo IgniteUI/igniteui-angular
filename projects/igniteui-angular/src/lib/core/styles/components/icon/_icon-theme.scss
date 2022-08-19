@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -44,7 +42,7 @@
         $icon-schema: $schema;
     }
 
-    $theme: themes.digest-schema($icon-schema);
+    $theme: digest-schema($icon-schema);
 
     @return extend($theme, (
         name: $name,
@@ -87,11 +85,11 @@
     }
 
     %igx-icon--success {
-        color: ig-color.color(map.get($theme, 'palette'), 'success');
+        color: color(map.get($theme, 'palette'), 'success');
     }
 
     %igx-icon--error {
-        color: ig-color.color(map.get($theme, 'palette'), 'error');
+        color: color(map.get($theme, 'palette'), 'error');
     }
 
     %igx-icon--inactive {
