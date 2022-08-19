@@ -1,6 +1,4 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
-@use '../../base' as *;
+ @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
 @use 'sass:map';
@@ -176,7 +174,7 @@
         }
 
         $themes: map.merge($themes, (
-            $_name: extend(themes.digest-schema($_schema), (
+            $_name: extend( digest-schema($_schema), (
                 name: $name,
                 background: $background,
                 foreground: $foreground,
@@ -1022,13 +1020,13 @@
     $text: map.get($categories, 'text');
 
     %igx-button-display {
-        @include typography.type-style($text) {
+        @include type-style($text) {
             text-align: center;
         }
     }
 
     %igx-button--fab {
-        @include typography.type-style($text) {
+        @include type-style($text) {
             text-align: center;
             margin: 0;
         }

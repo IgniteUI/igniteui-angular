@@ -1,4 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -45,7 +44,7 @@
         $grid-paginator-schema: $schema;
     }
 
-    $theme: themes.digest-schema($grid-paginator-schema);
+    $theme: digest-schema($grid-paginator-schema);
 
 
     @if not($text-color) and $background-color {

@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -83,7 +81,7 @@
         $slider-schema: $schema;
     }
 
-    $theme: themes.digest-schema($slider-schema);
+    $theme: digest-schema($slider-schema);
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
@@ -596,10 +594,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include typography.type-style($thumb-label)
+        @include type-style($thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include typography.type-style($ticks-label)
+        @include type-style($ticks-label)
     }
 }

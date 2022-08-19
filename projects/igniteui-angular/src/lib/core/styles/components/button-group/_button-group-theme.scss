@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -91,7 +89,7 @@
         $button-group-schema: $schema;
     }
 
-    $theme: themes.digest-schema($button-group-schema);
+    $theme: digest-schema($button-group-schema);
 
     $border: 1px solid map.get($theme, 'item-selected-border-color');
 
@@ -311,7 +309,7 @@
                 bottom: 0;
                 inset-inline-end: 0;
                 inset-inline-start: 0;
-                background: ig-color.color($palette, 'gray', 500, .12);
+                background: color($palette, 'gray', 500, .12);
             }
         }
     }

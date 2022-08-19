@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use 'sass:map';
 
@@ -43,12 +41,12 @@
         display: flex;
         align-items: center;
         padding: $vertical-space-comfortable;
-        color: ig-color.color($palette, 'gray', 700);
+        color: color($palette, 'gray', 700);
 
         @if $bootstrap-theme {
-            background-color: ig-color.color($palette, 'gray', 100, .5);
+            background-color: color($palette, 'gray', 100, .5);
         } @else {
-            background-color: ig-color.color($palette, 'gray', 100);
+            background-color: color($palette, 'gray', 100);
         }
 
         user-select: none;
@@ -153,12 +151,12 @@
 
         igx-icon {
             cursor: pointer;
-            color: ig-color.color($palette, 'gray', 500);
+            color: color($palette, 'gray', 500);
             outline-style: none;
 
             &:hover,
             &:focus {
-                color: ig-color.color($palette, 'gray', 800);
+                color: color($palette, 'gray', 800);
             }
         }
 
@@ -258,7 +256,7 @@
         padding: rem(16px);
         margin-inline-start: rem(16px);
         border-radius: border-radius(rem(4px));
-        border: 1px solid ig-color.color($palette, 'gray', 200);
+        border: 1px solid color($palette, 'gray', 200);
 
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
@@ -281,19 +279,19 @@
     }
 
     %filter-con-menu__delete-btn {
-        color: ig-color.color($palette, 'error');
+        color: color($palette, 'error');
         @if $bootstrap-theme {
-            border-color: ig-color.color($palette, 'error');
+            border-color: color($palette, 'error');
         }
 
         &:hover,
         &:focus {
             @if $bootstrap-theme {
-                background: ig-color.color($palette, 'error');
-                border-color: ig-color.color($palette, 'error');
-                color: ig-color.color($palette, 'gray', 100);
+                background: color($palette, 'error');
+                border-color: color($palette, 'error');
+                color: color($palette, 'gray', 100);
             } @else {
-                color: ig-color.color($palette, 'error');
+                color: color($palette, 'error');
             }
         }
     }
@@ -303,7 +301,7 @@
         top: rem(-18px);
         inset-inline-end: rem(-18px);
         background-color: var-get($theme, 'filtering-row-background');
-        border: 1px solid ig-color.color($palette, 'gray', 200);
+        border: 1px solid color($palette, 'gray', 200);
 
         &:hover,
         &:focus {
@@ -321,7 +319,7 @@
     }
 
     %filter-empty__title {
-        color: ig-color.color($palette, 'gray', 500);
+        color: color($palette, 'gray', 500);
     }
 
     %advanced-filter--cosy {

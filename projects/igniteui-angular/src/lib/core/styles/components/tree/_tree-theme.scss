@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
@@ -60,7 +58,7 @@
         $tree-schema: $schema;
     }
 
-    $theme: themes.digest-schema($tree-schema);
+    $theme: digest-schema($tree-schema);
 
     @if not($foreground) and $background {
         $foreground: text-contrast($background);
@@ -348,6 +346,6 @@
     $text: map.get($categories, 'label');
 
     %node-content {
-        @include typography.type-style($text)
+        @include type-style($text)
     }
 }

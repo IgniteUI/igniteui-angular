@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/color' as ig-color;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
@@ -62,7 +60,7 @@
         $grid-toolbar-schema: $schema;
     }
 
-    $theme: themes.digest-schema($grid-toolbar-schema);
+    $theme: digest-schema($grid-toolbar-schema);
 
 
     @if not($title-text-color) and $background-color {
@@ -147,9 +145,9 @@
         font-size: $grid-toolbar-fs;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid ig-color.color(map.get($theme, 'palette'), 'gray', 100);
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'gray', 100);
         } @else {
-            border-bottom: 1px solid ig-color.color(map.get($theme, 'palette'), 'gray', 300);
+            border-bottom: 1px solid color(map.get($theme, 'palette'), 'gray', 300);
         }
 
         background: var-get($theme, 'background-color');
@@ -265,22 +263,22 @@
             border-radius: 0;
 
             &:first-child > div {
-                background: ig-color.color(map.get($theme, 'palette'), 'secondary');
+                background: color(map.get($theme, 'palette'), 'secondary');
             }
         }
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
-        border-color: ig-color.color(map.get($theme, 'palette'), 'secondary') !important;
+        border-color: color(map.get($theme, 'palette'), 'secondary') !important;
 
         @if $bootstrap-theme {
             border-width: 2px;
-            border-color: ig-color.color(map.get($theme, 'palette'), 'primary', 800) !important;
-            color: ig-color.color(map.get($theme, 'palette'), 'primary', 800);
+            border-color: color(map.get($theme, 'palette'), 'primary', 800) !important;
+            color: color(map.get($theme, 'palette'), 'primary', 800);
 
             &:hover,
             &:focus {
-                background: ig-color.color(map.get($theme, 'palette'), 'primary', 800);
+                background: color(map.get($theme, 'palette'), 'primary', 800);
             }
         }
     }

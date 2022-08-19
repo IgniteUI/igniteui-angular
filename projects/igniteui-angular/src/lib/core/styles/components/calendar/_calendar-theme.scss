@@ -1,5 +1,3 @@
-@use '../../../../../../../../node_modules/igniteui-theming/sass/themes' as themes;
-@use '../../../../../../../../node_modules/igniteui-theming/sass/typography' as typography;
 @use '../../../../../../../../node_modules/igniteui-theming/sass/typography/presets' as ig-typography-presets;
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -177,7 +175,7 @@
         $calendar-schema: $schema;
     }
 
-    $theme: themes.digest-schema($calendar-schema);
+    $theme: digest-schema($calendar-schema);
     $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
@@ -1234,36 +1232,36 @@
     $content: map.get($categories, 'content');
 
     %cal-header-year {
-        @include typography.type-style($header-year) {
+        @include type-style($header-year) {
             margin: 0;
         }
     }
 
     %cal-header-date {
-        @include typography.type-style($header-date) {
+        @include type-style($header-date) {
             margin: 0;
         }
     }
 
     %cal-picker-date {
-        @include typography.type-style($picker-date) {
+        @include type-style($picker-date) {
             margin: 0;
         }
     }
 
     %cal-value-content {
-        @include typography.type-style($content) {
+        @include type-style($content) {
             margin: 0;
         }
     }
 
     %cal-value--label {
-        @include typography.type-style($weekday-label, false);
+        @include type-style($weekday-label, false);
         margin: 0;
     }
 
     %cal-value--year-current {
-        @include typography.type-style($content) {
+        @include type-style($content) {
             font-size: rem(24px);
             line-height: rem(52px);
             margin: 0;
