@@ -5,6 +5,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:color';
 
 ////
 /// @group themes
@@ -120,17 +121,17 @@
 
     @if not($item-background-hover) and $item-background {
         @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-hover: lighten-color($item-background, 8%);
+            $item-background-hover: color.scale($item-background, $lightness: 8%);
         } @else {
-            $item-background-hover: darken-color($item-background, 8%);
+            $item-background-hover: color.scale($item-background, $lightness: -8%);
         }
     }
 
     @if not($item-background-active) and $item-background {
         @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-active: lighten-color($item-background, 8%);
+            $item-background-active: color.scale($item-background, $lightness: 8%);
         } @else {
-            $item-background-active: darken-color($item-background, 8%);
+            $item-background-active: color.scale($item-background, $lightness: -8%);
         }
     }
 

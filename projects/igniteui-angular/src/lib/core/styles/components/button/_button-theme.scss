@@ -4,6 +4,7 @@
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
 @use 'sass:map';
+@use 'sass:color';
 
 ////
 /// @group themes
@@ -123,7 +124,7 @@
         }
 
         @if not($hover-background) and $background {
-            $hover-background: lighten-color($background, 5%);
+            $hover-background: color.scale($background, $lightness: 5%);
         }
 
         @if not($hover-foreground) and $hover-background {
@@ -131,7 +132,7 @@
         }
 
         @if not($focus-background) and $background {
-            $focus-background: lighten-color($background, 5%);
+            $focus-background: color.scale($background, $lightness: 5%);
         }
 
         @if not($focus-foreground) and $focus-background {

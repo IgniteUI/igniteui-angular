@@ -20,35 +20,35 @@
 /// @property {String} subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle.
 /// @see $default-palette
 $light-data-chart: (
-    // 'margin': null,
+    'margin': null,
 
-    // 'title-text-color': (
-    //     color: ('gray', 900)
-    // ),
+    'title-text-color': (
+        color: ('gray', 900)
+    ),
 
-    // 'title-margin': null,
+    'title-margin': null,
 
-    // 'subtitle-text-color': (
-    //     color: ('gray', 600)
-    // ),
+    'subtitle-text-color': (
+        color: ('gray', 600)
+    ),
 
-    // 'subtitle-margin': null,
+    'subtitle-margin': null,
 
-    // 'brushes': series,
+    'brushes': series,
 
-    // 'marker-brushes': series,
+    'marker-brushes': series,
 
-    // 'outlines': series,
+    'outlines': series,
 
-    // 'marker-outlines': series,
+    'marker-outlines': series,
 
-    // 'plot-area-background': (
-    //     color: ('surface', 500)
-    // ),
+    'plot-area-background': (
+        color: ('surface', 500)
+    ),
 
-    // 'title-horizontal-alignment': null,
+    'title-horizontal-alignment': null,
 
-    // 'subtitle-horizontal-alignment': null,
+    'subtitle-horizontal-alignment': null,
 );
 
 /// Generates a fluent data-chart schema.

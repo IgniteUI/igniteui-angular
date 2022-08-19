@@ -5,6 +5,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:color';
 
 ////
 /// @group themes
@@ -115,9 +116,9 @@
         $luminance: luminance($background);
 
         @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $hover-background: lighten-color($background, 14%);
+            $hover-background: color.scale($background, $lightness: 14%);
         } @else {
-            $hover-background: darken-color($background, 4%);
+            $hover-background: color.scale($background, $lightness: -4%);
         }
     }
 
@@ -129,9 +130,9 @@
         $luminance: luminance($background);
 
         @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $focus-background: lighten-color($background, 22%);
+            $focus-background: color.scale($background, $lightness: 22%);
         } @else {
-            $focus-background: darken-color($background, 8%);
+            $focus-background: color.scale($background, $lightness: -8%);
         }
     }
 
@@ -143,9 +144,9 @@
         $luminance: luminance($background);
 
         @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $selected-background: lighten-color($background, 22%);
+            $selected-background: color.scale($background, $lightness: 22%);
         } @else {
-            $selected-background: darken-color($background, 8%);
+            $selected-background: color.scale($background, $lightness: -8%);
         }
     }
 
@@ -165,9 +166,9 @@
         $luminance: luminance($selected-background);
 
         @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
-            $focus-selected-background: lighten-color($background, 32%);
+            $focus-selected-background: color.scale($background, $lightness: 32%);
         } @else {
-            $focus-selected-background: darken-color($background, 16%);
+            $focus-selected-background: color.scale($background, $lightness: -16%);
         }
     }
 
