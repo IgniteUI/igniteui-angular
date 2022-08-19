@@ -5930,6 +5930,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
+        const overlay = this.overlayService.getOverlayById(overlayId);
+        overlay.initialSize.width = newSize;
+        overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
+        this.overlayService.reposition(overlayId);
+    }
+
+    /**
+     * @hidden @internal
+     */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID.type;

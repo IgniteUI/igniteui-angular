@@ -83,6 +83,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public errorIcon: IgxIconComponent;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('error', { read: ElementRef, static: false })
+    public errorDiv: ElementRef;
+
+    /**
      * Gets the default error template.
      */
     @ViewChild('defaultError', { read: TemplateRef, static: true })
@@ -881,6 +888,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             // while in edit mode subscribe to value changes on the current form control and set to editValue
             this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
                 this.editValue = value;
+            });
+            this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
+                if (status === 'INVALID' && this.errorTooltip.length > 0) {
+                    this.cdr.detectChanges();
+                    const tooltip = this.errorTooltip.toArray()[0];
+                    this.grid.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorDiv.nativeElement.offsetWidth);
+                }
             });
         }
         if (changes.value && !changes.value.firstChange) {
