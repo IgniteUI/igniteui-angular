@@ -11,49 +11,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-@function expand-shorthand($list) {
-    $len: list.length($list);
-
-    $margins: (
-        'margin-top': null,
-        'margin-right': null,
-        'margin-bottom': null,
-        'margin-left': null,
-    );
-
-    @for $i from 1 through 4 {
-        $n: $i % $len;
-        $n: if($n != 0, $n, $len);
-
-        @if $len == 3 and $i == 4 {
-            $n: 2;
-        }
-
-        $key: list.nth(map.keys($margins), $i);
-        $value: list.nth($list, $n);
-
-        $margins: map.merge($margins, ($key: $value));
-    }
-
-    @return $margins;
-}
-
-@function map-keys-prefix($map, $prefix, $separator: '-') {
-    $keys: map.keys($map);
-    $len: list.length($keys);
-    $result: ();
-
-    @for $i from 1 through $len {
-        $key: list.nth($keys, $i);
-
-        $result: map.merge($result, (
-            '#{$prefix}#{$separator}#{$key}': map.get($map, $key))
-        );
-    }
-
-    @return $result;
-}
-
 /// @access private
 @function is-used($name, $checklist) {
     $used: true;

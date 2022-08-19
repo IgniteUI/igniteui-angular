@@ -100,18 +100,10 @@ $light-material-palette: $light-palette;
 $dark-material-palette: $default-dark-palette;
 
 /// @access private
-$green-palette: palette(
-    $primary: #09f,
-    $secondary: #72da67,
-    $surface: #fff
-) !default;
+$green-palette: palettes.$light-green-palette;
 
 /// @access private
-$green-dark-palette: palette(
-    $primary: color($green-palette, 'primary'),
-    $secondary: color($green-palette, 'secondary'),
-    $surface: #222,
-) !default;
+$green-dark-palette: palettes.$dark-green-palette;
 
 /// Light green palette
 /// @type Map
@@ -142,18 +134,10 @@ $light-green-palette: $green-palette;
 $dark-green-palette: $green-dark-palette;
 
 /// @access private
-$purple-palette: palette(
-    $primary: #00b4d6,
-    $secondary: #514590,
-    $surface: #fff
-) !default;
+$purple-palette: palettes.$light-purple-palette;
 
 /// @access private
-$purple-dark-palette: palette(
-    $primary: color($purple-palette, 'primary'),
-    $secondary: color($purple-palette, 'secondary'),
-    $surface: #333,
-) !default;
+$purple-dark-palette: palettes.$dark-purple-palette;
 
 /// Light purple palette
 /// @type Map
@@ -184,26 +168,10 @@ $light-purple-palette: $purple-palette;
 $dark-purple-palette: $purple-dark-palette;
 
 /// @access private
-$fluent-excel-palette: palette(
-    $primary: #217346,
-    $secondary: #217346,
-    $surface: #fff,
-    $success: #107c10,
-    $warn: #797673,
-    $error: #a80000,
-    $variant: 'fluent'
-) !default;
+$fluent-excel-palette: palettes.$light-fluent-excel-palette;
 
 /// @access private
-$fluent-excel-dark-palette: palette(
-    $primary: color($fluent-excel-palette, 'primary'),
-    $secondary: color($fluent-excel-palette, 'secondary'),
-    $success: color($fluent-excel-palette, 'success'),
-    $warn: color($fluent-excel-palette, 'warn'),
-    $error: color($fluent-excel-palette, 'error'),
-    $surface: #222,
-    $variant: 'fluent'
-) !default;
+$fluent-excel-dark-palette: palettes.$dark-fluent-excel-palette;
 
 /// Light Fluent Excel palette
 /// @type Map
@@ -234,26 +202,10 @@ $light-fluent-excel-palette: $fluent-excel-palette;
 $dark-fluent-excel-palette: $fluent-excel-dark-palette;
 
 /// @access private
-$fluent-word-palette: palette(
-    $primary: #2b579a,
-    $secondary: #2b579a,
-    $surface: #fff,
-    $success: #107c10,
-    $warn: #797673,
-    $error: #a80000,
-    $variant: 'fluent'
-) !default;
+$fluent-word-palette: palettes.$light-fluent-word-palette;
 
 /// @access private
-$fluent-word-dark-palette: palette(
-    $primary: color($fluent-word-palette, 'primary'),
-    $secondary: color($fluent-word-palette, 'secondary'),
-    $surface: #222,
-    $success: color($fluent-word-palette, 'success'),
-    $warn: color($fluent-word-palette, 'warn'),
-    $error: color($fluent-word-palette, 'error'),
-    $variant: 'fluent'
-) !default;
+$fluent-word-dark-palette: palettes.$dark-fluent-word-palette;
 
 /// Light Fluent Word palette
 /// @type Map
@@ -284,26 +236,10 @@ $light-fluent-word-palette: $fluent-word-palette;
 $dark-fluent-word-palette: $fluent-word-dark-palette;
 
 /// @access private
-$fluent-palette: palette(
-    $primary: #0078d4,
-    $secondary: #0078d4,
-    $surface: #fff,
-    $success: #107c10,
-    $warn: #797673,
-    $error: #a80000,
-    $variant: 'fluent'
-) !default;
+$fluent-palette: palettes.$light-fluent-palette;
 
 /// @access private
-$fluent-dark-palette: palette(
-    $primary: color($fluent-palette, 'primary'),
-    $secondary: color($fluent-palette, 'secondary'),
-    $success: color($fluent-palette, 'success'),
-    $warn: color($fluent-palette, 'warn'),
-    $error: color($fluent-palette, 'error'),
-    $surface: #222,
-    $variant: 'fluent'
-) !default;
+$fluent-dark-palette: palettes.$dark-fluent-palette;
 
 /// Light Fluent palette
 /// @type Map
@@ -334,30 +270,10 @@ $light-fluent-palette: $fluent-palette;
 $dark-fluent-palette: $fluent-dark-palette;
 
 /// @access private
-$bootstrap-palette: palette(
-    $primary: #0d6efd,
-    $secondary: #6c757d,
-    $surface: #f8f9fa,
-    $info: #0dcaf0,
-    $success: #198754,
-    $warn: #ffc107,
-    $error: #dc3545,
-    $gray: #adb5bd,
-    $variant: 'bootstrap'
-) !default;
+$bootstrap-palette: palettes.$light-bootstrap-palette;
 
 /// @access private
-$bootstrap-dark-palette: palette(
-    $primary: color($bootstrap-palette, 'primary'),
-    $secondary: color($bootstrap-palette, 'secondary'),
-    $surface: #212529,
-    $info: color($bootstrap-palette, 'info'),
-    $success: color($bootstrap-palette, 'success'),
-    $warn: color($bootstrap-palette, 'warn'),
-    $error: color($bootstrap-palette, 'error'),
-    $gray: color($bootstrap-palette, 'gray'),
-    $variant: 'bootstrap'
-) !default;
+$bootstrap-dark-palette: palettes.$dark-bootstrap-palette;
 
 /// Light bootstrap palette
 /// @type Map
@@ -399,17 +315,7 @@ $dark-bootstrap-palette: $bootstrap-dark-palette;
 /// @prop {Color} error [#cf1a2b] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
-$light-indigo-palette: palette(
-    $primary: #3f51b5,
-    $secondary: #3f51b5,
-    $gray: hsl(236, 8%, 5%),
-    $surface: #fff,
-    $info: #9208bc,
-    $success: #689f38,
-    $warn: #ff9800,
-    $error: #cf1a2b,
-    $variant: 'indigo-design'
-) !default;
+$light-indigo-palette: palettes.$light-indigo-palette;
 
 /// Dark Indigo palette
 /// @type Map
@@ -423,17 +329,7 @@ $light-indigo-palette: palette(
 /// @prop {Color} error [#cf1a2b] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
-$dark-indigo-palette: palette(
-    $primary: color($light-indigo-palette, 'primary'),
-    $secondary: color($light-indigo-palette, 'secondary'),
-    $info: color($light-indigo-palette, 'info'),
-    $success: color($light-indigo-palette, 'success'),
-    $warn: color($light-indigo-palette, 'warn'),
-    $error: color($light-indigo-palette, 'error'),
-    $surface: #2a2b2f,
-    $gray: hsl(262, 8%, 98%),
-    $variant: 'indigo-design'
-) !default;
+$dark-indigo-palette: palettes.$dark-indigo-palette;
 
 /// Global Overlay Color.
 /// Assigned to the 500 variant of the gray color form the current $default-palette.
