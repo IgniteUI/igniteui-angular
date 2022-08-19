@@ -13,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
+import { IgxSummaryResult } from '../../grids/summaries/grid-summary';
+import { GridSummaryCalculationMode } from '../../grids/common/enums';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -20,6 +22,7 @@ export enum ExportRecordType {
     DataRecord = 'DataRecord',
     HierarchicalGridRecord = 'HierarchicalGridRecord',
     HeaderRecord = 'HeaderRecord',
+    SummaryRecord = 'SummaryRecord',
 }
 
 export enum HeaderType {
@@ -33,6 +36,8 @@ export interface IExportRecord {
     type: ExportRecordType;
     owner?: string | GridType;
     hidden?: boolean;
+    summaryRows?: number;
+    summaryKey?: string;
 }
 
 export interface IColumnList {
@@ -158,6 +163,7 @@ class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
 
 export const DEFAULT_OWNER = 'default';
 const DEFAULT_COLUMN_WIDTH = 8.43;
+const GRID_ROOT_SUMMARY = 'igxGridRootSummary';
 
 export abstract class IgxBaseExporter {
 
@@ -192,6 +198,7 @@ export abstract class IgxBaseExporter {
 
     private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
+    private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
 
     /**
      * Method for exporting IgxGrid component's data.
@@ -229,6 +236,42 @@ export abstract class IgxBaseExporter {
             this._ownersMap.set(DEFAULT_OWNER, columnList);
         }
 
+        options.exportSummaries = true;
+        if (options.exportSummaries && grid.summaryService.summaryCacheMap.size > 0) {
+            const summaryCacheMap = grid.summaryService.summaryCacheMap;
+
+            switch(grid.summaryCalculationMode) {
+                case GridSummaryCalculationMode.rootAndChildLevels:
+                    this.summaries = summaryCacheMap;
+                    break;
+                case GridSummaryCalculationMode.childLevelsOnly:
+                    summaryCacheMap.delete(GRID_ROOT_SUMMARY);
+                    this.summaries = summaryCacheMap;
+                    break;
+                case GridSummaryCalculationMode.rootLevelOnly:
+                    for (let k of summaryCacheMap.keys()) {
+                        if (k !== GRID_ROOT_SUMMARY) {
+                            summaryCacheMap.delete(k);
+                        }
+                    }
+
+                    this.summaries = summaryCacheMap;
+                    break;
+            }
+
+            // for(const summary of summaries.entries()) {
+            //     debugger
+            //     const record: IExportRecord = {
+            //         data: summary,
+            //         hidden: false,
+            //         level: 0,
+            //         type: ExportRecordType.SummaryRecord
+            //     }
+
+            //     this.flatRecords.push(record);
+            // }
+        }
+
         this.prepareData(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
     }
@@ -263,7 +306,7 @@ export abstract class IgxBaseExporter {
 
     private exportGridRecordsData(records: IExportRecord[], grid?: GridType) {
         if (this._ownersMap.size === 0) {
-            const recordsData = records.map(r => r.data);
+            const recordsData = records.filter(r => r.type !== ExportRecordType.SummaryRecord).map(r => r.data);
             const keys = ExportUtilities.getKeysFromData(recordsData);
             const columns = keys.map((k) =>
                 ({ header: k, field: k, skip: false, headerType: HeaderType.ColumnHeader, level: 0, columnSpan: 1 }));
@@ -341,7 +384,6 @@ export abstract class IgxBaseExporter {
                 mapRecord.columns = this.reorderColumns(mapRecord.columns);
             }
         }
-
 
         const dataToExport = new Array<IExportRecord>();
         const actualData = records[0]?.data;
@@ -746,6 +788,12 @@ export abstract class IgxBaseExporter {
                 this.addFlatData(gridData);
             }
         }
+
+        if (grid.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly) {
+            this.setSummaries(GRID_ROOT_SUMMARY);
+        }
+        const a = this.flatRecords;
+        debugger
     }
 
     private prepareTreeGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
@@ -811,6 +859,32 @@ export abstract class IgxBaseExporter {
         }
     }
 
+    private setSummaries(summaryKey: string) {
+        if (this.summaries.size > 0) {
+            const rootSummary = this.summaries.get(summaryKey);
+            const values = [...rootSummary.values()];
+            const biggest = values.sort((a, b) => b.length - a.length)[0];
+
+            for (let i = 0; i < biggest.length; i++) {
+                const obj = {}
+
+                for (const [key, value] of rootSummary) {
+                    debugger
+                    const summaries = value.map(s => ({label: s.label, value: s.summaryResult}))
+                    obj[key] = summaries[i];
+                }
+
+                const summaryRecord: IExportRecord = {
+                    data: obj,
+                    type: ExportRecordType.SummaryRecord,
+                    level: 0,
+                };
+
+                this.flatRecords.push(summaryRecord);
+            }
+        }
+    }
+
     private addGroupedData(grid: GridType, records: IGroupByRecord[],
         groupingState: IGroupingState, parentExpanded: boolean = true) {
         if (!records) {
@@ -841,15 +915,19 @@ export abstract class IgxBaseExporter {
                 record.expression.fieldName;
 
             recordVal = recordVal !== null ? recordVal : '';
+            const emptyPlaceholder = '\u200e';
 
             const groupExpression: IExportRecord = {
-                data: { [firstCol]: `${groupExpressionName}: ${recordVal} (${record.records.length})` },
+                data: { [firstCol]: `${emptyPlaceholder}${groupExpressionName}: ${recordVal ?? '(Blank)'} (${record.records.length})` },
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.GroupedRecord,
             };
 
             this.flatRecords.push(groupExpression);
+
+            const key = `{ '${groupExpressionName}': '${recordVal}' }`;
+            const shouldSetSummaries = this.summaries.size > 0 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
 
             if (record.groups.length > 0) {
                 this.addGroupedData(grid, record.groups, groupingState, expanded && parentExpanded);
@@ -864,7 +942,15 @@ export abstract class IgxBaseExporter {
                         type: ExportRecordType.DataRecord,
                     };
 
+                    if (shouldSetSummaries) {
+                        currentRecord.summaryKey = key;
+                    }
+
                     this.flatRecords.push(currentRecord);
+                }
+
+                if (shouldSetSummaries) {
+                    this.setSummaries(key);
                 }
             }
         }

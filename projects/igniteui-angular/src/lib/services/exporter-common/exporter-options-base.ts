@@ -65,7 +65,12 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-     public ignoreMultiColumnHeaders = false;
+    public ignoreMultiColumnHeaders = false;
+
+    /**
+     * @memberof IgxExporterOptionsBase
+     */
+    public exportSummaries = false;
 
     /**
      * Specifies whether the exported data should have frozen headers.
@@ -76,7 +81,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-     public freezeHeaders = false;
+    public freezeHeaders = false;
 
     /**
      * Specifies whether the headers should be exported if there is no data.

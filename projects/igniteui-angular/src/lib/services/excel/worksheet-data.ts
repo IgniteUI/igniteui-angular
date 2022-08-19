@@ -10,6 +10,7 @@ export class WorksheetData {
     private _isSpecialData: boolean;
     private _hasMultiColumnHeader: boolean;
     private _isHierarchical: boolean;
+    private _hasSummaries: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -50,6 +51,10 @@ export class WorksheetData {
         return this._hasMultiColumnHeader;
     }
 
+    public get hasSummaries(): boolean {
+        return this._hasSummaries;
+    }
+
     public get isHierarchical(): boolean {
         return this._isHierarchical;
     }
@@ -63,7 +68,11 @@ export class WorksheetData {
         this._isHierarchical = this.data[0]?.type === ExportRecordType.HierarchicalGridRecord
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');
 
-        if (this._isHierarchical || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
+        this._hasSummaries = this._data.filter(d => d.type === ExportRecordType.SummaryRecord).length > 0;
+
+        const exportMultiColumnHeaders = this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders;
+
+        if (this._isHierarchical || exportMultiColumnHeaders) {
             this.options.exportAsTable = false;
         }
 

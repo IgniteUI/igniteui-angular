@@ -52,6 +52,11 @@ export class ThemeFile implements IExcelFile {
     }
 }
 
+interface Dimensions {
+    startCoordinate: string
+    endCoordinate: string
+}
+
 /**
  * @hidden
  */
@@ -65,6 +70,9 @@ export class WorksheetFile implements IExcelFile {
     private mergeCellStr = '';
     private mergeCellsCounter = 0;
     private rowIndex = 0;
+
+    private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
+    private summaryOwner = '';
 
     public writeElement() {}
 
@@ -206,6 +214,8 @@ export class WorksheetFile implements IExcelFile {
                 }
             }
 
+            debugger
+
             this.processDataRecordsAsync(worksheetData, (rows) => {
                 sheetData += rows;
                 sheetData += '</sheetData>';
@@ -330,10 +340,17 @@ export class WorksheetFile implements IExcelFile {
         const sHidden = record.hidden ? ` hidden="1"` : '';
 
         this.rowIndex++;
-        rowData[0] =
-            `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
+        rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
+
+        if (record.type === ExportRecordType.DataRecord && worksheetData.hasSummaries) {
+            if (this.summaryOwner !== record.summaryKey && this.summaryOwner !== '') {
+                this.dimensionMap.clear();
+            }
+
+            this.summaryOwner = record.summaryKey;
+        }
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
@@ -348,11 +365,44 @@ export class WorksheetFile implements IExcelFile {
         return rowData.join('');
     }
 
+    private getSummaryFunction(type: string, key: string): string {
+        const dimensions = this.dimensionMap.get(key);
+        switch(type.toLowerCase()) {
+            case "count":
+                return `_xlfn.UNICHAR(8206)&amp;"Count - "&amp;COUNTIF(${dimensions.startCoordinate}:${dimensions.endCoordinate},"&lt;&gt;"&amp;_xlfn.UNICHAR(8206)&amp;"*")`
+            case "countnum":
+                return `_xlfn.UNICHAR(8206)&amp;"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "min":
+                return `_xlfn.UNICHAR(8206)&amp;"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "max":
+                return `_xlfn.UNICHAR(8206)&amp;"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "sum":
+                return `_xlfn.UNICHAR(8206)&amp;"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "avg":
+                return `_xlfn.UNICHAR(8206)&amp;"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+        }
+    }
+
     private getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
+        const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
+        const isDataRecord = fullRow.type === ExportRecordType.DataRecord;
+
+        if (worksheetData.hasSummaries && isDataRecord) {
+            if (!this.dimensionMap.get(key)) {
+                const initialDimensions: Dimensions = {
+                    startCoordinate: columnName,
+                    endCoordinate: columnName
+                };
+
+                this.dimensionMap.set(key, initialDimensions)
+            } else {
+                this.dimensionMap.get(key).endCoordinate = columnName;
+            }
+        }
 
         const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
@@ -360,7 +410,7 @@ export class WorksheetFile implements IExcelFile {
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
-        } else {
+        } else if (!isSummaryRecord) {
             const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
@@ -379,6 +429,12 @@ export class WorksheetFile implements IExcelFile {
             const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+        } else {
+            const isNumberCol = worksheetData.owner.columns.filter(c => c.field === key)[0]?.dataType === 'number';
+            const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
+
+            const summaryFunc = this.getSummaryFunction(functionType, key);
+            return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
         }
     }
 }
