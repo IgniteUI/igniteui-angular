@@ -18,7 +18,7 @@ body {
 @include core();
 @include typography($font-family: $typeface, $type-scale: $type-scale);
 @include theme(
-    $palette: ig-color-presets.$light-material-palette,
+    $palette: $palette,
     $schema: $schema,
 );
 
