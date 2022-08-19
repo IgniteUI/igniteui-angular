@@ -73,11 +73,27 @@ All notable changes for each version of this project will be documented in this 
 
     - Added reactive forms style validation for grid editing. This extends the [Angular's reactive forms](https://angular.io/guide/form-validation#validating-input-in-reactive-forms) validation functionality
     You can configure it in 2 ways:
-        1. Via template-driven configuration on the `igx-column` of the grid.
-        2. Via reactive forms using the FormGroup exposed via the `onFormGroupCreate` event of the grid.
+        1. Via template-driven configuration on the `igx-column` of the grid:
+        ```html
+          <igx-column required minlength="4" ...>
+          ```
+        2. Via reactive forms using the FormGroup exposed via the `onFormGroupCreate` event of the grid:
 
-    Edited cells wil enter an invalid state when validation fails, will be marked with `igx-grid__td--invalid` class and will display an error icon with additional error message. Cell will remain in that state until the value is edited to a valid value or the related transaction in the transaction service are commited or cleared.
-    Additional Apis have been exposed on the base transaction service to get transactions and states related to validity.
+        ```html
+        <igx-grid (onFormGroupCreate)='formCreateHandler($event)' ...>
+        ```
+
+        ```ts
+        public formCreateHandler(formGr: FormGroup) {
+            // add a validator
+            const prodName = formGr.get('UserName');
+            prodName.addValidators(forbiddenNameValidator(/bob/i))
+        }
+        ```
+
+    Edited cells wil enter an invalid state when validation fails and will be show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related transaction in the transaction service are commited or cleared.
+    
+    You can refer to the documentation for more details: https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation
 
 ### General
 
