@@ -1202,6 +1202,12 @@
                 caret-color: var-get($theme, 'edit-mode-color') !important;
             }
 
+            %form-group-bundle--fluent--focus {
+                &::after {
+                    border: none !important;
+                }
+            }
+
             %form-group-border {
                 background: var-get($theme, 'edit-mode-color') !important;
             }
@@ -1395,7 +1401,6 @@
     }
     
     %grid-cell--invalid {
-        box-shadow: inset 0 0 0 rem(1px) color($palette, 'error', 500) !important;
         padding-inline-end: rem(4px) !important;
 
         > igx-icon {
@@ -1419,7 +1424,7 @@
     }
 
     %grid-cell--valid {
-        box-shadow: inset 0 0 0 rem(1px) color($palette, 'success', 500) !important;
+        box-shadow: inset 0 0 0 rem(2px) color($palette, 'success', 500) !important;
     }
 
     %grid-cell--pinned-selected,
@@ -1529,6 +1534,7 @@
         }
 
         &.igx-grid__td--invalid {
+            box-shadow: inset 0 0 0 rem(2px) color($palette, 'error', 500) !important;
             padding-inline-end: rem(4px) !important;
         }
 
