@@ -59,6 +59,7 @@ import { HierarchicalTransactionService } from '../../services/transaction/hiera
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -84,6 +85,7 @@ let NEXT_ID = 0;
     templateUrl: 'tree-grid.component.html',
     providers: [
         IgxGridCRUDService,
+        IgxGridValidationService,
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
@@ -391,6 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // }
 
     constructor(
+        public validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -416,7 +419,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
-        super(selectionService, colResizingService, gridAPI, transactionFactory,
+        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory,
             _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }

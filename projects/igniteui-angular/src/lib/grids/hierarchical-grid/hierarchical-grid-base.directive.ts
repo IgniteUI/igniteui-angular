@@ -40,6 +40,7 @@ import { IgxTransactionService } from '../../services/transaction/igx-transactio
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { IgxGridTransaction } from '../common/types';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -148,6 +149,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public abstract expandChildren: boolean;
 
     constructor(
+        public validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
@@ -171,6 +173,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
         super(
+            validationService,
             selectionService,
             colResizingService,
             gridAPI,

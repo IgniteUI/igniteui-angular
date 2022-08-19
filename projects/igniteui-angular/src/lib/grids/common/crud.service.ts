@@ -13,12 +13,7 @@ export class IgxEditRow {
     public rowFormGroup = new FormGroup({});
 
     constructor(public id: any, public index: number, public data: any, public grid: GridType) {
-        for (const col of grid.columns) {
-            const field = col.field;
-            const control = new FormControl(this.data ? this.data[field] : {}, { updateOn: grid.validationTrigger });
-            control.addValidators(col.validators);
-            this.rowFormGroup.addControl(field, control);
-        }
+        this.rowFormGroup = this.grid.validationService.createFormGroupForRecord(id, data);
      }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
@@ -95,7 +90,6 @@ export interface IgxAddRowParent {
 export class IgxCell {
     public primaryKey: any;
     public state: any;
-    public row: IgxEditRow;
 
     constructor(
         public id,
@@ -105,7 +99,7 @@ export class IgxCell {
         public editValue: any,
         public rowData: any,
         public grid: GridType) {
-            this.row = new IgxEditRow(id, rowIndex, rowData, grid);
+            this.grid.validationService.createFormGroupForRecord(id.rowID, rowData);
          }
 
     public castToNumber(value: any): any {
@@ -117,8 +111,7 @@ export class IgxCell {
     }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
-        const row = this.grid.crudService.row ?? this.row;
-        const formControl = row.rowFormGroup.get(this.column.field);
+        const formControl = this.grid.validationService.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -140,8 +133,7 @@ export class IgxCell {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
-        const row = this.grid.crudService.row ?? this.row;
-        const formControl = row.rowFormGroup.get(this.column.field);
+        const formControl = this.grid.validationService.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -568,7 +560,6 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
             } else {
                 this.createCell(cell);
-                this.grid.onFormGroupCreate.emit(this.cell.row.rowFormGroup);
                 this.beginCellEdit(event);
             }
         }

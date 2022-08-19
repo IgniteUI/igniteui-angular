@@ -108,14 +108,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
 
     public get formGroup(): FormGroup {
-        const isRowEdit = this.grid.crudService.rowEditing;
-        const editRow = isRowEdit ? this.grid.crudService.row : this.grid.crudService.cell?.row;
-        const id = isRowEdit ? editRow?.id : editRow?.id.rowID;
-        if (editRow && id === this.intRow.key) {
-            return editRow.rowFormGroup;
-        } else {
-            return this.validity?.formGroup ?? editRow?.rowFormGroup;
-        }
+        return this.grid.validationService.getFormGroup(this.intRow.key) || new FormGroup({});
     }
 
     /**
@@ -492,11 +485,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-        if (this.intRow.inEditMode || this.editMode) {
-            return this.formGroup?.get(this.column?.field)?.invalid;
-        } else {
-            return !!this.validity ? !this.validity.valid : false;
-        }
+       return this.formGroup?.get(this.column?.field)?.invalid;
     }
 
     /**
@@ -514,13 +503,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public get formControl(): FormControl {
         return (this.formGroup?.get(this.column.field) || new FormControl(this.column.field)) as FormControl;
-    }
-
-    private get validity() {
-        const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
-        if (state && state.validity && state.validity.some(x => x.valid === false)) {
-            return state.validity.find(x => x.field === this.column.field);
-        }
     }
 
     public get gridRowSpan(): number {

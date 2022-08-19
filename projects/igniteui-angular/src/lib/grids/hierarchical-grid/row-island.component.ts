@@ -47,6 +47,7 @@ import { IgxActionStripComponent } from '../../action-strip/action-strip.compone
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -217,6 +218,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     constructor(
+        public validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
@@ -240,6 +242,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil) {
         super(
+            validationService,
             selectionService,
             colResizingService,
             gridAPI,

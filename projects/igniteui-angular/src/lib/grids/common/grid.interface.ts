@@ -37,6 +37,7 @@ import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormGroup } from '@angular/forms';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -399,6 +400,7 @@ export interface GridType extends IGridDataBindable {
     filteredSortedData: any[];
     dataWithAddedInTransactionRows: any[];
     transactions: TransactionService<Transaction, State>;
+    validationService: IgxGridValidationService;
     defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;

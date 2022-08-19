@@ -155,6 +155,7 @@ import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-ro
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
 import { FormGroup } from '@angular/forms';
+import { IgxGridValidationService } from './grid/grid-validation.service';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -3047,6 +3048,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     constructor(
+        public validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -3254,6 +3256,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
         this.selectionService.grid = this as any;
+        this.validationService.grid = this as any;
         this.navigation.grid = this as any;
         this.filteringService.grid = this as any;
         this.summaryService.grid = this as any;

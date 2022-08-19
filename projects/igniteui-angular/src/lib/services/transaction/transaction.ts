@@ -21,7 +21,6 @@ export interface Transaction {
     id: any;
     type: TransactionType;
     newValue: any;
-    validity?: IFieldValid[];
 }
 
 /**
@@ -36,7 +35,6 @@ export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
-    validity?: IFieldValid[];
 }
 
 export interface Action<T extends Transaction> {
@@ -91,29 +89,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
      */
     add(transaction: T, recordRef?: any): void;
 
-    /**
-     * Adds provided transaction with validation status.
-     *
-     * @param transaction Transaction to be added
-     * @param recordRef Reference to the value of the record in the data source related to the changed item
-     */
-    addValidation(transaction: T, recordRef?: any): void;
-
-    /**
-     * Returns the validation state of the record with provided id
-     *
-     * @param id The id of the record
-     * @returns State of the record if any
-     */
-    getAggregatedValidationState(id: any): T;
-
-    /**
-     * Returns aggregated validation changes from all transactions
-     * @returns The states with the validation status.
-     */
-    getAggregatedValidationChanges(): T[];
-
-    /**
+     /**
      * Returns all recorded transactions in chronological order
      *
      * @param id Optional record id to get transactions for
@@ -125,11 +101,6 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * Remove the last transaction if any
      */
     undo(): void;
-
-    /**
-    * Returns invalid transactions.
-    */
-    getInvalidTransactionLog(id?: any): T[];
 
     /**
      * Applies the last undone transaction if any

@@ -50,14 +50,14 @@ export class GridValidationSampleComponent {
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {
-        const invalidTransactions = this.gridWithTransaction.transactions.getInvalidTransactionLog();
-        if (invalidTransactions.length > 0) {
-           if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
-            this.gridWithTransaction.transactions.commit(this.transactionData);
-           }
-        } else {
-            this.gridWithTransaction.transactions.commit(this.transactionData);
-        }
+        // const invalidTransactions = this.gridWithTransaction.transactions.getInvalidTransactionLog();
+        // if (invalidTransactions.length > 0) {
+        //    if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
+        //     this.gridWithTransaction.transactions.commit(this.transactionData);
+        //    }
+        // } else {
+        //     this.gridWithTransaction.transactions.commit(this.transactionData);
+        // }
     }
 
     public commitNoTransactions() {

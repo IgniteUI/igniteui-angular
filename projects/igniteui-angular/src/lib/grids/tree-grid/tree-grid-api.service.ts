@@ -299,7 +299,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-        grid.transactions.addValidation(transaction, rowCurrentValue);
     }
 
     private row_deleted_parent(rowID: any): boolean {
