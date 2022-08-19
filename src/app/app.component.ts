@@ -565,6 +565,7 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Query Builder'
         },
+        {
             link: '/pivot-state',
             icon: 'view_column',
             name: 'Pivot Grid State Persistance'

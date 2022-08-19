@@ -5,13 +5,16 @@ import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, HostBinding, NgModule
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { editor } from '@igniteui/material-icons-extended';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IButtonGroupEventArgs } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
+import { IgxChipsModule } from '../chips/chips.module';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { PlatformUtil } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
+import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
@@ -20,7 +23,7 @@ import { IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
-import { IgxIconModule } from '../icon/public_api';
+import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxSelectComponent } from '../select/select.component';
 import { IgxSelectModule } from '../select/select.module';
 import { IgxOverlayService } from '../services/overlay/overlay';
@@ -34,9 +37,10 @@ export interface IQueryBuilderField {
     /** The name of the data field */
     fieldName: string;
     /** The field data type */
-    dataType?: string;
+    //TODO rename the type so that it isn't related to the grid column/define another type/set it as string
+    dataType: GridColumnDataType;
     /** The filter conditions for the specified field */
-    filteringConditions?: string[];
+    filteringOperands?: IgxFilteringOperand;
 }
 /**
  * @hidden
@@ -70,7 +74,7 @@ class ExpressionOperandItem extends ExpressionItem {
     public inEditMode: boolean;
     public inAddMode: boolean;
     public hovered: boolean;
-    public columnHeader: string;
+    public fieldLabel: string;
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
         this.expression = expression;
@@ -84,126 +88,12 @@ class ExpressionOperandItem extends ExpressionItem {
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
 
-    // /**
-    //  * @hidden @internal
-    //  */
-    // @ViewChild(IgxToggleDirective)
-    // public contextMenuToggle: IgxToggleDirective;
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public rootGroup: ExpressionGroupItem;
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public currentGroup: ExpressionGroupItem;
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public addModeExpression: ExpressionOperandItem;
-
-    // constructor(protected platform: PlatformUtil) { }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    //  public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-    //     this.cancelOperandAdd();
-
-    //     const operandItem = new ExpressionOperandItem({
-    //         fieldName: null,
-    //         condition: null,
-    //         ignoreCase: true,
-    //         searchVal: null
-    //     }, parent);
-
-    //     if (afterExpression) {
-    //         const index = parent.children.indexOf(afterExpression);
-    //         parent.children.splice(index + 1, 0, operandItem);
-    //     } else {
-    //         parent.children.push(operandItem);
-    //     }
-
-    //     //this.enterExpressionEdit(operandItem);
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-    //     this.addGroup(FilteringLogic.And, parent, afterExpression);
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public cancelOperandAdd() {
-    //     if (this.addModeExpression) {
-    //         this.addModeExpression.inAddMode = false;
-    //         this.addModeExpression = null;
-    //     }
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public clearSelection() {
-    //     //TODO Implement clear selection for the context menu
-
-    //     // for (const group of this.selectedGroups) {
-    //     //     group.selected = false;
-    //     // }
-    //     // this.selectedGroups = [];
-
-    //     // for (const expr of this.selectedExpressions) {
-    //     //     expr.selected = false;
-    //     // }
-    //     // this.selectedExpressions = [];
-
-    //     // this.toggleContextMenu();
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public onKeyDown(eventArgs: KeyboardEvent) {
-    //     eventArgs.stopPropagation();
-    //     const key = eventArgs.key;
-    //     if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
-    //         this.clearSelection();
-    //     }
-    // }
-
-    // private addGroup(operator: FilteringLogic, parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-    //     this.cancelOperandAdd();
-
-    //     const groupItem = new ExpressionGroupItem(operator, parent);
-
-    //     if (parent) {
-    //         if (afterExpression) {
-    //             const index = parent.children.indexOf(afterExpression);
-    //             parent.children.splice(index + 1, 0, groupItem);
-    //         } else {
-    //             parent.children.push(groupItem);
-    //         }
-    //     } else {
-    //         this.rootGroup = groupItem;
-    //     }
-
-    //     this.addCondition(groupItem);
-    //     this.currentGroup = groupItem;
-    // }
-
-
 
     /**
      * @hidden @internal
      */
-    @ViewChild('columnSelect', { read: IgxSelectComponent })
-    public columnSelect: IgxSelectComponent;
+    @ViewChild('fieldSelect', { read: IgxSelectComponent })
+    public fieldSelect: IgxSelectComponent;
 
     /**
      * @hidden @internal
@@ -412,6 +302,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;
     private _selectedColumn: ColumnType;
+    private _selectedField: IQueryBuilderField;
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
@@ -426,7 +317,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
     };
-    
+
     private _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
@@ -434,9 +325,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil, @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
+    constructor(public cdr: ChangeDetectorRef, protected iconService: IgxIconService, protected platform: PlatformUtil, @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
         super(_displayDensityOptions);
-     }
+    }
 
     /**
      * @hidden @internal
@@ -455,27 +346,49 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.destroy$.complete();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public get selectedColumn(): ColumnType {
-        return this._selectedColumn;
-    }
+    // /**
+    //  * @hidden @internal
+    //  */
+    // public get selectedColumn(): ColumnType {
+    //     return this._selectedColumn;
+    // }
+    // /**
+    //  * @hidden @internal
+    //  */
+    //  public set selectedColumn(value: ColumnType) {
+    //     const oldValue = this._selectedColumn;
+
+    //     if (this._selectedColumn !== value) {
+    //         this._selectedColumn = value;
+    //         if (oldValue && this._selectedColumn && this._selectedColumn.dataType !== oldValue.dataType) {
+    //             this.selectedCondition = null;
+    //             this.searchValue = null;
+    //             this.cdr.detectChanges();
+    //         }
+    //     }
+    // }
 
     /**
      * @hidden @internal
      */
-    public set selectedColumn(value: ColumnType) {
-        const oldValue = this._selectedColumn;
+    public set selectedField(value: IQueryBuilderField) {
+        const oldValue = this._selectedField;
 
-        if (this._selectedColumn !== value) {
-            this._selectedColumn = value;
-            if (oldValue && this._selectedColumn && this._selectedColumn.dataType !== oldValue.dataType) {
+        if (this._selectedField !== value) {
+            this._selectedField = value;
+            if (oldValue && this._selectedField && this._selectedField.dataType !== oldValue.dataType) {
                 this.selectedCondition = null;
                 this.searchValue = null;
                 this.cdr.detectChanges();
             }
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedField(): IQueryBuilderField {
+        return this._selectedField;
     }
 
     /**
@@ -510,28 +423,30 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * An @Input property that sets the fields.
      */
-     @Input()
-     public set fields(fields: IQueryBuilderField[]) {
-         this._fields = fields;
- 
-         if (this._filteringChange) {
-             this._filteringChange.unsubscribe();
-         }
- 
-         if (this._fields) {
-             //this._grid.filteringService.registerSVGIcons();
- 
-             this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                 this.init();
-             });
- 
-             this.init();
-         }
-     }
+    @Input()
+    public set fields(fields: IQueryBuilderField[]) {
+        this._fields = fields;
 
-     /**
-     * Returns the fields.
-     */
+        if (this._filteringChange) {
+            this._filteringChange.unsubscribe();
+        }
+
+        if (this._fields) {
+            this.registerSVGIcons();
+
+            this._fields.forEach(field => this.setFilteringOperands(field));
+
+            // this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            //     this.init();
+            // });
+
+            this.init();
+        }
+    }
+
+    /**
+    * Returns the fields.
+    */
     public get fields(): IQueryBuilderField[] {
         return this._fields;
     }
@@ -634,10 +549,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public commitOperandEdit() {
         if (this.editedExpression) {
-            this.editedExpression.expression.fieldName = this.selectedColumn.field;
-            this.editedExpression.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
-            this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedColumn.dataType, this.searchValue);
-            this.editedExpression.columnHeader = this.selectedColumn.header;
+            this.editedExpression.expression.fieldName = this.selectedField.fieldName;
+            //TODO selected field filters
+            //this.editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
+            //TODO selected field datatype
+            //this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            this.editedExpression.fieldLabel = this.selectedField.label ? this.selectedField.label : this.selectedField.fieldName;
 
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
@@ -673,8 +590,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public operandCanBeCommitted(): boolean {
-        return this.selectedColumn && this.selectedCondition &&
-            (!!this.searchValue || this.selectedColumn.filters.condition(this.selectedCondition).isUnary);
+        //TODO check if !! is needed here
+        return !!this.selectedField && !!this.selectedCondition; // &&
+        //TODO conditions
+        //(!!this.searchValue || this.selectedColumn.filters.condition(this.selectedCondition).isUnary);
     }
 
     /**
@@ -741,8 +660,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
         expressionItem.hovered = false;
 
-        this.selectedColumn = expressionItem.expression.fieldName ?
-            this.grid.getColumnByName(expressionItem.expression.fieldName) : null;
+        this.selectedField = expressionItem.expression.fieldName ?
+            this.fields.filter(field => field.fieldName === expressionItem.expression.fieldName)[0] : null;
+        //this.grid.getColumnByName(expressionItem.expression.fieldName) : null;
         this.selectedCondition = expressionItem.expression.condition ?
             expressionItem.expression.condition.name : null;
         this.searchValue = expressionItem.expression.searchVal;
@@ -752,17 +672,18 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
         this.cdr.detectChanges();
 
-        this.columnSelectOverlaySettings.target = this.columnSelect.element;
-        this.columnSelectOverlaySettings.excludeFromOutsideClick = [this.columnSelect.element as HTMLElement];
+        this.columnSelectOverlaySettings.target = this.fieldSelect.element;
+        this.columnSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
         this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
         this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
         this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
-        if (!this.selectedColumn) {
-            this.columnSelect.input.nativeElement.focus();
-        } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
-            this.conditionSelect.input.nativeElement.focus();
+        if (!this.selectedField) {
+            this.fieldSelect.input.nativeElement.focus();
+            //TODO conditions
+            // } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
+            //     this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -899,7 +820,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getConditionFriendlyName(name: string): string {
-        return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
+        //TODO resource strings
+        //return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
+        return name;
     }
 
     /**
@@ -949,7 +872,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getConditionList(): string[] {
-        return this.selectedColumn ? this.selectedColumn.filters.conditionList() : [];
+        this.selectedField ? console.log(this.selectedField.fieldName) : console.log('selectedfield is not set');
+        this.selectedField?.filteringOperands ? console.log(this.selectedField?.filteringOperands) : console.log('filteringOperands not set');
+        return this.selectedField ? this.selectedField.filteringOperands.conditionList() : [];
+        //this.selectedField ? this.selectedField.filters.conditionList() : [];
     }
 
     /**
@@ -1021,6 +947,36 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
     }
 
+    private setFilteringOperands(field: IQueryBuilderField) {
+        if (!Array.isArray(field.filteringOperands) || !field.filteringOperands.length) {
+            switch (field.dataType) {
+                case GridColumnDataType.Boolean:
+                    field.filteringOperands = IgxBooleanFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.Number:
+                case GridColumnDataType.Currency:
+                case GridColumnDataType.Percent:
+                    field.filteringOperands = IgxNumberFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.Date:
+                    field.filteringOperands = IgxDateFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.Time:
+                    field.filteringOperands = IgxTimeFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.DateTime:
+                    field.filteringOperands = IgxDateTimeFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.String:
+                default:
+                    field.filteringOperands = IgxStringFilteringOperand.instance();
+                    break;
+            }
+
+        }
+        console.log("filtering operands are: " + field.filteringOperands);
+    }
+
     private onToggleExpression(expressionItem: ExpressionOperandItem) {
         this.exitOperandEdit();
         this.toggleExpression(expressionItem);
@@ -1078,7 +1034,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const column = this.grid.getColumnByName(filteringExpr.fieldName);
-                    operandItem.columnHeader = column.header;
+                    operandItem.fieldLabel = column.header;
                     groupItem.children.push(operandItem);
                 }
             }
@@ -1270,8 +1226,14 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
+        //TODO set default expressionstree
+        //this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
         this.currentGroup = this.rootGroup;
+    }
+
+    private registerSVGIcons(): void {
+        const editorIcons = editor as any[];
+        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
     }
 }
 
@@ -1281,6 +1243,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 @NgModule({
     declarations: [IgxQueryBuilderComponent],
     exports: [IgxQueryBuilderComponent],
-    imports: [CommonModule, FormsModule, IgxIconModule, IgxButtonModule, IgxSelectModule, IgxToggleModule]
+    imports: [CommonModule, FormsModule, IgxChipsModule, IgxIconModule, IgxButtonModule, IgxSelectModule, IgxToggleModule]
 })
 export class IgxQueryBuilderModule { }
