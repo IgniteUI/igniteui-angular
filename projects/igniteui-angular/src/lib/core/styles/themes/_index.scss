@@ -2,7 +2,6 @@
 /// @group themes
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-@use '../../../../../../../node_modules/igniteui-theming/sass/color/' as ig-color;
 @use '../../../../../../../node_modules/igniteui-theming/sass/elevations/presets' as elevations;
 
 @use 'sass:list';
@@ -41,7 +40,7 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
-    @include ig-color.palette($palette, $contrast: true);
+    @include palette($palette, $contrast: true);
     @include elevations($elevations);
 
     @if $elevation == false {
@@ -446,16 +445,16 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $gray: ig-color.color($palette, 'gray');
-    $surface: ig-color.color($palette, 'surface');
+    $gray: color($palette, 'gray');
+    $surface: color($palette, 'surface');
 
-    $light-palette: ig-color.palette(
-        $primary: ig-color.color($palette, 'primary'),
-        $secondary: ig-color.color($palette, 'secondary'),
-        $info: ig-color.color($palette, 'info'),
-        $success: ig-color.color($palette, 'success'),
-        $warn: ig-color.color($palette, 'warn'),
-        $error: ig-color.color($palette, 'error'),
+    $light-palette: palette(
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #fff),
         $gray: if($gray != #9e9e9e, $gray, #000),
     );
@@ -478,16 +477,16 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $gray: ig-color.color($palette, 'gray');
-    $surface: ig-color.color($palette, 'surface');
+    $gray: color($palette, 'gray');
+    $surface: color($palette, 'surface');
 
-    $dark-palette: ig-color.palette(
-        $primary: ig-color.color($palette, 'primary'),
-        $secondary: ig-color.color($palette, 'secondary'),
-        $info: ig-color.color($palette, 'info'),
-        $success: ig-color.color($palette, 'success'),
-        $warn: ig-color.color($palette, 'warn'),
-        $error: ig-color.color($palette, 'error'),
+    $dark-palette: palette(
+        $primary: color($palette, 'primary'),
+        $secondary: color($palette, 'secondary'),
+        $info: color($palette, 'info'),
+        $success: color($palette, 'success'),
+        $warn: color($palette, 'warn'),
+        $error: color($palette, 'error'),
         $surface: if($surface != #fff, $surface, #222),
         $gray: if($gray != #9e9e9e, $gray, #fff),
     );
@@ -510,12 +509,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
@@ -537,12 +536,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #222),
@@ -565,12 +564,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
@@ -592,12 +591,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #222),
@@ -619,12 +618,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #fff, $surface, #fff),
@@ -646,12 +645,12 @@
     $roundness: 1,
     $elevation: true,
 ) {
-    $primary: ig-color.color($palette, 'primary');
-    $secondary: ig-color.color($palette, 'secondary');
-    $surface: ig-color.color($palette, 'surface');
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
 
     @include theme(
-        $palette: ig-color.palette(
+        $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #2a2b2f),
