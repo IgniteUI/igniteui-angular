@@ -62,9 +62,9 @@
 /// @property {Number} y-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the Y-axis.
 /// @see $default-palette
 $light-category-chart: (
-    // 'margin': (
-    //     expand-shorthand: (null)
-    // ),
+    'margin': (
+        expand-shorthand: (null)
+    ),
 
     'brushes': series,
 
@@ -80,10 +80,10 @@ $light-category-chart: (
 
     'title-alignment': null,
 
-    // 'title-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'title'
-    // ),
+    'title-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'title'
+    ),
 
     'title-text-color': (
         color: ('gray', 900),
@@ -91,10 +91,10 @@ $light-category-chart: (
 
     'title-text-style': null,
 
-    // 'subtitle-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'subtitle'
-    // ),
+    'subtitle-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'subtitle'
+    ),
 
     'subtitle-alignment': null,
 
@@ -110,10 +110,10 @@ $light-category-chart: (
 
     'trend-line-thickness': null,
 
-    // 'x-axis-label-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'x-axis-label'
-    // ),
+    'x-axis-label-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'x-axis-label'
+    ),
 
     'x-axis-label-text-color': (
         color: ('gray', 700),
@@ -149,10 +149,10 @@ $light-category-chart: (
 
     'x-axis-title-alignment': null,
 
-    // 'x-axis-title-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'x-axis-title'
-    // ),
+    'x-axis-title-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'x-axis-title'
+    ),
 
     'x-axis-title-text-color': (
         color: ('gray', 900),
@@ -160,10 +160,10 @@ $light-category-chart: (
 
     'x-axis-title-text-style': null,
 
-    // 'y-axis-label-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'y-axis-label'
-    // ),
+    'y-axis-label-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'y-axis-label'
+    ),
 
     'y-axis-label-text-color': (
         color: ('gray', 700),
@@ -191,10 +191,10 @@ $light-category-chart: (
 
     'y-axis-title-alignment': null,
 
-    // 'y-axis-title-margin': (
-    //     expand-shorthand: (null),
-    //     map-keys-prefix: 'y-axis-title'
-    // ),
+    'y-axis-title-margin': (
+        expand-shorthand: (null),
+        map-keys-prefix: 'y-axis-title'
+    ),
 
     'y-axis-title-text-color': (
         color: ('gray', 900),
@@ -228,4 +228,3 @@ $bootstrap-category-chart: $light-category-chart;
 /// @requires {function} extend
 /// @requires {Map} $light-category-chart
 $indigo-category-chart: $light-category-chart;
-
