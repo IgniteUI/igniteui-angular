@@ -21,7 +21,7 @@ export class IgxGridValidationService {
                 control.addValidators(col.validators);
                 formGroup.addControl(field, control);
             }
-            this.grid.onFormGroupCreate.emit(formGroup);
+            this.grid.formGroupCreated.emit(formGroup);
             this.add(rowId, formGroup);
         }
         return formGroup;

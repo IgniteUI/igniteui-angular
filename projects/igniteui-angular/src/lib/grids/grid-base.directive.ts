@@ -505,7 +505,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public cellClick = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
-    public onFormGroupCreate = new EventEmitter<FormGroup>();
+    public formGroupCreated = new EventEmitter<FormGroup>();
 
     @Output()
     public validationStatusChange = new EventEmitter<IValidationStatus>();

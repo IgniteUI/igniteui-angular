@@ -518,7 +518,7 @@ export interface GridType extends IGridDataBindable {
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
-    onFormGroupCreate: EventEmitter<FormGroup>;
+    formGroupCreated: EventEmitter<FormGroup>;
     validationStatusChange: EventEmitter<IValidationStatus>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;

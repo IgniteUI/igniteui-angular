@@ -31,7 +31,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     column?: ColumnType;
     owner?: GridType;
     isAddRow?: boolean;
-    isValid?: boolean;
+    invalid?: boolean;
 }
 
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {

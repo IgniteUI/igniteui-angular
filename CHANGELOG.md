@@ -77,10 +77,10 @@ All notable changes for each version of this project will be documented in this 
         ```html
           <igx-column required minlength="4" ...>
           ```
-        2. Via reactive forms using the FormGroup exposed via the `onFormGroupCreate` event of the grid:
+        2. Via reactive forms using the FormGroup exposed via the `formGroupCreated` event of the grid:
 
         ```html
-        <igx-grid (onFormGroupCreate)='formCreateHandler($event)' ...>
+        <igx-grid (formGroupCreated)='formCreateHandler($event)' ...>
         ```
 
         ```ts

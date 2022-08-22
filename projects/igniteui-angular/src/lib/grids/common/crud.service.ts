@@ -24,7 +24,7 @@ export class IgxEditRow {
             cancel: false,
             owner: this.grid,
             isAddRow: false,
-            isValid: this.rowFormGroup.valid,
+            invalid: this.rowFormGroup.invalid,
             event
         };
         if (includeNewValue) {
@@ -120,7 +120,7 @@ export class IgxCell {
             cancel: false,
             column: this.column,
             owner: this.grid,
-            isValid: formControl ? formControl.valid : true,
+            invalid: formControl ? formControl.invalid : false,
             event
         };
         if (includeNewValue) {
@@ -141,7 +141,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
             oldValue: this.value,
-            isValid: formControl ? formControl.valid : true,
+            invalid: formControl ? formControl.invalid : false,
             newValue: value,
             column: this.column,
             owner: this.grid,
@@ -297,7 +297,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
         if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
             if (!this.row) {
                 this.createRow(this.cell);
-                this.grid.onFormGroupCreate.emit(this.row.rowFormGroup);
             }
             const rowArgs = this.row.createEditEventArgs(false, event);
 
