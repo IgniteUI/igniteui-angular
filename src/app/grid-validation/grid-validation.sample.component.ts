@@ -1,8 +1,8 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxColumnValidator, IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
-import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {  IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
+import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -15,7 +15,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: '[appForbiddenName]',
     providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
   })
-  export class ForbiddenValidatorDirective extends IgxColumnValidator {
+  export class ForbiddenValidatorDirective extends Validators {
     @Input('appForbiddenName') 
     public forbiddenName = '';
   
