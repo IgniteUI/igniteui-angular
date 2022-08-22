@@ -5,7 +5,7 @@ import { GridType, IFieldValidationState, IRecordValidationState } from '../comm
 @Injectable()
 export class IgxGridValidationService {
     public grid: GridType;
-    private _validityStates = new Map<any,FormGroup>();
+    private _validityStates = new Map<any, FormGroup>();
 
     /**
      * @hidden
@@ -48,25 +48,31 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
-    public add(rowId: any, form: FormGroup ) {
+    public add(rowId: any, form: FormGroup) {
         this._validityStates.set(rowId, form);
     }
 
-    public getValidity() : IRecordValidationState[] {
+    /** Returns validity states for records.
+    * @returns Array os records states.
+    */
+    public getValidity(): IRecordValidationState[] {
         const states: IRecordValidationState[] = [];
         this._validityStates.forEach((formGroup, key) => {
             const state: IFieldValidationState[] = [];
             for (const col of this.grid.columns) {
                 const control = formGroup.get(col.field);
                 if (control) {
-                    state.push({field: col.field, valid: control.valid, errors: control.errors })
+                    state.push({ field: col.field, valid: control.valid, errors: control.errors })
                 }
             }
-            states.push({id: key, valid: formGroup.valid, state: state });
+            states.push({ id: key, valid: formGroup.valid, state: state });
         });
         return states;
     }
 
+    /** Returns all invalid record states.
+    * @returns Array of IRecordValidationState.
+    */
     public getInvalid(): IRecordValidationState[] {
         const validity = this.getValidity();
         return validity.filter(x => !x.valid);
@@ -76,7 +82,7 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
-    public update(rowId:any, rowData: any) {
+    public update(rowId: any, rowData: any) {
         const rowGroup = this.getFormGroup(rowId);
         for (const col of this.grid.columns) {
             const control = rowGroup.get(col.field);
@@ -86,6 +92,10 @@ export class IgxGridValidationService {
         }
     }
 
+    /** Clears validity state by id or clears all states if no id is passed.
+     * @param id The id of the record for which to clear state.
+     * @returns Array of IRecordValidationState.
+    */
     public clear(rowId?: any) {
         if (rowId) {
             this._validityStates.delete(rowId);
