@@ -85,7 +85,7 @@ export class IgxGridValidationService {
     public update(rowId: any, rowData: any) {
         const rowGroup = this.getFormGroup(rowId);
         for (const col of this.grid.columns) {
-            const control = rowGroup.get(col.field);
+            const control = rowGroup?.get(col.field);
             if (control) {
                 control.setValue(rowData[col.field]);
             }
