@@ -1,4 +1,4 @@
-﻿import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
+import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -396,6 +396,29 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
+    }));
+
+    it(`should create ghost at the same position relative to the mouse
+        when drag started when host has custom style position.`, (async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        firstElement.parentElement.style.left = '50px';
+        firstElement.parentElement.style.top = '50px';
+        firstElement.parentElement.style.position = 'relative';
+        firstDrag.ghostHost = firstElement.parentElement;
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        (firstDrag as any).createGhost(startingX + 10, startingY + 10);
+        fix.detectChanges();
+
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 60);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 60);
     }));
 
     it('should allow customizing of ghost element by passing template reference and position it correctly.', (async () => {
