@@ -50,20 +50,26 @@ export class GridValidationSampleComponent {
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {
-        // const invalidTransactions = this.gridWithTransaction.transactions.getInvalidTransactionLog();
-        // if (invalidTransactions.length > 0) {
-        //    if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
-        //     this.gridWithTransaction.transactions.commit(this.transactionData);
-        //    }
-        // } else {
-        //     this.gridWithTransaction.transactions.commit(this.transactionData);
-        // }
+      const invalid = this.gridWithTransaction.validation.getInvalid();
+        if (invalid.length > 0) {
+           if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
+            this.gridWithTransaction.transactions.commit(this.transactionData);
+           }
+        } else {
+            this.gridWithTransaction.transactions.commit(this.transactionData);
+        }
     }
 
-    public commitNoTransactions() {
-        console.log(this.data);
-        this.gridNoTransactions.transactions.commit([]);
-        this.gridNoTransactions.markForCheck();
+    public undo() {
+      this.gridWithTransaction.transactions.undo();
+    }
+
+    public redo() {
+      this.gridWithTransaction.transactions.redo();
+    }
+
+    public clearValidity() {
+        this.gridNoTransactions.validation.clear();
     }
 
     public cellEdit(evt) {

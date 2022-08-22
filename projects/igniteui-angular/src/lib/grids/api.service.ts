@@ -545,7 +545,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowNewValue New value of the row
      */
     protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
-        
         const transaction: Transaction = {
             id: rowID,
             type: TransactionType.UPDATE,
@@ -556,9 +555,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-        const formGroup = this.grid.validationService.getFormGroup(rowID);
-        const validation = grid.validationService as IgxGridValidationService;
-        validation.addRecordState(rowID, formGroup)
+        const formGroup = this.grid.validation.getFormGroup(rowID);
+        const validation = grid.validation as IgxGridValidationService;
+        validation.add(rowID, formGroup)
     }
 
 

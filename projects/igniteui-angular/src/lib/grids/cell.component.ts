@@ -108,7 +108,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
 
     public get formGroup(): FormGroup {
-        return this.grid.validationService.getFormGroup(this.intRow.key) || new FormGroup({});
+        return this.grid.validation.getFormGroup(this.intRow.key) || new FormGroup({});
     }
 
     /**
@@ -485,7 +485,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-       return this.formGroup?.get(this.column?.field)?.invalid;
+       return !this.intRow.deleted && this.formGroup?.get(this.column?.field)?.invalid;
     }
 
     /**

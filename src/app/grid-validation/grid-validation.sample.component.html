@@ -16,7 +16,7 @@
             <igx-grid-editing-actions></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
-    <button (click)='commitNoTransactions()'>Commit</button>
+    <button (click)='clearValidity()'>Clear validity</button>
     </article>
     <article class="grid-row-edit-wrapper">
         <h4>Grid with transactions</h4>
@@ -39,4 +39,6 @@
             </igx-action-strip>
         </igx-grid>
         <button (click)='commitWithTransactions()'>Commit</button>
+        <button (click)='undo()'>Undo</button>
+        <button (click)='redo()'>Redo</button>
     </article>

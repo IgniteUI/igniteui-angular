@@ -13,7 +13,7 @@ export class IgxEditRow {
     public rowFormGroup = new FormGroup({});
 
     constructor(public id: any, public index: number, public data: any, public grid: GridType) {
-        this.rowFormGroup = this.grid.validationService.createFormGroupForRecord(id, data);
+        this.rowFormGroup = this.grid.validation.create(id, data);
      }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
@@ -99,7 +99,7 @@ export class IgxCell {
         public editValue: any,
         public rowData: any,
         public grid: GridType) {
-            this.grid.validationService.createFormGroupForRecord(id.rowID, rowData);
+            this.grid.validation.create(id.rowID, rowData);
          }
 
     public castToNumber(value: any): any {
@@ -111,7 +111,7 @@ export class IgxCell {
     }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
-        const formControl = this.grid.validationService.getFormControl(this.id.rowID, this.column.field);
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -133,7 +133,7 @@ export class IgxCell {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
-        const formControl = this.grid.validationService.getFormControl(this.id.rowID, this.column.field);
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,

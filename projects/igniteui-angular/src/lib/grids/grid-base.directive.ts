@@ -3048,7 +3048,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     constructor(
-        public validationService: IgxGridValidationService,
+        public validation: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -3256,7 +3256,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
         this.selectionService.grid = this as any;
-        this.validationService.grid = this as any;
+        this.validation.grid = this as any;
         this.navigation.grid = this as any;
         this.filteringService.grid = this as any;
         this.summaryService.grid = this as any;
@@ -6203,6 +6203,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
         this.notifyChanges();
+        if (event.origin === TransactionEventOrigin.REDO || event.origin === TransactionEventOrigin.UNDO) {
+            event.actions.forEach(x => {
+                const value = this.transactions.getAggregatedValue(x.transaction.id, true);
+                this.validation.update(x.transaction.id, value ?? x.recordRef);
+            });
+        }
     };
 
     protected writeToData(rowIndex: number, value: any) {
