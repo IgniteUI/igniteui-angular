@@ -18,6 +18,7 @@ import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteri
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
+import { IgxDatePickerModule } from '../date-picker/date-picker.module';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -550,10 +551,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public commitOperandEdit() {
         if (this.editedExpression) {
             this.editedExpression.expression.fieldName = this.selectedField.fieldName;
-            //TODO selected field filters
-            //this.editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
-            //TODO selected field datatype
-            //this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
+            this.editedExpression.expression.condition = this.selectedField.filteringOperands.condition(this.selectedCondition);
+            this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
             this.editedExpression.fieldLabel = this.selectedField.label ? this.selectedField.label : this.selectedField.fieldName;
 
             this.editedExpression.inEditMode = false;
@@ -872,10 +871,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getConditionList(): string[] {
-        this.selectedField ? console.log(this.selectedField.fieldName) : console.log('selectedfield is not set');
-        this.selectedField?.filteringOperands ? console.log(this.selectedField?.filteringOperands) : console.log('filteringOperands not set');
         return this.selectedField ? this.selectedField.filteringOperands.conditionList() : [];
-        //this.selectedField ? this.selectedField.filters.conditionList() : [];
     }
 
     /**
@@ -974,7 +970,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             }
 
         }
-        console.log("filtering operands are: " + field.filteringOperands);
     }
 
     private onToggleExpression(expressionItem: ExpressionOperandItem) {
@@ -1243,6 +1238,15 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 @NgModule({
     declarations: [IgxQueryBuilderComponent],
     exports: [IgxQueryBuilderComponent],
-    imports: [CommonModule, FormsModule, IgxChipsModule, IgxIconModule, IgxButtonModule, IgxSelectModule, IgxToggleModule]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxButtonModule,
+        IgxDatePickerModule,
+        IgxChipsModule,
+        IgxIconModule,
+        IgxSelectModule,
+        IgxToggleModule
+    ]
 })
 export class IgxQueryBuilderModule { }

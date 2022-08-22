@@ -165,7 +165,7 @@ h4,
     } */
 }
 
-igx-filter-contextual-menu {
+.igx-filter-contextual-menu {
     position: relative;
     display: flex;
     flex-flow: column;
