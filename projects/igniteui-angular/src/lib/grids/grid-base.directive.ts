@@ -6199,16 +6199,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             }
         }
-        this.selectionService.clearHeaderCBState();
-        this.summaryService.clearSummaryCache();
-        this.pipeTrigger++;
-        this.notifyChanges();
         if (event.origin === TransactionEventOrigin.REDO || event.origin === TransactionEventOrigin.UNDO) {
             event.actions.forEach(x => {
                 const value = this.transactions.getAggregatedValue(x.transaction.id, true);
                 this.validation.update(x.transaction.id, value ?? x.recordRef);
             });
         }
+        this.selectionService.clearHeaderCBState();
+        this.summaryService.clearSummaryCache();
+        this.pipeTrigger++;
+        this.notifyChanges();
     };
 
     protected writeToData(rowIndex: number, value: any) {

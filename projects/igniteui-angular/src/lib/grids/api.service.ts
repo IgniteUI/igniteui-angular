@@ -555,9 +555,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-        const formGroup = this.grid.validation.getFormGroup(rowID);
         const validation = grid.validation as IgxGridValidationService;
-        validation.add(rowID, formGroup)
+        validation.update(rowID, rowNewValue);
     }
 
 
