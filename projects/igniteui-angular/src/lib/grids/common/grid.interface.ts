@@ -209,12 +209,6 @@ export interface IFieldValid {
     formGroup: FormGroup;
 }
 
-export interface IValidationStatus {
-    value: any;
-    formGroup: FormGroup;
-    state: Validity
-}
-
 export enum Validity {
 Valid,
 Invalid
@@ -519,7 +513,7 @@ export interface GridType extends IGridDataBindable {
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
     formGroupCreated: EventEmitter<FormGroup>;
-    validationStatusChange: EventEmitter<IValidationStatus>;
+    validationStatusChange: EventEmitter<Validity>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;

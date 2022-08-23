@@ -815,13 +815,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.cdr.detectChanges();
                 this.openErrorTooltip();
             }
-            this.grid.validationStatusChange.emit(
-                {
-                    formGroup: this.formGroup,
-                    value: this.editValue,
-                    state: this.errorTooltip.length > 0 ? Validity.Invalid : Validity.Valid
-                }
-            );
         });
     }
 

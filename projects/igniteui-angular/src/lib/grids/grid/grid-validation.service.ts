@@ -1,26 +1,42 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { GridType, IFieldValidationState, IRecordValidationState } from '../common/grid.interface';
+import { GridType, IFieldValidationState, IRecordValidationState, Validity } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
+    /**
+     * @hidden
+     * @internal
+     */
     public grid: GridType;
     private _validityStates = new Map<any, FormGroup>();
+    private _valid = true;
+
+    public get valid() {
+        return this._valid;
+    }
+
+    public set valid(value: boolean) {
+        this._valid = value;
+    }
 
     /**
      * @hidden
      * @internal
      */
     public create(rowId, data) {
-        let formGroup = new FormGroup({});
-        for (const col of this.grid.columns) {
-            const field = col.field;
-            const control = new FormControl(data ? data[field] : undefined, { updateOn: this.grid.validationTrigger });
-            control.addValidators(col.validators);
-            formGroup.addControl(field, control);
+        let formGroup = this.getFormGroup(rowId);
+        if (!formGroup) {
+            formGroup = new FormGroup({});
+            for (const col of this.grid.columns) {
+                const field = col.field;
+                const control = new FormControl(data ? data[field] : undefined, { updateOn: this.grid.validationTrigger });
+                control.addValidators(col.validators);
+                formGroup.addControl(field, control);
+            }
+            this.grid.formGroupCreated.emit(formGroup);
+            this.add(rowId, formGroup);
         }
-        this.grid.formGroupCreated.emit(formGroup);
-        this.add(rowId, formGroup);
         return formGroup;
     }
 
@@ -80,12 +96,18 @@ export class IgxGridValidationService {
      * @internal
      */
     public update(rowId: any, rowData: any) {
+        const currentValid = this.valid;
+        const keys = Object.keys(rowData);
         const rowGroup = this.getFormGroup(rowId);
-        for (const col of this.grid.columns) {
-            const control = rowGroup?.get(col.field);
+        for (const key of keys) {
+            const control = rowGroup?.get(key);
             if (control) {
-                control.setValue(rowData[col.field]);
+                control.setValue(rowData[key]);
             }
+        }
+        this.valid = this.getInvalid().length === 0;
+        if (this.valid !== currentValid) {
+            this.grid.validationStatusChange.emit(this.valid ? Validity.Valid : Validity.Invalid);
         }
     }
 

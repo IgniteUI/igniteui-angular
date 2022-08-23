@@ -124,7 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, IValidationStatus, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType, Validity } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -508,7 +508,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public formGroupCreated = new EventEmitter<FormGroup>();
 
     @Output()
-    public validationStatusChange = new EventEmitter<IValidationStatus>();
+    public validationStatusChange = new EventEmitter<Validity>();
 
     /**
      * Emitted when a cell is selected.
@@ -5935,6 +5935,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
         const overlay = this.overlayService.getOverlayById(overlayId);
+        if(!overlay) return;
         overlay.initialSize.width = newSize;
         overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
         this.overlayService.reposition(overlayId);

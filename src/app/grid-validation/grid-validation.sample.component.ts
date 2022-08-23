@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
+import {  IgxGridComponent, IgxTransactionService, Validity } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
@@ -85,8 +85,8 @@ export class GridValidationSampleComponent {
         //    prodName.addValidators(forbiddenNameValidator(/bob/i));
     }
 
-    public validationChange(evtArgs: IValidationStatus){
-        //console.log(evtArgs);
+    public validationChange(evtArgs: Validity){
+        alert(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
     }
 }
 
