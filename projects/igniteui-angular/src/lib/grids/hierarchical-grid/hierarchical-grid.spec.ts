@@ -1556,7 +1556,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
     });
 
-    fit(`Should set ID column's width property to auto on init`, async () => {
+    it(`Should set ID column's width property to auto on init`, async () => {
         const customFixture = TestBed.createComponent(IgxHierarchicalGridAutoSizeColumns);
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid = customFixture.componentInstance.hgrid;
@@ -2048,8 +2048,8 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false"
     [height]="'400px'" [width]="width" [rowEditable]="true" #hierarchicalGrid>
-     <igx-column field="ID"></igx-column>
-     <igx-column field="ProductName"></igx-column>
+     <igx-column field="ID" width="auto"></igx-column>
+     <igx-column field="ProductName" width="auto"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true"
             #rowIsland>
             <igx-column field="ID"></igx-column>
