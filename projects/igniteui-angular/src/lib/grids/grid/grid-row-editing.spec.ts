@@ -2791,8 +2791,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(trans.add).toHaveBeenCalledWith({
                 id: 3,
                 type: 'update',
-                newValue: { ProductName: 'Updated Cell' },
-                validity: trans.getTransactionLog()[0].validity
+                newValue: { ProductName: 'Updated Cell' }
             }, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
@@ -2816,8 +2815,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(trans.add).toHaveBeenCalledWith({
                 id: 3,
                 type: 'update',
-                newValue: updateRowData,
-                validity: trans.getTransactionLog()[0].validity
+                newValue: updateRowData
             }, oldRowData);
             expect(grid.data[2]).toBe(oldRowData);
         });

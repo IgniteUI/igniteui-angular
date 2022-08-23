@@ -96,6 +96,7 @@ export class IgxGridValidationService {
      * @internal
      */
     public update(rowId: any, rowData: any) {
+        if(!rowData) return;
         const currentValid = this.valid;
         const keys = Object.keys(rowData);
         const rowGroup = this.getFormGroup(rowId);
