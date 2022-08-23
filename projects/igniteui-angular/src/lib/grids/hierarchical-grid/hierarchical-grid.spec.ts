@@ -1422,7 +1422,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
             declarations: [
                 IgxHierarchicalGridToggleRIComponent,
                 IgxHierarchicalGridCustomRowEditOverlayComponent,
-                IgxHierarchicalGridAutoSizeColumns
+                IgxHierarchicalGridAutoSizeColumnsComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
@@ -1557,7 +1557,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
     });
 
     it(`Should set ID column's width property to auto on init`, async () => {
-        const customFixture = TestBed.createComponent(IgxHierarchicalGridAutoSizeColumns);
+        const customFixture = TestBed.createComponent(IgxHierarchicalGridAutoSizeColumnsComponent);
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid = customFixture.componentInstance.hgrid;
         customFixture.detectChanges();
@@ -2065,4 +2065,5 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
         </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class IgxHierarchicalGridAutoSizeColumns extends IgxHierarchicalGridTestBaseComponent{}
+export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
+
