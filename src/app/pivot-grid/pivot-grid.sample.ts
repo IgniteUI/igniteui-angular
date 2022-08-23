@@ -113,7 +113,6 @@ export class PivotGridSampleComponent {
         ],
         rows: [
             
-            this.dimensions[2],
             {
                 memberName: 'SellerName',
                 enabled: true,
