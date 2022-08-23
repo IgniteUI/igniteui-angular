@@ -636,6 +636,10 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return args.cancel;
             }
         } else {
+            const id = this.row ? this.row.id : this.cell.id.rowID;
+            const value = this.grid.transactions.getAggregatedValue(id, true);
+            const originalData = this.row ? this.row.data : this.cell.rowData;
+            this.grid.validation.update(id, value ?? originalData);
             this.exitCellEdit(event);
         }
 

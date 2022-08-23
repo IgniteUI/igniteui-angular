@@ -12,18 +12,15 @@ export class IgxGridValidationService {
      * @internal
      */
     public create(rowId, data) {
-        let formGroup = this._validityStates.get(rowId);
-        if (!formGroup) {
-            formGroup = new FormGroup({});
-            for (const col of this.grid.columns) {
-                const field = col.field;
-                const control = new FormControl(data ? data[field] : undefined, { updateOn: this.grid.validationTrigger });
-                control.addValidators(col.validators);
-                formGroup.addControl(field, control);
-            }
-            this.grid.formGroupCreated.emit(formGroup);
-            this.add(rowId, formGroup);
+        let formGroup = new FormGroup({});
+        for (const col of this.grid.columns) {
+            const field = col.field;
+            const control = new FormControl(data ? data[field] : undefined, { updateOn: this.grid.validationTrigger });
+            control.addValidators(col.validators);
+            formGroup.addControl(field, control);
         }
+        this.grid.formGroupCreated.emit(formGroup);
+        this.add(rowId, formGroup);
         return formGroup;
     }
 
