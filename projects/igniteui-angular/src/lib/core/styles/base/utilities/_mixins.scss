@@ -13,25 +13,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Registers a keyframes animation in the global keyframes registry list.
-/// @access public
-/// @group animations
-/// @param {String} $name - The name of the keyframes animation.
-@mixin keyframes($name) {
-    $keyframe: map.get($keyframes, $name);
-
-    @if $keyframe == null {
-        $keyframe: string.unique-id();
-        $keyframes: map.merge($keyframes, (#{$name}: $keyframe)) !global;
-
-        @at-root {
-            @keyframes #{$name} {
-                @content;
-            }
-        }
-    }
-}
-
 /// Registers a component to the list of known components.
 /// @access private
 /// @param {String} $name - The component name to register.
@@ -60,28 +41,6 @@
             )) !global;
         }
     }
-}
-
-/// Animates an element.
-/// @access public
-/// @group animations
-/// @param {List} $animate - The list of animation properties.
-/// @example scss - Animating an element
-///  @include fade-in(); // include the 'fade-in' keyframes animation mixin
-///
-///  .bozo {
-///     @include animation('fade-in' .3s ease-out);
-///  }
-@mixin animation($animate...) {
-    $max: list.length($animate);
-    $animations: '';
-    @for $i from 1 through $max {
-        $animations: #{$animations + list.nth($animate, $i)};
-        @if $i < $max {
-            $animations: #{$animations + ', '};
-        }
-    }
-    animation: $animations;
 }
 
 /// Generates a CSS class name for a color from a

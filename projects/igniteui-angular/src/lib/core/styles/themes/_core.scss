@@ -4,6 +4,7 @@
 ////
 
 @use 'utilities' as *;
+@use 'igniteui-theming/sass/color/functions' as color;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -80,9 +81,9 @@
 /// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
-    $enhanced-accessibility: $enhanced-accessibility
+    $enhanced-accessibility: false
 ) {
-    $enhanced-accessibility: $enhanced-accessibility !global;
+    @include color.configure($enhanced-accessibility);
 
     // Angular hack for binding to [hidden] property
     // not working
