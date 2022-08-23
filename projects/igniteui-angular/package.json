@@ -84,7 +84,8 @@
         "@angular/common": "^14.0.0",
         "@angular/core": "^14.0.0",
         "@angular/animations": "^14.0.0",
-        "@angular/forms": "^14.0.0"
+        "@angular/forms": "^14.0.0",
+        "igniteui-theming": "^1.0.0-beta.11"
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~14.0.1000"
