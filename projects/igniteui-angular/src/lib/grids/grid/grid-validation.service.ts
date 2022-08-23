@@ -103,7 +103,7 @@ export class IgxGridValidationService {
         for (const key of keys) {
             const control = rowGroup?.get(key);
             if (control) {
-                control.setValue(rowData[key]);
+                control.setValue(rowData[key], { emitEvent: false });
             }
         }
         this.valid = this.getInvalid().length === 0;
