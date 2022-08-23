@@ -538,8 +538,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected get ghostLeft() {
         if (this.ghostElement) {
             return parseInt(this.ghostElement.style.left, 10) + this._ghostHostX;
-        } else
-            return 0;
+        }
     }
 
     protected set ghostTop(pageY: number) {
@@ -554,8 +553,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected get ghostTop() {
         if (this.ghostElement) {
             return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
-        } else
-            return 0;
+        }
     }
 
     protected get windowScrollTop() {
