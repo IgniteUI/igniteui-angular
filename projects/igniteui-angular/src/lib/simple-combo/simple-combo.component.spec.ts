@@ -1342,25 +1342,6 @@ describe('IgxSimpleCombo', () => {
     });
 });
 
-
-@Component({
-    template: `
-        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
-})
-export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
-    @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
-    public combo: IgxSimpleComboComponent;
-    public items: any[] = [];
-    public selectedItem: number = 0;
-
-    constructor(private cdr: ChangeDetectorRef) { }
-
-    public ngAfterViewInit() {
-        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
-        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
-    });
-});
-
 @Component({
     template: `
 <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
@@ -1563,6 +1544,24 @@ class IgxSimpleComboInTemplatedFormComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
+})
+export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
+    @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+    public items: any[] = [];
+    public selectedItem: number = 0;
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
         this.cdr.detectChanges();
     }
 }
