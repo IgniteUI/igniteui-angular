@@ -518,8 +518,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     private get validity() {
         const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
-        if (state && state.validity && state.validity.some(x => x.valid === false)) {
-            return state.validity.find(x => x.field === this.column.field);
+        if (state && state.validity) {
+           return state.validity.find(x => x.field === this.column.field);
         }
     }
 
@@ -836,7 +836,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.grid.validationStatusChange.emit(
                 {
                     formGroup: this.formGroup,
-                    value: this.editValue,
+                    value: this.editValue || this.value,
                     state: this.errorTooltip.length > 0 ? Validity.Invalid : Validity.Valid
                 }
             );
@@ -947,7 +947,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (!cell) {
             cell = this.grid.crudService.createCell(this);
         }
-        cell.editValue = val;
+        this.formControl.setValue(val);
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();

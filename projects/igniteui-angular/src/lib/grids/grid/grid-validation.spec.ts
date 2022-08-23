@@ -1,0 +1,314 @@
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { FormGroup, Validators } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxInputDirective, IgxTooltipTargetDirective } from 'igniteui-angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators'
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { ForbiddenValidatorDirective, IgxGridValidationTestBaseComponent, IgxGridValidationTestCustomErrorComponent } from '../../test-utils/grid-validation-samples.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { Validity } from '../common/grid.interface';
+import { IgxGridComponent } from './grid.component';
+import { IgxGridModule } from './grid.module';
+
+describe('IgxGrid - Validation #grid', () => {
+
+    configureTestSuite((() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridValidationTestBaseComponent,
+                IgxGridValidationTestCustomErrorComponent,
+                ForbiddenValidatorDirective
+            ],
+            imports: [IgxGridModule, NoopAnimationsModule]
+        });
+    }));
+
+    describe('Basic Validation - ', () => {
+        let fixture;
+        const $destroyer = new Subject<boolean>();
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxGridValidationTestBaseComponent);
+            fixture.detectChanges();
+        });
+
+        afterEach(() => {
+            UIInteractions.clearOverlay();
+            $destroyer.next(true);
+        });
+
+        it('should allow setting built-in validators via template-driven configuration on the column', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const firstColumn = grid.columnList.first;
+            const validators = firstColumn.validators;
+            expect(validators.length).toBeGreaterThanOrEqual(3);
+
+            const minValidator = validators.find(validator => validator['inputName'] === 'minlength');
+            const maxValidator = validators.find(validator => validator['inputName'] === 'maxlength');
+            const requiredValidator = validators.find(validator => validator['inputName'] === 'required');
+
+            expect(parseInt(minValidator['minlength'], 10)).toBe(4);
+            expect(parseInt(maxValidator['maxlength'], 10)).toBe(8);
+            expect(requiredValidator).toBeDefined();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+
+            cell.editMode = true;
+            cell.update('test');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+        });
+
+        it('should allow setting custom validators via template-driven configuration on the column', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const firstColumn = grid.columnList.first;
+            const validators = firstColumn.validators;
+
+
+            const customValidator = validators.find(validator => validator['forbiddenName']);
+            expect(customValidator).toBeDefined();
+            expect(customValidator['forbiddenName']).toEqual('bob');
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('bob');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //the name should not contain bob
+            GridFunctions.verifyCellValid(cell, false);
+
+            cell.editMode = true;
+            cell.update('valid');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+        });
+
+        it('should allow setting validators on the exposed FormGroup object', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            grid.onFormGroupCreate.pipe(takeUntil($destroyer)).subscribe((formGroup: FormGroup) => {
+                const prodName = formGroup.get('ProductName');
+                prodName.addValidators(Validators.email);
+            });
+
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('test');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //the name should be correct email
+            GridFunctions.verifyCellValid(cell, false);
+            expect(cell.formControl.errors.email).toBeTrue();
+
+            cell.editMode = true;
+            cell.update('m@in.com');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+            expect(cell.formControl.errors).toBeFalsy();
+        });
+
+        it('should allow setting validation triggers - "change" , "blur".', async () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            //changing validation triger to blur
+            grid.validationTrigger = 'blur';
+            fixture.detectChanges();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            fixture.detectChanges();
+
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            input.value = 'asd';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            //the cell should be invalid after blur event is fired
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+
+            input.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            // fix.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            GridFunctions.verifyCellValid(cell, false);
+        });
+
+        it('should mark invalid cell with igx-grid__td--invalid class and show the related error cell template', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+        });
+
+        it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            input.value = 'asd';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //min length should be 4
+            GridFunctions.verifyCellValid(cell, false);
+            GridSelectionFunctions.verifyCellActive(cell, true);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+
+            cell.focusout();
+            tick();
+            fixture.detectChanges();
+            expect(cell.errorTooltip.first.collapsed).toBeTrue();
+
+            const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
+            element.dispatchEvent(new MouseEvent('mouseenter'));
+            flush();
+            fixture.detectChanges();
+            expect(cell.errorTooltip.first.collapsed).toBeFalse();
+        }));
+
+        it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((args) => {
+                if (!args.isValid) {
+                    args.cancel = true;
+                }
+            });
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+
+            const lastValue = cell.value;
+            cell.formControl.setValue('asd');
+            fixture.detectChanges();
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            // should have been canceled and left in editmode because of non valid value
+            // should not have updated the value
+            GridFunctions.verifyCellValid(cell, false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(true);
+            expect(cell.value).toEqual(lastValue);
+
+            cell.update('test');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+        });
+
+        it('should trigger the onValidationStatusChange event on grid when validation status changes', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            spyOn(grid.validationStatusChange, "emit").and.callThrough();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            GridFunctions.verifyCellValid(cell, false);
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({
+                formGroup: cell.formGroup,
+                state: Validity.Invalid,
+                value: 'asd'
+            });
+
+            cell.editMode = true;
+            cell.update('test');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            GridFunctions.verifyCellValid(cell, true);
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({
+                formGroup: cell.formGroup,
+                state: Validity.Valid,
+                value: 'test'
+            });
+        });
+
+        xit('should return invalid transaction using the transaction`s getInvalidTransactionLog method', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('asd');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            let transactionLog = grid.transactions.getInvalidTransactionLog();
+
+            GridFunctions.verifyCellValid(cell, false);
+            expect(transactionLog[0].newValue).toEqual({ ProductName: 'asd' });
+            expect(transactionLog[0].validity[0].valid).toBeFalse();
+
+
+            cell.editMode = true;
+            cell.update('test');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            GridFunctions.verifyCellValid(cell, true);
+            transactionLog = grid.transactions.getInvalidTransactionLog();
+            expect(transactionLog[1].newValue).toEqual({ ProductName: 'test' });
+            expect(transactionLog[1].validity[0].valid).toBeTrue();
+        });
+    });
+
+    describe('Custom Validation - ', () => {
+        let fixture;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxGridValidationTestCustomErrorComponent);
+            fixture.detectChanges();
+        }));
+
+        it('should allow setting built-in validators via template-driven configuration on the column', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.update('bob');
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            //bob cannot be the name
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' This name is forbidden. ');
+
+            cell.editMode = true;
+            cell.update('test');
+            fixture.detectChanges();
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+        });
+    });
+});
