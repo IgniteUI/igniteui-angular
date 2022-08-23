@@ -296,6 +296,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
     public set data(val: any[] | null) {
         this._data = (val) ? val : [];
+
+        if (this._data?.length && this.selectionService.get(this.id)) {
+            this._value = this.createDisplayText(this.selection, []);
+        }
     }
 
     /**
