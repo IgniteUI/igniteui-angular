@@ -3,7 +3,7 @@ import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
-import { yieldingLoop } from '../../core/utils';
+import { isDate, yieldingLoop } from '../../core/utils';
 import { HeaderType, ExportRecordType, IExportRecord, IColumnList } from '../exporter-common/base-export-service';
 
 /**
@@ -73,6 +73,8 @@ export class WorksheetFile implements IExcelFile {
 
     private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
     private summaryOwner = '';
+
+    private _firstDataRec = Number.MAX_VALUE;
 
     public writeElement() {}
 
@@ -213,8 +215,6 @@ export class WorksheetFile implements IExcelFile {
                          topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
             }
-
-            debugger
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
                 sheetData += rows;
@@ -369,17 +369,23 @@ export class WorksheetFile implements IExcelFile {
         const dimensions = this.dimensionMap.get(key);
         switch(type.toLowerCase()) {
             case "count":
-                return `_xlfn.UNICHAR(8206)&amp;"Count - "&amp;COUNTIF(${dimensions.startCoordinate}:${dimensions.endCoordinate},"&lt;&gt;"&amp;_xlfn.UNICHAR(8206)&amp;"*")`
+                return `"Count - "&amp;SUMPRODUCT(--(NOT(_xlfn.ISFORMULA(${dimensions.startCoordinate}:${dimensions.endCoordinate}))))`
             case "countnum":
-                return `_xlfn.UNICHAR(8206)&amp;"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "min":
-                return `_xlfn.UNICHAR(8206)&amp;"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "max":
-                return `_xlfn.UNICHAR(8206)&amp;"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "sum":
-                return `_xlfn.UNICHAR(8206)&amp;"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "avg":
-                return `_xlfn.UNICHAR(8206)&amp;"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "earliest":
+                return `CONCATENATE("Earliest - ", TEXT(MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+            case "latest":
+                return `CONCATENATE("Latest - ", TEXT(MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+
+
         }
     }
 
@@ -390,6 +396,10 @@ export class WorksheetFile implements IExcelFile {
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
         const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
         const isDataRecord = fullRow.type === ExportRecordType.DataRecord;
+
+        if (isDataRecord && this._firstDataRec > this.rowIndex) {
+            this._firstDataRec = this.rowIndex;
+        }
 
         if (worksheetData.hasSummaries && isDataRecord) {
             if (!this.dimensionMap.get(key)) {
@@ -404,13 +414,22 @@ export class WorksheetFile implements IExcelFile {
             }
         }
 
-        const cellValue = worksheetData.isSpecialData ?
+        if (fullRow.summaryKey && fullRow.summaryKey === 'igxGridRootSummary') {
+            const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this._firstDataRec);
+
+            if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
+                this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
+                console.log('CCCCCCCCHECK')
+            }
+        }
+
+        let cellValue = worksheetData.isSpecialData ?
             fullRow.data :
             fullRow.data[key];
 
-        if (cellValue === undefined || cellValue === null) {
+        if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
-        } else if (!isSummaryRecord) {
+        } else if ((worksheetData.hasSummaries && isDataRecord) || !worksheetData.hasSummaries) {
             const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
@@ -430,10 +449,15 @@ export class WorksheetFile implements IExcelFile {
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {
-            const isNumberCol = worksheetData.owner.columns.filter(c => c.field === key)[0]?.dataType === 'number';
-            const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
+            let summaryFunc = `"${cellValue ?? ""}"`;
 
-            const summaryFunc = this.getSummaryFunction(functionType, key);
+            if (isSummaryRecord && cellValue) {
+                const isNumberCol = worksheetData.owner.columns.filter(c => c.field === key)[0]?.dataType === 'number';
+                const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
+
+                summaryFunc = this.getSummaryFunction(functionType, key);
+            }
+
             return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
         }
     }

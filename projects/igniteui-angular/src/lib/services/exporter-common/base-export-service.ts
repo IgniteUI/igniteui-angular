@@ -258,18 +258,6 @@ export abstract class IgxBaseExporter {
                     this.summaries = summaryCacheMap;
                     break;
             }
-
-            // for(const summary of summaries.entries()) {
-            //     debugger
-            //     const record: IExportRecord = {
-            //         data: summary,
-            //         hidden: false,
-            //         level: 0,
-            //         type: ExportRecordType.SummaryRecord
-            //     }
-
-            //     this.flatRecords.push(record);
-            // }
         }
 
         this.prepareData(grid);
@@ -448,6 +436,8 @@ export abstract class IgxBaseExporter {
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
 
                         if (e.dataType === 'date' &&
+                            record.type !== ExportRecordType.SummaryRecord &&
+                            record.type !== ExportRecordType.GroupedRecord &&
                             !(rawValue instanceof Date) &&
                             !shouldApplyFormatter &&
                             rawValue !== undefined &&
@@ -869,7 +859,6 @@ export abstract class IgxBaseExporter {
                 const obj = {}
 
                 for (const [key, value] of rootSummary) {
-                    debugger
                     const summaries = value.map(s => ({label: s.label, value: s.summaryResult}))
                     obj[key] = summaries[i];
                 }
@@ -878,6 +867,7 @@ export abstract class IgxBaseExporter {
                     data: obj,
                     type: ExportRecordType.SummaryRecord,
                     level: 0,
+                    summaryKey
                 };
 
                 this.flatRecords.push(summaryRecord);
@@ -915,10 +905,9 @@ export abstract class IgxBaseExporter {
                 record.expression.fieldName;
 
             recordVal = recordVal !== null ? recordVal : '';
-            const emptyPlaceholder = '\u200e';
 
             const groupExpression: IExportRecord = {
-                data: { [firstCol]: `${emptyPlaceholder}${groupExpressionName}: ${recordVal ?? '(Blank)'} (${record.records.length})` },
+                data: { [firstCol]: `${groupExpressionName}: ${recordVal ?? '(Blank)'} (${record.records.length})` },
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.GroupedRecord,
