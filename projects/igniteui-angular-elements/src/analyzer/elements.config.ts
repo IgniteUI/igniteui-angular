@@ -1,4 +1,4 @@
-import { IgxPivotGridComponent } from 'igniteui-angular';
+import { IgxPivotGridComponent } from '../../../igniteui-angular/src/public_api';
 import { IgxGridComponent } from '../../../igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component";
 import { IgxGridToolbarExporterComponent } from "../../../igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component";

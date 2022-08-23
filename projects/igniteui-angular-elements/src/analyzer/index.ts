@@ -33,7 +33,7 @@ let componentList = new Map<string, ComponentMetadata<string> & { type: ts.Inter
 // TODO: Create program from entry point? Will populate files automatically?
 glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.spec.ts' }, (err, files) => {
     // rough pass at source to gather info on all components
-    const program = ts.createProgram(files, {}); // todo feed config?
+    const program = ts.createProgram(files, { declaration: true, emitDeclarationOnly: true }); // todo feed config?
     const typeChecker = program.getTypeChecker();
 
     for (const file of files) {
@@ -45,7 +45,6 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
 
         for (const component of componentDeclarations) {
             const type = typeChecker.getTypeAtLocation(component);
-
             if (!type.isClass()) {
                 // mostly for type narrowing, should be always be class with the Component decorator
                 continue;
@@ -128,6 +127,51 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
     console.log('----FINAL:-----');
     console.log(ComponentConfigMap);
     printConfiguration();
+
+
+
+    //#region declaration output test
+
+    let sourceFile = program.getSourceFiles().find(x => x.fileName.endsWith('grid.component.ts'));
+
+    // TODO: possibly filter by owning class if replicating inheritance structure in declarations
+    const gridProps = typeChecker.getTypeAtLocation(sourceFile.statements[sourceFile.statements.length-1]).getProperties();
+    const gridInputs = gridProps.filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
+    const gridOutputs = gridProps.filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Output')))
+
+    function filterProperties(sourceFile: ts.SourceFile | ts.Bundle) {
+        if (ts.isSourceFile(sourceFile)) {
+            let classDecl = sourceFile.statements
+                .filter((m): m is ts.ClassDeclaration => m.kind === ts.SyntaxKind.ClassDeclaration)
+                 // TODO: NO DECORATORS HERE, declarations transform drops them :(
+                // .filter(x => x.decorators?.some(x => getDecoratorName(x) === 'Component'))
+                [0];
+
+            // TODO: Strip @example tags due to Angular code?
+            // Type Checker also doesn't work on AST after it's been transformed apparently:
+            // const members = classDecl.members.filter(x => gridInputs.includes(typeChecker.getSymbolAtLocation(x)));
+            const members = classDecl.members.filter(x => gridInputs.some(input => input.escapedName === x.name.getText()));
+
+            classDecl = ts.factory.updateClassDeclaration(classDecl, classDecl.decorators, classDecl.modifiers, classDecl.name, classDecl.typeParameters, classDecl.heritageClauses, members /*members*/);
+            return ts.factory.updateSourceFile(sourceFile, [...sourceFile.statements.slice(0,sourceFile.statements.length-2), classDecl]);
+        }
+        return sourceFile;
+    }
+
+    const test = program.emit(sourceFile,
+        (fileName: string, text: string) => {
+            // insert EventMap here before writing to file:
+            // gridOutputs.map(x => ...)
+            console.log(fileName, text);
+        },
+        null,
+        true,
+        {
+            afterDeclarations: [context => sourceFile => filterProperties(sourceFile)]
+        }
+    );
+
+    //#endregion declaration output test
 });
 
 /**
