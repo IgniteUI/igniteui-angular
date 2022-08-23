@@ -11,7 +11,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 }
 
 @Directive({
-    selector: '[appForbiddenName]',
+    selector: '[igxAppForbiddenName]',
     providers: [{ provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true }]
 })
 export class ForbiddenValidatorDirective extends IgxColumnValidator {
@@ -28,7 +28,7 @@ export class ForbiddenValidatorDirective extends IgxColumnValidator {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-            <igx-column appForbiddenName='bob' minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+            <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [width]="c.width" [resizable]='true'>
         </igx-column>
     </igx-grid>
@@ -51,7 +51,7 @@ export class IgxGridValidationTestBaseComponent {
     template: `
     <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
         [width]="'1200px'" [height]="'800px'">
-            <igx-column appForbiddenName='bob' minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+            <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [width]="c.width" [resizable]='true'>
             <ng-template igxCellValidationError let-cell='cell'>
                     <div *ngIf="cell.formGroup?.get(cell.column?.field).errors?.['forbiddenName'] else cell.defaultErrorTemplate">
