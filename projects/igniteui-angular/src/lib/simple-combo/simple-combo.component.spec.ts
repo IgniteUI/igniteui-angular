@@ -1318,7 +1318,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxComboRemoteDataComponent
+                    IgxComboRemoteDataComponent,
+                    IgxSimpleComboBindingDataAfterInitComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1346,6 +1347,36 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect((combo as any)._remoteSelection[0]).toBeUndefined();
         });
+        it('should add predefined selection to the input when data is bound after initialization', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboBindingDataAfterInitComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            tick();
+            fixture.detectChanges();
+
+            const expectedOutput = 'One';
+            expect(input.nativeElement.value).toEqual(expectedOutput);
+        }));
+    });
+});
+
+
+@Component({
+    template: `
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
+})
+export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
+    @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+    public items: any[] = [];
+    public selectedItem: number = 0;
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
     });
 });
 
@@ -1552,5 +1583,6 @@ class IgxSimpleComboInTemplatedFormComponent {
                 });
             });
         }
+        this.cdr.detectChanges();
     }
 }
