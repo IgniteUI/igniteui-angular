@@ -701,7 +701,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         expect(rowArgs.newValue.locations.length).toEqual(3);
         expect(rowArgs.oldValue.locations.length).toEqual(3);
-        delete rowArgs.invalid;
+        delete rowArgs.valid;
         expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditExit.emit).toHaveBeenCalledWith(rowArgs);
 
@@ -770,7 +770,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         delete rowArgs.cancel;
         rowArgs.rowData = initialRowData;
-        delete rowArgs.invalid;
+        delete rowArgs.valid;
         expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowArgs);
 

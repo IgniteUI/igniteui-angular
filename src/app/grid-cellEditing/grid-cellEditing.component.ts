@@ -56,13 +56,13 @@ export class GridCellEditingComponent {
 
 
     public cellEdit(evt) {
-        if (evt.invalid) {
+        if (!evt.valid) {
             evt.cancel = true;
         }
     }
 
     public rowEdit(evt) {
-        if (evt.invalid) {
+        if (!evt.valid) {
             evt.cancel = true;
         }
     }
