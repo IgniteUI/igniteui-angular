@@ -1350,9 +1350,8 @@ describe('IgxSimpleCombo', () => {
         it('should add predefined selection to the input when data is bound after initialization', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboBindingDataAfterInitComponent);
             fixture.detectChanges();
-            combo = fixture.componentInstance.instance;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick();
+            tick(1200);
             fixture.detectChanges();
 
             const expectedOutput = 'One';
@@ -1360,26 +1359,6 @@ describe('IgxSimpleCombo', () => {
         }));
     });
 });
-
-
-@Component({
-    template: `
-        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
-})
-export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
-    @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
-    public combo: IgxSimpleComboComponent;
-    public items: any[] = [];
-    public selectedItem: number = 0;
-
-    constructor(private cdr: ChangeDetectorRef) { }
-
-    public ngAfterViewInit() {
-        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
-        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
-    });
-});
-
 @Component({
     template: `
 <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
@@ -1583,6 +1562,24 @@ class IgxSimpleComboInTemplatedFormComponent {
                 });
             });
         }
-        this.cdr.detectChanges();
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
+})
+export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
+    public items: any[];
+    public selectedItem: number = 1;
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
+            { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
+            this.cdr.detectChanges();
+        }, 1000)
     }
 }
