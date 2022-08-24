@@ -9,13 +9,11 @@
 ////
 
 /// If only background color(s) specified, text color(s) will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $resting-background [null]- The background color used for the highlight in its resting state.
 /// @param {Color} $resting-color [null] - The text color used for the highlight in its resting state.
 /// @param {Color} $active-background [null] - The background color used for the highlight in its active state.
 /// @param {Color} $active-color [null] - The text color used for the highlight in its active state.
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires text-contrast
@@ -26,7 +24,6 @@
 ///   // Pass the theme to the highlight component mixin
 ///   @include highlight($my-highlight-theme);
 @function highlight-theme(
-    $palette: null,
     $schema: $light-schema,
     $resting-background: null,
     $resting-color: null,
@@ -56,7 +53,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         resting-background: $resting-background,
         resting-color: $resting-color,
         active-background: $active-background,

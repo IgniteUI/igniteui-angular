@@ -14,7 +14,6 @@
 ////
 
 /// Checkbox Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
@@ -38,7 +37,6 @@
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
 @function checkbox-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -73,7 +71,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,

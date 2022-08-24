@@ -13,7 +13,6 @@
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -24,7 +23,6 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the snackbar component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -36,7 +34,6 @@
 ///   // Pass the theme to the snackbar component mixin
 ///   @include snackbar($my-snackbar-theme);
 @function snackbar-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -76,7 +73,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         border-radius: $border-radius,
         background: $background,
         text-color: $text-color,

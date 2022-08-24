@@ -12,7 +12,6 @@
 ////
 
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The card background color.
@@ -41,7 +40,6 @@
 ///   // Pass the theme to the card component mixin
 ///   @include card($my-card-theme);
 @function card-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -104,7 +102,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         outline-color: $outline-color,
         border-radius: $border-radius,

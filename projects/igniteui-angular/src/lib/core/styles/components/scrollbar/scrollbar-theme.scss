@@ -9,12 +9,10 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $thumb-background [null] - The background color used for the thumb.
 /// @param {Color} $track-background [null] - The background color used for the track.
 /// @param {Number | String} $size [null] - The size of the track.
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires text-contrast
@@ -25,7 +23,6 @@
 ///   // Pass the theme to the scrollbar component mixin
 ///   @include scrollbar($my-scrollbar-theme);
 @function scrollbar-theme(
-    $palette: null,
     $schema: $light-schema,
     $size: null,
     $thumb-background: null,
@@ -46,7 +43,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         thumb-background: $thumb-background,
         track-background: $track-background,
         size: $size

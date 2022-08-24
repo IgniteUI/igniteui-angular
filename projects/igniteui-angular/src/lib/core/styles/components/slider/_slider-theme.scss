@@ -11,7 +11,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $track-color [null] - The color of the track.
@@ -37,7 +36,6 @@
 /// @param {Color} $tick-label-color [null] - The color of the tick label.
 /// @param {Color} $tick-color [null] - The background-color of the tick.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -48,7 +46,6 @@
 ///   // Pass the theme to the slider component mixin
 ///   @include slider($my-slider-theme);
 @function slider-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $track-color: null,
@@ -89,7 +86,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         track-color: $track-color,
         track-step-color: $track-step-color,
         track-step-size: $track-step-size,
@@ -118,7 +114,6 @@
 @mixin slider($theme) {
     @include css-vars($theme);
 
-    $palette: map.get($theme, 'palette');
     $variant: map.get($theme, variant);
 
     $slider-height: rem(48px);

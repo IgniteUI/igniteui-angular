@@ -13,7 +13,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
@@ -43,7 +42,6 @@
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -54,7 +52,6 @@
 ///   // Pass the theme to the switch component mixin
 ///   @include switch($my-switch-theme);
 @function switch-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $thumb-on-color: null,
@@ -128,7 +125,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
 
         thumb-on-color: $thumb-on-color,
         track-on-color: $track-on-color,

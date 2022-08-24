@@ -10,7 +10,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $step-background [null] - The background of the step header.
@@ -80,7 +79,6 @@
 /// @param {Color} $border-radius-indicator [null] - The border-radius of the step indicator.
 /// @param {Color} $border-radius-step-header [null] - The border-radius of the step header.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -94,7 +92,6 @@
 ///   // Pass the theme to the stepper component mixin
 ///   @include stepper($my-stepper-theme);
 @function stepper-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $step-background: null,
@@ -249,7 +246,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         selector: $selector,
 
         // Incomplete

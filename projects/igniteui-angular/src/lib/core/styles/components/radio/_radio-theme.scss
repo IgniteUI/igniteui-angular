@@ -13,7 +13,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
@@ -26,7 +25,6 @@
 /// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -37,7 +35,6 @@
 ///   // Pass the theme to the radio component mixin
 ///   @include radio($my-radio-theme);
 @function radio-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $label-color: null,
@@ -63,7 +60,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,

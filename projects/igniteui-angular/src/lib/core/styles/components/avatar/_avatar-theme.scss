@@ -10,7 +10,6 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
@@ -27,7 +26,6 @@
 ///   // Pass the theme to the avatar component mixin
 ///   @include avatar($my-avatar-theme);
 @function avatar-theme(
-    $palette: null,
     $schema: $light-schema,
     $background: null,
     $color: null,
@@ -55,7 +53,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         color: $color,
         border-radius: $border-radius,

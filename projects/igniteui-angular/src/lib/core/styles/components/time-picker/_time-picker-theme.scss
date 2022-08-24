@@ -14,7 +14,6 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -33,7 +32,6 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for the outline of the picker.
 /// @param {border-radius} $active-item-border-radius [null] - The border radius used for the outline of the currently active item (hours, minutes, AM/PM).
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires text-contrast
@@ -48,7 +46,6 @@
 ///   // Pass the theme to the time-picker component mixin
 ///   @include time-picker($my-time-picker-theme);
 @function time-picker-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -132,7 +129,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         text-color: $text-color,
         hover-text-color: $hover-text-color,
         selected-text-color: $selected-text-color,

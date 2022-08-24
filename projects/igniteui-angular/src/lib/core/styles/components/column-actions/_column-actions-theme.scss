@@ -11,7 +11,6 @@
 ////
 
 /// Column actions Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
@@ -30,7 +29,6 @@
 ///   @include igx-column-actions($column-actions-theme);
 ////
 @function column-actions-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -54,7 +52,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         elevations: $elevations,
         title-color: $title-color,
         background-color: $background-color

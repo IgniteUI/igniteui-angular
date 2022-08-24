@@ -9,12 +9,10 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background-color [null] - The background color used for modal overlays.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -25,7 +23,6 @@
 ///   overlay($my-overlay-theme);
 ///
 @function overlay-theme(
-    $palette: null,
     $schema: $light-schema,
     $background-color: null
 ) {
@@ -44,7 +41,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         background-color: $background-color,
     ));
 }

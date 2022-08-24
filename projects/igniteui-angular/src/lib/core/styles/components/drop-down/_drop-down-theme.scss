@@ -12,7 +12,6 @@
 ////
 
 /// Generates a drop-down theme.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
@@ -51,7 +50,6 @@
 /// @requires text-contrast
 /// @requires elevation
 @function drop-down-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -175,7 +173,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         background-color: $background-color,
         border-radius: $border-radius,
         item-border-radius: $item-border-radius,

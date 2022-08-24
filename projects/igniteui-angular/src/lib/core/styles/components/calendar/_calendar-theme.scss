@@ -20,7 +20,6 @@
 /// - year/month hover/selected colors
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
@@ -85,7 +84,6 @@
 /// @param {Color} $week-number-color [null] - The text color of the week number column.
 /// @param {Color} $week-number-background [null] - The background color of the week number column.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires text-contrast
@@ -99,7 +97,6 @@
 ///   // Pass the theme to the calendar component mixin
 ///   @include calendar($my-calendar-theme);
 @function calendar-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $content-background: null,
@@ -338,7 +335,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,
 
@@ -418,7 +414,6 @@
 @mixin calendar($theme) {
     @include css-vars($theme);
 
-    $palette: map.get($theme, 'palette');
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);

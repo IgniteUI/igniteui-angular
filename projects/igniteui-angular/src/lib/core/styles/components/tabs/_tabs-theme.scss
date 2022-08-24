@@ -15,7 +15,6 @@
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $item-text-color [null] - The color used for the tab text color.
@@ -47,7 +46,6 @@
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
 /// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -61,7 +59,6 @@
 ///   // Pass the theme to the tabs component mixin
 ///   @include tabs($my-tabs-theme);
 @function tabs-theme(
-    $palette: null,
     $schema: $light-schema,
     $item-text-color: null,
     $item-background: null,
@@ -194,7 +191,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
         item-hover-color: $item-hover-color,

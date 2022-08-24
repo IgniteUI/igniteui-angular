@@ -12,7 +12,6 @@
 ////
 
 /// Dialog Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The dialog background color.
@@ -34,7 +33,6 @@
 ///   // Pass the theme to the igx-dialog component mixin
 ///   @include dialog($my-dialog-theme);
 @function dialog-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -81,7 +79,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         border-radius: $border-radius,
         background: $background,
         title-color: $title-color,

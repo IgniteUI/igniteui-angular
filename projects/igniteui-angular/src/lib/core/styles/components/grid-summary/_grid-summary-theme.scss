@@ -10,7 +10,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
@@ -23,7 +22,6 @@
 /// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
 /// @param {Color} $label-hover-color [null] - The summaries hover label color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires extend
 /// @requires text-contrast
@@ -36,7 +34,6 @@
 ///   // Pass the theme to the grid-summary component mixin
 ///   @include grid-summary($my-summary-theme);
 @function grid-summary-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $background-color: null,
@@ -80,7 +77,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         background-color: $background-color,
         focus-background-color: $focus-background-color,
         label-color: $label-color,

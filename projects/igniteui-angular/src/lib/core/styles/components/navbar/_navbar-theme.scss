@@ -10,7 +10,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -21,7 +20,6 @@
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -33,7 +31,6 @@
 ///   // Pass the theme to the navbar component mixin
 ///   @include navbar($my-navbar-theme);
 @function navbar-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -78,7 +75,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,

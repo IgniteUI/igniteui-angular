@@ -11,7 +11,6 @@
 ////
 
 /// Returns a map containing all style properties related to the theming of the tree component.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} background [null] - The background color used for the tree node.
 /// @param {Color} foreground [null] - The color used for the tree node content.
@@ -34,7 +33,6 @@
 ///   // Pass the theme to the tree component mixin
 ///   @include tree($my-tree-theme);
 @function tree-theme(
-    $palette: null,
     $schema: $light-schema,
     $background: null,
     $background-selected: null,
@@ -78,7 +76,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         foreground: $foreground,
         background-selected: $background-selected,

@@ -10,7 +10,6 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $icon-color [null] - The color used for the actions icons.
@@ -28,7 +27,6 @@
 ///   // Pass the theme to the action-strip component mixin
 ///   @include action-strip($my-action-strip-theme);
 @function action-strip-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $background: null,
@@ -58,7 +56,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         actions-background: $actions-background,
         icon-color: $icon-color,
@@ -157,10 +154,10 @@
     }
 
     %igx-action-strip__menu-item--danger {
-        color: color(map.get($theme, 'palette'), 'error');
+        color: color($color: 'error');
 
         &:hover {
-            color: color(map.get($theme, 'palette'), 'error');
+            color: color($color: 'error');
         }
     }
 

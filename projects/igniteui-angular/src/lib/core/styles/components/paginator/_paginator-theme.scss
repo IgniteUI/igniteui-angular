@@ -10,13 +10,11 @@
 ////
 
 /// Grid Paging Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $text-color [currentColor] - The text color.
 /// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -28,7 +26,6 @@
 ///   // Pass the theme to the paginator component mixin
 ///   @include paginator($my-paginator-theme);
 @function paginator-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $text-color: null,
@@ -53,7 +50,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         text-color: $text-color,
         background-color: $background-color,
         border-color: $border-color

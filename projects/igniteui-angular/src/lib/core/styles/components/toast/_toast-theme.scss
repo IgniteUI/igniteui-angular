@@ -13,7 +13,6 @@
 /// If only background color is specified,
 /// the text-color will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The background color used for the toast.
@@ -23,7 +22,6 @@
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
 ///
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires text-contrast
@@ -35,7 +33,6 @@
 ///   // Pass the theme to the toast component mixin
 ///   @include toast($my-toast-theme);
 @function toast-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -69,7 +66,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
@@ -84,7 +80,6 @@
 /// @requires var-get
 @mixin toast($theme) {
     $variant: map.get($theme, variant);
-    $palette: map.get($theme, 'palette');
 
     @include css-vars($theme);
 

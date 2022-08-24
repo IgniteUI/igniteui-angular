@@ -12,7 +12,6 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -38,7 +37,6 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
 /// @requires digest-schema
 /// @requires extend
@@ -54,7 +52,6 @@
 ///   // Pass the theme to the button-group component mixin
 ///   @include button-group($my-button-group-theme);
 @function button-group-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -145,7 +142,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
         item-border-color: $item-border-color,
@@ -177,7 +173,6 @@
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $ease-in-out-quad;
-    $palette: map.get($theme, 'palette');
 
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
@@ -309,7 +304,7 @@
                 bottom: 0;
                 inset-inline-end: 0;
                 inset-inline-start: 0;
-                background: color($palette, 'gray', 500, .12);
+                background: color($color: 'gray', $variant: 500, $opacity: .12);
             }
         }
     }
