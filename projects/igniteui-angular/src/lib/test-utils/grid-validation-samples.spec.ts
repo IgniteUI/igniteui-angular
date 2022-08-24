@@ -15,7 +15,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     providers: [{ provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true }]
 })
 export class ForbiddenValidatorDirective extends IgxColumnValidator {
-    @Input('appForbiddenName')
+    @Input('igxAppForbiddenName')
     public forbiddenName = '';
 
     public validate(control: AbstractControl): ValidationErrors | null {
