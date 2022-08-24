@@ -96,8 +96,7 @@ export class IgxGridValidationService {
      * @internal
      */
     public update(rowId: any, rowData: any) {
-        if(!rowData) return;
-        const currentValid = this.valid;
+        if (!rowData) return;
         const keys = Object.keys(rowData);
         const rowGroup = this.getFormGroup(rowId);
         for (const key of keys) {
@@ -106,6 +105,16 @@ export class IgxGridValidationService {
                 control.setValue(rowData[key], { emitEvent: false });
             }
         }
+
+        this.updateStatus();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private updateStatus() {
+        const currentValid = this.valid;
         this.valid = this.getInvalid().length === 0;
         if (this.valid !== currentValid) {
             this.grid.validationStatusChange.emit(this.valid ? Validity.Valid : Validity.Invalid);
@@ -122,6 +131,7 @@ export class IgxGridValidationService {
         } else {
             this._validityStates.clear();
         }
+        this.updateStatus();
     }
 
 }

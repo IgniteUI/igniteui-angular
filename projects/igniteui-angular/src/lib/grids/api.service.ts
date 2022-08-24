@@ -4,7 +4,7 @@ import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
+import { IgxCell, IgxGridCRUDService, IgxEditRow, IgxAddRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, IFieldValid, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
@@ -300,6 +300,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             grid.data.push(rowData);
         }
+        const validation = grid.validation as IgxGridValidationService;
+        validation.update(transactionId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -317,6 +319,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const state: State = grid.transactions.getState(rowID);
             grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
+        grid.validation.clear(rowID);
     }
 
     public deleteRowById(rowId: any): any {
@@ -555,6 +558,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
+        const isAddRow = this.crudService.row instanceof IgxAddRow;
+        if (isAddRow) { return; }
         const validation = grid.validation as IgxGridValidationService;
         validation.update(rowID, rowNewValue);
     }

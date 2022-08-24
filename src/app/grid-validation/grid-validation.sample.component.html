@@ -13,7 +13,7 @@
         </igx-column>
         <igx-action-strip #actionStrip1>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
     <button (click)='clearValidity()'>Clear validity</button>
@@ -21,7 +21,7 @@
     <article class="grid-row-edit-wrapper">
         <h4>Grid with transactions</h4>
         <igx-switch [(ngModel)]="rowEditWithTransactions">Row edit</igx-switch>
-        <igx-grid #gridTransactions [batchEditing]="true" primaryKey="ProductID" [data]="transactionData" [rowEditable]="rowEditWithTransactions"
+        <igx-grid  (validationStatusChange)='validationChange($event)'  #gridTransactions [batchEditing]="true" primaryKey="ProductID" [data]="transactionData" [rowEditable]="rowEditWithTransactions"
             [width]="'1200px'" [height]="'800px'" >
             <igx-column appForbiddenName='bob'  minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
                 [header]="c.field" [width]="c.width" [resizable]='true'>
@@ -35,7 +35,7 @@
             </igx-column>
             <igx-action-strip #actionStrip1>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
-                <igx-grid-editing-actions></igx-grid-editing-actions>
+                <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
         <button (click)='commitWithTransactions()'>Commit</button>

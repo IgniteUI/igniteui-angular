@@ -14,7 +14,7 @@ export class IgxEditRow {
 
     constructor(public id: any, public index: number, public data: any, public grid: GridType) {
         this.rowFormGroup = this.grid.validation.create(id, data);
-     }
+    }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
@@ -99,8 +99,8 @@ export class IgxCell {
         public editValue: any,
         public rowData: any,
         public grid: GridType) {
-            this.grid.validation.create(id.rowID, rowData);
-         }
+        this.grid.validation.create(id.rowID, rowData);
+    }
 
     public castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -639,7 +639,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             const id = this.row ? this.row.id : this.cell.id.rowID;
             const value = this.grid.transactions.getAggregatedValue(id, true);
             const originalData = this.row ? this.row.data : this.cell.rowData;
-            this.grid.validation.update(id, value ?? originalData);
+            if (!(this.row instanceof IgxAddRow)) {
+                this.grid.validation.update(id, value ?? originalData);
+            }
             this.exitCellEdit(event);
         }
 
