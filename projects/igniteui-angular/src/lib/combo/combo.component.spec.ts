@@ -2189,7 +2189,7 @@ describe('igxCombo', () => {
             fixture = TestBed.createComponent(IgxComboBindingDataAfterInitComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick();
+            tick(1200);
             fixture.detectChanges();
 
             const expectedOutput = 'One';
@@ -3620,16 +3620,16 @@ export class ComboModelBindingComponent implements OnInit {
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
-    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
-    public combo: IgxComboComponent;
     public items: any[] = [];
     public selectedItems: any[] = [0];
 
     constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
-        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
-        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
-        this.cdr.detectChanges();
+        setTimeout(() => {
+            this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+            { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
+            this.cdr.detectChanges();
+        }, 1000);
     }
 }
