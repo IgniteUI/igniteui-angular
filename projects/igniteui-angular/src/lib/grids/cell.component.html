@@ -119,7 +119,7 @@
     <div [id]="describeBy"
     igxTooltip #error #tooltipRef="tooltip">
         <div [style.width]="'max-content'">
-            <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: { cell: this }"></ng-container>
+            <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: context"></ng-container>
         </div>
     </div>
 </ng-container>

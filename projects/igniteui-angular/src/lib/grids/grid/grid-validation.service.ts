@@ -12,7 +12,10 @@ export class IgxGridValidationService {
     private _validityStates = new Map<any, FormGroup>();
     private _valid = true;
 
-    public get valid() {
+
+    /** Gets whether state is valid.
+    */
+    public get valid() : boolean {
         return this._valid;
     }
 
@@ -36,7 +39,14 @@ export class IgxGridValidationService {
             }
             this.grid.formGroupCreated.emit(formGroup);
             this.add(rowId, formGroup);
+        } else {
+            // reset to pristine.
+            for (const col of this.grid.columns) {
+                const formControl = formGroup.get(col.field);
+                formControl.markAsPristine();
+            }
         }
+        
         return formGroup;
     }
 
@@ -65,10 +75,11 @@ export class IgxGridValidationService {
         this._validityStates.set(rowId, form);
     }
 
-    /** Returns validity states for records.
-    * @returns Array os records states.
-    */
-    public getValidity(): IRecordValidationState[] {
+    /**
+     * @hidden
+     * @internal
+     */
+    private getValidity(): IRecordValidationState[] {
         const states: IRecordValidationState[] = [];
         this._validityStates.forEach((formGroup, key) => {
             const state: IFieldValidationState[] = [];
