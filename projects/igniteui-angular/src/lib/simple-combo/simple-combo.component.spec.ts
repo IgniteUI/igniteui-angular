@@ -1571,7 +1571,7 @@ class IgxSimpleComboInTemplatedFormComponent {
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
     public items: any[];
-    public selectedItem: number = 1;
+    public selectedItem = 1;
 
     constructor(private cdr: ChangeDetectorRef) { }
 
@@ -1580,6 +1580,6 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
             this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
             { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
             this.cdr.detectChanges();
-        }, 1000)
+        }, 1000);
     }
 }
