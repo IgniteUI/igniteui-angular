@@ -217,7 +217,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const ctx = {
             $implicit: this.value,
             additionalTemplateContext: this.column.additionalTemplateContext,
-            formControl: this.editMode ? this.formControl : undefined
+            formControl: this.editMode ? this.formControl : undefined,
+            defaultErrorTemplate: this.defaultErrorTemplate
         };
         /* Turns the `cell` property from the template context object into lazy-evaluated one.
          * Otherwise on each detection cycle the cell template is recreating N cell instances where
