@@ -70,6 +70,7 @@ export class GridValidationSampleComponent {
 
     public clearValidity() {
         this.gridNoTransactions.validation.clear();
+        this.gridNoTransactions.markForCheck();
     }
 
     public cellEdit(evt) {
