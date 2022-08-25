@@ -22,13 +22,15 @@
                         <label igxLabel>States</label>
                         <igx-hint>Please select the state you've visited</igx-hint>
                     </igx-simple-combo>
-                    <igx-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
-                        required [data]="uniqueFalsyData" displayKey="field" valueKey="value" [disabled]="isDisabled">
+                    <igx-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+                        [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
+                        [disabled]="isDisabled">
                         <label igxLabel>Falsy unique values (combo)</label>
                         <igx-hint>Select a unique falsy value</igx-hint>
                     </igx-combo>
-                    <igx-simple-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo" [width]="'100%'"
-                        required [data]="uniqueFalsyData" displayKey="field" valueKey="value" [disabled]="isDisabled">
+                    <igx-simple-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+                        [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
+                        [disabled]="isDisabled">
                         <label igxLabel>Falsy unique values (simple-combo)</label>
                         <igx-hint>Select a unique falsy value</igx-hint>
                     </igx-simple-combo>
@@ -62,6 +64,19 @@
                     </div>
                 </form>
             </div>
+
+            <div>
+                <h5 class="sample-title">Remote Binding</h5>
+                <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'"
+                    (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
+                    (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
+                    (opening)="onOpening()" placeholder="Location(s)">
+                </igx-combo>
+                <igx-toast #loadingToast></igx-toast>
+
+            </div>
+
             <div class="input-row">
                 <igx-combo #playgroundCombo class="input-container" [placeholder]="'Locations'"
                     [showSearchCaseIcon]='true' (addition)="handleAddition($event)"
