@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { editor } from '@igniteui/material-icons-extended';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IButtonGroupEventArgs } from '../buttonGroup/buttonGroup.component';
+import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
@@ -30,7 +30,7 @@ import { IgxSelectModule } from '../select/select.module';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
+import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
 
 @Directive({
     selector: 'igx-query-builder-header, [igxQueryBuilderHeader]'
@@ -1218,7 +1218,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         CommonModule,
         FormsModule,
         IgxButtonModule,
+        IgxButtonGroupModule,
         IgxDatePickerModule,
+        IgxTimePickerModule,
         IgxChipsModule,
         IgxDragDropModule,
         IgxIconModule,
