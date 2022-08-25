@@ -451,13 +451,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public get width(): string {
         const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
-        if(isAutoWidth) {
-            if(!this.autoSize) {
+        if (isAutoWidth) {
+            if (!this.autoSize) {
                 return 'fit-content';
             } else {
                 return this.autoSize + 'px';
             }
-           
+
         }
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
@@ -1828,8 +1828,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.width === 'fit-content' ? col.autoSize : 
-                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize :
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1857,8 +1857,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // Replace the old column with the new one.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.width === 'fit-content' ? col.autoSize : 
-                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize :
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1871,8 +1871,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
                             ref: col,
-                            width: col.width === 'fit-content' ? col.autoSize : 
-                            col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                            width: col.width === 'fit-content' ? col.autoSize :
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
