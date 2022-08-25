@@ -43,7 +43,9 @@ export class IgxGridValidationService {
             // reset to pristine.
             for (const col of this.grid.columns) {
                 const formControl = formGroup.get(col.field);
-                formControl.markAsPristine();
+                if (formControl) {
+                    formControl.markAsPristine();
+                }
             }
         }
         
