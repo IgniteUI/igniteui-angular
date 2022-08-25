@@ -41,6 +41,7 @@ import {
 export * from './common/grid-pipes.module';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
+import { IgxQueryBuilderModule } from '../query-builder/query-builder.component';
 
 /**
  * @hidden
@@ -118,7 +119,8 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridSharedModules,
-        IgxChipsModule
+        IgxChipsModule,
+        IgxQueryBuilderModule
     ]
 })
 export class IgxGridCommonModule { }

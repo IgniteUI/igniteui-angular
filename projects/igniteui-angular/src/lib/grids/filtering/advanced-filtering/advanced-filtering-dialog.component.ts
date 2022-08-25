@@ -22,6 +22,7 @@ import { IgxDatePickerComponent } from '../../../date-picker/date-picker.compone
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { ColumnType, GridType } from '../../common/grid.interface';
 import { DisplayDensity } from '../../../core/displayDensity';
+import { IgxQueryBuilderComponent, IQueryBuilderField } from '../../../query-builder/query-builder.component';
 
 /**
  * @hidden
@@ -78,6 +79,12 @@ class ExpressionOperandItem extends ExpressionItem {
     templateUrl: './advanced-filtering-dialog.component.html'
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
+    /**
+     * @hidden @internal
+     */
+     @ViewChild('queryBuilder', { read: IgxQueryBuilderComponent })
+     public queryBuilder: IgxQueryBuilderComponent;
+    
     /**
      * @hidden @internal
      */
@@ -320,6 +327,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this._overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.queryBuilder.fields = this.filterableFields;
     }
 
     /**
@@ -399,6 +407,22 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public get filterableFields(): IQueryBuilderField[] {        
+        return this.grid.columns
+            .filter((column) => !column.columnGroup && column.filterable)
+            .map((column) => { 
+                return {
+                    label: column.header,
+                    fieldName: column.field,
+                    dataType: column.dataType,
+                    filteringOperands: column.filters
+                }
+            });
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get hasEditedExpression(): boolean {
         return this.editedExpression !== undefined && this.editedExpression !== null;
     }
@@ -412,20 +436,20 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             return;
         }
 
-        if (!this.contextMenuToggle.collapsed) {
-            this.contextMenuToggle.element.style.display = 'none';
-        }
+        // if (!this.contextMenuToggle.collapsed) {
+        //     this.contextMenuToggle.element.style.display = 'none';
+        // }
     }
 
     /**
      * @hidden @internal
      */
     public dragEnd() {
-        if (!this.contextMenuToggle.collapsed) {
-            this.calculateContextMenuTarget();
-            this.contextMenuToggle.reposition();
-            this.contextMenuToggle.element.style.display = '';
-        }
+        // if (!this.contextMenuToggle.collapsed) {
+        //     this.calculateContextMenuTarget();
+        //     this.contextMenuToggle.reposition();
+        //     this.contextMenuToggle.element.style.display = '';
+        // }
     }
 
     /**
@@ -670,9 +694,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
         const key = eventArgs.key;
-        if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
-            this.clearSelection();
-        } else if (key === this.platform.KEYMAP.ESCAPE) {
+        // if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
+        //     this.clearSelection();
+        // } else if (key === this.platform.KEYMAP.ESCAPE) {
+        //     this.closeDialog();
+        // }
+        if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
         }
     }
@@ -768,10 +795,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onExpressionsScrolled() {
-        if (!this.contextMenuToggle.collapsed) {
-            this.calculateContextMenuTarget();
-            this.contextMenuToggle.reposition();
-        }
+        // if (!this.contextMenuToggle.collapsed) {
+        //     this.calculateContextMenuTarget();
+        //     this.contextMenuToggle.reposition();
+        // }
     }
 
     /**
@@ -887,7 +914,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
         this.exitOperandEdit();
-        this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
+        //TODO set grid expressionsTree
+        //this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
+        this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.queryBuilder.rootGroup);
     }
 
     /**

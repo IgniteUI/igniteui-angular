@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Optional } from '@angular/core';
+import { ContentChild, Directive, Optional } from '@angular/core';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, HostBinding, NgModule
@@ -20,7 +20,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-ope
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxDatePickerModule } from '../date-picker/date-picker.module';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive';
+import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { ColumnType, GridType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
@@ -31,6 +31,11 @@ import { IgxOverlayService } from '../services/overlay/overlay';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
+
+@Directive({
+    selector: 'igx-query-builder-header, [igxQueryBuilderHeader]'
+})
+export class IgxQueryBuilderHeaderDirective { }
 
 export interface IQueryBuilderField {
     /** The field label */
@@ -125,6 +130,16 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     @ViewChild('addConditionButton', { read: ElementRef })
     public addConditionButton: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxQueryBuilderHeaderDirective, { read: IgxQueryBuilderHeaderDirective })
+    protected headerContent: IgxQueryBuilderHeaderDirective;
+    
+    public get isHeaderContentVisible(): boolean {
+        return this.headerContent ? true : false;
+    }
 
     /**
      * @hidden @internal
@@ -452,53 +467,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         return this._fields;
     }
 
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public get filterableColumns(): ColumnType[] {
-    //     return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
-    // }
-
     /**
      * @hidden @internal
      */
     public get hasEditedExpression(): boolean {
         return this.editedExpression !== undefined && this.editedExpression !== null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dragStart(dragArgs: IDragStartEventArgs) {
-        if (!this._overlayComponentId) {
-            dragArgs.cancel = true;
-            return;
-        }
-
-        if (!this.contextMenuToggle.collapsed) {
-            this.contextMenuToggle.element.style.display = 'none';
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dragEnd() {
-        if (!this.contextMenuToggle.collapsed) {
-            this.calculateContextMenuTarget();
-            this.contextMenuToggle.reposition();
-            this.contextMenuToggle.element.style.display = '';
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onDragMove(e) {
-        const deltaX = e.nextPageX - e.pageX;
-        const deltaY = e.nextPageY - e.pageY;
-        e.cancel = true;
-        this._overlayService.setOffset(this._overlayComponentId, deltaX, deltaY);
     }
 
     /**
@@ -661,7 +634,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
         this.selectedField = expressionItem.expression.fieldName ?
             this.fields.filter(field => field.fieldName === expressionItem.expression.fieldName)[0] : null;
-        //this.grid.getColumnByName(expressionItem.expression.fieldName) : null;
         this.selectedCondition = expressionItem.expression.condition ?
             expressionItem.expression.condition.name : null;
         this.searchValue = expressionItem.expression.searchVal;
@@ -889,6 +861,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getFormatter(field: string) {
+        //TODO formatter
         return this.grid.getColumnByName(field).formatter;
     }
 
@@ -896,6 +869,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getFormat(field: string) {
+        //TODO formatter
         return this.grid.getColumnByName(field).pipeArgs.format;
     }
 
@@ -903,6 +877,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getTimezone(field: string) {
+        //TODO formatter time-zone
         return this.grid.getColumnByName(field).pipeArgs.timezone;
     }
 
@@ -1011,6 +986,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.currentGroup = groupItem;
     }
 
+    //TODO set default expressiontree
     private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
@@ -1236,14 +1212,15 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
  * @hidden
  */
 @NgModule({
-    declarations: [IgxQueryBuilderComponent],
-    exports: [IgxQueryBuilderComponent],
+    declarations: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderDirective],
+    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderDirective],
     imports: [
         CommonModule,
         FormsModule,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxChipsModule,
+        IgxDragDropModule,
         IgxIconModule,
         IgxSelectModule,
         IgxToggleModule

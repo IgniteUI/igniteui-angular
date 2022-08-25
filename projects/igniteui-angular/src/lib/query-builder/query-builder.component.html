@@ -1,5 +1,7 @@
 <article class="igx-query-builder">
-    <header class="igx-query-builder__header">
+    <header 
+        *ngIf="!isHeaderContentVisible"
+        class="igx-query-builder__header">
         <h4 class="igx-typography__h6" style="pointer-events: none;">
             Query Builder
         </h4>
@@ -12,30 +14,8 @@
             </div>
         </div>
     </header>
+    <ng-content select="igx-query-builder-header, [igxQueryBuilderHeader]"></ng-content>
 
-    <!-- <div #expressionsContainer>
-        <ng-container *ngIf="!rootGroup">
-            <button #addRootAndGroupButton
-                igxButton="outlined"
-                [displayDensity]="this.displayDensity"
-                (click)="addAndGroup()"
-            >
-                <igx-icon>add</igx-icon>
-                <span>and</span>
-            </button>
-
-            <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="addOrGroup()">
-                <igx-icon>add</igx-icon>
-                <span>or</span>
-            </button>
-
-            <div class="igx-filter-empty">
-                <h6 class="igx-filter-empty__title">
-                    Start with creating a group of conditions linked with "And" or "Or"
-                </h6>
-            </div>
-        </ng-container>
-    </div> -->
     <div #expressionsContainer class="igx-advanced-filter__main" (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 
