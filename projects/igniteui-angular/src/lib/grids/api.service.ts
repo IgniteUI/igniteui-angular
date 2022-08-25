@@ -558,10 +558,12 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-        const isAddRow = this.crudService.row instanceof IgxAddRow;
-        if (isAddRow) { return; }
-        const validation = grid.validation as IgxGridValidationService;
-        validation.update(rowID, rowNewValue);
+
+        if (!this.grid.transactions.isPending) {
+            const validation = grid.validation as IgxGridValidationService;
+            validation.update(rowID, rowNewValue);
+        }
+
     }
 
 

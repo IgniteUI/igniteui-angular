@@ -143,6 +143,7 @@ export class IgxGridValidationService {
             this._validityStates.clear();
         }
         this.updateStatus();
+        (this.grid as any).markForCheck();
     }
 
 }

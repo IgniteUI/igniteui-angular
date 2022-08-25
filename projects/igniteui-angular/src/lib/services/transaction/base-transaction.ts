@@ -38,6 +38,11 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return this._isPending;
     }
 
+    /** @hidden @internal **/
+    public get isPending() {
+        return this._isPending;
+    }
+
     /**
      * @inheritdoc
      */
