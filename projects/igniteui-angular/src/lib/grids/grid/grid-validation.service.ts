@@ -124,6 +124,20 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
+    public markAsTouched(rowId: any) {
+        const rowGroup = this.getFormGroup(rowId);
+        rowGroup.markAsTouched();
+        for (const col of this.grid.columns) {
+            const field = col.field;
+            const control = rowGroup?.get(field);
+            control.markAsTouched();
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     private updateStatus() {
         const currentValid = this.valid;
         this.valid = this.getInvalid().length === 0;

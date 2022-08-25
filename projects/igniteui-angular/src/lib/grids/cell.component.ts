@@ -487,7 +487,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-       return !this.intRow.deleted && this.formGroup?.get(this.column?.field)?.invalid;
+        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
+       return !this.intRow.deleted && isInvalid;
     }
 
     /**

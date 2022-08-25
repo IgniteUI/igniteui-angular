@@ -301,6 +301,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             grid.data.push(rowData);
         }
         const validation = grid.validation as IgxGridValidationService;
+        validation.markAsTouched(transactionId);
         validation.update(transactionId, rowData);
     }
 
