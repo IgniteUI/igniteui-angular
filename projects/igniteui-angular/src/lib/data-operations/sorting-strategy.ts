@@ -15,6 +15,7 @@ export interface ISortingExpression extends IBaseEventArgs {
 }
 
 export interface ISortingStrategy {
+    /* blazorSuppress */
     sort: (
         data: any[],
         fieldName: string,
@@ -36,6 +37,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return this._instance || (this._instance = new this());
     }
 
+    /* blazorSuppress */
     public sort(
         data: any[],
         fieldName: string,

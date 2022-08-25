@@ -372,6 +372,7 @@ export interface IBaseEventArgs {
 }
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
+    /* blazorSuppress */
     /** Browser event */
     event?: Event;
 }

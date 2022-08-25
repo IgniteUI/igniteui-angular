@@ -96,6 +96,7 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
     /** Set if the overlay should close when `Esc` key is pressed */
     closeOnEscape?: boolean;
+    /* blazorSuppress */
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
@@ -111,6 +112,7 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<any>;
+    /* blazorSuppress */
     /** Will provide the original keyboard event if closed from ESC or click */
     event?: Event;
 }
@@ -159,6 +161,7 @@ export interface OverlayInfo {
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
+    /* blazorSuppress */
     event?: Event;
     wrapperElement?: HTMLElement;
 }

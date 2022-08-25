@@ -195,6 +195,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Output()
     public dataChanged = new EventEmitter<any>();
 
+    /* blazorSuppress */
     @Output()
     public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 

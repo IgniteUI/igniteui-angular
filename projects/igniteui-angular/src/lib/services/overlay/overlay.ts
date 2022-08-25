@@ -309,6 +309,7 @@ export class IgxOverlayService implements OnDestroy {
      * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(element: ElementRef, settings?: OverlaySettings): string;
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *

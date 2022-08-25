@@ -14,6 +14,7 @@ export interface IGridClipboardEvent {
 
 export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: CellType;
+    /* blazorSuppress */
     event: Event;
 }
 
@@ -27,6 +28,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     rowData: any;
     oldValue: any;
     newValue?: any;
+    /* blazorSuppress */
     event?: Event;
     column?: ColumnType;
     owner?: GridType;
@@ -83,6 +85,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     newSelection: any[];
     readonly added: any[];
     readonly removed: any[];
+    /* blazorSuppress */
     readonly event?: Event;
 }
 
@@ -91,6 +94,7 @@ export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEve
     newSelection: string[];
     readonly added: string[];
     readonly removed: string[];
+    /* blazorSuppress */
     readonly event?: Event;
 }
 
@@ -127,6 +131,7 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
 export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     target: any;
+    /* blazorSuppress */
     event: Event;
     cancel: boolean;
 }
@@ -152,6 +157,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export interface IRowToggleEventArgs extends IBaseEventArgs {
     rowID: any;
     expanded: boolean;
+    /* blazorSuppress */
     event?: Event;
     cancel: boolean;
 }
@@ -178,6 +184,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
 export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The scroll direction - vertical or horizontal. */
     direction: string;
+    /* blazorSuppress */
     /** The original browser scroll event. */
     event: Event;
     /** The new scroll position */

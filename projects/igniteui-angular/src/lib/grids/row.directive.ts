@@ -165,6 +165,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
     public _virtDirRow: QueryList<IgxGridForOfDirective<any>>;
 
+    /* blazorSuppress */
     public get virtDirRow(): IgxGridForOfDirective<any> {
         return this._virtDirRow ? this._virtDirRow.first : null;
     }

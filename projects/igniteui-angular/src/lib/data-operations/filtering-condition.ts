@@ -855,6 +855,7 @@ export interface IFilteringOperation {
     isUnary: boolean;
     iconName: string;
     hidden?: boolean;
+    /* blazorSuppress */
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 

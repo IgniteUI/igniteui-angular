@@ -456,6 +456,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public primaryKey: any;
 
+    /* blazorSuppress */
     /**
      * Gets/Sets a unique values strategy used by the Excel Style Filtering
      *
@@ -1207,6 +1208,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('footer', { read: ElementRef })
     public footer: ElementRef;
 
+    /* blazorSuppress */
     public get headerContainer() {
         return this.theadRow?.headerForOf;
     }
@@ -3779,6 +3781,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         col.toggleVisibility(args.newValue);
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
      *
@@ -3796,6 +3799,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._expansionStates;
     }
 
+    /* blazorSuppress */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
@@ -4006,6 +4010,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.width === null || diff >= 0;
     }
 
+    /* blazorSuppress */
     /**
      * @hidden @internal
      * Gets the header cell inner width for auto-sizing.
@@ -6042,6 +6047,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
+    /* blazorSuppress */
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }

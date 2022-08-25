@@ -10,6 +10,7 @@ export interface IPositionStrategy {
      */
     settings: PositionSettings;
 
+    /* blazorSuppress */
     /**
      * Position the element based on the PositionStrategy implementing this interface.
      *

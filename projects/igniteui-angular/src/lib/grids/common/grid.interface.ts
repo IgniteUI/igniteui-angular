@@ -70,8 +70,11 @@ export interface CellType {
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
+    /* blazorSuppress */
     activate?(event: FocusEvent | KeyboardEvent): void;
+    /* blazorSuppress */
     onDoubleClick?(event: MouseEvent): void;
+    /* blazorSuppress */
     onClick?(event: MouseEvent): void;
 }
 
@@ -81,12 +84,14 @@ export interface RowType {
     viewIndex: number;
     isGroupByRow?: boolean;
     isSummaryRow?: boolean;
+    /* blazorSuppress */
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
+    /* blazorSuppress */
     virtDirRow?: IgxGridForOfDirective<any>;
     pinned?: boolean;
     selected?: boolean;
@@ -100,8 +105,11 @@ export interface RowType {
     addRowUI?: boolean;
     focused?: boolean;
     grid: GridType;
+    /* blazorSuppress */
     onRowSelectorClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     onClick?: (event: MouseEvent) => void;
+    /* blazorSuppress */
     beginAddRow?: () => void;
     update?: (value: any) => void;
     delete?: () => any;
@@ -197,6 +205,7 @@ export interface ColumnType {
     isFirstPinned: boolean;
     applySelectableClass: boolean;
     title: string;
+    /* blazorSuppress */
     groupingComparer: (a: any, b: any) => number;
 
     filterCellTemplate: TemplateRef<any>;
@@ -236,6 +245,7 @@ export interface GridServiceType {
     addRowToData(rowData: any, parentID?: any): void;
     deleteRowById(id: any): any;
     get_row_expansion_state(id: any): boolean;
+    /* blazorSuppress */
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[];
 
@@ -248,6 +258,7 @@ export interface GridServiceType {
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
     update_cell(cell: IgxCell): IGridEditEventArgs;
+    /* blazorSuppress */
     update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
 
     expand_path_to_record?(record: ITreeGridRecord): void;
@@ -415,9 +426,12 @@ export interface GridType extends IGridDataBindable {
     hasSummarizedColumns: boolean;
     hasColumnGroups: boolean;
     hasEditableColumns: boolean;
+    /* blazorSuppress */
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    /* blazorSuppress */
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
+    /* blazorSuppress */
     cdr: ChangeDetectorRef;
     document: Document;
     rowExpandedIndicatorTemplate: TemplateRef<any>;
@@ -481,8 +495,10 @@ export interface GridType extends IGridDataBindable {
     onDensityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IGridEditEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowAddedNotifier: Subject<IRowDataEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
+    /* blazorSuppress */
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
     cellEditEnter: EventEmitter<IGridEditEventArgs>;
     cellEdit: EventEmitter<IGridEditEventArgs>;
@@ -497,7 +513,9 @@ export interface GridType extends IGridDataBindable {
     rowToggle: EventEmitter<IRowToggleEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
+    /* blazorSuppress */
     rendered$: Observable<boolean>;
+    /* blazorSuppress */
     resizeNotify: Subject<void>;
 
     sortStrategy: IGridSortingStrategy;
