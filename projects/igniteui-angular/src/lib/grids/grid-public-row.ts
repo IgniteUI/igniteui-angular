@@ -58,8 +58,8 @@ abstract class BaseRow implements RowType {
     * ```
     */
     public errors(): ValidationErrors {
-        const editRow = this.grid.crudService.row || this.grid.crudService.cell.row;
-        return editRow.rowFormGroup.errors;
+        const formGroup = this.grid.validation.getFormGroup(this.key);
+        return formGroup?.errors;
     }
 
     /**

@@ -83,9 +83,8 @@ export class IgxGridCell implements CellType {
      */
 
     public get errors(): ValidationErrors {
-        const editRow = this.grid.crudService.row || this.grid.crudService.cell.row;
-        const form = editRow.rowFormGroup.get(this.column.field);
-        return form.errors;
+        const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
+        return form?.errors;
     }
 
     /**
