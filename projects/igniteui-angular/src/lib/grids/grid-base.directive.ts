@@ -3680,7 +3680,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
             if (this.hasColumnsToAutosize) {
-               this.autoSizeColumnsInView();
+                this.autoSizeColumnsInView();
             }
             this._rendered = true;
         });
@@ -5201,7 +5201,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
                 let widthValue = parseInt(colWidth, 10);
-                if(isNaN(widthValue)) {
+                if (isNaN(widthValue)) {
                     widthValue = MINIMUM_COLUMN_WIDTH;
                 }
                 const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
@@ -6892,7 +6892,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this._columns.filter((c) => !c.pinned) :
             this._columns.filter((c) => !c.pinned)
-            .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
+                .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
@@ -7037,7 +7037,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected autoSizeColumnsInView() {
-        if(!this.hasColumnsToAutosize) return;
+        if (!this.hasColumnsToAutosize) return;
         const vState = this.headerContainer.state;
         let colResized = false;
         const unpinnedInView = this.headerContainer.igxGridForOf.slice(vState.startIndex, vState.startIndex + vState.chunkSize).flatMap(x => x.columnGroup ? x.allChildren : x);
@@ -7055,9 +7055,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     // cells not in DOM yet...
                     continue;
                 }
-                const header = this.headerCellList.find( x=> x.column === col);
+                const header = this.headerCellList.find(x => x.column === col);
                 cellsContentWidths.push(header.nativeElement.offsetWidth);
-                let maxSize =  Math.ceil(Math.max(...cellsContentWidths)) + 1;
+                let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
                 if (col.maxWidth && maxSize > col.maxWidthPx) {
                     maxSize = col.maxWidthPx;
                 } else if (maxSize < col.minWidthPx) {
