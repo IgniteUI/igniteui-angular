@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, OnInit } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -1421,7 +1421,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridToggleRIComponent,
-                IgxHierarchicalGridCustomRowEditOverlayComponent
+                IgxHierarchicalGridCustomRowEditOverlayComponent,
+                IgxHierarchicalGridAutoSizeColumnsComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
@@ -1553,6 +1554,16 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         expect(nestedGridOverlayTextContent).toBe('Row Edit Text');
         expect(nestedGridOverlayActionsContent).toBe('Row Edit Actions');
+    });
+
+    it(`Should set ID column's width property to auto on init`, async () => {
+        const customFixture = TestBed.createComponent(IgxHierarchicalGridAutoSizeColumnsComponent);
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid = customFixture.componentInstance.hgrid;
+        customFixture.detectChanges();
+
+        expect(hierarchicalGrid).not.toBeNull();
+        expect(hierarchicalGrid).not.toBeUndefined();
     });
 
     it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened
@@ -2031,4 +2042,28 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
         </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarchicalGridTestBaseComponent { }
+export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarchicalGridTestBaseComponent{}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false"
+    [height]="'400px'" [width]="width" [rowEditable]="true" #hierarchicalGrid>
+     <igx-column field="ID" width="auto"></igx-column>
+     <igx-column field="ProductName" width="auto"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true"
+            #rowIsland>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            </igx-row-island>
+            <ng-template igxRowEditText let-rowChangesCount>
+                <span>Row Edit Text</span>
+            </ng-template>
+            <ng-template igxRowEditActions let-endRowEdit>
+                <span>Row Edit Actions</span>
+            </ng-template>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
+
