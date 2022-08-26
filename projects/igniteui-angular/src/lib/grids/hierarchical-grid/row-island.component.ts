@@ -218,7 +218,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     constructor(
-        public validationService: IgxGridValidationService,
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,

@@ -913,7 +913,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     constructor(
-        public validationService: IgxGridValidationService,
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxPivotColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,

@@ -393,7 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // }
 
     constructor(
-        public validationService: IgxGridValidationService,
+        protected validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,

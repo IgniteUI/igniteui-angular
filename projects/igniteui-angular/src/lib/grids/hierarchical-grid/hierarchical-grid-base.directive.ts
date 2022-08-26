@@ -149,7 +149,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public abstract expandChildren: boolean;
 
     constructor(
-        public validationService: IgxGridValidationService,
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
