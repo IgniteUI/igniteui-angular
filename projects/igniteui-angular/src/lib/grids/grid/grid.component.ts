@@ -30,6 +30,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
+import { IgxGridValidationService } from './grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -66,6 +67,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
+        IgxGridValidationService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
         IgxFilteringService,

@@ -13,6 +13,8 @@ import {
     EventEmitter,
     OnDestroy,
     Inject,
+    Optional,
+    Self,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -52,7 +54,7 @@ import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
-import { Validator } from '@angular/forms';
+import { NG_VALIDATORS, Validator } from '@angular/forms';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -1737,9 +1739,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
+        @Optional() @Self() @Inject(NG_VALIDATORS) private _validators: Validator[],
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
-    ) { }
+    ) {
+        this.validators  = _validators;
+     }
 
     /**
      * @hidden

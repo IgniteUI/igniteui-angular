@@ -172,16 +172,12 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
         const lastActions: Action<T>[] = this._undoStack.pop();
         this._transactions.splice(this._transactions.length - lastActions.length);
-        this._validationTransactions.splice(this._validationTransactions.length - lastActions.length);
         this._redoStack.push(lastActions);
 
         this._states.clear();
-        this._validationStates.clear();
         for (const currentActions of this._undoStack) {
             for (const transaction of currentActions) {
                 this.updateState(this._states, transaction.transaction, transaction.recordRef);
-                const validationTransaction = this._validationTransactions.find(x => x.id === transaction.transaction.id);
-                this.updateValidationState(this._validationStates, validationTransaction, transaction.recordRef);
             }
         }
 
@@ -196,9 +192,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             const actions: Action<T>[] = this._redoStack.pop();
             for (const action of actions) {
                 this.updateState(this._states, action.transaction, action.recordRef);
-                this.updateValidationState(this._validationStates, action.transaction, action.recordRef);
                 this._transactions.push(action.transaction);
-                this._validationTransactions.push(action.transaction);
             }
 
             this._undoStack.push(actions);

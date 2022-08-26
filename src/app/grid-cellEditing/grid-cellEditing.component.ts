@@ -2,7 +2,7 @@ import { Component, Directive, Input, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from '../shared/data';
 
 import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity, IgxColumnComponent, IgxColumnValidator
+    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity, IgxColumnComponent
 } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
@@ -56,13 +56,13 @@ export class GridCellEditingComponent {
 
 
     public cellEdit(evt) {
-        if (!evt.isValid) {
+        if (!evt.valid) {
             evt.cancel = true;
         }
     }
 
     public rowEdit(evt) {
-        if (!evt.isValid) {
+        if (!evt.valid) {
             evt.cancel = true;
         }
     }

@@ -11,6 +11,7 @@ import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { FilterUtil } from '../data-operations/filtering-strategy';
+import { IgxGridValidationService } from './grid/grid-validation.service';
 
 /**
  * @hidden
@@ -145,12 +146,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
-        const validity: IFieldValid[] = [{
-            field: cell.column.field,
-            valid: args.isValid,
-            formGroup: cell.row.rowFormGroup
-        }];
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue), validity);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -201,16 +197,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (hasSummarized) {
             grid.summaryService.removeSummaries(args.rowID);
         }
-        const validityArray: IFieldValid[] = [];
-        Object.keys(row.rowFormGroup.controls).forEach(key => {
-            validityArray.push({
-                field: key,
-                valid: row.rowFormGroup.controls[key].valid,
-                formGroup: row.rowFormGroup
-            });
-        });
 
-        this.updateData(grid, row.id, data[index], args.oldValue, args.newValue, validityArray);
+        this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
@@ -312,7 +300,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             grid.data.push(rowData);
         }
-        grid.transactions.addValidation({newValue: rowData, id: transactionId, type: TransactionType.ADD,  validity: validity});
+        grid.validation.markAsTouched(transactionId);
+        grid.validation.update(transactionId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -330,6 +319,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const state: State = grid.transactions.getState(rowID);
             grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
+        grid.validation.clear(rowID);
     }
 
     public deleteRowById(rowId: any): any {
@@ -557,20 +547,23 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowCurrentValue Current value of the row as it is with applied previous transactions
      * @param rowNewValue New value of the row
      */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }, validity?) {
-        
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
         const transaction: Transaction = {
             id: rowID,
             type: TransactionType.UPDATE,
-            newValue: rowNewValue,
-            validity: validity
+            newValue: rowNewValue
         };
         if (grid.transactions.enabled) {
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-        grid.transactions.addValidation(transaction, rowCurrentValue);
+
+        if (!this.grid.transactions.isPending) {
+            const validation = grid.validation as IgxGridValidationService;
+            validation.update(rowID, rowNewValue);
+        }
+
     }
 
 

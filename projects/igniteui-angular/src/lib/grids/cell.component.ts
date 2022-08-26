@@ -107,15 +107,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public column: ColumnType;
 
 
+    /**
+     * @hidden
+     * @internal
+     */
     public get formGroup(): FormGroup {
-        const isRowEdit = this.grid.crudService.rowEditing;
-        const editRow = isRowEdit ? this.grid.crudService.row : this.grid.crudService.cell?.row;
-        const id = isRowEdit ? editRow?.id : editRow?.id.rowID;
-        if (editRow && id === this.intRow.key) {
-            return editRow.rowFormGroup;
-        } else {
-            return this.validity?.formGroup ?? editRow?.rowFormGroup;
-        }
+        return this.grid.validation.getFormGroup(this.intRow.key);
     }
 
     /**
@@ -224,6 +221,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const ctx = {
             $implicit: this.value,
             additionalTemplateContext: this.column.additionalTemplateContext,
+            formControl: this.editMode ? this.formControl : undefined,
+            defaultErrorTemplate: this.defaultErrorTemplate
         };
         /* Turns the `cell` property from the template context object into lazy-evaluated one.
          * Otherwise on each detection cycle the cell template is recreating N cell instances where
@@ -244,7 +243,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get template(): TemplateRef<any> {
-        if (this.editMode) {
+        if (this.editMode && this.formGroup) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
         }
@@ -492,11 +491,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('class.igx-grid__td--invalid')
     @HostBinding('attr.aria-invalid')
     public get isInvalid() {
-        if (this.intRow.inEditMode || this.editMode) {
-            return this.formGroup?.get(this.column?.field)?.invalid;
-        } else {
-            return !!this.validity ? !this.validity.valid : false;
-        }
+        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
+       return !this.intRow.deleted && isInvalid;
     }
 
     /**
@@ -514,13 +510,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public get formControl(): FormControl {
         return (this.formGroup?.get(this.column.field) || new FormControl(this.column.field)) as FormControl;
-    }
-
-    private get validity() {
-        const state = this.grid.transactions.getAggregatedValidationState(this.intRow.key);
-        if (state && state.validity && state.validity.some(x => x.valid === false)) {
-            return state.validity.find(x => x.field === this.column.field);
-        }
     }
 
     public get gridRowSpan(): number {
@@ -833,13 +822,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.cdr.detectChanges();
                 this.openErrorTooltip();
             }
-            this.grid.validationStatusChange.emit(
-                {
-                    formGroup: this.formGroup,
-                    value: this.editValue,
-                    state: this.errorTooltip.length > 0 ? Validity.Invalid : Validity.Valid
-                }
-            );
         });
     }
 
@@ -888,6 +870,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             // while in edit mode subscribe to value changes on the current form control and set to editValue
             this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
                 this.editValue = value;
+                this.formControl.markAsTouched();
             });
             this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
