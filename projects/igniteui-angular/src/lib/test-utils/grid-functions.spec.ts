@@ -2079,9 +2079,9 @@ export class GridFunctions {
     public static getResizer(fix): DebugElement {
         return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
     }
-    
-    public static verifyCellValid(cell: IgxGridCellComponent | CellType, valid = true) {
-        expect((cell as IgxGridCell).formControl.valid).toEqual(valid);
+
+    public static verifyCellValid(cell: IgxGridCellComponent, valid = true) {
+        expect(cell.formControl.valid).toEqual(valid);
         expect(cell.nativeElement.classList.contains(CELL_INVALID_CSS_CLASS)).not.toEqual(valid);
     }
 }

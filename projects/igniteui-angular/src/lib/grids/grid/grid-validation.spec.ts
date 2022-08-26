@@ -7,7 +7,11 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { ForbiddenValidatorDirective, IgxGridValidationTestBaseComponent, IgxGridValidationTestCustomErrorComponent } from '../../test-utils/grid-validation-samples.spec';
+import {
+    ForbiddenValidatorDirective,
+    IgxGridValidationTestBaseComponent,
+    IgxGridValidationTestCustomErrorComponent
+} from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Validity } from '../common/grid.interface';
 import { IgxGridComponent } from './grid.component';
@@ -97,7 +101,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should allow setting validators on the exposed FormGroup object', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            grid.onFormGroupCreate.pipe(takeUntil($destroyer)).subscribe((formGroup: FormGroup) => {
+            grid.formGroupCreated.pipe(takeUntil($destroyer)).subscribe((formGroup: FormGroup) => {
                 const prodName = formGroup.get('ProductName');
                 prodName.addValidators(Validators.email);
             });
@@ -196,7 +200,7 @@ describe('IgxGrid - Validation #grid', () => {
         it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((args) => {
-                if (!args.isValid) {
+                if (!args.valid) {
                     args.cancel = true;
                 }
             });
@@ -224,34 +228,34 @@ describe('IgxGrid - Validation #grid', () => {
             GridFunctions.verifyCellValid(cell, true);
         });
 
-        it('should trigger the onValidationStatusChange event on grid when validation status changes', () => {
+        it('should trigger the validationStatusChange event on grid when validation status changes', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             spyOn(grid.validationStatusChange, "emit").and.callThrough();
 
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
             cell.update('asd');
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
-            GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({
-                formGroup: cell.formGroup,
-                state: Validity.Invalid,
-                value: 'asd'
-            });
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
 
+            GridFunctions.verifyCellValid(cell, false);
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith(Validity.Invalid);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
             cell.update('test');
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({
-                formGroup: cell.formGroup,
-                state: Validity.Valid,
-                value: 'test'
-            });
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith(Validity.Valid);
         });
 
         xit('should return invalid transaction using the transaction`s getInvalidTransactionLog method', () => {
@@ -263,11 +267,10 @@ describe('IgxGrid - Validation #grid', () => {
             cell.update('asd');
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
-            let transactionLog = grid.transactions.getInvalidTransactionLog();
+            let transactionLog = grid.validation.getInvalid();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(transactionLog[0].newValue).toEqual({ ProductName: 'asd' });
-            expect(transactionLog[0].validity[0].valid).toBeFalse();
+            expect(transactionLog[0].state[0].valid).toBeFalse();
 
 
             cell.editMode = true;
@@ -276,9 +279,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
             GridFunctions.verifyCellValid(cell, true);
-            transactionLog = grid.transactions.getInvalidTransactionLog();
-            expect(transactionLog[1].newValue).toEqual({ ProductName: 'test' });
-            expect(transactionLog[1].validity[0].valid).toBeTrue();
+            transactionLog = grid.validation.getInvalid();
+            expect(transactionLog[1].state[0].valid).toBeTrue();
         });
     });
 
@@ -290,7 +292,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
         }));
 
-        it('should allow setting built-in validators via template-driven configuration on the column', () => {
+        it('should allow setting custom validators via template-driven configuration on the column', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
@@ -309,6 +311,95 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             GridFunctions.verifyCellValid(cell, true);
+        });
+    });
+
+    describe('Trensactions integration - ', () => {
+        let fixture;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxGridValidationTestBaseComponent);
+            fixture.componentInstance.batchEditing = true;
+            fixture.detectChanges();
+        }));
+
+        it('should allow setting built-in validators via template-driven configuration on the column', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('IG');
+            fixture.detectChanges();
+
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, true);
+
+            grid.transactions.redo();
+            fixture.detectChanges();
+
+            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.transactions.commit(grid.data);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+            expect((grid.validation as any).getValidity().length).toEqual(1);
+
+            grid.validation.clear();
+            fixture.detectChanges();
+        });
+
+        it('should not invalidate cleared number cell when transactions are enabled', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 3);
+
+            // Set cell to null, which should invalidate
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update(null);
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, false);
+
+            // Exit edit. CRUD service sets number value to 0
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(0);
+            GridFunctions.verifyCellValid(cell, true);
+
+            // Undo. Expect previous value
+            grid.transactions.undo();
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(0);
+            expect((grid.validation as any).getValidity().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, true);
+
+            // Redo. Expect value 0
+            grid.transactions.redo();
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(0);
+            expect((grid.validation as any).getValidity().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, true);
+
+            grid.transactions.commit(grid.data);
+            grid.validation.clear();
+            fixture.detectChanges();
+
+            expect((grid.validation as any).getValidity().length).toEqual(0);
         });
     });
 });
