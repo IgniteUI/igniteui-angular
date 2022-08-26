@@ -87,7 +87,7 @@ export class GridValidationSampleComponent {
     }
 
     public validationChange(evtArgs: Validity){
-        alert(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
+        console.log(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
     }
 }
 
