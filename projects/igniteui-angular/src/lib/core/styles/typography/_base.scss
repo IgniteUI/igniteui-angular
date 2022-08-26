@@ -9,7 +9,7 @@
 ///   $h1-style: type-scale-category($type-scale, 'h1');
 ///   @include font-var('h1-font', $h1-style);
 @mixin font-var($name, $type-style, $prefix: null) {
-    $ff: var(--igx-font-family);
+    $ff: var(--ig-font-family);
     $fz: map.get($type-style, 'font-size');
     $fw: map.get($type-style, 'font-weight');
 

@@ -108,7 +108,7 @@
 /// @requires {mixin} type-style
 @mixin graph-typography() {
     igx-bullet-graph {
-        --bullet-graph-font: var(--igx-font-family, inherit);
+        --bullet-graph-font: var(--ig-font-family, inherit);
     }
 }
 

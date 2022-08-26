@@ -87,7 +87,7 @@
 /// @requires {mixin} type-style
 @mixin dock-manager-typography() {
     igx-dock-manager {
-        --igc-font-family: var(--igx-font-family, inherit);
+        --igc-font-family: var(--ig-font-family, inherit);
     }
 }
 

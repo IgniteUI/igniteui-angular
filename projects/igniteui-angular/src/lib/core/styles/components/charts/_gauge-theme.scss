@@ -121,11 +121,11 @@
 /// @requires {mixin} type-style
 @mixin gauge-typography() {
     igx-linear-gauge {
-        --linear-gauge-font: var(--igx-font-family, inherit);
+        --linear-gauge-font: var(--ig-font-family, inherit);
     }
 
     igx-radial-gauge {
-        --radial-gauge-font: var(--igx-font-family, inherit);
+        --radial-gauge-font: var(--ig-font-family, inherit);
     }
 }
 
