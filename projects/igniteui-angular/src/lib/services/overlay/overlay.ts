@@ -321,6 +321,7 @@ export class IgxOverlayService implements OnDestroy {
      */
     public attach(component: Type<any>, settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
+    /* blazorSuppress */
     public attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string {
         const info: OverlayInfo = this.getOverlayInfo(component, moduleRef);
@@ -424,6 +425,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Hides the component with the ID provided as a parameter.
      * ```typescript

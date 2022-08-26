@@ -166,6 +166,10 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 // Paginator selector
 const PAGINATOR_SELECTOR = 'igx-paginator';
 
+/**
+ * testing testing test
+ * @blazorComponent true
+*/ 
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
