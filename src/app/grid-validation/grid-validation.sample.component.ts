@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IgxTransactionService, Validity } from 'igniteui-angular';
+import {  IgxGridComponent, IgxTransactionService, Validity, IRecordValidationState } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
@@ -50,7 +50,7 @@ export class GridValidationSampleComponent {
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {
-      const invalid = this.gridWithTransaction.validation.getInvalid();
+      const invalid: IRecordValidationState[] = this.gridWithTransaction.validation.getInvalid();
         if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);

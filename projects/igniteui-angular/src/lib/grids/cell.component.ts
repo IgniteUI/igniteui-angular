@@ -107,6 +107,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public column: ColumnType;
 
 
+    /**
+     * @hidden
+     * @internal
+     */
     public get formGroup(): FormGroup {
         return this.grid.validation.getFormGroup(this.intRow.key);
     }

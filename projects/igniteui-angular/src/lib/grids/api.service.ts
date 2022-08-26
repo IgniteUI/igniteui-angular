@@ -4,7 +4,7 @@ import { cloneArray, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxGridCRUDService, IgxEditRow, IgxAddRow } from './common/crud.service';
+import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, IFieldValid, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
@@ -300,9 +300,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             grid.data.push(rowData);
         }
-        const validation = grid.validation as IgxGridValidationService;
-        validation.markAsTouched(transactionId);
-        validation.update(transactionId, rowData);
+        grid.validation.markAsTouched(transactionId);
+        grid.validation.update(transactionId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {

@@ -355,9 +355,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
             const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
             if (!isAddRow) {
                 const id = this.row ? this.row.id : this.cell.id.rowID;
-                const value = this.grid.transactions.getAggregatedValue(id, true);
-                const originalData = this.row ? this.row.data : this.cell.rowData;
-                this.grid.validation.update(id, value ?? originalData);
+                this.grid.validation.update(id, rowEditArgs.oldValue);
             }
         } else if (this.row.getClassName() === IgxEditRow.name) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
