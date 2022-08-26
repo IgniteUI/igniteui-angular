@@ -97,7 +97,8 @@
     @include drag.component();
 
     // Includes the base for each theme.
-    [class^='igx-'] {
+    [class^='igx-'],
+    [class^='ig-'] {
         &,
         *,
         *::before,
