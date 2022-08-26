@@ -6,6 +6,7 @@ import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
 import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
+import { ValidationErrors } from '@angular/forms';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -49,6 +50,16 @@ abstract class BaseRow implements RowType {
         return !!this.grid.crudService.row &&
             this.grid.crudService.row.getClassName() === IgxAddRow.name &&
             this.grid.crudService.row.id === this.key;
+    }
+
+    /** Gets the validation errors if any.
+    * ```typescript
+    * let errors = row.errors;
+    * ```
+    */
+    public errors(): ValidationErrors {
+        const formGroup = this.grid.validation.getFormGroup(this.key);
+        return formGroup?.errors;
     }
 
     /**

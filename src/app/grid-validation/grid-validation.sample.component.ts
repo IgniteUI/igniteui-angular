@@ -1,8 +1,8 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxColumnValidator, IgxGridComponent, IgxTransactionService, IValidationStatus } from 'igniteui-angular';
-import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {  IgxGridComponent, IgxTransactionService, Validity, IRecordValidationState } from 'igniteui-angular';
+import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -15,7 +15,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: '[appForbiddenName]',
     providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
   })
-  export class ForbiddenValidatorDirective extends IgxColumnValidator {
+  export class ForbiddenValidatorDirective extends Validators {
     @Input('appForbiddenName') 
     public forbiddenName = '';
   
@@ -50,8 +50,8 @@ export class GridValidationSampleComponent {
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {
-        const invalidTransactions = this.gridWithTransaction.transactions.getInvalidTransactionLog();
-        if (invalidTransactions.length > 0) {
+      const invalid: IRecordValidationState[] = this.gridWithTransaction.validation.getInvalid();
+        if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
            }
@@ -60,9 +60,16 @@ export class GridValidationSampleComponent {
         }
     }
 
-    public commitNoTransactions() {
-        console.log(this.data);
-        this.gridNoTransactions.transactions.commit([]);
+    public undo() {
+      this.gridWithTransaction.transactions.undo();
+    }
+
+    public redo() {
+      this.gridWithTransaction.transactions.redo();
+    }
+
+    public clearValidity() {
+        this.gridNoTransactions.validation.clear();
         this.gridNoTransactions.markForCheck();
     }
 
@@ -79,8 +86,8 @@ export class GridValidationSampleComponent {
         //    prodName.addValidators(forbiddenNameValidator(/bob/i));
     }
 
-    public validationChange(evtArgs: IValidationStatus){
-        //console.log(evtArgs);
+    public validationChange(evtArgs: Validity){
+        console.log(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
     }
 }
 

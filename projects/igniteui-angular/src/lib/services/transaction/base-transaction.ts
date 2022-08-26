@@ -38,6 +38,11 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return this._isPending;
     }
 
+    /** @hidden @internal **/
+    public get isPending() {
+        return this._isPending;
+    }
+
     /**
      * @inheritdoc
      */
@@ -46,9 +51,6 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
-
-    protected _validationTransactions: T[] = [];
-    protected _validationStates: Map<any, S> = new Map();
 
     private _cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
@@ -86,64 +88,9 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         const result: T[] = [];
         this._pendingStates.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type, validity: state.validity } as T);
+            result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
-    }
-
-    /**
-    * @inheritdoc
-    */
-    public addValidation(transaction: T, recordRef?: any): void {
-        this.updateValidationState(this._validationStates, transaction, recordRef);
-        this._validationTransactions.push(transaction);
-    }
-
-
-    /**
-     * Updates the provided validation states collection according to passed transaction and recordRef
-     *
-     * @param states States collection to apply the update to
-     * @param transaction Transaction to apply to the current state
-     * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
-     */
-    protected updateValidationState(states: Map<any, S>, transaction: T, recordRef?: any): void {
-        if (!transaction) return;
-        let state = states.get(transaction.id);
-        if (state) {
-            if (isObject(state.value)) {
-                mergeObjects(state.value, transaction.newValue);
-            } else {
-                state.value = transaction.newValue;
-            }
-            this.updateValidity(state, transaction);
-        } else {
-            state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type, validity: transaction.validity } as S;
-            states.set(transaction.id, state);
-            state.validity = transaction.validity;
-        }
-    }
-
-    /**
-    * @inheritdoc
-    */
-    public getAggregatedValidationChanges(): T[] {
-        const result: T[] = [];
-        this._validationStates.forEach((state: S, key: any) => {
-            result.push({ id: key, newValue: state.value, type: state.type, validity: state.validity } as T);
-        });
-        return result;
-    }
-
-    /**
-    * @inheritdoc
-    */
-    public getAggregatedValidationState(id: any): any {
-        const state = this._validationStates.get(id);
-        if (!state) {
-            return null;
-        }
-        return state;
     }
 
     /**
@@ -177,28 +124,9 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public getInvalidTransactionLog(id?: any) {
-        let validationTransactions = [...this._validationTransactions];
-        if (id !== undefined) {
-            validationTransactions = validationTransactions.filter(t => t.id === id);
-        }
-        return validationTransactions.filter(x => x.validity.some(y => y.valid === false));
-    }
-
-    /**
-     * @inheritdoc
-     */
     public clear(id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
-        if (id !== undefined) {
-            this._validationTransactions = this._validationTransactions.filter(t => t.id !== id);
-            this._validationStates.delete(id);
-        } else {
-            this._validationStates.clear();
-            this._validationTransactions = [];
-        }
-
     }
 
     /**
@@ -236,30 +164,6 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         } else {
             state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
-        }
-    }
-
-    /**
-     * Updates the validity state after update.
-     *
-     * @param state State to update value for
-     * @param transaction The transaction based on which to update.
-     */
-    protected updateValidity(state, transaction) {
-        // update validity
-        if (transaction.validity) {
-            transaction.validity.forEach(validity => {
-                const existingState = state.validity?.find(x => x.field === validity.field);
-                if (existingState) {
-                    existingState.valid = validity.valid;
-                    existingState.formGroup = validity.formGroup;
-                } else {
-                    if (!state.validity) {
-                        state.validity = [];
-                    }
-                    state.validity.push(validity);
-                }
-            });
         }
     }
 

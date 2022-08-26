@@ -2,41 +2,50 @@
     <article class="grid-row-edit-wrapper">
         <h4>Grid without transactions</h4>
         <igx-switch [(ngModel)]="rowEditNoTransactions">Row edit</igx-switch>
-        <igx-grid validationTrigger='change' (validationStatusChange)='validationChange($event)' (cellEdit)='cellEdit($event)' (onFormGroupCreate)='formCreateHandler($event)' #gridNoTransactions primaryKey="ProductID" [data]="data" [rowEditable]="rowEditNoTransactions"
+        <igx-grid validationTrigger='change' (validationStatusChange)='validationChange($event)' (cellEdit)='cellEdit($event)' (formGroupCreated)='formCreateHandler($event)' #gridNoTransactions primaryKey="ProductID" [data]="data" [rowEditable]="rowEditNoTransactions"
         [width]="'1200px'" [height]="'800px'">
-        <igx-column appForbiddenName='bob' minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [width]="c.width" [resizable]='true'>
-            <!-- <ng-template igxCellEditor let-cell="cell" let-value>
-                <input [igxFocus]="true"
-                [formControl]="cell.formControl"/>
-            </ng-template> -->
+        <igx-column field='ProductID' [editable]='false'></igx-column>
+        <igx-column field='ProductName' appForbiddenName='bob' required [editable]='true'>
+            <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
+                <ng-container *ngTemplateOutlet="defaultErr" >
+                </ng-container>
+                <div *ngIf="cell.errors?.['forbiddenName']">
+                    This name is forbidden.
+                </div>
+            </ng-template>
         </igx-column>
+        <igx-column field='UnitPrice' required min='0' max='100' [editable]='true'></igx-column>
+        <igx-column field='UnitsInStock' required min='0' max='200' [editable]='true'></igx-column>
         <igx-action-strip #actionStrip1>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
-    <button (click)='commitNoTransactions()'>Commit</button>
+    <button (click)='clearValidity()'>Clear validity</button>
     </article>
     <article class="grid-row-edit-wrapper">
         <h4>Grid with transactions</h4>
         <igx-switch [(ngModel)]="rowEditWithTransactions">Row edit</igx-switch>
-        <igx-grid #gridTransactions [batchEditing]="true" primaryKey="ProductID" [data]="transactionData" [rowEditable]="rowEditWithTransactions"
+        <igx-grid  (validationStatusChange)='validationChange($event)'  #gridTransactions [batchEditing]="true" primaryKey="ProductID" [data]="transactionData" [rowEditable]="rowEditWithTransactions"
             [width]="'1200px'" [height]="'800px'" >
-            <igx-column appForbiddenName='bob'  minlength="4" maxlength='8' required *ngFor="let c of columns" [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-                [header]="c.field" [width]="c.width" [resizable]='true'>
-                <ng-template igxCellValidationError let-cell='cell'>
-                    <ng-container *ngTemplateOutlet="cell.defaultErrorTemplate" >
+            <igx-column field='ProductID' [editable]='false'></igx-column>
+            <igx-column field='ProductName' appForbiddenName='bob' required [editable]='true'>
+                <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
+                    <ng-container *ngTemplateOutlet="defaultErr" >
                     </ng-container>
-                    <div *ngIf="cell.formGroup?.get(cell.column?.field).errors?.['forbiddenName']">
+                    <div *ngIf="cell.errors?.['forbiddenName']">
                         This name is forbidden.
                     </div>
                 </ng-template>
             </igx-column>
+            <igx-column field='UnitPrice' required min='0' max='100' [editable]='true'></igx-column>
+            <igx-column field='UnitsInStock' required min='0' max='200' [editable]='true'></igx-column>
             <igx-action-strip #actionStrip1>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
-                <igx-grid-editing-actions></igx-grid-editing-actions>
+                <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
         <button (click)='commitWithTransactions()'>Commit</button>
+        <button (click)='undo()'>Undo</button>
+        <button (click)='redo()'>Redo</button>
     </article>
