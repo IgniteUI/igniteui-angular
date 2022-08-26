@@ -5729,6 +5729,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.addRowSnackbar.open();
     }
 
+    /* blazorSuppress */
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      *

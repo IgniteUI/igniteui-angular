@@ -322,7 +322,6 @@ export class IgxOverlayService implements OnDestroy {
      */
     public attach(component: Type<any>, settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
-    
     /* blazorSuppress */
     public attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string {

@@ -455,6 +455,7 @@ export interface GridType extends IGridDataBindable {
     childDataKey?: any;
     foreignKey?: any;
     cascadeOnDelete?: boolean;
+    /* blazorSuppress */
     loadChildrenOnDemand?: (parentID: any, done: (children: any[]) => void) => void;
     hasChildrenKey?: any;
     loadingRows?: Set<any>;
@@ -593,8 +594,11 @@ export interface GridType extends IGridDataBindable {
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;
+    /* blazorSuppress */
     navigateTo(rowIndex: number, visibleColumnIndex: number, callback?: (e: any) => any): void;
+    /* blazorSuppress */
     getPreviousCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
+    /* blazorSuppress */
     getNextCell(currRowIndex: number, curVisibleColIndex: number, callback: (c: ColumnType) => boolean): ICellPosition;
     clearCellSelection(): void;
     selectRange(range: GridSelectionRange | GridSelectionRange[]): void;
