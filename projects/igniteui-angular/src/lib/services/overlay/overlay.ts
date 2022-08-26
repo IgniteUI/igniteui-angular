@@ -301,6 +301,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    /* blazorSuppress */
     /**
      * Generates Id. Provide this Id when call `show(id)` method
      *

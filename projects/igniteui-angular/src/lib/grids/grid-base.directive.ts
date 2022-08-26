@@ -5733,6 +5733,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.addRowSnackbar.open();
     }
 
+    /* blazorSuppress */
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      *
@@ -5779,6 +5780,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorSuppress */
     /**
      * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
@@ -5814,6 +5816,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorSuppress */
     /**
      * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.
