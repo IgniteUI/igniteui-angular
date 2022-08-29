@@ -44,7 +44,7 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-tabs: tabs-theme(
-                $item-text-color: red,
+                $item-text-color: red
             );`
         );
     });
