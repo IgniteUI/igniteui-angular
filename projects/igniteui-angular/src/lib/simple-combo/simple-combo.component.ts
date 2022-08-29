@@ -192,7 +192,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     }
                     return current === this.selection[0];
                 });
-                this.dropdown.navigateItem(index);
+                if (!this.isRemote) {
+                    // navigate to item only if we have local data
+                    // as with remote data this will fiddle with igxFor's scroll handler
+                    // and will trigger another chunk load which will break the visualization
+                    this.dropdown.navigateItem(index);
+                }
             }
         });
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
