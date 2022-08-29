@@ -54,6 +54,7 @@ export class GridValidationSampleComponent {
         if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
+            this.gridWithTransaction.validation.clear();
            }
         } else {
             this.gridWithTransaction.transactions.commit(this.transactionData);

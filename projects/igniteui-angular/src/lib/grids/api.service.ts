@@ -148,7 +148,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const data = this.getRowData(cell.id.rowID);
         const newRowData = reverseMapper(cell.column.field, args.newValue);
         this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
-        if (!this.grid.rowEditable) {
+        if (!this.grid.crudService.row) {
             this.grid.validation.update(cell.id.rowID, newRowData);
         }
         if (this.grid.primaryKey === cell.column.field) {
@@ -203,9 +203,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
-        if (this.grid.rowEditable) {
-            this.grid.validation.update(row.id, args.newValue);
-        }
+        this.grid.validation.update(row.id, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
