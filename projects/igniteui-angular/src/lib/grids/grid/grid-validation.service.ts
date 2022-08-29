@@ -132,7 +132,7 @@ export class IgxGridValidationService {
         rowGroup.markAsTouched();
         for (const col of this.grid.columns) {
             if(!field || (field && col.field === field)) {
-                rowGroup?.get(col.field).markAsTouched();
+                rowGroup?.get(col.field)?.markAsTouched();
             }
         }
     }
