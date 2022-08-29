@@ -126,14 +126,14 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
-    public markAsTouched(rowId: any) {
+    public markAsTouched(rowId: any, field?: string) {
         const rowGroup = this.getFormGroup(rowId);
         if (!rowGroup) return;
         rowGroup.markAsTouched();
         for (const col of this.grid.columns) {
-            const field = col.field;
-            const control = rowGroup?.get(field);
-            control.markAsTouched();
+            if(!field || (field && col.field === field)) {
+                rowGroup?.get(col.field).markAsTouched();
+            }
         }
     }
 
