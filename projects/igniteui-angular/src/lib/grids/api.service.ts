@@ -146,7 +146,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const newRowData = reverseMapper(cell.column.field, args.newValue);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
+        if (!this.grid.rowEditable) {
+            this.grid.validation.update(cell.id.rowID, newRowData);
+        }
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -199,6 +203,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
+        if (this.grid.rowEditable) {
+            this.grid.validation.update(row.id, args.newValue);
+        }
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
@@ -558,12 +565,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
-
-        if (!this.grid.transactions.isPending) {
-            const validation = grid.validation as IgxGridValidationService;
-            validation.update(rowID, rowNewValue);
-        }
-
     }
 
 
