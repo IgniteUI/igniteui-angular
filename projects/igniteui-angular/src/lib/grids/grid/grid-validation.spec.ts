@@ -314,7 +314,7 @@ describe('IgxGrid - Validation #grid', () => {
         });
     });
 
-    describe('Trensactions integration - ', () => {
+    describe('Transactions integration - ', () => {
         let fixture;
 
         beforeEach(fakeAsync(() => {
@@ -323,7 +323,37 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
         }));
 
-        it('should allow setting built-in validators via template-driven configuration on the column', () => {
+        it('should update validity when setting new value through grid API', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            grid.updateCell('IG', 2,'ProductName');
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, true);
+
+            grid.updateRow({ProductID : '2', ProductName: '', UnitPrice: '29.0000', UnitsInStock: '66'}, 2);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, true);
+
+            grid.transactions.redo();
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+        });
+
+        it('should update validation status when using undo/redo api', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
@@ -340,13 +370,11 @@ describe('IgxGrid - Validation #grid', () => {
             grid.transactions.undo();
             fixture.detectChanges();
 
-            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             GridFunctions.verifyCellValid(cell, true);
 
             grid.transactions.redo();
             fixture.detectChanges();
 
-            cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             GridFunctions.verifyCellValid(cell, false);
 
             grid.transactions.commit(grid.data);
@@ -359,7 +387,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
         });
 
-        it('should not invalidate cleared number cell when transactions are enabled', () => {
+        it('should not invalidate cleared number cell', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 3);
 
@@ -400,6 +428,40 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             expect((grid.validation as any).getValidity().length).toEqual(0);
+        });
+
+        it('should not show errors when the row is deleted', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('IG');
+            fixture.detectChanges();
+
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.deleteRow(2);
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(0);
+            GridFunctions.verifyCellValid(cell, true);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, false);
+
+            grid.transactions.redo();
+            fixture.detectChanges();
+
+            expect(grid.validation.getInvalid().length).toEqual(0);
+            GridFunctions.verifyCellValid(cell, true);
         });
     });
 });
