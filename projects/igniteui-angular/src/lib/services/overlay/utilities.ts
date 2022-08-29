@@ -75,8 +75,10 @@ export interface PositionSettings {
     horizontalStartPoint?: HorizontalAlignment;
     /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
+    /* blazorSuppress */
     /** Animation applied while overlay opens */
     openAnimation?: AnimationReferenceMetadata;
+    /* blazorSuppress */
     /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
     /** The size up to which element may shrink when shown in elastic position strategy */

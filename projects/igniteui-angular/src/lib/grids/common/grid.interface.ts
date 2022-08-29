@@ -57,6 +57,7 @@ export interface CellType {
     active: boolean;
     editable: boolean;
     editMode: boolean;
+    /* blazorSuppress */
     nativeElement?: HTMLElement;
     column: ColumnType;
     row: RowType;
@@ -79,6 +80,7 @@ export interface CellType {
 }
 
 export interface RowType {
+    /* blazorSuppress */
     nativeElement?: HTMLElement;
     index: number;
     viewIndex: number;
@@ -282,6 +284,7 @@ export interface GridType extends IGridDataBindable {
     displayDensity: DisplayDensity;
     locale: string;
     resourceStrings: IGridResourceStrings;
+    /* blazorSuppress */
     nativeElement: HTMLElement;
     rowEditable: boolean;
     rootSummariesEnabled: boolean;
