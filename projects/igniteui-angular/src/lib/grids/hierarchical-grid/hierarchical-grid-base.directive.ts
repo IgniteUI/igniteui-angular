@@ -268,6 +268,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
                 ref.instance[propName] = col[propName].constructor;
             }
         });
+        ref.instance.validators = col.validators;
         return ref;
     }
 
