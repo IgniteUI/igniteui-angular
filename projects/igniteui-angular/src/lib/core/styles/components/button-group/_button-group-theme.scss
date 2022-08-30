@@ -2,6 +2,7 @@
 @use '../../themes/schemas' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -172,7 +173,7 @@
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
-    $transition: all 140ms $ease-in-out-quad;
+    $transition: all 140ms $in-out-quad;
 
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';

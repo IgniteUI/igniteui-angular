@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 @use 'sass:map';
 @use 'sass:math';
 
@@ -181,7 +182,7 @@
         height: $slider-height;
         flex-grow: 1;
         align-items: center;
-        transition: all .2s $ease-out-quad;
+        transition: all .2s $out-quad;
 
         &:hover {
             %igx-slider-track-fill {
@@ -234,7 +235,7 @@
         width: 100%;
         height: inherit;
         background: var-get($theme, 'base-track-color');
-        transition: background .2s $ease-out-quad;
+        transition: background .2s $out-quad;
         border-radius: inherit;
 
         @if $variant == 'material' {
@@ -302,7 +303,7 @@
         transform: translate(-50%);
         line-height: .7;
         opacity: 1;
-        transition: opacity .2s $ease-in-out-quad;
+        transition: opacity .2s $in-out-quad;
 
         [dir='rtl'] & {
             left: 100%;
@@ -524,7 +525,7 @@
             margin-inline-start: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             background: var-get($theme, 'thumb-color');
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
-            transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
+            transition: transform .1s $out-quad, border-radius .1s $out-quad;
             border-radius: border-radius(rem($thumb-radius));
         }
 
@@ -540,7 +541,7 @@
                 opacity: 0;
                 transform: scale(0);
                 transform-origin: center center;
-                transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
+                transition: transform .1s $out-quad, opacity .1s $out-quad;
                 border-radius: border-radius(50%);
                 overflow: hidden;
             }

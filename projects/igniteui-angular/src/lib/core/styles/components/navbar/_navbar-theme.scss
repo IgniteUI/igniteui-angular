@@ -2,6 +2,7 @@
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
 @use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -141,7 +142,7 @@
         button[igxButton='icon'] {
             cursor: pointer;
             color: var-get($theme, 'idle-icon-color');
-            transition: color .15s $ease-out-quad;
+            transition: color .15s $out-quad;
 
             &:hover {
                 color: var-get($theme, 'hover-icon-color');

@@ -3,6 +3,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -164,7 +165,7 @@
     %navdrawer-display {
         transition: flex-basis;
         transition-duration: .3s;
-        transition-timing-function: $ease-out-quad;
+        transition-timing-function: $out-quad;
         flex-shrink: 0;
     }
 
@@ -180,7 +181,7 @@
         inset-inline-start: 0;
         z-index: 999;
         transition: width, transform;
-        transition-timing-function: $ease-out-quad, $ease-out-quad;
+        transition-timing-function: $out-quad, $out-quad;
         box-shadow: var-get($theme, 'shadow');
         @if $variant != 'indigo-design' {
             border-inline-end: 1px solid var-get($theme, 'border-color');

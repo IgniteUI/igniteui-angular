@@ -3,6 +3,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -250,7 +251,7 @@
 @mixin input-group($theme) {
     @include css-vars($theme);
 
-    $transition-timing: .25s $ease-out-cubic;
+    $transition-timing: .25s $out-cubic;
 
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';

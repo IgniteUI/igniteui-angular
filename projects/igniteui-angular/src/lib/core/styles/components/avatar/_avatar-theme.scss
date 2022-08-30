@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -109,7 +110,7 @@
             @if $bootstrap-theme {
                 @extend %igx-avatar-outline;
             }
-            transition: box-shadow .15s $ease-in-out-quad;
+            transition: box-shadow .15s $in-out-quad;
         }
 
         &:focus::after {

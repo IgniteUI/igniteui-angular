@@ -4,6 +4,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -545,7 +546,7 @@
     }
 
     %igx-list-item-content--inactive {
-        transition: transform .3s $ease-out-quad;
+        transition: transform .3s $out-quad;
     }
 }
 

@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -78,7 +79,7 @@
 /// @requires color
 /// @requires extend
 /// @requires rem
-/// @requires $ease-in-out-quad
+/// @requires $in-out-quad
 /// @requires var-get
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
@@ -152,7 +153,7 @@
 
     %igx-bottom-nav-menu-item--selected {
         color: var-get($theme, 'active-item-color');
-        transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
+        transition: color .15s $in-out-quad, opacity .25s $in-out-quad;
     }
 
     %igx-tab-label {
@@ -161,7 +162,7 @@
         max-width: 100%;
         text-align: center;
         transform: translateZ(0);
-        transition: transform .15s $ease-in-out-quad;
+        transition: transform .15s $in-out-quad;
         z-index: 1;
     }
 
@@ -172,7 +173,7 @@
         height: 24px;
         padding: 0 8px;
         transform: translateZ(0);
-        transition: transform .15s $ease-in-out-quad;
+        transition: transform .15s $in-out-quad;
         z-index: 1;
     }
 

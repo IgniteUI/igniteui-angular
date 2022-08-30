@@ -1,4 +1,5 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes/index' as *;
+@use 'igniteui-theming/sass/animations' as *;
 
 @include b(igniteui-logo) {
     @include e(u) {
@@ -27,10 +28,6 @@
 
 #igniteui-demo-app {
     @include fade-in-fwd();
-
-    .sample-wrapper {
-        padding: rem(16px);
-    }
 
     .logo {
         min-width: 172px;
@@ -72,6 +69,7 @@
             position: relative;
             height: 100%;
             margin: 0 auto;
+            padding: rem(16px);
         }
 
         &-column {

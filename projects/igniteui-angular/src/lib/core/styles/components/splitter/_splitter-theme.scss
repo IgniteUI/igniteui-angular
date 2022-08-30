@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -106,7 +107,7 @@
         border: 1px solid $splitter-color;
         z-index: 99;
         opacity: .68;
-        transition: opacity .15s $ease-out-quad !important;
+        transition: opacity .15s $out-quad !important;
 
         &::before {
             @extend %handle-area;

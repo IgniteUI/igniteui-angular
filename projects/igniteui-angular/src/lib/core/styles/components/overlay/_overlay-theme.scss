@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -63,7 +64,7 @@
         position: fixed;
         inset: 0;
         background: transparent;
-        transition: background .25s $ease-in-out-quad;
+        transition: background .25s $in-out-quad;
         pointer-events: none;
         z-index: 10005;
         box-sizing: content-box;

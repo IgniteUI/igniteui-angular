@@ -3,6 +3,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -107,7 +108,7 @@
         flex-direction: column;
         border-radius: border-radius(var-get($theme, 'border-radius'));
         overflow: hidden;
-        transition: margin 350ms $ease-out-quad;
+        transition: margin 350ms $out-quad;
     }
 
     %igx-expansion-panel__header-title {
