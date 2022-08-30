@@ -258,6 +258,8 @@ export abstract class IgxBaseExporter {
                     this.summaries = summaryCacheMap;
                     break;
             }
+        } else {
+            this.summaries = new Map<string, Map<string, IgxSummaryResult[]>>();
         }
 
         this.prepareData(grid);
@@ -530,6 +532,10 @@ export abstract class IgxBaseExporter {
                 break;
             }
         }
+
+        if (grid.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly) {
+            this.setSummaries(GRID_ROOT_SUMMARY);
+        }
     }
 
     private prepareHierarchicalGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
@@ -778,12 +784,6 @@ export abstract class IgxBaseExporter {
                 this.addFlatData(gridData);
             }
         }
-
-        if (grid.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly) {
-            this.setSummaries(GRID_ROOT_SUMMARY);
-        }
-        const a = this.flatRecords;
-        debugger
     }
 
     private prepareTreeGridData(grid: GridType, hasFiltering: boolean, hasSorting: boolean) {
@@ -791,8 +791,10 @@ export abstract class IgxBaseExporter {
             (!hasFiltering || !this.options.ignoreFiltering) &&
             (!hasSorting || !this.options.ignoreSorting);
 
+        const shouldSetSummaries = this.summaries.size > 0 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
+
         if (skipOperations) {
-            this.addTreeGridData(grid.processedRootRecords);
+            this.addTreeGridData(grid.processedRootRecords, shouldSetSummaries);
         } else {
             let gridData = grid.rootRecords;
 
@@ -813,16 +815,19 @@ export abstract class IgxBaseExporter {
                 gridData = DataUtil.treeGridSort(gridData, grid.sortingExpressions, grid.sortStrategy);
             }
 
-            this.addTreeGridData(gridData);
+            this.addTreeGridData(gridData, shouldSetSummaries);
         }
     }
 
-    private addTreeGridData(records: ITreeGridRecord[], parentExpanded: boolean = true) {
+    private addTreeGridData(records: ITreeGridRecord[], shouldSetSummaries: boolean, parentExpanded: boolean = true) {
         if (!records) {
             return;
         }
 
         for (const record of records) {
+            let summaryLevel = record.level;
+            let summaryHidden = !parentExpanded;
+
             const hierarchicalRecord: IExportRecord = {
                 data: record.data,
                 level: record.level,
@@ -830,7 +835,34 @@ export abstract class IgxBaseExporter {
                 type: ExportRecordType.TreeGridRecord
             };
             this.flatRecords.push(hierarchicalRecord);
-            this.addTreeGridData(record.children, parentExpanded && record.expanded);
+
+            if (record.children) {
+                for (const rc of record.children) {
+                    if (rc.children && rc.children.length > 0) {
+                        this.addTreeGridData([rc], shouldSetSummaries, parentExpanded && record.expanded);
+
+                    } else {
+                        const currentRecord: IExportRecord = {
+                            data: rc.data,
+                            level: rc.level,
+                            hidden: !(record.expanded && parentExpanded),
+                            type: ExportRecordType.DataRecord,
+                        };
+
+                        if (shouldSetSummaries) {
+                            currentRecord.summaryKey = record.key;
+                        }
+
+                        this.flatRecords.push(currentRecord);
+                        summaryLevel = rc.level;
+                        summaryHidden = !(record.expanded && parentExpanded)
+                    }
+                }
+            }
+
+            if (shouldSetSummaries) {
+                this.setSummaries(record.key, summaryLevel, summaryHidden);
+            }
         }
     }
 
@@ -849,7 +881,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private setSummaries(summaryKey: string) {
+    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false) {
         if (this.summaries.size > 0) {
             const rootSummary = this.summaries.get(summaryKey);
             const values = [...rootSummary.values()];
@@ -866,7 +898,8 @@ export abstract class IgxBaseExporter {
                 const summaryRecord: IExportRecord = {
                     data: obj,
                     type: ExportRecordType.SummaryRecord,
-                    level: 0,
+                    level,
+                    hidden,
                     summaryKey
                 };
 
