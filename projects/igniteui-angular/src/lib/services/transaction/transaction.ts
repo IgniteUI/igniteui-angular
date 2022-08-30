@@ -61,9 +61,6 @@ export interface TransactionService<T extends Transaction, S extends State> {
      */
     readonly enabled: boolean;
 
-    /** @hidden @internal **/
-    readonly isPending: boolean;
-
     /**
      * Gets/Sets the data clone strategy used to clone data
      */

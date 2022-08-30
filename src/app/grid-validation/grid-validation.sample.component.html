@@ -45,6 +45,8 @@
                 <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
+        <button (click)='updateRow(1)'>Update row</button>
+        <button (click)='updateCell(1)'>Update cell</button>
         <button (click)='commitWithTransactions()'>Commit</button>
         <button (click)='undo()'>Undo</button>
         <button (click)='redo()'>Redo</button>

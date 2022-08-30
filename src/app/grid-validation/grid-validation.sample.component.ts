@@ -121,6 +121,7 @@ public hColumns2 = [
         if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
+            this.gridWithTransaction.validation.clear();
            }
         } else {
             this.gridWithTransaction.transactions.commit(this.transactionData);
@@ -154,7 +155,28 @@ public hColumns2 = [
     }
 
     public validationChange(evtArgs: Validity){
-        console.log(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
+        alert(evtArgs === Validity.Invalid ? 'state became INVALID' : 'state became VALID');
+    }
+
+    public updateRow(id) {
+      this.gridWithTransaction.updateRow({
+        ProductID: 1,
+        ProductName: '',
+        SupplierID: 1,
+        CategoryID: 1,
+        QuantityPerUnit: '10 boxes x 20 bags',
+        UnitPrice: '18.0000',
+        UnitsInStock: 39,
+        UnitsOnOrder: 0,
+        ReorderLevel: 10.567,
+        Discontinued: false,
+        OrderDate: null,
+        OrderDate2: new Date(1991, 2, 12, 18, 40, 50).toISOString()
+      }, id)
+    }
+
+    public updateCell(id) {
+      this.gridWithTransaction.updateCell('', id, 'ProductName');
     }
 }
 

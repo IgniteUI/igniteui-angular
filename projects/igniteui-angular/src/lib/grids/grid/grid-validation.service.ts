@@ -122,18 +122,17 @@ export class IgxGridValidationService {
         this.updateStatus();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public markAsTouched(rowId: any) {
+    /** Marks the associated record or field as touched.
+     * @param id The id of the record that will be marked as touched.
+     * @param field Optional. The field from the record that will be marked as touched. If not provided all fields will be touched.
+    */
+    public markAsTouched(rowId: any, field?: string) {
         const rowGroup = this.getFormGroup(rowId);
         if (!rowGroup) return;
         rowGroup.markAsTouched();
-        for (const col of this.grid.columns) {
-            const field = col.field;
-            const control = rowGroup?.get(field);
-            control.markAsTouched();
+        const fields = field ? [field] : this.grid.columns.map(x => x.field);
+        for (const currField of fields) {
+            rowGroup?.get(currField)?.markAsTouched();
         }
     }
 
