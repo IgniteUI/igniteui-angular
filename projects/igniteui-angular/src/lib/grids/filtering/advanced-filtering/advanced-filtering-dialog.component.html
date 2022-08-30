@@ -6,19 +6,10 @@
         'igx-advanced-filter--inline': inline
     }">
     <igx-query-builder #queryBuilder>
-        <header igxQueryBuilderHeader class="igx-advanced-filter__header" igxDragHandle>
-            <h4 class="igx-typography__h6" style="pointer-events: none;">
-                {{ grid.resourceStrings.igx_grid_advanced_filter_title }}
-            </h4>
-            <div class="igx-filter-legend">
-                <div class="igx-filter-legend__item--and">
-                    <span>{{ grid.resourceStrings.igx_grid_advanced_filter_and_label }}</span>
-                </div>
-                <div class="igx-filter-legend__item--or">
-                    <span>{{ grid.resourceStrings.igx_grid_advanced_filter_or_label }}</span>
-                </div>
-            </div>
-        </header>
+        <igx-query-builder-header
+            [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
+            igxDragHandle>
+        </igx-query-builder-header>
     </igx-query-builder>
 
     <footer class="igx-excel-filter__secondary-footer">

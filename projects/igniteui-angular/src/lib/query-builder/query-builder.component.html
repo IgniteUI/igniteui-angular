@@ -1,21 +1,8 @@
 <article class="igx-query-builder">
-    <header 
-        *ngIf="!isHeaderContentVisible"
-        class="igx-query-builder__header">
-        <h4 class="igx-typography__h6" style="pointer-events: none;">
-            Query Builder
-        </h4>
-        <div class="igx-builder-legend">
-            <div class="igx-builder-legend__item--and">
-                <span>And</span>
-            </div>
-            <div class="igx-builder-legend__item--or">
-                <span>Or</span>
-            </div>
-        </div>
-    </header>
-    <ng-content select="igx-query-builder-header, [igxQueryBuilderHeader]"></ng-content>
-
+    <!-- TODO add resource strings for query builder title -->
+    <igx-query-builder-header *ngIf="!headerContent" [title]="'Query Builder'"></igx-query-builder-header>
+    <ng-content select="igx-query-builder-header"></ng-content>
+    
     <div #expressionsContainer class="igx-advanced-filter__main" (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 

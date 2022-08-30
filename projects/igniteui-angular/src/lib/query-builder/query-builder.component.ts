@@ -31,11 +31,7 @@ import { IgxOverlayService } from '../services/overlay/overlay';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
-
-@Directive({
-    selector: 'igx-query-builder-header, [igxQueryBuilderHeader]'
-})
-export class IgxQueryBuilderHeaderDirective { }
+import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 
 export interface IQueryBuilderField {
     /** The field label */
@@ -93,8 +89,6 @@ class ExpressionOperandItem extends ExpressionItem {
     styleUrls: ['./query-builder.component.css']
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
-
-
     /**
      * @hidden @internal
      */
@@ -132,14 +126,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public addConditionButton: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    @ContentChild(IgxQueryBuilderHeaderDirective, { read: IgxQueryBuilderHeaderDirective })
-    protected headerContent: IgxQueryBuilderHeaderDirective;
-    
-    public get isHeaderContentVisible(): boolean {
-        return this.headerContent ? true : false;
-    }
+    @ContentChild(IgxQueryBuilderHeaderComponent)
+    public headerContent: IgxQueryBuilderHeaderComponent;
 
     /**
      * @hidden @internal
@@ -1212,8 +1202,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
  * @hidden
  */
 @NgModule({
-    declarations: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderDirective],
-    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderDirective],
+    declarations: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent],
+    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent],
     imports: [
         CommonModule,
         FormsModule,

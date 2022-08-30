@@ -1,0 +1,16 @@
+<header class="igx-query-builder__header">    
+    <h4 class="igx-typography__h6" style="pointer-events: none;">
+        {{ title }}
+        <ng-content></ng-content>
+    </h4>    
+    <div *ngIf="showLegend" class="igx-builder-legend" >
+        <div class="igx-builder-legend__item--and">
+            <!-- //TODO add resource strings -->
+            <span>And</span>
+        </div>
+        <div class="igx-builder-legend__item--or">
+            <!-- //TODO add resource strings -->
+            <span>Or</span>
+        </div>
+    </div>
+</header>
