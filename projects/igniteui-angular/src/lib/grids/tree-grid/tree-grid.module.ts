@@ -10,6 +10,8 @@ import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { IgxTooltipModule } from '../../directives/tooltip';
 /**
  * @hidden
  */
@@ -42,7 +44,9 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
     IgxTreeGridAddRowPipe
   ],
   imports: [
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxTooltipModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

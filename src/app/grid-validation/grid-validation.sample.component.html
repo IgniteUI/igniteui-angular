@@ -49,3 +49,34 @@
         <button (click)='undo()'>Undo</button>
         <button (click)='redo()'>Redo</button>
     </article>
+
+
+    <article class="grid-row-edit-wrapper">
+        <h4>TreeGrid</h4>
+        <igx-tree-grid #treegrid [data]="treeData" primaryKey="employeeID"
+        foreignKey="PID" [width]="'900px'" [height]="'800px'" [rowEditable]="true" [moving]="true">
+        <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+            [pinned]="c.pinned" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [minWidth]="c.minWidth"
+            [maxWidth]="c.maxWidth" required>
+        </igx-column>
+        <igx-action-strip #actionstrip>
+            <igx-grid-editing-actions [addRow]="true" [addChild]="actionstrip.context?.treeRow.level < 1">
+            </igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-tree-grid>
+    </article>
+
+
+    <article class="grid-row-edit-wrapper">
+        <h4>Hierarchical Grid</h4>
+        <igx-hierarchical-grid #hgrid [data]="hGridData" primaryKey="EmployeeID"
+         [width]="'900px'" [height]="'550px'" [rowEditable]="true" [moving]="true">
+        <igx-column *ngFor="let c of hColumns" [field]="c.field" required editable='true'>
+        </igx-column>
+        <igx-row-island [key]="'Orders'" [autoGenerate]="false">
+            <igx-column *ngFor="let c of hColumns2" [field]="c.field" required editable='true'>
+            </igx-column>
+    </igx-row-island>
+    </igx-hierarchical-grid>
+    </article>

@@ -334,6 +334,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Drag'
         },
         {
+            link: '/gridRowReorder',
+            icon: 'view_column',
+            name: 'Grid Row Reorder'
+        },
+        {
             link: '/gridSummary',
             icon: 'view_column',
             name: 'Grid Summary'
