@@ -1040,8 +1040,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
 
-
-        if (this.isInvalid) {
+        const isTargetErrorIcon = event.target && event.target === this.errorIcon?.el.nativeElement
+        if (this.isInvalid && !isTargetErrorIcon) {
             this.openErrorTooltip();
             this.grid.activeNodeChange.pipe(first()).subscribe(() => {
                 this.closeErrorTooltip();
