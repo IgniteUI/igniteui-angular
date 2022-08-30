@@ -2,7 +2,7 @@ import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective, IgxTooltipTargetDirective } from 'igniteui-angular';
+import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -10,7 +10,8 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import {
     ForbiddenValidatorDirective,
     IgxGridValidationTestBaseComponent,
-    IgxGridValidationTestCustomErrorComponent
+    IgxGridValidationTestCustomErrorComponent,
+    IgxTreeGridValidationTestComponent
 } from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Validity } from '../common/grid.interface';
@@ -24,9 +25,10 @@ describe('IgxGrid - Validation #grid', () => {
             declarations: [
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
+                IgxTreeGridValidationTestComponent,
                 ForbiddenValidatorDirective
             ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         });
     }));
 
@@ -461,6 +463,81 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             expect(grid.validation.getInvalid().length).toEqual(0);
+            GridFunctions.verifyCellValid(cell, true);
+        });
+    });
+
+    describe('TreeGrid integration - ', () => {
+        let fixture;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxTreeGridValidationTestComponent);
+            fixture.componentInstance.batchEditing = true;
+            fixture.detectChanges();
+        }));
+
+        it('should allow setting built-in validators via template-driven and mark cell invalid', () => {
+            const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
+            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('IG');
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+        });
+        
+        it('should allow setting custom validators via template-driven and mark cell invalid', () => {
+            const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
+            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('bob');
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+        });
+
+        it('should update validation status when using undo/redo/delete api', () => {
+            const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
+            let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('IG');
+            fixture.detectChanges();
+
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            treeGrid.transactions.undo();
+            fixture.detectChanges();
+
+            expect(treeGrid.validation.getInvalid().length).toEqual(0);
+            GridFunctions.verifyCellValid(cell, true);
+
+            treeGrid.transactions.redo();
+            fixture.detectChanges();
+
+            expect(treeGrid.validation.getInvalid().length).toEqual(1);
+            GridFunctions.verifyCellValid(cell, false);
+
+            treeGrid.deleteRow(711);
+            fixture.detectChanges();
+
+            expect(treeGrid.validation.getInvalid().length).toEqual(0);
             GridFunctions.verifyCellValid(cell, true);
         });
     });
