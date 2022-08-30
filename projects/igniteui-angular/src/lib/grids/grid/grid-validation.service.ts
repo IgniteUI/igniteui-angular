@@ -130,10 +130,9 @@ export class IgxGridValidationService {
         const rowGroup = this.getFormGroup(rowId);
         if (!rowGroup) return;
         rowGroup.markAsTouched();
-        for (const col of this.grid.columns) {
-            if(!field || (field && col.field === field)) {
-                rowGroup?.get(col.field)?.markAsTouched();
-            }
+        const fields = field ? [field] : this.grid.columns.map(x => x.field);
+        for (const currField of fields) {
+            rowGroup?.get(currField)?.markAsTouched();
         }
     }
 
