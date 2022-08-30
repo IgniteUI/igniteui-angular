@@ -4528,7 +4528,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
                 const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this as any);
                 this.gridAPI.update_cell(cell);
-                this.validation.markAsTouched(rowSelector, column);
                 this.cdr.detectChanges();
             }
         }
@@ -4559,7 +4558,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this as any);
             this.gridAPI.update_row(row, value);
-            this.validation.markAsTouched(rowSelector);
 
             // TODO: fix for #5934 and probably break for #5763
             // consider adding of third optional boolean parameter in updateRow.
