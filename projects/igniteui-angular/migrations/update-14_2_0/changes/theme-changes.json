@@ -172,7 +172,7 @@
         {
             "name": "$palette",
             "remove": true,
-            "owner": "input-theme",
+            "owner": "input-group-theme",
             "type": "property"
         },
         {
@@ -464,11 +464,6 @@
         },
         {
             "name": "elevations-to-wc",
-            "remove": true,
-            "type": "mixin"
-        },
-        {
-            "name": "linear-gradient",
             "remove": true,
             "type": "mixin"
         }
