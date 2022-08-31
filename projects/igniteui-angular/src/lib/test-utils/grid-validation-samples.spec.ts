@@ -86,7 +86,7 @@ export class IgxGridValidationTestCustomErrorComponent {
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID"
      width="900px" height="600px" [rowEditable]="rowEditable" [batchEditing]="batchEditing">
-        <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
+        <igx-column igxAppForbiddenName='bob' minlength="4" required
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [width]="c.width" [resizable]='true' [dataType]="c.dataType" >

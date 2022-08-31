@@ -260,7 +260,7 @@ describe('IgxGrid - Validation #grid', () => {
             expect(grid.validationStatusChange.emit).toHaveBeenCalledWith(Validity.Valid);
         });
 
-        xit('should return invalid transaction using the transaction`s getInvalidTransactionLog method', () => {
+        it('should return invalid transaction using the transaction service API', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
 
 
@@ -269,10 +269,10 @@ describe('IgxGrid - Validation #grid', () => {
             cell.update('asd');
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
-            let transactionLog = grid.validation.getInvalid();
+            let invalidRecords = grid.validation.getInvalid();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(transactionLog[0].state[0].valid).toBeFalse();
+            expect(invalidRecords[0].state[1].valid).toBeFalse();
 
 
             cell.editMode = true;
@@ -281,8 +281,8 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
             GridFunctions.verifyCellValid(cell, true);
-            transactionLog = grid.validation.getInvalid();
-            expect(transactionLog[1].state[0].valid).toBeTrue();
+            invalidRecords = grid.validation.getInvalid();
+            expect(invalidRecords.length).toEqual(0);
         });
     });
 
@@ -330,6 +330,7 @@ describe('IgxGrid - Validation #grid', () => {
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
             grid.updateCell('IG', 2,'ProductName');
+            grid.validation.markAsTouched(2);
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
@@ -339,7 +340,21 @@ describe('IgxGrid - Validation #grid', () => {
 
             GridFunctions.verifyCellValid(cell, true);
 
-            grid.updateRow({ProductID : '2', ProductName: '', UnitPrice: '29.0000', UnitsInStock: '66'}, 2);
+            grid.updateRow({
+                ProductID: 2,
+                ProductName: '',
+                SupplierID: 1,
+                CategoryID: 1,
+                QuantityPerUnit: '24 - 12 oz bottles',
+                UnitPrice: '19.0000',
+                UnitsInStock: 66,
+                UnitsOnOrder: 40,
+                ReorderLevel: 25,
+                Discontinued: false,
+                OrderDate: new Date('2003-03-17').toISOString(),
+                OrderDate2: new Date('2003-03-17').toISOString()
+            }, 2);
+            grid.validation.markAsTouched(2);
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
