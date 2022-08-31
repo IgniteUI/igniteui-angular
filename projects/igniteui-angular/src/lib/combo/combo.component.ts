@@ -35,8 +35,6 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-import { IComboResourceStrings } from '../core/i18n/combo-resources';
-import { CurrentResourceStrings } from '../core/i18n/resources';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -152,23 +150,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public searchPlaceholder = 'Enter a Search Term';
 
     /**
-     * Gets/Sets the resource strings.
-     *
-     * @remarks
-     * By default it uses EN resources.
-     */
-    @Input()
-    public get resourceStrings(): IComboResourceStrings {
-        if (!this._resourceStrings) {
-            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
-        }
-        return this._resourceStrings;
-    }
-    public set resourceStrings(value: IComboResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
      * Emitted when item selection is changing, before the selection completes
      *
      * ```html
@@ -207,7 +188,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _prevInputValue = '';
-    protected _resourceStrings;
 
     constructor(
         protected elementRef: ElementRef,
