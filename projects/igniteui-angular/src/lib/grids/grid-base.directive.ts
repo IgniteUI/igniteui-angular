@@ -6210,6 +6210,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (value) {
                         this.validation.create(x.transaction.id, value ?? x.recordRef);
                         this.validation.update(x.transaction.id, value ?? x.recordRef);
+                        this.validation.markAsTouched(x.transaction.id);
                     } else {
                         this.validation.clear(x.transaction.id);
                     }
