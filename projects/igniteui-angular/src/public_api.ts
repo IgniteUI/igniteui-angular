@@ -116,6 +116,7 @@ export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
 export * from './lib/grids/pivot-grid/public_api';
 export * from './lib/query-builder/query-builder.component'
+export * from './lib/query-builder/query-builder-header.component'
 
 /**
  * Exporter services, classes, interfaces and enums

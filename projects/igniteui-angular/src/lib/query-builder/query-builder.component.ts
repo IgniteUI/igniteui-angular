@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ContentChild, Directive, Optional } from '@angular/core';
+import { ContentChild, Optional } from '@angular/core';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, HostBinding, NgModule
@@ -13,7 +13,7 @@ import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { PlatformUtil } from '../core/utils';
-import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
+import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -40,7 +40,7 @@ export interface IQueryBuilderField {
     fieldName: string;
     /** The field data type */
     //TODO rename the type so that it isn't related to the grid column/define another type/set it as string
-    dataType: GridColumnDataType;
+    dataType: DataType;
     /** The filter conditions for the specified field */
     filteringOperands?: IgxFilteringOperand;
 }
@@ -911,24 +911,24 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private setFilteringOperands(field: IQueryBuilderField) {
         if (!Array.isArray(field.filteringOperands) || !field.filteringOperands.length) {
             switch (field.dataType) {
-                case GridColumnDataType.Boolean:
+                case DataType.Boolean:
                     field.filteringOperands = IgxBooleanFilteringOperand.instance();
                     break;
-                case GridColumnDataType.Number:
-                case GridColumnDataType.Currency:
-                case GridColumnDataType.Percent:
+                case DataType.Number:
+                case DataType.Currency:
+                case DataType.Percent:
                     field.filteringOperands = IgxNumberFilteringOperand.instance();
                     break;
-                case GridColumnDataType.Date:
+                case DataType.Date:
                     field.filteringOperands = IgxDateFilteringOperand.instance();
                     break;
-                case GridColumnDataType.Time:
+                case DataType.Time:
                     field.filteringOperands = IgxTimeFilteringOperand.instance();
                     break;
-                case GridColumnDataType.DateTime:
+                case DataType.DateTime:
                     field.filteringOperands = IgxDateTimeFilteringOperand.instance();
                     break;
-                case GridColumnDataType.String:
+                case DataType.String:
                 default:
                     field.filteringOperands = IgxStringFilteringOperand.instance();
                     break;
