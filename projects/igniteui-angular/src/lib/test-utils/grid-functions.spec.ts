@@ -23,6 +23,7 @@ import { IgxRowDirective } from '../grids/row.directive';
 import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
+import { IgxGridCell } from 'igniteui-angular';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -52,6 +53,7 @@ const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const ACTIVE_HEADER_CLASS = 'igx-grid-th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const CELL_INVALID_CSS_CLASS = 'igx-grid__td--invalid';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid__td--active';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
@@ -2076,6 +2078,11 @@ export class GridFunctions {
 
     public static getResizer(fix): DebugElement {
         return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+    }
+
+    public static verifyCellValid(cell: IgxGridCellComponent, valid = true) {
+        expect(cell.formControl.valid).toEqual(valid);
+        expect(cell.nativeElement.classList.contains(CELL_INVALID_CSS_CLASS)).not.toEqual(valid);
     }
 }
 export class GridSummaryFunctions {

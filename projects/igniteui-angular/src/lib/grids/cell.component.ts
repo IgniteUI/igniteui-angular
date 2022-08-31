@@ -931,6 +931,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
+        this.formControl.setValue(val);
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
