@@ -1,10 +1,9 @@
+@use 'sass:map';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas/dark' as *;
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
 @use '../tree/tree-theme' as *;
-@use 'sass:map';
 
 ////
 /// @group themes

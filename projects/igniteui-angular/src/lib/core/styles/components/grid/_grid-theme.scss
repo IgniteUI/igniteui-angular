@@ -1,11 +1,11 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use './excel-filtering-theme' as *;
-@use './advanced-filtering-theme' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
 @use 'sass:math';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use './excel-filtering-theme' as *;
+@use './advanced-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
 ////

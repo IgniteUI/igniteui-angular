@@ -1,7 +1,4 @@
-@use '../variables' as *;
-@use 'sass:math';
-@use 'sass:color';
-@use 'sass:meta';
+@use 'variables' as *;
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:string';
@@ -30,9 +27,23 @@
         @if not($used) {
             $dropped-themes: list.append($dropped-themes, $name) !global;
         } @else {
-            @warn 'You\'ve opted to exclude the "#{$name}" theme but it was held back as the following themes depend on it: "#{$deps}".';
+            @warn string.unquote('You\'ve opted to exclude the "#{$name}" theme but it was held back as the following themes depend on it: "#{$deps}".');
         }
     }
 
     @return $used;
+}
+
+/// Test if a component, or list of components is in the list of known components.
+/// @access private
+/// @param {String|List} $items - The components list to check in.
+/// @return {List} - The list of passed items.
+@function is-component($items) {
+    $register: map.keys($components);
+    @each $item in $items {
+        @if not(list.index($register, $item)) {
+            @warn string.unquote('Can\'t exclude "#{$item}" because it is not in the list of known components.');
+        }
+    }
+    @return $items;
 }

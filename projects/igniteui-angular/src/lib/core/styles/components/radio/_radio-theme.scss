@@ -1,11 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'igniteui-theming/sass/animations' as *;
-@use 'sass:map';
-@use 'sass:math';
 
 ////
 /// @group themes
