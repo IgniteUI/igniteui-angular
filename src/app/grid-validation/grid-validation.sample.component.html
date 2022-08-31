@@ -45,6 +45,8 @@
                 <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
+        <button (click)='updateRow(1)'>Update row</button>
+        <button (click)='updateCell(1)'>Update cell</button>
         <button (click)='commitWithTransactions()'>Commit</button>
         <button (click)='undo()'>Undo</button>
         <button (click)='redo()'>Redo</button>
@@ -75,8 +77,15 @@
         <igx-column *ngFor="let c of hColumns" [field]="c.field" required editable='true'>
         </igx-column>
         <igx-row-island [key]="'Orders'" [autoGenerate]="false">
-            <igx-column *ngFor="let c of hColumns2" [field]="c.field" required editable='true'>
-            </igx-column>
+            <igx-column *ngFor="let c of hColumns2" [field]="c.field" required appForbiddenName='bob' editable='true'>
+                <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
+                    <ng-container *ngTemplateOutlet="defaultErr" >
+                    </ng-container>
+                    <div *ngIf="cell.errors?.['forbiddenName']">
+                        This name is forbidden.
+                    </div>
+                </ng-template>
+            </igx-column> 
     </igx-row-island>
     </igx-hierarchical-grid>
     </article>

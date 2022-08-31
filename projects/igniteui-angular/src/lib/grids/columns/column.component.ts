@@ -1296,6 +1296,32 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
     }
+
+    /**
+     * Returns a reference to the validation error template.
+     * ```typescript
+     * let errorTemplate = this.column.errorTemplate;
+     * ```
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input('errorTemplate')
+    public get errorTemplate(): TemplateRef<any> {
+        return this._errorTemplate;
+    }
+    /**
+     * Sets the validation error template.
+     * ```html
+     * <ng-template igxCellValidationError let-cell="cell">
+     *     <div *ngIf="cell.errors?.['forbiddenName']">
+     *      This name is forbidden.
+     *     </div>
+     * </ng-template>
+     */
+    public set errorTemplate(template: TemplateRef<any>) {
+        this._errorTemplate = template;
+    }
+
     /**
      * Returns a reference to the `filterCellTemplate`.
      * ```typescript
