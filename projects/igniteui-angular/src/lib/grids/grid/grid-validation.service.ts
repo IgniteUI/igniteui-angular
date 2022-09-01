@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { resolveNestedPath } from '../../core/utils';
 import { GridType, IFieldValidationState, IRecordValidationState, Validity } from '../common/grid.interface';
 
 @Injectable()
@@ -28,8 +29,9 @@ export class IgxGridValidationService {
         if (!formGroup) {
             formGroup = new FormGroup({});
             for (const col of this.grid.columns) {
-                const field = col.field;
-                const control = new FormControl(data ? data[field] : undefined, { updateOn: this.grid.validationTrigger });
+                const value = resolveNestedPath(data, col.field);
+                const field = this.getFieldKey(col.field);
+                const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
                 control.addValidators(col.validators);
                 formGroup.addControl(field, control);
             }
@@ -52,6 +54,15 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
+    private getFieldKey(path: string) {
+        const parts = path?.split('.') ?? [];
+        return parts.join('_');
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public getFormGroup(id: any) {
         return this._validityStates.get(id);
     }
@@ -62,7 +73,8 @@ export class IgxGridValidationService {
      */
     public getFormControl(rowId: any, columnKey: string) {
         const formControl = this.getFormGroup(rowId);
-        return formControl.get(columnKey);
+        const field = this.getFieldKey(columnKey);
+        return formControl.get(field);
     }
 
     /**
@@ -82,9 +94,10 @@ export class IgxGridValidationService {
         this._validityStates.forEach((formGroup, key) => {
             const state: IFieldValidationState[] = [];
             for (const col of this.grid.columns) {
-                const control = formGroup.get(col.field);
+                const colKey = this.getFieldKey(col.field);
+                const control = formGroup.get(colKey);
                 if (control) {
-                    state.push({ field: col.field, valid: control.valid, errors: control.errors })
+                    state.push({ field: colKey, valid: control.valid, errors: control.errors })
                 }
             }
             states.push({ id: key, valid: formGroup.valid, state: state });
@@ -109,7 +122,8 @@ export class IgxGridValidationService {
         const keys = Object.keys(rowData);
         const rowGroup = this.getFormGroup(rowId);
         for (const key of keys) {
-            const control = rowGroup?.get(key);
+            const colKey = this.getFieldKey(key);
+            const control = rowGroup?.get(colKey);
             if (control) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
@@ -128,7 +142,8 @@ export class IgxGridValidationService {
         rowGroup.markAsTouched();
         const fields = field ? [field] : this.grid.columns.map(x => x.field);
         for (const currField of fields) {
-            rowGroup?.get(currField)?.markAsTouched();
+            const colKey = this.getFieldKey(currField);
+            rowGroup?.get(colKey)?.markAsTouched();
         }
     }
 

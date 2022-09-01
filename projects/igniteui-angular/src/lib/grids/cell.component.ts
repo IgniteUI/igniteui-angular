@@ -506,7 +506,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * Gets the formControl responsible for value changes and validation for this cell.
      */
     protected get formControl(): FormControl {
-        return this.formGroup?.get(this.column.field) as FormControl;
+        return this.grid.validation.getFormControl(this.intRow.key, this.column.field) as FormControl;
     }
 
     public get gridRowSpan(): number {
