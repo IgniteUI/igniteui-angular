@@ -71,6 +71,9 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @HostBinding('attr.z-index')
     public zIndex = 0;
 
+    @HostBinding('class.igx-slider-thumb-to--focused')
+    public focused = false;
+
     @HostBinding('class.igx-slider-thumb-from')
     public get thumbFromClass() {
         return this.type === SliderHandle.FROM;
@@ -141,13 +144,20 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     constructor(private _elementRef: ElementRef, private _dir: IgxDirectionality) { }
 
     @HostListener('pointerenter')
-    public onPinterEnter() {
+    public onPointerEnter() {
+        this.focused = false;
         this.hoverChange.emit(true);
     }
 
     @HostListener('pointerleave')
     public onPointerLeave() {
         this.hoverChange.emit(false);
+    }
+
+    @HostListener('keyup', ['$event'])
+    public onKeyUp(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
     }
 
     @HostListener('keydown', ['$event'])
@@ -174,6 +184,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public onBlur() {
         this.isActive = false;
         this.zIndex = 0;
+        this.focused = false;
     }
 
     @HostListener('focus')

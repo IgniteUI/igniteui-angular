@@ -819,7 +819,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbTo;
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
