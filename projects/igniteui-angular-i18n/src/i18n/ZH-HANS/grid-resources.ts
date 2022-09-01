@@ -158,13 +158,13 @@ const GridResourceStringsZHHANS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
     igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
-    igx_grid_required_validation_error: 'This field is required',
-    igx_grid_min_validation_error: 'A value of at least {0} should be entered',
-    igx_grid_max_validation_error: 'A value no more than {0} should be entered',
-    igx_grid_min_length_validation_error: 'Entry should be at least {0} character(s) long',
-    igx_grid_max_length_validation_error: 'Entry should be no more than {0} character(s) long',
-    igx_grid_email_validation_error: 'A valid email address should be entered',
-    igx_grid_pattern_validation_error: 'Entry does not match the required pattern'
+    igx_grid_required_validation_error: '此字段为必填项',
+    igx_grid_min_validation_error: '至少应输入 {0} 的值',
+    igx_grid_max_validation_error: '必须输入不超过 {0} 的值',
+    igx_grid_min_length_validation_error: '输入项的字符长度至少应为 {0} 个字符',
+    igx_grid_max_length_validation_error: '输入项的字符不得超过 {0} 个字符',
+    igx_grid_email_validation_error: '必须输入有效的电子邮件地址',
+    igx_grid_pattern_validation_error: '输入项与要求的模式不匹配',
 };
 
 /**

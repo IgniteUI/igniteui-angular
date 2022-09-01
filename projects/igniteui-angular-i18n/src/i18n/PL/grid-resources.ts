@@ -158,13 +158,13 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
     igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
-    igx_grid_required_validation_error: 'This field is required',
-    igx_grid_min_validation_error: 'A value of at least {0} should be entered',
-    igx_grid_max_validation_error: 'A value no more than {0} should be entered',
-    igx_grid_min_length_validation_error: 'Entry should be at least {0} character(s) long',
-    igx_grid_max_length_validation_error: 'Entry should be no more than {0} character(s) long',
-    igx_grid_email_validation_error: 'A valid email address should be entered',
-    igx_grid_pattern_validation_error: 'Entry does not match the required pattern'
+    igx_grid_required_validation_error: 'To pole jest wymagane',
+    igx_grid_min_validation_error: 'Należy wprowadzić wartość równą co najmniej {0}',
+    igx_grid_max_validation_error: 'Należy wprowadzić wartość nie większą niż {0}',
+    igx_grid_min_length_validation_error: 'Wpis powinien mieć co najmniej {0} znaków',
+    igx_grid_max_length_validation_error: 'Długość wpisu nie może przekraczać {0} znaków',
+    igx_grid_email_validation_error: 'Należy podać prawidłowy adres e-mail',
+    igx_grid_pattern_validation_error: 'Wpis nie pasuje do wymaganego wzorca',
 };
 
 /**
