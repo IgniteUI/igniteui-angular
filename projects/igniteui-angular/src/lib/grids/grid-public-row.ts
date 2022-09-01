@@ -57,7 +57,7 @@ abstract class BaseRow implements RowType {
     * let errors = row.errors;
     * ```
     */
-    public errors(): ValidationErrors {
+    public get errors(): ValidationErrors {
         const formGroup = this.grid.validation.getFormGroup(this.key);
         return formGroup?.errors;
     }
