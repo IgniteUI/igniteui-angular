@@ -4481,8 +4481,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             cancel: false,
             rowData: this.getRowData(rowId),
             oldValue: null,
-            owner: this,
-            valid: true
+            owner: this
         };
         this.rowDelete.emit(args);
         if (args.cancel) {
