@@ -129,7 +129,7 @@
 <ng-container *ngIf="isInvalid">
     <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" 
     (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
-    <div [id]="describeBy"
+    <div [id]="ariaErrorMessage"
     igxTooltip #error #tooltipRef="tooltip">
         <div [style.width]="'max-content'">
             <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: context"></ng-container>

@@ -294,19 +294,19 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, _parentID?: any, validity?) {
+    public addRowToData(rowData: any, _parentID?: any) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
-        const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+        const rowId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
         if (grid.transactions.enabled) {
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            const transaction: Transaction = { id: rowId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
         }
-        grid.validation.markAsTouched(transactionId);
-        grid.validation.update(transactionId, rowData);
+        grid.validation.markAsTouched(rowId);
+        grid.validation.update(rowId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -553,12 +553,12 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowNewValue New value of the row
      */
     protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
-        const transaction: Transaction = {
-            id: rowID,
-            type: TransactionType.UPDATE,
-            newValue: rowNewValue
-        };
         if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue
+            };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);

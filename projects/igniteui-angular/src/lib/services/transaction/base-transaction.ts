@@ -53,7 +53,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public add(transaction: T, recordRef?: any): void {
-        if (this.enabled) {
+        if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
         }
@@ -112,14 +112,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public commit(_data: any[], _id?: any): void {
-        this.clear(_id);
-    }
+     public commit(_data: any[], _id?: any): void { }
 
     /**
      * @inheritdoc
      */
-    public clear(id?: any): void {
+     public clear(_id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
     }

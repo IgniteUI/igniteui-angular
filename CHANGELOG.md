@@ -71,7 +71,7 @@ All notable changes for each version of this project will be documented in this 
 
 - Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
 
-    - Added reactive forms style validation for grid editing. This extends the [Angular's reactive forms](https://angular.io/guide/form-validation#validating-input-in-reactive-forms) validation functionality
+    - Added built-in validation mechanism for Grid Editing. Extends the [Angular Form validation](https://angular.io/guide/form-validation) functionality
     You can configure it in 2 ways:
         1. Via template-driven configuration on the `igx-column` of the grid:
         ```html
@@ -91,7 +91,7 @@ All notable changes for each version of this project will be documented in this 
         }
         ```
 
-    Edited cells wil enter an invalid state when validation fails and will be show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related transaction in the transaction service are commited or cleared.
+    Edited cells wil enter an invalid state when validation fails and will show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related state in the validation service is cleared.
     
     You can refer to the documentation for more details: https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation
 

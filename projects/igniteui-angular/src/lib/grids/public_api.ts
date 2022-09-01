@@ -21,6 +21,7 @@ export * from './row-drag.directive';
 export * from './column-actions/column-actions.module';
 export * from './state.directive';
 export * from './toolbar/toolbar.module';
+export * from './grid/grid-validation.service';
 
 export { IgxGridCellComponent as ϴIgxGridCellComponent } from './cell.component';
 

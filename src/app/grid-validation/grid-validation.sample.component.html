@@ -2,7 +2,7 @@
     <article class="grid-row-edit-wrapper">
         <h4>Grid without transactions</h4>
         <igx-switch [(ngModel)]="rowEditNoTransactions">Row edit</igx-switch>
-        <igx-grid validationTrigger='change' (validationStatusChange)='validationChange($event)' (cellEdit)='cellEdit($event)' (formGroupCreated)='formCreateHandler($event)' #gridNoTransactions primaryKey="ProductID" [data]="data" [rowEditable]="rowEditNoTransactions"
+        <igx-grid validationTrigger='blur' (validationStatusChange)='validationChange($event)' (cellEdit)='cellEdit($event)' (formGroupCreated)='formCreateHandler($event)' #gridNoTransactions primaryKey="ProductID" [data]="data" [rowEditable]="rowEditNoTransactions"
         [width]="'1200px'" [height]="'800px'">
         <igx-column field='ProductID' [editable]='false'></igx-column>
         <igx-column field='ProductName' appForbiddenName='bob' required [editable]='true'>

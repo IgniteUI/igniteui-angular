@@ -14,10 +14,8 @@
     OnChanges,
     SimpleChanges,
     Inject,
-    ContentChildren,
     ViewChildren,
     QueryList,
-    AfterContentInit,
     AfterViewInit
 } from '@angular/core';
 import { formatPercent } from '@angular/common';
@@ -26,7 +24,7 @@ import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType, Validity } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -34,10 +32,11 @@ import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
 import { IgxTooltipDirective } from '../directives/tooltip';
-import { AutoPositionStrategy, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
-import { first, takeWhile } from 'rxjs/operators';
+import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -59,6 +58,7 @@ import { FormControl, FormGroup } from '@angular/forms';
     providers: [HammerGesturesManager]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
+    private _destroy$ = new Subject<void>();
     /**
      * @hidden
      * @internal
@@ -83,13 +83,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public errorIcon: IgxIconComponent;
 
     /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('error', { read: ElementRef, static: false })
-    public errorDiv: ElementRef;
-
-    /**
      * Gets the default error template.
      */
     @ViewChild('defaultError', { read: TemplateRef, static: true })
@@ -111,7 +104,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
-    public get formGroup(): FormGroup {
+    protected get formGroup(): FormGroup {
         return this.grid.validation.getFormGroup(this.intRow.key);
     }
 
@@ -220,10 +213,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get context(): any {
         const ctx = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext,
-            formControl: this.editMode ? this.formControl : undefined,
-            defaultErrorTemplate: this.defaultErrorTemplate
+            additionalTemplateContext: this.column.additionalTemplateContext
         };
+        if (this.editMode) {
+            ctx['formControl'] = this.formControl;
+        }
+        if (this.isInvalid) {
+            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+        }
         /* Turns the `cell` property from the template context object into lazy-evaluated one.
          * Otherwise on each detection cycle the cell template is recreating N cell instances where
          * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
@@ -508,8 +505,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     /**
      * Gets the formControl responsible for value changes and validation for this cell.
      */
-    public get formControl(): FormControl {
-        return (this.formGroup?.get(this.column.field) || new FormControl(this.column.field)) as FormControl;
+    protected get formControl(): FormControl {
+        return this.formGroup?.get(this.column.field) as FormControl;
     }
 
     public get gridRowSpan(): number {
@@ -816,7 +813,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     }
 
     public ngAfterViewInit() {
-        this.errorTooltip.changes.subscribe(() => {
+        this.errorTooltip.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
             if (this.errorTooltip.length > 0 && this.active) {
                 // error ocurred
                 this.cdr.detectChanges();
@@ -832,7 +829,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public errorShowing = false;
 
     private openErrorTooltip() {
-        const tooltip = this.errorTooltip.toArray()[0];
+        const tooltip = this.errorTooltip.first;
         tooltip.open(
             {
                 target: this.errorIcon.el.nativeElement,
@@ -859,6 +856,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.removePointerListeners(this.cellSelectionMode);
         });
         this.touchManager.destroy();
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
     /**
@@ -875,8 +874,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
                     this.cdr.detectChanges();
-                    const tooltip = this.errorTooltip.toArray()[0];
-                    this.grid.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorDiv.nativeElement.offsetWidth);
+                    const tooltip = this.errorTooltip.first;
+                    this.grid.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorTooltip.first.element.offsetWidth);
                 }
             });
         }
@@ -988,7 +987,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     }
 
     private closeErrorTooltip() {
-        const tooltip = this.errorTooltip.toArray()[0];
+        const tooltip = this.errorTooltip.first;
         if (tooltip) {
             tooltip.close();
         }

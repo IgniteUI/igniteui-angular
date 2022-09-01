@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IgxTransactionService, Validity, IRecordValidationState } from 'igniteui-angular';
+import {  IgxGridComponent, IgxTransactionService, Validity, IRecordValidationState, IgxGridValidationService } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
@@ -121,6 +121,7 @@ public hColumns2 = [
         if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
+            const validator : IgxGridValidationService = this.gridWithTransaction.validation;
             this.gridWithTransaction.validation.clear();
            }
         } else {

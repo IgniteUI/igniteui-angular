@@ -65,7 +65,7 @@ export interface CellType {
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
-    errors?: ValidationErrors;
+    readonly errors?: ValidationErrors;
     readonly?: boolean;
     title?: any;
     width: string;
@@ -87,7 +87,7 @@ export interface RowType {
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
-    errors?: ValidationErrors;
+    readonly errors?: ValidationErrors;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;

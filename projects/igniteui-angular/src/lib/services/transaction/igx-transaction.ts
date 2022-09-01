@@ -24,11 +24,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public autoCommit: boolean = false;
-
-    /**
-     * @inheritdoc
-     */
     public get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
@@ -144,7 +139,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @inheritdoc
      */
     public clear(id?: any): void {
-        super.clear(id);
         if (id !== undefined) {
             this._transactions = this._transactions.filter(t => t.id !== id);
             this._states.delete(id);
