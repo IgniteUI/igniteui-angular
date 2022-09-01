@@ -205,12 +205,6 @@ export interface ColumnType {
     populateVisibleIndexes?(): void;
 }
 
-export interface IFieldValid {
-    field: string;
-    valid: boolean;
-    formGroup: FormGroup;
-}
-
 export enum Validity {
 Valid,
 Invalid

@@ -2081,7 +2081,7 @@ export class GridFunctions {
     }
 
     public static verifyCellValid(cell: IgxGridCellComponent, valid = true) {
-        expect(cell.formControl.valid).toEqual(valid);
+        expect(cell.isInvalid).toEqual(!valid);
         expect(cell.nativeElement.classList.contains(CELL_INVALID_CSS_CLASS)).not.toEqual(valid);
     }
 }

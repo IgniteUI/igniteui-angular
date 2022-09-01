@@ -1,11 +1,21 @@
 <ng-template #defaultPinnedIndicator>
-    <igx-chip *ngIf="displayPinnedChip" class="igx-grid__td--pinned-chip" [disabled]="true"
-        [displayDensity]="'compact'">{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip>
+    <igx-chip
+        *ngIf="displayPinnedChip"
+        class="igx-grid__td--pinned-chip"
+        [disabled]="true"
+        [displayDensity]="'compact'"
+        >{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip
+    >
 </ng-template>
 <ng-template #defaultCell>
-    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)" igxTextHighlight
-        class="igx-grid__td-text" style="pointer-events: none;" [cssClass]="highlightClass"
-        [activeCssClass]="activeHighlightClass" [groupName]="gridID" [value]="
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+        igxTextHighlight
+        class="igx-grid__td-text"
+        style="pointer-events: none;"
+        [cssClass]="highlightClass"
+        [activeCssClass]="activeHighlightClass"
+        [groupName]="gridID"
+        [value]="
             formatter
                 ? (value | columnFormatter:formatter:rowData:columnData)
                 : column.dataType === 'number'
@@ -17,34 +27,47 @@
                 : column.dataType === 'percent'
                 ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
                 : value
-        " [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{
-        formatter
-        ? (value | columnFormatter:formatter:rowData:columnData)
-        : column.dataType === "number"
-        ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
-        : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
-        ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
-        : column.dataType === 'currency'
-        ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
-        : column.dataType === 'percent'
-        ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
-        : value
+        "
+        [row]="rowData"
+        [column]="this.column.field"
+        [containerClass]="'igx-grid__td-text'"
+        [metadata]="searchMetadata"
+    >{{
+            formatter
+                ? (value | columnFormatter:formatter:rowData:columnData)
+                : column.dataType === "number"
+                ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
+                : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
+                ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
+                : column.dataType === 'currency'
+                ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'percent'
+                ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
+                : value
         }}</div>
-    <igx-icon *ngIf="column.dataType === 'boolean' && !this.formatter"
-        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }">{{ value ? "check" : "close" }}</igx-icon>
+    <igx-icon
+        *ngIf="column.dataType === 'boolean' && !this.formatter"
+        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
+        >{{ value ? "check" : "close" }}</igx-icon
+    >
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
-    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)" igxTextHighlight
-        class="igx-grid__td-text" style="pointer-events: none" [cssClass]="highlightClass"
-        [activeCssClass]="activeHighlightClass" [groupName]="gridID" [value]="formatter ? (value | columnFormatter:formatter:rowData) : column.dataType === 'number' ?
+    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+        igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    [cssClass]="highlightClass"
+    [activeCssClass]="activeHighlightClass"
+    [groupName]="gridID"
+    [value]="formatter ? (value | columnFormatter:formatter:rowData) : column.dataType === 'number' ?
         (value | number:column.pipeArgs.digitsInfo:grid.locale) : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime') ?
         (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency' ?
         (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
-        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value" [row]="rowData" [column]="this.column.field"
-        [containerClass]="'igx-grid__td-text'" [metadata]="searchMetadata">{{
+        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
+    [row]="rowData"
+    [column]="this.column.field"
+    [containerClass]="'igx-grid__td-text'"
+    [metadata]="searchMetadata">{{
         !isEmptyAddRowCell ? value : (column.header || column.field)
-        }}</div>
+    }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'" [formGroup]="formGroup">
@@ -113,6 +136,7 @@
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+
 <ng-container *ngIf="isInvalid">
     <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" 
     (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
