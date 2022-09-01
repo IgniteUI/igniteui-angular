@@ -517,10 +517,12 @@ export abstract class IgxBaseExporter {
             (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
         const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
         const hasSorting = expressions && expressions.length > 0;
+        let setSummaryOwner = false;
 
         switch (tagName) {
             case 'igx-hierarchical-grid': {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
+                setSummaryOwner = true;
                 break;
             }
             case 'igx-tree-grid': {
@@ -534,7 +536,9 @@ export abstract class IgxBaseExporter {
         }
 
         if (grid.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly) {
-            this.setSummaries(GRID_ROOT_SUMMARY);
+            setSummaryOwner ?
+                this.setSummaries(GRID_ROOT_SUMMARY, 0, false, grid) :
+                this.setSummaries(GRID_ROOT_SUMMARY);
         }
     }
 
@@ -881,7 +885,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false) {
+    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any) {
         if (this.summaries.size > 0) {
             const rootSummary = this.summaries.get(summaryKey);
             const values = [...rootSummary.values()];
@@ -902,6 +906,10 @@ export abstract class IgxBaseExporter {
                     hidden,
                     summaryKey
                 };
+
+                if (owner) {
+                    summaryRecord.owner = owner;
+                }
 
                 this.flatRecords.push(summaryRecord);
             }

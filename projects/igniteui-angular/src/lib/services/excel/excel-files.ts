@@ -395,13 +395,13 @@ export class WorksheetFile implements IExcelFile {
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
         const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
-        const isDataRecord = fullRow.type === ExportRecordType.DataRecord;
+        const isValidRecordType = fullRow.type === ExportRecordType.DataRecord ||  fullRow.type === ExportRecordType.HierarchicalGridRecord;
 
-        if (isDataRecord && this._firstDataRec > this.rowIndex) {
+        if (isValidRecordType && this._firstDataRec > this.rowIndex) {
             this._firstDataRec = this.rowIndex;
         }
 
-        if (worksheetData.hasSummaries && isDataRecord) {
+        if (worksheetData.hasSummaries && isValidRecordType) {
             if (!this.dimensionMap.get(key)) {
                 const initialDimensions: Dimensions = {
                     startCoordinate: columnName,
@@ -419,7 +419,6 @@ export class WorksheetFile implements IExcelFile {
 
             if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
                 this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
-                console.log('CCCCCCCCHECK')
             }
         }
 
@@ -429,7 +428,7 @@ export class WorksheetFile implements IExcelFile {
 
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
-        } else if ((worksheetData.hasSummaries && isDataRecord) || !worksheetData.hasSummaries) {
+        } else if ((worksheetData.hasSummaries && (isValidRecordType || isHeaderRecord)) || !worksheetData.hasSummaries) {
             const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
