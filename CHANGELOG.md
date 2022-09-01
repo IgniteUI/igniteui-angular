@@ -99,6 +99,9 @@ All notable changes for each version of this project will be documented in this 
 
 - **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
 
+### Theme Changes
+- **Breaking Changes** - `$disable-shadow` property of `IgxTabsComponent` theme has been removed.
+
 ## 14.0.0
 
 - Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
