@@ -193,7 +193,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.data,
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
@@ -253,7 +254,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
@@ -1818,7 +1820,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
         });
 
@@ -1908,7 +1911,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: undefined,
+                valid: true
             });
         });
 
@@ -1938,7 +1942,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: undefined,
+                valid: true
             });
         });
 
@@ -2171,7 +2176,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);

@@ -29,7 +29,7 @@ export class IgxGridValidationService {
         if (!formGroup) {
             formGroup = new FormGroup({});
             for (const col of this.grid.columns) {
-                const value = resolveNestedPath(data, col.field);
+                const value = resolveNestedPath(data || {}, col.field);
                 const field = this.getFieldKey(col.field);
                 const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
                 control.addValidators(col.validators);
@@ -74,7 +74,7 @@ export class IgxGridValidationService {
     public getFormControl(rowId: any, columnKey: string) {
         const formControl = this.getFormGroup(rowId);
         const field = this.getFieldKey(columnKey);
-        return formControl.get(field);
+        return formControl?.get(field);
     }
 
     /**
