@@ -19,10 +19,6 @@ export class IgxGridValidationService {
         return this._valid;
     }
 
-    public set valid(value: boolean) {
-        this._valid = value;
-    }
-
     /**
      * @hidden
      * @internal
@@ -142,7 +138,7 @@ export class IgxGridValidationService {
      */
     private updateStatus() {
         const currentValid = this.valid;
-        this.valid = this.getInvalid().length === 0;
+        this._valid = this.getInvalid().length === 0;
         if (this.valid !== currentValid) {
             this.grid.validationStatusChange.emit(this.valid ? Validity.Valid : Validity.Invalid);
         }

@@ -4481,7 +4481,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             cancel: false,
             rowData: this.getRowData(rowId),
             oldValue: null,
-            owner: this
+            owner: this,
+            valid: true
         };
         this.rowDelete.emit(args);
         if (args.cancel) {
@@ -5928,17 +5929,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 rowStyle.display = 'none';
             }
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
-        const overlay = this.overlayService.getOverlayById(overlayId);
-        if(!overlay) return;
-        overlay.initialSize.width = newSize;
-        overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
-        this.overlayService.reposition(overlayId);
     }
 
     /**

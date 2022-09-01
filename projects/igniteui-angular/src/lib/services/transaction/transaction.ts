@@ -1,7 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { IFieldValid } from '../../grids/common/grid.interface';
 
 export enum TransactionType {
     ADD = 'add',

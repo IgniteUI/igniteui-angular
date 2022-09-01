@@ -5,7 +5,7 @@ import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
-import { CellType, ColumnType, GridServiceType, GridType, IFieldValid, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';

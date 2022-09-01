@@ -44,6 +44,7 @@ export class IgxEditRow {
             newValue: updatedData,
             owner: this.grid,
             isAddRow: false,
+            valid: true,
             event
         };
 

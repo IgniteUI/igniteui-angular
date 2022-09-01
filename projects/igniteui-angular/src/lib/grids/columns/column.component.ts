@@ -97,10 +97,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
 
     /**
-     * Sets/gets the validators used when editing cell from this column.
-     * ```typescript
-     * let validators = this.column.validators;
-     * ```
+     * @hidden @internal
      */
     public validators: Validator[] = [];
 
@@ -1181,18 +1178,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public set summaryTemplate(template: TemplateRef<any>) {
         this._summaryTemplate = template;
-    }
-
-        /** 
-     * Returns a reference to the `errorTemplate`.
-     * ```typescript
-     * let errorTemplate = this.column.errorTemplate;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    public get validationErrorTemplate(): TemplateRef<any> {
-        return this._errorTemplate;
     }
 
     /**

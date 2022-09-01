@@ -616,7 +616,6 @@ export interface GridType extends IGridDataBindable {
     resetColumnCollections(): void;
     triggerPipes(): void;
     repositionRowEditingOverlay(row: RowType): void;
-    resizeAndRepositionOverlayById(overlayId: string, newSize: number): void;
     closeRowEditingOverlay(): void;
     reflow(): void;
 

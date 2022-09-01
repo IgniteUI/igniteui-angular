@@ -288,6 +288,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         rowValueInDataSource: any,
         rowCurrentValue: any,
         rowNewValue: { [x: string]: any }) {
+        if (grid.transactions.enabled) {
             const path = grid.generateRowPath(rowID);
             const transaction: HierarchicalTransaction = {
                 id: rowID,
@@ -295,7 +296,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
                 newValue: rowNewValue,
                 path
             };
-        if (grid.transactions.enabled) {
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
             mergeObjects(rowValueInDataSource, rowNewValue);

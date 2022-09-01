@@ -32,7 +32,7 @@ import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
 import { IgxTooltipDirective } from '../directives/tooltip';
-import { AutoPositionStrategy, HorizontalAlignment } from '../services/public_api';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
 import { first, takeUntil, takeWhile } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -744,6 +744,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     constructor(
         protected selectionService: IgxGridSelectionService,
         @Inject(IGX_GRID_BASE) public grid: GridType,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef<HTMLElement>,
         protected zone: NgZone,
@@ -875,7 +876,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
                     this.cdr.detectChanges();
                     const tooltip = this.errorTooltip.first;
-                    this.grid.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorTooltip.first.element.offsetWidth);
+                    this.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorTooltip.first.element.offsetWidth);
                 }
             });
         }
@@ -886,6 +887,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
             }
         }
+    }
+
+    
+
+    /**
+     * @hidden @internal
+     */
+     private resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
+        const overlay = this.overlayService.getOverlayById(overlayId);
+        if(!overlay) return;
+        overlay.initialSize.width = newSize;
+        overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
+        this.overlayService.reposition(overlayId);
     }
 
     /**
