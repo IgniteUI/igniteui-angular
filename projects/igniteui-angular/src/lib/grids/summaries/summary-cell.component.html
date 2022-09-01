@@ -7,21 +7,9 @@
             <div class="igx-grid-summary__item" [style.height.px]="itemHeight">
 
                 <span class="igx-grid-summary__label" [title]="summary.label">{{ translateSummary(summary) }}</span>
-                <span class="igx-grid-summary__result" [title]="summary.summaryResult">
+                <span class="igx-grid-summary__result" [title]="formatSummaryResult(summary)">
                     {{
-                        summaryFormatter
-                        ? (summary | summaryFormatter:column.summaries:summaryFormatter)
-                        : (isNumberColumn() && summary.defaultFormatting)
-                        ? (summary.summaryResult | number:column.pipeArgs.digitsInfo:grid.locale)
-                        : (isDateKindColumn() && summary.defaultFormatting)
-                        ? (summary.summaryResult | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
-                        : (isCurrencyColumn() && summary.defaultFormatting)
-                        ? (summary.summaryResult | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
-                        : (isPercentColumn() && summary.defaultFormatting)
-                        ? (summary.summaryResult | percent:column.pipeArgs.digitsInfo:grid.locale)
-                        : (summary.key === 'count')
-                        ? (summary.summaryResult | number:undefined:grid.locale)
-                        : summary.summaryResult
+                        formatSummaryResult(summary)
                     }}
                 </span>
             </div>

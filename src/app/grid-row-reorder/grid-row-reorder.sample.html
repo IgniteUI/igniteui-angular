@@ -1,0 +1,7 @@
+<div class="grid-container">
+    <igx-grid igxPreventDocumentScroll #grid [data]="data" [height]="'800px'" [autoGenerate]="false" [rowDraggable]="true"
+        [primaryKey]="'ProductID'" igxDrop (dropped)="onDropAllowed($event)">
+        <igx-column [field]="'ProductID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [header]="'Product Name'"></igx-column>
+    </igx-grid>
+</div>
