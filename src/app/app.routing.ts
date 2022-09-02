@@ -88,6 +88,7 @@ import { GridFormattingComponent } from './grid-formatting/grid-formatting.compo
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
@@ -100,6 +101,7 @@ import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 
 const appRoutes: Routes = [
     {
@@ -321,6 +323,10 @@ const appRoutes: Routes = [
         component: GridRowAPISampleComponent
     },
     {
+        path: 'gridRowReorder',
+        component: GridRowReorderComponent
+    },
+    {
         path: 'gridCellAPI',
         component: GridCellAPISampleComponent
     },
@@ -463,6 +469,10 @@ const appRoutes: Routes = [
     {
         path: 'pivotHierarchy',
         component: PivotGridHierarchySampleComponent
+    },
+    {
+        path: 'pivotState',
+        component: PivotGridStateSampleComponent
     },
     {
         path: 'pivot-noop',

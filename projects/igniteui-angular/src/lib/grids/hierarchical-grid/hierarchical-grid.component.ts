@@ -299,7 +299,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     // @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected get headerHierarchyExpander() {
-        return this.theadRow.headerHierarchyExpander;
+        return this.theadRow?.headerHierarchyExpander;
     }
 
     /**

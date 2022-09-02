@@ -112,15 +112,15 @@ export enum IgxComboState {
     INVALID = IgxInputState.INVALID
 }
 
-    /** The filtering criteria to be applied on data search */
-    export interface IComboFilteringOptions {
-        /** Defines filtering case-sensitivity */
-        caseSensitive: boolean;
-        /** Defines whether filtering is allowed */
-        filterable: boolean;
-        /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
-        filteringKey?: string;
-    }
+/** The filtering criteria to be applied on data search */
+export interface IComboFilteringOptions {
+    /** Defines filtering case-sensitivity */
+    caseSensitive: boolean;
+    /** Defines whether filtering is allowed */
+    filterable: boolean;
+    /** Defines optional key to filter against complex list items. Default to displayKey if provided.*/
+    filteringKey?: string;
+}
 
 @Directive()
 export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, OnInit, DoCheck,

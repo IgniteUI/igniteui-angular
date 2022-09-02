@@ -15,6 +15,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { IgxSelectModule } from './select.module';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -54,6 +55,15 @@ describe('igxSelect', () => {
     let inputElement: DebugElement;
     let selectList: DebugElement;
     let selectListWrapper: DebugElement;
+
+    beforeEach(waitForAsync(() => {
+        UIInteractions.clearOverlay();
+    }));
+
+    afterAll(() => {
+        UIInteractions.clearOverlay();
+    });
+
     const verifyFocusedItem = focusedItemIndex => {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);

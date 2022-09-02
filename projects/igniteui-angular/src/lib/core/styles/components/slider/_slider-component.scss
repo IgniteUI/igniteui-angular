@@ -82,7 +82,6 @@ $_igx-slider-thumbs: 'from' 'to';
             @extend %igx-slider-thumbs-container !optional;
         }
 
-
         @include e(track-steps) {
             @extend %igx-slider-track-steps !optional;
         }
@@ -114,6 +113,10 @@ $_igx-slider-thumbs: 'from' 'to';
 
             @include e(dot) {
                 @extend %igx-slider-thumb__dot !optional;
+            }
+
+            @include m(focused) {
+                @extend %igx-slider-thumb--focused !optional;
             }
 
             @include m(pressed) {

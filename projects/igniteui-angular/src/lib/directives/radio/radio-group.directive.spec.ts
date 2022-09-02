@@ -195,6 +195,24 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
     }));
 
+    it('Properly rebind dynamically added components', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
+        const radioInstance = fixture.componentInstance.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        fixture.componentInstance.choices = [ 0, 1, 4, 7 ];
+        fixture.detectChanges();
+        tick();
+
+        radioInstance.radioButtons.last.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
+
+        expect(radioInstance.value).toEqual(7);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
+    }));
+
     it('Updates checked radio button correctly', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
         fixture.detectChanges();
