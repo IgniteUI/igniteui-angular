@@ -14,7 +14,6 @@ import {
     IgxTreeGridValidationTestComponent
 } from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { Validity } from '../common/grid.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './grid.module';
 
@@ -245,7 +244,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith(Validity.Invalid);
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('Invalid');
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -257,7 +256,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith(Validity.Valid);
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('INVALID');
         });
 
         it('should return invalid transaction using the transaction service API', () => {
