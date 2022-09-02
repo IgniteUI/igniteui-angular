@@ -244,7 +244,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('Invalid');
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('INVALID');
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
