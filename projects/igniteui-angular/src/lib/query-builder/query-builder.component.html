@@ -2,7 +2,7 @@
     <!-- TODO add resource strings for query builder title -->
     <igx-query-builder-header *ngIf="!headerContent" [title]="'Query Builder'"></igx-query-builder-header>
     <ng-content select="igx-query-builder-header"></ng-content>
-    
+
     <div #expressionsContainer class="igx-advanced-filter__main" (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 
@@ -69,18 +69,15 @@
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
                     <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
-                        <!-- TODO field formatter -->
-                        <!-- {{
+                        {{
                         isDate(expressionItem.expression.searchVal)
                         ? getFormatter(expressionItem.expression.fieldName)
                         ? (expressionItem.expression.searchVal |
-                        columnFormatter:getFormatter(expressionItem.expression.fieldName):undefined)
+                        fieldFormatter:getFormatter(expressionItem.expression.fieldName):undefined)
                         : (expressionItem.expression.searchVal |
-                        date:getFormat(expressionItem.expression.fieldName):undefined:grid.locale)
+                        date:getFormat(expressionItem.expression.fieldName):undefined:this.locale)
                         : expressionItem.expression.searchVal
-                        }} -->
-
-                        {{ expressionItem.expression.searchVal }}
+                        }}
                     </span>
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"
@@ -101,11 +98,8 @@
                     [overlaySettings]="columnSelectOverlaySettings" [placeholder]="'Select column'"
                     [(ngModel)]="selectedField">
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder" -->
-                    <!-- <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
-                        {{column.header || column.field}}
-                    </igx-select-item> -->
                     <igx-select-item *ngFor="let field of fields" [value]="field">
-                        {{field.label || field.fieldName}}
+                        {{field.header || field.field}}
                     </igx-select-item>
                 </igx-select>
 
@@ -114,9 +108,9 @@
                     [(ngModel)]="selectedCondition" [disabled]="!selectedField">
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder" -->
                     <igx-prefix
-                        *ngIf="selectedField && conditionSelect.value && selectedField.filteringOperands.condition(conditionSelect.value)">
+                        *ngIf="selectedField && conditionSelect.value && selectedField.filters.condition(conditionSelect.value)">
                         <igx-icon family="imx-icons"
-                            [name]="selectedField.filteringOperands.condition(conditionSelect.value).iconName">
+                            [name]="selectedField.filters.condition(conditionSelect.value).iconName">
                         </igx-icon>
                     </igx-prefix>
 
@@ -124,7 +118,7 @@
                         [text]="getConditionFriendlyName(condition)">
                         <div class="igx-grid__filtering-dropdown-items">
                             <igx-icon family="imx-icons"
-                                [name]="selectedField.filteringOperands.condition(condition).iconName">
+                                [name]="selectedField.filters.condition(condition).iconName">
                             </igx-icon>
                             <span
                                 class="igx-grid__filtering-dropdown-text">{{getConditionFriendlyName(condition)}}</span>
@@ -136,7 +130,7 @@
                     *ngIf="!selectedField || (selectedField.dataType !== 'date' && selectedField.dataType !== 'time' && selectedField.dataType !== 'dateTime')"
                     type="box" [displayDensity]="'compact'">
                     <input #searchValueInput igxInput [disabled]="!selectedField || !selectedCondition
-                            || (selectedField && selectedField.filteringOperands.condition(selectedCondition).isUnary)"
+                            || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                         [type]="selectedField && selectedField.dataType === 'number' ? 'number' : 'text'"
                         [placeholder]="'Value'" [(ngModel)]="searchValue" />
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder" -->
@@ -145,13 +139,12 @@
                 <igx-date-picker #picker *ngIf="selectedField && selectedField.dataType === 'date'"
                     [(value)]="searchValue" (keydown)="openPicker($event)" (click)="picker.open()" type="box"
                     [readOnly]="true" [displayDensity]="'compact'" [placeholder]="'Pick up date'" [disabled]="!selectedField || !selectedCondition
-                        || (selectedField && selectedField.filteringOperands.condition(selectedCondition).isUnary)">
+                        || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
+                    [locale]="this.locale"
+                    [formatter]="selectedField.formatter"
+                    [displayFormat]="selectedField.pipeArgs.format"
+                    [weekStart]="selectedField.pipeArgs.weekStart">
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder" -->
-                    <!-- TODO formatter -->
-                    <!-- [formatter]="selectedColumn.formatter" -->
-                    <!-- [displayFormat]="selectedColumn.pipeArgs.format"  -->
-                    <!-- [weekStart]="selectedColumn.pipeArgs.weekStart"  -->
-                    <!-- [locale]="grid.locale" -->
 
                     <!-- TODO outlet -->
                     <!-- [outlet]="grid.outlet" -->
@@ -164,12 +157,12 @@
                 <igx-time-picker #picker *ngIf="selectedField && selectedField.dataType === 'time'"
                     [(value)]="searchValue" (click)="picker.open()" (keydown)="openPicker($event)"
                     [displayDensity]="'compact'" [placeholder]="'Pick up time'" type="box" [readOnly]="true" [disabled]="!selectedField || !selectedCondition ||
-                             (selectedField && selectedField.filteringOperands.condition(selectedCondition).isUnary)">
+                             (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
+                    [locale]="this.locale"
+                    [formatter]="selectedField.formatter"
+                    [inputFormat]="selectedField.defaultTimeFormat"
+                    >
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder" -->
-                    <!-- TODO formatter -->
-                    <!-- [formatter]="selectedColumn.formatter" -->
-                    <!-- [locale]="grid.locale"  -->
-                    <!-- [inputFormat]="selectedColumn.defaultTimeFormat"  -->
 
                     <!-- TODO outlet -->
                     <!-- [outlet]="grid.outlet" -->
@@ -182,10 +175,10 @@
                 <igx-input-group #inputGroup type="box" *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                     type="box" [displayDensity]="'compact'">
                     <input #input igxInput tabindex="0" [placeholder]="'Pick up date'" [(ngModel)]="searchValue"
-                        [disabled]="!selectedField || !selectedCondition || (selectedField && selectedField.filteringOperands.condition(selectedCondition).isUnary)" />
+                        [disabled]="!selectedField || !selectedCondition || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)" 
+                        [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
+                        />
                     <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder" -->
-                    <!-- TODO formatter -->
-                    <!-- [igxDateTimeEditor]="selectedColumn.defaultDateTimeFormat"  -->
                 </igx-input-group>
 
                 <div class="igx-filter-tree__inputs-actions">

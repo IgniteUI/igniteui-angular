@@ -20,9 +20,9 @@ import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
-import { ColumnType, GridType } from '../../common/grid.interface';
+import { ColumnType, FieldType, GridType } from '../../common/grid.interface';
 import { DisplayDensity } from '../../../core/displayDensity';
-import { IgxQueryBuilderComponent, IQueryBuilderField } from '../../../query-builder/query-builder.component';
+import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 
 /**
  * @hidden
@@ -407,17 +407,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get filterableFields(): IQueryBuilderField[] {        
-        return this.grid.columns
-            .filter((column) => !column.columnGroup && column.filterable)
-            .map((column) => { 
-                return {
-                    label: column.header,
-                    fieldName: column.field,
-                    dataType: column.dataType,
-                    filteringOperands: column.filters
-                }
-            });
+    public get filterableFields(): FieldType[] {    
+        return this.grid.columns.filter((column) => !column.columnGroup && column.filterable)
     }
 
     /**

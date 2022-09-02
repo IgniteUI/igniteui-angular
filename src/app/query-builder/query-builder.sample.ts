@@ -7,7 +7,7 @@ import { FilteringExpressionsTree, IgxStringFilteringOperand,
 @Component({
     providers: [],
     selector: 'app-query-builder-sample',
-    styleUrls: ['query-builder.sample.css'],
+    styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html'
 })
 export class QueryBuilderComponent implements OnInit {
@@ -44,19 +44,20 @@ export class QueryBuilderComponent implements OnInit {
             { field: 'Contract', width: 150, resizable: true, type: 'boolean' }
         ];
         this.fields = [
-            { fieldName: 'ID', dataType: 'string' },
-            { fieldName: 'CompanyName', dataType: 'string'},
-            { fieldName: 'ContactName', dataType: 'string' },
-            { fieldName: 'Employees', dataType: 'number' },
-            { fieldName: 'ContactTitle', dataType: 'string' },
-            { fieldName: 'DateCreated', dataType: 'date' },
-            { fieldName: 'Address', dataType: 'string' },
-            { fieldName: 'City', dataType: 'string' },
-            { fieldName: 'Region', dataType: 'string' },
-            { fieldName: 'PostalCode', dataType: 'string' },
-            { fieldName: 'Phone', dataType: 'string' },
-            { fieldName: 'Fax', dataType: 'string' },
-            { fieldName: 'Contract', dataType: 'boolean' }
+            { field: 'ID', dataType: 'string' },
+            { field: 'CompanyName', dataType: 'string'},
+            { field: 'ContactName', dataType: 'string' },
+            { field: 'Employees', dataType: 'number' },
+            { field: 'ContactTitle', dataType: 'string' },
+            { field: 'DateCreated', dataType: 'date' },
+            { field: 'TimeCreated', dataType: 'time' },
+            { field: 'Address', dataType: 'string' },
+            { field: 'City', dataType: 'string' },
+            { field: 'Region', dataType: 'string' },
+            { field: 'PostalCode', dataType: 'string' },
+            { field: 'Phone', dataType: 'string' },
+            { field: 'Fax', dataType: 'string' },
+            { field: 'Contract', dataType: 'boolean' }
         ];
         this.data = [
             {
@@ -537,5 +538,9 @@ export class QueryBuilderComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public changeLocale(locale: string) {
+        this.queryBuilder.locale = locale;
     }
 }
