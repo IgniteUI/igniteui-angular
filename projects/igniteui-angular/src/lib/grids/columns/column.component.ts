@@ -1295,13 +1295,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._errorTemplate;
     }
     /**
-     * Sets the validation error template.
+     * Sets the error template.
      * ```html
-     * <ng-template igxCellValidationError let-cell="cell">
+     * <ng-template igxCellValidationError let-cell="cell" #errorTemplate >
      *     <div *ngIf="cell.errors?.['forbiddenName']">
      *      This name is forbidden.
      *     </div>
      * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'errorTemplate'", {read: TemplateRef })
+     * public errorTemplate: TemplateRef<any>;
+     * this.column.errorTemplate = this.errorTemplate;
+     * ```
      */
     public set errorTemplate(template: TemplateRef<any>) {
         this._errorTemplate = template;
