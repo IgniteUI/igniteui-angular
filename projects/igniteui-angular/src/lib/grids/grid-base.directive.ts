@@ -504,9 +504,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
 
+
+    /**
+     * Emitted when formGroup is created on edit of row/cell.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (formGroupCreated)="formGroupCreated($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
     @Output()
     public formGroupCreated = new EventEmitter<FormGroup>();
 
+    /**
+     * Emitted when grid's validation status changes.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (validationStatusChange)="validationStatusChange($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
     @Output()
     public validationStatusChange = new EventEmitter<ValidityStatus>();
 
