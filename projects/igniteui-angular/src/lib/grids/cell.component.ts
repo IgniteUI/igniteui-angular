@@ -992,14 +992,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
     };
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public focusout = () => {
-        this.closeErrorTooltip();
-    }
-
     private closeErrorTooltip() {
         const tooltip = this.errorTooltip.first;
         if (tooltip) {
@@ -1172,7 +1164,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
-        this.nativeElement.addEventListener('focusout', this.focusout);
     }
 
     private removePointerListeners(selection) {
@@ -1181,7 +1172,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
-        this.nativeElement.removeEventListener('focusout', this.focusout);
     }
 
     private getCellType(useRow?: boolean): CellType {
