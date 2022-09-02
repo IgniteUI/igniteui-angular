@@ -448,18 +448,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
-        const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null || this.selectionService.size(this.id) === 0) {
+        const filtered = this.filteredData.find(this.findMatch);
+        if (filtered === undefined || filtered === null || this.getElementKey(filtered) !== this.selectedItem) {
             this.clearAndClose();
             return;
         }
-        if (this.isPartialMatch(filtered) || this.getElementVal(filtered) !== this._internalFilter) {
-            this.clearAndClose();
-        }
     }
 
-    private isPartialMatch(filtered: any): boolean {
-        return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
+    private getElementKey(element: any): any {
+        const elementVal = this.valueKey ? element[this.valueKey] : element;
+        return elementVal;
     }
 
     private getElementVal(element: any): string {

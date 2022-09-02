@@ -815,7 +815,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxSimpleComboSampleComponent
+                    IgxSimpleComboSampleComponent,
+                    IgxComboInContainerTestComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1068,6 +1069,32 @@ describe('IgxSimpleCombo', () => {
             expect((combo as any).clearSelection).toHaveBeenCalledOnceWith(true);
             expect(combo.dropdown.closing.emit).toHaveBeenCalledTimes(1);
             expect(combo.value).toBeFalsy();
+        });
+
+        it('should not clear the selection and input on blur with a match', () => {
+            fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            fixture.detectChanges();
+
+            combo.data = ['Apples', 'Apple'];
+            fixture.detectChanges();
+
+            combo.select(combo.data[1]);
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toBe(1);
+            expect(combo.selection[0]).toEqual('Apple');
+
+            combo.open();
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.value).toEqual('Apple');
+            expect(combo.selection.length).toEqual(1);
         });
 
         it('should empty any invalid item values', () => {
