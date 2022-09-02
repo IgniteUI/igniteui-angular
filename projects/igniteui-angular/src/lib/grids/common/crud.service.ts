@@ -354,10 +354,12 @@ export class IgxRowCrudState extends IgxCellCrudState {
         if (!commit) {
             this.grid.transactions.endPending(false);
             const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
-            if (!isAddRow) {
-                const id = this.row ? this.row.id : this.cell.id.rowID;
+            const id = this.row ? this.row.id : this.cell.id.rowID;
+            if (isAddRow) {
+                this.grid.validation.clear(id);
+            } else {
                 this.grid.validation.update(id, rowEditArgs.oldValue);
-            }
+            } 
         } else if (this.row.getClassName() === IgxEditRow.name) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
