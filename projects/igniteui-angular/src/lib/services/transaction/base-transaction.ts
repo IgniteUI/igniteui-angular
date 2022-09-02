@@ -46,7 +46,6 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
-
     private _cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
@@ -112,12 +111,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-     public commit(_data: any[], _id?: any): void { }
+    public commit(_data: any[], _id?: any): void { }
 
     /**
      * @inheritdoc
      */
-     public clear(_id?: any): void {
+    public clear(_id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
     }

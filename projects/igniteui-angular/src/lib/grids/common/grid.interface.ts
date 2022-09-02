@@ -215,7 +215,7 @@ export interface IGridValidityStatusEventArgs {
     owner: GridType
 }
 
-export declare type ValidityStatus = 'VALID' | 'INVALID';
+export type ValidityStatus = 'VALID' | 'INVALID';
 
 export interface IRecordValidationState {
     key: any;
