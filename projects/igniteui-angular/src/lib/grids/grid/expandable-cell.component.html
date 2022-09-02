@@ -65,13 +65,23 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
-            [formControl]="formControl" />
+            <input
+                igxInput
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [igxFocus]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl" 
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'" [formGroup]="formGroup">
-        <igx-checkbox [checked]="editValue" (change)="editValue = $event.checked" [igxFocus]="true"
-            [disableRipple]="true" [formControl]="formControl"></igx-checkbox>
+        <igx-checkbox
+            [checked]="editValue"
+            [igxFocus]="true"
+            [disableRipple]="true"
+            [formControl]="formControl"
+        ></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'" [formGroup]="formGroup">
         <igx-date-picker
@@ -87,29 +97,53 @@
         </igx-date-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'time'" [formGroup]="formGroup">
-        <igx-time-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown" [locale]="grid.locale"
-            [inputFormat]="column.defaultTimeFormat" [(value)]="editValue" [igxFocus]="true"
-            [formControl]="formControl">
-        </igx-time-picker>
+        <igx-time-picker
+            [style.width.%]="100"
+            [outlet]="grid.outlet"
+            mode="dropdown"
+            [locale]="grid.locale"
+            [inputFormat]="column.defaultTimeFormat"
+            [(value)]="editValue"
+            [igxFocus]="true"
+            [formControl]="formControl"
+        ></igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
         <igx-input-group [formGroup]="formGroup">
-            <input type="text" [attr.aria-errormessage]="ariaErrorMessage" [formControl]="formControl" igxInput
-                [igxDateTimeEditor]="column.defaultDateTimeFormat"  [igxFocus]="true" />
+            <input
+                type="text"
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [formControl]="formControl"
+                igxInput
+                [igxDateTimeEditor]="column.defaultDateTimeFormat" 
+                [igxFocus]="true"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
-            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
-            [formControl]="formControl" />
+            <input
+                igxInput
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [igxFocus]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl"
+            />
             <igx-suffix *ngIf="!grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
-            <input igxInput [attr.aria-errormessage]="ariaErrorMessage" [igxFocus]="true" [step]="step" type="number"
-            [formControl]="formControl" />
+            <input
+                igxInput
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [igxFocus]="true"
+                [step]="step"
+                type="number"
+                [formControl]="formControl"
+            />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>
     </ng-container>
