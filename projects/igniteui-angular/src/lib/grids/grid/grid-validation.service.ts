@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IRecordValidationState, ValidityStatus } from '../common/grid.interface';
+import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -35,7 +35,11 @@ export class IgxGridValidationService {
                 control.addValidators(col.validators);
                 formGroup.addControl(field, control);
             }
-            this.grid.formGroupCreated.emit(formGroup);
+            const args: IGridFormGroupCreatedEventArgs = {
+                formGroup,
+                owner: this.grid
+            };
+            this.grid.formGroupCreated.emit(args);
             this.add(rowId, formGroup);
         } else {
             // reset to pristine.
@@ -100,7 +104,7 @@ export class IgxGridValidationService {
                     state.push({ field: colKey, valid: control.valid, errors: control.errors })
                 }
             }
-            states.push({ id: key, valid: formGroup.valid, state: state });
+            states.push({ key: key, valid: formGroup.valid, cells: state, errors: formGroup.errors });
         });
         return states;
     }
@@ -155,7 +159,7 @@ export class IgxGridValidationService {
         const currentValid = this.valid;
         this._valid = this.getInvalid().length === 0;
         if (this.valid !== currentValid) {
-            this.grid.validationStatusChange.emit(this.valid ? 'VALID' : 'INVALID');
+            this.grid.validationStatusChange.emit({ status: this.valid ? 'VALID' : 'INVALID', owner: this.grid });
         }
     }
 
@@ -164,7 +168,7 @@ export class IgxGridValidationService {
      * @returns Array of IRecordValidationState.
     */
     public clear(rowId?: any) {
-        if (rowId) {
+        if (rowId !== undefined) {
             this._validityStates.delete(rowId);
         } else {
             this._validityStates.clear();

@@ -205,12 +205,23 @@ export interface ColumnType {
     populateVisibleIndexes?(): void;
 }
 
+export interface IGridFormGroupCreatedEventArgs {
+    formGroup: FormGroup,
+    owner: GridType
+}
+
+export interface IGridValidityStatusEventArgs {
+    status: ValidityStatus,
+    owner: GridType
+}
+
 export declare type ValidityStatus = 'VALID' | 'INVALID';
 
 export interface IRecordValidationState {
-    id: any;
+    key: any;
     valid: boolean;
-    state: IFieldValidationState[];
+    errors: ValidationErrors;
+    cells: IFieldValidationState[];
 }
 
 export interface IFieldValidationState {
@@ -505,8 +516,8 @@ export interface GridType extends IGridDataBindable {
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
-    formGroupCreated: EventEmitter<FormGroup>;
-    validationStatusChange: EventEmitter<ValidityStatus>;
+    formGroupCreated: EventEmitter<IGridFormGroupCreatedEventArgs>;
+    validationStatusChange: EventEmitter<IGridValidityStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;

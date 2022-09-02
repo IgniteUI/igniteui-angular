@@ -124,7 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType, ValidityStatus } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidityStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -514,7 +514,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public formGroupCreated = new EventEmitter<FormGroup>();
+    public formGroupCreated = new EventEmitter<IGridFormGroupCreatedEventArgs>();
 
     /**
      * Emitted when grid's validation status changes.
@@ -525,7 +525,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public validationStatusChange = new EventEmitter<ValidityStatus>();
+    public validationStatusChange = new EventEmitter<IGridValidityStatusEventArgs>();
 
     /**
      * Emitted when a cell is selected.

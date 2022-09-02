@@ -244,7 +244,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('INVALID');
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -256,7 +256,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith('INVALID');
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
         });
 
         it('should return invalid transaction using the transaction service API', () => {
@@ -271,7 +271,7 @@ describe('IgxGrid - Validation #grid', () => {
             let invalidRecords = grid.validation.getInvalid();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(invalidRecords[0].state[1].valid).toBeFalse();
+            expect(invalidRecords[0].cells[1].valid).toBeFalse();
 
 
             cell.editMode = true;
