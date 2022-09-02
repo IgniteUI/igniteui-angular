@@ -187,7 +187,7 @@ describe('IgxGrid - Validation #grid', () => {
             const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
             expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
 
-            cell.focusout();
+            cell.errorTooltip.first.close();
             tick();
             fixture.detectChanges();
             expect(cell.errorTooltip.first.collapsed).toBeTrue();
