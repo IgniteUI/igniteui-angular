@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IRecordValidationState, Validity } from '../common/grid.interface';
+import { GridType, IFieldValidationState, IRecordValidationState, ValidityStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -155,7 +155,7 @@ export class IgxGridValidationService {
         const currentValid = this.valid;
         this._valid = this.getInvalid().length === 0;
         if (this.valid !== currentValid) {
-            this.grid.validationStatusChange.emit(this.valid ? Validity.Valid : Validity.Invalid);
+            this.grid.validationStatusChange.emit(this.valid ? 'VALID' : 'INVALID');
         }
     }
 

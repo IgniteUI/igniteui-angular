@@ -205,10 +205,7 @@ export interface ColumnType {
     populateVisibleIndexes?(): void;
 }
 
-export enum Validity {
-Valid,
-Invalid
-}
+export declare type ValidityStatus = 'VALID' | 'INVALID';
 
 export interface IRecordValidationState {
     id: any;
@@ -509,7 +506,7 @@ export interface GridType extends IGridDataBindable {
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
     formGroupCreated: EventEmitter<FormGroup>;
-    validationStatusChange: EventEmitter<Validity>;
+    validationStatusChange: EventEmitter<ValidityStatus>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;
