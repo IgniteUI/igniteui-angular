@@ -14,6 +14,7 @@ import {
     IgxTreeGridValidationTestComponent
 } from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './grid.module';
 
@@ -102,8 +103,8 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should allow setting validators on the exposed FormGroup object', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            grid.formGroupCreated.pipe(takeUntil($destroyer)).subscribe((formGroup: FormGroup) => {
-                const prodName = formGroup.get('ProductName');
+            grid.formGroupCreated.pipe(takeUntil($destroyer)).subscribe((args: IGridFormGroupCreatedEventArgs) => {
+                const prodName = args.formGroup.get('ProductName');
                 prodName.addValidators(Validators.email);
             });
 
