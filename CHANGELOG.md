@@ -63,37 +63,39 @@ All notable changes for each version of this project will be documented in this 
     ```
 
 - `igxGrid`
+    - Added built-in validation mechanism for Grid Editing. Extends the [Angular Form validation](https://angular.io/guide/form-validation) functionality
+        You can configure it in 2 ways:
+        1. Via template-driven configuration on the `igx-column` of the grid:
+            ```html
+            <igx-column required minlength="4" ...>
+            ```
+        2. Via reactive forms using the FormGroup exposed via the `formGroupCreated` event of the grid:
+
+            ```html
+            <igx-grid (formGroupCreated)='formCreateHandler($event)' ...>
+            ```
+
+            ```ts
+            public formCreateHandler(formGr: FormGroup) {
+                // add a validator
+                const prodName = formGr.get('UserName');
+                prodName.addValidators(forbiddenNameValidator(/bob/i))
+            }
+            ```
+
+        Edited cells will enter an invalid state when validation fails and will show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related state in the validation service is cleared.
+
+        You can refer to the documentation for more details: https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation
     - Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
     ```
     <column width='auto' ...>
     ```
     - Added support for restoring filtering expressions with custom filtering operands for the `IgxGridStateDirective`.
+    
 
 - Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
 
-    - Added built-in validation mechanism for Grid Editing. Extends the [Angular Form validation](https://angular.io/guide/form-validation) functionality
-    You can configure it in 2 ways:
-        1. Via template-driven configuration on the `igx-column` of the grid:
-        ```html
-          <igx-column required minlength="4" ...>
-          ```
-        2. Via reactive forms using the FormGroup exposed via the `formGroupCreated` event of the grid:
 
-        ```html
-        <igx-grid (formGroupCreated)='formCreateHandler($event)' ...>
-        ```
-
-        ```ts
-        public formCreateHandler(formGr: FormGroup) {
-            // add a validator
-            const prodName = formGr.get('UserName');
-            prodName.addValidators(forbiddenNameValidator(/bob/i))
-        }
-        ```
-
-    Edited cells wil enter an invalid state when validation fails and will show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related state in the validation service is cleared.
-    
-    You can refer to the documentation for more details: https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation
 
 ### General
 
