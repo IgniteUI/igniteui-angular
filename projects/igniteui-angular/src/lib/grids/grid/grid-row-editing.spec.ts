@@ -126,7 +126,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Emit all events with proper arguments', () => {
             const row = grid.gridAPI.get_row_by_index(2);
-            const initialRowData = {...cell.row.data};
+            const initialRowData = { ...cell.row.data };
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.data, { ProductName: newCellValue });
 
@@ -153,6 +153,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
+                valid: true,
                 event: jasmine.anything() as any
             };
             let rowEditArgs: IGridEditEventArgs = {
@@ -160,6 +161,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: row.data,
                 cancel: false,
+                valid: true,
                 owner: grid,
                 isAddRow: row.addRowUI,
                 event: jasmine.anything() as any
@@ -177,6 +179,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
+                valid: true,
                 newValue: cell.value,
                 column: cell.column,
                 owner: grid,
@@ -190,7 +193,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.data,
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
@@ -210,6 +214,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
+                valid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -226,6 +231,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: row.addRowUI,
+                valid: true,
                 event: jasmine.anything() as any
             };
 
@@ -235,6 +241,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
                 newValue: newCellValue,
+                valid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -247,7 +254,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
@@ -493,7 +501,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            targetCell =  grid.gridAPI.get_cell_by_index(0, 'Test');
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Test');
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
@@ -1542,7 +1550,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             initialRow = grid.getRowByIndex(0);
-            initialData = {...initialRow.data};
+            initialData = { ...initialRow.data };
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));
@@ -1684,7 +1692,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.click();
 
-            const rowData = Object.assign({}, cell.row.data, {ProductName: 'New Name'});
+            const rowData = Object.assign({}, cell.row.data, { ProductName: 'New Name' });
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.data).not.toEqual(rowData);
@@ -1717,6 +1725,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: false,
+                valid: true,
                 event: jasmine.anything() as any
             });
         });
@@ -1756,7 +1765,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
 
             // Enter cell edit mode again
@@ -1780,7 +1790,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
         });
 
@@ -1809,7 +1820,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
         });
 
@@ -1835,7 +1847,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
         });
 
@@ -1865,7 +1878,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             });
         });
 
@@ -1897,7 +1911,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: undefined,
+                valid: true
             });
         });
 
@@ -1927,7 +1942,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: undefined,
+                valid: true
             });
         });
 
@@ -1945,7 +1961,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
@@ -2148,7 +2165,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: newCellValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
@@ -2158,7 +2176,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 owner: grid,
                 isAddRow: row.addRowUI,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
@@ -2753,7 +2772,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData});
+            expect(trans.add).toHaveBeenCalledWith({ id: 100, type: 'add', newValue: addRowData });
             expect(grid.data.length).toBe(10);
         });
 
@@ -2775,7 +2794,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: { ProductName: 'Updated Cell' }}, grid.data[2]);
+            expect(trans.add).toHaveBeenCalledWith({
+                id: 3,
+                type: 'update',
+                newValue: { ProductName: 'Updated Cell' }
+            }, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
 
@@ -2795,7 +2818,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            expect(trans.add).toHaveBeenCalledWith({ id: 3, type: 'update', newValue: updateRowData }, oldRowData);
+            expect(trans.add).toHaveBeenCalledWith({
+                id: 3,
+                type: 'update',
+                newValue: updateRowData
+            }, oldRowData);
             expect(grid.data[2]).toBe(oldRowData);
         });
 
