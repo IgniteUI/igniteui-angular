@@ -65,6 +65,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
  */
+/* blazorAlternateName: GridColumn */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',

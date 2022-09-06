@@ -58,6 +58,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  * </igx-grid>
  * ```
  */
+/* blazorIndirectRender */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -275,6 +276,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    /* treatAsRef */
     @Input()
     public get data(): any[] | null {
         return this._data;

@@ -312,7 +312,7 @@ export interface GridType extends IGridDataBindable {
     filteringRow: any;
     actionStrip: any;
     resizeLine: any;
-
+    /* blazorSuppress */
     tfoot: ElementRef<HTMLElement>;
     paginator: IgxPaginatorComponent | Element;
     paginatorList?: QueryList<IgxPaginatorComponent>;
@@ -452,7 +452,9 @@ export interface GridType extends IGridDataBindable {
 
     // XXX: Work around till we fixed the injection tokens
     lastChildGrid?: GridType;
+    /* blazorSuppress */
     toolbarOutlet?: ViewContainerRef;
+    /* blazorSuppress */
     paginatorOutlet?: ViewContainerRef;
     flatData?: any[] | null;
     childRow?: any;

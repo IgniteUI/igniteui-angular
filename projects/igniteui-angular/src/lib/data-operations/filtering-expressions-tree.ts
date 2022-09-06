@@ -10,6 +10,7 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     operator: FilteringLogic;
     fieldName?: string;
+    /* alternateName: treeType */
     type?: FilteringExpressionsTreeType;
 
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;

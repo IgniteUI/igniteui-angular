@@ -166,10 +166,7 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 // Paginator selector
 const PAGINATOR_SELECTOR = 'igx-paginator';
 
-/**
- * testing testing test
- * @blazorComponent true
-*/ 
+/* blazorIndirectRender */
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
@@ -194,7 +191,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public autoGenerate = false;
+    public autoGenerate = true;
 
     /**
      * Controls whether columns moving is enabled in the grid.
@@ -2916,7 +2913,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public abstract id: string;
+    /**
+     * @hidden @internal
+     */
     public abstract data: any[] | null;
+    /**
+     * @hidden @internal
+     */
     public abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
