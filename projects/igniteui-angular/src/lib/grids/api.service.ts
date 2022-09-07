@@ -11,6 +11,7 @@ import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { FilterUtil } from '../data-operations/filtering-strategy';
+import { IgxGridValidationService } from './grid/grid-validation.service';
 
 /**
  * @hidden
@@ -145,7 +146,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const newRowData = reverseMapper(cell.column.field, args.newValue);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
+        if (!this.grid.crudService.row) {
+            this.grid.validation.update(cell.id.rowID, newRowData);
+        }
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -198,6 +203,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
+        this.grid.validation.update(row.id, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
@@ -292,14 +298,15 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
-
+        const rowId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
         if (grid.transactions.enabled) {
-            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            const transaction: Transaction = { id: rowId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
         }
+        grid.validation.markAsTouched(rowId);
+        grid.validation.update(rowId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -317,6 +324,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const state: State = grid.transactions.getState(rowID);
             grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
+        grid.validation.clear(rowID);
     }
 
     public deleteRowById(rowId: any): any {

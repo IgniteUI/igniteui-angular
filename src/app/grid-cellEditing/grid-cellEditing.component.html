@@ -3,13 +3,13 @@
 <div class="density-chooser" style="margin-bottom: 16px">
     <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
-<igx-grid #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid1 [filterMode]="'excelStyleFilter'" [moving]="true" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="1500px" height="550px" [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hidden]="orderDateHidden" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
                 </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
+    <igx-column field="OrderDate2" required width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
@@ -25,15 +25,14 @@
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="false">
     </igx-column>
     <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
-        <ng-template igxCell let-cell="cell">
-            <button> {{cell.value}}</button>
+        <ng-template igxCellValidationError let-cell='cell'>
+            <div *ngIf="cell.formGroup?.get(cell.column?.field).errors?.['forbiddenName']">
+                This name is forbidden.
+            </div>
         </ng-template>
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
-        <ng-template igxCellEditor let-cell="cell">
-            <input name="units" [(ngModel)]="cell.value" style="color: black" />
-        </ng-template>
-    </igx-column>
+    <igx-column required field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="false">
+      </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" [editable]="true" [resizable]="true">
     </igx-column>
     <igx-paginator></igx-paginator>
@@ -50,7 +49,7 @@
 <input type="text" [(ngModel)]="pname">
 
 <h3>Grid without PK</h3>
-<igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
+<igx-grid (cellEdit)='cellEdit($event)' #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [moving]="true" [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.id.rowIndex)">Delete</button>
@@ -61,7 +60,7 @@
     </igx-column>
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" [editable]="true" [dataType]="'number'" [hasSummary]="true">
     </igx-column>
-    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
+    <igx-column required field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" [editable]="true" [resizable]="true">
     </igx-column>
     <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [editable]="true" [sortable]="true" [hasSummary]="true">
         <ng-template igxCellEditor let-cell="cell">

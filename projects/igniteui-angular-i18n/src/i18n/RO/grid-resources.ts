@@ -157,7 +157,14 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
-    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_required_validation_error: 'Acest câmp este obligatoriu',
+    igx_grid_min_validation_error: 'Trebuie introdusă o valoare de cel puțin {0}',
+    igx_grid_max_validation_error: 'Trebuie introdusă o valoare de maximum {0}',
+    igx_grid_min_length_validation_error: 'Intrarea trebuie să aibă cel puțin {0} caractere',
+    igx_grid_max_length_validation_error: 'Intrarea nu trebuie să aibă mai mult de {0} caractere',
+    igx_grid_email_validation_error: 'Ar trebui introdusă o adresă de e-mail validă',
+    igx_grid_pattern_validation_error: 'Intrarea nu se potrivește cu modelul cerut',
 };
 
 /**
