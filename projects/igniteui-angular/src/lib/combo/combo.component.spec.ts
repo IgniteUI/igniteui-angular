@@ -610,7 +610,7 @@ describe('igxCombo', () => {
             combo.data = data;
             combo.dropdown = dropdown;
             combo.comboInput = {
-                value: "",
+                value: '',
             } as any;
             combo.filterable = true;
             const matchSpy = spyOn<any>(combo, 'checkMatch').and.callThrough();

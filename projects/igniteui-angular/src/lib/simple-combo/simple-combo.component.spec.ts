@@ -1054,13 +1054,11 @@ describe('IgxSimpleCombo', () => {
 
         it('should not clear the selection and input on blur with a match', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
-            fixture.detectChanges();
             combo = fixture.componentInstance.combo;
-            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             fixture.detectChanges();
 
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             combo.data = ['Apples', 'Apple'];
-            fixture.detectChanges();
 
             combo.select(combo.data[1]);
             fixture.detectChanges();
