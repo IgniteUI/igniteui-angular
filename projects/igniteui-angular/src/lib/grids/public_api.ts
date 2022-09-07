@@ -13,7 +13,7 @@ export * from './grid-base.directive';
 export * from './grid.common';
 export * from './grid-public-row';
 export * from './grid-public-cell';
-export { CellType, RowType, IGX_GRID_BASE } from './common/grid.interface';
+export { CellType, RowType, IGX_GRID_BASE, ValidityStatus, IRecordValidationState, IFieldValidationState } from './common/grid.interface';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
 export * from './grid.rowEdit.directive';
@@ -21,6 +21,7 @@ export * from './row-drag.directive';
 export * from './column-actions/column-actions.module';
 export * from './state.directive';
 export * from './toolbar/toolbar.module';
+export * from './grid/grid-validation.service';
 
 export { IgxGridCellComponent as ϴIgxGridCellComponent } from './cell.component';
 

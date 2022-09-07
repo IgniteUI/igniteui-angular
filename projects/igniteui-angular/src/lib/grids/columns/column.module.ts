@@ -7,16 +7,30 @@ import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
+    IgxCellValidationErrorDirective,
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective,
     IgxSummaryTemplateDirective
 } from './templates.directive';
+import {
+    IgxColumMaxLengthValidatorDirective, IgxColumnEmailValidatorDirective, IgxColumnMaxValidatorDirective,
+    IgxColumnMinLengthValidatorDirective, IgxColumnMinValidatorDirective, IgxColumnRequiredValidatorDirective,
+    IgxColumPatternValidatorDirective
+} from './validators.directive';
 
 @NgModule({
     declarations: [
+        IgxColumnRequiredValidatorDirective,
+        IgxColumnMinValidatorDirective,
+        IgxColumnMaxValidatorDirective,
+        IgxColumnMinLengthValidatorDirective,
+        IgxColumMaxLengthValidatorDirective,
+        IgxColumnEmailValidatorDirective,
+        IgxColumPatternValidatorDirective,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
+        IgxCellValidationErrorDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -26,9 +40,17 @@ import {
         IgxColumnLayoutComponent
     ],
     exports: [
+        IgxColumnRequiredValidatorDirective,
+        IgxColumnMinValidatorDirective,
+        IgxColumnMaxValidatorDirective,
+        IgxColumnMinLengthValidatorDirective,
+        IgxColumMaxLengthValidatorDirective,
+        IgxColumnEmailValidatorDirective,
+        IgxColumPatternValidatorDirective,
         IgxFilterCellTemplateDirective,
         IgxSummaryTemplateDirective,
         IgxCellTemplateDirective,
+        IgxCellValidationErrorDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -38,4 +60,4 @@ import {
         IgxColumnLayoutComponent
     ]
 })
-export class IgxGridColumnModule {}
+export class IgxGridColumnModule { }

@@ -578,6 +578,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: false,
+                valid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -598,6 +599,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
+                valid: true,
                 cancel: false,
                 column: cell2.column,
                 owner: grid,
@@ -626,6 +628,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: true,
+                valid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -651,7 +654,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: true,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
@@ -676,6 +680,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 newValue: 'John Brown',
+                valid: true,
                 oldValue: 'John Brown',
                 column: cell.column,
                 owner: grid,
@@ -698,6 +703,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 newValue: 20,
                 oldValue: 20,
+                valid: true,
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
@@ -733,7 +739,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
@@ -758,7 +765,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: false,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
@@ -796,6 +804,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cancel: true,
                 column: cell.column,
                 owner: grid,
+                valid: true,
                 event: undefined
             };
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
@@ -967,7 +976,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'New Name',
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
@@ -1004,7 +1014,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: firstNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
@@ -1028,7 +1039,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: secondNewValue,
                 column: cell.column,
                 owner: grid,
-                event: jasmine.anything() as any
+                event: jasmine.anything() as any,
+                valid: true
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);

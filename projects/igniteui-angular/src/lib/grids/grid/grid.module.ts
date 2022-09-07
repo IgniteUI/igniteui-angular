@@ -17,6 +17,8 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
+import { IgxTooltipModule } from '../../directives/tooltip';
+import { ReactiveFormsModule } from '@angular/forms';
 /**
  * @hidden
  */
@@ -54,6 +56,8 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
   ],
   imports: [
     IgxGridCommonModule,
+    IgxTooltipModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

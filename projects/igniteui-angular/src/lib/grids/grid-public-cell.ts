@@ -1,6 +1,7 @@
 import { CellType, ColumnType, GridType, RowType } from './common/grid.interface';
 import { ISelectionNode } from './common/types';
 import { resolveNestedPath } from '../core/utils';
+import { ValidationErrors } from '@angular/forms';
 
 export class IgxGridCell implements CellType {
 
@@ -72,6 +73,18 @@ export class IgxGridCell implements CellType {
         if (this.isCellInEditMode()) {
             return this.grid.crudService.cell.editValue;
         }
+    }
+
+    /**
+     * Gets the validation errors if any.
+     * ```typescript
+     * let errors = this.cell.errors;
+     * ```
+     */
+
+    public get errors(): ValidationErrors {
+        const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
+        return form?.errors;
     }
 
     /**
