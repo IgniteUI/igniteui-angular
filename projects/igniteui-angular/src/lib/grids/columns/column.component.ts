@@ -1071,6 +1071,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
+    /* blazorSuppress */
     /**
      * Gets the function that compares values for grouping.
      * ```typescript

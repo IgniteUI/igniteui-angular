@@ -6,12 +6,14 @@ import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
+/* blazorAlternateName: GridHorizontalAlignment */
 export enum HorizontalAlignment {
     Left = -1,
     Center = -0.5,
     Right = 0
 }
 
+/* blazorAlternateName: GridVerticalAlignment */
 export enum VerticalAlignment {
     Top = -1,
     Middle = -0.5,

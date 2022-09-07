@@ -49,7 +49,7 @@
     "lint:i18n": "eslint projects/igniteui-angular-i18n/src/**/*.ts",
     "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
     "build:elements": "ng build --configuration production --project igniteui-angular-elements --output-hashing none && npm run pack:elements && cp projects/igniteui-angular-elements/package.json dist/igniteui-angular-elements",
-    "pack:elements": "cat ./dist/igniteui-angular-elements/{runtime,polyfills,main}.js > dist/igniteui-angular-elements/elements.js && ls -lah dist/igniteui-angular-elements/elements.js",
+    "pack:elements": "gulp concatElements",
     "postinstall": "gulp copyGitHooks",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"

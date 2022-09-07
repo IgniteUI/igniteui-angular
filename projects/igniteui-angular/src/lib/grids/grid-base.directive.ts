@@ -166,7 +166,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 // Paginator selector
 const PAGINATOR_SELECTOR = 'igx-paginator';
 
-/* blazorIndirectRender */
+/* blazorIndirectRender 
+   blazorComponent */
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
@@ -1742,6 +1743,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the height.
      *
@@ -1757,6 +1759,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._height;
     }
 
+    /* blazorSuppress */
     public set height(value: string | null) {
         if (this._height !== value) {
             this._height = value;
@@ -1773,6 +1776,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._width || this._hostWidth;
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the width of the grid.
      *
@@ -1787,6 +1791,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._width;
     }
 
+    /* blazorSuppress */
     public set width(value: string | null) {
         if (this._width !== value) {
             this._width = value;

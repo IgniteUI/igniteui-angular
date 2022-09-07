@@ -1,7 +1,7 @@
 /**
  * Provides base filtering operations
  * Implementations should be Singleton
- *
+ * 
  * @export
  */
 export class IgxFilteringOperand {
