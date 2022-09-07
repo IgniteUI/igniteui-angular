@@ -11,7 +11,6 @@ import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { FilterUtil } from '../data-operations/filtering-strategy';
-import { IgxGridValidationService } from './grid/grid-validation.service';
 
 /**
  * @hidden

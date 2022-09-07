@@ -65,7 +65,7 @@ export interface CellType {
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
-    readonly errors?: ValidationErrors;
+    readonly validation?: IGridValidationState;
     readonly?: boolean;
     title?: any;
     width: string;
@@ -87,7 +87,7 @@ export interface RowType {
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
-    readonly errors?: ValidationErrors;
+    readonly validation?: IGridValidationState;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
@@ -216,6 +216,11 @@ export interface IGridValidityStatusEventArgs {
 }
 
 export type ValidityStatus = 'VALID' | 'INVALID';
+
+export interface IGridValidationState {
+    readonly status: ValidityStatus;
+    readonly errors?: ValidationErrors;
+}
 
 export interface IRecordValidationState {
     key: any;

@@ -434,7 +434,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public disablePinning = false;
     /**
      * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
-     * 
+     *
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      *
@@ -1298,7 +1298,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * Sets the error template.
      * ```html
      * <ng-template igxCellValidationError let-cell="cell" #errorTemplate >
-     *     <div *ngIf="cell.errors?.['forbiddenName']">
+     *     <div *ngIf="cell.validation.errors?.['forbiddenName']">
      *      This name is forbidden.
      *     </div>
      * </ng-template>
