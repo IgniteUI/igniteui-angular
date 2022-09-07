@@ -133,6 +133,7 @@ import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/s
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
+import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const appRoutes: Routes = [
     {
@@ -520,6 +521,10 @@ const appRoutes: Routes = [
     {
         path: 'gridRowReorder',
         component: GridRowReorderComponent
+    },
+    {
+        path: 'gridValidation',
+        component: GridValidationSampleComponent
     },
     {
         path: 'gridScrollVirtualization',

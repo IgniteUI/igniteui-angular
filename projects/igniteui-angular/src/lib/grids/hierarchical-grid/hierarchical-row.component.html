@@ -73,6 +73,7 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
             [cellTemplate]="col.bodyTemplate"
+            [cellValidationErrorTemplate]="col.errorTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
@@ -122,6 +123,7 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
             [cellTemplate]="col.bodyTemplate"
+            [cellValidationErrorTemplate]="col.errorTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">

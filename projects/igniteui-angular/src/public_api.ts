@@ -79,6 +79,7 @@ export * from './lib/grids/grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
 export * from './lib/grids/columns/templates.directive';
+export * from './lib/grids/columns/validators.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';

@@ -71,32 +71,39 @@
     }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
-    <ng-container *ngIf="column.dataType === 'string'">
-        <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true"
-            (compositionstart)="grid.crudService.isInCompositionMode = true"
-            (compositionend)="grid.crudService.isInCompositionMode = false"
+    <ng-container *ngIf="column.dataType === 'string'" [formGroup]="formGroup">
+        <igx-input-group displayDensity="compact" >
+            <input
+                igxInput
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [igxFocus]="true"
+                [formControl]="formControl"
+                (compositionstart)="grid.crudService.isInCompositionMode = true"
+                (compositionend)="grid.crudService.isInCompositionMode = false"
             />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [(ngModel)]="editValue"
+                [attr.aria-errormessage]="ariaErrorMessage"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControl]="formControl" 
             />
         </igx-input-group>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'boolean'">
+    <ng-container *ngIf="column.dataType === 'boolean'" [formGroup]="formGroup">
         <igx-checkbox
-            [(ngModel)]="editValue"
+            [checked]="editValue"
+            [igxFocus]="true"
             [disableRipple]="true"
+            [formControl]="formControl"
         ></igx-checkbox>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'date'">
+    <ng-container *ngIf="column.dataType === 'date'" [formGroup]="formGroup">
         <igx-date-picker
             [style.width.%]="100"
             [outlet]="grid.outlet"
@@ -105,45 +112,57 @@
             [weekStart]="column.pipeArgs.weekStart"
             [(value)]="editValue"
             [igxFocus]="true"
+            [formControl]="formControl"
         >
         </igx-date-picker>
     </ng-container>
-    <ng-container *ngIf="column.dataType === 'time'">
+    <ng-container *ngIf="column.dataType === 'time'" [formGroup]="formGroup">
         <igx-time-picker
             [style.width.%]="100"
             [outlet]="grid.outlet"
             mode="dropdown"
+            [locale]="grid.locale"
             [inputFormat]="column.defaultTimeFormat"
-            [(ngModel)]="editValue"
+            [(value)]="editValue"
             [igxFocus]="true"
-            >
-        </igx-time-picker>
+            [formControl]="formControl"
+        ></igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
-        <igx-input-group>
-            <input type="text" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
+        <igx-input-group [formGroup]="formGroup">
+            <input
+                type="text"
+                [attr.aria-errormessage]="ariaErrorMessage"
+                [formControl]="formControl"
+                igxInput
+                [igxDateTimeEditor]="column.defaultDateTimeFormat" 
+                [igxFocus]="true"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
-        <igx-input-group displayDensity="compact">
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [(ngModel)]="editValue"
+                [attr.aria-errormessage]="ariaErrorMessage"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControl]="formControl"
             />
-            <igx-suffix *ngIf="!grid.currencyPositionLeft" >{{ currencyCodeSymbol }}</igx-suffix>
+            <igx-suffix *ngIf="!grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
-        <igx-input-group displayDensity="compact">
-            <input igxInput
-                [(ngModel)]="editValue"
+        <igx-input-group displayDensity="compact" [formGroup]="formGroup">
+            <input
+                igxInput
+                [attr.aria-errormessage]="ariaErrorMessage"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [formControl]="formControl"
             />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>
@@ -193,9 +212,43 @@
     </ng-template>
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context"> </ng-container>
+<ng-container *ngIf="isInvalid">
+    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" 
+    (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
+    <div [id]="ariaErrorMessage"
+    igxTooltip #error #tooltipRef="tooltip">
+        <div [style.width]="'max-content'">
+            <ng-container *ngTemplateOutlet="cellValidationErrorTemplate || defaultError; context: context"></ng-container>
+        </div>
+    </div>
+</ng-container>
+
 <ng-template #defaultExpandedTemplate>
     <igx-icon>expand_more</igx-icon>
 </ng-template>
 <ng-template #defaultCollapsedTemplate>
     <igx-icon>chevron_right</igx-icon>
+</ng-template>
+<ng-template #defaultError>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['required']">
+        {{grid.resourceStrings.igx_grid_required_validation_error}}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['minlength']">
+        {{grid.resourceStrings.igx_grid_min_length_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.minlength.requiredLength }}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['maxlength']">
+        {{grid.resourceStrings.igx_grid_max_length_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.maxlength.requiredLength }}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['min']">
+        {{grid.resourceStrings.igx_grid_min_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.min.min }}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['max']">
+        {{grid.resourceStrings.igx_grid_max_validation_error | igxStringReplace:'{0}':formGroup.get(column.field).errors.max.max }}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['email']">
+        {{grid.resourceStrings.igx_grid_email_validation_error }}
+    </div>
+    <div *ngIf="formGroup?.get(column?.field).errors?.['pattern']">
+        {{grid.resourceStrings.igx_grid_pattern_validation_error}}
+    </div>
 </ng-template>
