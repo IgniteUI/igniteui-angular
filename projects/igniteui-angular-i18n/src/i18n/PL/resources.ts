@@ -9,6 +9,7 @@ import { CalendarResourceStringsPL } from './calendar-resources';
 import { TreeResourceStringsPL } from './tree-resources';
 import { InputResourceStringsPL } from './input-resources';
 import { ChipResourceStringsPL } from './chip-resources';
+import { ComboResourceStringsPL } from './combo-resources';
 
 /**
  * Polish resource strings for all components
@@ -24,5 +25,6 @@ export const IgxResourceStringsPL = {
     ...CalendarResourceStringsPL,
     ...TreeResourceStringsPL,
     ...InputResourceStringsPL,
-    ...ChipResourceStringsPL
+    ...ChipResourceStringsPL,
+    ...ComboResourceStringsPL
 };
