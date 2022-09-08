@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, ValidationStatus, IRecordValidationState, IgxGridValidationService } from 'igniteui-angular';
+import {  IgxGridComponent, IRecordValidationState, IgxGridValidationService, IGridValidationStatusEventArgs } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
@@ -155,8 +155,8 @@ public hColumns2 = [
         //    prodName.addValidators(forbiddenNameValidator(/bob/i));
     }
 
-    public validationChange(evtArgs: ValidationStatus){
-        alert(evtArgs === 'INVALID' ? 'state became INVALID' : 'state became VALID');
+    public validationChange(evtArgs: IGridValidationStatusEventArgs){
+        alert(evtArgs.status === 'INVALID' ? 'state became INVALID' : 'state became VALID');
     }
 
     public updateRow(id) {
