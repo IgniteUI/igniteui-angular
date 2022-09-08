@@ -469,17 +469,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get readonly(): boolean {
         return !this.editable;
     }
-    /** @hidden @internal */
-    @HostBinding('attr.aria-describedby')
-    public get describeBy() {
-        if (this.isInvalid) {
-            return this.ariaErrorMessage;
-        }
-        return this.grid.id + '_' + this.column.field;
-    }
 
     /** @hidden @internal */
-    @HostBinding('attr.aria-errormessage')
+    @HostBinding('attr.aria-describedby')
     public get ariaErrorMessage() {
         return this.grid.id + '_' + this.column.field + '_' + this.intRow.index + '_error';
     }
