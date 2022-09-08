@@ -1059,6 +1059,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
+
+    
     /**
      * Sets the column `sortStrategy`.
      * ```typescript
@@ -1071,6 +1073,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
+
     /* blazorSuppress */
     /**
      * Gets the function that compares values for grouping.
@@ -1084,6 +1087,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get groupingComparer(): (a: any, b: any) => number {
         return this._groupingComparer;
     }
+
+    /* blazorSuppress */
     /**
      * Sets a custom function to compare values for grouping.
      * Subsequent values in the sorted data that the function returns 0 for are grouped.

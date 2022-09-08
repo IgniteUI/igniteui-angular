@@ -2,6 +2,9 @@ export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
 }
+
+/* wcAlternateName: GridSummaryResult */
+/* blazorAlternateName: GridSummaryResult */
 export interface IgxSummaryResult {
     key: string;
     label: string;
@@ -31,6 +34,8 @@ const clear = (el) => el === 0 || Boolean(el);
 const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
 
+/* wcAlternateName: GridSummaryOperand */
+/* blazorAlternateName: GridSummaryOperand */
 export class IgxSummaryOperand {
     /**
      * Counts all the records in the data source.
