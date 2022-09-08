@@ -65,7 +65,7 @@ export interface CellType {
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
-    readonly errors?: ValidationErrors;
+    readonly validation?: IGridValidationState;
     readonly?: boolean;
     title?: any;
     width: string;
@@ -87,7 +87,7 @@ export interface RowType {
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
-    readonly errors?: ValidationErrors;
+    readonly validation?: IGridValidationState;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
@@ -210,24 +210,25 @@ export interface IGridFormGroupCreatedEventArgs {
     owner: GridType
 }
 
-export interface IGridValidityStatusEventArgs {
-    status: ValidityStatus,
+export interface IGridValidationStatusEventArgs {
+    status: ValidationStatus,
     owner: GridType
 }
 
-export type ValidityStatus = 'VALID' | 'INVALID';
+export type ValidationStatus = 'VALID' | 'INVALID';
 
-export interface IRecordValidationState {
-    key: any;
-    valid: boolean;
-    errors: ValidationErrors;
-    cells: IFieldValidationState[];
+export interface IGridValidationState {
+    readonly status: ValidationStatus;
+    readonly errors?: ValidationErrors;
 }
 
-export interface IFieldValidationState {
-    field: string,
-    valid: boolean,
-    errors: ValidationErrors
+export interface IRecordValidationState extends IGridValidationState {
+    key: any;
+    fields: IFieldValidationState[];
+}
+
+export interface IFieldValidationState extends IGridValidationState {
+    field: string
 }
 
 export interface GridServiceType {
@@ -517,7 +518,7 @@ export interface GridType extends IGridDataBindable {
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
     formGroupCreated: EventEmitter<IGridFormGroupCreatedEventArgs>;
-    validationStatusChange: EventEmitter<IGridValidityStatusEventArgs>;
+    validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;

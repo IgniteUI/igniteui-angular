@@ -60,7 +60,7 @@ export class IgxGridValidationTestBaseComponent {
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [width]="c.width" [resizable]='true' [dataType]="c.dataType">
             <ng-template igxCellValidationError let-cell='cell'>
-                    <div *ngIf="cell.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
+                    <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
                         This name is forbidden.
                     </div>
                 </ng-template>
@@ -91,7 +91,7 @@ export class IgxGridValidationTestCustomErrorComponent {
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
             [header]="c.field" [width]="c.width" [resizable]='true' [dataType]="c.dataType" >
             <ng-template igxCellValidationError let-cell='cell'>
-                <div *ngIf="cell.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
+                <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
                     This name is forbidden.
                 </div>
             </ng-template>
