@@ -1,4 +1,4 @@
-import { CellType, ColumnType, GridType, IGridValidationState, RowType, ValidityStatus } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
 import { ISelectionNode } from './common/types';
 import { resolveNestedPath } from '../core/utils';
 
@@ -84,7 +84,7 @@ export class IgxGridCell implements CellType {
 
     public get validation(): IGridValidationState {
         const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
-        return { status: form?.status as ValidityStatus || 'VALID', errors: form?.errors } as const;
+        return { status: form?.status as ValidationStatus || 'VALID', errors: form?.errors } as const;
     }
 
     /**

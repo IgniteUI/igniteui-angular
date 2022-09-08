@@ -210,15 +210,15 @@ export interface IGridFormGroupCreatedEventArgs {
     owner: GridType
 }
 
-export interface IGridValidityStatusEventArgs {
-    status: ValidityStatus,
+export interface IGridValidationStatusEventArgs {
+    status: ValidationStatus,
     owner: GridType
 }
 
-export type ValidityStatus = 'VALID' | 'INVALID';
+export type ValidationStatus = 'VALID' | 'INVALID';
 
 export interface IGridValidationState {
-    readonly status: ValidityStatus;
+    readonly status: ValidationStatus;
     readonly errors?: ValidationErrors;
 }
 
@@ -522,7 +522,7 @@ export interface GridType extends IGridDataBindable {
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
     formGroupCreated: EventEmitter<IGridFormGroupCreatedEventArgs>;
-    validationStatusChange: EventEmitter<IGridValidityStatusEventArgs>;
+    validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;

@@ -124,7 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidityStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -154,7 +154,6 @@ import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
-import { FormGroup } from '@angular/forms';
 import { IgxGridValidationService } from './grid/grid-validation.service';
 
 let FAKE_ROW_ID = -1;
@@ -525,7 +524,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public validationStatusChange = new EventEmitter<IGridValidityStatusEventArgs>();
+    public validationStatusChange = new EventEmitter<IGridValidationStatusEventArgs>();
 
     /**
      * Emitted when a cell is selected.

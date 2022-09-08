@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, ValidityStatus, IRecordValidationState, IgxGridValidationService } from 'igniteui-angular';
+import {  IgxGridComponent, ValidationStatus, IRecordValidationState, IgxGridValidationService } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
@@ -17,9 +17,9 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]
   })
   export class ForbiddenValidatorDirective extends Validators {
-    @Input('appForbiddenName') 
+    @Input('appForbiddenName')
     public forbiddenName = '';
-  
+
     public validate(control: AbstractControl): ValidationErrors | null {
       return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
                                 : null;
@@ -150,12 +150,12 @@ public hColumns2 = [
     }
 
     public formCreateHandler(formGr: FormGroup) {
-        // can add validators here 
+        // can add validators here
         //    const prodName = formGr.get('ProductName');
         //    prodName.addValidators(forbiddenNameValidator(/bob/i));
     }
 
-    public validationChange(evtArgs: ValidityStatus){
+    public validationChange(evtArgs: ValidationStatus){
         alert(evtArgs === 'INVALID' ? 'state became INVALID' : 'state became VALID');
     }
 
@@ -180,4 +180,3 @@ public hColumns2 = [
       this.gridWithTransaction.updateCell('', id, 'ProductName');
     }
 }
-

@@ -5,7 +5,7 @@ import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
-import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidityStatus } from './common/grid.interface';
+import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -59,7 +59,7 @@ abstract class BaseRow implements RowType {
     */
     public get validation(): IGridValidationState {
         const formGroup = this.grid.validation.getFormGroup(this.key);
-        return { status: formGroup?.status as ValidityStatus || 'VALID', errors: formGroup?.errors } as const;
+        return { status: formGroup?.status as ValidationStatus || 'VALID', errors: formGroup?.errors } as const;
     }
 
     /**
