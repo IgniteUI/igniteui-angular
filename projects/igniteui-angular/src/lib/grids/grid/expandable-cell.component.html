@@ -56,6 +56,8 @@
             <input
                 igxInput
                 [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
@@ -68,6 +70,8 @@
             <input
                 igxInput
                 [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -113,6 +117,8 @@
             <input
                 type="text"
                 [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
                 [igxDateTimeEditor]="column.defaultDateTimeFormat" 
@@ -126,6 +132,8 @@
             <input
                 igxInput
                 [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -139,6 +147,8 @@
             <input
                 igxInput
                 [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
