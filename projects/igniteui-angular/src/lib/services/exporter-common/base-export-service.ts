@@ -161,8 +161,8 @@ class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
 }
 
 export const DEFAULT_OWNER = 'default';
+export const GRID_ROOT_SUMMARY = 'igxGridRootSummary';
 const DEFAULT_COLUMN_WIDTH = 8.43;
-const GRID_ROOT_SUMMARY = 'igxGridRootSummary';
 
 export abstract class IgxBaseExporter {
 
@@ -195,7 +195,7 @@ export abstract class IgxBaseExporter {
     protected _sort = null;
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
-    private _setSummaries: boolean = false
+    private _setChildSummaries: boolean = false
     private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
     private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
@@ -237,32 +237,8 @@ export abstract class IgxBaseExporter {
         }
 
         options.exportSummaries = true;
-        if (options.exportSummaries && grid.summaryService.summaryCacheMap.size > 0) {
-            const summaryCacheMap = grid.summaryService.summaryCacheMap;
-
-            switch(grid.summaryCalculationMode) {
-                case GridSummaryCalculationMode.rootAndChildLevels:
-                    this.summaries = summaryCacheMap;
-                    break;
-                case GridSummaryCalculationMode.childLevelsOnly:
-                    summaryCacheMap.delete(GRID_ROOT_SUMMARY);
-                    this.summaries = summaryCacheMap;
-                    break;
-                case GridSummaryCalculationMode.rootLevelOnly:
-                    for (let k of summaryCacheMap.keys()) {
-                        if (k !== GRID_ROOT_SUMMARY) {
-                            summaryCacheMap.delete(k);
-                        }
-                    }
-
-                    this.summaries = summaryCacheMap;
-                    break;
-            }
-        } else {
-            this.summaries = new Map<string, Map<string, IgxSummaryResult[]>>();
-        }
-
-        this._setSummaries =  this.summaries.size > 0 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
+        this.summaries = this.prepareSummaries(grid);
+        this._setChildSummaries =  this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
 
         this.prepareData(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
@@ -613,6 +589,31 @@ export abstract class IgxBaseExporter {
         }
     }
 
+    private prepareSummaries(grid: any): Map<string, Map<string, IgxSummaryResult[]>> {
+        let summaries = new Map<string, Map<string, IgxSummaryResult[]>>();
+
+        if (this.options.exportSummaries && grid.summaryService.summaryCacheMap.size > 0) {
+            const summaryCacheMap = grid.summaryService.summaryCacheMap;
+
+            switch(grid.summaryCalculationMode) {
+                case GridSummaryCalculationMode.childLevelsOnly:
+                    summaryCacheMap.delete(GRID_ROOT_SUMMARY);
+                    break;
+                case GridSummaryCalculationMode.rootLevelOnly:
+                    for (let k of summaryCacheMap.keys()) {
+                        if (k !== GRID_ROOT_SUMMARY) {
+                            summaryCacheMap.delete(k);
+                        }
+                    }
+                    break;
+            }
+
+            summaries = summaryCacheMap;
+        }
+
+        return summaries;
+    }
+
     private prepareIslandData(island: any, islandGrid: GridType, data: any[]): any[] {
         if (islandGrid !== undefined) {
             const hasFiltering = (islandGrid.filteringExpressionsTree &&
@@ -723,11 +724,20 @@ export abstract class IgxBaseExporter {
                             rowIslandKey: childIsland.key
                         };
 
+                        // only defined when row is expanded in UI
                         const childIslandGrid = grid?.gridAPI.getChildGrid([path]);
                         const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
                         this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
                     }
+                }
+            }
+
+            if (grid) {
+                const summaries = this.prepareSummaries(grid);
+                for (const k of summaries.keys()) {
+                    const summary = summaries.get(k);
+                    this.setSummaries(k, island.level, !expansionStateVal, island, summary)
                 }
             }
         }
@@ -853,7 +863,7 @@ export abstract class IgxBaseExporter {
                             type: ExportRecordType.DataRecord,
                         };
 
-                        if (this._setSummaries) {
+                        if (this._setChildSummaries) {
                             currentRecord.summaryKey = record.key;
                         }
 
@@ -864,7 +874,7 @@ export abstract class IgxBaseExporter {
                 }
             }
 
-            if (this._setSummaries) {
+            if (this._setChildSummaries) {
                 this.setSummaries(record.key, summaryLevel, summaryHidden);
             }
         }
@@ -885,41 +895,44 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any) {
-        const rootSummary = this.summaries.get(summaryKey);
-        const values = [...rootSummary.values()];
-        const biggest = values.sort((a, b) => b.length - a.length)[0];
+    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any, summary?: Map<string, IgxSummaryResult[]>) {
+        const rootSummary = summary ?? this.summaries.get(summaryKey);
 
-        for (let i = 0; i < biggest.length; i++) {
-            const obj = {}
+        if (rootSummary) {
+            const values = [...rootSummary.values()];
+            const biggest = values.sort((a, b) => b.length - a.length)[0];
 
-            for (const [key, value] of rootSummary) {
-                const summaries = value.map(s => ({label: s.label, value: s.summaryResult}))
-                obj[key] = summaries[i];
+            for (let i = 0; i < biggest.length; i++) {
+                const obj = {}
+
+                for (const [key, value] of rootSummary) {
+                    const summaries = value.map(s => ({label: s.label, value: s.summaryResult}))
+                    obj[key] = summaries[i];
+                }
+
+                const summaryRecord: IExportRecord = {
+                    data: obj,
+                    type: ExportRecordType.SummaryRecord,
+                    level,
+                    hidden,
+                    summaryKey
+                };
+
+                if (owner) {
+                    summaryRecord.owner = owner;
+                }
+
+                this.flatRecords.push(summaryRecord);
             }
-
-            const summaryRecord: IExportRecord = {
-                data: obj,
-                type: ExportRecordType.SummaryRecord,
-                level,
-                hidden,
-                summaryKey
-            };
-
-            if (owner) {
-                summaryRecord.owner = owner;
-            }
-
-            this.flatRecords.push(summaryRecord);
         }
     }
 
-    private addGroupedData(grid: GridType, records: IGroupByRecord[],
-        groupingState: IGroupingState, parentExpanded: boolean = true) {
+    private addGroupedData(grid: GridType, records: IGroupByRecord[], groupingState: IGroupingState, parentExpanded: boolean = true, summaryKeysArr: string[] = []) {
         if (!records) {
             return;
         }
 
+        let previousKey = ''
         const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns[0].field;
 
         for (const record of records) {
@@ -954,12 +967,23 @@ export abstract class IgxBaseExporter {
 
             this.flatRecords.push(groupExpression);
 
-            const key = `{ '${groupExpressionName}': '${recordVal}' }`;
+            let currKey = '';
+            let summaryKey = '';
+
+            if (this._setChildSummaries) {
+                currKey = `'${groupExpressionName}': '${recordVal}'`;
+                summaryKeysArr = summaryKeysArr.filter(a => a !== previousKey);
+                previousKey = currKey;
+                summaryKeysArr.push(currKey);
+                summaryKey = `{ ${summaryKeysArr.join(', ')} }`;
+            }
 
             if (record.groups.length > 0) {
-                this.addGroupedData(grid, record.groups, groupingState, expanded && parentExpanded);
+                this.addGroupedData(grid, record.groups, groupingState, expanded && parentExpanded, summaryKeysArr);
             } else {
                 const rowRecords = record.records;
+
+               // const summaryKey = `{ ${summaryKeysArr.join(', ')} }`
 
                 for (const rowRecord of rowRecords) {
                     const currentRecord: IExportRecord = {
@@ -969,17 +993,29 @@ export abstract class IgxBaseExporter {
                         type: ExportRecordType.DataRecord,
                     };
 
-                    if (this._setSummaries) {
-                        currentRecord.summaryKey = key;
+                    if (summaryKey) {
+                        currentRecord.summaryKey = summaryKey;
                     }
 
                     this.flatRecords.push(currentRecord);
                 }
 
-                if (this._setSummaries) {
-                    this.setSummaries(key);
-                }
+                // Add summaries only in last child
+
+                // if (this._setChildSummaries) {
+                //     this.setSummaries(key3, record.level + 1, !(expanded && parentExpanded));
+                // }
+
+                //summaryKeysArr.pop()
             }
+
+            // Add summaries for every single group (as in grid UI)
+
+            if (this._setChildSummaries) {
+                this.setSummaries(summaryKey, record.level + 1, !(expanded && parentExpanded));
+                summaryKeysArr.pop();
+            }
+
         }
     }
 

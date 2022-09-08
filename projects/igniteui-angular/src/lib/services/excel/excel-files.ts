@@ -3,8 +3,8 @@ import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
-import { isDate, yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList } from '../exporter-common/base-export-service';
+import { yieldingLoop } from '../../core/utils';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -72,7 +72,7 @@ export class WorksheetFile implements IExcelFile {
     private rowIndex = 0;
 
     private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
-    private summaryOwner = '';
+    private currentSummaryOwner = '';
 
     private _firstDataRec = Number.MAX_VALUE;
 
@@ -345,11 +345,11 @@ export class WorksheetFile implements IExcelFile {
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
 
         if (record.type === ExportRecordType.DataRecord && worksheetData.hasSummaries) {
-            if (this.summaryOwner !== record.summaryKey && this.summaryOwner !== '') {
+            if (this.currentSummaryOwner !== record.summaryKey && this.currentSummaryOwner !== '') {
                 this.dimensionMap.clear();
             }
 
-            this.summaryOwner = record.summaryKey;
+            this.currentSummaryOwner = record.summaryKey;
         }
 
         for (let j = 0; j < keys.length; j++) {
@@ -414,7 +414,7 @@ export class WorksheetFile implements IExcelFile {
             }
         }
 
-        if (fullRow.summaryKey && fullRow.summaryKey === 'igxGridRootSummary') {
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY) {
             const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this._firstDataRec);
 
             if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
