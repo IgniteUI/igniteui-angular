@@ -222,17 +222,13 @@ export interface IGridValidationState {
     readonly errors?: ValidationErrors;
 }
 
-export interface IRecordValidationState {
+export interface IRecordValidationState extends IGridValidationState {
     key: any;
-    valid: boolean;
-    errors: ValidationErrors;
-    cells: IFieldValidationState[];
+    fields: IFieldValidationState[];
 }
 
-export interface IFieldValidationState {
-    field: string,
-    valid: boolean,
-    errors: ValidationErrors
+export interface IFieldValidationState extends IGridValidationState {
+    field: string
 }
 
 export interface GridServiceType {

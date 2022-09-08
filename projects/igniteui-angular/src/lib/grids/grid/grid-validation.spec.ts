@@ -272,7 +272,7 @@ describe('IgxGrid - Validation #grid', () => {
             let invalidRecords = grid.validation.getInvalid();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(invalidRecords[0].cells[1].valid).toBeFalse();
+            expect(invalidRecords[0].fields[1].status).toEqual('INVALID');
 
 
             cell.editMode = true;
@@ -507,7 +507,7 @@ describe('IgxGrid - Validation #grid', () => {
 
             GridFunctions.verifyCellValid(cell, false);
         });
-        
+
         it('should allow setting custom validators via template-driven and mark cell invalid', () => {
             const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;
             let cell = treeGrid.gridAPI.get_cell_by_visible_index(4, 1);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState } from '../common/grid.interface';
+import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -101,10 +101,10 @@ export class IgxGridValidationService {
                 const colKey = this.getFieldKey(col.field);
                 const control = formGroup.get(colKey);
                 if (control) {
-                    state.push({ field: colKey, valid: control.valid, errors: control.errors })
+                    state.push({ field: colKey, status: control.status as ValidationStatus, errors: control.errors })
                 }
             }
-            states.push({ key: key, valid: formGroup.valid, cells: state, errors: formGroup.errors });
+            states.push({ key: key, status: formGroup.status as ValidationStatus, fields: state, errors: formGroup.errors });
         });
         return states;
     }
@@ -114,7 +114,7 @@ export class IgxGridValidationService {
      */
     public getInvalid(): IRecordValidationState[] {
         const validity = this.getValidity();
-        return validity.filter(x => !x.valid);
+        return validity.filter(x => x.status === 'INVALID');
     }
 
     /**
