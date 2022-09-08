@@ -11,10 +11,12 @@ import { CalendarResourceStringsEN, ICalendarResourceStrings } from './calendar-
 import { IInputResourceStrings, InputResourceStringsEN } from './input-resources';
 import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 import { IActionStripResourceStrings, ActionStripResourceStringsEN } from './action-strip-resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from './combo-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
-    ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDatePickerResourceStrings, IDateRangePickerResourceStrings,
-    IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings, IActionStripResourceStrings { }
+    ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
+    IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,
+    IActionStripResourceStrings { }
 
 /**
  * @hidden
@@ -34,6 +36,7 @@ export const CurrentResourceStrings = {
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
     CalendarResStrings: cloneValue(CalendarResourceStringsEN),
     ChipResStrings: cloneValue(ChipResourceStringsEN),
+    ComboResStrings: cloneValue(ComboResourceStringsEN),
     DatePickerResourceStrings: cloneValue(DatePickerResourceStringsEN),
     DateRangePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
@@ -69,6 +72,7 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.CalendarResStrings,
     ...CurrentResourceStrings.CarouselResStrings,
     ...CurrentResourceStrings.ChipResStrings,
+    ...CurrentResourceStrings.ComboResStrings,
     ...CurrentResourceStrings.DatePickerResourceStrings,
     ...CurrentResourceStrings.DateRangePickerResStrings,
     ...CurrentResourceStrings.GridResStrings,
