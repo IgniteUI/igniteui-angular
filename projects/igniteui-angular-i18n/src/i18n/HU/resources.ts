@@ -9,6 +9,7 @@ import { CalendarResourceStringsHU } from './calendar-resources';
 import { TreeResourceStringsHU } from './tree-resources';
 import { InputResourceStringsHU } from './input-resources';
 import { ChipResourceStringsHU } from './chip-resources';
+import { ComboResourceStringsHU } from './combo-resources';
 
 /**
  * Hungarian resource strings for all components
@@ -24,5 +25,6 @@ export const IgxResourceStringsHU = {
     ...CalendarResourceStringsHU,
     ...TreeResourceStringsHU,
     ...InputResourceStringsHU,
-    ...ChipResourceStringsHU
+    ...ChipResourceStringsHU,
+    ...ComboResourceStringsHU
 };
