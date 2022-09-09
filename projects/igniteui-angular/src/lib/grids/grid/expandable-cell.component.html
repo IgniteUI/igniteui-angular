@@ -55,7 +55,7 @@
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
-                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [formControl]="formControl"
@@ -68,7 +68,7 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
@@ -114,7 +114,7 @@
         <igx-input-group [formGroup]="formGroup">
             <input
                 type="text"
-                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
@@ -128,7 +128,7 @@
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
@@ -142,7 +142,7 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-describedby]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
