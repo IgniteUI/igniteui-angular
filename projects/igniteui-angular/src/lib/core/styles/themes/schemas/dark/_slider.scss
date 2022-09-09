@@ -15,11 +15,12 @@ $dark-slider: $light-slider;
 
 /// Generates a dark fluent slider schema.
 /// @type {Map}
-/// @property {Map} base-track-color [color: ('grays', 100)] - The base background color of the track.
-/// @property {Map} track-color [color: ('grays', 400)] - The color of the track.
+/// @property {Map} base-track-color [color: ('grays', 300)] - The base background color of the track.
+/// @property {Map} base-track-hover-color [color: ('grays', 300)] - The base background color of the track on hover.
+/// @property {Map} track-color [color: ('grays', 600)] - The color of the track.
 /// @property {Map} track-hover-color [color: ('primary', 300)] - The color of the track on hover.
 /// @property {Map} thumb-border-color [color: ('grays', 400)] - The thumb border color.
-/// @property {Map} thumb-focus-color [color: ('primary', 300)] - The focus outline color of the thumb.
+/// @property {Map} thumb-focus-color [color: ('primary', 100)] - The focus outline color of the thumb.
 /// @property {Map} thumb-disabled-border-color [color: ('grays', 200)] - The thumb border color when it's disabled.
 /// @property {Map} disabled-base-track-color [color: ('grays', 100)] - The base background color of the track when is disabled.
 /// @property {Map} disabled-fill-track-color [color: ('grays', 300)] - The background color of the fill track when is disabled.
@@ -30,11 +31,15 @@ $dark-fluent-slider: extend(
     $fluent-slider,
     (
         base-track-color: (
-            color: ('grays', 100),
+            color: ('grays', 300),
+        ),
+
+        base-track-hover-color:  (
+            color: ('grays', 300),
         ),
 
         track-color: (
-            color: ('grays', 400),
+            color: ('grays', 600),
         ),
 
         track-hover-color: (
@@ -46,7 +51,7 @@ $dark-fluent-slider: extend(
         ),
 
         thumb-focus-color: (
-            color: ('primary', 300)
+            color: ('primary', 100)
         ),
 
         thumb-disabled-border-color: (

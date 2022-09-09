@@ -79,6 +79,7 @@ export * from './lib/grids/grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
 export * from './lib/grids/columns/templates.directive';
+export * from './lib/grids/columns/validators.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
@@ -126,6 +127,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { IComboResourceStrings } from './lib/core/i18n/combo-resources';
 export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
