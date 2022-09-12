@@ -167,7 +167,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 const PAGINATOR_SELECTOR = 'igx-paginator';
 
 /* blazorIndirectRender 
-   blazorComponent */
+   blazorComponent
+   omitModule */
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
@@ -7182,12 +7183,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns: IgxColumnComponent [] = [];
 
         config.forEach(column => {
-            const newColumn = factory.create(this.viewRef.injector);
-            for (const prop in column) {
-                newColumn.instance[prop] = column[prop];
+            var newCol: IgxColumnComponent | undefined;
+            if (column instanceof IgxColumnComponent) {
+                newCol = column;
+            } else {
+                const newColumn = factory.create(this.viewRef.injector);
+                for (const prop in column) {
+                    newColumn.instance[prop] = column[prop];
+                }
+                newColumn.changeDetectorRef.detectChanges();
+                newCol = newColumn.instance;
             }
-            newColumn.changeDetectorRef.detectChanges();
-            columns.push(newColumn.instance);
+            columns.push(newCol);
         });
 
         this.columnList.reset(columns);

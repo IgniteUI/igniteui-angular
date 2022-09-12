@@ -26,6 +26,7 @@ import mergeWith from 'lodash.mergewith';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+/* omitModule */
 @Directive({ selector: '[igxRowBaseComponent]' })
 export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**

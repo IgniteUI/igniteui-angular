@@ -29,7 +29,8 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
 export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('DisplayDensity');
 
 /* blazorComponent
-    blazorIndirectRender  */
+    blazorIndirectRender
+    omitModule  */
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */

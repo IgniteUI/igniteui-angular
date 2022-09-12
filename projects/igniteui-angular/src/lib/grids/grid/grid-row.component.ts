@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, forwardRef } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 
+/* blazorElement */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-row',
