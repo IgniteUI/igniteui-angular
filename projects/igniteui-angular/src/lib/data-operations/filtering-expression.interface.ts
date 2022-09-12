@@ -6,11 +6,17 @@ export enum FilteringLogic {
 }
 
 /**
- * Represents filtering expressions.
+ * Represents base expressions.
  */
-export declare interface IFilteringExpression {
+export declare interface IExpression {
     fieldName: string;
     condition: IFilteringOperation;
     searchVal?: any;
+}
+
+/**
+ * Represents filtering expressions.
+ */
+export declare interface IFilteringExpression extends IExpression {
     ignoreCase?: boolean;
 }

@@ -7,29 +7,27 @@ import {
 import { FormsModule } from '@angular/forms';
 import { editor } from '@igniteui/material-icons-extended';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
+import { FilteringLogic, IExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxDatePickerModule } from '../date-picker/date-picker.module';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { ColumnType, FieldType, GridType } from '../grids/common/grid.interface';
+import { FieldType, GridType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IgxSelectComponent } from '../select/select.component';
 import { IgxSelectModule } from '../select/select.module';
-import { IgxOverlayService } from '../services/overlay/overlay';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
@@ -76,12 +74,12 @@ class ExpressionGroupItem extends ExpressionItem {
  * @hidden
  */
 class ExpressionOperandItem extends ExpressionItem {
-    public expression: IFilteringExpression;
+    public expression: IExpression;
     public inEditMode: boolean;
     public inAddMode: boolean;
     public hovered: boolean;
     public fieldLabel: string;
-    constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
+    constructor(expression: IExpression, parent: ExpressionGroupItem) {
         super(parent);
         this.expression = expression;
     }
@@ -309,9 +307,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     };
 
     private destroy$ = new Subject<any>();
-    private _overlayComponentId: string;
-    private _overlayService: IgxOverlayService;
-    private _selectedColumn: ColumnType;
     private _selectedField: FieldType;
     private _clickTimer;
     private _dblClickDelay = 200;
@@ -319,8 +314,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _grid: GridType;
     private _fields: FieldType[];
+    private _expressionTree: IExpressionTree;
     private _filteringChange: Subscription;
     private _locale;
 
@@ -384,36 +379,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public get selectedField(): FieldType {
         return this._selectedField;
     }
-
-    /**
-     * An @Input property that sets the grid.
-     */
-    @Input()
-    public set grid(grid: GridType) {
-        this._grid = grid;
-
-        if (this._filteringChange) {
-            this._filteringChange.unsubscribe();
-        }
-
-        if (this._grid) {
-            this._grid.filteringService.registerSVGIcons();
-
-            this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.init();
-            });
-
-            this.init();
-        }
-    }
-
-    /**
-     * Returns the grid.
-     */
-    public get grid(): GridType {
-        return this._grid;
-    }
-
+    
     /**
     * Returns the fields.
     */
@@ -428,12 +394,33 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public set fields(fields: FieldType[]) {
         this._fields = fields;
 
-        if (this._filteringChange) {
-            this._filteringChange.unsubscribe();
-        }
-
         if (this._fields) {
             this.registerSVGIcons();
+
+            this._fields.forEach(field => {
+                this.setFilters(field);
+                this.setFormat(field);
+            });
+
+            this.init();
+        }
+    }
+
+    /**
+    * Returns the expression tree.
+    */
+     public get expressionTree(): IExpressionTree {
+        return this._expressionTree;
+    }
+
+    /**
+     * An @Input property that sets the expression tree.
+     */
+    @Input()
+    public set expressionTree(expressionTree: IExpressionTree) {
+        this._expressionTree = expressionTree;
+
+        if (this._expressionTree && this._fields) {
 
             this._fields.forEach(field => {
                 this.setFilters(field);
@@ -474,6 +461,13 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
+     public get isContextMenuVisible(): boolean {
+        return !this.contextMenuToggle.collapsed;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get hasEditedExpression(): boolean {
         return this.editedExpression !== undefined && this.editedExpression !== null;
     }
@@ -487,7 +481,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         const operandItem = new ExpressionOperandItem({
             fieldName: null,
             condition: null,
-            ignoreCase: true,
             searchVal: null
         }, parent);
 
@@ -654,9 +647,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
         if (!this.selectedField) {
             this.fieldSelect.input.nativeElement.focus();
-            //TODO conditions
-            // } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
-            //     this.conditionSelect.input.nativeElement.focus();
+            } else if (this.selectedField.filters.condition(this.selectedCondition).isUnary) {
+                this.conditionSelect.input.nativeElement.focus();
         } else {
             const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
             input.focus();
@@ -999,7 +991,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     //TODO set default expressiontree
-    private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
+    private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
@@ -1008,16 +1000,15 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                 if (expr instanceof FilteringExpressionsTree) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
                 } else {
-                    const filteringExpr = expr as IFilteringExpression;
-                    const exprCopy: IFilteringExpression = {
+                    const filteringExpr = expr as IExpression;
+                    const exprCopy: IExpression = {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal,
-                        ignoreCase: filteringExpr.ignoreCase
+                        searchVal: filteringExpr.searchVal
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
-                    operandItem.fieldLabel = field.header;
+                    operandItem.fieldLabel = field.header || field.field;
                     groupItem.children.push(operandItem);
                 }
             }
@@ -1026,7 +1017,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         return groupItem;
     }
 
-    private createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+    /**
+     * @hidden @internal
+     */
+    public createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
         if (!groupItem) {
             return null;
         }
@@ -1054,11 +1048,13 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             if (contextualGroup) {
                 this.filteringLogics = [
                     {
-                        label: this.grid.resourceStrings.igx_grid_filter_operator_and,
+                        //TODO resource strings
+                        label: 'And', //this.grid.resourceStrings.igx_grid_filter_operator_and,
                         selected: contextualGroup.operator === FilteringLogic.And
                     },
                     {
-                        label: this.grid.resourceStrings.igx_grid_filter_operator_or,
+                        //TODO resource strings
+                        label: 'Or', //this.grid.resourceStrings.igx_grid_filter_operator_or,
                         selected: contextualGroup.operator === FilteringLogic.Or
                     }
                 ];
@@ -1211,6 +1207,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.cancelOperandEdit();
         //TODO set default expressionstree
         //this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
+        this.rootGroup = this.createExpressionGroupItem(this.expressionTree)
         this.currentGroup = this.rootGroup;
     }
 
