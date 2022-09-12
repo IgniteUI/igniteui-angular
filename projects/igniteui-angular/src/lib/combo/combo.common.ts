@@ -41,6 +41,8 @@ import {
 import {
     IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
 } from './public_api';
+import { IComboResourceStrings } from '../core/i18n/combo-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -447,6 +449,23 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     public set type(val: IgxInputGroupType) {
         this._type = val;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public get resourceStrings(): IComboResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
+        }
+        return this._resourceStrings;
+    }
+    public set resourceStrings(value: IComboResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
@@ -874,6 +893,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
+    protected _resourceStrings;
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
@@ -1190,7 +1210,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value?.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        const searchValue = this.searchValue || this.comboInput?.value;
+        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {
