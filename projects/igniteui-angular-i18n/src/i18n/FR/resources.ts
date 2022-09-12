@@ -9,6 +9,7 @@ import { CalendarResourceStringsFR } from './calendar-resources';
 import { TreeResourceStringsFR } from './tree-resources';
 import { InputResourceStringsFR } from './input-resources';
 import { ChipResourceStringsFR } from './chip-resources';
+import { ComboResourceStringsFR } from './combo-resources';
 
 /**
  * French resource strings for all components
@@ -24,5 +25,6 @@ export const IgxResourceStringsFR = {
     ...CalendarResourceStringsFR,
     ...TreeResourceStringsFR,
     ...InputResourceStringsFR,
-    ...ChipResourceStringsFR
+    ...ChipResourceStringsFR,
+    ...ComboResourceStringsFR
 };
