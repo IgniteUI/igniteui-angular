@@ -9,6 +9,7 @@ import { CalendarResourceStringsRO } from './calendar-resources';
 import { TreeResourceStringsRO } from './tree-resources';
 import { InputResourceStringsRO } from './input-resources';
 import { ChipResourceStringsRO } from './chip-resources';
+import { ComboResourceStringsRO } from './combo-resources';
 
 /**
  * Romanian resource strings for all components
@@ -24,5 +25,6 @@ export const IgxResourceStringsRO = {
     ...CalendarResourceStringsRO,
     ...TreeResourceStringsRO,
     ...InputResourceStringsRO,
-    ...ChipResourceStringsRO
+    ...ChipResourceStringsRO,
+    ...ComboResourceStringsRO
 };
