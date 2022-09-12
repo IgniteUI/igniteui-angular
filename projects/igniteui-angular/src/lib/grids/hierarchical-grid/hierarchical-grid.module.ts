@@ -5,6 +5,8 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxTooltipModule } from '../../directives/tooltip';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * @hidden
@@ -29,6 +31,8 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     ],
     imports: [
         IgxGridModule,
+        IgxTooltipModule,
+        ReactiveFormsModule 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
