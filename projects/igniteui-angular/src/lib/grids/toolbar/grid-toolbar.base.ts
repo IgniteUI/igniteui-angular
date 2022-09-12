@@ -116,7 +116,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     /** @hidden @internal */
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
-            this._setupListeners(toggleRef);
+            this._setupListeners(toggleRef, actions);
             const setHeight = () =>
                 actions.columnsAreaMaxHeight = actions.columnsAreaMaxHeight !== '100%'
                     ? actions.columnsAreaMaxHeight :
@@ -137,9 +137,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     private _setupListeners(toggleRef: IgxToggleDirective, actions? : IgxColumnActionsComponent) {
         if (actions){
             if (!this.$sub || this.$sub.closed){
-                this.$sub = actions.columnToggled.subscribe((event) => this.columnToggle.emit(event));
-            } else {
-                this.$sub.unsubscribe();
+                this.$sub = actions.columnToggled.pipe(takeUntil(this.$destroyer)).subscribe((event) => this.columnToggle.emit(event));
             }
         }
         /** The if statement prevents emitting open and close events twice  */
