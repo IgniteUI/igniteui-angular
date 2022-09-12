@@ -88,6 +88,7 @@ import { GridFormattingComponent } from './grid-formatting/grid-formatting.compo
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
@@ -101,6 +102,7 @@ import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
+import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const appRoutes: Routes = [
     {
@@ -322,6 +324,10 @@ const appRoutes: Routes = [
         component: GridRowAPISampleComponent
     },
     {
+        path: 'gridRowReorder',
+        component: GridRowReorderComponent
+    },
+    {
         path: 'gridCellAPI',
         component: GridCellAPISampleComponent
     },
@@ -360,6 +366,10 @@ const appRoutes: Routes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridValidation',
+        component: GridValidationSampleComponent
     },
     {
         path: 'buttonGroup',

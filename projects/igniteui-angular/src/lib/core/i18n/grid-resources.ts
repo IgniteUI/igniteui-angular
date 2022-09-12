@@ -155,6 +155,13 @@ export interface IGridResourceStrings {
     igx_grid_pivot_selector_columns?: string;
     igx_grid_pivot_selector_values?: string;
     igx_grid_pivot_selector_panel_empty?: string;
+    igx_grid_required_validation_error?: string;
+    igx_grid_min_validation_error?: string;
+    igx_grid_max_validation_error?: string;
+    igx_grid_min_length_validation_error?: string;
+    igx_grid_max_length_validation_error?: string;
+    igx_grid_email_validation_error?: string;
+    igx_grid_pattern_validation_error?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -314,4 +321,11 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drop Items Here',
+    igx_grid_required_validation_error: 'This field is required',
+    igx_grid_min_validation_error: 'A value of at least {0} should be entered',
+    igx_grid_max_validation_error: 'A value no more than {0} should be entered',
+    igx_grid_min_length_validation_error: 'Entry should be at least {0} character(s) long',
+    igx_grid_max_length_validation_error: 'Entry should be no more than {0} character(s) long',
+    igx_grid_email_validation_error: 'A valid email address should be entered',
+    igx_grid_pattern_validation_error: 'Entry does not match the required pattern'
 };

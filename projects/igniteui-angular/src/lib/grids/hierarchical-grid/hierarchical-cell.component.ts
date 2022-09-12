@@ -4,6 +4,7 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { IgxOverlayService } from '../../services/public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,13 +19,14 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     constructor(
         protected selectionService: IgxGridSelectionService,
         @Inject(IGX_GRID_BASE) public grid: GridType,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public cdr: ChangeDetectorRef,
         helement: ElementRef<HTMLElement>,
         protected zone: NgZone,
         touchManager: HammerGesturesManager,
         protected platformUtil: PlatformUtil
     ) {
-        super(selectionService, grid, cdr, helement, zone, touchManager, platformUtil);
+        super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
     }
 
     public ngOnInit() {

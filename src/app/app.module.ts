@@ -79,6 +79,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -165,6 +166,7 @@ import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
+import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const components = [
     AccordionSampleComponent,
@@ -228,6 +230,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridCellEditingComponent,
+    ForbiddenValidatorDirective,
     GridSampleComponent,
     GridAddRowSampleComponent,
     HierarchicalGridAddRowSampleComponent,
@@ -247,6 +250,7 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridRowDraggableComponent,
+    GridRowReorderComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
@@ -256,6 +260,7 @@ const components = [
     GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
+    GridValidationSampleComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridLoadOnDemandSampleComponent,
