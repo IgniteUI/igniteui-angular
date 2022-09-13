@@ -323,6 +323,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridCustomEditorsComponent);
+            fixture.componentInstance.grid.batchEditing = true;
             fixture.detectChanges();
         }));
 

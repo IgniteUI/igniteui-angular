@@ -109,9 +109,11 @@ export class IgxCell {
 
     public set editValue(value) {
         this._editValue = value;
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+        formControl.setValue(value, { emitEvent: false });
         if (this.grid.validationTrigger === 'change') {
-            // in case trigger is change, delegate all value changes to the form control.
-            this.grid.crudService.formControlEditChange(value);
+            // in case trigger is change, mark as touched.
+            formControl.markAsTouched();
         }
     }
 
@@ -254,20 +256,13 @@ export class IgxCellCrudState {
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
         this.cell.value = newValue;
-        this.formControlEditChange(newValue);
-
+        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
+        formControl.markAsTouched();
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
     }
 
-    private formControlEditChange(newValue: any) : void {
-        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
-        if (formControl && formControl.value != newValue) {
-            formControl.setValue(newValue, { emitEvent: false });
-        }
-        formControl.markAsTouched();
-    }
 
     /** Clears cell editing state */
     public endCellEdit() {
