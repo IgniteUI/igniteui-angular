@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
-import { IgxGridModule } from './public_api';
+import { IgxGridComponent, IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -216,6 +216,43 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
             expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
+
+         it('should emit columnToggle event when a column is shown/hidden via the column hiding action', fakeAsync(() => {
+            const spy = spyOn(instance.hidingAction.columnToggle, 'emit');
+            const hidingUI = $(TOOLBAR_HIDING_TAG);
+            const grid = fixture.componentInstance.grid;
+            fixture.detectChanges();
+            const hidingActionButton = hidingUI.querySelector('button');
+            const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
+
+            hidingActionButton.click();
+            tick();
+            fixture.detectChanges();
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductID');
+            fixture.detectChanges();
+
+            expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledTimes(1);
+            expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ProductID'), checked: false });
+
+            // test after closing and reopening the hiding UI
+            spy.calls.reset();
+            hidingActionButton.click();
+            tick();
+            fixture.detectChanges();
+
+            hidingActionButton.click();
+            tick();
+            fixture.detectChanges();
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductID');
+            fixture.detectChanges();
+
+            expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledTimes(1);
+            expect(instance.hidingAction.columnToggle.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ProductID'), checked: true });
+        }));
     });
 });
 
@@ -247,7 +284,7 @@ export class DefaultToolbarComponent {
 
 @Component({
     template: `
-    <igx-grid [data]="data" [autoGenerate]="true">
+    <igx-grid #grid [data]="data" [autoGenerate]="true">
         <igx-grid-toolbar>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning #pinningAction></igx-grid-toolbar-pinning>
@@ -266,6 +303,9 @@ export class DefaultToolbarComponent {
     `
 })
 export class ToolbarActionsComponent {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
     @ViewChild('pinningAction', {static: true})
     public pinningAction;
 
