@@ -874,7 +874,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             // while in edit mode subscribe to value changes on the current form control and set to editValue
             this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
                 this.editValue = value;
-                this.formControl.markAsTouched();
             });
             this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
@@ -948,7 +947,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        this.formControl.setValue(val);
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
