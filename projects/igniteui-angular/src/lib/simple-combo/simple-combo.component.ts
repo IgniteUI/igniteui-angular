@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    IterableDiffers,
     NgModule, Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -120,13 +119,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
-        protected _iterableDiffers: IterableDiffers,
         private platformUtil: PlatformUtil,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI,
-            _iconService, _iterableDiffers, _displayDensityOptions, _inputGroupType, _injector);
+            _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 

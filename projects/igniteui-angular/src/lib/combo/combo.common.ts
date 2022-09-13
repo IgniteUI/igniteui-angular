@@ -13,7 +13,6 @@ import {
     InjectionToken,
     Injector,
     Input,
-    IterableDiffers,
     OnDestroy,
     OnInit,
     Optional,
@@ -907,7 +906,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _value = '';
     protected _groupKey = '';
     protected _init = true;
-    protected _iterableDiffer;
     protected _searchValue = '';
     protected _filteredData = [];
     protected _displayKey: string;
@@ -937,12 +935,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
-        protected _iterableDiffers: IterableDiffers,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
         super(_displayDensityOptions);
-        this._iterableDiffer = _iterableDiffers.find([]).create(null);
     }
 
     /** @hidden @internal */
@@ -991,9 +987,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             if (this._init) {
                 return;
             }
-    
-            let changes = this._iterableDiffer.diff(this.data);
-            if (changes) {
+
+            if (this.data?.length && this.selection) {
                 this._value = this.createDisplayText(this.selection, []);
             }
         }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, IterableDiffers
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -195,11 +195,10 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         protected selectionService: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         protected _iconService: IgxIconService,
-        protected _iterableDiffers: IterableDiffers,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
-        super(elementRef, cdr, selectionService, comboAPI, _iconService, _iterableDiffers, _displayDensityOptions, _inputGroupType, _injector);
+        super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }
 
