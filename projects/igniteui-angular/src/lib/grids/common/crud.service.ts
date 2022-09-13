@@ -97,10 +97,22 @@ export class IgxCell {
         public rowIndex: number,
         public column,
         public value: any,
-        public editValue: any,
+        private _editValue: any,
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
+    }
+
+    public get editValue() {
+        return this._editValue;
+    }
+
+    public set editValue(value) {
+        this._editValue = value;
+        if (this.grid.validationTrigger === 'change') {
+            // in case trigger is change, delegate all value changes to the form control.
+            this.grid.crudService.formControlEditChange(value);
+        }
     }
 
     public castToNumber(value: any): any {
@@ -242,10 +254,19 @@ export class IgxCellCrudState {
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
         this.cell.value = newValue;
+        this.formControlEditChange(newValue);
 
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
+    }
+
+    private formControlEditChange(newValue: any) : void {
+        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
+        if (formControl && formControl.value != newValue) {
+            formControl.setValue(newValue, { emitEvent: false });
+        }
+        formControl.markAsTouched();
     }
 
     /** Clears cell editing state */
