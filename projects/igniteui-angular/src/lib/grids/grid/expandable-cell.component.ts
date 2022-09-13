@@ -16,6 +16,7 @@ import { DOCUMENT } from '@angular/common';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
+import { IgxOverlayService } from '../../services/public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,13 +51,14 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
 
     constructor(selectionService: IgxGridSelectionService,
                 @Inject(IGX_GRID_BASE) grid: GridType,
+                @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
                 touchManager: HammerGesturesManager,
                 @Inject(DOCUMENT) public document,
                 protected platformUtil: PlatformUtil) {
-        super(selectionService, grid, cdr, element, zone, touchManager, platformUtil);
+        super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
     }
 
     /**

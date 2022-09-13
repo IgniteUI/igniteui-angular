@@ -157,7 +157,14 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
-    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_required_validation_error: 'Dette feltet er obligatorisk',
+    igx_grid_min_validation_error: 'Du må angi en verdi på minst {0}',
+    igx_grid_max_validation_error: 'Du må angi en verdi som ikke er mer enn {0}',
+    igx_grid_min_length_validation_error: 'Oppføringen skal være minst {0} tegn(er) lang',
+    igx_grid_max_length_validation_error: 'Oppføringen må ikke være mer enn {0} tegn(er) lang',
+    igx_grid_email_validation_error: 'Du må angi en gyldig e-postadresse',
+    igx_grid_pattern_validation_error: 'Oppføringen samsvarer ikke med det nødvendige mønsteret',
 };
 
 /**

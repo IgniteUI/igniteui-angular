@@ -91,7 +91,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    GridValidationTrigger
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -123,7 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -153,6 +154,7 @@ import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
+import { IgxGridValidationService } from './grid/grid-validation.service';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -500,6 +502,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
+
+
+    /**
+     * Emitted when formGroup is created on edit of row/cell.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (formGroupCreated)="formGroupCreated($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public formGroupCreated = new EventEmitter<IGridFormGroupCreatedEventArgs>();
+
+    /**
+     * Emitted when grid's validation status changes.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (validationStatusChange)="validationStatusChange($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public validationStatusChange = new EventEmitter<IGridValidationStatusEventArgs>();
 
     /**
      * Emitted when a cell is selected.
@@ -1697,6 +1722,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowDrag && this.hasVisibleColumns;
     }
 
+    /**
+     * Gets/Sets the trigger for validators used when editing the grid.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid validationTrigger='blur'></igx-grid>
+     * ```
+     */
+    @Input()
+    public validationTrigger: GridValidationTrigger = 'change';
+
 
     public set rowDraggable(val: boolean) {
         this._rowDrag = val;
@@ -2893,6 +2929,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
+    private _autoSize = false;
 
     /**
      * @hidden @internal
@@ -3028,6 +3065,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     constructor(
+        public validation: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -3235,6 +3273,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
         this.selectionService.grid = this as any;
+        this.validation.grid = this as any;
         this.navigation.grid = this as any;
         this.filteringService.grid = this as any;
         this.summaryService.grid = this as any;
@@ -3347,11 +3386,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.cdr.detectChanges();
         });
 
-        this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges();
+        this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
+            this.notifyChanges(true);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
+            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
             this.crudService.endEdit(false);
             if (this._summaryRowHeight === 0) {
                 this.summaryService.summaryHeight = 0;
@@ -6167,6 +6207,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             }
         }
+        if (event.origin === TransactionEventOrigin.REDO || event.origin === TransactionEventOrigin.UNDO) {
+            event.actions.forEach(x => {
+                if (x.transaction.type === TransactionType.UPDATE) {
+                    const value = this.transactions.getAggregatedValue(x.transaction.id, true);
+                    this.validation.update(x.transaction.id, value ?? x.recordRef);
+                } else if (x.transaction.type === TransactionType.DELETE || x.transaction.type === TransactionType.ADD) {
+                    const value = this.transactions.getAggregatedValue(x.transaction.id, true);
+                    if (value) {
+                        this.validation.create(x.transaction.id, value ?? x.recordRef);
+                        this.validation.update(x.transaction.id, value ?? x.recordRef);
+                        this.validation.markAsTouched(x.transaction.id);
+                    } else {
+                        this.validation.clear(x.transaction.id);
+                    }
+                }
+
+            });
+        }
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
@@ -6712,10 +6770,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.tbody.nativeElement.style.display = 'none';
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight ||
+            this.nativeElement.parentElement.clientHeight === renderedHeight;
+        if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
-            this.checkContainerSizeChange();
+            this._autoSize = false;
+            res = this.checkContainerSizeChange();
+        }
         this.tbody.nativeElement.style.display = '';
         return res;
     }

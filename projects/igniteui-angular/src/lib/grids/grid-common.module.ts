@@ -41,6 +41,8 @@ import {
 export * from './common/grid-pipes.module';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
+import { ReactiveFormsModule } from '@angular/forms';
+import { IgxTooltipModule } from '../directives/tooltip';
 
 /**
  * @hidden
@@ -118,7 +120,9 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridSharedModules,
-        IgxChipsModule
+        IgxChipsModule,
+        IgxTooltipModule,
+        ReactiveFormsModule 
     ]
 })
 export class IgxGridCommonModule { }

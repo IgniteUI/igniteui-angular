@@ -27,7 +27,7 @@ describe(`Update to ${version}`, () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    const migrationName = 'migration-25';
+    const migrationName = 'migration-26';
 
     it('should remove the $palette prop from component themes', async () => {
         appTree.create(

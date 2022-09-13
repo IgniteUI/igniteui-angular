@@ -17,6 +17,13 @@ export class IgxCellTemplateDirective {
 }
 
 @Directive({
+    selector: '[igxCellValidationError]'
+})
+export class IgxCellValidationErrorDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
+@Directive({
     selector: '[igxHeader]'
 })
 export class IgxCellHeaderTemplateDirective {
