@@ -234,7 +234,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-pivot-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
+    $selector: 'igx-grid, igc-grid, igx-hierarchical-grid, igc-hierarchical-grid, igx-pivot-grid, igc-pivot-grid, igx-tree-grid, igc-tree-grid, igx-advanced-filtering-dialog, igc-advanced-filtering-dialog, igx-grid-excel-style-filtering, igc-grid-excel-style-filtering, .igx-excel-filter__secondary';
     $grid-schema: ();
 
     @if map.has-key($schema, $name) {

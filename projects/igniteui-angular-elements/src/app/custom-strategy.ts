@@ -57,8 +57,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
 
         // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
-        if (element.tagName.toLocaleLowerCase() === 'igx-grid-toolbar'
-            || element.tagName.toLocaleLowerCase() === 'igx-paginator') {
+        if (element.tagName.toLocaleLowerCase() === 'igc-grid-toolbar'
+            || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
             // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
             // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
             parentAnchor = parent['ngElementStrategy']['componentRef'].instance.anchor;

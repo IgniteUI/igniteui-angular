@@ -48,49 +48,49 @@ export class AppModule {
     // customElements.define("app-child-standalone", child);
 
     const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-grid", grid);
+    customElements.define("igc-grid", grid);
     // const column = createCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector });
-    // customElements.define("igx-column", column);
+    // customElements.define("igc-column", column);
 
     const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
-    customElements.define("igx-tree-grid", treegrid);
+    customElements.define("igc-tree-grid", treegrid);
 
     const hgrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-hierarchical-grid", hgrid);
+    customElements.define("igc-hierarchical-grid", hgrid);
 
     const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
-    customElements.define("igx-row-island", ri);
+    customElements.define("igc-row-island", ri);
 
     const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
-    customElements.define("igx-pivot-grid", pivot);
+    customElements.define("igc-pivot-grid", pivot);
 
     const pager = createIgxCustomElement(IgxPaginatorComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-paginator", pager);
+    customElements.define("igc-paginator", pager);
 
     const toolbar = createIgxCustomElement(IgxGridToolbarComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-grid-toolbar", toolbar);
+    customElements.define("igc-grid-toolbar", toolbar);
 
     /**
      * WARN: createCustomElement default setup is ONLY FOR ROOT ELEMENTS!
      * TODO: MUST be the parent injector!!!!! Otherwise NullInjectorError: No provider for IgxToolbarToken!
      * TODO: In order to provide the parent injector correctly, this can ONLY be registered/initialized
-     * after the parent is CREATED - i.e. this should be a custom form of *child def for igx-grid-toolbar*
+     * after the parent is CREATED - i.e. this should be a custom form of *child def for igc-grid-toolbar*
      * which means custom factory more than likely to handle the component creation process.
      */
     const toolbarHiding = createIgxCustomElement(IgxGridToolbarHidingComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-grid-toolbar-hiding", toolbarHiding);
+    customElements.define("igc-grid-toolbar-hiding", toolbarHiding);
 
     const toolbarPinning = createIgxCustomElement(IgxGridToolbarPinningComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-grid-toolbar-pinning", toolbarPinning);
+    customElements.define("igc-grid-toolbar-pinning", toolbarPinning);
 
     const toolbarExport = createIgxCustomElement(IgxGridToolbarExporterComponent, { injector: this.injector, registerConfig });
-    customElements.define("igx-grid-toolbar-exporter", toolbarExport);
+    customElements.define("igc-grid-toolbar-exporter", toolbarExport);
 
     // const toolbarActions = createCustomElement(IgxGridToolbarActionsDirective, { injector: this.injector, strategyFactory: new IgxCustomNgElementStrategyFactory(IgxGridToolbarActionsDirective, this.injector) });
-    // customElements.define("igx-grid-toolbar-actions", toolbarActions);
+    // customElements.define("igc-grid-toolbar-actions", toolbarActions);
 
     // const column = createCustomElement(IgxColumnComponent, { injector: this.injector });
-    // customElements.define("igx-column", column);
+    // customElements.define("igc-column", column);
   }
 
 }
@@ -102,7 +102,7 @@ declare global {
     type IgxGridElement = NgElement & WithProperties<GridType>;
     type IgxTreeGridElement = NgElement & WithProperties<IgxTreeGridComponent>;
     interface HTMLElementTagNameMap {
-      'igx-grid': NgElement & WithProperties<GridType>;
-      'igx-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
+      'igc-grid': NgElement & WithProperties<GridType>;
+      'igc-tree-grid': NgElement & WithProperties<IgxTreeGridElement>;
     }
   }

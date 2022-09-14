@@ -51,7 +51,7 @@
     $item-focus-text-color: null
 ) {
     $name: 'igx-grid-toolbar';
-    $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
+    $selector: 'igx-grid-toolbar, igc-grid-toolbar, .igx-grid-toolbar__dd-list';
     $grid-toolbar-schema: ();
 
     @if map.has-key($schema, $name) {

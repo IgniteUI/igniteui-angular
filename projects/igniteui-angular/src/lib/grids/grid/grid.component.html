@@ -1,5 +1,5 @@
 <!-- Toolbar area -->
-<ng-content select="igx-grid-toolbar"></ng-content>
+<ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 
 <!-- Group-by area -->
 <ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
@@ -179,8 +179,8 @@
 </div>
 
 <div class="igx-grid__footer" #footer>
-    <ng-content select="igx-grid-footer"></ng-content>
-    <ng-content select="igx-paginator"></ng-content>
+    <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
+    <ng-content select="igx-paginator,igc-paginator"></ng-content>
 </div>
 
 <ng-template #emptyFilteredGrid>
