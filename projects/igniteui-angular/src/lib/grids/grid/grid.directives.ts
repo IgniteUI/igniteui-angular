@@ -32,7 +32,7 @@ export class IgxGridDetailTemplateDirective {
     selector: '[igxRowExpandedIndicator]'
 })
 export class IgxRowExpandedIndicatorDirective {
-    static ngTemplateContextGuard<T>(directive: IgxRowExpandedIndicatorDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxRowExpandedIndicatorDirective,
             context: unknown): context is IgxGridRowTemplateContext { 
         return true
     };
@@ -45,7 +45,7 @@ export class IgxRowExpandedIndicatorDirective {
     selector: '[igxRowCollapsedIndicator]'
 })
 export class IgxRowCollapsedIndicatorDirective {
-    static ngTemplateContextGuard<T>(directive: IgxRowCollapsedIndicatorDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxRowCollapsedIndicatorDirective,
         context: unknown): context is IgxGridRowTemplateContext { 
         return true
     };
@@ -59,7 +59,7 @@ export class IgxRowCollapsedIndicatorDirective {
     selector: '[igxHeaderExpandedIndicator]'
 })
 export class IgxHeaderExpandIndicatorDirective {
-    static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
         context: unknown): context is IgxGridRowTemplateContext { 
         return true
     };
@@ -72,7 +72,7 @@ export class IgxHeaderExpandIndicatorDirective {
     selector: '[igxHeaderCollapsedIndicator]'
 })
 export class IgxHeaderCollapseIndicatorDirective {
-    static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
         context: unknown): context is IgxGridRowTemplateContext { 
         return true
     };
@@ -85,7 +85,7 @@ export class IgxHeaderCollapseIndicatorDirective {
     selector: '[igxExcelStyleHeaderIcon]'
 })
 export class IgxExcelStyleHeaderIconDirective {
-    static ngTemplateContextGuard<T>(directive: IgxExcelStyleHeaderIconDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxExcelStyleHeaderIconDirective,
         context: unknown): context is IgxGridHeaderTemplateContext { 
         return true
     };
@@ -98,7 +98,7 @@ export class IgxExcelStyleHeaderIconDirective {
     selector: '[igxSortHeaderIcon]'
 })
 export class IgxSortHeaderIconDirective {
-    static ngTemplateContextGuard<T>(directive: IgxSortHeaderIconDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxSortHeaderIconDirective,
         context: unknown): context is IgxGridHeaderTemplateContext { 
         return true
     };
@@ -111,7 +111,7 @@ export class IgxSortHeaderIconDirective {
     selector: '[igxSortAscendingHeaderIcon]'
 })
 export class IgxSortAscendingHeaderIconDirective {
-    static ngTemplateContextGuard<T>(directive: IgxSortAscendingHeaderIconDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxSortAscendingHeaderIconDirective,
         context: unknown): context is IgxGridHeaderTemplateContext { 
         return true
     };
@@ -124,7 +124,7 @@ export class IgxSortAscendingHeaderIconDirective {
     selector: '[igxSortDescendingHeaderIcon]'
 })
 export class IgxSortDescendingHeaderIconDirective {
-    static ngTemplateContextGuard<T>(directive: IgxSortDescendingHeaderIconDirective,
+    public static ngTemplateContextGuard<T>(directive: IgxSortDescendingHeaderIconDirective,
         context: unknown): context is IgxGridHeaderTemplateContext { 
         return true
     };
