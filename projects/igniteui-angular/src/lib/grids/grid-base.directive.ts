@@ -124,7 +124,18 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
+import {
+    ColumnType,
+    GridServiceType,
+    GridType,
+    IGridFormGroupCreatedEventArgs,
+    IGridValidationStatusEventArgs,
+    IgxGridHeaderTemplateContext,
+    IgxGridRowTemplateContext,
+    IGX_GRID_SERVICE_BASE,
+    ISizeInfo,
+    RowType
+} from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -1330,49 +1341,49 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef })
-    public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
+    public rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a row collapse indicator.
      */
     @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef })
-    public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
+    public rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header expand indicator.
      */
     @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
-    public headerExpandIndicatorTemplate: TemplateRef<any> = null;
+    public headerExpandIndicatorTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header collapse indicator.
      */
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
-    public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
+    public headerCollapseIndicatorTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
-    public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
+    public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      */
     @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
-    public sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
+    public sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
     @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
-    public sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
+    public sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
      */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
-    public sortHeaderIconTemplate: TemplateRef<any> = null;
+    public sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * @hidden

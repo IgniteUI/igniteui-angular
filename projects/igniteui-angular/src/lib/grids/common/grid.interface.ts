@@ -38,6 +38,7 @@ import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IP
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxGridRow, IgxHierarchicalGridRow, IgxTreeGridRow, IgxGridHeaderComponent, IgxGroupByRow } from '../grid/public_api';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -697,4 +698,39 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
+}
+
+export interface IgxGridRowTemplateContext {
+    $implicit: IgxGridRow | IgxTreeGridRow | IgxHierarchicalGridRow
+}
+
+export interface IgxGridHeaderTemplateContext {
+    $implicit: IgxGridHeaderComponent
+}
+
+export interface IgxRowSelectorTemplateContext {
+    $implicit: {
+        index: number,
+        rowID: any,
+        selected: boolean,
+        select?: () => void,
+        deselect?: () => void
+    }
+}
+
+export interface IgxGroupByRowSelectorTemplateContext {
+    $implicit: {
+        selectedCount: number,
+        totalCount: number,
+        groupRow: IgxGroupByRow
+    }
+}
+
+export interface IgxHeadSelectorTemplateContext {
+    $implicit: {
+        selectedCount: number;
+        totalCount: number;
+        selectAll?: () => void;
+        deselectAll?: () => void;
+    };
 }
