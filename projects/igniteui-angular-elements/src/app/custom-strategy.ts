@@ -43,7 +43,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             parentInjector = parent['ngElementStrategy']['componentRef'].injector as Injector;
         }
 
-        if (element.tagName.toLocaleLowerCase() === 'igx-grid-toolbar') {
+        // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
+        if (element.tagName.toLocaleLowerCase() === 'igx-grid-toolbar'
+            || element.tagName.toLocaleLowerCase() === 'igx-paginator') {
             // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
             // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
             parentAnchor = parent['ngElementStrategy']['componentRef'].instance.anchor;
@@ -72,7 +74,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
          if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
             const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
+            // preserve original position in DOM (in case of projection, e.g. grid pager):
+            const domParent = element.parentElement;
+            const nextSibling = element.nextSibling;
             parentAnchor.insert((this as any).componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
+            //restore original DOM position
+            domParent.insertBefore(element, nextSibling);
             this.detectChanges();
         } else if (!parentAnchor) {
             const applicationRef = this._injector.get<ApplicationRef>(ApplicationRef);
@@ -83,7 +90,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
          */
 
         // componentRef should also likely be protected:
-        const componentRef = (this as any).componentRef;
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
 
         if (parentConfig && parent) {
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
