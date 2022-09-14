@@ -4,8 +4,7 @@ var hgridData = [{
     "StartDate": new Date(1304197200000),
     "EndDate": new Date(1310677200000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 1,
             "ProjectId": 1,
             "Name": "Monica Galler0",
@@ -306,9 +305,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -925,8 +921,7 @@ var hgridData = [{
     "StartDate": new Date(1306875600000),
     "EndDate": new Date(1313355600000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 11,
             "ProjectId": 2,
             "Name": "Monica Galler1",
@@ -1227,9 +1222,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -1846,8 +1838,7 @@ var hgridData = [{
     "StartDate": new Date(1309467600000),
     "EndDate": new Date(1316034000000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers":  [{
             "DeveloperId": 21,
             "ProjectId": 3,
             "Name": "Monica Galler2",
@@ -2148,9 +2139,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -2767,8 +2755,7 @@ var hgridData = [{
     "StartDate": new Date(1312146000000),
     "EndDate": new Date(1318626000000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 31,
             "ProjectId": 4,
             "Name": "Monica Galler3",
@@ -3069,9 +3056,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -3688,8 +3672,7 @@ var hgridData = [{
     "StartDate": new Date(1314824400000),
     "EndDate": new Date(1321308000000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 41,
             "ProjectId": 5,
             "Name": "Monica Galler4",
@@ -3990,9 +3973,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -4609,8 +4589,7 @@ var hgridData = [{
     "StartDate": new Date(1317416400000),
     "EndDate": new Date(1323900000000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 51,
             "ProjectId": 6,
             "Name": "Monica Galler5",
@@ -4911,9 +4890,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -5530,8 +5506,7 @@ var hgridData = [{
     "StartDate": new Date(1320098400000),
     "EndDate": new Date(1326578400000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 61,
             "ProjectId": 7,
             "Name": "Monica Galler6",
@@ -5832,9 +5807,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -6451,8 +6423,7 @@ var hgridData = [{
     "StartDate": new Date(1322690400000),
     "EndDate": new Date(1329256800000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers":  [{
             "DeveloperId": 71,
             "ProjectId": 8,
             "Name": "Monica Galler7",
@@ -6753,9 +6724,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -7372,8 +7340,7 @@ var hgridData = [{
     "StartDate": new Date(1325368800000),
     "EndDate": new Date(1331762400000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 81,
             "ProjectId": 9,
             "Name": "Monica Galler8",
@@ -7674,9 +7641,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -8293,8 +8257,7 @@ var hgridData = [{
     "StartDate": new Date(1328047200000),
     "EndDate": new Date(1334437200000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 91,
             "ProjectId": 10,
             "Name": "Monica Galler9",
@@ -8595,9 +8558,6 @@ var hgridData = [{
                 "Metadata": {}
             }
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
