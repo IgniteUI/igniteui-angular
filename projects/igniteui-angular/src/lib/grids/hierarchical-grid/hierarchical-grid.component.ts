@@ -227,7 +227,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 }
 
 /**
- * Row island
+ * Hierarchical grid
  *
  * @igxModule IgxHierarchicalGridModule
  *

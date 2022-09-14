@@ -52,7 +52,7 @@ import { IGridCreatedEventArgs } from './events';
  * Row island
  *
  * @igxModule IgxHierarchicalGridModule
- * @igxParent IgxHierarchicalGridComponent
+ * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
  *
  */
 @Component({
