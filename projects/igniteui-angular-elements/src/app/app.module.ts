@@ -15,6 +15,7 @@ import {
     IgxHierarchicalGridComponent,
     IgxPaginatorComponent,
     IgxPivotGridComponent,
+    IgxRowIslandComponent,
     IgxTreeGridComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,8 +55,11 @@ export class AppModule {
     const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
     customElements.define("igx-tree-grid", treegrid);
 
-    const hgrid = createCustomElement(IgxHierarchicalGridComponent, { injector: this.injector });
+    const hgrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igx-hierarchical-grid", hgrid);
+
+    const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
+    customElements.define("igx-row-island", ri);
 
     const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
     customElements.define("igx-pivot-grid", pivot);

@@ -226,7 +226,12 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
+/**
+ * Row island
+ *
+ * @igxModule IgxHierarchicalGridModule
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',

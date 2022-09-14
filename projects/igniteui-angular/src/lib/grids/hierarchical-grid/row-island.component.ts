@@ -48,6 +48,13 @@ import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
 
+/**
+ * Row island
+ *
+ * @igxModule IgxHierarchicalGridModule
+ * @igxParent IgxHierarchicalGridComponent
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',

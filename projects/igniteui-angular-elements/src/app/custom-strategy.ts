@@ -94,6 +94,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 if (query.isQueryList) {
                     const list = parentRef.instance[query.property] as QueryList<any>;
                     list.reset([...list.toArray(), componentRef.instance]);
+                    list.notifyOnChanges();
                 } else {
                     parentRef.instance[query.property] = componentRef.instance;
                 }
