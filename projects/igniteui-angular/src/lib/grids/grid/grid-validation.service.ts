@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { resolveNestedPath } from '../../core/utils';
-import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState } from '../common/grid.interface';
+import { GridType, IFieldValidationState, IGridFormGroupCreatedEventArgs, IRecordValidationState, ValidationStatus } from '../common/grid.interface';
 
 @Injectable()
 export class IgxGridValidationService {
@@ -50,7 +50,7 @@ export class IgxGridValidationService {
                 }
             }
         }
-        
+
         return formGroup;
     }
 
@@ -101,20 +101,20 @@ export class IgxGridValidationService {
                 const colKey = this.getFieldKey(col.field);
                 const control = formGroup.get(colKey);
                 if (control) {
-                    state.push({ field: colKey, valid: control.valid, errors: control.errors })
+                    state.push({ field: colKey, status: control.status as ValidationStatus, errors: control.errors })
                 }
             }
-            states.push({ key: key, valid: formGroup.valid, cells: state, errors: formGroup.errors });
+            states.push({ key: key, status: formGroup.status as ValidationStatus, fields: state, errors: formGroup.errors });
         });
         return states;
     }
 
-    /** Returns all invalid record states.
-    * @returns Array of IRecordValidationState.
-    */
+    /**
+     * Returns all invalid record states.
+     */
     public getInvalid(): IRecordValidationState[] {
         const validity = this.getValidity();
-        return validity.filter(x => !x.valid);
+        return validity.filter(x => x.status === 'INVALID');
     }
 
     /**
@@ -137,11 +137,11 @@ export class IgxGridValidationService {
     }
 
     /** Marks the associated record or field as touched.
-     * @param id The id of the record that will be marked as touched.
+     * @param key The id of the record that will be marked as touched.
      * @param field Optional. The field from the record that will be marked as touched. If not provided all fields will be touched.
     */
-    public markAsTouched(rowId: any, field?: string) {
-        const rowGroup = this.getFormGroup(rowId);
+    public markAsTouched(key: any, field?: string) {
+        const rowGroup = this.getFormGroup(key);
         if (!rowGroup) return;
         rowGroup.markAsTouched();
         const fields = field ? [field] : this.grid.columns.map(x => x.field);
@@ -163,13 +163,12 @@ export class IgxGridValidationService {
         }
     }
 
-    /** Clears validity state by id or clears all states if no id is passed.
-     * @param id The id of the record for which to clear state.
-     * @returns Array of IRecordValidationState.
+    /** Clears validation state by key or all states if none is provided.
+     * @param key Optional. The key of the record for which to clear state.
     */
-    public clear(rowId?: any) {
-        if (rowId !== undefined) {
-            this._validityStates.delete(rowId);
+    public clear(key?: any) {
+        if (key !== undefined) {
+            this._validityStates.delete(key);
         } else {
             this._validityStates.clear();
         }

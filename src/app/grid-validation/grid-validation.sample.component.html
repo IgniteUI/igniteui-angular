@@ -9,7 +9,7 @@
             <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
                 <ng-container *ngTemplateOutlet="defaultErr" >
                 </ng-container>
-                <div *ngIf="cell.errors?.['forbiddenName']">
+                <div *ngIf="cell.validation.errors?.['forbiddenName']">
                     This name is forbidden.
                 </div>
             </ng-template>
@@ -33,7 +33,7 @@
                 <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
                     <ng-container *ngTemplateOutlet="defaultErr" >
                     </ng-container>
-                    <div *ngIf="cell.errors?.['forbiddenName']">
+                    <div *ngIf="cell.validation.errors?.['forbiddenName']">
                         This name is forbidden.
                     </div>
                 </ng-template>
@@ -81,7 +81,7 @@
                 <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
                     <ng-container *ngTemplateOutlet="defaultErr" >
                     </ng-container>
-                    <div *ngIf="cell.errors?.['forbiddenName']">
+                    <div *ngIf="cell.validation.errors?.['forbiddenName']">
                         This name is forbidden.
                     </div>
                 </ng-template>
