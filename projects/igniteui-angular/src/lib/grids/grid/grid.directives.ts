@@ -79,7 +79,7 @@ export class IgxHeaderCollapseIndicatorDirective {
 }
 
 /**
- * @hidden 
+ * @hidden
  */
 @Directive({
     selector: '[igxExcelStyleHeaderIcon]'
