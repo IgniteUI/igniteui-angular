@@ -44,7 +44,14 @@
     <igx-paginator per-page="10"></igx-paginator>
   </igx-grid>
 
-  <button onclick="changeColumns()">Change columns</button>
+  <div>
+      <button onclick="changeColumns()">Change columns</button>
+      <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+      <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+      <button onclick="grid1.displayDensity = 'compact'">Compact</button>
+      <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
+      <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
+  </div>
 
   <script src="assets/data/nw-products.js"></script>
   <script>
@@ -89,7 +96,7 @@
   <!-- END IgxTreeGridComponent -->
 
   <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-      <igx-row-island auto-generate="true" key="Developers"></igx-row-island>  
+      <igx-row-island auto-generate="true" key="Developers"></igx-row-island>
   </igx-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->
