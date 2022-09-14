@@ -1404,6 +1404,7 @@
         padding-inline-end: rem(4px) !important;
 
         > igx-icon {
+            margin-left: auto;
             color: color($palette, 'error', 500);
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
