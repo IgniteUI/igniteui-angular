@@ -4,11 +4,24 @@ import { ComponentConfig } from './component-config';
 
 // TODO: Should be from '@angular/elements' when actually public
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
+import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 
 /**
  * Custom Ignite UI for Angular Elements strategy
  */
 class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
+
+
+    private _templateWrapper : TemplateWrapperComponent;
+    protected get templateWrapper() : TemplateWrapperComponent {
+        if (!this._templateWrapper) {
+            const componentRef = (this as any).componentRef as ComponentRef<any>;
+            const viewRef = componentRef.injector.get(ViewContainerRef);
+            this._templateWrapper = viewRef.createComponent(TemplateWrapperComponent).instance;
+        }
+        return this._templateWrapper;
+    }
+
 
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
         super(_componentFactory, _injector);
@@ -107,6 +120,18 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 }
                 parentRef.changeDetectorRef.detectChanges();
             }
+        }
+    }
+
+    /**
+     * assignTemplateCallback
+     */
+    public assignTemplateCallback(templateProp: string, callback: any) {
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        if (componentRef) {
+            const templateRef = this.templateWrapper.addTemplate(callback);
+            componentRef.instance[templateProp] = templateRef;
+            componentRef.changeDetectorRef.detectChanges();
         }
     }
 }

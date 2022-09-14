@@ -21,5 +21,19 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
         }
     }
 
+    // TODO: all 'template' props
+    let propName = 'sortHeaderIconTemplate';
+    Object.defineProperty(elementCtor.prototype, propName, {
+        get(): any {
+            throw 'Not implemented';
+        },
+        set(newValue: any): void {
+            if (!newValue) return;
+            this.ngElementStrategy.assignTemplateCallback(propName, newValue);
+        },
+        configurable: true,
+        enumerable: true,
+    });
+
     return elementCtor;
 }
