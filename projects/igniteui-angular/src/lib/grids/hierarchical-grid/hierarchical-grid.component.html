@@ -1,7 +1,3 @@
-
-<!-- Project ri -->
-<ng-content select="igx-row-island,igc-row-island"></ng-content>
-
 <ng-content select="igx-grid-toolbar,igc-grid-toolbar"></ng-content>
 <ng-container #toolbarOutlet></ng-container>
 
@@ -228,3 +224,7 @@
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column"></ng-content>
+    <ng-content select="igx-row-island,igc-row-island"></ng-content>
+</div>

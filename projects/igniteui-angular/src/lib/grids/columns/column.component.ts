@@ -64,6 +64,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
  * the column using `ng-template` which will be used for all cells within the column.
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -842,6 +844,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     protected summaryTemplateDirective: IgxSummaryTemplateDirective;
     /**
      * @hidden
+     * @see {@link bodyTemplate}
      */
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;

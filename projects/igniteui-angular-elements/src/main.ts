@@ -23,6 +23,6 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 // treeGrid.reflow() // <-- wrong, better WithProps TODO?
 
 document.addEventListener('DOMContentLoaded', () => {
-    let grid1 = document.querySelector('igx-grid#grid1') as any;
+    let grid1 = document.querySelector('igc-grid#grid1') as any;
     grid1.sortHeaderIconTemplate = (context) => html`⬇(${context.$implicit.title})`;
 });

@@ -1398,7 +1398,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('igxFilteringOverlayOutlet', { read: ViewContainerRef, static: true })
+    @ViewChild('sink', { read: ViewContainerRef, static: true })
     public anchor: ViewContainerRef;
 
     /**

@@ -36,10 +36,10 @@
       </igc-grid-toolbar-actions>
     </igc-grid-toolbar>
 
-    <igc-column field="ProductID" data-type="number"></igc-column>
-    <igc-column field="ProductName"></igc-column>
-    <igc-column field="CategoryName"></igc-column>
-    <igc-column field="InStock" data-type="number"></igc-column>
+    <igc-column field="ProductID" header="Product ID" data-type="number" width="25%"></igc-column>
+    <igc-column field="ProductName" field="Product Name" sortable="true" width="25%"></igc-column>
+    <igc-column field="CategoryName" field="Category Name" sortable="true" groupable="true" width="25%"></igc-column>
+    <igc-column field="InStock" field="In Stock" data-type="number" width="25%"></igc-column>
 
     <igc-paginator per-page="10"></igc-paginator>
   </igc-grid>
@@ -57,13 +57,13 @@
   <script>
     grid1.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
-        let columns = [
-            { field: 'ProductID', header: 'Product Id', dataType: 'number' },
-            { field: 'ProductName', sortable: true },
-            { field: 'CategoryName', sortable: true, groupable: true },
-            { field: 'InStock', dataType: 'number' }
-        ];
-        grid1.columns = columns;
+        // let columns = [
+        //     { field: 'ProductID', header: 'Product Id', dataType: 'number' },
+        //     { field: 'ProductName', sortable: true },
+        //     { field: 'CategoryName', sortable: true, groupable: true },
+        //     { field: 'InStock', dataType: 'number' }
+        // ];
+        // grid1.columns = columns;
     });
 
     function changeColumns() {

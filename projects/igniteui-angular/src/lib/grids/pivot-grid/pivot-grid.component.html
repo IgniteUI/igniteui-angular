@@ -116,7 +116,7 @@
 </ng-template>
 <igx-pivot-grid-column-resizer [restrictResizerTop]="theadRow.nativeElement.clientHeight" *ngIf="colResizingService.showResizer"></igx-pivot-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+<div #sink class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header">
