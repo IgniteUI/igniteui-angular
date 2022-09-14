@@ -38,7 +38,6 @@ import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IP
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxGridRow, IgxHierarchicalGridRow, IgxTreeGridRow, IgxGridHeaderComponent, IgxGroupByRow } from '../grid/public_api';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -77,6 +76,17 @@ export interface CellType {
     activate?(event: FocusEvent | KeyboardEvent): void;
     onDoubleClick?(event: MouseEvent): void;
     onClick?(event: MouseEvent): void;
+}
+
+export interface HeaderType {
+    nativeElement: HTMLElement;
+    column: ColumnType;
+    density: DisplayDensity;
+    sorted: boolean;
+    selectable: boolean;
+    selected: boolean;
+    title: boolean;
+    sortDirection: SortingDirection;
 }
 
 export interface RowType {
@@ -700,12 +710,16 @@ export interface ISizeInfo {
     padding: number
 }
 
+export interface IgxGridTemplateContext {
+    $implicit: GridType
+}
+
 export interface IgxGridRowTemplateContext {
-    $implicit: IgxGridRow | IgxTreeGridRow | IgxHierarchicalGridRow
+    $implicit: RowType
 }
 
 export interface IgxGridHeaderTemplateContext {
-    $implicit: IgxGridHeaderComponent
+    $implicit: HeaderType
 }
 
 export interface IgxRowSelectorTemplateContext {
@@ -722,7 +736,7 @@ export interface IgxGroupByRowSelectorTemplateContext {
     $implicit: {
         selectedCount: number,
         totalCount: number,
-        groupRow: IgxGroupByRow
+        groupRow: RowType
     }
 }
 

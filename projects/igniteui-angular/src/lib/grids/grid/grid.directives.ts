@@ -2,7 +2,7 @@ import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } fr
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
-import { ColumnType, IgxGridHeaderTemplateContext, IgxGridRowTemplateContext } from '../common/grid.interface';
+import { ColumnType, IgxGridHeaderTemplateContext, IgxGridRowTemplateContext, IgxGridTemplateContext } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -60,7 +60,7 @@ export class IgxRowCollapsedIndicatorDirective {
 })
 export class IgxHeaderExpandIndicatorDirective {
     public static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
-        context: unknown): context is IgxGridRowTemplateContext { 
+        context: unknown): context is IgxGridTemplateContext { 
         return true
     };
 }
@@ -73,7 +73,7 @@ export class IgxHeaderExpandIndicatorDirective {
 })
 export class IgxHeaderCollapseIndicatorDirective {
     public static ngTemplateContextGuard<T>(directive: IgxHeaderExpandIndicatorDirective,
-        context: unknown): context is IgxGridRowTemplateContext { 
+        context: unknown): context is IgxGridTemplateContext { 
         return true
     };
 }
