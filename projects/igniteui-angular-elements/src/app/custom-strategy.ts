@@ -47,7 +47,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         if (configParents?.length) {
             // select closest of all possible config parents
-            parent = element.closest(configParents.map(x => x.selector).join(',')) as NgElement;
+            parent = element.parentElement.closest(configParents.map(x => x.selector).join(',')) as NgElement;
             // find the respective config entry
             parentConfig = configParents.find(x => x.selector === parent.tagName.toLocaleLowerCase());
 
