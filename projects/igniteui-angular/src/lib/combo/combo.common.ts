@@ -905,7 +905,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _data = [];
     protected _value = '';
     protected _groupKey = '';
-    protected _init = true;
     protected _searchValue = '';
     protected _filteredData = [];
     protected _displayKey: string;
@@ -968,7 +967,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this._init = false;
         this.filteredData = [...this.data];
 
         if (this.ngControl) {
@@ -984,11 +982,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
         /** @hidden @internal */
         public ngDoCheck() {
-            if (this._init) {
-                return;
-            }
-
-            if (this.data?.length && this.selection) {
+            if (this.data?.length && this.selection.length) {
                 this._value = this.createDisplayText(this.selection, []);
             }
         }
