@@ -298,10 +298,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
     public set data(val: any[] | null) {
         this._data = (val) ? val : [];
-
-        if (this._data?.length && this.selectionService.get(this.id) && this.virtDir) {
-            this._value = this.createDisplayText(this.selection, []);
-        }
     }
 
     /**
@@ -961,6 +957,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
         });
+    }
+
+    /** @hidden @internal */
+    public ngDoCheck() {
+        if (this.data?.length && this.selection.length) {
+            this._value = this.createDisplayText(this.selection, []);
+        }
     }
 
     /** @hidden @internal */
