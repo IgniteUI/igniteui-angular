@@ -14,6 +14,8 @@ import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
+import { CurrentResourceStrings } from '../../../core/i18n/resources';
+import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -100,9 +102,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        this._overlaySettings.outlet = this.overlayOutlet;
-        this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;        
+        this.queryBuilder.overlaySettings.outlet = this.overlayOutlet;
+        this.queryBuilder.columnSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.queryBuilder.conditionSelectOverlaySettings.outlet = this.overlayOutlet;        
         this.queryBuilder.fields = this.filterableFields;
         this.queryBuilder.expressionTree = this.grid.advancedFilteringExpressionsTree;
     }
@@ -143,6 +145,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
             // this.init();
         }
+
+        this.assignResourceStrings();        
     }
 
     /**
@@ -271,5 +275,64 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onApplyButtonClick(event?: Event) {
         this.applyChanges(event);
         this.closeDialog();
+    }
+
+    private assignResourceStrings() {
+        // If grid has custom resource strings, they are passed to the query builder
+        const gridRS = this.grid.resourceStrings;
+
+        if (gridRS !== GridResourceStringsEN) {
+            const queryBuilderRS = CurrentResourceStrings.QueryBuilderResStrings;
+
+            queryBuilderRS.igx_query_builder_date_placeholder = gridRS.igx_grid_filter_row_date_placeholder;
+            queryBuilderRS.igx_query_builder_time_placeholder = gridRS.igx_grid_filter_row_time_placeholder;           
+            queryBuilderRS.igx_query_builder_filter_contains = gridRS.igx_grid_filter_contains;
+            queryBuilderRS.igx_query_builder_filter_doesNotContain = gridRS.igx_grid_filter_doesNotContain;
+            queryBuilderRS.igx_query_builder_filter_startsWith = gridRS.igx_grid_filter_startsWith;
+            queryBuilderRS.igx_query_builder_filter_endsWith = gridRS.igx_grid_filter_endsWith;
+            queryBuilderRS.igx_query_builder_filter_equals = gridRS.igx_grid_filter_equals;
+            queryBuilderRS.igx_query_builder_filter_doesNotEqual = gridRS.igx_grid_filter_doesNotEqual;
+            queryBuilderRS.igx_query_builder_filter_empty = gridRS.igx_grid_filter_empty;
+            queryBuilderRS.igx_query_builder_filter_notEmpty = gridRS.igx_grid_filter_notEmpty;
+            queryBuilderRS.igx_query_builder_filter_null = gridRS.igx_grid_filter_null;
+            queryBuilderRS.igx_query_builder_filter_notNull = gridRS.igx_grid_filter_notNull;
+            queryBuilderRS.igx_query_builder_filter_before = gridRS.igx_grid_filter_before;
+            queryBuilderRS.igx_query_builder_filter_after = gridRS.igx_grid_filter_after;
+            queryBuilderRS.igx_query_builder_filter_at = gridRS.igx_grid_filter_at;
+            queryBuilderRS.igx_query_builder_filter_not_at = gridRS.igx_grid_filter_not_at;
+            queryBuilderRS.igx_query_builder_filter_at_before = gridRS.igx_grid_filter_at_before;
+            queryBuilderRS.igx_query_builder_filter_at_after = gridRS.igx_grid_filter_at_after;
+            queryBuilderRS.igx_query_builder_filter_today = gridRS.igx_grid_filter_today;
+            queryBuilderRS.igx_query_builder_filter_yesterday = gridRS.igx_grid_filter_yesterday;
+            queryBuilderRS.igx_query_builder_filter_thisMonth = gridRS.igx_grid_filter_thisMonth;
+            queryBuilderRS.igx_query_builder_filter_lastMonth = gridRS.igx_grid_filter_lastMonth;
+            queryBuilderRS.igx_query_builder_filter_nextMonth = gridRS.igx_grid_filter_nextMonth;
+            queryBuilderRS.igx_query_builder_filter_thisYear = gridRS.igx_grid_filter_thisYear;
+            queryBuilderRS.igx_query_builder_filter_lastYear = gridRS.igx_grid_filter_lastYear;
+            queryBuilderRS.igx_query_builder_filter_nextYear = gridRS.igx_grid_filter_nextYear;
+            queryBuilderRS.igx_query_builder_filter_greaterThan = gridRS.igx_grid_filter_greaterThan;
+            queryBuilderRS.igx_query_builder_filter_lessThan = gridRS.igx_grid_filter_lessThan;
+            queryBuilderRS.igx_query_builder_filter_greaterThanOrEqualTo = gridRS.igx_grid_filter_greaterThanOrEqualTo;
+            queryBuilderRS.igx_query_builder_filter_lessThanOrEqualTo = gridRS.igx_grid_filter_lessThanOrEqualTo;
+            queryBuilderRS.igx_query_builder_filter_true = gridRS.igx_grid_filter_true;
+            queryBuilderRS.igx_query_builder_filter_false = gridRS.igx_grid_filter_false;
+            queryBuilderRS.igx_query_builder_filter_all = gridRS.igx_grid_filter_all;
+            queryBuilderRS.igx_query_builder_title = gridRS.igx_grid_advanced_filter_title;
+            queryBuilderRS.igx_query_builder_and_group = gridRS.igx_grid_advanced_filter_and_group;
+            queryBuilderRS.igx_query_builder_or_group = gridRS.igx_grid_advanced_filter_or_group;
+            queryBuilderRS.igx_query_builder_end_group = gridRS.igx_grid_advanced_filter_end_group;
+            queryBuilderRS.igx_query_builder_and_label = gridRS.igx_grid_advanced_filter_and_label;
+            queryBuilderRS.igx_query_builder_or_label = gridRS.igx_grid_advanced_filter_or_label;
+            queryBuilderRS.igx_query_builder_add_condition = gridRS.igx_grid_advanced_filter_add_condition;
+            queryBuilderRS.igx_query_builder_create_and_group = gridRS.igx_grid_advanced_filter_create_and_group;            
+            queryBuilderRS.igx_query_builder_create_or_group = gridRS.igx_grid_advanced_filter_create_or_group;
+            queryBuilderRS.igx_query_builder_ungroup = gridRS.igx_grid_advanced_filter_ungroup;
+            queryBuilderRS.igx_query_builder_delete = gridRS.igx_grid_advanced_filter_delete;
+            queryBuilderRS.igx_query_builder_delete_filters = gridRS.igx_grid_advanced_filter_delete_filters;
+            queryBuilderRS.igx_query_builder_initial_text = gridRS.igx_grid_advanced_filter_initial_text;
+            queryBuilderRS.igx_query_builder_column_placeholder = gridRS.igx_grid_advanced_filter_column_placeholder;
+            queryBuilderRS.igx_query_builder_condition_placeholder = gridRS.igx_grid_filter_condition_placeholder;
+            queryBuilderRS.igx_query_builder_value_placeholder = gridRS.igx_grid_advanced_filter_value_placeholder;
+        }
     }
 }

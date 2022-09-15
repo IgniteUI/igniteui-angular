@@ -1,4 +1,4 @@
-import { IFilteringExpression, FilteringLogic, IExpression } from './filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
 
 export enum FilteringExpressionsTreeType {
@@ -7,7 +7,7 @@ export enum FilteringExpressionsTreeType {
 }
 
 export declare interface IExpressionTree {
-    filteringOperands: (IExpressionTree | IExpression)[];
+    filteringOperands: (IExpressionTree | IFilteringExpression)[];
     operator: FilteringLogic;
     fieldName?: string;
 }

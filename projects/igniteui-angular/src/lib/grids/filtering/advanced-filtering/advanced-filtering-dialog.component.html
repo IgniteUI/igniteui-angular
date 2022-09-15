@@ -5,7 +5,7 @@
         'igx-advanced-filter--compact': grid.displayDensity === 'compact',
         'igx-advanced-filter--inline': inline
     }">
-    <igx-query-builder #queryBuilder>
+    <igx-query-builder #queryBuilder [locale]="grid.locale">
         <igx-query-builder-header
             [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
             igxDragHandle>

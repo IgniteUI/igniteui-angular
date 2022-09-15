@@ -2,7 +2,7 @@ import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { ContentChild, LOCALE_ID, Optional, Pipe, PipeTransform } from '@angular/core';
 import { Inject } from '@angular/core';
 import {
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, HostBinding, NgModule
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { editor } from '@igniteui/material-icons-extended';
@@ -11,18 +11,20 @@ import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/butt
 import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 import { PlatformUtil } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic, IExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxDatePickerModule } from '../date-picker/date-picker.module';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { FieldType, GridType } from '../grids/common/grid.interface';
+import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { FieldType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
@@ -33,16 +35,18 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, Conn
 import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 
-const DEFAULT_DATE_FORMAT = 'mediumDate';
-const DEFAULT_TIME_FORMAT = 'mediumTime';
-const DEFAULT_DATE_TIME_FORMAT = 'medium';
-const DEFAULT_DIGITS_INFO = '1.0-3';
+const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
+const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
+const DEFAULT_PIPE_DATE_TIME_FORMAT = 'medium';
+const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
+const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss tt';
+const DEFAULT_TIME_FORMAT = 'hh:mm:ss tt';
 
 @Pipe({ name: 'fieldFormatter' })
 export class IgxFieldFormatterPipe implements PipeTransform {
 
-    public transform(value: any, formatter: (v: any, data: any, columnData?: any) => any, rowData: any, columnData?: any) {
-        return formatter(value, rowData, columnData);
+    public transform(value: any, formatter: (v: any, data: any, fieldData?: any) => any, rowData: any, fieldData?: any) {
+        return formatter(value, rowData, fieldData);
     }
 }
 
@@ -74,12 +78,12 @@ class ExpressionGroupItem extends ExpressionItem {
  * @hidden
  */
 class ExpressionOperandItem extends ExpressionItem {
-    public expression: IExpression;
+    public expression: IFilteringExpression;
     public inEditMode: boolean;
     public inAddMode: boolean;
     public hovered: boolean;
     public fieldLabel: string;
-    constructor(expression: IExpression, parent: ExpressionGroupItem) {
+    constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
         this.expression = expression;
     }
@@ -90,7 +94,7 @@ class ExpressionOperandItem extends ExpressionItem {
     templateUrl: './query-builder.component.html',
     styleUrls: ['./query-builder.component.css']
 })
-export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
+export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDestroy {
     /**
      * @hidden @internal
      */
@@ -226,16 +230,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    protected overlayOutlet: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
-    public inline = true;
-    /**
-     * @hidden @internal
-     */
     public rootGroup: ExpressionGroupItem;
 
     /**
@@ -318,17 +312,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _expressionTree: IExpressionTree;
     private _filteringChange: Subscription;
     private _locale;
+    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
-    };
-
-    private _overlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy()
     };
 
     constructor(public cdr: ChangeDetectorRef,
@@ -338,15 +326,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.locale = this.locale || this._localeId;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public ngAfterViewInit(): void {
-        this._overlaySettings.outlet = this.overlayOutlet;
-        this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
     }
 
     /**
@@ -459,6 +438,32 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     }
 
     /**
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IQueryBuilderResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * Returns the resource strings.
+     */
+    public get resourceStrings(): IQueryBuilderResourceStrings {
+        return this._resourceStrings;
+    }
+
+    /**
+     * @hidden @internal
+     */
+     public overlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+        scrollStrategy: new CloseScrollStrategy()
+    };
+
+    /**
      * @hidden @internal
      */
      public get isContextMenuVisible(): boolean {
@@ -481,6 +486,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         const operandItem = new ExpressionOperandItem({
             fieldName: null,
             condition: null,
+            ignoreCase: true,
             searchVal: null
         }, parent);
 
@@ -785,9 +791,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      * @hidden @internal
      */
     public getConditionFriendlyName(name: string): string {
-        //TODO resource strings
-        //return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
-        return name;
+        return this.resourceStrings[`igx_query_builder_filter_${name}`] || name;
     }
 
     /**
@@ -840,17 +844,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         return this.selectedField ? this.selectedField.filters.conditionList() : [];
     }
 
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public initialize(grid: GridType, overlayService: IgxOverlayService,
-    //     overlayComponentId: string) {
-    //     this.inline = false;
-    //     this.grid = grid;
-    //     this._overlayService = overlayService;
-    //     this._overlayComponentId = overlayComponentId;
-    // }
-
     /**
      * @hidden @internal
      */
@@ -895,7 +888,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             this.contextualGroup = contextualGroup;
             this.calculateContextMenuTarget();
             if (this.contextMenuToggle.collapsed) {
-                this.contextMenuToggle.open(this._overlaySettings);
+                this.contextMenuToggle.open(this.overlaySettings);
             } else {
                 this.contextMenuToggle.reposition();
             }
@@ -904,21 +897,21 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     private setFormat(field: FieldType) {
         if (!field.pipeArgs) {
-            field.pipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
+            field.pipeArgs = { digitsInfo: DEFAULT_PIPE_DIGITS_INFO };
         }
 
         if (!field.pipeArgs.format) {
             field.pipeArgs.format = field.dataType === DataType.Time ?
-                DEFAULT_TIME_FORMAT : field.dataType === DataType.DateTime ?
-                    DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
+                DEFAULT_PIPE_TIME_FORMAT : field.dataType === DataType.DateTime ?
+                    DEFAULT_PIPE_DATE_TIME_FORMAT : DEFAULT_PIPE_DATE_FORMAT;
         }
 
         if (!field.defaultDateTimeFormat) {
-            field.defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
+            field.defaultDateTimeFormat = DEFAULT_DATE_TIME_FORMAT;
         }
 
         if (!field.defaultTimeFormat) {
-            field.defaultTimeFormat = 'hh:mm:ss tt';
+            field.defaultTimeFormat = DEFAULT_TIME_FORMAT;
         }
     }
 
@@ -1000,11 +993,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                 if (expr instanceof FilteringExpressionsTree) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
                 } else {
-                    const filteringExpr = expr as IExpression;
-                    const exprCopy: IExpression = {
+                    const filteringExpr = expr as IFilteringExpression;
+                    const exprCopy: IFilteringExpression = {
                         fieldName: filteringExpr.fieldName,
                         condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal
+                        searchVal: filteringExpr.searchVal,
+                        ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
@@ -1186,7 +1180,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             Math.max(r, c.nativeElement.getBoundingClientRect().right), 0);
         maxRight = Math.max(maxRight, containerRect.left);
         maxRight = Math.min(maxRight, containerRect.right);
-        this._overlaySettings.target = new Point(maxRight, minTop);
+        this.overlaySettings.target = new Point(maxRight, minTop);
     }
 
     private scrollElementIntoView(target: HTMLElement) {

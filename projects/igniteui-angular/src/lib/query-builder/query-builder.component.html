@@ -1,6 +1,5 @@
 <article class="igx-query-builder">
-    <!-- TODO add resource strings for query builder title -->
-    <igx-query-builder-header *ngIf="!headerContent" [title]="'Query Builder'"></igx-query-builder-header>
+    <igx-query-builder-header *ngIf="!headerContent" [title]="this.resourceStrings.igx_query_builder_title"></igx-query-builder-header>
     <ng-content select="igx-query-builder-header"></ng-content>
 
     <div #expressionsContainer class="igx-advanced-filter__main" (scroll)="onExpressionsScrolled()">
@@ -9,20 +8,17 @@
             <button #addRootAndGroupButton igxButton="outlined" [displayDensity]="this.displayDensity"
                 (click)="addAndGroup()">
                 <igx-icon>add</igx-icon>
-                <span>"And" Group</span>
-                <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span> -->
+                <span>{{this.resourceStrings.igx_query_builder_and_group}}</span>
             </button>
 
             <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="addOrGroup()">
                 <igx-icon>add</igx-icon>
-                <span>"Or" Group</span>
-                <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span> -->
+                <span>{{this.resourceStrings.igx_query_builder_or_group}}</span>
             </button>
 
             <div class="igx-filter-empty">
                 <h6 class="igx-filter-empty__title">
-                    Start with creating a group of conditions linked with "And" or "Or"
-                    <!-- {{grid.resourceStrings.igx_grid_advanced_filter_initial_text}} -->
+                    {{this.resourceStrings.igx_query_builder_initial_text}}
                 </h6>
             </div>
         </ng-container>
@@ -31,22 +27,19 @@
             <button #addConditionButton igxButton="outlined" [displayDensity]="this.displayDensity"
                 [disabled]="hasEditedExpression" (click)="addCondition(expressionItem, afterExpression)">
                 <igx-icon>add</igx-icon>
-                <span>Condition</span>
-                <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_add_condition}}</span> -->
+                <span>{{this.resourceStrings.igx_query_builder_add_condition}}</span>
             </button>
 
             <button igxButton="outlined" [displayDensity]="this.displayDensity" [disabled]="hasEditedExpression"
                 (click)="addAndGroup(expressionItem, afterExpression)">
                 <igx-icon>add</igx-icon>
-                <span>"And" Group</span>
-                <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span> -->
+                <span>{{this.resourceStrings.igx_query_builder_and_group}}</span>
             </button>
 
             <button igxButton="outlined" [displayDensity]="this.displayDensity" [disabled]="hasEditedExpression"
                 (click)="addOrGroup(expressionItem, afterExpression)">
                 <igx-icon>add</igx-icon>
-                <span>"Or" Group</span>
-                <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span> -->
+                <span>{{this.resourceStrings.igx_query_builder_or_group}}</span>
             </button>
 
         </ng-template>
@@ -95,18 +88,18 @@
 
             <div *ngIf="expressionItem.inEditMode" #editingInputsContainer class="igx-filter-tree__inputs">
                 <igx-select #fieldSelect type="box" [displayDensity]="'compact'"
-                    [overlaySettings]="columnSelectOverlaySettings" [placeholder]="'Select column'"
+                    [overlaySettings]="columnSelectOverlaySettings"
+                    [placeholder]="this.resourceStrings.igx_query_builder_column_placeholder"
                     [(ngModel)]="selectedField">
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder" -->
                     <igx-select-item *ngFor="let field of fields" [value]="field">
                         {{field.header || field.field}}
                     </igx-select-item>
                 </igx-select>
 
                 <igx-select #conditionSelect type="box" [displayDensity]="'compact'"
-                    [overlaySettings]="conditionSelectOverlaySettings" [placeholder]="'Select filter'"
+                    [overlaySettings]="conditionSelectOverlaySettings"
+                    [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder"
                     [(ngModel)]="selectedCondition" [disabled]="!selectedField">
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder" -->
                     <igx-prefix
                         *ngIf="selectedField && conditionSelect.value && selectedField.filters.condition(conditionSelect.value)">
                         <igx-icon family="imx-icons"
@@ -132,19 +125,18 @@
                     <input #searchValueInput igxInput [disabled]="!selectedField || !selectedCondition
                             || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                         [type]="selectedField && selectedField.dataType === 'number' ? 'number' : 'text'"
-                        [placeholder]="'Value'" [(ngModel)]="searchValue" />
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder" -->
+                        [placeholder]="this.resourceStrings.igx_query_builder_value_placeholder" [(ngModel)]="searchValue" />
                 </igx-input-group>
 
                 <igx-date-picker #picker *ngIf="selectedField && selectedField.dataType === 'date'"
                     [(value)]="searchValue" (keydown)="openPicker($event)" (click)="picker.open()" type="box"
-                    [readOnly]="true" [displayDensity]="'compact'" [placeholder]="'Pick up date'" [disabled]="!selectedField || !selectedCondition
+                    [readOnly]="true" [displayDensity]="'compact'"
+                    [placeholder]="this.resourceStrings.igx_query_builder_date_placeholder" [disabled]="!selectedField || !selectedCondition
                         || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                     [locale]="this.locale"
                     [formatter]="selectedField.formatter"
                     [displayFormat]="selectedField.pipeArgs.format"
                     [weekStart]="selectedField.pipeArgs.weekStart">
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder" -->
 
                     <!-- TODO outlet -->
                     <!-- [outlet]="grid.outlet" -->
@@ -156,13 +148,13 @@
 
                 <igx-time-picker #picker *ngIf="selectedField && selectedField.dataType === 'time'"
                     [(value)]="searchValue" (click)="picker.open()" (keydown)="openPicker($event)"
-                    [displayDensity]="'compact'" [placeholder]="'Pick up time'" type="box" [readOnly]="true" [disabled]="!selectedField || !selectedCondition ||
+                    [displayDensity]="'compact'"
+                    [placeholder]="this.resourceStrings.igx_query_builder_time_placeholder"
+                    type="box" [readOnly]="true" [disabled]="!selectedField || !selectedCondition ||
                              (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                     [locale]="this.locale"
                     [formatter]="selectedField.formatter"
-                    [inputFormat]="selectedField.defaultTimeFormat"
-                    >
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder" -->
+                    [inputFormat]="selectedField.defaultTimeFormat">
 
                     <!-- TODO outlet -->
                     <!-- [outlet]="grid.outlet" -->
@@ -174,11 +166,12 @@
 
                 <igx-input-group #inputGroup type="box" *ngIf="selectedField && selectedField.dataType === 'dateTime'"
                     type="box" [displayDensity]="'compact'">
-                    <input #input igxInput tabindex="0" [placeholder]="'Pick up date'" [(ngModel)]="searchValue"
+                    <input #input igxInput tabindex="0"
+                        [placeholder]="this.resourceStrings.igx_query_builder_date_placeholder"
+                        [(ngModel)]="searchValue"
                         [disabled]="!selectedField || !selectedCondition || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)" 
                         [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
                         />
-                    <!-- [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder" -->
                 </igx-input-group>
 
                 <div class="igx-filter-tree__inputs-actions">
@@ -225,8 +218,7 @@
                             [displayDensity]="this.displayDensity"
                             [disabled]="hasEditedExpression || expressionItem.children.length < 2"
                             (click)="endGroup(expressionItem)">
-                            <span>End Group</span>
-                            <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_end_group}}</span> -->
+                            <span>{{this.resourceStrings.igx_query_builder_end_group}}</span>
                         </button>
                     </div>
                 </div>
@@ -255,29 +247,24 @@
                 <button igxButton="outlined" [displayDensity]="this.displayDensity" [disabled]="!contextualGroup.parent"
                     (click)="ungroup()">
                     <igx-icon family="imx-icons" name="ungroup"></igx-icon>
-                    <span>Ungroup</span>
-                    <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}</span> -->
+                    <span>{{this.resourceStrings.igx_query_builder_ungroup}}</span>
                 </button>
                 <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="deleteGroup()"
                     class="igx-filter-contextual-menu__delete-btn">
                     <igx-icon>delete</igx-icon>
-                    <span>Delete</span>
-                    <!-- <span>{{grid.resourceStrings.igx_grid_advanced_filter_delete}}</span> -->
+                    <span>{{this.resourceStrings.igx_query_builder_delete}}</span>
                 </button>
             </ng-container>
             <ng-container *ngIf="!contextualGroup">
                 <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="createAndGroup()">
-                    Create "And" Group
-                    <!-- {{grid.resourceStrings.igx_grid_advanced_filter_create_and_group}} -->
+                    {{this.resourceStrings.igx_query_builder_create_and_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="createOrGroup()">
-                    Create "Or" Group
-                    <!-- {{grid.resourceStrings.igx_grid_advanced_filter_create_or_group}} -->
+                    {{this.resourceStrings.igx_query_builder_create_or_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="this.displayDensity" (click)="deleteFilters()"
                     class="igx-filter-contextual-menu__delete-btn">
-                    Delete filters
-                    <!-- {{grid.resourceStrings.igx_grid_advanced_filter_delete_filters}} -->
+                    {{this.resourceStrings.igx_query_builder_delete_filters}}
                 </button>
             </ng-container>
         </div>

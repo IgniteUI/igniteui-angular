@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 @Component({
     selector: 'igx-query-builder-header',
@@ -6,6 +8,9 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./query-builder.component.css']
 })
 export class IgxQueryBuilderHeaderComponent {
+
+    private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
+    
     /**
      * An @Input property that sets the title of the `IgxQueryBuilderHeaderComponent`.
      * ```html
@@ -20,4 +25,20 @@ export class IgxQueryBuilderHeaderComponent {
      */
     @Input()
     public showLegend = true;
+
+    /**
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
+     @Input()
+     public set resourceStrings(value: IQueryBuilderResourceStrings) {
+         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+     }
+ 
+     /**
+      * Returns the resource strings.
+      */
+     public get resourceStrings(): IQueryBuilderResourceStrings {
+         return this._resourceStrings;
+     }
 }

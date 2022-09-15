@@ -5,12 +5,10 @@
     </h4>    
     <div *ngIf="showLegend" class="igx-builder-legend" >
         <div class="igx-builder-legend__item--and">
-            <!-- //TODO add resource strings -->
-            <span>And</span>
+            <span>{{this.resourceStrings.igx_query_builder_and_label}}</span>
         </div>
         <div class="igx-builder-legend__item--or">
-            <!-- //TODO add resource strings -->
-            <span>Or</span>
+            <span>{{this.resourceStrings.igx_query_builder_or_label}}</span>
         </div>
     </div>
 </header>
