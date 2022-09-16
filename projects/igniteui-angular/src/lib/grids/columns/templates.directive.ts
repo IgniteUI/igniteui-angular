@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext } from '../common/grid.interface';
 
 
 @Directive({
@@ -6,6 +7,11 @@ import { Directive, TemplateRef } from '@angular/core';
 })
 export class IgxFilterCellTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
+
+    public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective,
+        context: unknown): context is IgxColumnTemplateContext { 
+        return true;
+    };
 }
 
 @Directive({
@@ -14,6 +20,11 @@ export class IgxFilterCellTemplateDirective {
 export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective,
+        context: unknown): context is IgxCellTemplateContext { 
+        return true;
+    };
 }
 
 @Directive({
@@ -21,16 +32,25 @@ export class IgxCellTemplateDirective {
 })
 export class IgxCellValidationErrorDirective {
     constructor(public template: TemplateRef<any>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective,
+        context: unknown): context is IgxCellTemplateContext { 
+        return true;
+    };
 }
 
 @Directive({
     selector: '[igxHeader]'
 })
 export class IgxCellHeaderTemplateDirective {
-
     constructor(public template: TemplateRef<any>) { }
 
+    public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective,
+        context: unknown): context is IgxColumnTemplateContext { 
+        return true;
+    };
 }
+
 /**
  * @hidden
  */
@@ -48,6 +68,11 @@ export class IgxCellFooterTemplateDirective {
 export class IgxCellEditorTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective,
+        context: unknown): context is IgxCellTemplateContext { 
+        return true;
+    };
 }
 
 @Directive({
@@ -56,6 +81,11 @@ export class IgxCellEditorTemplateDirective {
 export class IgxCollapsibleIndicatorTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective,
+        context: unknown): context is IgxColumnTemplateContext { 
+        return true;
+    };
 }
 
 @Directive({
@@ -64,4 +94,9 @@ export class IgxCollapsibleIndicatorTemplateDirective {
 export class IgxSummaryTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective,
+        context: unknown): context is IgxSummaryTemplateContext { 
+        return true;
+    };
 }

@@ -722,6 +722,19 @@ export interface IgxGridHeaderTemplateContext {
     $implicit: HeaderType
 }
 
+export interface IgxColumnTemplateContext {
+    $implicit: ColumnType,
+    column: ColumnType
+}
+
+export interface IgxCellTemplateContext {
+    $implicit: any,
+    additionalTemplateContext: any,
+    formControl?: any,
+    defaultErrorTemplate?: any,
+    cell?: CellType
+}
+
 export interface IgxRowSelectorTemplateContext {
     $implicit: {
         index: number,
@@ -747,4 +760,8 @@ export interface IgxHeadSelectorTemplateContext {
         selectAll?: () => void;
         deselectAll?: () => void;
     };
+}
+
+export interface IgxSummaryTemplateContext {
+    $implicit: IgxSummaryResult[]
 }

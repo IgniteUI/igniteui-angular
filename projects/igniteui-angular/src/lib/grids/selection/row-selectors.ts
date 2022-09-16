@@ -11,7 +11,7 @@ import { IgxHeadSelectorTemplateContext, IgxGroupByRowSelectorTemplateContext, I
 export class IgxRowSelectorDirective {
     constructor(public templateRef: TemplateRef<any>) { }
 
-    public static ngTemplateContextGuard(directive: IgxRowSelectorDirective,
+    public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective,
         context: unknown): context is IgxRowSelectorTemplateContext { 
         return true
     };
@@ -27,7 +27,7 @@ export class IgxRowSelectorDirective {
 export class IgxGroupByRowSelectorDirective {
     constructor(public templateRef: TemplateRef<any>) { }
 
-    public static ngTemplateContextGuard(directive: IgxGroupByRowSelectorDirective,
+    public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective,
         context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
         return true
     };
@@ -43,7 +43,7 @@ export class IgxGroupByRowSelectorDirective {
 export class IgxHeadSelectorDirective {
     constructor(public templateRef: TemplateRef<any>) { }
 
-    public static ngTemplateContextGuard(directive: IgxHeadSelectorDirective,
+    public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective,
         context: unknown): context is IgxHeadSelectorTemplateContext { 
         return true
     };
