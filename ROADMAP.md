@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 24, version 14.1 (Due by October, 2022)
+## Milestone 24, version 14.2 (Due by October, 2022)
 
 1. Angular query builder component (Angular Tree Grid Advanced Filtering without the tree grid) [#11750](https://github.com/IgniteUI/igniteui-angular/issues/11750)
 2. [PivotGrid] Export to Excel [#11742](https://github.com/IgniteUI/igniteui-angular/issues/11742)
