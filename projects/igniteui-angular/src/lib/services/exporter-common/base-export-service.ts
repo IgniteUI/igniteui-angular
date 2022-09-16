@@ -485,6 +485,10 @@ export abstract class IgxBaseExporter {
         const hasSorting = expressions && expressions.length > 0;
 
         switch (tagName) {
+            case 'igx-pivot-grid': {
+                this.prepareGridData(grid, hasFiltering, hasSorting);
+                break;
+            }
             case 'igx-hierarchical-grid': {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 break;
