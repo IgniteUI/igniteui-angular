@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
-import { GridType, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
 @Directive({
@@ -38,7 +38,12 @@ export class IgxRowAddTextDirective {
 @Directive({
     selector: '[igxRowEditActions]'
 })
-export class IgxRowEditActionsDirective { }
+export class IgxRowEditActionsDirective {
+    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
+        context: unknown): context is IgxGridRowEditActionsTemplateContext { 
+        return true;
+    };
+ }
 
 
 // TODO: Refactor circular ref, deps and logic

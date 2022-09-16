@@ -131,6 +131,7 @@ import {
     IGridFormGroupCreatedEventArgs,
     IGridValidationStatusEventArgs,
     IgxGridHeaderTemplateContext,
+    IgxGridRowEditActionsTemplateContext,
     IgxGridRowEditTemplateContext,
     IgxGridRowEditTextTemplateContext,
     IgxGridRowTemplateContext,
@@ -1336,7 +1337,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
-    public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
+    public rowEditActionsDirectives: QueryList<TemplateRef<IgxGridRowEditActionsTemplateContext>>;
 
 
     /**
@@ -2376,7 +2377,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditActions(): TemplateRef<any> {
+    public get rowEditActions(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
         if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
             return this.rowEditActionsDirectives.first;
         }

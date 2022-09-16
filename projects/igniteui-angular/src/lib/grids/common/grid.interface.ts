@@ -721,11 +721,15 @@ export interface IgxGridRowTemplateContext {
 export interface IgxGridRowEditTemplateContext {
     $implicit: undefined,
     rowChangesCount: number,
-    endEdit: () => void
+    endEdit:  (commit: boolean, event?: Event) => void
 }
 
 export interface IgxGridRowEditTextTemplateContext {
-    $implicit?: number;
+    $implicit: number
+}
+
+export interface IgxGridRowEditActionsTemplateContext {
+    $implicit: (commit: boolean, event?: Event) => void
 }
 
 export interface IgxGridHeaderTemplateContext {
