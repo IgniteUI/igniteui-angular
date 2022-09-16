@@ -11,7 +11,7 @@ import { ColumnType, IgxGridMasterDetailContext, IgxGroupByRowTemplateContext } 
     selector: '[igxGroupByRow]'
 })
 export class IgxGroupByRowTemplateDirective {
-    public static ngTemplateContextGuard(dir: IgxGroupByRowTemplateDirective,
+    public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective,
         ctx: unknown): ctx is IgxGroupByRowTemplateContext {
         return true
     };
@@ -27,7 +27,7 @@ export class IgxGroupByRowTemplateDirective {
     selector: '[igxGridDetail]'
 })
 export class IgxGridDetailTemplateDirective {
-    public static ngTemplateContextGuard(dir: IgxGridDetailTemplateDirective,
+    public static ngTemplateContextGuard(_dir: IgxGridDetailTemplateDirective,
         ctx: unknown): ctx is IgxGridMasterDetailContext {
         return true
     };

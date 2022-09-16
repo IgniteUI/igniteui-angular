@@ -31,7 +31,7 @@ import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_
     selector: '[igxExcelStyleLoading]'
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
-    public static ngTemplateContextGuard(dir: IgxExcelStyleLoadingValuesTemplateDirective,
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
         ctx: unknown): ctx is undefined {
         return true
     };
