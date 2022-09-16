@@ -398,20 +398,20 @@ export class IgxGridSelectionService {
     }
 
     /** Clears row selection, if filtering is applied clears only selected rows from filtered data. */
-    public clearRowSelection(event?): void {
+    public clearRowSelection(event?, isSelectAllClicked: boolean = false): void {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
-        this.emitRowSelectionEvent(newSelection, [], removedRec, event);
+        this.emitRowSelectionEvent(newSelection, [], removedRec, event, isSelectAllClicked);
     }
 
     /** Select all rows, if filtering is applied select only from filtered data. */
-    public selectAllRows(event?) {
+    public selectAllRows(event?, isSelectAllClicked: boolean = false) {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
         const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
-        this.emitRowSelectionEvent(newSelection, addedRows, [], event);
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event, isSelectAllClicked);
     }
 
     /** Select the specified row and emit event. */
@@ -553,7 +553,7 @@ export class IgxGridSelectionService {
             this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
-    public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
+    public emitRowSelectionEvent(newSelection, added, removed, event?, isSelectAllClicked = false): boolean {
         const currSelection = this.getSelectedRows();
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
@@ -561,7 +561,7 @@ export class IgxGridSelectionService {
 
         const args = {
             oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false
+            added, removed, event, cancel: false, isSelectAllClicked
         };
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {

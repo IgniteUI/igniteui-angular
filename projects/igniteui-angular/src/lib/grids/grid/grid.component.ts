@@ -292,6 +292,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.isPercentHeight) {
             this.notifyChanges(true);
         }
+        if (this.isSelectAllClicked) {
+            this.selectAllRows();
+        }
     }
 
     /**
