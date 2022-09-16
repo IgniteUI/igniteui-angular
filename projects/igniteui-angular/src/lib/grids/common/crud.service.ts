@@ -101,16 +101,19 @@ export class IgxCell {
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
+        this.editValue = this._editValue;
     }
 
     public get editValue() {
-        return this._editValue;
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+        if (formControl) {
+            return formControl.value;
+        }
     }
 
     public set editValue(value) {
-        this._editValue = value;
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
-        formControl.setValue(value, { emitEvent: false });
+        formControl.setValue(value);
         if (this.grid.validationTrigger === 'change') {
             // in case trigger is change, mark as touched.
             formControl.markAsTouched();
