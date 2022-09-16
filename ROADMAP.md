@@ -2,17 +2,12 @@
 
 # Current Milestone
 
-## Milestone 23 (Due by August, 2022)
+## Milestone 24, version 14.2 (Due by October, 2022)
 
-1. Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
-2. Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
-3. **[DONE]** Tabs - update UI to latest specification [#11669](https://github.com/IgniteUI/igniteui-angular/issues/11669)
-4. **[DONE]** [PivotGrid] Filtering Expressions [#11786](https://github.com/IgniteUI/igniteui-angular/issues/11786)
-5. **[DONE]** IgxCombo's filtering strategy is not exposed limiting extensibility [#11810](https://github.com/IgniteUI/igniteui-angular/issues/11810)
-6. **[DONE]** Add 'searchKey' to Combo [#11532](https://github.com/IgniteUI/igniteui-angular/issues/11532)
-7. **[DONE]** IgxCombo: ability to filter multiple fields [#9884](https://github.com/IgniteUI/igniteui-angular/issues/9884)
-8. **[DONE]** [PivotGrid] Aggregation Method Label [#11736](https://github.com/IgniteUI/igniteui-angular/issues/11736)
-9. **[DONE]** IgxGrid filter: IgxDatePicker.weekStart not changable [#10852](https://github.com/IgniteUI/igniteui-angular/issues/10852)
+1. Angular query builder component (Angular Tree Grid Advanced Filtering without the tree grid) [#11750](https://github.com/IgniteUI/igniteui-angular/issues/11750)
+2. [PivotGrid] Export to Excel [#11742](https://github.com/IgniteUI/igniteui-angular/issues/11742)
+3. Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
+4. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
 
 ## Going down the road
 
@@ -26,13 +21,25 @@
 
 # Previous Milestone
 
-## Milestone 22 (Released June 09th, 2022)
+## Milestone 23, version 14.1 (Released September 13th, 2022)
+
+1. **[DONE]** Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
+2. **[DONE]** Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
+3. **[DONE]** Tabs - update UI to latest specification [#11669](https://github.com/IgniteUI/igniteui-angular/issues/11669)
+4. **[DONE]** [PivotGrid] Filtering Expressions [#11786](https://github.com/IgniteUI/igniteui-angular/issues/11786)
+5. **[DONE]** IgxCombo's filtering strategy is not exposed limiting extensibility [#11810](https://github.com/IgniteUI/igniteui-angular/issues/11810)
+6. **[DONE]** Add 'searchKey' to Combo [#11532](https://github.com/IgniteUI/igniteui-angular/issues/11532)
+7. **[DONE]** IgxCombo: ability to filter multiple fields [#9884](https://github.com/IgniteUI/igniteui-angular/issues/9884)
+8. **[DONE]** [PivotGrid] Aggregation Method Label [#11736](https://github.com/IgniteUI/igniteui-angular/issues/11736)
+9. **[DONE]** IgxGrid filter: IgxDatePicker.weekStart not changable [#10852](https://github.com/IgniteUI/igniteui-angular/issues/10852)
+
+## Milestone 22, version 14.0 (Released June 09th, 2022)
 
 1. **[DONE]** Support for Angular 14.0.0.
 2. **[DONE]** IgxCalendar: set weekStart globally [#10543](https://github.com/IgniteUI/igniteui-angular/issues/10543)
 3. **[DONE]** Hide delete and edit buttons in grid action strip [#11578](https://github.com/IgniteUI/igniteui-angular/issues/11578)
 
-## Milestone 21 (Released May 25th, 2022)
+## Milestone 21, version 13.2 (Released May 25th, 2022)
 
 1. **[DONE]** Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
 2. **[DONE]** Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
@@ -41,7 +48,7 @@
 5. **[DONE]** Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
 6. **[DONE]** [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
 
-## Milestone 20 (Released March 2nd, 2022)
+## Milestone 20, version 13.1 (Released March 2nd, 2022)
 
 1. **[DONE]** Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
 2. **[DONE]** igx-tree-grid:excel-style filtering should show children of parent elements returned from the filter [#10342](https://github.com/IgniteUI/igniteui-angular/issues/10342)
@@ -49,7 +56,7 @@
 6. **[DONE]** Tabs component does not support RTL [#5904](https://github.com/IgniteUI/igniteui-angular/issues/5904)
 7. **[DONE]** Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
 
-## Milestone 19 (Released November 23rd, 2021)
+## Milestone 19, version 13.0 (Released November 23rd, 2021)
 
 1. **[DONE]** Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 2. **[DONE]** Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
