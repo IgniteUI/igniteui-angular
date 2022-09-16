@@ -1330,7 +1330,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
-    public rowAddText: TemplateRef<any>;
+    public rowAddText: TemplateRef<null>;
 
     /**
      * @hidden @internal

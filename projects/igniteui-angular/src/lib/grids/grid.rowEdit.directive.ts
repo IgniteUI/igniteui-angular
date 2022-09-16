@@ -27,7 +27,12 @@ export class IgxRowEditTextDirective {
 @Directive({
     selector: '[igxRowAddText]'
 })
-export class IgxRowAddTextDirective { }
+export class IgxRowAddTextDirective {
+    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
+        context: unknown): context is null { 
+        return true;
+    };
+ }
 
 /** @hidden @internal */
 @Directive({
