@@ -1,11 +1,16 @@
 import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IgxGridRowEditTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxRowEdit]'
 })
-export class IgxRowEditTemplateDirective { }
+export class IgxRowEditTemplateDirective {
+    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
+        context: unknown): context is IgxGridRowEditTemplateContext { 
+        return true;
+    };
+ }
 
 /** @hidden @internal */
 @Directive({
