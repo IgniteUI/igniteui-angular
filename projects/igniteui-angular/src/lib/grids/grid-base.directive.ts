@@ -132,6 +132,7 @@ import {
     IGridValidationStatusEventArgs,
     IgxGridEmptyTemplateContext,
     IgxGridHeaderTemplateContext,
+    IgxGridRowDragGhostContext,
     IgxGridRowEditActionsTemplateContext,
     IgxGridRowEditTemplateContext,
     IgxGridRowEditTextTemplateContext,
@@ -1221,7 +1222,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
-    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+    public dragGhostCustomTemplates: QueryList<TemplateRef<IgxGridRowDragGhostContext>>;
 
     /**
      * @hidden @internal

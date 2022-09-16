@@ -718,6 +718,12 @@ export interface IgxGridRowTemplateContext {
     $implicit: RowType
 }
 
+export interface IgxGridRowDragGhostContext {
+    $implicit: any, // this is the row data
+    data: any, // this is also the row data for some reason.
+    grid: GridType
+}
+
 export interface IgxGridEmptyTemplateContext {
     $implicit: undefined
 }
