@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
-import { GridType, IgxGridRowEditTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
 @Directive({
@@ -16,7 +16,12 @@ export class IgxRowEditTemplateDirective {
 @Directive({
     selector: '[igxRowEditText]'
 })
-export class IgxRowEditTextDirective { }
+export class IgxRowEditTextDirective {
+    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
+        context: unknown): context is IgxGridRowEditTextTemplateContext { 
+        return true;
+    };
+ }
 
 /** @hidden @internal */
 @Directive({

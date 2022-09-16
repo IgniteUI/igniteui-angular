@@ -721,7 +721,11 @@ export interface IgxGridRowTemplateContext {
 export interface IgxGridRowEditTemplateContext {
     $implicit: undefined,
     rowChangesCount: number,
-    endEdit?: () => void
+    endEdit: () => void
+}
+
+export interface IgxGridRowEditTextTemplateContext {
+    $implicit?: number;
 }
 
 export interface IgxGridHeaderTemplateContext {
