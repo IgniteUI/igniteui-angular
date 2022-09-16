@@ -136,7 +136,8 @@ export class IgxGridRowStylesPipe implements PipeTransform {
         }
         for (const prop of Object.keys(styles)) {
             const cb = styles[prop];
-            const row = new IgxGridRow((this.grid as any), index, rowData);
+            const data = this.grid.isTreeRow && this.grid.isTreeRow(rowData) ? rowData.data : rowData;
+            const row = new IgxGridRow((this.grid as any), index, data);
             css[prop] = typeof cb === 'function' ? cb(row) : cb;
         }
         return css;
