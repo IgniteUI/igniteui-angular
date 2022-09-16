@@ -53,7 +53,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             // TODO: Extend `NgElement` interface with Igx-specific prop(s) (const!) for the strategy so this can be accessed cleanly?
-            parentInjector = parent['ngElementStrategy']['componentRef'].injector as Injector;
+            parentInjector = parent['ngElementStrategy']['componentRef'] ?
+             parent['ngElementStrategy']['componentRef'].injector as Injector :
+             parent['ngElementStrategy']['injector'] as Injector;
         }
 
         // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
@@ -109,6 +111,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
 
             for (const query of contentQueries) {
+                Promise.resolve().then(() => {
                 const parentRef = parent['ngElementStrategy']['componentRef'] as ComponentRef<any>;
 
                 if (query.isQueryList) {
@@ -119,6 +122,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     parentRef.instance[query.property] = componentRef.instance;
                 }
                 parentRef.changeDetectorRef.detectChanges();
+               });
             }
         }
     }

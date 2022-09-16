@@ -96,7 +96,9 @@
   <!-- END IgxTreeGridComponent -->
 
   <igc-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-      <igc-row-island auto-generate="true" key="Developers"></igc-row-island>
+      <igc-row-island auto-generate="true" key="Developers">
+        <igc-row-island auto-generate="true" key="VirtualMachines"></igc-row-island>
+      </igc-row-island>
   </igc-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->

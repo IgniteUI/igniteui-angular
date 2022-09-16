@@ -58,7 +58,10 @@ import { IGridCreatedEventArgs } from './events';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: ``,
+    template: `<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column"></ng-content>
+    <ng-content select="igx-row-island,igc-row-island"></ng-content>
+    </div>`,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
