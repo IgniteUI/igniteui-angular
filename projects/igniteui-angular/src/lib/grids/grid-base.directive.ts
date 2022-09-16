@@ -130,6 +130,7 @@ import {
     GridType,
     IGridFormGroupCreatedEventArgs,
     IGridValidationStatusEventArgs,
+    IgxGridEmptyTemplateContext,
     IgxGridHeaderTemplateContext,
     IgxGridRowEditActionsTemplateContext,
     IgxGridRowEditTemplateContext,
@@ -1393,7 +1394,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
-    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
 
     /**
      * @hidden @internal
@@ -2394,11 +2395,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      */
-    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+    public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
 
-    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+    public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._customDragIndicatorIconTemplate = val;
     }
 
@@ -2867,7 +2868,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _currentRowState: any;
     private _filteredSortedData = null;
 
-    private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
