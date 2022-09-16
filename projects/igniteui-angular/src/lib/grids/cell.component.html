@@ -177,7 +177,7 @@
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
 <ng-container *ngIf="isInvalid">
-    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" 
+    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef"  [igxToggleOutlet]="grid.outlet"
     (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
     <div [id]="ariaErrorMessage"
     igxTooltip #error #tooltipRef="tooltip">
