@@ -72,9 +72,10 @@ export class WorksheetFile implements IExcelFile {
     private rowIndex = 0;
 
     private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
+    private hierarchicalDimensionMap: Map<any,  Map<string, Dimensions>> = new Map<any,  Map<string, Dimensions>>();
     private currentSummaryOwner = '';
-
-    private _firstDataRec = Number.MAX_VALUE;
+    private currentHierarchicalOwner = '';
+    private firstDataRow = Number.MAX_VALUE;
 
     public writeElement() {}
 
@@ -343,13 +344,11 @@ export class WorksheetFile implements IExcelFile {
         rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
+        const isDataOrHierarchicalRecord = record.type === ExportRecordType.DataRecord || record.type === ExportRecordType.HierarchicalGridRecord;
+        const isValidRecordType = isDataOrHierarchicalRecord || record.type === ExportRecordType.SummaryRecord;
 
-        if (record.type === ExportRecordType.DataRecord && worksheetData.hasSummaries) {
-            if (this.currentSummaryOwner !== record.summaryKey && this.currentSummaryOwner !== '') {
-                this.dimensionMap.clear();
-            }
-
-            this.currentSummaryOwner = record.summaryKey;
+        if (isValidRecordType && worksheetData.hasSummaries) {
+            this.resolveSummaryDimensions(record, isDataOrHierarchicalRecord, worksheetData.isHierarchical)
         }
 
         for (let j = 0; j < keys.length; j++) {
@@ -365,61 +364,22 @@ export class WorksheetFile implements IExcelFile {
         return rowData.join('');
     }
 
-    private getSummaryFunction(type: string, key: string): string {
-        const dimensions = this.dimensionMap.get(key);
-        switch(type.toLowerCase()) {
-            case "count":
-                return `"Count - "&amp;SUMPRODUCT(--(NOT(_xlfn.ISFORMULA(${dimensions.startCoordinate}:${dimensions.endCoordinate}))))`
-            case "countnum":
-                return `"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "min":
-                return `"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "max":
-                return `"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "sum":
-                return `"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "avg":
-                return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "earliest":
-                return `CONCATENATE("Earliest - ", TEXT(MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
-            case "latest":
-                return `CONCATENATE("Latest - ", TEXT(MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
-
-
-        }
-    }
-
     private getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
         const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
-        const isValidRecordType = fullRow.type === ExportRecordType.DataRecord ||  fullRow.type === ExportRecordType.HierarchicalGridRecord;
+        const isValidRecordType = fullRow.type === ExportRecordType.DataRecord || fullRow.type === ExportRecordType.HierarchicalGridRecord;
 
-        if (isValidRecordType && this._firstDataRec > this.rowIndex) {
-            this._firstDataRec = this.rowIndex;
-        }
+        this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
 
         if (worksheetData.hasSummaries && isValidRecordType) {
-            if (!this.dimensionMap.get(key)) {
-                const initialDimensions: Dimensions = {
-                    startCoordinate: columnName,
-                    endCoordinate: columnName
-                };
-
-                this.dimensionMap.set(key, initialDimensions)
-            } else {
-                this.dimensionMap.get(key).endCoordinate = columnName;
-            }
+            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isHierarchical)
         }
 
-        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY) {
-            const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this._firstDataRec);
-
-            if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
-                this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
-            }
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && !worksheetData.isHierarchical) {
+            this.setRootSummaryStartCoordinate(column, key);
         }
 
         let cellValue = worksheetData.isSpecialData ?
@@ -453,11 +413,99 @@ export class WorksheetFile implements IExcelFile {
             if (isSummaryRecord && cellValue) {
                 const isNumberCol = worksheetData.owner.columns.filter(c => c.field === key)[0]?.dataType === 'number';
                 const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
+                const dimensionMapKey = worksheetData.isHierarchical ? fullRow.hierarchicalOwner ?? 'hierarchical-grid' : null;
 
-                summaryFunc = this.getSummaryFunction(functionType, key);
+                summaryFunc = this.getSummaryFunction(functionType, key, dimensionMapKey);
             }
 
             return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
+        }
+    }
+
+    private resolveSummaryDimensions(record: IExportRecord, isDataOrHierarchicalRecord: boolean, isHierarchicalGrid: boolean) {
+        if (isHierarchicalGrid &&
+            this.currentHierarchicalOwner !== '' &&
+            this.currentHierarchicalOwner !== record.owner &&
+            !this.hierarchicalDimensionMap.get(this.currentHierarchicalOwner)) {
+            this.hierarchicalDimensionMap.set(this.currentHierarchicalOwner, new Map(this.dimensionMap))
+        }
+
+        if (isDataOrHierarchicalRecord) {
+            if (this.currentSummaryOwner !== record.summaryKey) {
+                this.dimensionMap.clear();
+            }
+
+            this.currentSummaryOwner = record.summaryKey;
+            this.currentHierarchicalOwner = record.hierarchicalOwner;
+        }
+    }
+
+    private setSummaryCoordinates(columnName: string, key: string, hierarchicalOwner: string, isHierarchicalGrid: boolean) {
+        const targetDimensionMap = this.hierarchicalDimensionMap.get(hierarchicalOwner) ?? this.dimensionMap;
+
+        if (!targetDimensionMap.get(key)) {
+            const initialDimensions: Dimensions = {
+                startCoordinate: columnName,
+                endCoordinate: columnName
+            };
+
+            targetDimensionMap.set(key, initialDimensions)
+        } else {
+            targetDimensionMap.get(key).endCoordinate = columnName;
+        }
+
+        if (isHierarchicalGrid && hierarchicalOwner !== 'hierarchical-grid') {
+            const map = this.hierarchicalDimensionMap.get('hierarchical-grid');
+
+            for (const a of map.values()) {
+               const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
+               a.endCoordinate = `${colName}${this.rowIndex}`;
+            }
+        }
+
+    }
+
+    private getSummaryFunction(type: string, key: string, dimensionMapKey: any): string {
+        const dimensionMap = dimensionMapKey ? this.hierarchicalDimensionMap.get(dimensionMapKey) : this.dimensionMap;
+        const dimensions = dimensionMap.get(key);
+
+        switch(type.toLowerCase()) {
+            // case "count":
+            //     return `"Count - "&amp;SUMPRODUCT(--(NOT(_xlfn.ISFORMULA(${dimensions.startCoordinate}:${dimensions.endCoordinate}))))`
+            // case "countnum":
+            //     return `"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            // case "min":
+            //     return `"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            // case "max":
+            //     return `"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            // case "sum":
+            //     return `"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            // case "avg":
+            //     return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "count":
+                return `"Count - "&amp;_xlfn.AGGREGATE(3, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "countnum":
+                return `"Count - "&amp;_xlfn.AGGREGATE(2, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "min":
+                return `"Min - "&amp;_xlfn.AGGREGATE(5, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "max":
+                return `"Max - "&amp;_xlfn.AGGREGATE(4, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "sum":
+                return `"Sum - "&amp;_xlfn.AGGREGATE(9, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "avg":
+                return `"Avg - "&amp;_xlfn.AGGREGATE(1, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+            case "earliest":
+                return `CONCATENATE("Earliest - ", TEXT(MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+            case "latest":
+                return `CONCATENATE("Latest - ", TEXT(MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+        }
+    }
+
+    private setRootSummaryStartCoordinate(column: number, key: string) {
+        const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this.firstDataRow);
+
+        if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
+            this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
         }
     }
 }

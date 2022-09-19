@@ -37,6 +37,7 @@ export interface IExportRecord {
     owner?: string | GridType;
     hidden?: boolean;
     summaryKey?: string;
+    hierarchicalOwner?: string;
 }
 
 export interface IColumnList {
@@ -199,6 +200,7 @@ export abstract class IgxBaseExporter {
     private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
     private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
+    private rowIslandCounter = 0;
 
     /**
      * Method for exporting IgxGrid component's data.
@@ -571,6 +573,7 @@ export abstract class IgxBaseExporter {
                 level: 0,
                 type: ExportRecordType.HierarchicalGridRecord,
                 owner: grid,
+                hierarchicalOwner: 'hierarchical-grid'
             };
 
             this.flatRecords.push(hierarchicalGridRecord);
@@ -684,6 +687,7 @@ export abstract class IgxBaseExporter {
 
     private getAllChildColumnsAndData(island: any,
         childData: any[], expansionStateVal: boolean, grid: GridType) {
+        const hierarchicalOwner = `row-island-${++this.rowIslandCounter}`;
         const columnList = this._ownersMap.get(island).columns;
         const columnHeader = columnList
             .filter(col => col.headerType === HeaderType.ColumnHeader)
@@ -694,7 +698,8 @@ export abstract class IgxBaseExporter {
             level: island.level,
             type: ExportRecordType.HeaderRecord,
             owner: island,
-            hidden: !expansionStateVal
+            hidden: !expansionStateVal,
+            hierarchicalOwner
         };
 
         if (childData && childData.length > 0) {
@@ -706,9 +711,11 @@ export abstract class IgxBaseExporter {
                     level: island.level,
                     type: ExportRecordType.HierarchicalGridRecord,
                     owner: island,
-                    hidden: !expansionStateVal
+                    hidden: !expansionStateVal,
+                    hierarchicalOwner
                 };
 
+                exportRecord.summaryKey = island.key;
                 this.flatRecords.push(exportRecord);
 
                 if (island.children.length > 0) {
@@ -737,7 +744,7 @@ export abstract class IgxBaseExporter {
                 const summaries = this.prepareSummaries(grid);
                 for (const k of summaries.keys()) {
                     const summary = summaries.get(k);
-                    this.setSummaries(k, island.level, !expansionStateVal, island, summary)
+                    this.setSummaries(island.key, island.level, !expansionStateVal, island, summary, hierarchicalOwner)
                 }
             }
         }
@@ -842,13 +849,13 @@ export abstract class IgxBaseExporter {
             let summaryLevel = record.level;
             let summaryHidden = !parentExpanded;
 
-            const hierarchicalRecord: IExportRecord = {
+            const treeGridRecord: IExportRecord = {
                 data: record.data,
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.TreeGridRecord
             };
-            this.flatRecords.push(hierarchicalRecord);
+            this.flatRecords.push(treeGridRecord);
 
             if (record.children) {
                 for (const rc of record.children) {
@@ -895,7 +902,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any, summary?: Map<string, IgxSummaryResult[]>) {
+    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any, summary?: Map<string, IgxSummaryResult[]>, hierarchicalOwner?: string) {
         const rootSummary = summary ?? this.summaries.get(summaryKey);
 
         if (rootSummary) {
@@ -915,7 +922,8 @@ export abstract class IgxBaseExporter {
                     type: ExportRecordType.SummaryRecord,
                     level,
                     hidden,
-                    summaryKey
+                    summaryKey,
+                    hierarchicalOwner
                 };
 
                 if (owner) {
@@ -1174,6 +1182,7 @@ export abstract class IgxBaseExporter {
         this.flatRecords = [];
         this.options = {} as IgxExporterOptionsBase;
         this._ownersMap.clear();
+        this.rowIslandCounter = 0;
     }
 
     protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase, done: () => void): void;
