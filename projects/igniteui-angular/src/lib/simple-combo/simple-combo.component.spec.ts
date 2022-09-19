@@ -1213,6 +1213,43 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBe('NaN');
             expect(combo.selection).toEqual([ NaN ]);
         });
+
+        it('should select falsy values with "writeValue" method', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            combo.data = [
+                { field: '0', value: 0 },
+                { field: 'false', value: false },
+                { field: 'empty', value: '' },
+                { field: 'undefined', value: undefined },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
+            ];
+
+            combo.writeValue(0);
+            expect(combo.selection).toEqual([0]);
+            expect(combo.value).toBe('0');
+
+            combo.writeValue(false);
+            expect(combo.selection).toEqual([false]);
+            expect(combo.value).toBe('false');
+
+            combo.writeValue('');
+            expect(combo.selection).toEqual(['']);
+            expect(combo.value).toBe('empty');
+
+            combo.writeValue(undefined);
+            expect(combo.selection).toEqual([undefined]);
+            expect(combo.value).toBe('undefined');
+
+            combo.writeValue(null);
+            expect(combo.selection).toEqual([null]);
+            expect(combo.value).toBe('null');
+
+            combo.writeValue(NaN);
+            expect(combo.selection).toEqual([NaN]);
+            expect(combo.value).toBe('NaN');
+        });
     });
 
     describe('Display density', () => {
