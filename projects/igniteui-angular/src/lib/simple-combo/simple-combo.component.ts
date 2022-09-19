@@ -177,7 +177,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public writeValue(value: any): void {
         const oldSelection = this.selection;
         // the second check is used when value is undefined, i.e., item with valueKey=undefined is selected
-        let hasSelection = value !== undefined || this.valueKey && this.data.find(x => x[this.valueKey] === undefined);
+        const hasSelection = value !== undefined || this.valueKey && this.data.find(x => x[this.valueKey] === undefined);
         this.selectionService.select_items(this.id, hasSelection ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
