@@ -130,7 +130,12 @@ import {
     GridType,
     IGridFormGroupCreatedEventArgs,
     IGridValidationStatusEventArgs,
+    IgxGridEmptyTemplateContext,
     IgxGridHeaderTemplateContext,
+    IgxGridRowDragGhostContext,
+    IgxGridRowEditActionsTemplateContext,
+    IgxGridRowEditTemplateContext,
+    IgxGridRowEditTextTemplateContext,
     IgxGridRowTemplateContext,
     IgxGridTemplateContext,
     IGX_GRID_SERVICE_BASE,
@@ -1218,7 +1223,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
-    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+    public dragGhostCustomTemplates: QueryList<TemplateRef<IgxGridRowDragGhostContext>>;
 
     /**
      * @hidden @internal
@@ -1317,25 +1322,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditTemplateDirective, { descendants: false, read: TemplateRef })
-    public rowEditCustomDirectives: QueryList<TemplateRef<any>>;
+    public rowEditCustomDirectives: QueryList<TemplateRef<IgxGridRowEditTemplateContext>>;
 
     /**
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditTextDirective, { descendants: false, read: TemplateRef })
-    public rowEditTextDirectives: QueryList<TemplateRef<any>>;
+    public rowEditTextDirectives: QueryList<TemplateRef<IgxGridRowEditTextTemplateContext>>;
 
     /**
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
-    public rowAddText: TemplateRef<any>;
+    public rowAddText: TemplateRef<IgxGridEmptyTemplateContext>;
 
     /**
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
-    public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
+    public rowEditActionsDirectives: QueryList<TemplateRef<IgxGridRowEditActionsTemplateContext>>;
 
 
     /**
@@ -1391,7 +1396,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
-    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
 
     /**
      * @hidden @internal
@@ -1468,7 +1473,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
-    private defaultRowEditTemplate: TemplateRef<any>;
+    private defaultRowEditTemplate: TemplateRef<IgxGridRowEditTemplateContext>;
 
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
@@ -2355,7 +2360,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditCustom(): TemplateRef<any> {
+    public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
         }
@@ -2365,7 +2370,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditText(): TemplateRef<any> {
+    public get rowEditText(): TemplateRef<IgxGridRowEditTextTemplateContext> {
         if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
             return this.rowEditTextDirectives.first;
         }
@@ -2375,7 +2380,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditActions(): TemplateRef<any> {
+    public get rowEditActions(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
         if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
             return this.rowEditActionsDirectives.first;
         }
@@ -2385,18 +2390,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditContainer(): TemplateRef<any> {
+    public get rowEditContainer(): TemplateRef<IgxGridRowEditTemplateContext> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
 
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      */
-    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+    public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
 
-    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+    public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._customDragIndicatorIconTemplate = val;
     }
 
@@ -2865,7 +2870,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _currentRowState: any;
     private _filteredSortedData = null;
 
-    private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
