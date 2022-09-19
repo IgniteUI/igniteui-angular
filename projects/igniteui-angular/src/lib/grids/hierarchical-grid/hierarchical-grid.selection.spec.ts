@@ -656,6 +656,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith({
+                isSelectAllClicked: false,
                 added: ['00'],
                 cancel: false,
                 event: mockEvent,
@@ -673,6 +674,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(childSpy).toHaveBeenCalledWith({
+                isSelectAllClicked: false,
                 added: ['01'],
                 cancel: false,
                 event: mockEvent,
@@ -691,6 +693,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(1);
             expect(parentSpy).toHaveBeenCalledWith({
+                isSelectAllClicked: false,
                 added: ['1'],
                 cancel: false,
                 event: mockEvent,
@@ -707,6 +710,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledWith({
+                isSelectAllClicked: true,
                 added: ['0', '2', '3', '4'],
                 cancel: false,
                 event: mockEvent,
