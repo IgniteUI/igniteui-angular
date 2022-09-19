@@ -1,7 +1,7 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IRecordValidationState, IgxGridValidationService, IGridValidationStatusEventArgs } from 'igniteui-angular';
+import {  IgxGridComponent, IRecordValidationState, IgxGridValidationService, IGridValidationStatusEventArgs, RowType } from 'igniteui-angular';
 import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
@@ -37,6 +37,11 @@ export class GridValidationSampleComponent {
     public rowEditNoTransactions = true;
     public transactionData = JSON.parse(JSON.stringify(data));
     public data = data;
+    public rowStyles = {
+      background: (row: RowType) => {
+          return row.validation.status === 'INVALID' ? '#FF000033' : '#00000000';
+      } 
+  };
     public columns = [
         { field: 'ProductID' },
         { field: 'ProductName' },
