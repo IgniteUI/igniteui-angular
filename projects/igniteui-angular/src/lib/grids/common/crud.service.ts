@@ -97,7 +97,7 @@ export class IgxCell {
         public rowIndex: number,
         public column,
         public value: any,
-        private _editValue: any,
+        public _editValue: any,
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
@@ -113,10 +113,13 @@ export class IgxCell {
 
     public set editValue(value) {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
-        formControl.setValue(value);
+        
         if (this.grid.validationTrigger === 'change') {
             // in case trigger is change, mark as touched.
+            formControl.setValue(value);
             formControl.markAsTouched();
+        } else {
+            this._editValue = value;
         }
     }
 
@@ -218,6 +221,13 @@ export class IgxCellCrudState {
             return;
         }
 
+        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
+        if (this.grid.validationTrigger === 'blur') {
+            // in case trigger is blur, update value and mark as touched.
+            formControl.setValue(this.cell._editValue);
+            formControl.markAsTouched();
+        }
+
         let doneArgs;
         if (isEqual(this.cell.value, this.cell.editValue)) {
             doneArgs = this.exitCellEdit(event);
@@ -259,8 +269,6 @@ export class IgxCellCrudState {
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
         this.cell.value = newValue;
-        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
-        formControl.markAsTouched();
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
