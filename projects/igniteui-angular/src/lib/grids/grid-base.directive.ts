@@ -132,6 +132,7 @@ import {
     IGridValidationStatusEventArgs,
     IgxGridHeaderTemplateContext,
     IgxGridRowTemplateContext,
+    IgxGridTemplateContext,
     IGX_GRID_SERVICE_BASE,
     ISizeInfo,
     RowType
@@ -1353,13 +1354,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a header expand indicator.
      */
     @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
-    public headerExpandIndicatorTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header collapse indicator.
      */
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
-    public headerCollapseIndicatorTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
