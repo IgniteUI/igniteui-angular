@@ -947,6 +947,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         });
 
+        this.rowSelectionChanging.subscribe((args) => {
+            if (args?.isSelectAllClicked) {
+                this.selectAllRows();
+            }
+        });
+
         this.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe((sortingExpressions: ISortingExpression[]) => {
             if (!this.groupingExpressions || !this.groupingExpressions.length) {
                 return;
