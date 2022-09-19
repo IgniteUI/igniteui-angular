@@ -1379,7 +1379,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxComboRemoteDataComponent
+                    IgxComboRemoteDataComponent,
+                    IgxSimpleComboBindingDataAfterInitComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1407,9 +1408,18 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect((combo as any)._remoteSelection[0]).toBeUndefined();
         });
+        it('should add predefined selection to the input when data is bound after initialization', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboBindingDataAfterInitComponent);
+            fixture.detectChanges();
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            tick(1200);
+            fixture.detectChanges();
+
+            const expectedOutput = 'One';
+            expect(input.nativeElement.value).toEqual(expectedOutput);
+        }));
     });
 });
-
 @Component({
     template: `
 <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
@@ -1612,5 +1622,24 @@ class IgxSimpleComboInTemplatedFormComponent {
                 });
             });
         }
+    }
+}
+
+@Component({
+    template: `
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`
+})
+export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
+    public items: any[];
+    public selectedItem: number = 1;
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
+            { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
+            this.cdr.detectChanges();
+        }, 1000)
     }
 }

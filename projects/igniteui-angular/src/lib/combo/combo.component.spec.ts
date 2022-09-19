@@ -1918,7 +1918,8 @@ describe('igxCombo', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent,
-                    IgxComboRemoteDataComponent
+                    IgxComboRemoteDataComponent,
+                    IgxComboBindingDataAfterInitComponent
                 ],
                 imports: [
                     IgxComboModule,
@@ -2207,6 +2208,16 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect((combo as any)._remoteSelection[0]).toBeUndefined();
         });
+        it('should add predefined selection to the input when data is bound after initialization', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxComboBindingDataAfterInitComponent);
+            fixture.detectChanges();
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            tick(1200);
+            fixture.detectChanges();
+
+            const expectedOutput = 'One';
+            expect(input.nativeElement.value).toEqual(expectedOutput);
+        }));
     });
     describe('Grouping tests: ', () => {
         configureTestSuite();
@@ -3222,6 +3233,29 @@ class="input-container" [filterable]="true" placeholder="Location(s)"
 `
 })
 
+@Component({
+    template: `
+<form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+<p>
+<label>First Name:</label>
+<input type="text" formControlName="firstName">
+</p>
+<p>
+<label>Password:</label>
+<input type="password" formControlName="password">
+</p>
+<p>
+<igx-combo #comboReactive formControlName="townCombo"
+class="input-container" [filterable]="true" placeholder="Location(s)"
+[data]="items" [displayKey]="'field'" [groupKey]="'region'"><label igxLabel>Town</label></igx-combo>
+</p>
+<p>
+<button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+</p>
+</form>
+`
+})
+
 class IgxComboFormComponent {
     @ViewChild('comboReactive', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
@@ -3492,5 +3526,24 @@ export class ComboModelBindingComponent implements OnInit {
     public ngOnInit() {
         this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
         { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
+    }
+}
+
+@Component({
+    template: `
+        <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`
+})
+export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
+    public items: any[] = [];
+    public selectedItems: any[] = [0];
+
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+            { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
+            this.cdr.detectChanges();
+        }, 1000);
     }
 }
