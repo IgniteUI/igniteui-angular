@@ -91,6 +91,7 @@ export interface IgxAddRowParent {
 export class IgxCell {
     public primaryKey: any;
     public state: any;
+    public pendingValue: any;
 
     constructor(
         public id,
@@ -101,7 +102,6 @@ export class IgxCell {
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
-        this.editValue = this._editValue;
     }
 
     public get editValue() {
@@ -119,7 +119,7 @@ export class IgxCell {
             formControl.setValue(value);
             formControl.markAsTouched();
         } else {
-            this._editValue = value;
+            this.pendingValue = value;
         }
     }
 
@@ -222,9 +222,9 @@ export class IgxCellCrudState {
         }
 
         const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
-        if (this.grid.validationTrigger === 'blur') {
-            // in case trigger is blur, update value and mark as touched.
-            formControl.setValue(this.cell._editValue);
+        if (this.grid.validationTrigger === 'blur' && this.cell.pendingValue !== undefined) {
+            // in case trigger is blur, update value if there's a pending one and mark as touched.
+            formControl.setValue(this.cell.pendingValue);
             formControl.markAsTouched();
         }
 
