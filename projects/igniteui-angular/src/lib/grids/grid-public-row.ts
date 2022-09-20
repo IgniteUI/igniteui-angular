@@ -4,7 +4,7 @@ import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } fro
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
-import mergeWith from 'lodash.mergewith';
+import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
