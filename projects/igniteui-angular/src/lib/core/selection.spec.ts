@@ -10,7 +10,13 @@ describe('IgxSelectionAPIService', () => {
         expect(() => service.set(undefined, new Set())).toThrowError('Invalid value for component id!');
     });
 
-    it('call add_item method with falsy itemID', () => {
+    it('call add_item method with undefined itemID', () => {
+        const componentId = 'id1';
+        service.set(componentId, new Set());
+        expect(() => service.add_item(componentId, undefined)).toThrowError('Invalid value for item id!');
+    });
+
+    it('call add_item method with other falsy itemID', () => {
         const componentId = 'id1';
         service.set(componentId, new Set());
 
@@ -23,13 +29,10 @@ describe('IgxSelectionAPIService', () => {
         const selection3 = service.add_item(componentId, null);
         expect(selection3.has(null)).toBe(true);
 
-        const selection4 = service.add_item(componentId, undefined);
-        expect(selection4.has(undefined)).toBe(true);
+        const selection4 = service.add_item(componentId, '');
+        expect(selection4.has('')).toBe(true);
 
-        const selection5 = service.add_item(componentId, '');
-        expect(selection5.has('')).toBe(true);
-
-        const selection6 = service.add_item(componentId, NaN);
-        expect(selection6.has(NaN)).toBe(true);
+        const selection5 = service.add_item(componentId, NaN);
+        expect(selection5.has(NaN)).toBe(true);
     });
 });
