@@ -6,6 +6,16 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+        display: grid;
+        gap: 16px;
+        grid-auto-rows: minmax(400px, max-content);
+    }
+    igc-grid {
+        max-height: 550px;
+    }
+  </style>
 </head>
 <body class="igx-typography">
     <!-- <app-wrapper>
@@ -26,31 +36,33 @@
     </script> -->
 
   <!-- IgxGridComponent -->
-  <igc-grid id="grid1" moving="true" paging="true" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-    <igc-grid-toolbar>
-      <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
-      <igc-grid-toolbar-actions>
-        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
-        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
-        <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
-      </igc-grid-toolbar-actions>
-    </igc-grid-toolbar>
 
-    <igc-column field="ProductID" header="Product ID" data-type="number" width="25%"></igc-column>
-    <igc-column field="ProductName" header="Product Name" sortable="true" width="25%"></igc-column>
-    <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true" width="25%"></igc-column>
-    <igc-column field="InStock" header="In Stock" data-type="number" width="25%"></igc-column>
-
-    <igc-paginator per-page="10"></igc-paginator>
-  </igc-grid>
 
   <div>
-      <button onclick="changeColumns()">Change columns</button>
-      <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
-      <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
-      <button onclick="grid1.displayDensity = 'compact'">Compact</button>
-      <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
-      <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
+    <igc-grid id="grid1" moving="true" paging="true" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
+
+        <igc-column field="ProductID" header="Product ID" data-type="number" width="25%"></igc-column>
+        <igc-column field="ProductName" header="Product Name" sortable="true" width="25%"></igc-column>
+        <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true" width="25%"></igc-column>
+        <igc-column field="InStock" header="In Stock" data-type="number" width="25%"></igc-column>
+
+        <igc-paginator per-page="10"></igc-paginator>
+    </igc-grid>
+
+    <button onclick="changeColumns()">Change columns</button>
+    <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+    <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+    <button onclick="grid1.displayDensity = 'compact'">Compact</button>
+    <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
+    <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
   </div>
 
   <script src="assets/data/nw-products.js"></script>

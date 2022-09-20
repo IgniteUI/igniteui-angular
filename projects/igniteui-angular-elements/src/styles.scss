@@ -8,8 +8,3 @@ $palette: igx.$light-material-palette;
 @include igx.core();
 @include igx.typography();
 @include igx.bootstrap-light-theme($palette: $palette);
-
-body {
-    display: grid;
-    gap: 16px;
-}
