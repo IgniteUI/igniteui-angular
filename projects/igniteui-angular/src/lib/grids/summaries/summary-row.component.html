@@ -13,7 +13,6 @@
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]='"calcPixelWidth"' #igxDirRef>
         <igx-grid-summary-cell
             class="igx-grid-summary igx-grid-summary--fw"
-            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
             role="cell"
             [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
             [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"
@@ -43,7 +42,6 @@
 <ng-template #summaryCellTemplate let-col>
     <igx-grid-summary-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
             role="cell"
-            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
             class="igx-grid-summary igx-grid-summary--fw igx-grid-summary--pinned"
             [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
             [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"

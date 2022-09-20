@@ -164,6 +164,7 @@ import { IgxStepperSampleComponent } from './stepper/stepper.sample';
 import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
+import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 
 const components = [
     AccordionSampleComponent,
@@ -227,6 +228,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridCellEditingComponent,
+    ForbiddenValidatorDirective,
     GridSampleComponent,
     GridAddRowSampleComponent,
     HierarchicalGridAddRowSampleComponent,
@@ -256,6 +258,7 @@ const components = [
     GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
+    GridValidationSampleComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridLoadOnDemandSampleComponent,
