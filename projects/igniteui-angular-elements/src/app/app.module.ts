@@ -52,7 +52,7 @@ export class AppModule {
     const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column", column);
 
-    const treegrid = createCustomElement(IgxTreeGridComponent, { injector: this.injector });
+    const treegrid = createIgxCustomElement(IgxTreeGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-tree-grid", treegrid);
 
     const hgrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector: this.injector, registerConfig });
@@ -61,7 +61,7 @@ export class AppModule {
     const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
     customElements.define("igc-row-island", ri);
 
-    const pivot = createCustomElement(IgxPivotGridComponent, { injector: this.injector });
+    const pivot = createIgxCustomElement(IgxPivotGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-pivot-grid", pivot);
 
     const pager = createIgxCustomElement(IgxPaginatorComponent, { injector: this.injector, registerConfig });
