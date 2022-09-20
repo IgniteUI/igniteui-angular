@@ -44,9 +44,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     override async initializeComponent(element: HTMLElement) {
+        if (!element.isConnected) {
+            // D.P. 2022-09-20 do not initialize on connectedCallback that is not actually connected
+            // connectedCallback may be called once your element is no longer connected
+            // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks
+            return;
+        }
+
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
+
         const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         for (const iterator of toBeOrphanedChildren) {
             // TODO: special registration OR config for custom
@@ -68,7 +76,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // select closest of all possible config parents
             parent = element.parentElement.closest(configParents.map(x => x.selector).join(',')) as IgcNgElement;
             // find the respective config entry
-            parentConfig = configParents.find(x => x.selector === parent.tagName.toLocaleLowerCase());
+            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
