@@ -42,6 +42,8 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -238,6 +240,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
         IgxGridCRUDService,
+        IgxGridValidationService,
         IgxGridSelectionService,
         IgxColumnResizingService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
@@ -245,6 +248,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
+        IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
         IgxRowIslandAPIService
@@ -303,7 +307,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     // @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected get headerHierarchyExpander() {
-        return this.theadRow.headerHierarchyExpander;
+        return this.theadRow?.headerHierarchyExpander;
     }
 
     /**
@@ -397,6 +401,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const id = this.id;
         return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
             pg.nativeElement.offsetParent?.id === id);
+    }
+
+    /** @hidden @internal */
+    public get excelStyleFilteringComponent() : IgxGridExcelStyleFilteringComponent {
+        return this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents.first :
+            super.excelStyleFilteringComponent;
     }
 
     /**

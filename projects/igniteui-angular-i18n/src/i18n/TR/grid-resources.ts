@@ -157,7 +157,14 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
-    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_required_validation_error: 'Bu alan gereklidir',
+    igx_grid_min_validation_error: 'En az {0} değeri girilmelidir',
+    igx_grid_max_validation_error: 'En fazla {0} değeri girilmelidir',
+    igx_grid_min_length_validation_error: 'Giriş en az {0} karakter uzunluğunda olmalıdır',
+    igx_grid_max_length_validation_error: 'Giriş, {0} karakterden uzun olmamalıdır',
+    igx_grid_email_validation_error: 'Geçerli bir e-posta adresi girilmelidir',
+    igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor'
 };
 
 /**

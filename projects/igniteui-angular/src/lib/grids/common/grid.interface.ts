@@ -1,4 +1,4 @@
-import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition } from './enums';
+import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -36,6 +36,8 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { FormGroup, ValidationErrors } from '@angular/forms';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -63,6 +65,7 @@ export interface CellType {
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
+    readonly validation?: IGridValidationState;
     readonly?: boolean;
     title?: any;
     width: string;
@@ -84,6 +87,7 @@ export interface RowType {
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
+    readonly validation?: IGridValidationState;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
@@ -128,6 +132,7 @@ export interface ColumnType {
     headerGroup: any;
     // TYPE
     headerCell: any;
+    validators: any[];
 
     headerTemplate: TemplateRef<any>;
     collapsibleIndicatorTemplate?: TemplateRef<any>;
@@ -209,6 +214,32 @@ export interface ColumnType {
     toggleVisibility(value?: boolean): void;
     formatter(value: any, rowData?: any): any;
     populateVisibleIndexes?(): void;
+}
+
+export interface IGridFormGroupCreatedEventArgs {
+    formGroup: FormGroup,
+    owner: GridType
+}
+
+export interface IGridValidationStatusEventArgs {
+    status: ValidationStatus,
+    owner: GridType
+}
+
+export type ValidationStatus = 'VALID' | 'INVALID';
+
+export interface IGridValidationState {
+    readonly status: ValidationStatus;
+    readonly errors?: ValidationErrors;
+}
+
+export interface IRecordValidationState extends IGridValidationState {
+    key: any;
+    fields: IFieldValidationState[];
+}
+
+export interface IFieldValidationState extends IGridValidationState {
+    field: string
 }
 
 export interface GridServiceType {
@@ -359,6 +390,7 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
+    validationTrigger: GridValidationTrigger;
     pinning: IPinningConfig;
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
@@ -390,6 +422,7 @@ export interface GridType extends IGridDataBindable {
     filteredSortedData: any[];
     dataWithAddedInTransactionRows: any[];
     transactions: TransactionService<Transaction, State>;
+    validation: IgxGridValidationService;
     defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
@@ -495,6 +528,8 @@ export interface GridType extends IGridDataBindable {
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
+    formGroupCreated: EventEmitter<IGridFormGroupCreatedEventArgs>;
+    validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;
@@ -663,6 +698,7 @@ export interface PivotGridType extends GridType {
     hasMultipleValues: boolean;
     excelStyleFilterMaxHeight: string;
     excelStyleFilterMinHeight: string;
+    valueChipTemplate: TemplateRef<any>;
 }
 export interface GridSVGIcon {
     name: string;
@@ -672,4 +708,13 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
+}
+
+export interface IgxGridMasterDetailContext {
+    $implicit: any;
+    index: number;
+}
+
+export interface IgxGroupByRowTemplateContext {
+    $implicit: IGroupByRecord;
 }

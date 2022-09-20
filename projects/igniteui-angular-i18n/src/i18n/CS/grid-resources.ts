@@ -157,7 +157,14 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
-    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_required_validation_error: 'Toto pole je povinné',
+    igx_grid_min_validation_error: 'Je třeba zadat hodnotu alespoň {0}',
+    igx_grid_max_validation_error: 'Měla by být zadána hodnota nejvýše {0}',
+    igx_grid_min_length_validation_error: 'Záznam by měl mít alespoň {0} znaků',
+    igx_grid_max_length_validation_error: 'Záznam by neměl mít více než {0} znaků',
+    igx_grid_email_validation_error: 'Je třeba zadat platnou e-mailovou adresu',
+    igx_grid_pattern_validation_error: 'Položka neodpovídá požadovanému vzoru'
 };
 
 /**

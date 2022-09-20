@@ -1,5 +1,5 @@
-<igx-banner #bannerNoSafeConnection class="banner-border" [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
-        Your connections is not private!
+<igx-banner #bannerNoSafeConnection [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
+    Your connections is not private!
     <igx-icon>lock</igx-icon>
 </igx-banner>
 <igx-banner #bannerCookies (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
@@ -7,7 +7,7 @@
     <h5 class="igx-typography__subtitle-1">YOUR COOKIES SETTINGS</h5>
     <hr>
     <span>We asks you to accept cookies for performance, social media and advertising purpose. To get more
-        information click on 'more information' button</span>
+    information click on 'more information' button</span>
     <span>Do you accept these cookies and the processing of personal data involved?</span>
     <igx-banner-actions>
         <button igxButton="flat" igxRipple (click)="moreInfo($event)">MORE INFORMATION</button>
@@ -15,7 +15,7 @@
     </igx-banner-actions>
 </igx-banner>
 
-<div igxLayout igxFlex>
+<div class="sample-actions" igxLayout igxFlex>
     <button igxButton="flat" igxRipple (click)="toggle()">Toggle</button>
     <button igxButton="raised" igxRipple (click)="toggleCustomBanner($event)">Toggle Cookies Banner</button>
 </div>
