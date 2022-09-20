@@ -1,0 +1,37 @@
+{
+  "name": "igniteui-elements-grids",
+  "version": "0.0.1",
+  "description": "Ignite UI for Web Components Grids",
+  "main": "elements.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IgniteUI/igniteui-angular.git"
+  },
+  "keywords": [
+    "Web",
+    "components",
+    "Grids",
+    "UI",
+    "Components",
+    "grid",
+    "table",
+    "hierarchical",
+    "grid",
+    "hierarchical",
+    "table",
+    "tree",
+    "grid",
+    "tree",
+    "table",
+    "pivot"
+  ],
+  "author": "Infragistics",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/IgniteUI/igniteui-angular/issues"
+  },
+  "homepage": "https://github.com/IgniteUI/igniteui-angular#readme"
+}
