@@ -6,11 +6,27 @@ import { ComponentConfig } from './component-config';
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 
+export const ComponentRefKey = Symbol('ComponentRef');
+
+abstract class IgcNgElement extends NgElement {
+    public override readonly ngElementStrategy: IgxCustomNgElementStrategy;
+}
+
 /**
  * Custom Ignite UI for Angular Elements strategy
  */
 class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
+    private setComponentRef: (value: ComponentRef<any>) => void;
+
+    /**
+     * Resolvable component reference.
+     * The parent instance can/will still be creating when children connect
+     * or will move them around in the DOM and still trigger connect out-of-order.
+     * This can be awaited by the children so they can resolve their parent ref
+     * after they've been moved and the parent is done initializing.
+     */
+    public [ComponentRefKey] = new Promise<ComponentRef<any>>((resolve, _) => this.setComponentRef = resolve);
 
     private _templateWrapper : TemplateWrapperComponent;
     protected get templateWrapper() : TemplateWrapperComponent {
@@ -27,14 +43,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super(_componentFactory, _injector);
     }
 
-    override initializeComponent(element: HTMLElement) {
+    override async initializeComponent(element: HTMLElement) {
+        // set componentRef to non-null to prevent DOM moves from re-initializing
+        // TODO: Fail handling or cancellation needed?
+        (this as any).componentRef = {};
         const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
         for (const iterator of toBeOrphanedChildren) {
             // TODO: special registration OR config for custom
         }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
-        let parent: NgElement;
+        let parent: IgcNgElement;
         let parentConfig: ComponentConfig;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
         if (componentConfig) {
@@ -47,15 +66,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         if (configParents?.length) {
             // select closest of all possible config parents
-            parent = element.parentElement.closest(configParents.map(x => x.selector).join(',')) as NgElement;
+            parent = element.parentElement.closest(configParents.map(x => x.selector).join(',')) as IgcNgElement;
             // find the respective config entry
             parentConfig = configParents.find(x => x.selector === parent.tagName.toLocaleLowerCase());
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
-            // TODO: Extend `NgElement` interface with Igx-specific prop(s) (const!) for the strategy so this can be accessed cleanly?
-            parentInjector = parent['ngElementStrategy']['componentRef'] ?
-             parent['ngElementStrategy']['componentRef'].injector as Injector :
-             parent['ngElementStrategy']['injector'] as Injector;
+            const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+            parentInjector = parentComponentRef?.injector;
         }
 
         // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
@@ -63,7 +80,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
             // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
             // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-            parentAnchor = parent['ngElementStrategy']['componentRef'].instance.anchor;
+            const parentComponentRef = await parent.ngElementStrategy[ComponentRefKey];
+            parentAnchor = parentComponentRef?.instance.anchor;
         }
 
         // need to be able to reset the injector (as protected) to the parent's to call super normally
@@ -77,6 +95,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
          const projectableNodes =
              extractProjectableNodes(element, this._componentFactory.ngContentSelectors);
          (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
+         this.setComponentRef((this as any).componentRef);
          (this as any).viewChangeDetectorRef = (this as any).componentRef.injector.get(ChangeDetectorRef);
 
          (this as any).implementsOnChanges = isFunction(((this as any).componentRef.instance as OnChanges).ngOnChanges);
@@ -111,8 +130,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
 
             for (const query of contentQueries) {
-                Promise.resolve().then(() => {
-                const parentRef = parent['ngElementStrategy']['componentRef'] as ComponentRef<any>;
+                const parentRef = await parent.ngElementStrategy[ComponentRefKey];
 
                 if (query.isQueryList) {
                     const list = parentRef.instance[query.property] as QueryList<any>;
@@ -122,7 +140,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     parentRef.instance[query.property] = componentRef.instance;
                 }
                 parentRef.changeDetectorRef.detectChanges();
-               });
             }
         }
     }
