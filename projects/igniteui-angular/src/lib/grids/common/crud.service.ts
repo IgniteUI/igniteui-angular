@@ -102,6 +102,9 @@ export class IgxCell {
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
+        if (this.grid.validationTrigger === 'change') {
+            this.editValue = this._editValue;
+        }
     }
 
     public get editValue() {
