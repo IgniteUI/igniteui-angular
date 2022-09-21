@@ -231,7 +231,6 @@ export class WorksheetFile implements IExcelFile {
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                if (!worksheetData.isEmpty){
                     if (!isHierarchicalGrid) {
                         if (hasUserSetIndex) {
                             recordHeaders = worksheetData.rootKeys;
@@ -257,8 +256,9 @@ export class WorksheetFile implements IExcelFile {
                         recordHeaders = Object.keys(worksheetData.data[i].data);
                     }
 
-                    rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
-                }
+                    if((worksheetData.data[i] !== undefined)){
+                        rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
+                    }
             },
             () => {
                 done(rowDataArr.join(''));
