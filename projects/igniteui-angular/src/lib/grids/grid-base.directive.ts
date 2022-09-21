@@ -4070,6 +4070,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.featureColumnsWidth();
     }
 
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: ColumnCollection */
     /**
      * Gets an array of `IgxColumnComponent`s.
      *
