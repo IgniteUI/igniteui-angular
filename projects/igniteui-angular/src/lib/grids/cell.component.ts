@@ -1055,6 +1055,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         const isTargetErrorIcon = event && event.target && event.target === this.errorIcon?.el.nativeElement
         if (this.isInvalid && !isTargetErrorIcon) {
+            this.cdr.detectChanges();
             this.openErrorTooltip();
             this.grid.activeNodeChange.pipe(first()).subscribe(() => {
                 this.closeErrorTooltip();
