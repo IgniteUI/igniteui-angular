@@ -55,7 +55,8 @@
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
@@ -67,7 +68,8 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -112,7 +114,8 @@
         <igx-input-group [formGroup]="formGroup">
             <input
                 type="text"
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
                 [igxDateTimeEditor]="column.defaultDateTimeFormat" 
@@ -125,7 +128,8 @@
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -138,7 +142,8 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
