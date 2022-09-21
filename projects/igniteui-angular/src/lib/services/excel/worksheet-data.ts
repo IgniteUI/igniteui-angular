@@ -11,6 +11,7 @@ export class WorksheetData {
     private _hasMultiColumnHeader: boolean;
     private _isHierarchical: boolean;
     private _hasSummaries: boolean;
+    private _isTreeGrid: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -59,6 +60,10 @@ export class WorksheetData {
         return this._isHierarchical;
     }
 
+    public get isTreeGrid(): boolean {
+        return this._isTreeGrid;
+    }
+
     private initializeData() {
         this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
 
@@ -69,6 +74,8 @@ export class WorksheetData {
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');
 
         this._hasSummaries = this._data.filter(d => d.type === ExportRecordType.SummaryRecord).length > 0;
+
+        this._isTreeGrid = this._data.filter(d => d.type === ExportRecordType.TreeGridRecord).length > 0;
 
         const exportMultiColumnHeaders = this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders;
 

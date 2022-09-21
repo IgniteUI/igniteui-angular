@@ -4,7 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY, GRID_PARENT } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -344,11 +344,11 @@ export class WorksheetFile implements IExcelFile {
         rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
-        const isDataOrHierarchicalRecord = record.type === ExportRecordType.DataRecord || record.type === ExportRecordType.HierarchicalGridRecord;
+        const isDataOrHierarchicalRecord = record.type === ExportRecordType.DataRecord || record.type === ExportRecordType.HierarchicalGridRecord || record.type === ExportRecordType.TreeGridRecord;
         const isValidRecordType = isDataOrHierarchicalRecord || record.type === ExportRecordType.SummaryRecord;
 
         if (isValidRecordType && worksheetData.hasSummaries) {
-            this.resolveSummaryDimensions(record, isDataOrHierarchicalRecord, worksheetData.isHierarchical)
+            this.resolveSummaryDimensions(record, isDataOrHierarchicalRecord, worksheetData.isHierarchical || worksheetData.isTreeGrid)
         }
 
         for (let j = 0; j < keys.length; j++) {
@@ -370,15 +370,16 @@ export class WorksheetFile implements IExcelFile {
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
         const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
-        const isValidRecordType = fullRow.type === ExportRecordType.DataRecord || fullRow.type === ExportRecordType.HierarchicalGridRecord;
+        const isValidRecordType = fullRow.type === ExportRecordType.DataRecord || fullRow.type === ExportRecordType.HierarchicalGridRecord || fullRow.type === ExportRecordType.TreeGridRecord;
+        const isHierarchicalOrTreeGrid = worksheetData.isHierarchical || worksheetData.isTreeGrid;
 
         this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
 
         if (worksheetData.hasSummaries && isValidRecordType) {
-            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isHierarchical)
+            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, isHierarchicalOrTreeGrid)
         }
 
-        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && !worksheetData.isHierarchical) {
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && !isHierarchicalOrTreeGrid) {
             this.setRootSummaryStartCoordinate(column, key);
         }
 
@@ -411,9 +412,10 @@ export class WorksheetFile implements IExcelFile {
             let summaryFunc = `"${cellValue ?? ""}"`;
 
             if (isSummaryRecord && cellValue) {
-                const isNumberCol = worksheetData.owner.columns.filter(c => c.field === key)[0]?.dataType === 'number';
+                const ownerColumns = worksheetData.owners.get(fullRow.owner)?.columns;
+                const isNumberCol = ownerColumns ? ownerColumns.filter(c => c.field === key)[0]?.dataType === 'number' : false;
                 const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
-                const dimensionMapKey = worksheetData.isHierarchical ? fullRow.hierarchicalOwner ?? 'hierarchical-grid' : null;
+                const dimensionMapKey = isHierarchicalOrTreeGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
 
                 summaryFunc = this.getSummaryFunction(functionType, key, dimensionMapKey);
             }
@@ -422,8 +424,8 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    private resolveSummaryDimensions(record: IExportRecord, isDataOrHierarchicalRecord: boolean, isHierarchicalGrid: boolean) {
-        if (isHierarchicalGrid &&
+    private resolveSummaryDimensions(record: IExportRecord, isDataOrHierarchicalRecord: boolean, isValidGrid: boolean) {
+        if (isValidGrid &&
             this.currentHierarchicalOwner !== '' &&
             this.currentHierarchicalOwner !== record.owner &&
             !this.hierarchicalDimensionMap.get(this.currentHierarchicalOwner)) {
@@ -440,7 +442,7 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    private setSummaryCoordinates(columnName: string, key: string, hierarchicalOwner: string, isHierarchicalGrid: boolean) {
+    private setSummaryCoordinates(columnName: string, key: string, hierarchicalOwner: string, isValidGrid: boolean) {
         const targetDimensionMap = this.hierarchicalDimensionMap.get(hierarchicalOwner) ?? this.dimensionMap;
 
         if (!targetDimensionMap.get(key)) {
@@ -454,10 +456,10 @@ export class WorksheetFile implements IExcelFile {
             targetDimensionMap.get(key).endCoordinate = columnName;
         }
 
-        if (isHierarchicalGrid && hierarchicalOwner !== 'hierarchical-grid') {
-            const map = this.hierarchicalDimensionMap.get('hierarchical-grid');
+        if (isValidGrid && hierarchicalOwner !== GRID_PARENT) {
+            const parentMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
 
-            for (const a of map.values()) {
+            for (const a of parentMap.values()) {
                const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
                a.endCoordinate = `${colName}${this.rowIndex}`;
             }

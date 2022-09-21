@@ -163,7 +163,9 @@ class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
 
 export const DEFAULT_OWNER = 'default';
 export const GRID_ROOT_SUMMARY = 'igxGridRootSummary';
+export const GRID_PARENT = 'grid-parent';
 const DEFAULT_COLUMN_WIDTH = 8.43;
+const GRID_CHILD = 'grid-child-';
 
 export abstract class IgxBaseExporter {
 
@@ -244,6 +246,12 @@ export abstract class IgxBaseExporter {
 
         this.prepareData(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
+
+        for(const r of this.flatRecords){
+            if (r.type === ExportRecordType.DataRecord || r.type === ExportRecordType.TreeGridRecord || r.type === ExportRecordType.HierarchicalGridRecord) {
+                r.data["Level"] = r.level;
+            }
+        }
     }
 
     /**
@@ -573,7 +581,7 @@ export abstract class IgxBaseExporter {
                 level: 0,
                 type: ExportRecordType.HierarchicalGridRecord,
                 owner: grid,
-                hierarchicalOwner: 'hierarchical-grid'
+                hierarchicalOwner: GRID_PARENT
             };
 
             this.flatRecords.push(hierarchicalGridRecord);
@@ -687,7 +695,7 @@ export abstract class IgxBaseExporter {
 
     private getAllChildColumnsAndData(island: any,
         childData: any[], expansionStateVal: boolean, grid: GridType) {
-        const hierarchicalOwner = `row-island-${++this.rowIslandCounter}`;
+        const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`;
         const columnList = this._ownersMap.get(island).columns;
         const columnHeader = columnList
             .filter(col => col.headerType === HeaderType.ColumnHeader)
@@ -840,50 +848,59 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addTreeGridData(records: ITreeGridRecord[], parentExpanded: boolean = true) {
+    private addTreeGridData(records: ITreeGridRecord[], parentExpanded: boolean = true, hierarchicalOwner?: string) {
         if (!records) {
             return;
         }
 
         for (const record of records) {
-            let summaryLevel = record.level;
-            let summaryHidden = !parentExpanded;
-
             const treeGridRecord: IExportRecord = {
                 data: record.data,
                 level: record.level,
                 hidden: !parentExpanded,
-                type: ExportRecordType.TreeGridRecord
+                type: ExportRecordType.TreeGridRecord,
+                summaryKey: record.key,
+                hierarchicalOwner: record.level === 0 ? GRID_PARENT : hierarchicalOwner
             };
+
             this.flatRecords.push(treeGridRecord);
 
             if (record.children) {
-                for (const rc of record.children) {
-                    if (rc.children && rc.children.length > 0) {
-                        this.addTreeGridData([rc], parentExpanded && record.expanded);
+                this.getTreeGridChildData(record.children, record.key, record.level, record.expanded && parentExpanded)
+            }
+        }
+    }
 
-                    } else {
-                        const currentRecord: IExportRecord = {
-                            data: rc.data,
-                            level: rc.level,
-                            hidden: !(record.expanded && parentExpanded),
-                            type: ExportRecordType.DataRecord,
-                        };
+    private getTreeGridChildData(recordChildren: ITreeGridRecord[], key: string, level:number, parentExpanded: boolean = true) {
+        const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`
+        let summaryLevel = level;
+        let summaryHidden = !parentExpanded;
 
-                        if (this._setChildSummaries) {
-                            currentRecord.summaryKey = record.key;
-                        }
+        for (const rc of recordChildren) {
+            if (rc.children && rc.children.length > 0) {
+                this.addTreeGridData([rc], parentExpanded, hierarchicalOwner);
+            } else {
 
-                        this.flatRecords.push(currentRecord);
-                        summaryLevel = rc.level;
-                        summaryHidden = !(record.expanded && parentExpanded)
-                    }
+                const currentRecord: IExportRecord = {
+                    data: rc.data,
+                    level: rc.level,
+                    hidden: !parentExpanded,
+                    type: ExportRecordType.DataRecord,
+                    hierarchicalOwner
+                };
+
+                if (this._setChildSummaries) {
+                    currentRecord.summaryKey = key;
                 }
-            }
 
-            if (this._setChildSummaries) {
-                this.setSummaries(record.key, summaryLevel, summaryHidden);
+                this.flatRecords.push(currentRecord);
+                summaryLevel = rc.level;
+                summaryHidden = !parentExpanded
             }
+        }
+
+        if (this._setChildSummaries) {
+            this.setSummaries(key, summaryLevel, summaryHidden, null, null, hierarchicalOwner);
         }
     }
 
@@ -1093,6 +1110,23 @@ export abstract class IgxBaseExporter {
             }
 
         });
+
+        const levelCol: IColumnInfo = {
+            header: "Level",
+            dataType: 'number',
+            field: 'Level',
+            skip: false,
+            skipFormatter: false,
+            headerType: HeaderType.ColumnHeader,
+            columnSpan: 1,
+            level: 0,
+            // fix
+            startIndex: 5,
+        };
+
+        colList.push(levelCol);
+
+        colWidthList.push(DEFAULT_COLUMN_WIDTH);
 
         //Append the hidden columns to the end of the list
         hiddenColumns.forEach((hiddenColumn) => {
