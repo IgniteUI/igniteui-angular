@@ -1141,16 +1141,16 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toBe(undefined);
         });
 
-        it('should select unique falsy item values', () => {
+        it('should select falsy values except "undefined"', () => {
             combo.valueKey = 'value';
             combo.displayKey = 'field';
             combo.data = [
                 { field: '0', value: 0 },
                 { field: 'false', value: false },
                 { field: '', value: '' },
-                { field: 'undefined', value: undefined },
                 { field: 'null', value: null },
                 { field: 'NaN', value: NaN },
+                { field: 'undefined', value: undefined },
             ];
 
             combo.open();
@@ -1190,8 +1190,8 @@ describe('IgxSimpleCombo', () => {
 
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('undefined');
-            expect(combo.selection).toEqual([ undefined ]);
+            expect(combo.value).toBe('null');
+            expect(combo.selection).toEqual([ null ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1200,9 +1200,11 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('null');
-            expect(combo.selection).toEqual([ null ]);
+            expect(combo.value).toBe('NaN');
+            expect(combo.selection).toEqual([ NaN ]);
 
+            // should not select "undefined"
+            // combo.value & combo.selection equal the values from the previous selection
             combo.open();
             fixture.detectChanges();
             const item6 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
@@ -1214,16 +1216,16 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toEqual([ NaN ]);
         });
 
-        it('should select falsy values with "writeValue" method', () => {
+        it('should select falsy values except "undefined" with "writeValue" method', () => {
             combo.valueKey = 'value';
             combo.displayKey = 'field';
             combo.data = [
                 { field: '0', value: 0 },
                 { field: 'false', value: false },
                 { field: 'empty', value: '' },
-                { field: 'undefined', value: undefined },
                 { field: 'null', value: null },
                 { field: 'NaN', value: NaN },
+                { field: 'undefined', value: undefined },
             ];
 
             combo.writeValue(0);
@@ -1238,10 +1240,6 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toEqual(['']);
             expect(combo.value).toBe('empty');
 
-            combo.writeValue(undefined);
-            expect(combo.selection).toEqual([undefined]);
-            expect(combo.value).toBe('undefined');
-
             combo.writeValue(null);
             expect(combo.selection).toEqual([null]);
             expect(combo.value).toBe('null');
@@ -1249,6 +1247,11 @@ describe('IgxSimpleCombo', () => {
             combo.writeValue(NaN);
             expect(combo.selection).toEqual([NaN]);
             expect(combo.value).toBe('NaN');
+
+            // should not select undefined
+            combo.writeValue(undefined);
+            expect(combo.selection).toEqual([]);
+            expect(combo.value).toBe('');
         });
     });
 
