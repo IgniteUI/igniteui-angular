@@ -260,7 +260,7 @@
     $result: ();
     @each $saturation in $saturations {
         $shade: gen-color($color, $saturation);
-        $contrast: text-contrast(to-opaque($shade, $base, null));
+        $contrast: text-contrast(to-opaque($shade, $base));
 
         $result: map.merge($result, (
             $saturation: $shade,
@@ -284,7 +284,7 @@
     $result: ();
     @each $shade in $shades {
         $gray-shade: _gen-gray($color, $shade, $base);
-        $contrast: text-contrast(to-opaque($gray-shade, $base, null));
+        $contrast: text-contrast(to-opaque($gray-shade, $base));
 
         $result: map-merge($result, (
             $shade: $gray-shade,
@@ -338,31 +338,31 @@
         info: (
             500: $info,
             '500-contrast': text-contrast(
-                to-opaque($info, $surface, null)
+                to-opaque($info, $surface)
             )
         ),
         success: (
             500: $success,
             '500-contrast': text-contrast(
-                to-opaque($success, $surface, null)
+                to-opaque($success, $surface)
             )
         ),
         warn: (
             500: $warn,
             '500-contrast': text-contrast(
-                to-opaque($warn, $surface, null)
+                to-opaque($warn, $surface)
             )
         ),
         error: (
             500: $error,
             '500-contrast': text-contrast(
-                to-opaque($error, $surface, null)
+                to-opaque($error, $surface)
             )
         ),
         surface: (
             500: $surface,
             '500-contrast': text-contrast(
-                to-opaque($surface, $surface, null)
+                to-opaque($surface, $surface)
             )
         ),
         _meta: (
@@ -428,53 +428,13 @@ $p-test: palette(#fff, #000);
     @return color($palette, $color, #{$variant}-contrast, $opacity);
 }
 
-/// Returns a CSS variable string reference as a list of words.
-/// @access private
-/// @param {String} $value [] - The CSS variable reference (e.g. var(--igx-primary-500).
-/// @param {String} $separator ['-'] - The character to split the string by.
-/// @example scss Split a CSS variable reference into Sass list.
-/// $list: var-to-parts(var(--igx-primary-500)); // igx primary 500
-/// @returns {List}
-@function var-to-parts($value, $separator: '-') {
-    @if meta.type-of($value) != 'string' {
-        @return null;
-    }
-
-    $parts: str-replace($value, 'var(--');
-    $parts: str-replace($parts, ')');
-    @return str-split($parts, $separator);
-}
-
-/// Detects if the passed value is a CSS variable and retrieves the
-/// referenced color from the passed palette.
-/// If the value is not a CSS variable it's simply passed through.
-/// @access private
-/// @returns {Color | Map}
-@function color-from-var($value, $palette: $theme-palette, $raw: true) {
-    $parts: var-to-parts($value);
-    $is-igx: list.index($parts, 'igx');
-
-    @if $parts and $is-igx {
-        $c: list.nth($parts, 2);
-        $v: to-number(nth($parts, 3));
-        $color: color($palette, $c, $v);
-        @return if($raw, $color, (($c $v): $color));
-    }
-
-    @return $value;
-}
-
 /// Mixes two colors to produce an opaque color.
 /// @access public
 /// @param {Color} $color-1 - The first color, usually transparent.
 /// @param {Color} $color-2 [#fff] - The second color, usually opaque.
 /// @param {Map} $palette [$default-palette] - Pass an palette if the passed colors are CSS variable references.
-/// @requires {function} color-from-var
 /// @return {Color} - The color representation of the rgba value.
-@function to-opaque($color-1, $color-2: #fff, $palette: $theme-palette) {
-    $color-1: color-from-var($color-1, $palette);
-    $color-2: color-from-var($color-2, $palette);
-
+@function to-opaque($color-1, $color-2: #fff) {
     @if meta.type-of($color-1) == color and meta.type-of($color-2) == color {
         $red: color.red($color-1);
         $green: color.green($color-1);
@@ -502,13 +462,6 @@ $p-test: palette(#fff, #000);
     $contrast: 'AAA',
     $palette: null
 ) {
-    $background: color-from-var($background, $palette, $raw: false);
-    $foreground: color-from-var($foreground, $palette);
-
-    @if meta.type-of($background) == 'map' {
-        @return contrast-color(null, nth(map.keys($background), 1)...);
-    }
-
     @if meta.type-of($foreground) == 'color' and meta.type-of($background) == 'color' {
         $level: map.get((
             'A': 3,
@@ -721,8 +674,6 @@ $p-test: palette(#fff, #000);
         @if list.length(map.keys($value)) > 1 {
             @if $result == null and ($fn == 'color' or $fn == 'contrast-color') {
                 $result: meta.call($func, $payload or $tp, $args...);
-            } @else if $fn == 'to-opaque' and meta.type-of($args) == 'map' {
-                $result: meta.call($func, $result, resolve-value($args, $payload or $tp));
             } @else if $result {
                 $result: meta.call($func, $result, $args...);
             } @else {

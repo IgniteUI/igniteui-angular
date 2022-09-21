@@ -51,7 +51,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
             }
             const baseTypes = type.getBaseTypes();
 
-            const componentMetadata: ComponentMetadata<string> = { parents: [], contentQueries: [] };
+            const componentMetadata: ComponentMetadata<string> = { parents: [], contentQueries: [], methods: [] };
 
             // if (components.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             //     // pre-populate
@@ -110,7 +110,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
         if (configComponents.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             ComponentConfigMap.set(type, {
                 contentQueries: filterRelevantQueries(contentQueries, name),
-                parents: parents.map(x => componentList.get(x).type) // these should always be empty, but just in case?
+                parents: parents.map(x => componentList.get(x).type), // these should always be empty, but just in case?
+                methods: getPublicMethods(type.getProperties())
             });
         }
 
@@ -119,7 +120,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
             ComponentConfigMap.set(type, {
                 contentQueries: filterRelevantQueries(contentQueries, name),
                 // filter out parents that don't lead to config components:
-                parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type)
+                parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type),
+                methods: getPublicMethods(type.getProperties())
             });
         }
     }
@@ -265,7 +267,8 @@ function createMetaLiteralObject(value: [ts.InterfaceType, ComponentMetadata<ts.
         [
             ts.factory.createPropertyAssignment('component', ts.factory.createIdentifier(type.symbol.name)),
             ts.factory.createPropertyAssignment('parents', ts.factory.createArrayLiteralExpression(meta.parents.map(x => ts.factory.createIdentifier(x.symbol.name)))),
-            ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => createContentQueryLiteral(x))))
+            ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => createContentQueryLiteral(x)))),
+            ts.factory.createPropertyAssignment('methods', ts.factory.createArrayLiteralExpression(meta.methods.map(x => ts.factory.createStringLiteral(x.name))))
         ]
     );
 }
@@ -305,11 +308,12 @@ function importContainsType(importDecl: ts.ImportDeclaration, type: ts.Type) {
     return false;
 }
 
-//#endregion
+//#endregion config file
 
 interface ComponentMetadata<ParentType = ts.InterfaceType> {
     parents: ParentType[],
-    contentQueries: ContentQuery[]
+    contentQueries: ContentQuery[],
+    methods: MethodInfo[]
 }
 
 interface ContentQuery {
@@ -318,9 +322,34 @@ interface ContentQuery {
     isQueryList: boolean;
 }
 
+/** Method info container, tentatively with just name */
+interface MethodInfo {
+    name: string;
+}
+
 function getDecoratorName(decorator: ts.Decorator): string | null {
     if (decorator.expression.kind === ts.SyntaxKind.CallExpression) {
         return (decorator.expression as ts.CallExpression).expression.getText();
     }
     return null;
+}
+
+function getPublicMethods(symbols: ts.Symbol[]): MethodInfo[] {
+    const methods = symbols
+        .filter(x => isMethod(x))
+        .filter(x => isPublic(x.valueDeclaration))
+        .filter(x => !x.getJsDocTags().some(x => ['hidden', 'internal'].includes(x.name)));
+    return methods.map(x => ({ name: x.name }));
+}
+
+function isPublic(node: ts.Declaration) {
+    if(!node) return false;
+    // TODO: Public flag only present w/ explicit keyword in code (currently enforced by lint)
+    // Consider !protected & !private to be public instead as more robust?
+    return (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Public) !== ts.ModifierFlags.None;
+}
+
+function isMethod(symbol: ts.Symbol) {
+    if(!symbol) return false;
+    return (symbol.getFlags() & ts.SymbolFlags.Method) !== ts.SymbolFlags.None;
 }

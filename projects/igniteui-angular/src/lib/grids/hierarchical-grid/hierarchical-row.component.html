@@ -54,7 +54,7 @@
         <igx-hierarchical-grid-cell
             class="igx-grid__td igx-grid__td--fw"
             [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+
             [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
             [class.igx-grid__td--bool]="col.dataType === 'boolean'"
             [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
@@ -73,6 +73,7 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
             [cellTemplate]="col.bodyTemplate"
+            [cellValidationErrorTemplate]="col.errorTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
@@ -101,7 +102,7 @@
         <igx-hierarchical-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
             class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
             [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-            [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+
             [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
             [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
             [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
@@ -122,6 +123,7 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
             [cellTemplate]="col.bodyTemplate"
+            [cellValidationErrorTemplate]="col.errorTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">

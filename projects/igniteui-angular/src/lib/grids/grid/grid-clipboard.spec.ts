@@ -8,6 +8,9 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
 import { take } from 'rxjs/operators';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
+import { IgxInputDirective } from '../../input-group/public_api';
 
 describe('IgxGrid - Clipboard #grid', () => {
 
@@ -167,6 +170,27 @@ describe('IgxGrid - Clipboard #grid', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(0);
         expect(eventData).toEqual('');
+    }));
+
+    it('Should be able to copy from quick filtering input', fakeAsync(() => {
+        fix.componentInstance.allowFiltering = true;
+        fix.detectChanges();
+        const productNameFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
+        productNameFilterCellChip.nativeElement.click();
+        tick(100);
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const inputDebugElement = filteringRow.query(By.directive(IgxInputDirective));
+        const input = inputDebugElement.nativeElement;
+        const searchVal = 'aaa';
+
+        const ev = new ClipboardEvent('copy', {bubbles: true, clipboardData: new DataTransfer()});
+        ev.clipboardData.setData('text/plain', searchVal);
+        input.dispatchEvent(ev);
+        fix.detectChanges();
+        const eventData = ev.clipboardData.getData('text/plain');
+        expect(eventData).toEqual(searchVal);
     }));
 });
 

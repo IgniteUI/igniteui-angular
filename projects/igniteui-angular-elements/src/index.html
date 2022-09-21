@@ -6,6 +6,16 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+        display: grid;
+        gap: 16px;
+        grid-auto-rows: minmax(400px, max-content);
+    }
+    igc-grid {
+        max-height: 550px;
+    }
+  </style>
 </head>
 <body class="igx-typography">
     <!-- <app-wrapper>
@@ -26,37 +36,46 @@
     </script> -->
 
   <!-- IgxGridComponent -->
-  <igx-grid id="grid1" moving="true" paging="true" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-    <igx-grid-toolbar>
-      <igx-grid-toolbar-title>My new toolbar</igx-grid-toolbar-title>
-      <igx-grid-toolbar-actions>
-        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-      </igx-grid-toolbar-actions>
-    </igx-grid-toolbar>
 
-    <igx-column field="ProductID" data-type="number"></igx-column>
-    <igx-column field="ProductName"></igx-column>
-    <igx-column field="CategoryName"></igx-column>
-    <igx-column field="InStock" data-type="number"></igx-column>
 
-    <igx-paginator per-page="10"></igx-paginator>
-  </igx-grid>
+  <div>
+    <igc-grid id="grid1" moving="true" paging="true" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
 
-  <button onclick="changeColumns()">Change columns</button>
+        <igc-column field="ProductID" header="Product ID" data-type="number" width="25%"></igc-column>
+        <igc-column field="ProductName" header="Product Name" sortable="true" width="25%"></igc-column>
+        <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true" width="25%"></igc-column>
+        <igc-column field="InStock" header="In Stock" data-type="number" width="25%"></igc-column>
+
+        <igc-paginator per-page="10"></igc-paginator>
+    </igc-grid>
+
+    <button onclick="changeColumns()">Change columns</button>
+    <button onclick="grid1.selectAllColumns()">selectAllColumns</button>
+    <button onclick="grid1.deselectAllColumns()">deselectAllColumns</button>
+    <button onclick="grid1.displayDensity = 'compact'">Compact</button>
+    <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
+    <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
+  </div>
 
   <script src="assets/data/nw-products.js"></script>
   <script>
     grid1.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
-        let columns = [
-            { field: 'ProductID', header: 'Product Id', dataType: 'number' },
-            { field: 'ProductName', sortable: true },
-            { field: 'CategoryName', sortable: true, groupable: true },
-            { field: 'InStock', dataType: 'number' }
-        ];
-        grid1.columns = columns;
+        // let columns = [
+        //     { field: 'ProductID', header: 'Product Id', dataType: 'number' },
+        //     { field: 'ProductName', sortable: true },
+        //     { field: 'CategoryName', sortable: true, groupable: true },
+        //     { field: 'InStock', dataType: 'number' }
+        // ];
+        // grid1.columns = columns;
     });
 
     function changeColumns() {
@@ -71,8 +90,8 @@
   <!-- END IgxGridComponent -->
 
   <!-- IgxTreeGridComponent -->
-  <igx-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
-  </igx-tree-grid>
+  <igc-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+  </igc-tree-grid>
 
   <script src="assets/data/tree-grid-ds.js"></script>
   <script>
@@ -88,11 +107,14 @@
   </script>
   <!-- END IgxTreeGridComponent -->
 
-  <igx-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-  </igx-hierarchical-grid>
+  <igc-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+      <igc-row-island auto-generate="true" key="Developers">
+        <igc-row-island auto-generate="true" key="VirtualMachines"></igc-row-island>
+      </igc-row-island>
+  </igc-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->
-  <igx-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igx-pivot-grid>
+  <igc-pivot-grid id="pivotgrid1" default-expand-state="true" row-selection="single"></igc-pivot-grid>
 
   <script src="assets/data/pivot-data.js"></script>
   <script>

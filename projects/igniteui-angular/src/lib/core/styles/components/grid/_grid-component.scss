@@ -231,6 +231,14 @@
             @extend %grid-cell--selected !optional;
         }
 
+        @include e(td, $m: invalid) {
+            @extend %grid-cell--invalid !optional;
+        }
+    
+        @include e(td, $m: valid) {
+            @extend %grid-cell--valid !optional;
+        }
+
         @include e(td, $m: column-selected) {
             @extend %grid-cell--column-selected !optional;
         }

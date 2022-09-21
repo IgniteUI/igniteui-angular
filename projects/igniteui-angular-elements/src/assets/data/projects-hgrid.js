@@ -4,16 +4,14 @@ var hgridData = [{
     "StartDate": new Date(1304197200000),
     "EndDate": new Date(1310677200000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 1,
             "ProjectId": 1,
             "Name": "Monica Galler0",
             "Position": "Lead",
             "HireDate": new Date(1316523461310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:1",
                     "DeveloperId": 1,
                     "OperatingSystem": "Win XPx32",
@@ -31,10 +29,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 2230,
                     "ExpirationDate": new Date(1316696261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 2,
             "ProjectId": 1,
@@ -42,8 +37,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1324389461310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:4",
                     "DeveloperId": 2,
                     "OperatingSystem": "Win Linux",
@@ -61,10 +55,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 5575,
                     "ExpirationDate": new Date(1317041861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 3,
             "ProjectId": 1,
@@ -72,8 +63,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1332251861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:7",
                     "DeveloperId": 3,
                     "OperatingSystem": "Win 7",
@@ -91,10 +81,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 8920,
                     "ExpirationDate": new Date(1317387461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 4,
             "ProjectId": 1,
@@ -102,8 +89,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1340197061310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:10",
                     "DeveloperId": 4,
                     "OperatingSystem": "Win 7x64",
@@ -121,10 +107,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 12265,
                     "ExpirationDate": new Date(1317733061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 5,
             "ProjectId": 1,
@@ -132,8 +115,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1348145861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:13",
                     "DeveloperId": 5,
                     "OperatingSystem": "Win Vista",
@@ -151,10 +133,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 15610,
                     "ExpirationDate": new Date(1318078661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 6,
             "ProjectId": 1,
@@ -162,8 +141,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1356011861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:16",
                     "DeveloperId": 6,
                     "OperatingSystem": "Win XPx32",
@@ -181,10 +159,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 18955,
                     "ExpirationDate": new Date(1318424261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 7,
             "ProjectId": 1,
@@ -192,8 +167,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1363787861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:19",
                     "DeveloperId": 7,
                     "OperatingSystem": "Win Linux",
@@ -211,10 +185,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 22300,
                     "ExpirationDate": new Date(1318769861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 8,
             "ProjectId": 1,
@@ -222,8 +193,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1371733061310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:22",
                     "DeveloperId": 8,
                     "OperatingSystem": "Win 7",
@@ -241,10 +211,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 25645,
                     "ExpirationDate": new Date(1319115461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 9,
             "ProjectId": 1,
@@ -252,8 +219,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1379681861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:25",
                     "DeveloperId": 9,
                     "OperatingSystem": "Win 7x64",
@@ -271,10 +237,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 28990,
                     "ExpirationDate": new Date(1319461061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 10,
             "ProjectId": 1,
@@ -282,8 +245,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1387547861310),
             "Salary": 0.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:28",
                     "DeveloperId": 10,
                     "OperatingSystem": "Win Vista",
@@ -301,14 +263,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 32335,
                     "ExpirationDate": new Date(1319806661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -925,16 +881,14 @@ var hgridData = [{
     "StartDate": new Date(1306875600000),
     "EndDate": new Date(1313355600000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 11,
             "ProjectId": 2,
             "Name": "Monica Galler1",
             "Position": "Senior",
             "HireDate": new Date(1395323861310),
             "Salary": 2005.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:31",
                     "DeveloperId": 11,
                     "OperatingSystem": "Win XPx32",
@@ -952,10 +906,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 35680,
                     "ExpirationDate": new Date(1320155861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 12,
             "ProjectId": 2,
@@ -963,8 +914,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1403269061310),
             "Salary": 2205.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:34",
                     "DeveloperId": 12,
                     "OperatingSystem": "Win Linux",
@@ -982,10 +932,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 39025,
                     "ExpirationDate": new Date(1320501461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 13,
             "ProjectId": 2,
@@ -993,8 +940,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1411217861310),
             "Salary": 2406.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:37",
                     "DeveloperId": 13,
                     "OperatingSystem": "Win 7",
@@ -1012,10 +958,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 42370,
                     "ExpirationDate": new Date(1320847061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 14,
             "ProjectId": 2,
@@ -1023,8 +966,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1419083861310),
             "Salary": 2606.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:40",
                     "DeveloperId": 14,
                     "OperatingSystem": "Win 7x64",
@@ -1042,10 +984,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 45715,
                     "ExpirationDate": new Date(1321192661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 15,
             "ProjectId": 2,
@@ -1053,8 +992,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1426859861310),
             "Salary": 2807.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:43",
                     "DeveloperId": 15,
                     "OperatingSystem": "Win Vista",
@@ -1072,10 +1010,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 49060,
                     "ExpirationDate": new Date(1321538261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 16,
             "ProjectId": 2,
@@ -1083,8 +1018,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1434805061310),
             "Salary": 3007.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:46",
                     "DeveloperId": 16,
                     "OperatingSystem": "Win XPx32",
@@ -1102,10 +1036,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 52405,
                     "ExpirationDate": new Date(1321883861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 17,
             "ProjectId": 2,
@@ -1113,8 +1044,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1442753861310),
             "Salary": 3208.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:49",
                     "DeveloperId": 17,
                     "OperatingSystem": "Win Linux",
@@ -1132,10 +1062,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 55750,
                     "ExpirationDate": new Date(1322229461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 18,
             "ProjectId": 2,
@@ -1143,8 +1070,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1450619861310),
             "Salary": 3408.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:52",
                     "DeveloperId": 18,
                     "OperatingSystem": "Win 7",
@@ -1162,10 +1088,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 59095,
                     "ExpirationDate": new Date(1322575061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 19,
             "ProjectId": 2,
@@ -1173,8 +1096,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1458482261310),
             "Salary": 3609.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:55",
                     "DeveloperId": 19,
                     "OperatingSystem": "Win 7x64",
@@ -1192,10 +1114,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 62440,
                     "ExpirationDate": new Date(1322920661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 20,
             "ProjectId": 2,
@@ -1203,8 +1122,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1466427461310),
             "Salary": 3809.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:58",
                     "DeveloperId": 20,
                     "OperatingSystem": "Win Vista",
@@ -1222,14 +1140,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 65785,
                     "ExpirationDate": new Date(1323266261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -1846,16 +1758,14 @@ var hgridData = [{
     "StartDate": new Date(1309467600000),
     "EndDate": new Date(1316034000000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers":  [{
             "DeveloperId": 21,
             "ProjectId": 3,
             "Name": "Monica Galler2",
             "Position": "Lead",
             "HireDate": new Date(1474376261310),
             "Salary": 8020.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:61",
                     "DeveloperId": 21,
                     "OperatingSystem": "Win XPx32",
@@ -1873,10 +1783,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 69130,
                     "ExpirationDate": new Date(1323611861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 22,
             "ProjectId": 3,
@@ -1884,8 +1791,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1482242261310),
             "Salary": 8421.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:64",
                     "DeveloperId": 22,
                     "OperatingSystem": "Win Linux",
@@ -1903,10 +1809,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 72475,
                     "ExpirationDate": new Date(1323957461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 23,
             "ProjectId": 3,
@@ -1914,8 +1817,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1490018261310),
             "Salary": 8822.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:67",
                     "DeveloperId": 23,
                     "OperatingSystem": "Win 7",
@@ -1933,10 +1835,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 75820,
                     "ExpirationDate": new Date(1324303061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 24,
             "ProjectId": 3,
@@ -1944,8 +1843,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1497963461310),
             "Salary": 9223.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:70",
                     "DeveloperId": 24,
                     "OperatingSystem": "Win 7x64",
@@ -1963,10 +1861,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 79165,
                     "ExpirationDate": new Date(1324648661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 25,
             "ProjectId": 3,
@@ -1974,8 +1869,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1505912261310),
             "Salary": 9624.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:73",
                     "DeveloperId": 25,
                     "OperatingSystem": "Win Vista",
@@ -1993,10 +1887,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 82510,
                     "ExpirationDate": new Date(1324994261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 26,
             "ProjectId": 3,
@@ -2004,8 +1895,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1513778261310),
             "Salary": 10025.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:76",
                     "DeveloperId": 26,
                     "OperatingSystem": "Win XPx32",
@@ -2023,10 +1913,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 85855,
                     "ExpirationDate": new Date(1325339861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 27,
             "ProjectId": 3,
@@ -2034,8 +1921,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1521554261310),
             "Salary": 10426.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:79",
                     "DeveloperId": 27,
                     "OperatingSystem": "Win Linux",
@@ -2053,10 +1939,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 89200,
                     "ExpirationDate": new Date(1325685461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 28,
             "ProjectId": 3,
@@ -2064,8 +1947,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1529499461310),
             "Salary": 10827.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:82",
                     "DeveloperId": 28,
                     "OperatingSystem": "Win 7",
@@ -2083,10 +1965,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 92545,
                     "ExpirationDate": new Date(1326031061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 29,
             "ProjectId": 3,
@@ -2094,8 +1973,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1537448261310),
             "Salary": 11228.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:85",
                     "DeveloperId": 29,
                     "OperatingSystem": "Win 7x64",
@@ -2113,10 +1991,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 95890,
                     "ExpirationDate": new Date(1326376661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 30,
             "ProjectId": 3,
@@ -2124,8 +1999,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1545314261310),
             "Salary": 11629.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:88",
                     "DeveloperId": 30,
                     "OperatingSystem": "Win Vista",
@@ -2143,14 +2017,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 99235,
                     "ExpirationDate": new Date(1326722261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -2767,16 +2635,14 @@ var hgridData = [{
     "StartDate": new Date(1312146000000),
     "EndDate": new Date(1318626000000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 31,
             "ProjectId": 4,
             "Name": "Monica Galler3",
             "Position": "Senior",
             "HireDate": new Date(1553090261310),
             "Salary": 18045.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:91",
                     "DeveloperId": 31,
                     "OperatingSystem": "Win XPx32",
@@ -2794,10 +2660,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 102580,
                     "ExpirationDate": new Date(1327067861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 32,
             "ProjectId": 4,
@@ -2805,8 +2668,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1561035461310),
             "Salary": 18646.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:94",
                     "DeveloperId": 32,
                     "OperatingSystem": "Win Linux",
@@ -2824,10 +2686,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 105925,
                     "ExpirationDate": new Date(1327413461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 33,
             "ProjectId": 4,
@@ -2835,8 +2694,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1568984261310),
             "Salary": 19248.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:97",
                     "DeveloperId": 33,
                     "OperatingSystem": "Win 7",
@@ -2854,10 +2712,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 109270,
                     "ExpirationDate": new Date(1327759061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 34,
             "ProjectId": 4,
@@ -2865,8 +2720,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1576850261310),
             "Salary": 19849.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:100",
                     "DeveloperId": 34,
                     "OperatingSystem": "Win 7x64",
@@ -2884,10 +2738,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 112615,
                     "ExpirationDate": new Date(1328104661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 35,
             "ProjectId": 4,
@@ -2895,8 +2746,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1584712661310),
             "Salary": 20451.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:103",
                     "DeveloperId": 35,
                     "OperatingSystem": "Win Vista",
@@ -2914,10 +2764,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 115960,
                     "ExpirationDate": new Date(1328450261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 36,
             "ProjectId": 4,
@@ -2925,8 +2772,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1592657861310),
             "Salary": 21052.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:106",
                     "DeveloperId": 36,
                     "OperatingSystem": "Win XPx32",
@@ -2944,10 +2790,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 119305,
                     "ExpirationDate": new Date(1328795861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 37,
             "ProjectId": 4,
@@ -2955,8 +2798,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1600606661310),
             "Salary": 21654.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:109",
                     "DeveloperId": 37,
                     "OperatingSystem": "Win Linux",
@@ -2974,10 +2816,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 122650,
                     "ExpirationDate": new Date(1329141461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 38,
             "ProjectId": 4,
@@ -2985,8 +2824,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1608472661310),
             "Salary": 22255.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:112",
                     "DeveloperId": 38,
                     "OperatingSystem": "Win 7",
@@ -3004,10 +2842,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 125995,
                     "ExpirationDate": new Date(1329487061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 39,
             "ProjectId": 4,
@@ -3015,8 +2850,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1616248661310),
             "Salary": 22857.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:115",
                     "DeveloperId": 39,
                     "OperatingSystem": "Win 7x64",
@@ -3034,10 +2868,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 129340,
                     "ExpirationDate": new Date(1329832661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 40,
             "ProjectId": 4,
@@ -3045,8 +2876,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1624193861310),
             "Salary": 23458.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:118",
                     "DeveloperId": 40,
                     "OperatingSystem": "Win Vista",
@@ -3064,14 +2894,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 132685,
                     "ExpirationDate": new Date(1330178261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -3688,16 +3512,14 @@ var hgridData = [{
     "StartDate": new Date(1314824400000),
     "EndDate": new Date(1321308000000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 41,
             "ProjectId": 5,
             "Name": "Monica Galler4",
             "Position": "Lead",
             "HireDate": new Date(1632142661310),
             "Salary": 32080.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:121",
                     "DeveloperId": 41,
                     "OperatingSystem": "Win XPx32",
@@ -3715,10 +3537,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 136030,
                     "ExpirationDate": new Date(1330523861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 42,
             "ProjectId": 5,
@@ -3726,8 +3545,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1640008661310),
             "Salary": 32882.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:124",
                     "DeveloperId": 42,
                     "OperatingSystem": "Win Linux",
@@ -3745,10 +3563,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 139375,
                     "ExpirationDate": new Date(1330869461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 43,
             "ProjectId": 5,
@@ -3756,8 +3571,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1647784661310),
             "Salary": 33684.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:127",
                     "DeveloperId": 43,
                     "OperatingSystem": "Win 7",
@@ -3775,10 +3589,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 142720,
                     "ExpirationDate": new Date(1331215061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 44,
             "ProjectId": 5,
@@ -3786,8 +3597,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1655729861310),
             "Salary": 34486.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:130",
                     "DeveloperId": 44,
                     "OperatingSystem": "Win 7x64",
@@ -3805,10 +3615,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 146065,
                     "ExpirationDate": new Date(1331560661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 45,
             "ProjectId": 5,
@@ -3816,8 +3623,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1663678661310),
             "Salary": 35288.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:133",
                     "DeveloperId": 45,
                     "OperatingSystem": "Win Vista",
@@ -3835,10 +3641,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 149410,
                     "ExpirationDate": new Date(1331906261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 46,
             "ProjectId": 5,
@@ -3846,8 +3649,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1671544661310),
             "Salary": 36090.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:136",
                     "DeveloperId": 46,
                     "OperatingSystem": "Win XPx32",
@@ -3865,10 +3667,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 152755,
                     "ExpirationDate": new Date(1332251861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 47,
             "ProjectId": 5,
@@ -3876,8 +3675,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1679320661310),
             "Salary": 36892.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:139",
                     "DeveloperId": 47,
                     "OperatingSystem": "Win Linux",
@@ -3895,10 +3693,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 156100,
                     "ExpirationDate": new Date(1332597461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 48,
             "ProjectId": 5,
@@ -3906,8 +3701,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1687265861310),
             "Salary": 37694.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:142",
                     "DeveloperId": 48,
                     "OperatingSystem": "Win 7",
@@ -3925,10 +3719,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 159445,
                     "ExpirationDate": new Date(1332939461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 49,
             "ProjectId": 5,
@@ -3936,8 +3727,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1695214661310),
             "Salary": 38496.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:145",
                     "DeveloperId": 49,
                     "OperatingSystem": "Win 7x64",
@@ -3955,10 +3745,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 162790,
                     "ExpirationDate": new Date(1333285061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 50,
             "ProjectId": 5,
@@ -3966,8 +3753,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1703080661310),
             "Salary": 39298.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:148",
                     "DeveloperId": 50,
                     "OperatingSystem": "Win Vista",
@@ -3985,14 +3771,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 166135,
                     "ExpirationDate": new Date(1333630661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -4609,16 +4389,14 @@ var hgridData = [{
     "StartDate": new Date(1317416400000),
     "EndDate": new Date(1323900000000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 51,
             "ProjectId": 6,
             "Name": "Monica Galler5",
             "Position": "Senior",
             "HireDate": new Date(1710943061310),
             "Salary": 50125.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:151",
                     "DeveloperId": 51,
                     "OperatingSystem": "Win XPx32",
@@ -4636,10 +4414,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 169480,
                     "ExpirationDate": new Date(1333976261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 52,
             "ProjectId": 6,
@@ -4647,8 +4422,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1718888261310),
             "Salary": 51127.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:154",
                     "DeveloperId": 52,
                     "OperatingSystem": "Win Linux",
@@ -4666,10 +4440,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 172825,
                     "ExpirationDate": new Date(1334321861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 53,
             "ProjectId": 6,
@@ -4677,8 +4448,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1726837061310),
             "Salary": 52130.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:157",
                     "DeveloperId": 53,
                     "OperatingSystem": "Win 7",
@@ -4696,10 +4466,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 176170,
                     "ExpirationDate": new Date(1334667461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 54,
             "ProjectId": 6,
@@ -4707,8 +4474,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1734703061310),
             "Salary": 53132.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:160",
                     "DeveloperId": 54,
                     "OperatingSystem": "Win 7x64",
@@ -4726,10 +4492,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 179515,
                     "ExpirationDate": new Date(1335013061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 55,
             "ProjectId": 6,
@@ -4737,8 +4500,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1742479061310),
             "Salary": 54135.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:163",
                     "DeveloperId": 55,
                     "OperatingSystem": "Win Vista",
@@ -4756,10 +4518,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 182860,
                     "ExpirationDate": new Date(1335358661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 56,
             "ProjectId": 6,
@@ -4767,8 +4526,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1750424261310),
             "Salary": 55137.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:166",
                     "DeveloperId": 56,
                     "OperatingSystem": "Win XPx32",
@@ -4786,10 +4544,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 186205,
                     "ExpirationDate": new Date(1335704261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 57,
             "ProjectId": 6,
@@ -4797,8 +4552,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1758373061310),
             "Salary": 56140.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:169",
                     "DeveloperId": 57,
                     "OperatingSystem": "Win Linux",
@@ -4816,10 +4570,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 189550,
                     "ExpirationDate": new Date(1336049861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 58,
             "ProjectId": 6,
@@ -4827,8 +4578,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1766239061310),
             "Salary": 57142.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:172",
                     "DeveloperId": 58,
                     "OperatingSystem": "Win 7",
@@ -4846,10 +4596,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 192895,
                     "ExpirationDate": new Date(1336395461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 59,
             "ProjectId": 6,
@@ -4857,8 +4604,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1774015061310),
             "Salary": 58145.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:175",
                     "DeveloperId": 59,
                     "OperatingSystem": "Win 7x64",
@@ -4876,10 +4622,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 196240,
                     "ExpirationDate": new Date(1336741061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 60,
             "ProjectId": 6,
@@ -4887,8 +4630,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1781960261310),
             "Salary": 59147.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:178",
                     "DeveloperId": 60,
                     "OperatingSystem": "Win Vista",
@@ -4906,14 +4648,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 199585,
                     "ExpirationDate": new Date(1337086661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -5530,16 +5266,14 @@ var hgridData = [{
     "StartDate": new Date(1320098400000),
     "EndDate": new Date(1326578400000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 61,
             "ProjectId": 7,
             "Name": "Monica Galler6",
             "Position": "Lead",
             "HireDate": new Date(1789909061310),
             "Salary": 72180.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:181",
                     "DeveloperId": 61,
                     "OperatingSystem": "Win XPx32",
@@ -5557,10 +5291,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 202930,
                     "ExpirationDate": new Date(1337432261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 62,
             "ProjectId": 7,
@@ -5568,8 +5299,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1797775061310),
             "Salary": 73383.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:184",
                     "DeveloperId": 62,
                     "OperatingSystem": "Win Linux",
@@ -5587,10 +5317,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 206275,
                     "ExpirationDate": new Date(1337777861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 63,
             "ProjectId": 7,
@@ -5598,8 +5325,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1805551061310),
             "Salary": 74586.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:187",
                     "DeveloperId": 63,
                     "OperatingSystem": "Win 7",
@@ -5617,10 +5343,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 209620,
                     "ExpirationDate": new Date(1338123461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 64,
             "ProjectId": 7,
@@ -5628,8 +5351,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1813496261310),
             "Salary": 75789.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:190",
                     "DeveloperId": 64,
                     "OperatingSystem": "Win 7x64",
@@ -5647,10 +5369,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 212965,
                     "ExpirationDate": new Date(1338469061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 65,
             "ProjectId": 7,
@@ -5658,8 +5377,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1821445061310),
             "Salary": 76992.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:193",
                     "DeveloperId": 65,
                     "OperatingSystem": "Win Vista",
@@ -5677,10 +5395,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 216310,
                     "ExpirationDate": new Date(1338814661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 66,
             "ProjectId": 7,
@@ -5688,8 +5403,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1829311061310),
             "Salary": 78195.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:196",
                     "DeveloperId": 66,
                     "OperatingSystem": "Win XPx32",
@@ -5707,10 +5421,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 219655,
                     "ExpirationDate": new Date(1339160261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 67,
             "ProjectId": 7,
@@ -5718,8 +5429,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1837173461310),
             "Salary": 79398.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:199",
                     "DeveloperId": 67,
                     "OperatingSystem": "Win Linux",
@@ -5737,10 +5447,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 223000,
                     "ExpirationDate": new Date(1339505861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 68,
             "ProjectId": 7,
@@ -5748,8 +5455,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1845118661310),
             "Salary": 80601.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines":[{
                     "VirtualMachineId": "vm:202",
                     "DeveloperId": 68,
                     "OperatingSystem": "Win 7",
@@ -5767,10 +5473,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 226345,
                     "ExpirationDate": new Date(1339851461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 69,
             "ProjectId": 7,
@@ -5778,8 +5481,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1853067461310),
             "Salary": 81804.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:205",
                     "DeveloperId": 69,
                     "OperatingSystem": "Win 7x64",
@@ -5797,10 +5499,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 229690,
                     "ExpirationDate": new Date(1340197061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 70,
             "ProjectId": 7,
@@ -5808,8 +5507,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1860933461310),
             "Salary": 83007.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:208",
                     "DeveloperId": 70,
                     "OperatingSystem": "Win Vista",
@@ -5827,14 +5525,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 233035,
                     "ExpirationDate": new Date(1340542661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -6451,16 +6143,14 @@ var hgridData = [{
     "StartDate": new Date(1322690400000),
     "EndDate": new Date(1329256800000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers":  [{
             "DeveloperId": 71,
             "ProjectId": 8,
             "Name": "Monica Galler7",
             "Position": "Senior",
             "HireDate": new Date(1868709461310),
             "Salary": 98245.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:211",
                     "DeveloperId": 71,
                     "OperatingSystem": "Win XPx32",
@@ -6478,10 +6168,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 236380,
                     "ExpirationDate": new Date(1340888261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 72,
             "ProjectId": 8,
@@ -6489,8 +6176,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1876654661310),
             "Salary": 99648.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:214",
                     "DeveloperId": 72,
                     "OperatingSystem": "Win Linux",
@@ -6508,10 +6194,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 239725,
                     "ExpirationDate": new Date(1341233861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 73,
             "ProjectId": 8,
@@ -6519,8 +6202,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1884603461310),
             "Salary": 101052.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:217",
                     "DeveloperId": 73,
                     "OperatingSystem": "Win 7",
@@ -6538,10 +6220,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 243070,
                     "ExpirationDate": new Date(1341579461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 74,
             "ProjectId": 8,
@@ -6549,8 +6228,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1892469461310),
             "Salary": 102455.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:220",
                     "DeveloperId": 74,
                     "OperatingSystem": "Win 7x64",
@@ -6568,10 +6246,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 246415,
                     "ExpirationDate": new Date(1341925061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 75,
             "ProjectId": 8,
@@ -6579,8 +6254,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1900245461310),
             "Salary": 103859.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:223",
                     "DeveloperId": 75,
                     "OperatingSystem": "Win Vista",
@@ -6598,10 +6272,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 249760,
                     "ExpirationDate": new Date(1342270661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 76,
             "ProjectId": 8,
@@ -6609,8 +6280,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1908190661310),
             "Salary": 105262.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:226",
                     "DeveloperId": 76,
                     "OperatingSystem": "Win XPx32",
@@ -6628,10 +6298,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 253105,
                     "ExpirationDate": new Date(1342616261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 77,
             "ProjectId": 8,
@@ -6639,8 +6306,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1916139461310),
             "Salary": 106666.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:229",
                     "DeveloperId": 77,
                     "OperatingSystem": "Win Linux",
@@ -6658,10 +6324,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 256450,
                     "ExpirationDate": new Date(1342961861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 78,
             "ProjectId": 8,
@@ -6669,8 +6332,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1924005461310),
             "Salary": 108069.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:232",
                     "DeveloperId": 78,
                     "OperatingSystem": "Win 7",
@@ -6688,10 +6350,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 259795,
                     "ExpirationDate": new Date(1343307461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 79,
             "ProjectId": 8,
@@ -6699,8 +6358,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1931781461310),
             "Salary": 109473.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:235",
                     "DeveloperId": 79,
                     "OperatingSystem": "Win 7x64",
@@ -6718,10 +6376,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 263140,
                     "ExpirationDate": new Date(1343653061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 80,
             "ProjectId": 8,
@@ -6729,8 +6384,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1939726661310),
             "Salary": 110876.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:238",
                     "DeveloperId": 80,
                     "OperatingSystem": "Win Vista",
@@ -6748,14 +6402,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 266485,
                     "ExpirationDate": new Date(1343998661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,
@@ -7372,16 +7020,14 @@ var hgridData = [{
     "StartDate": new Date(1325368800000),
     "EndDate": new Date(1331762400000),
     "IsPostponed": false,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 81,
             "ProjectId": 9,
             "Name": "Monica Galler8",
             "Position": "Lead",
             "HireDate": new Date(1947675461310),
             "Salary": 128320.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:241",
                     "DeveloperId": 81,
                     "OperatingSystem": "Win XPx32",
@@ -7399,10 +7045,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 269830,
                     "ExpirationDate": new Date(1344344261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 82,
             "ProjectId": 9,
@@ -7410,8 +7053,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1955541461310),
             "Salary": 129924.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:244",
                     "DeveloperId": 82,
                     "OperatingSystem": "Win Linux",
@@ -7429,10 +7071,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 273175,
                     "ExpirationDate": new Date(1344689861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 83,
             "ProjectId": 9,
@@ -7440,8 +7079,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1963403861310),
             "Salary": 131528.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:247",
                     "DeveloperId": 83,
                     "OperatingSystem": "Win 7",
@@ -7459,10 +7097,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 276520,
                     "ExpirationDate": new Date(1345035461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 84,
             "ProjectId": 9,
@@ -7470,8 +7105,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(1971349061310),
             "Salary": 133132.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:250",
                     "DeveloperId": 84,
                     "OperatingSystem": "Win 7x64",
@@ -7489,10 +7123,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 279865,
                     "ExpirationDate": new Date(1345381061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 85,
             "ProjectId": 9,
@@ -7500,8 +7131,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(1979297861310),
             "Salary": 134736.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:253",
                     "DeveloperId": 85,
                     "OperatingSystem": "Win Vista",
@@ -7519,10 +7149,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 283210,
                     "ExpirationDate": new Date(1345726661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 86,
             "ProjectId": 9,
@@ -7530,8 +7157,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(1987163861310),
             "Salary": 136340.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:256",
                     "DeveloperId": 86,
                     "OperatingSystem": "Win XPx32",
@@ -7549,10 +7175,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 286555,
                     "ExpirationDate": new Date(1346072261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 87,
             "ProjectId": 9,
@@ -7560,8 +7183,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(1994939861310),
             "Salary": 137944.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:259",
                     "DeveloperId": 87,
                     "OperatingSystem": "Win Linux",
@@ -7579,10 +7201,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 289900,
                     "ExpirationDate": new Date(1346417861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 88,
             "ProjectId": 9,
@@ -7590,8 +7209,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(2002885061310),
             "Salary": 139548.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:262",
                     "DeveloperId": 88,
                     "OperatingSystem": "Win 7",
@@ -7609,10 +7227,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 293245,
                     "ExpirationDate": new Date(1346763461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 89,
             "ProjectId": 9,
@@ -7620,8 +7235,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(2010833861310),
             "Salary": 141152.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:265",
                     "DeveloperId": 89,
                     "OperatingSystem": "Win 7x64",
@@ -7639,10 +7253,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 296590,
                     "ExpirationDate": new Date(1347109061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 90,
             "ProjectId": 9,
@@ -7650,8 +7261,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(2018699861310),
             "Salary": 142756.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:268",
                     "DeveloperId": 90,
                     "OperatingSystem": "Win Vista",
@@ -7669,14 +7279,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 299935,
                     "ExpirationDate": new Date(1347454661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 1,
@@ -8293,16 +7897,14 @@ var hgridData = [{
     "StartDate": new Date(1328047200000),
     "EndDate": new Date(1334437200000),
     "IsPostponed": true,
-    "Developers": {
-        "Records": [{
+    "Developers": [{
             "DeveloperId": 91,
             "ProjectId": 10,
             "Name": "Monica Galler9",
             "Position": "Senior",
             "HireDate": new Date(2026475861310),
             "Salary": 162405.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:271",
                     "DeveloperId": 91,
                     "OperatingSystem": "Win XPx32",
@@ -8320,10 +7922,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 303280,
                     "ExpirationDate": new Date(1347800261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 92,
             "ProjectId": 10,
@@ -8331,8 +7930,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(2034421061310),
             "Salary": 164209.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:274",
                     "DeveloperId": 92,
                     "OperatingSystem": "Win Linux",
@@ -8350,10 +7948,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 306625,
                     "ExpirationDate": new Date(1348145861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 93,
             "ProjectId": 10,
@@ -8361,8 +7956,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(2042369861310),
             "Salary": 166014.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:277",
                     "DeveloperId": 93,
                     "OperatingSystem": "Win 7",
@@ -8380,10 +7974,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 309970,
                     "ExpirationDate": new Date(1348491461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 94,
             "ProjectId": 10,
@@ -8391,8 +7982,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(2050235861310),
             "Salary": 167818.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:280",
                     "DeveloperId": 94,
                     "OperatingSystem": "Win 7x64",
@@ -8410,10 +8000,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 313315,
                     "ExpirationDate": new Date(1348837061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 95,
             "ProjectId": 10,
@@ -8421,8 +8008,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(2058011861310),
             "Salary": 169623.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:283",
                     "DeveloperId": 95,
                     "OperatingSystem": "Win Vista",
@@ -8440,10 +8026,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 316660,
                     "ExpirationDate": new Date(1349182661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 96,
             "ProjectId": 10,
@@ -8451,8 +8034,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(2065957061310),
             "Salary": 171427.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:286",
                     "DeveloperId": 96,
                     "OperatingSystem": "Win XPx32",
@@ -8470,10 +8052,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Vista",
                     "DelegatedSpace": 320005,
                     "ExpirationDate": new Date(1349528261313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 97,
             "ProjectId": 10,
@@ -8481,8 +8060,7 @@ var hgridData = [{
             "Position": "Lead",
             "HireDate": new Date(2073905861310),
             "Salary": 173232.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:289",
                     "DeveloperId": 97,
                     "OperatingSystem": "Win Linux",
@@ -8500,10 +8078,7 @@ var hgridData = [{
                     "OperatingSystem": "Win XPx32",
                     "DelegatedSpace": 323350,
                     "ExpirationDate": new Date(1349873861313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 98,
             "ProjectId": 10,
@@ -8511,8 +8086,7 @@ var hgridData = [{
             "Position": "Junior",
             "HireDate": new Date(2081771861310),
             "Salary": 175036.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:292",
                     "DeveloperId": 98,
                     "OperatingSystem": "Win 7",
@@ -8530,10 +8104,7 @@ var hgridData = [{
                     "OperatingSystem": "Win Linux",
                     "DelegatedSpace": 326695,
                     "ExpirationDate": new Date(1350219461313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 99,
             "ProjectId": 10,
@@ -8541,8 +8112,7 @@ var hgridData = [{
             "Position": "Senior",
             "HireDate": new Date(2089634261310),
             "Salary": 176841.0000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:295",
                     "DeveloperId": 99,
                     "OperatingSystem": "Win 7x64",
@@ -8560,10 +8130,7 @@ var hgridData = [{
                     "OperatingSystem": "Win 7",
                     "DelegatedSpace": 330040,
                     "ExpirationDate": new Date(1350565061313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }, {
             "DeveloperId": 100,
             "ProjectId": 10,
@@ -8571,8 +8138,7 @@ var hgridData = [{
             "Position": "Intern",
             "HireDate": new Date(2097579461310),
             "Salary": 178645.5000,
-            "VirtualMachines": {
-                "Records": [{
+            "VirtualMachines": [{
                     "VirtualMachineId": "vm:298",
                     "DeveloperId": 100,
                     "OperatingSystem": "Win Vista",
@@ -8590,14 +8156,8 @@ var hgridData = [{
                     "OperatingSystem": "Win 7x64",
                     "DelegatedSpace": 333385,
                     "ExpirationDate": new Date(1350910661313)
-                }],
-                "TotalRecordsCount": 0,
-                "Metadata": {}
-            }
+                }]
         }],
-        "TotalRecordsCount": 0,
-        "Metadata": {}
-    },
     "Scrums": {
         "Records": [{
             "MeetingId": 6,

@@ -1,5 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { html } from 'lit-html';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -20,3 +21,8 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 // const treeGrid = document.querySelector("igx-tree-grid");
 // treeGrid.childDataKey // <-- doc w/ angular example :(
 // treeGrid.reflow() // <-- wrong, better WithProps TODO?
+
+document.addEventListener('DOMContentLoaded', () => {
+    let grid1 = document.querySelector('igc-grid#grid1') as any;
+    grid1.sortHeaderIconTemplate = (context) => html`⬇(${context.$implicit.title})`;
+});

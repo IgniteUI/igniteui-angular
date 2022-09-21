@@ -15,8 +15,6 @@
 /// @requires rem
 @mixin date-picker($theme) {
     $palette: map.get($theme, 'palette');
-    $selected-hover-color: text-contrast(map.get($theme, 'date-selected-background'), $palette: $palette);
-
     @include css-vars($theme, '.igx-date-picker');
 
     $variant: map.get($theme, variant);
@@ -121,21 +119,10 @@
 
         %cal-value--selected {
             color: var-get($theme, 'date-selected-text-color');
-            // background: var-get($theme, 'date-selected-background') !important;
         }
 
         %cal-value--current {
             color: var-get($theme, 'date-current-text-color');
-        }
-
-        %cal-value--hover {
-            %cal-value-content::after {
-                background: var-get($theme, 'date-hover-background');
-            }
-
-            &%cal-value--selected %cal-value-content::after {
-                background: $selected-hover-color;
-            }
         }
     }
 

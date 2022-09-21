@@ -1162,7 +1162,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
 
-            expect(sundayLabel.trim()).toEqual('So');
+            expect(sundayLabel.trim()).toEqual('Mo');
         }));
 
         it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
@@ -4707,6 +4707,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
             expect(grid.filteredData.length).toEqual(1);
+        }));
+
+        it('Should take pipeArgs weekStart property as calendar\'s default.', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseDate');
+
+            column.pipeArgs = {
+                digitsInfo: '3.4-4',
+                currencyCode: 'USD',
+                display: 'symbol-narrow',
+                weekStart: 5,
+            };
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const input = datePicker.querySelector('input');
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            // Get Calendar component.
+            const calendar = document.querySelector('igx-calendar');
+
+            const daysOfWeek = calendar.querySelector('.igx-calendar__body-row');
+            const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
+
+            expect(weekStart.innerText).toMatch('Fri');
         }));
 
         it('Should filter grid with ISO 8601 dates through custom date filter dialog', fakeAsync(() => {

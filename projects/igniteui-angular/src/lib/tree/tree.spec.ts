@@ -269,13 +269,40 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeExpanding.emit).not.toHaveBeenCalled();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalled();
             });
-            it('Should call service expand/collapse methods when calling API state methods', () => {
+            it('Expand() should expand currently collapsing node', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
                 const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
                     mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
-                const emitSpy = spyOn(node, 'expandedChange');
+                mockTreeService.expandedNodes.add(node);
+                mockTreeService.collapsingNodes.add(node);
+                node.expand();
+                expect(mockTree.nodeExpanding.emit).toHaveBeenCalledTimes(1);
+
+            });
+            it('Collapse() shouldn`t affect a currently collapsing node', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                mockTreeService.expandedNodes.add(node);
+                mockTreeService.collapsingNodes.add(node);
+                node.collapse();
+                expect(mockTree.nodeCollapsing.emit).toHaveBeenCalledTimes(0);
+            });
+            it('Should call service expand/collapse methods when calling API state methods', () => {
+                mockTreeService = new IgxTreeService();
+                mockTreeService.register(mockTree);
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                    mockNavService, mockCdr, mockAnimationService, mockElementRef, null);
+                node.expandedChange = jasmine.createSpyObj('emitter', ['emit'])
                 const openAnimationSpy = spyOn(node, 'playOpenAnimation');
                 const closeAnimationSpy = spyOn(node, 'playCloseAnimation');
                 const mockObj = jasmine.createSpyObj<any>('mockElement', ['focus']);
+                spyOn(mockTreeService, 'collapse').and.callThrough();
+                spyOn(mockTreeService, 'collapsing').and.callThrough();
+                spyOn(mockTreeService, 'expand').and.callThrough();
+                spyOn(node, 'expandedChange').and.callThrough();
                 const ingArgs = {
                     owner: mockTree,
                     cancel: false,
@@ -297,7 +324,7 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsing.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalledWith();
-                expect(emitSpy).not.toHaveBeenCalled();
+                expect(node.expandedChange).not.toHaveBeenCalled();
                 node.ngOnInit();
                 node.expand();
                 expect(openAnimationSpy).toHaveBeenCalledWith(mockObj);
@@ -307,6 +334,8 @@ describe('IgxTree #treeView', () => {
                 expect(mockTreeService.expand).toHaveBeenCalledWith(node, true);
                 expect(mockTreeService.expand).toHaveBeenCalledTimes(1);
                 node.openAnimationDone.emit();
+                expect(node.expandedChange.emit).toHaveBeenCalledTimes(1);
+                expect(node.expandedChange.emit).toHaveBeenCalledWith(true);
                 expect(mockTree.nodeExpanded.emit).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeExpanded.emit).toHaveBeenCalledWith(edArgs);
                 node.collapse();
@@ -319,6 +348,8 @@ describe('IgxTree #treeView', () => {
                 node.closeAnimationDone.emit();
                 expect(mockTreeService.collapse).toHaveBeenCalledTimes(1);
                 expect(mockTreeService.collapse).toHaveBeenCalledWith(node);
+                expect(node.expandedChange.emit).toHaveBeenCalledTimes(2);
+                expect(node.expandedChange.emit).toHaveBeenCalledWith(false);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledWith(edArgs);
                 spyOn(node, 'expand');
@@ -507,6 +538,18 @@ describe('IgxTree #treeView', () => {
                 pending('Test not implemented');
             });
 
+            it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', fakeAsync(() => {
+                const expandingSpy = spyOn(tree.nodeExpanding, 'emit').and.callThrough();
+                const collapsingSpy = spyOn(tree.nodeCollapsing, 'emit').and.callThrough();
+                tree.nodes.first.collapse();
+                expect(expandingSpy).not.toHaveBeenCalled();
+
+                tree.nodes.first.expanded = true;
+
+                tree.nodes.first.expand();
+                expect(collapsingSpy).not.toHaveBeenCalled();
+            }));
+
             it('Should properly emit state toggle events', fakeAsync(() => {
                 // node event spies
                 const collapsingSpy = spyOn(tree.nodeCollapsing, 'emit').and.callThrough();
@@ -554,6 +597,7 @@ describe('IgxTree #treeView', () => {
                 tick();
                 expect(expandingSpy).toHaveBeenCalledTimes(2);
                 expect(expandedSpy).toHaveBeenCalledTimes(1);
+                tree.nodes.first.expanded = true;
                 unsub$.next();
                 tree.nodeCollapsing.pipe(takeUntil(unsub$)).subscribe(e => {
                     e.cancel = true;

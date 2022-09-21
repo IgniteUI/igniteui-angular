@@ -22,7 +22,7 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode, GridInstanceType } from '../common/enums';
-import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowTemplateContext, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
@@ -30,6 +30,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
+import { IgxGridValidationService } from './grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -67,6 +68,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
+        IgxGridValidationService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
         IgxFilteringService,
@@ -154,7 +156,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     @ContentChildren(IgxGridDetailTemplateDirective, { read: TemplateRef })
-    public detailTemplate: QueryList<TemplateRef<any>> = new QueryList();
+    public detailTemplate: QueryList<TemplateRef<IgxGridMasterDetailContext>> = new QueryList();
 
     /**
      * @hidden @internal
@@ -250,7 +252,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
-    protected _groupRowTemplate: TemplateRef<any>;
+    protected _groupRowTemplate: TemplateRef<IgxGroupByRowTemplateContext>;
     /**
      * @hidden
      */
@@ -544,7 +546,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public getDetailsContext(rowData, index) {
+    public getDetailsContext(rowData, index): IgxGridDetailTemplateDirective {
         return {
             $implicit: rowData,
             index
@@ -603,11 +605,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
      */
-    public get groupRowTemplate(): TemplateRef<any> {
+    public get groupRowTemplate(): TemplateRef<IgxGroupByRowTemplateContext> {
         return this._groupRowTemplate;
     }
 
-    public set groupRowTemplate(template: TemplateRef<any>) {
+    public set groupRowTemplate(template: TemplateRef<IgxGroupByRowTemplateContext>) {
         this._groupRowTemplate = template;
         this.notifyChanges();
     }
@@ -921,8 +923,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._groupRowTemplate = this.groupTemplate.template;
         }
 
-        this.detailTemplate.changes.subscribe(() =>
-            this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
         if (this.hideGroupedColumns && this._columns && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
@@ -966,6 +966,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngOnInit() {
         super.ngOnInit();
+        this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
