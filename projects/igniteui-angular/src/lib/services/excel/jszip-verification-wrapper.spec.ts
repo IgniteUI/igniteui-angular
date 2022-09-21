@@ -1,19 +1,19 @@
-import * as JSZip from 'jszip';
+import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
 import { JSZipFiles } from './jszip-helper.spec';
 
 export class JSZipWrapper {
-    private _zip: JSZip;
+    private _zip: Object;
     private _filesAndFolders: string[];
-    private _fileContent = '';
-    private _files: {[key: string]: JSZip.JSZipObject};
+    private _files: Map<string, Uint8Array>;
     private _filesContent: IFileContent[] = [];
     private _hasValues = true;
 
-    constructor(currentZip: JSZip) {
+    constructor(currentZip: Object) {
         this._zip = currentZip;
-        this._files = currentZip.files;
-        this.createFilesAndFolders();
+        this._files = new Map<string, Uint8Array>();
+        this._filesAndFolders = [];
+        this.createFilesAndFolders(this._zip, '');
         this._hasValues = this._filesAndFolders.length > JSZipFiles.templatesNames.length;
         this._filesContent = [];
     }
@@ -24,8 +24,8 @@ export class JSZipWrapper {
         const template = isHGrid ? JSZipFiles.hGridDataFilesAndFoldersNames : JSZipFiles.dataFilesAndFoldersNames;
 
         result = (this.hasValues) ?
-                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
-                    result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
+            result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
+            result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
 
         expect(result).toBe(true, message + ' Unexpected zip structure!');
     }
@@ -56,8 +56,17 @@ export class JSZipWrapper {
         });
     }
 
-    private createFilesAndFolders() {
-        this._filesAndFolders = Object.keys(this._files).map(f => f);
+    private createFilesAndFolders(obj: Object, prefix: string) {
+        Object.keys(obj).forEach((key) => {
+            if (ArrayBuffer.isView(obj[key])) {
+                this._files.set(`${prefix}${key}`, obj[key]);
+                this._filesAndFolders.push(`${prefix}${key}`);
+            } else {
+                const newPrefix = `${prefix}${key}/`;
+                this._filesAndFolders.push(newPrefix);
+                this.createFilesAndFolders(obj[key], newPrefix);
+            }
+        });
     }
 
     public get templateFilesAndFolders(): string[] {
@@ -81,32 +90,18 @@ export class JSZipWrapper {
     }
 
     private getFiles(collection: string[]) {
-        return collection.filter((f) => this._files[f].dir === false);
-    }
-
-    /* Loads and reads a file asynchronously. */
-    private async readFile(fileName: string) {
-        if (this._zip === undefined) {
-            return 'Zip file not found!';
-        }
-
-        await this._files[fileName].async('text')
-        .then((txt) => {
-                this._fileContent = txt;
-        });
+        return collection.filter((f) => f.endsWith('/') === false);
     }
 
     /* Reads all files and stores their contents in this._filesContent. */
-    private async readFiles(files: string[]) {
+    private readFiles(files: string[]) {
         // const self = this;
         this._filesContent = [];
         for (const file of files) {
-            await this.readFile(file).then(() => {
-                const content = this._fileContent;
-                this._filesContent.push({
-                    fileName : file,
-                    fileContent : content
-                });
+            const content = strFromU8(this._files.get(file));
+            this._filesContent.push({
+                fileName: file,
+                fileContent: content
             });
         }
     }
@@ -117,13 +112,13 @@ export class JSZipWrapper {
 
     private async readTemplateFiles() {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
         await this.readFiles(actualTemplates);
     }
 
     public get templateFilesContent(): IFileContent[] {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 

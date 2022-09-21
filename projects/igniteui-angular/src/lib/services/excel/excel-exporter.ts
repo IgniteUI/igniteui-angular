@@ -11,7 +11,7 @@ import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
 
-export interface IExcelExportEndedEventArgs extends IBaseEventArgs { }
+export interface IExcelExportEndedEventArgs extends IBaseEventArgs { zipStructure: Object }
 
 const EXCEL_MAX_ROWS = 1048576;
 const EXCEL_MAX_COLS = 16384;
@@ -138,7 +138,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             .then(() => {
                 zip(fileData, (_, result) => {
                     this.saveFile(result, options.fileName);
-                    this.exportEnded.emit();
+                    this.exportEnded.emit({ zipStructure: fileData });
                     done();
                 });
             });

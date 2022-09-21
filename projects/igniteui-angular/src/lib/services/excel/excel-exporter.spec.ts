@@ -120,7 +120,7 @@ describe('Excel Exporter', () => {
     const getExportedData = (data: any[], exportOptions: IgxExcelExporterOptions) => {
         const result = new Promise<JSZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {
-                const wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new JSZipWrapper(value.zipStructure);
                 resolve(wrapper);
             });
             exporter.exportData(data, exportOptions);

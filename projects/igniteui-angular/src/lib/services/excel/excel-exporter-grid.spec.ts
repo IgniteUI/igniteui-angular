@@ -1199,7 +1199,7 @@ describe('Excel Exporter', () => {
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {
-                const wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new JSZipWrapper(value.zipStructure);
                 resolve(wrapper);
             });
             exporter.export(grid, exportOptions);
