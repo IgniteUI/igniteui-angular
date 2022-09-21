@@ -144,6 +144,7 @@ export interface ICellPosition {
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: any;
     dragData: RowType;
+    /* blazorSuppress */
     dragElement: HTMLElement;
     animation: boolean;
 }
@@ -151,6 +152,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
     dragDirective: any;
     dragData: RowType;
+    /* blazorSuppress */
     dragElement: HTMLElement;
 }
 
