@@ -155,7 +155,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public select(item: any): void {
-        if (item !== null && item !== undefined) {
+        if (item !== undefined) {
             const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
             this.setSelection(newSelection);
         }
@@ -176,9 +176,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = this.selection;
-        // the second check is used when value is undefined, i.e., item with valueKey=undefined is selected
-        const hasSelection = value !== undefined || this.valueKey && this.data.find(x => x[this.valueKey] === undefined);
-        this.selectionService.select_items(this.id, hasSelection ? [value] : [], true);
+        this.selectionService.select_items(this.id, value !== undefined ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
     }
@@ -401,17 +399,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        // additional checks when selecting and clearing an item with valueKey=undefined
-        // as the event should emit when args.newSelection differs from args.oldSelection
-        // however in this case both args.newSelection and args.oldSelection are 'undefined'
-        if (args.newSelection !== args.oldSelection
-            || args.newSelection === undefined && newSelection?.size > 0
-            || args.oldSelection === undefined && oldSelectionAsArray.length > 0) {
+        if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = newSelection?.size > 0
+            let argsSelection = args.newSelection !== undefined
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
