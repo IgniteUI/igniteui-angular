@@ -71,6 +71,9 @@ export class IgxSelectionAPIService {
         if (sel === undefined) {
             sel = this.get_empty();
         }
+        if (itemID === undefined) {
+            throw Error('Invalid value for item id!');
+        }
         sel.add(itemID);
         return sel;
     }
