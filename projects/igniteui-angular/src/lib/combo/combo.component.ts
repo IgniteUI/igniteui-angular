@@ -354,6 +354,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
+        if (itemID === undefined) {
+            return;
+        }
         if (select) {
             this.select([itemID], false, event);
         } else {
