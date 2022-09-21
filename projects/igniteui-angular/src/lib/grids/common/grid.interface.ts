@@ -36,7 +36,7 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { FormGroup, ValidationErrors } from '@angular/forms';
+import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -362,16 +362,16 @@ export interface GridType extends IGridDataBindable {
     pinnedColumnsCount: number;
 
     iconTemplate?: TemplateRef<any>;
-    groupRowTemplate?: TemplateRef<any>;
-    groupByRowSelectorTemplate?: TemplateRef<any>;
+    groupRowTemplate?: TemplateRef<IgxGroupByRowTemplateContext>;
+    groupByRowSelectorTemplate?: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
-    headSelectorTemplate: TemplateRef<any>;
-    rowSelectorTemplate: TemplateRef<any>;
-    sortHeaderIconTemplate: TemplateRef<any>;
-    sortAscendingHeaderIconTemplate: TemplateRef<any>;
-    sortDescendingHeaderIconTemplate: TemplateRef<any>;
-    headerCollapseIndicatorTemplate: TemplateRef<any>;
-    headerExpandIndicatorTemplate: TemplateRef<any>;
+    headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
+    rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
+    sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
@@ -453,9 +453,9 @@ export interface GridType extends IGridDataBindable {
 
     cdr: ChangeDetectorRef;
     document: Document;
-    rowExpandedIndicatorTemplate: TemplateRef<any>;
-    rowCollapsedIndicatorTemplate: TemplateRef<any>;
-    excelStyleHeaderIconTemplate: TemplateRef<any>;
+    rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
 
     selectRowOnClick: boolean;
     cellSelection: GridSelectionMode;
@@ -763,8 +763,8 @@ export interface IgxColumnTemplateContext {
 export interface IgxCellTemplateContext {
     $implicit: any,
     additionalTemplateContext: any,
-    formControl?: any,
-    defaultErrorTemplate?: any,
+    formControl?: FormControl<any>,
+    defaultErrorTemplate?: TemplateRef<any>,
     cell?: CellType
 }
 
@@ -782,7 +782,7 @@ export interface IgxGroupByRowSelectorTemplateContext {
     $implicit: {
         selectedCount: number,
         totalCount: number,
-        groupRow: RowType
+        groupRow: IGroupByRecord
     }
 }
 

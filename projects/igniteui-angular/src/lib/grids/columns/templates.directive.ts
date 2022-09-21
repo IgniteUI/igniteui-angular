@@ -6,10 +6,10 @@ import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateCon
     selector: '[igxFilterCellTemplate]'
 })
 export class IgxFilterCellTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext { 
+        context: unknown): context is IgxColumnTemplateContext {
         return true;
     };
 }
@@ -18,11 +18,10 @@ export class IgxFilterCellTemplateDirective {
     selector: '[igxCell]'
 })
 export class IgxCellTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective,
-        context: unknown): context is IgxCellTemplateContext { 
+        context: unknown): context is IgxCellTemplateContext {
         return true;
     };
 }
@@ -31,10 +30,10 @@ export class IgxCellTemplateDirective {
     selector: '[igxCellValidationError]'
 })
 export class IgxCellValidationErrorDirective {
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective,
-        context: unknown): context is IgxCellTemplateContext { 
+        context: unknown): context is IgxCellTemplateContext {
         return true;
     };
 }
@@ -43,10 +42,10 @@ export class IgxCellValidationErrorDirective {
     selector: '[igxHeader]'
 })
 export class IgxCellHeaderTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext { 
+        context: unknown): context is IgxColumnTemplateContext {
         return true;
     };
 }
@@ -58,7 +57,6 @@ export class IgxCellHeaderTemplateDirective {
     selector: '[igxFooter]'
 })
 export class IgxCellFooterTemplateDirective {
-
     constructor(public template: TemplateRef<any>) { }
 }
 
@@ -66,11 +64,10 @@ export class IgxCellFooterTemplateDirective {
     selector: '[igxCellEditor]'
 })
 export class IgxCellEditorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective,
-        context: unknown): context is IgxCellTemplateContext { 
+        context: unknown): context is IgxCellTemplateContext {
         return true;
     };
 }
@@ -79,11 +76,10 @@ export class IgxCellEditorTemplateDirective {
     selector: '[igxCollapsibleIndicator]'
 })
 export class IgxCollapsibleIndicatorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext { 
+        context: unknown): context is IgxColumnTemplateContext {
         return true;
     };
 }
@@ -92,11 +88,10 @@ export class IgxCollapsibleIndicatorTemplateDirective {
     selector: '[igxSummary]'
 })
 export class IgxSummaryTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<IgxSummaryTemplateContext>) { }
 
     public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective,
-        context: unknown): context is IgxSummaryTemplateContext { 
+        context: unknown): context is IgxSummaryTemplateContext {
         return true;
     };
 }

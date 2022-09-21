@@ -138,6 +138,8 @@ import {
     IgxGridRowEditTextTemplateContext,
     IgxGridRowTemplateContext,
     IgxGridTemplateContext,
+    IgxHeadSelectorTemplateContext,
+    IgxRowSelectorTemplateContext,
     IGX_GRID_SERVICE_BASE,
     ISizeInfo,
     RowType
@@ -2306,7 +2308,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
+    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
         if (this.headSelectorsTemplates && this.headSelectorsTemplates.first) {
             return this.headSelectorsTemplates.first.templateRef;
         }
@@ -2334,7 +2336,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
+    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
         if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
             return this.rowSelectorsTemplates.first.templateRef;
         }
