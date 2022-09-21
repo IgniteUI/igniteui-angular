@@ -1,5 +1,7 @@
-<article class="igx-query-builder">
-    <igx-query-builder-header *ngIf="!headerContent" [title]="this.resourceStrings.igx_query_builder_title"></igx-query-builder-header>
+<div class="igx-query-builder">
+    <igx-query-builder-header *ngIf="!headerContent" [title]="this.resourceStrings.igx_query_builder_title">
+    </igx-query-builder-header>
+    
     <ng-content select="igx-query-builder-header"></ng-content>
 
     <div #expressionsContainer class="igx-advanced-filter__main" (scroll)="onExpressionsScrolled()">
@@ -52,7 +54,7 @@
                     [selected]="expressionItem.selected" (keydown)="invokeClick($event)"
                     (click)="onChipClick(expressionItem)" (dblclick)="onChipDblClick(expressionItem)"
                     (remove)="onChipRemove(expressionItem)" (selectedChanged)="onChipSelectionEnd()">
-                    <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.columnHeader ||
+                    <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.fieldLabel ||
                         expressionItem.expression.fieldName }}</span>
                     <igx-prefix>
                         <igx-icon family="imx-icons" [name]="expressionItem.expression.condition.iconName">
@@ -125,7 +127,8 @@
                     <input #searchValueInput igxInput [disabled]="!selectedField || !selectedCondition
                             || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                         [type]="selectedField && selectedField.dataType === 'number' ? 'number' : 'text'"
-                        [placeholder]="this.resourceStrings.igx_query_builder_value_placeholder" [(ngModel)]="searchValue" />
+                        [placeholder]="this.resourceStrings.igx_query_builder_value_placeholder"
+                        [(ngModel)]="searchValue" />
                 </igx-input-group>
 
                 <igx-date-picker #picker *ngIf="selectedField && selectedField.dataType === 'date'"
@@ -134,12 +137,10 @@
                     [placeholder]="this.resourceStrings.igx_query_builder_date_placeholder" [disabled]="!selectedField || !selectedCondition
                         || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                     [locale]="this.locale"
+                    [outlet]="this.overlaySettings.outlet"
                     [formatter]="selectedField.formatter"
                     [displayFormat]="selectedField.pipeArgs.format"
                     [weekStart]="selectedField.pipeArgs.weekStart">
-
-                    <!-- TODO outlet -->
-                    <!-- [outlet]="grid.outlet" -->
 
                     <!-- disable default icons -->
                     <igx-picker-toggle></igx-picker-toggle>
@@ -153,11 +154,9 @@
                     type="box" [readOnly]="true" [disabled]="!selectedField || !selectedCondition ||
                              (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
                     [locale]="this.locale"
+                    [outlet]="this.overlaySettings.outlet"
                     [formatter]="selectedField.formatter"
                     [inputFormat]="selectedField.defaultTimeFormat">
-
-                    <!-- TODO outlet -->
-                    <!-- [outlet]="grid.outlet" -->
 
                     <!-- disable default icons -->
                     <igx-picker-toggle></igx-picker-toggle>
@@ -169,9 +168,8 @@
                     <input #input igxInput tabindex="0"
                         [placeholder]="this.resourceStrings.igx_query_builder_date_placeholder"
                         [(ngModel)]="searchValue"
-                        [disabled]="!selectedField || !selectedCondition || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)" 
-                        [igxDateTimeEditor]="selectedField.defaultDateTimeFormat"
-                        />
+                        [disabled]="!selectedField || !selectedCondition || (selectedField && selectedField.filters.condition(selectedCondition).isUnary)"
+                        [igxDateTimeEditor]="selectedField.defaultDateTimeFormat" />
                 </igx-input-group>
 
                 <div class="igx-filter-tree__inputs-actions">
@@ -269,4 +267,6 @@
             </ng-container>
         </div>
     </div>
-</article>
+</div>
+<div #overlayOutlet igxOverlayOutlet class="igx-advanced-filter__outlet" (pointerdown)="onOutletPointerDown($event)">
+</div>

@@ -1,14 +1,9 @@
 import {
     Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding
 } from '@angular/core';
-import { VerticalAlignment, HorizontalAlignment, OverlaySettings } from '../../../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
-import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scroll-strategy';
-import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { Subject, Subscription } from 'rxjs';
-import { AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
@@ -48,12 +43,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    protected overlayOutlet: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
     public inline = true;    
 
     /**
@@ -61,40 +50,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public lastActiveNode = {} as IActiveNode;
 
-    /**
-     * @hidden @internal
-     */
-    public columnSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
-    /**
-     * @hidden @internal
-     */
-    public conditionSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;    
     private _grid: GridType;
     private _filteringChange: Subscription;
-
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalStartPoint: VerticalAlignment.Top
-    };
-    private _overlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy()
-    };
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
@@ -102,9 +62,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        this.queryBuilder.overlaySettings.outlet = this.overlayOutlet;
-        this.queryBuilder.columnSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.queryBuilder.conditionSelectOverlaySettings.outlet = this.overlayOutlet;        
         this.queryBuilder.fields = this.filterableFields;
         this.queryBuilder.expressionTree = this.grid.advancedFilteringExpressionsTree;
     }
@@ -214,14 +171,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public onOutletPointerDown(event) {
-        // This prevents closing the select's dropdown when clicking the scroll
-        event.preventDefault();
-    }
-
-    /**
-     * @hidden @internal
-     */
     public initialize(grid: GridType, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = false;
@@ -256,9 +205,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
-        //this.exitOperandEdit();
-        //TODO set grid expressionsTree
-        //this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
         this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionsTreeFromGroupItem(this.queryBuilder.rootGroup);
     }
 
@@ -278,14 +224,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     private assignResourceStrings() {
-        // If grid has custom resource strings, they are passed to the query builder
+        // If grid has custom resource strings set for the advanced filtering,
+        // they are passed to the query builder resource strings. 
         const gridRS = this.grid.resourceStrings;
 
         if (gridRS !== GridResourceStringsEN) {
             const queryBuilderRS = CurrentResourceStrings.QueryBuilderResStrings;
 
             queryBuilderRS.igx_query_builder_date_placeholder = gridRS.igx_grid_filter_row_date_placeholder;
-            queryBuilderRS.igx_query_builder_time_placeholder = gridRS.igx_grid_filter_row_time_placeholder;           
+            queryBuilderRS.igx_query_builder_time_placeholder = gridRS.igx_grid_filter_row_time_placeholder;
+            queryBuilderRS.igx_query_builder_filter_operator_and = gridRS.igx_grid_filter_operator_and;
+            queryBuilderRS.igx_query_builder_filter_operator_or = gridRS.igx_grid_filter_operator_or;
             queryBuilderRS.igx_query_builder_filter_contains = gridRS.igx_grid_filter_contains;
             queryBuilderRS.igx_query_builder_filter_doesNotContain = gridRS.igx_grid_filter_doesNotContain;
             queryBuilderRS.igx_query_builder_filter_startsWith = gridRS.igx_grid_filter_startsWith;

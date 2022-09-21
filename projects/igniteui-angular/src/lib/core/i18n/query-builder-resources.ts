@@ -1,6 +1,8 @@
 export interface IQueryBuilderResourceStrings {
     igx_query_builder_date_placeholder?: string;
     igx_query_builder_time_placeholder?: string;
+    igx_query_builder_filter_operator_and?: string;
+    igx_query_builder_filter_operator_or?: string;
     igx_query_builder_filter_contains?: string;
     igx_query_builder_filter_doesNotContain?: string;
     igx_query_builder_filter_startsWith?: string;
@@ -53,6 +55,8 @@ export interface IQueryBuilderResourceStrings {
 export const QueryBuilderResourceStringsEN: IQueryBuilderResourceStrings = {
     igx_query_builder_date_placeholder: 'Pick up date',
     igx_query_builder_time_placeholder: 'Pick up time',
+    igx_query_builder_filter_operator_and: 'And',
+    igx_query_builder_filter_operator_or: 'Or',
     igx_query_builder_filter_contains: 'Contains',
     igx_query_builder_filter_doesNotContain: 'Does Not Contain',
     igx_query_builder_filter_startsWith: 'Starts With',

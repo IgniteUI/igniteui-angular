@@ -1,5 +1,5 @@
 import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
-import { ContentChild, LOCALE_ID, Optional, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, LOCALE_ID, Optional, Pipe, PipeTransform } from '@angular/core';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
@@ -23,7 +23,7 @@ import { IgxDatePickerModule } from '../date-picker/date-picker.module';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/date-time-editor.directive';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { FieldType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
@@ -94,7 +94,7 @@ class ExpressionOperandItem extends ExpressionItem {
     templateUrl: './query-builder.component.html',
     styleUrls: ['./query-builder.component.css']
 })
-export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDestroy {
+export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
@@ -230,6 +230,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDe
     /**
      * @hidden @internal
      */
+     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+     protected overlayOutlet: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden @internal
+     */
     public rootGroup: ExpressionGroupItem;
 
     /**
@@ -326,6 +332,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDe
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.locale = this.locale || this._localeId;
+    }
+
+    public ngAfterViewInit(): void {
+        this.overlaySettings.outlet = this.overlayOutlet;
+        this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;        
     }
 
     /**
@@ -821,7 +833,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDe
         }
     }
 
-    /** @hidden @internal */
+    /** 
+     * @hidden @internal 
+     */
     public openPicker(args: KeyboardEvent) {
         if (this.platform.isActivationKey(args)) {
             args.preventDefault();
@@ -1042,13 +1056,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements OnDe
             if (contextualGroup) {
                 this.filteringLogics = [
                     {
-                        //TODO resource strings
-                        label: 'And', //this.grid.resourceStrings.igx_grid_filter_operator_and,
+                        label: this.resourceStrings.igx_query_builder_filter_operator_and,
                         selected: contextualGroup.operator === FilteringLogic.And
                     },
                     {
-                        //TODO resource strings
-                        label: 'Or', //this.grid.resourceStrings.igx_grid_filter_operator_or,
+                        label: this.resourceStrings.igx_query_builder_filter_operator_or,
                         selected: contextualGroup.operator === FilteringLogic.Or
                     }
                 ];

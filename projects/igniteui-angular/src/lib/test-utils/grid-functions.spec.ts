@@ -1438,7 +1438,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeader(fix: ComponentFixture<any>) {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-        const header = advFilterDialog.querySelector('.igx-advanced-filter__header');
+        const header = advFilterDialog.querySelector('.igx-query-builder__header');
         return header;
     }
 
@@ -1450,13 +1450,13 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeaderLegendItemAnd(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const andLegendItem = header.querySelector('.igx-filter-legend__item--and');
+        const andLegendItem = header.querySelector('.igx-builder-legend__item--and');
         return andLegendItem;
     }
 
     public static getAdvancedFilteringHeaderLegendItemOr(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const orLegendItem = header.querySelector('.igx-filter-legend__item--or');
+        const orLegendItem = header.querySelector('.igx-builder-legend__item--or');
         return orLegendItem;
     }
 
