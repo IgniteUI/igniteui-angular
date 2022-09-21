@@ -2105,16 +2105,16 @@ describe('igxCombo', () => {
             expect(combo.selection.length).toEqual(0);
             expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(0);
         });
-        it('should select unique falsy item values', () => {
+        it('should select falsy values except "undefined"', () => {
             combo.valueKey = 'value';
             combo.displayKey = 'field';
             combo.data = [
                 { field: '0', value: 0 },
                 { field: 'false', value: false },
                 { field: '', value: '' },
-                { field: 'undefined', value: undefined },
                 { field: 'null', value: null },
                 { field: 'NaN', value: NaN },
+                { field: 'undefined', value: undefined },
             ];
 
             combo.open();
@@ -2154,8 +2154,8 @@ describe('igxCombo', () => {
 
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('0, false, , undefined');
-            expect(combo.selection).toEqual([ 0, false, '', undefined ]);
+            expect(combo.value).toBe('0, false, , null');
+            expect(combo.selection).toEqual([ 0, false, '', null ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2164,8 +2164,8 @@ describe('igxCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('0, false, , undefined, null');
-            expect(combo.selection).toEqual([ 0, false, '', undefined, null ]);
+            expect(combo.value).toBe('0, false, , null, NaN');
+            expect(combo.selection).toEqual([ 0, false, '', null, NaN ]);
 
             combo.open();
             fixture.detectChanges();
@@ -2174,8 +2174,8 @@ describe('igxCombo', () => {
 
             item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe('0, false, , undefined, null, NaN');
-            expect(combo.selection).toEqual([ 0, false, '', undefined, null, NaN ]);
+            expect(combo.value).toBe('0, false, , null, NaN');
+            expect(combo.selection).toEqual([ 0, false, '', null, NaN ]);
         });
         it('should prevent selection when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
