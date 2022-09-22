@@ -9,6 +9,7 @@ import { CellType, GridServiceType, GridType, RowType } from './common/grid.inte
 
 abstract class BaseRow implements RowType {
     public index: number;
+    /* blazorAlternateType: Grid */
     /**
      * The grid that contains the row.
      */
@@ -247,6 +248,8 @@ abstract class BaseRow implements RowType {
     }
 }
 
+/* marshalByValueIgnore */
+/* blazorAlternateName: Row */
 export class IgxGridRow extends BaseRow implements RowType {
     /**
      * @hidden
@@ -325,6 +328,7 @@ export class IgxGridRow extends BaseRow implements RowType {
     }
 }
 
+/* marshalByValueIgnore */
 export class IgxTreeGridRow extends BaseRow implements RowType {
     /**
      * @hidden
@@ -481,6 +485,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     }
 }
 
+/* marshalByValueIgnore */
 export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     /**
      * @hidden
@@ -525,6 +530,7 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     }
 }
 
+/* marshalByValueIgnore */
 export class IgxGroupByRow implements RowType {
     /**
      * Returns the row index.
@@ -678,6 +684,7 @@ export class IgxGroupByRow implements RowType {
     }
 }
 
+/* marshalByValueIgnore */
 export class IgxSummaryRow implements RowType {
     /**
      * Returns the row index.
