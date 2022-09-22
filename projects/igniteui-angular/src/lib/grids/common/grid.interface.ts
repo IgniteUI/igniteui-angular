@@ -228,6 +228,7 @@ export interface ColumnType {
 }
 
 export interface IGridFormGroupCreatedEventArgs {
+    /* blazorSuppress */
     formGroup: FormGroup,
     owner: GridType
 }
