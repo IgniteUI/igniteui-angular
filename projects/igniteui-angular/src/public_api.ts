@@ -140,6 +140,7 @@ export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
+export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';
