@@ -1,41 +1,22 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter,
-    HostBinding, Input, NgModule, OnInit, Output, Renderer2,
-    ViewChild,
-    TemplateRef,
-    ContentChild,
-    OnDestroy,
-    HostListener,
-    ViewChildren,
-    QueryList,
-    ChangeDetectorRef,
-    OnChanges,
-    NgZone,
-    AfterContentInit,
-    SimpleChanges
+    AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
+    HostBinding, HostListener, Input, NgModule, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { EditorProvider } from '../core/edit-provider';
-import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject, merge, Observable, timer, noop } from 'rxjs';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import {
-    SliderHandle,
-    IgxThumbFromTemplateDirective,
-    IgxThumbToTemplateDirective,
-    IRangeSliderValue,
-    IgxSliderType,
-    ISliderValueChangeEventArgs,
-    TicksOrientation,
-    TickLabelsOrientation,
-    IgxTickLabelTemplateDirective
-} from './slider.common';
-import { IgxThumbLabelComponent } from './label/thumb-label.component';
-import { IgxTicksComponent } from './ticks/ticks.component';
-import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import { EditorProvider } from '../core/edit-provider';
 import { resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
+import { IgxThumbLabelComponent } from './label/thumb-label.component';
+import {
+    IgxSliderType, IgxThumbFromTemplateDirective,
+    IgxThumbToTemplateDirective, IgxTickLabelTemplateDirective, IRangeSliderValue, ISliderValueChangeEventArgs, SliderHandle, TickLabelsOrientation, TicksOrientation
+} from './slider.common';
+import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
+import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import { IgxTicksComponent } from './ticks/ticks.component';
 
 let NEXT_ID = 0;
 
@@ -838,7 +819,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbTo;
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
@@ -1264,22 +1245,6 @@ export class IgxSliderComponent implements
         return Math.max(Math.min(value, max), min);
     }
 
-    private generateTickMarks(color: string, interval: number) {
-        return interval !== null ? `repeating-linear-gradient(
-            ${'to left'},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        ), repeating-linear-gradient(
-            ${'to right'},
-            ${color},
-            ${color} 1.5px,
-            transparent 1.5px,
-            transparent ${interval}%
-        )` : interval;
-    }
-
     private positionHandler(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
         const percent = `${this.valueToFraction(position) * 100}%`;
         const dir = this._dir.rtl ? 'right' : 'left';
@@ -1326,6 +1291,7 @@ export class IgxSliderComponent implements
     private setTickInterval() {
         let interval;
         const trackProgress = 100;
+
         if (this.labelsViewEnabled) {
             // Calc ticks depending on the labels length;
             interval = ((trackProgress / (this.labels.length - 1) * 10)) / 10;
@@ -1336,9 +1302,8 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        const renderCallbackExecution = !this.continuous ? this.generateTickMarks(
-            'var(--igx-slider-track-step-color, var(--track-step-color, white))', interval) : null;
-        this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${interval * Math.sqrt(2)}%`);
+        this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || interval === null ? 'hidden' : 'visible');
     }
 
     private showSliderIndicators() {

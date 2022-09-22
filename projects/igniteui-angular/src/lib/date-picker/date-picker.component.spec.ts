@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -8,7 +8,7 @@ import {
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule } from '../calendar/public_api';
+import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
@@ -26,6 +26,8 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { registerLocaleData } from "@angular/common";
+import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
@@ -290,6 +292,61 @@ describe('IgxDatePicker', () => {
                 expect(inputGroupRequiredClass).toBeDefined();
                 expect(inputGroupRequiredClass).not.toBeNull();
                 expect(asterisk).toBe('"*"');
+            });
+
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                datePicker.locale = 'en';
+                fixture.detectChanges();
+
+                expect(datePicker.weekStart).toEqual(0);
+
+                datePicker.weekStart = WEEKDAYS.FRIDAY;
+                expect(datePicker.weekStart).toEqual(5);
+
+                datePicker.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(datePicker.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                const locale = 'en-US';
+                datePicker.locale = locale;
+                fixture.detectChanges();
+
+                expect(datePicker.locale).toEqual(locale);
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                datePicker.locale = 'frrr';
+                datePicker.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(datePicker.locale).toEqual('en-US');
+                expect(datePicker.weekStart).toEqual(WEEKDAYS.FRIDAY);
+            }));
+
+            it('should set initial validity state when the form group is disabled', () => {
+                fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).markAsTouched();
+                fixture.detectChanges();
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INVALID);
+
+                (fixture.componentInstance as IgxDatePickerReactiveFormComponent).disableForm();
+                fixture.detectChanges();
+                expect((datePicker as any).inputDirective.valid).toBe(IgxInputState.INITIAL);
             });
         });
 
@@ -568,7 +625,7 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
@@ -582,6 +639,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
+            registerLocaleData(localeES);
             it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
@@ -608,7 +666,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.spinLoop).toEqual(true);
                 expect(datePicker.tabIndex).toEqual(undefined);
                 expect(datePicker.overlaySettings).toEqual(undefined);
-                expect(datePicker.locale).toEqual(null);
+                expect(datePicker.locale).toEqual('en-US');
                 expect(datePicker.placeholder).toEqual('');
                 expect(datePicker.readOnly).toEqual(false);
                 expect(datePicker.value).toEqual(undefined);
@@ -1337,5 +1395,14 @@ export class IgxDatePickerReactiveFormComponent {
     public addValidators() {
         this.form.get('date').setValidators(Validators.required);
         this.form.get('date').updateValueAndValidity();
+    }
+
+    public markAsTouched() {
+        this.form.get('date').markAsTouched();
+        this.form.get('date').updateValueAndValidity();
+    }
+
+    public disableForm() {
+        this.form.disable();
     }
 }

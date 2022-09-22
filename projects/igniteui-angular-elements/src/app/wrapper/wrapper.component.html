@@ -1,5 +1,4 @@
-<h1>Wrapper's own content</h1>
-
-<button (click)="changeChildText()">Change child text</button>
-
-<ng-content select="app-child-standalone"></ng-content>
+<ng-template *ngFor="let templateFunc of templateFunctions" let-context="context">
+    <div #container></div>
+    {{ litRender(container, templateFunc, context) }}
+</ng-template>

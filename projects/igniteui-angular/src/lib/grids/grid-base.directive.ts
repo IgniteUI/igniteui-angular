@@ -91,7 +91,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    GridValidationTrigger
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -123,7 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { ColumnType, GridServiceType, GridType, IgxColumn, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IgxColumn, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -133,6 +134,7 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IgxGridRowComponent } from './grid/grid-row.component';
+import { IPageEventArgs } from '../paginator/paginator-interfaces';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
@@ -152,6 +154,7 @@ import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { IgxGridCellComponent } from './cell.component';
+import { IgxGridValidationService } from './grid/grid-validation.service';
 
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
@@ -163,8 +166,6 @@ const FILTER_ROW_HEIGHT = 50;
 // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
 // but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
-// Paginator selector
-const PAGINATOR_SELECTOR = 'igx-paginator';
 
 /* blazorIndirectRender 
    blazorComponent
@@ -211,7 +212,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<any>;
+    public emptyGridTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -252,6 +253,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return this._summaryRowHeight || this.summaryService.calcMaxSummaryHeight();
         }
         return 0;
+    }
+
+    public get hasColumnsToAutosize() {
+        return this._columns.some(x => x.width === 'fit-content');
     }
 
     /**
@@ -353,8 +358,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
-    // @Output()
-    // public pageChange = new EventEmitter<number>();
+    @Output()
+    public pageChange = new EventEmitter<number>();
 
     /**
      * @deprecated in version 12.1.0. Use the corresponding output exposed by the `igx-paginator` component instead
@@ -372,8 +377,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
-    // @Output()
-    // public perPageChange = new EventEmitter<number>();
+    @Output()
+    public perPageChange = new EventEmitter<number>();
 
     /**
      * @hidden
@@ -501,6 +506,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public cellClick = new EventEmitter<IGridCellEventArgs>();
+
+
+    /**
+     * Emitted when formGroup is created on edit of row/cell.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (formGroupCreated)="formGroupCreated($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public formGroupCreated = new EventEmitter<IGridFormGroupCreatedEventArgs>();
+
+    /**
+     * Emitted when grid's validation status changes.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (validationStatusChange)="validationStatusChange($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public validationStatusChange = new EventEmitter<IGridValidationStatusEventArgs>();
 
     /**
      * Emitted when a cell is selected.
@@ -768,8 +796,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (pagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
-    // @Output()
-    // public pagingDone = new EventEmitter<IPageEventArgs>();
+    @Output()
+    public pagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
      * Emitted when a row is added.
@@ -1404,7 +1432,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('igxFilteringOverlayOutlet', { read: ViewContainerRef, static: true })
+    @ViewChild('sink', { read: ViewContainerRef, static: true })
     public anchor: ViewContainerRef;
 
     /**
@@ -1622,6 +1650,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated in version 12.1.0. Use `page` property form `paginator` component instead
+     *
      * Gets/Sets the current page index.
      *
      *
@@ -1636,16 +1666,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get page(): number {
-        return (this.paginator as IgxPaginatorComponent)?.page || 0;
+        return this.paginator?.page || 0;
     }
 
     public set page(val: number) {
         if (this.paginator) {
-            (this.paginator as IgxPaginatorComponent).page = val;
+            this.paginator.page = val;
         }
     }
 
     /**
+     * @deprecated in version 12.1.0. Use `perPage` property from `paginator` component instead
+     *
      * Gets/Sets the number of visible items per page.
      *
      *
@@ -1660,13 +1692,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public get perPage(): number {
-        return (this.paginator as IgxPaginatorComponent)?.perPage || DEFAULT_ITEMS_PER_PAGE;
+        return this.paginator?.perPage || DEFAULT_ITEMS_PER_PAGE;
     }
 
     public set perPage(val: number) {
         this._perPage = val;
         if (this.paginator) {
-            (this.paginator as IgxPaginatorComponent).perPage = val;
+            this.paginator.perPage = val;
         }
     }
 
@@ -1699,6 +1731,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get rowDraggable(): boolean {
         return this._rowDrag && this.hasVisibleColumns;
     }
+
+    /**
+     * Gets/Sets the trigger for validators used when editing the grid.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid validationTrigger='blur'></igx-grid>
+     * ```
+     */
+    @Input()
+    public validationTrigger: GridValidationTrigger = 'change';
 
 
     public set rowDraggable(val: boolean) {
@@ -2596,7 +2639,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set pagingState(value) {
         this._pagingState = value;
         if (this.paginator && !this._init) {
-            (this.paginator as IgxPaginatorComponent).totalRecords = value.metadata.countRecords;
+            this.paginator.totalRecords = value.metadata.countRecords;
         }
     }
 
@@ -2820,9 +2863,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public get paginator() {
-        if (!this.paginationComponents?.first) {
-            return this.elementRef.nativeElement.querySelector(PAGINATOR_SELECTOR);
-        }
         return this.paginationComponents?.first;
     }
 
@@ -2914,6 +2954,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private _class = '';
+    private _autoSize = false;
+
+    /**
+     * @hidden @internal
+     */
+    protected get minColumnWidth() {
+        return MINIMUM_COLUMN_WIDTH;
+    }
 
     /**
      * @hidden @internal
@@ -3048,6 +3096,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     constructor(
+        public validation: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -3255,6 +3304,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.grid = this as any;
         this.crudService.grid = this as any;
         this.selectionService.grid = this as any;
+        this.validation.grid = this as any;
         this.navigation.grid = this as any;
         this.filteringService.grid = this as any;
         this.summaryService.grid = this as any;
@@ -3367,11 +3417,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.cdr.detectChanges();
         });
 
-        this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), destructor).subscribe(() => {
-            this.notifyChanges();
+        this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
+            this.notifyChanges(true);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
+            this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
             this.crudService.endEdit(false);
             if (this._summaryRowHeight === 0) {
                 this.summaryService.summaryHeight = 0;
@@ -3549,43 +3600,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public setUpPaginator() {
-        if (this.paginator instanceof IgxPaginatorComponent) {
-            const pager = (this.paginator as IgxPaginatorComponent);
-            // pager.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-            //     .subscribe((page: number) => {
-            //         this.pageChange.emit(page);
-            //     });
-            pager.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-                .subscribe(() => {
+        if (this.paginator) {
+            this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((page: number) => {
+                    this.pageChange.emit(page);
+                });
+            this.paginator.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((args: IPageEventArgs) => {
                     this.selectionService.clear(true);
-                    // this.pagingDone.emit({ previous: args.previous, current: args.current });
+                    this.pagingDone.emit({ previous: args.previous, current: args.current });
                     this.crudService.endEdit(false);
                     this.pipeTrigger++;
                     this.navigateTo(0);
                     this.notifyChanges();
                 });
-            pager.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
-                .subscribe(() => {
+            this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((perPage: number) => {
                     this.selectionService.clear(true);
-                    // this.perPageChange.emit(perPage);
-                    pager.page = 0;
-                    this.crudService.endEdit(false);
-                    this.notifyChanges();
-                });
-        } else if (this.paginator instanceof Element) {
-            const pager = this.paginator as Element;
-
-            fromEvent(pager, 'pagingDone').pipe(takeWhile(() => !!this.paginator), filter(() => !this._init), map(event => (event as any).detail))
-                .subscribe(() => {
-                    this.selectionService.clear(true);
-                    this.crudService.endEdit(false);
-                    this.pipeTrigger++;
-                    this.navigateTo(0);
-                    this.notifyChanges();
-                });
-            fromEvent(pager, 'perPageChange').pipe(takeWhile(() => !!this.paginator), filter(() => !this._init), map(event => (event as any).detail))
-                .subscribe(() => {
-                    this.selectionService.clear(true);
+                    this.perPageChange.emit(perPage);
+                    this.paginator.page = 0;
                     this.crudService.endEdit(false);
                     this.notifyChanges();
                 });
@@ -3652,6 +3685,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
+            if (this.hasColumnsToAutosize) {
+                this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                    this.cdr.detectChanges();
+                    this.zone.onStable.pipe(first()).subscribe(() => {
+                        this.autoSizeColumnsInView();
+                    });
+                });
+            }
             fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
             resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
@@ -3685,11 +3726,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // Keep the stream open for future subscribers
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            const pager = this.paginator as IgxPaginatorComponent;
-            if (pager) {
-                pager.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : pager.perPage;
-                pager.totalRecords = this.totalRecords ? this.totalRecords : pager.totalRecords;
-                pager.overlaySettings = { outlet: this.outlet };
+            if (this.paginator) {
+                this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
+                this.paginator.totalRecords = this.totalRecords ? this.totalRecords : this.paginator.totalRecords;
+                this.paginator.overlaySettings = { outlet: this.outlet };
+            }
+            if (this.hasColumnsToAutosize) {
+                this.autoSizeColumnsInView();
             }
             this._rendered = true;
         });
@@ -4085,7 +4128,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     @Input()
-    public set columns(config: IgxColumn []) {
+    public set columns(config: IgxColumn[]) {
         this._columnConfig = config;
         if (this._rendered) {
             this.configToColumns(config);
@@ -4194,7 +4237,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get totalPages(): number {
-        return (this.paginator as IgxPaginatorComponent)?.totalPages;
+        return this.paginator?.totalPages;
     }
 
     /**
@@ -4209,7 +4252,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get isFirstPage(): boolean {
-        return (this.paginator as IgxPaginatorComponent)?.isLastPage;
+        return this.paginator?.isLastPage;
     }
 
     /**
@@ -4225,7 +4268,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // eslint-disable-next-line @typescript-eslint/member-ordering
     public nextPage(): void {
-        (this.paginator as IgxPaginatorComponent)?.nextPage();
+        this.paginator?.nextPage();
     }
 
     /**
@@ -4238,7 +4281,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     // eslint-disable-next-line @typescript-eslint/member-ordering
     public previousPage(): void {
-        (this.paginator as IgxPaginatorComponent)?.previousPage();
+        this.paginator?.previousPage();
     }
 
     /**
@@ -4259,7 +4302,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set totalRecords(total: number) {
         if (total >= 0) {
             if (this.paginator) {
-                (this.paginator as IgxPaginatorComponent).totalRecords = total;
+                this.paginator.totalRecords = total;
             }
             this._totalRecords = total;
             this.pipeTrigger++;
@@ -4279,7 +4322,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get isLastPage(): boolean {
-        return (this.paginator as IgxPaginatorComponent)?.isLastPage;
+        return this.paginator.isLastPage;
     }
 
     /**
@@ -4422,7 +4465,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param val
      */
     public paginate(val: number): void {
-        (this.paginator as IgxPaginatorComponent)?.paginate(val);
+        this.paginator?.paginate(val);
     }
 
     /**
@@ -5157,7 +5200,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paginator ? Math.min(allItems, (this.paginator as IgxPaginatorComponent).perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
     /**
@@ -5222,7 +5265,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
-                const widthValue = parseInt(colWidth, 10);
+                let widthValue = parseInt(colWidth, 10);
+                if (isNaN(widthValue)) {
+                    widthValue = MINIMUM_COLUMN_WIDTH;
+                }
                 const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
                     widthValue / 100 * computedWidth :
                     widthValue;
@@ -5235,8 +5281,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
+            Math.max(computedWidth / columnsToSize, this.minColumnWidth) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, this.minColumnWidth));
 
         return columnWidth + 'px';
     }
@@ -5663,6 +5709,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event) {
+        const eventPathElements = event.composedPath().map(el => el.tagName?.toLowerCase());
+        if (eventPathElements.includes('igx-grid-filtering-row') ||
+            eventPathElements.includes('igx-grid-filtering-cell')) {
+            return;
+        }
+
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         let selectedData;
@@ -6203,6 +6255,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             }
         }
+        if (event.origin === TransactionEventOrigin.REDO || event.origin === TransactionEventOrigin.UNDO) {
+            event.actions.forEach(x => {
+                if (x.transaction.type === TransactionType.UPDATE) {
+                    const value = this.transactions.getAggregatedValue(x.transaction.id, true);
+                    this.validation.update(x.transaction.id, value ?? x.recordRef);
+                } else if (x.transaction.type === TransactionType.DELETE || x.transaction.type === TransactionType.ADD) {
+                    const value = this.transactions.getAggregatedValue(x.transaction.id, true);
+                    if (value) {
+                        this.validation.create(x.transaction.id, value ?? x.recordRef);
+                        this.validation.update(x.transaction.id, value ?? x.recordRef);
+                        this.validation.markAsTouched(x.transaction.id);
+                    } else {
+                        this.validation.clear(x.transaction.id);
+                    }
+                }
+
+            });
+        }
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
@@ -6294,7 +6364,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _derivePossibleWidth() {
         if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px';
+            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : this.minColumnWidth + 'px';
         }
         this._columns.forEach((column: IgxColumnComponent) => {
             if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
@@ -6600,6 +6670,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
         this.resetCaches(recalcFeatureWidth);
+        if (this.hasColumnsToAutosize) {
+            this.cdr.detectChanges();
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.autoSizeColumnsInView();
+            });
+        }
     }
 
     /**
@@ -6745,10 +6821,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.tbody.nativeElement.style.display = 'none';
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight ||
+            this.nativeElement.parentElement.clientHeight === renderedHeight;
+        if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
-            this.checkContainerSizeChange();
+            this._autoSize = false;
+            res = this.checkContainerSizeChange();
+        }
         this.tbody.nativeElement.style.display = '';
         return res;
     }
@@ -6896,7 +6975,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this._columns.filter((c) => !c.pinned) :
             this._columns.filter((c) => !c.pinned)
-            .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
+                .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
     }
 
     protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
@@ -6970,9 +7049,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            const pager = this.paginator as IgxPaginatorComponent;
-            row = pager && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ?
-                    row + (pager.perPage * pager.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -7039,6 +7116,44 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 .filter(col => !col.columnGroup)
                 .sort((a, b) => a.visibleIndex - b.visibleIndex);
             return [visibleColumns[index]];
+        }
+    }
+
+    protected autoSizeColumnsInView() {
+        if (!this.hasColumnsToAutosize) return;
+        const vState = this.headerContainer.state;
+        let colResized = false;
+        const unpinnedInView = this.headerContainer.igxGridForOf.slice(vState.startIndex, vState.startIndex + vState.chunkSize).flatMap(x => x.columnGroup ? x.allChildren : x);
+        const columnsInView = this.pinnedColumns.concat(unpinnedInView);
+        for (const col of columnsInView) {
+            if (!col.autoSize && col.headerCell) {
+                const cellsContentWidths = [];
+                if (col._cells.length !== this.rowList.length) {
+                    this.rowList.forEach(x => x.cdr.detectChanges());
+                }
+                const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
+                cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const max = Math.max(...cellsContentWidths);
+                if (max === 0) {
+                    // cells not in DOM yet...
+                    continue;
+                }
+                const header = this.headerCellList.find(x => x.column === col);
+                cellsContentWidths.push(header.nativeElement.offsetWidth);
+                let maxSize = Math.ceil(Math.max(...cellsContentWidths)) + 1;
+                if (col.maxWidth && maxSize > col.maxWidthPx) {
+                    maxSize = col.maxWidthPx;
+                } else if (maxSize < col.minWidthPx) {
+                    maxSize = col.minWidthPx;
+                }
+                col.autoSize = maxSize;
+                col.resetCaches();
+                colResized = true;
+            }
+        }
+        if (colResized) {
+            this.resetCachedWidths();
+            this.cdr.detectChanges();
         }
     }
 
@@ -7113,15 +7228,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
-        const pager = this.paginator as IgxPaginatorComponent;
 
-        if (pager && typeof (row) !== 'number') {
+        if (this.paginator && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
-            const page = Math.floor(rowIndex / pager.perPage);
+            const page = Math.floor(rowIndex / this.paginator.perPage);
 
-            if (pager.page !== page) {
+            if (this.paginator.page !== page) {
                 delayScrolling = true;
-                pager.page = page;
+                this.paginator.page = page;
             }
         }
 
@@ -7170,7 +7284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
-            colSum += parseInt((item.calcWidth || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
+            colSum += parseInt((item.calcWidth || item.defaultWidth), 10) || this.minColumnWidth;
         });
         if (!colSum) {
             return null;
@@ -7180,9 +7294,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return colSum;
     }
 
-    private configToColumns(config: IgxColumn []) {
+    private configToColumns(config: IgxColumn[]) {
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const columns: IgxColumnComponent [] = [];
+        const columns: IgxColumnComponent[] = [];
 
         config.forEach(column => {
             var newCol: IgxColumnComponent | undefined;
@@ -7273,6 +7387,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
+                requestAnimationFrame(() => {
+                    this.autoSizeColumnsInView();
+                });
             });
         });
 

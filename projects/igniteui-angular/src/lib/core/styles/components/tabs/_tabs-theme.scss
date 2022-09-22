@@ -35,6 +35,7 @@
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $button-color [null] - The color used for the button icon/text color.
 /// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
+/// @param {Color} $button-disabled-color [null] - The color used for the disabled button icon/text.
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
 ///
@@ -44,7 +45,6 @@
 ///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
-/// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -78,12 +78,12 @@
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
+    $button-disabled-color: null,
     $tab-ripple-color: null,
     $button-ripple-color: null,
     $border-radius: null,
     $border-color: null,
     $border-color--hover: null,
-    $disable-shadow: true
 ) {
     $name: 'igx-tabs';
     $tabs-schema: ();
@@ -98,9 +98,6 @@
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
-
-    $tab-area-shadow: if($disable-shadow == true, none, elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -209,10 +206,9 @@
         button-background: $button-background,
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
+        button-disabled-color:$button-disabled-color,
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
-        tab-area-shadow: $tab-area-shadow,
-        buttons-shadow: $buttons-shadow,
         border-color: $border-color,
         border-radius: $border-radius,
     ));
@@ -273,13 +269,8 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
         z-index: 1;
-
-        @if $bootstrap-theme or $indigo-theme {
-            box-shadow: none;
-        }
     }
 
     %tabs-header-content {
@@ -325,10 +316,6 @@
         color: var-get($theme, 'button-color');
         outline: 0;
 
-        @if not $indigo-theme {
-            box-shadow: var-get($theme, 'buttons-shadow');
-        }
-
         &:hover {
             background: var-get($theme, 'button-hover-background');
             color: var-get($theme, 'button-hover-color');
@@ -344,8 +331,8 @@
             border: 0;
         }
 
-        &--hidden {
-            visibility: hidden;
+        &:disabled {
+            color: var-get($theme, 'button-disabled-color');
         }
 
         &--none {

@@ -33,6 +33,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     column?: ColumnType;
     owner?: GridType;
     isAddRow?: boolean;
+    valid?: boolean;
 }
 
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
@@ -144,6 +145,7 @@ export interface ICellPosition {
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: any;
     dragData: RowType;
+    /* blazorSuppress */
     dragElement: HTMLElement;
     animation: boolean;
 }
@@ -151,6 +153,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
     dragDirective: any;
     dragData: RowType;
+    /* blazorSuppress */
     dragElement: HTMLElement;
 }
 

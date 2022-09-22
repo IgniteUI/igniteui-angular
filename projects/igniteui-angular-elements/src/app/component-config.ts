@@ -9,4 +9,5 @@ export interface ComponentConfig {
         childType: Type<any>;
         isQueryList: boolean;
     }[];
+    methods: string[];
 }

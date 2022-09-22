@@ -47,11 +47,22 @@ import { IgxActionStripComponent } from '../../action-strip/action-strip.compone
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
+/**
+ * Row island
+ *
+ * @igxModule IgxHierarchicalGridModule
+ * @igxParent IgxHierarchicalGridComponent, IgxRowIslandComponent
+ *
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: ``,
+    template: `<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column"></ng-content>
+    <ng-content select="igx-row-island,igc-row-island"></ng-content>
+    </div>`,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
@@ -217,6 +228,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     constructor(
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
@@ -240,6 +252,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil) {
         super(
+            validationService,
             selectionService,
             colResizingService,
             gridAPI,

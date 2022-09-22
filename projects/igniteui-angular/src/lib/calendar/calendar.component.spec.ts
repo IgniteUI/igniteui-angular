@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, LOCALE_ID, ViewChild } from '@angular/core';
 import { TestBed, tick, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -347,7 +347,7 @@ describe('IgxCalendar - ', () => {
                 expect(headerDate.nativeElement.textContent.trim()).toMatch('1 sept.');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
-                expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
+                expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Lun.');
             });
 
             it('Should default to today date when invalid date is passed', () => {
@@ -1964,6 +1964,7 @@ describe('IgxCalendar - ', () => {
             let fixture; let dom; let calendar; let prevMonthBtn; let nextMonthBtn;
 
             beforeEach(waitForAsync(() => {
+                TestBed.overrideProvider(LOCALE_ID, {useValue: 'fr'});
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
                 dom = fixture.debugElement;
@@ -2006,6 +2007,76 @@ describe('IgxCalendar - ', () => {
                 tick(100);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
+            }));
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                calendar.locale = 'en';
+                fixture.detectChanges();
+
+                expect(calendar.weekStart).toEqual(0);
+
+                calendar.weekStart = WEEKDAYS.FRIDAY;
+                expect(calendar.weekStart).toEqual(5);
+
+                calendar.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(calendar.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+                const locale = 'en-US';
+                calendar.locale = locale;
+                fixture.detectChanges();
+
+                expect(calendar.locale).toEqual(locale);
+                expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                calendar.locale = 'frrr';
+                calendar.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(calendar.locale).toEqual('fr');
+                expect(calendar.weekStart).toEqual(WEEKDAYS.FRIDAY);
+
+                flush();
+            }));
+
+            it('Should setting the global LOCALE_ID, Calendar must be displayed per current locale.', fakeAsync(() => {
+                // Verify locale is set respecting the globally LOCALE_ID provider
+                expect(calendar.locale).toEqual('fr');
+
+                // Verify Calendar is displayed per FR locale
+                fixture.componentInstance.viewDate = new Date(2022, 5, 23);
+                fixture.componentInstance.model = new Date();
+                fixture.detectChanges();
+
+                const defaultOptions = {
+                    day: 'numeric',
+                    month: 'short',
+                    weekday: 'short',
+                    year: 'numeric'
+                };
+                const defaultViews = { day: false, month: true, year: false };
+                const bodyMonth = dom.query(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS));
+                const headerYear = dom.query(By.css(HelperTestFunctions.CALENDAR_HEADER_YEAR_CSSCLASS));
+                const bodyYear = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[1];
+                const headerWeekday = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS} span`))[0];
+                const headerDate = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS} span`))[1];
+
+                calendar.selectDate(calendar.viewDate);
+                fixture.detectChanges();
+
+                expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
+                expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
+                expect(headerYear.nativeElement.textContent.trim()).toMatch('2022');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('mer');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('1 juin');
+                expect(bodyYear.nativeElement.textContent.trim()).toMatch('2022');
+                expect(bodyMonth.nativeElement.textContent.trim()).toMatch('juin');
+
+                flush();
             }));
         });
     });
