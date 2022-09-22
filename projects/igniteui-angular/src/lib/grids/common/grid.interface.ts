@@ -50,6 +50,7 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
+/* marshalByValue */
 export interface CellType {
     value: any;
     editValue: any;
@@ -59,8 +60,11 @@ export interface CellType {
     editMode: boolean;
     /* blazorSuppress */
     nativeElement?: HTMLElement;
+    /* blazorAlternateType: GridColumn */
     column: ColumnType;
+    /* blazorSuppress */
     row: RowType;
+    /* blazorAlternateType: Grid */
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
