@@ -164,6 +164,7 @@ class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
 export const DEFAULT_OWNER = 'default';
 export const GRID_ROOT_SUMMARY = 'igxGridRootSummary';
 export const GRID_PARENT = 'grid-parent';
+export const GRID_LEVEL_COL = 'GRID_LEVEL_COL';
 const DEFAULT_COLUMN_WIDTH = 8.43;
 const GRID_CHILD = 'grid-child-';
 
@@ -244,14 +245,10 @@ export abstract class IgxBaseExporter {
         this.summaries = this.prepareSummaries(grid);
         this._setChildSummaries =  this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
 
+        this.addLevelColumns();
         this.prepareData(grid);
+        this.addLevelData();
         this.exportGridRecordsData(this.flatRecords, grid);
-
-        for(const r of this.flatRecords){
-            if (r.type === ExportRecordType.DataRecord || r.type === ExportRecordType.TreeGridRecord || r.type === ExportRecordType.HierarchicalGridRecord) {
-                r.data["Level"] = r.level;
-            }
-        }
     }
 
     /**
@@ -1111,23 +1108,6 @@ export abstract class IgxBaseExporter {
 
         });
 
-        const levelCol: IColumnInfo = {
-            header: "Level",
-            dataType: 'number',
-            field: 'Level',
-            skip: false,
-            skipFormatter: false,
-            headerType: HeaderType.ColumnHeader,
-            columnSpan: 1,
-            level: 0,
-            // fix
-            startIndex: 5,
-        };
-
-        colList.push(levelCol);
-
-        colWidthList.push(DEFAULT_COLUMN_WIDTH);
-
         //Append the hidden columns to the end of the list
         hiddenColumns.forEach((hiddenColumn) => {
             colList[++lastVisibleColumnIndex] = hiddenColumn;
@@ -1209,6 +1189,36 @@ export abstract class IgxBaseExporter {
         };
 
         return result;
+    }
+
+    private addLevelColumns() {
+        if (this.options.exportSummaries && this.summaries.size > 0) {
+            this._ownersMap.forEach(om => {
+                const levelCol: IColumnInfo = {
+                    header: GRID_LEVEL_COL,
+                    dataType: 'number',
+                    field: GRID_LEVEL_COL,
+                    skip: false,
+                    skipFormatter: false,
+                    headerType: HeaderType.ColumnHeader,
+                    columnSpan: 1,
+                    level: 0,
+                };
+
+                om.columns.push(levelCol);
+                om.columnWidths.push(20);
+            })
+        }
+    }
+
+    private addLevelData() {
+        if (this.options.exportSummaries && this.summaries.size > 0) {
+            for(const r of this.flatRecords){
+                if (r.type === ExportRecordType.DataRecord || r.type === ExportRecordType.TreeGridRecord || r.type === ExportRecordType.HierarchicalGridRecord) {
+                    r.data[GRID_LEVEL_COL] = r.level;
+                }
+            }
+        }
     }
 
     private resetDefaults() {

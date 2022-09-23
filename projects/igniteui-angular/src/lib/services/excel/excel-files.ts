@@ -4,7 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY, GRID_PARENT } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -136,7 +136,9 @@ export class WorksheetFile implements IExcelFile {
                 for (const currentCol of headersForLevel) {
                     if (currentCol.level === i) {
                         let columnCoordinate;
-                        columnCoordinate = ExcelStrings.getExcelColumn(startValue) + this.rowIndex;
+                        columnCoordinate = (currentCol.field === GRID_LEVEL_COL
+                            ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
+                            : ExcelStrings.getExcelColumn(startValue)) + this.rowIndex;
                         const columnValue = dictionary.saveValue(currentCol.header, true);
                         sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
 
@@ -208,7 +210,8 @@ export class WorksheetFile implements IExcelFile {
                 }
             } else {
                 const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
-                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
+                const maxColumn = worksheetData.hasSummaries ? worksheetData.columnCount + 2 : worksheetData.columnCount;
+                cols += `<cols><col min="1" max="${maxColumn}" width="${columnWidth}" customWidth="1"/></cols>`;
                 if (worksheetData.options.freezeHeaders) {
                     const firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
                     this.freezePane =
@@ -366,7 +369,7 @@ export class WorksheetFile implements IExcelFile {
 
     private getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
-        const columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
+        let columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
         const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
@@ -374,6 +377,14 @@ export class WorksheetFile implements IExcelFile {
         const isHierarchicalOrTreeGrid = worksheetData.isHierarchical || worksheetData.isTreeGrid;
 
         this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
+
+        let cellValue = worksheetData.isSpecialData ?
+            fullRow.data :
+            fullRow.data[key];
+
+        if (cellValue === GRID_LEVEL_COL || key === GRID_LEVEL_COL) {
+            columnName = ExcelStrings.getExcelColumn(worksheetData.columnCount + 1) + (this.rowIndex);
+        }
 
         if (worksheetData.hasSummaries && isValidRecordType) {
             this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, isHierarchicalOrTreeGrid)
@@ -383,9 +394,7 @@ export class WorksheetFile implements IExcelFile {
             this.setRootSummaryStartCoordinate(column, key);
         }
 
-        let cellValue = worksheetData.isSpecialData ?
-            fullRow.data :
-            fullRow.data[key];
+
 
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
@@ -412,12 +421,8 @@ export class WorksheetFile implements IExcelFile {
             let summaryFunc = `"${cellValue ?? ""}"`;
 
             if (isSummaryRecord && cellValue) {
-                const ownerColumns = worksheetData.owners.get(fullRow.owner)?.columns;
-                const isNumberCol = ownerColumns ? ownerColumns.filter(c => c.field === key)[0]?.dataType === 'number' : false;
-                const functionType = isNumberCol && cellValue.label.toLowerCase() === "count" ? 'countnum' : cellValue.label;
                 const dimensionMapKey = isHierarchicalOrTreeGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
-
-                summaryFunc = this.getSummaryFunction(functionType, key, dimensionMapKey);
+                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, fullRow.level);
             }
 
             return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
@@ -433,7 +438,7 @@ export class WorksheetFile implements IExcelFile {
         }
 
         if (isDataOrHierarchicalRecord) {
-            if (this.currentSummaryOwner !== record.summaryKey) {
+            if (this.currentSummaryOwner !== record.summaryKey || this.currentHierarchicalOwner !== record.hierarchicalOwner) {
                 this.dimensionMap.clear();
             }
 
@@ -467,9 +472,10 @@ export class WorksheetFile implements IExcelFile {
 
     }
 
-    private getSummaryFunction(type: string, key: string, dimensionMapKey: any): string {
+    private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number): string {
         const dimensionMap = dimensionMapKey ? this.hierarchicalDimensionMap.get(dimensionMapKey) : this.dimensionMap;
         const dimensions = dimensionMap.get(key);
+        const levelDimensions = dimensionMap.get(GRID_LEVEL_COL);
 
         switch(type.toLowerCase()) {
             // case "count":
@@ -485,17 +491,16 @@ export class WorksheetFile implements IExcelFile {
             // case "avg":
             //     return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "count":
-                return `"Count - "&amp;_xlfn.AGGREGATE(3, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            case "countnum":
-                return `"Count - "&amp;_xlfn.AGGREGATE(2, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Count - "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
                 return `"Min - "&amp;_xlfn.AGGREGATE(5, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "max":
                 return `"Max - "&amp;_xlfn.AGGREGATE(4, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "sum":
-                return `"Sum - "&amp;_xlfn.AGGREGATE(9, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Sum - "&amp;_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "avg":
-                return `"Avg - "&amp;_xlfn.AGGREGATE(1, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                debugger
+                return `"Avg - "&amp;_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "earliest":
                 return `CONCATENATE("Earliest - ", TEXT(MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
             case "latest":
