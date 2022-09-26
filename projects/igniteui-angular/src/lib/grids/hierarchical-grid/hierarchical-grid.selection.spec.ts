@@ -656,14 +656,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: ['00'],
                 cancel: false,
                 event: mockEvent,
                 newSelection: ['00'],
                 oldSelection: [],
                 removed: [],
-                owner: childGrid
+                owner: childGrid,
+                allRowsSelected: false
             });
 
             // Click on checkbox on second row
@@ -674,14 +674,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(childSpy).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: ['01'],
                 cancel: false,
                 event: mockEvent,
                 newSelection: ['01'],
                 oldSelection: ['00'],
                 removed: ['00'],
-                owner: childGrid
+                owner: childGrid,
+                allRowsSelected: false
             });
 
             // Click on a row in parent grid
@@ -693,13 +693,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(1);
             expect(parentSpy).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: ['1'],
                 cancel: false,
                 event: mockEvent,
                 newSelection: ['1'],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             // Click on a header checkbox in parent grid
@@ -710,13 +710,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledWith({
-                isSelectAllClicked: true,
                 added: ['0', '2', '3', '4'],
                 cancel: false,
                 event: mockEvent,
                 newSelection: ['1', '0', '2', '3', '4'],
                 oldSelection: ['1'],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
         });
         it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {

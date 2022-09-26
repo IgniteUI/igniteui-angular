@@ -292,9 +292,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.isPercentHeight) {
             this.notifyChanges(true);
         }
-        if (this.isSelectAllClicked) {
-            this.selectAllRows();
-        }
     }
 
     /**
@@ -944,12 +941,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     const tmlpOutlet = cachedData.owner;
                     tmlpOutlet._viewContainerRef.detach(0);
                 }
-            }
-        });
-
-        this.rowSelectionChanging.subscribe((args) => {
-            if (args?.isSelectAllClicked) {
-                this.selectAllRows();
             }
         });
 

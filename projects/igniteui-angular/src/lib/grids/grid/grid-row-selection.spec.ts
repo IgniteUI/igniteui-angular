@@ -133,13 +133,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual(allRowsArray);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             let args: IRowSelectionEventArgs = {
-                isSelectAllClicked: true,
                 added: allRowsArray,
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: allRowsArray,
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -151,13 +151,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             args = {
-                isSelectAllClicked: false,
                 oldSelection: allRowsArray,
                 newSelection: [],
                 added: [],
                 removed: allRowsArray,
                 event: jasmine.anything() as any,
-                cancel: false
+                cancel: false,
+                allRowsSelected: true
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -202,13 +202,13 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             let args: IRowSelectionEventArgs = {
-                isSelectAllClicked: false,
                 added: [1],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -226,13 +226,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([1, 2]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             args = {
-                isSelectAllClicked: false,
                 added: [2],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [1, 2],
                 oldSelection: [1],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -245,13 +245,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([2]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
             args = {
-                isSelectAllClicked: false,
                 added: [],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1, 2],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -263,13 +263,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(4);
             args = {
-                isSelectAllClicked: false,
                 added: [],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -288,13 +288,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([2]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: [2],
                 cancel: false,
                 event: mockEvent,
                 newSelection: [2],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             // Click again on same row
@@ -314,13 +314,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([3]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: [3],
                 cancel: false,
                 event: mockEvent,
                 newSelection: [3],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
         });
         it('Should select the row only on checkbox click when selectRowOnClick has value false', () => {
@@ -511,13 +511,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([2, 3, 4, 5]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: [3, 4, 5],
                 cancel: false,
                 event: mockEvent,
                 newSelection: [2, 3, 4, 5],
                 oldSelection: [2],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             for (let index = 1; index < 5; index++) {
@@ -854,13 +854,13 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             let args: IRowSelectionEventArgs = {
-                isSelectAllClicked: false,
                 added: [1],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -877,13 +877,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([2]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             args = {
-                isSelectAllClicked: false,
                 added: [2],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -1030,13 +1030,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([5]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
-                isSelectAllClicked: false,
                 added: [5],
                 cancel: false,
                 event: mockEvent,
                 newSelection: [5],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -1366,13 +1366,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([gridData[1]]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
             let args: IRowSelectionEventArgs = {
-                isSelectAllClicked: false,
                 added: [gridData[1]],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1]],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -1382,13 +1382,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([gridData[1], gridData[2], gridData[3], gridData[4]]);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             args = {
-                isSelectAllClicked: false,
                 added: [gridData[2], gridData[3], gridData[4]],
                 cancel: false,
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });

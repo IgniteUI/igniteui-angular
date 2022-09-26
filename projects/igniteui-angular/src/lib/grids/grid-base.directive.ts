@@ -1176,16 +1176,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public emptyGridDefaultTemplate: TemplateRef<any>;
 
     /**
-     * A template reference for the template if all rows are selected.
-     *
-     * @example
-     * ```
-     * const areAllRowsSelected = this.grid.isSelectAllClicked;
-     * ```
-     */
-    public isSelectAllClicked = false;
-
-    /**
      * @hidden @internal
      */
     @ViewChild('defaultLoadingGrid', { read: TemplateRef, static: true })
@@ -5431,7 +5421,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public selectAllRows(onlyFilterData = true) {
         const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data(true);
         const rowIDs = this.selectionService.getRowIDs(data).filter(rID => !this.gridAPI.row_deleted_transaction(rID));
-        this.isSelectAllClicked = true;
         this.selectRows(rowIDs);
     }
 
@@ -5454,7 +5443,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.selectionService.clearAllSelectedRows();
             this.notifyChanges();
         }
-        this.isSelectAllClicked = false;
     }
 
     /**
