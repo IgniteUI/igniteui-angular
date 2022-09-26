@@ -1,0 +1,11 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$disable-shadow",
+            "remove": true,
+            "owner": "tabs-theme",
+            "type": "property"
+        }
+    ]
+}

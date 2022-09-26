@@ -9,7 +9,7 @@
             </igx-column>
             <igx-column field="ProductID" width="60px" header="Product ID"></igx-column>
             <igx-column field="ReorderLevel" width="100px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'" [editable]="true"></igx-column>
-            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="ProductName" required header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
             <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" [editable]="true">
                 <ng-template igxCellEditor let-cell="cell">
                     <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue" style="color: black; width: 30px;" />
@@ -92,7 +92,7 @@
             <igx-column width="100px" field="ProductID" [editable]="false" [filterable]="true" [sortable]="true" header="Product ID"></igx-column>
             <igx-column width="100px" field="ReorderLevel" [filterable]="true" [sortable]="true" header="ReorderLever" [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true">
             </igx-column>
-            <igx-column width="100px" field="ProductName" [filterable]="true" [sortable]="true" header="ProductName" [hidden]="hideFlag" [dataType]="'string'" [editable]="true"></igx-column>
+            <igx-column width="100px" required field="ProductName" [filterable]="true" [sortable]="true" header="ProductName" [hidden]="hideFlag" [dataType]="'string'" [editable]="true"></igx-column>
             <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                 <ng-template igxCellEditor let-cell="cell">
                     <input name="units" [(ngModel)]="cell.editValue" style="color: black; width: 30px;" />

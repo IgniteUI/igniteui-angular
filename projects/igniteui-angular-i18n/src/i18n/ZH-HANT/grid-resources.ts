@@ -157,7 +157,14 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_columns: 'Columns',
     igx_grid_pivot_selector_values: 'Values',
     igx_grid_pivot_selector_panel_empty: 'Drag Items Here',
-    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.'
+    igx_grid_pivot_empty_message: 'Pivot grid has no dimensions and values.',
+    igx_grid_required_validation_error: '此欄位為必填項',
+    igx_grid_min_validation_error: '必須輸入至少 {0} 的值',
+    igx_grid_max_validation_error: '必須輸入不超過 {0} 的值',
+    igx_grid_min_length_validation_error: '輸入內容必須至少 {0} 個字元',
+    igx_grid_max_length_validation_error: '輸入內容不得超過 {0} 個字元',
+    igx_grid_email_validation_error: '必須輸入有效的電子郵件地址',
+    igx_grid_pattern_validation_error: '輸入的內容不符合要求的格式'
 };
 
 /**

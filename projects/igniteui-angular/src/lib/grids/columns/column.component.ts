@@ -13,6 +13,8 @@ import {
     EventEmitter,
     OnDestroy,
     Inject,
+    Optional,
+    Self,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -44,13 +46,15 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective,
-    IgxSummaryTemplateDirective
+    IgxSummaryTemplateDirective,
+    IgxCellValidationErrorDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { isConstructor, PlatformUtil } from '../../core/utils';
 import { IgxGridCell } from '../grid-public-cell';
+import { NG_VALIDATORS, Validator } from '@angular/forms';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -90,6 +94,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get field(): string {
         return this._field;
     }
+
+
+    /**
+     * @hidden @internal
+     */
+    public validators: Validator[] = [];
+
     /**
      * Sets/gets the `header` value.
      * ```typescript
@@ -423,7 +434,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public disablePinning = false;
     /**
      * @deprecated in version 13.1.0. Use `IgxGridComponent.moving` instead.
-     * 
+     *
      * Sets/gets whether the column is movable.
      * Default value is `false`.
      *
@@ -451,13 +462,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public get width(): string {
         const isAutoWidth = this._width && typeof this._width === 'string' && this._width === 'auto';
-        if(isAutoWidth) {
-            if(!this.autoSize) {
+        if (isAutoWidth) {
+            if (!this.autoSize) {
                 return 'fit-content';
             } else {
                 return this.autoSize + 'px';
             }
-           
+
         }
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
@@ -862,6 +873,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    @ContentChild(IgxCellValidationErrorDirective, { read: IgxCellValidationErrorDirective })
+    protected cellValidationErrorTemplate: IgxCellValidationErrorDirective;
+    /**
+     * @hidden
+     */
     @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
     protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
     /**
@@ -1163,6 +1179,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set summaryTemplate(template: TemplateRef<any>) {
         this._summaryTemplate = template;
     }
+
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
@@ -1264,6 +1281,38 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
     }
+
+    /**
+     * Returns a reference to the validation error template.
+     * ```typescript
+     * let errorTemplate = this.column.errorTemplate;
+     * ```
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input('errorTemplate')
+    public get errorTemplate(): TemplateRef<any> {
+        return this._errorTemplate;
+    }
+    /**
+     * Sets the error template.
+     * ```html
+     * <ng-template igxCellValidationError let-cell="cell" #errorTemplate >
+     *     <div *ngIf="cell.validation.errors?.['forbiddenName']">
+     *      This name is forbidden.
+     *     </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'errorTemplate'", {read: TemplateRef })
+     * public errorTemplate: TemplateRef<any>;
+     * this.column.errorTemplate = this.errorTemplate;
+     * ```
+     */
+    public set errorTemplate(template: TemplateRef<any>) {
+        this._errorTemplate = template;
+    }
+
     /**
      * Returns a reference to the `filterCellTemplate`.
      * ```typescript
@@ -1617,6 +1666,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
+    protected _errorTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
     protected _headerTemplate: TemplateRef<any>;
     /**
      * @hidden
@@ -1703,9 +1756,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
+        @Optional() @Self() @Inject(NG_VALIDATORS) private _validators: Validator[],
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
-    ) { }
+    ) {
+        this.validators  = _validators;
+     }
 
     /**
      * @hidden
@@ -1734,6 +1790,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
+        }
+        if (this.cellValidationErrorTemplate) {
+            this._errorTemplate = this.cellValidationErrorTemplate.template;
         }
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;
@@ -1828,8 +1887,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.width === 'fit-content' ? col.autoSize : 
-                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize :
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1857,8 +1916,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 // Replace the old column with the new one.
                 columnSizes[col.colStart - 1] = {
                     ref: col,
-                    width: col.width === 'fit-content' ? col.autoSize : 
-                    col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                    width: col.width === 'fit-content' ? col.autoSize :
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -1871,8 +1930,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
                             ref: col,
-                            width: col.width === 'fit-content' ? col.autoSize : 
-                            col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
+                            width: col.width === 'fit-content' ? col.autoSize :
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
