@@ -1408,7 +1408,7 @@ export class FileContentData {
             `count="12" uniqueCount="12"><si><t>ID</t></si><si><t>General Information</t></si><si><t>Address Information</t></si><si><t>Personal Details</t></si><si><t>Location</t></si><si><t>Contact Information</t></si><si><t>ContactName</t></si><si><t>ContactTitle</t></si><si><t>Country</t></si><si><t>Phone</t></si><si><t>Fax</t></si><si><t>PostalCode</t></si>`;
 
         this._worksheetData =
-            `<dimension ref="A1:G5"/>
+            `<dimension ref="A1:G3"/>
             <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
             <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
             <cols><col min="1" max="7" width="15" customWidth="1"/></cols>
