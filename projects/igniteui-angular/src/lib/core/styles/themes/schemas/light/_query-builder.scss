@@ -8,59 +8,42 @@
 ////
 
 /// Generates a fluent query builder schema.
-/// @prop {Color} filtering-header-background [color: ('grays', 50)] - The background color of the filtered column header.
-/// @prop {Map} filtering-header-text-color [color: ('grays', 800)] - The text color color of the filtered column header.
-/// @prop {Map} filtering-background-and [color: ('primary', 300)] - The background color of advanced filtering "AND" condition.
-/// @prop {Map} filtering-background-and--focus [color: ('primary', 700)] - The background color on focus/selected of advanced filtering "AND" condition.
-/// @prop {Map} filtering-background-or [color: ('secondary', 300)] - The background color of advanced filtering "OR" condition.
-/// @prop {Map} filtering-background-or--focus [color: ('secondary', 700)] - The background color on focus/selected of advanced filtering "OR" condition.
-/// @prop {Color} filtering-row-background [color: 'grays', 50)] - The background color of the filtering row.
-/// @prop {Map} filtering-row-text-color [color: ('grays', 800)] - The text-color color of the filtering row.
+/// @prop {Color} background [color: 'grays', 50)] - The background color of the filtering row.
+/// @prop {Map} background-and [color: ('primary', 300)] - The background color of advanced filtering "AND" condition.
+/// @prop {Map} background-and--focus [color: ('primary', 700)] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @prop {Map} background-or [color: ('secondary', 300)] - The background color of advanced filtering "OR" condition.
+/// @prop {Map} background-or--focus [color: ('secondary', 700)] - The background color on focus/selected of advanced filtering "OR" condition.
 ///
 /// @requires {function} extend
 $light-query-builder: (
     variant: 'material',
 
-    filtering-header-background: (
+    background: (
         color: ('grays', 50)
     ),
 
-    filtering-header-text-color: (
-        color: ('grays', 800)
-    ),
-
-    filtering-background-and: (
+    background-and: (
         color: ('primary', 300)
     ),
 
-    filtering-background-and--focus: (
+    background-and--focus: (
         color: ('primary', 700)
     ),
 
-    filtering-background-or: (
+    background-or: (
         color: ('secondary', 300)
     ),
 
-    filtering-background-or--focus: (
+    background-or--focus: (
         color: ('secondary', 700)
-    ),
-
-    filtering-row-background: (
-        color: ('grays', 50)
-    ),
-
-    filtering-row-text-color: (
-        color: ('grays', 800)
     ),
 );
 
 /// Generates a fluent query builder schema.
 /// @type {Map}
-/// @prop {Map} filtering-header-background [color: ('grays', 50)] - The background color of the filtered column header.
-/// @prop {Map} filtering-header-text-color [color: ('grays', 900)] - The text color color of the filtered column header.
-/// @prop {Map} filtering-row-background [color: ('grays', 200)] - The background color of the filtering row.
-/// @prop {Map} filtering-background-or [color: ('error', .5)] - The background color of advanced filtering "OR" condition.
-/// @prop {Map} filtering-background-or--focus [color: ('error')] - The background color on focus/selected of advanced filtering "OR" condition.
+/// @prop {Map} background [color: ('grays', 200)] - The background color of the filtering row.
+/// @prop {Map} background-or [color: ('error', .5)] - The background color of advanced filtering "OR" condition.
+/// @prop {Map} background-or--focus [color: ('error')] - The background color on focus/selected of advanced filtering "OR" condition.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-query-builder
@@ -69,25 +52,17 @@ $fluent-query-builder: extend(
     (
         variant: 'fluent',
 
-        filtering-header-background: (
+        background: (
             color: ('grays', 50)
         ),
 
-        filtering-header-text-color: (
-            color: ('grays', 900)
-        ),
-
-        filtering-background-or: (
+        background-or: (
             color: ('error', 500, .5),
         ),
 
-        filtering-background-or--focus: (
+        background-or--focus: (
             color: ('error')
-        ),
-
-        filtering-row-background: (
-            color: ('grays', 50)
-        ),
+        )
     )
 );
 
@@ -97,9 +72,9 @@ $fluent-query-builder: extend(
 $bootstrap-query-builder: $light-query-builder;
 
 /// Generates an indigo query builder schema.
-/// @prop {Map} filtering-header-text-color [color: ('primary', 900)] - The text color color of the filtered column header.
-/// @prop {Map} filtering-background-or [color: ('warn', 500, .72)] - The background color of advanced filtering "OR" condition.
-/// @prop {Map} filtering-background-or--focus [color: 'warn'] - The background color on focus/selected of advanced filtering "OR" condition.
+/// @prop {Map} header-text-color [color: ('primary', 900)] - The text color color of the filtered column header.
+/// @prop {Map} background-or [color: ('warn', 500, .72)] - The background color of advanced filtering "OR" condition.
+/// @prop {Map} background-or--focus [color: 'warn'] - The background color on focus/selected of advanced filtering "OR" condition.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-query-builder
@@ -108,15 +83,11 @@ $indigo-query-builder: extend(
     (
         variant: 'indigo-design',
 
-        filtering-header-text-color: (
-            color: ('primary', 900),
-        ),
-
-        filtering-background-or: (
+        background-or: (
             color: ('warn', 500, .72),
         ),
 
-        filtering-background-or--focus: (
+        background-or--focus: (
             color: 'warn',
         ),
     )
