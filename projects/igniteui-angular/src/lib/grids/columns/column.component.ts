@@ -72,7 +72,6 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent
  */
 /* blazorElement */
-/* jsonAPIPlainObject */
 /* blazorAlternateName: GridColumn */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
