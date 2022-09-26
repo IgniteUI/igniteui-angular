@@ -1399,7 +1399,7 @@
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
     }
-    
+
     %grid-cell--invalid {
         padding-inline-end: rem(4px) !important;
 
@@ -1409,7 +1409,7 @@
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
         }
-        
+
         %grid-cell-text {
             width: 100%;
         }
@@ -2923,7 +2923,7 @@
     }
 
     @include excel-filtering($theme, $palette);
-    @include advanced-filtering($theme, $palette);
+    // @include advanced-filtering($theme, $palette);
 
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
