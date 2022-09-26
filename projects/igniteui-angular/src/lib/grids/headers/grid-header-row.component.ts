@@ -204,7 +204,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
         if (this.grid.selectionService.areAllRowSelected()) {
             this.grid.selectionService.clearRowSelection(event);
         } else {
-            this.grid.selectionService.selectAllRows(event, true);
+            this.grid.selectionService.selectAllRows(event);
         }
     }
 }
