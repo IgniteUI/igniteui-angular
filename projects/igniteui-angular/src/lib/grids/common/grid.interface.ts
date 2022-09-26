@@ -772,6 +772,7 @@ export interface IgxRowSelectorTemplateContext {
     $implicit: {
         index: number,
         rowID: any,
+        key: any,
         selected: boolean,
         select?: () => void,
         deselect?: () => void
