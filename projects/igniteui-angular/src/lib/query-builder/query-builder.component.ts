@@ -51,7 +51,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionItem {
     public parent: ExpressionGroupItem;
@@ -62,7 +62,7 @@ class ExpressionItem {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionGroupItem extends ExpressionItem {
     public operator: FilteringLogic;
@@ -75,7 +75,7 @@ class ExpressionGroupItem extends ExpressionItem {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionOperandItem extends ExpressionItem {
     public expression: IFilteringExpression;
@@ -89,6 +89,17 @@ class ExpressionOperandItem extends ExpressionItem {
     }
 }
 
+/**
+ * A component used for operating with complex filters by creating or editing conditions
+ * and grouping them using AND/OR logic.
+ * It is used internally in the Advanced Filtering of the Grid.
+ *
+ * @example
+ * ```html
+ * <igx-query-builder [fields]="this.fields">            
+ * </igx-query-builder>
+ * ```
+ */
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
@@ -392,8 +403,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                 this.setFilters(field);
                 this.setFormat(field);
             });
-
-            this.init();
         }
     }
 
@@ -412,15 +421,10 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this._expressionTree = expressionTree;
 
         if (this._expressionTree && this._fields) {
-
             this._fields.forEach(field => {
                 this.setFilters(field);
                 this.setFormat(field);
             });
-
-            // this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            //     this.init();
-            // });
 
             this.init();
         }
@@ -997,7 +1001,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.currentGroup = groupItem;
     }
 
-    //TODO set default expressiontree
     private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
@@ -1211,8 +1214,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        //TODO set default expressionstree
-        //this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
         this.rootGroup = this.createExpressionGroupItem(this.expressionTree)
         this.currentGroup = this.rootGroup;
     }

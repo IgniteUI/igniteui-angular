@@ -1,11 +1,13 @@
 <article *ngIf="grid" class="igx-advanced-filter" igxDrag [ghost]="false" [dragTolerance]="0"
-    (dragStart)="dragStart($event)" (dragEnd)="dragEnd()" (dragMove)="onDragMove($event)" (keydown)="onKeyDown($event)"
+    (dragStart)="dragStart($event)" (dragMove)="onDragMove($event)" (keydown)="onKeyDown($event)"
     [ngClass]="{
         'igx-advanced-filter--cosy': grid.displayDensity === 'cosy',
         'igx-advanced-filter--compact': grid.displayDensity === 'compact',
         'igx-advanced-filter--inline': inline
     }">
-    <igx-query-builder #queryBuilder [locale]="grid.locale">
+    <igx-query-builder #queryBuilder [locale]="grid.locale"
+        [fields]="this.filterableFields"
+        [expressionTree]="this.grid.advancedFilteringExpressionsTree">
         <igx-query-builder-header
             [title]="grid.resourceStrings.igx_grid_advanced_filter_title"
             igxDragHandle>

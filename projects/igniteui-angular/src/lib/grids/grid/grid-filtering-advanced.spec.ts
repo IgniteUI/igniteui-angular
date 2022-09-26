@@ -909,16 +909,16 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
 
         it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
             // Make the 'Downloads', 'Released' and 'ReleaseDate' columns non-filterable.
             grid.getColumnByName('Downloads').filterable = false;
             grid.getColumnByName('Released').filterable = false;
             grid.getColumnByName('ReleaseDate').filterable = false;
             grid.cdr.detectChanges();
             tick(100);
-
-            // Open Advanced Filtering dialog.
-            grid.openAdvancedFilteringDialog();
-            fix.detectChanges();
 
             // Click the initial 'Add and Group' button.
             GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
@@ -2388,7 +2388,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 rootOperatorLine.click();
 
                 // Simulate end of chip selection animation
-                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
+                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
                 const transitionEvent = new TransitionEvent('transitionend', {
                     propertyName: 'width'
                 });
@@ -2431,7 +2431,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 rootOperatorLine.click();
 
                 // Simulate end of chip selection animation
-                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
+                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
                 const transitionEvent = new TransitionEvent('transitionend', {
                     propertyName: 'width'
                 });
