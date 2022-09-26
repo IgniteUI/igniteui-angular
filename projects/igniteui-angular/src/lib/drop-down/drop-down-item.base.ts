@@ -34,7 +34,11 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @HostBinding('attr.aria-label')
     @Input()
     public get ariaLabel(): string {
-        return this.value ? this.value : this.id;
+        return this._label ? this._label : this.value ? this.value : this.id;
+    }
+
+    public set ariaLabel(value: string) {
+        this._label = value;
     }
 
     /**
@@ -282,6 +286,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected _selected = false;
     protected _index = null;
     protected _disabled = false;
+    protected _label = null;
 
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
