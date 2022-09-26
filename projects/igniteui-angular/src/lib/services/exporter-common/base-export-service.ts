@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
+import { IPivotDimension } from '../../grids/pivot-grid/public_api';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -20,6 +21,7 @@ export enum ExportRecordType {
     DataRecord = 'DataRecord',
     HierarchicalGridRecord = 'HierarchicalGridRecord',
     HeaderRecord = 'HeaderRecord',
+    PivotGridRecord = 'PivotGridRecord'
 }
 
 export enum HeaderType {
@@ -192,6 +194,7 @@ export abstract class IgxBaseExporter {
 
     private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
+    private pivotGridRowDimensionsMap: Map<string, string>;
 
     /**
      * Method for exporting IgxGrid component's data.
@@ -225,6 +228,32 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
             }
+        } else if (tagName === 'igx-pivot-grid') {
+            this.pivotGridRowDimensionsMap = new Map<string, string>();
+            const dimensionColumns = [];
+            let pinnedIndex = -1;
+            grid.pivotConfiguration.rows.filter(r => r.enabled).forEach(rowDimension => {
+                pinnedIndex++;
+                columnList.columnWidths.unshift(200); // TODO: get from grid
+
+                const rowDimensionColumn: IColumnInfo = {
+                    header: rowDimension.memberName,
+                    field: rowDimension.memberName,
+                    dataType: 'string',
+                    skip: false,
+                    headerType: HeaderType.ColumnHeader,
+                    columnSpan: 1,
+                    level: 0,
+                    startIndex: 0,
+                    pinnedIndex: 0
+                };
+                dimensionColumns.push(rowDimensionColumn);
+                this.addToRowDimensionsMap(rowDimension, rowDimension.memberName);
+            });
+
+            columnList.columns.unshift(...dimensionColumns);
+            columnList.indexOfLastPinnedColumn = pinnedIndex;
+            this._ownersMap.set(DEFAULT_OWNER, columnList);
         } else {
             this._ownersMap.set(DEFAULT_OWNER, columnList);
         }
@@ -259,6 +288,13 @@ export abstract class IgxBaseExporter {
         });
 
         this.exportGridRecordsData(records);
+    }
+
+    private addToRowDimensionsMap(rowDimension: IPivotDimension, rootParentName: string) {
+        this.pivotGridRowDimensionsMap[rowDimension.memberName] = rootParentName;
+        if (rowDimension.childLevel) {
+            this.addToRowDimensionsMap(rowDimension.childLevel, rootParentName)
+        }
     }
 
     private exportGridRecordsData(records: IExportRecord[], grid?: GridType) {
@@ -486,7 +522,7 @@ export abstract class IgxBaseExporter {
 
         switch (tagName) {
             case 'igx-pivot-grid': {
-                this.prepareGridData(grid, hasFiltering, hasSorting);
+                this.preparePivotGridData(grid/*, hasFiltering, hasSorting*/);
                 break;
             }
             case 'igx-hierarchical-grid': {
@@ -501,6 +537,24 @@ export abstract class IgxBaseExporter {
                 this.prepareGridData(grid, hasFiltering, hasSorting);
                 break;
             }
+        }
+    }
+
+    private preparePivotGridData(grid: GridType/*, hasFiltering: boolean, hasSorting: boolean*/) {
+        for (const record of grid.filteredSortedData) {
+            const recordData = Object.fromEntries(record.aggregationValues);
+            record.dimensionValues.forEach((value, key, map) => {
+                const actualKey = this.pivotGridRowDimensionsMap[key];
+                recordData[actualKey] = value;
+            });
+
+            const pivotGridRecord: IExportRecord = {
+                data: recordData,
+                level: record.level,
+                type: ExportRecordType.PivotGridRecord
+            };
+
+            this.flatRecords.push(pivotGridRecord);
         }
     }
 
