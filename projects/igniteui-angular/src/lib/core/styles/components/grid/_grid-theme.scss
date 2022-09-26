@@ -1,7 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use './excel-filtering-theme' as *;
-@use './advanced-filtering-theme' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
@@ -2924,7 +2923,6 @@
     }
 
     @include excel-filtering($theme, $palette);
-    // @include advanced-filtering($theme, $palette);
 
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
