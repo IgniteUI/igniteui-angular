@@ -157,7 +157,7 @@ export class WorksheetFile implements IExcelFile {
 
             if (!isHierarchicalGrid) {
                 this.dimension =
-                    'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount + owner.maxLevel);
+                    'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount);
 
                 cols += '<cols>';
 
@@ -229,8 +229,9 @@ export class WorksheetFile implements IExcelFile {
 
         let recordHeaders = [];
 
-        yieldingLoop(worksheetData.rowCount - 1, 1000,
+        yieldingLoop(worksheetData.rowCount - worksheetData.multiColumnHeaderRows - 1, 1000,
             (i) => {
+                if(!worksheetData.isEmpty){
                     if (!isHierarchicalGrid) {
                         if (hasUserSetIndex) {
                             recordHeaders = worksheetData.rootKeys;
@@ -256,9 +257,8 @@ export class WorksheetFile implements IExcelFile {
                         recordHeaders = Object.keys(worksheetData.data[i].data);
                     }
 
-                    if((worksheetData.data[i] !== undefined)){
-                        rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
-                    }
+                    rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
+                }
             },
             () => {
                 done(rowDataArr.join(''));
