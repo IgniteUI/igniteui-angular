@@ -2159,6 +2159,43 @@ describe('igxCombo', () => {
             expect(combo.value).toBe('0, false, , null, NaN');
             expect(combo.selection).toEqual([ 0, false, '', null, NaN ]);
         });
+        it('should select falsy values except "undefined" with "writeValue" method', () => {
+            combo.valueKey = 'value';
+            combo.displayKey = 'field';
+            combo.data = [
+                { field: '0', value: 0 },
+                { field: 'false', value: false },
+                { field: 'empty', value: '' },
+                { field: 'null', value: null },
+                { field: 'NaN', value: NaN },
+                { field: 'undefined', value: undefined },
+            ];
+
+            combo.writeValue([0]);
+            expect(combo.selection).toEqual([0]);
+            expect(combo.value).toBe('0');
+
+            combo.writeValue([false]);
+            expect(combo.selection).toEqual([false]);
+            expect(combo.value).toBe('false');
+
+            combo.writeValue(['']);
+            expect(combo.selection).toEqual(['']);
+            expect(combo.value).toBe('empty');
+
+            combo.writeValue([null]);
+            expect(combo.selection).toEqual([null]);
+            expect(combo.value).toBe('null');
+
+            combo.writeValue([NaN]);
+            expect(combo.selection).toEqual([NaN]);
+            expect(combo.value).toBe('NaN');
+
+            // should not select undefined
+            combo.writeValue([undefined]);
+            expect(combo.selection).toEqual([]);
+            expect(combo.value).toBe('');
+        });
         it('should prevent selection when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
             combo.toggle();
