@@ -562,8 +562,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             this.editedExpression.expression.fieldName = this.selectedField.field;
             this.editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
-            this.editedExpression.fieldLabel = this.selectedField.label ? this.selectedField.label : this.selectedField.field;
-
+            this.editedExpression.fieldLabel = this.selectedField.label
+                ? this.selectedField.label
+                : this.selectedField.header
+                    ? this.selectedField.header
+                    : this.selectedField.field;
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
         }
@@ -1036,7 +1039,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
-                    operandItem.fieldLabel = field.label || field.field;
+                    operandItem.fieldLabel = field.label || field.header || field.field;
                     groupItem.children.push(operandItem);
                 }
             }

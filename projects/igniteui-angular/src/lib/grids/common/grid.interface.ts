@@ -114,8 +114,9 @@ export interface RowType {
 }
 
 export interface FieldType {
-    field: string;
     label?: string;
+    field: string;
+    header?: string;
     dataType: DataType;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
