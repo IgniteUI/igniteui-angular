@@ -49,10 +49,10 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         this.data1 = this.localData.slice(0, 10);
         this.data2 = this.localData.slice(10, 20);
         this.localData1 = this.data1;
-        // this.localData[0].hasChild = false;
-        // this.localData[1].hasChild = false;
-        // this.localData[2].childData[0].hasChild = false;
-        // this.localData[2].childData[1].hasChild = false;
+        this.localData[0].hasChild = false;
+        this.localData[1].hasChild = false;
+        this.localData[2].childData[0].hasChild = false;
+        this.localData[2].childData[1].hasChild = false;
         this.selectionMode = GridSelectionMode.none;
     }
 
@@ -121,9 +121,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
                 Col1: i,
                 Col2: i,
                 Col3: i,
-                childData: {
-                    Records: children
-                },
+                childData: children,
                 childData2: i % 2 ? [] : children,
                 hasChild: true
             });
