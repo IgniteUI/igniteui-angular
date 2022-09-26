@@ -147,6 +147,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
             } else {
                 collection.splice(index, 1);
             }
+            this.grid.validation.clear(rowID);
         }
     }
 

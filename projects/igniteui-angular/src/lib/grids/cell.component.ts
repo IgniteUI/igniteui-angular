@@ -13,7 +13,10 @@
     OnDestroy,
     OnChanges,
     SimpleChanges,
-    Inject
+    Inject,
+    ViewChildren,
+    QueryList,
+    AfterViewInit
 } from '@angular/core';
 import { formatPercent } from '@angular/common';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -28,6 +31,12 @@ import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
+import { IgxTooltipDirective } from '../directives/tooltip';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
+import { first, takeUntil, takeWhile } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -48,7 +57,8 @@ import { ISelectionNode } from './common/types';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
+    private _destroy$ = new Subject<void>();
     /**
      * @hidden
      * @internal
@@ -57,6 +67,26 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get isEmptyAddRowCell() {
         return this.intRow.addRowUI && (this.value === undefined || this.value === null);
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChildren('error', { read: IgxTooltipDirective })
+    public errorTooltip: QueryList<IgxTooltipDirective>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('errorIcon', { read: IgxIconComponent, static: false })
+    public errorIcon: IgxIconComponent;
+
+    /**
+     * Gets the default error template.
+     */
+    @ViewChild('defaultError', { read: TemplateRef, static: true })
+    public defaultErrorTemplate: TemplateRef<any>;
 
     /**
      * Gets the column of the cell.
@@ -68,6 +98,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @Input()
     public column: ColumnType;
+
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected get formGroup(): FormGroup {
+        return this.grid.validation.getFormGroup(this.intRow.key);
+    }
 
     /**
      * @hidden
@@ -133,6 +172,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public cellTemplate: TemplateRef<any>;
 
     @Input()
+    public cellValidationErrorTemplate: TemplateRef<any>;
+
+    @Input()
     public pinnedIndicator: TemplateRef<any>;
 
     /**
@@ -171,8 +213,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get context(): any {
         const ctx = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext,
+            additionalTemplateContext: this.column.additionalTemplateContext
         };
+        if (this.editMode) {
+            ctx['formControl'] = this.formControl;
+        }
+        if (this.isInvalid) {
+            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+        }
         /* Turns the `cell` property from the template context object into lazy-evaluated one.
          * Otherwise on each detection cycle the cell template is recreating N cell instances where
          * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
@@ -192,7 +240,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get template(): TemplateRef<any> {
-        if (this.editMode) {
+        if (this.editMode && this.formGroup) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
         }
@@ -297,7 +345,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     @HostBinding('attr.title')
     public get title() {
-        if (this.editMode || this.cellTemplate) {
+        if (this.editMode || this.cellTemplate || this.errorShowing) {
             return '';
         }
 
@@ -420,6 +468,49 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     @HostBinding('attr.aria-readonly')
     public get readonly(): boolean {
         return !this.editable;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('attr.aria-describedby')
+    public get ariaDescribeBy() {
+        let describeBy = (this.gridID + '_' + this.column.field).replace('.', '_');
+        if (this.isInvalid) {
+            describeBy += ' ' + this.ariaErrorMessage;
+        }
+        return describeBy;
+    }
+
+    /** @hidden @internal */
+    public get ariaErrorMessage() {
+        return this.grid.id + '_' + this.column.field + '_' + this.intRow.index + '_error';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--invalid')
+    @HostBinding('attr.aria-invalid')
+    public get isInvalid() {
+        const isInvalid = this.formGroup?.get(this.column?.field)?.invalid && this.formGroup?.get(this.column?.field)?.touched;
+       return !this.intRow.deleted && isInvalid;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--valid')
+    public get isValidAfterEdit() {
+        const formControl = this.formGroup?.get(this.column?.field);
+        return this.editMode && formControl && !formControl.invalid && formControl.dirty;
+    }
+
+    /**
+     * Gets the formControl responsible for value changes and validation for this cell.
+     */
+    protected get formControl(): FormControl {
+        return this.grid.validation.getFormControl(this.intRow.key, this.column.field) as FormControl;
     }
 
     public get gridRowSpan(): number {
@@ -657,6 +748,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     constructor(
         protected selectionService: IgxGridSelectionService,
         @Inject(IGX_GRID_BASE) public grid: GridType,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef<HTMLElement>,
         protected zone: NgZone,
@@ -722,6 +814,41 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
         }
+
+    }
+
+    public ngAfterViewInit() {
+        this.errorTooltip.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            if (this.errorTooltip.length > 0 && this.active) {
+                // error ocurred
+                this.cdr.detectChanges();
+                this.openErrorTooltip();
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public errorShowing = false;
+
+    private openErrorTooltip() {
+        const tooltip = this.errorTooltip.first;
+        tooltip.open(
+            {
+                target: this.errorIcon.el.nativeElement,
+                closeOnOutsideClick: true,
+                excludeFromOutsideClick: [this.nativeElement],
+                closeOnEscape: false,
+                outlet: this.grid.outlet,
+                modal: false,
+                positionStrategy: new AutoPositionStrategy({
+                    horizontalStartPoint: HorizontalAlignment.Center,
+                    horizontalDirection: HorizontalAlignment.Center
+                })
+            }
+        );
     }
 
     /**
@@ -734,6 +861,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.removePointerListeners(this.cellSelectionMode);
         });
         this.touchManager.destroy();
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
     /**
@@ -741,6 +870,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.editMode && changes.editMode.currentValue && this.formControl) {
+            // while in edit mode subscribe to value changes on the current form control and set to editValue
+            this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
+                this.editValue = value;
+                this.formControl.markAsTouched();
+            });
+            this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
+                if (status === 'INVALID' && this.errorTooltip.length > 0) {
+                    this.cdr.detectChanges();
+                    const tooltip = this.errorTooltip.first;
+                    this.resizeAndRepositionOverlayById(tooltip.overlayId, this.errorTooltip.first.element.offsetWidth);
+                }
+            });
+        }
         if (changes.value && !changes.value.firstChange) {
             if (this.highlight) {
                 this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
@@ -748,6 +891,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
             }
         }
+    }
+
+    
+
+    /**
+     * @hidden @internal
+     */
+     private resizeAndRepositionOverlayById(overlayId: string, newSize: number) {
+        const overlay = this.overlayService.getOverlayById(overlayId);
+        if(!overlay) return;
+        overlay.initialSize.width = newSize;
+        overlay.elementRef.nativeElement.parentElement.style.width = newSize + 'px';
+        this.overlayService.reposition(overlayId);
     }
 
     /**
@@ -792,6 +948,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
+        this.formControl.setValue(val);
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
@@ -843,6 +1000,21 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @hidden
      * @internal
      */
+    public focusout = () => {
+        this.closeErrorTooltip();
+    }
+
+    private closeErrorTooltip() {
+        const tooltip = this.errorTooltip.first;
+        if (tooltip) {
+            tooltip.close();
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation?.activeNode?.gridID ||
@@ -886,6 +1058,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
 
+        const isTargetErrorIcon = event && event.target && event.target === this.errorIcon?.el.nativeElement
+        if (this.isInvalid && !isTargetErrorIcon) {
+            this.openErrorTooltip();
+            this.grid.activeNodeChange.pipe(first()).subscribe(() => {
+                this.closeErrorTooltip();
+            });
+        }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
             this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
@@ -956,6 +1135,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
+                if (this.grid.validationTrigger === 'blur') {
+                    this.grid.tbody.nativeElement.focus({ preventScroll: true });
+                }
                 editableArgs = this.grid.crudService.updateCell(false, event);
 
                 /* This check is related with the following issue #6517:
@@ -994,6 +1176,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
+        this.nativeElement.addEventListener('focusout', this.focusout);
     }
 
     private removePointerListeners(selection) {
@@ -1002,6 +1185,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+        this.nativeElement.removeEventListener('focusout', this.focusout);
     }
 
     private getCellType(useRow?: boolean): CellType {

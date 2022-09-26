@@ -314,6 +314,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Editing'
         },
         {
+            link: '/gridValidation',
+            icon: 'view_column',
+            name: 'Grid Validation'
+        },
+        {
             link: '/gridLocalization',
             icon: 'view_column',
             name: 'Grid Localization'
@@ -327,6 +332,11 @@ export class AppComponent implements OnInit {
             link: '/gridRowDrag',
             icon: 'view_column',
             name: 'Grid Row Drag'
+        },
+        {
+            link: '/gridRowReorder',
+            icon: 'view_column',
+            name: 'Grid Row Reorder'
         },
         {
             link: '/gridSummary',

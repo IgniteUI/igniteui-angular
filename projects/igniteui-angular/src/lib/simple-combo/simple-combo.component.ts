@@ -192,7 +192,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                     }
                     return current === this.selection[0];
                 });
-                this.dropdown.navigateItem(index);
+                if (!this.isRemote) {
+                    // navigate to item only if we have local data
+                    // as with remote data this will fiddle with igxFor's scroll handler
+                    // and will trigger another chunk load which will break the visualization
+                    this.dropdown.navigateItem(index);
+                }
             }
         });
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -443,18 +448,16 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
-        const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null || this.selectionService.size(this.id) === 0) {
+        const filtered = this.filteredData.find(this.findMatch);
+        if (filtered === undefined || filtered === null || this.getElementKey(filtered) !== this.selectedItem) {
             this.clearAndClose();
             return;
         }
-        if (this.isPartialMatch(filtered) || this.getElementVal(filtered) !== this._internalFilter) {
-            this.clearAndClose();
-        }
     }
 
-    private isPartialMatch(filtered: any): boolean {
-        return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
+    private getElementKey(element: any): any {
+        const elementVal = this.valueKey ? element[this.valueKey] : element;
+        return elementVal;
     }
 
     private getElementVal(element: any): string {
