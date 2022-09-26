@@ -13,8 +13,10 @@ export class IgxQueryBuilderHeaderComponent {
     
     /**
      * An @Input property that sets the title of the `IgxQueryBuilderHeaderComponent`.
+     * 
+     * @example
      * ```html
-     * <igx-query-builder-header title="Sample Query Builder">
+     * <igx-query-builder-header title="Sample Query Builder"></igx-query-builder-header>
      * ```
      */
     @Input()
@@ -22,6 +24,11 @@ export class IgxQueryBuilderHeaderComponent {
 
     /**
      * An @Input property to show/hide the legend.
+     * 
+     * @example
+     * ```html
+     * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
+     * ```
      */
     @Input()
     public showLegend = true;
@@ -32,13 +39,13 @@ export class IgxQueryBuilderHeaderComponent {
      */
      @Input()
      public set resourceStrings(value: IQueryBuilderResourceStrings) {
-         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
      }
  
      /**
       * Returns the resource strings.
       */
      public get resourceStrings(): IQueryBuilderResourceStrings {
-         return this._resourceStrings;
+        return this._resourceStrings;
      }
 }

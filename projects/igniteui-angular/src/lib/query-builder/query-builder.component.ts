@@ -1,5 +1,5 @@
 import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
-import { AfterViewInit, ContentChild, LOCALE_ID, Optional, Pipe, PipeTransform } from '@angular/core';
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
@@ -51,7 +51,7 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionItem {
     public parent: ExpressionGroupItem;
@@ -62,7 +62,7 @@ class ExpressionItem {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionGroupItem extends ExpressionItem {
     public operator: FilteringLogic;
@@ -75,7 +75,7 @@ class ExpressionGroupItem extends ExpressionItem {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 class ExpressionOperandItem extends ExpressionItem {
     public expression: IFilteringExpression;
@@ -89,6 +89,17 @@ class ExpressionOperandItem extends ExpressionItem {
     }
 }
 
+/**
+ * A component used for operating with complex filters by creating or editing conditions
+ * and grouping them using AND/OR logic.
+ * It is used internally in the Advanced Filtering of the Grid.
+ *
+ * @example
+ * ```html
+ * <igx-query-builder [fields]="this.fields">            
+ * </igx-query-builder>
+ * ```
+ */
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
@@ -392,8 +403,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                 this.setFilters(field);
                 this.setFormat(field);
             });
-
-            this.init();
         }
     }
 
@@ -412,18 +421,15 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this._expressionTree = expressionTree;
 
         if (this._expressionTree && this._fields) {
-
             this._fields.forEach(field => {
                 this.setFilters(field);
                 this.setFormat(field);
             });
 
-            // this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            //     this.init();
-            // });
-
             this.init();
         }
+        
+        this.expressionTreeChange.emit();
     }
 
     /**
@@ -464,6 +470,15 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public get resourceStrings(): IQueryBuilderResourceStrings {
         return this._resourceStrings;
     }
+
+    /**
+     * Event fired as the expression tree is changed.
+     *
+     * ```html
+     *  <igx-query-builder (expressionTreeChange)='onExpressionTreeChange()'></igx-query-builder>
+     * ```
+     */
+    @Output() public expressionTreeChange = new EventEmitter();
 
     /**
      * @hidden @internal
@@ -541,7 +556,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             this.editedExpression.expression.fieldName = this.selectedField.field;
             this.editedExpression.expression.condition = this.selectedField.filters.condition(this.selectedCondition);
             this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedField.dataType, this.searchValue);
-            this.editedExpression.fieldLabel = this.selectedField.header ? this.selectedField.header : this.selectedField.field;
+            this.editedExpression.fieldLabel = this.selectedField.label ? this.selectedField.label : this.selectedField.field;
 
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
@@ -997,7 +1012,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.currentGroup = groupItem;
     }
 
-    //TODO set default expressiontree
     private createExpressionGroupItem(expressionTree: IExpressionTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
@@ -1016,7 +1030,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const field = this.fields.find(el => el.field === filteringExpr.fieldName);
-                    operandItem.fieldLabel = field.header || field.field;
+                    operandItem.fieldLabel = field.label || field.field;
                     groupItem.children.push(operandItem);
                 }
             }
@@ -1028,23 +1042,23 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-    public createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+    public createExpressionTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
         if (!groupItem) {
             return null;
         }
 
-        const expressionsTree = new FilteringExpressionsTree(groupItem.operator);
+        const expressionTree = new FilteringExpressionsTree(groupItem.operator);
 
         for (const item of groupItem.children) {
             if (item instanceof ExpressionGroupItem) {
-                const subTree = this.createExpressionsTreeFromGroupItem((item as ExpressionGroupItem));
-                expressionsTree.filteringOperands.push(subTree);
+                const subTree = this.createExpressionTreeFromGroupItem((item as ExpressionGroupItem));
+                expressionTree.filteringOperands.push(subTree);
             } else {
-                expressionsTree.filteringOperands.push((item as ExpressionOperandItem).expression);
+                expressionTree.filteringOperands.push((item as ExpressionOperandItem).expression);
             }
         }
 
-        return expressionsTree;
+        return expressionTree;
     }
 
     private toggleContextMenu() {
@@ -1211,8 +1225,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        //TODO set default expressionstree
-        //this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
         this.rootGroup = this.createExpressionGroupItem(this.expressionTree)
         this.currentGroup = this.rootGroup;
     }

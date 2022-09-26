@@ -94,7 +94,7 @@
                     [placeholder]="this.resourceStrings.igx_query_builder_column_placeholder"
                     [(ngModel)]="selectedField">
                     <igx-select-item *ngFor="let field of fields" [value]="field">
-                        {{field.header || field.field}}
+                        {{field.label || field.header || field.field}}
                     </igx-select-item>
                 </igx-select>
 

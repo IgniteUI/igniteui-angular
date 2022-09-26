@@ -115,7 +115,7 @@ export interface RowType {
 
 export interface FieldType {
     field: string;
-    header?: string;
+    label?: string;
     dataType: DataType;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
@@ -150,8 +150,7 @@ export interface ColumnType extends FieldType {
     minWidthPercent: number;
     maxWidthPercent: number;
 
-    //field: string;
-    //header?: string;
+    header?: string;
     index: number;
     dataType: GridColumnDataType;
     inlineEditorTemplate: TemplateRef<any>;
@@ -172,7 +171,6 @@ export interface ColumnType extends FieldType {
     sortStrategy: ISortingStrategy;
     sortingIgnoreCase: boolean;
     filterCell: any;
-    // filters: IgxFilteringOperand;
     filteringIgnoreCase: boolean;
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
@@ -196,8 +194,6 @@ export interface ColumnType extends FieldType {
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
-    // defaultTimeFormat: string;
-    // defaultDateTimeFormat: string;
     additionalTemplateContext: any;
     isLastPinned: boolean;
     isFirstPinned: boolean;
@@ -213,7 +209,6 @@ export interface ColumnType extends FieldType {
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
-    //formatter(value: any, rowData?: any): any;
     populateVisibleIndexes?(): void;
 }
 
@@ -709,4 +704,13 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
+}
+
+export interface IgxGridMasterDetailContext {
+    $implicit: any;
+    index: number;
+}
+
+export interface IgxGroupByRowTemplateContext {
+    $implicit: IGroupByRecord;
 }

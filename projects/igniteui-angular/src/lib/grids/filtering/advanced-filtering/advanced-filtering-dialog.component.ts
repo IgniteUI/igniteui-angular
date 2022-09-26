@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
@@ -27,7 +27,7 @@ import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html'
 })
-export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
+export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
@@ -54,17 +54,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _overlayComponentId: string;
     private _overlayService: IgxOverlayService;    
     private _grid: GridType;
-    private _filteringChange: Subscription;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
-
-    /**
-     * @hidden @internal
-     */
-    public ngAfterViewInit(): void {
-        this.queryBuilder.fields = this.filterableFields;
-        this.queryBuilder.expressionTree = this.grid.advancedFilteringExpressionsTree;
-    }
 
     /**
      * @hidden @internal
@@ -88,19 +79,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public set grid(grid: GridType) {
         this._grid = grid;
 
-        if (this._filteringChange) {
-            this._filteringChange.unsubscribe();
-        }
-
         if (this._grid) {
             this._grid.filteringService.registerSVGIcons();
-
-            //TODO Clear query builder edit state
-            // this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            //     this.init();
-            // });
-
-            // this.init();
         }
 
         this.assignResourceStrings();        
@@ -116,7 +96,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get filterableFields(): FieldType[] {    
+    public get filterableFields(): FieldType[] {
         return this.grid.columns.filter((column) => !column.columnGroup && column.filterable)
     }
 
@@ -128,21 +108,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             dragArgs.cancel = true;
             return;
         }
-
-        // if (!this.contextMenuToggle.collapsed) {
-        //     this.contextMenuToggle.element.style.display = 'none';
-        // }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dragEnd() {
-        // if (!this.contextMenuToggle.collapsed) {
-        //     this.calculateContextMenuTarget();
-        //     this.contextMenuToggle.reposition();
-        //     this.contextMenuToggle.element.style.display = '';
-        // }
     }
 
     /**
@@ -205,7 +170,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
-        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionsTreeFromGroupItem(this.queryBuilder.rootGroup);
+        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionTreeFromGroupItem(this.queryBuilder.rootGroup);
     }
 
     /**
