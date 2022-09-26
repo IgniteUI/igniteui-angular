@@ -170,7 +170,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      */
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
-        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionsTreeFromGroupItem(this.queryBuilder.rootGroup);
+        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionTreeFromGroupItem(this.queryBuilder.rootGroup);
     }
 
     /**
