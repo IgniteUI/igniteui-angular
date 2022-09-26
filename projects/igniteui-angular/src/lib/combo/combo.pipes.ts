@@ -74,7 +74,7 @@ function defaultFilterFunction (collection: any[], searchValue: any, filteringOp
             e[filteringOptions.filteringKey]?.toString().toLowerCase().includes(searchTerm));
     } else {
         return collection.filter(e => filteringOptions.caseSensitive ?
-            e.includes(searchTerm) :
+            e?.includes(searchTerm) :
             e?.toString().toLowerCase().includes(searchTerm));
     }
 }
