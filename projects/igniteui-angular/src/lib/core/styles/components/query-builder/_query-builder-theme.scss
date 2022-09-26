@@ -89,6 +89,7 @@
         min-width: 660px;
         background-color: var-get($theme, 'filtering-row-background');
         border-radius: border-radius(rem(4px));
+        box-shadow: elevation($elevation: 12);
     }
 
     %advanced-filter__header {

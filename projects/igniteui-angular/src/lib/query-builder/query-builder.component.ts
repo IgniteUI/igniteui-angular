@@ -96,7 +96,7 @@ class ExpressionOperandItem extends ExpressionItem {
  *
  * @example
  * ```html
- * <igx-query-builder [fields]="this.fields">            
+ * <igx-query-builder [fields]="this.fields">
  * </igx-query-builder>
  * ```
  */
@@ -106,6 +106,12 @@ class ExpressionOperandItem extends ExpressionItem {
     styleUrls: ['./query-builder.component.css']
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-query-builder')
+    public cssClass = 'igx-query-builder';
+
     /**
      * @hidden @internal
      */
@@ -348,7 +354,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public ngAfterViewInit(): void {
         this.overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
-        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;        
+        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
     }
 
     /**
@@ -381,7 +387,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public get selectedField(): FieldType {
         return this._selectedField;
     }
-    
+
     /**
     * Returns the fields.
     */
@@ -428,7 +434,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
             this.init();
         }
-        
+
         this.expressionTreeChange.emit();
     }
 
@@ -848,8 +854,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
     }
 
-    /** 
-     * @hidden @internal 
+    /**
+     * @hidden @internal
      */
     public openPicker(args: KeyboardEvent) {
         if (this.platform.isActivationKey(args)) {
@@ -1258,3 +1264,4 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     ]
 })
 export class IgxQueryBuilderModule { }
+
