@@ -10,10 +10,6 @@
 ////
 @mixin advanced-filtering-partial {
     @include b(igx-advanced-filter) {
-        @extend %advanced-filter !optional;
-
-        igx-query-builder {
-            box-shadow: none;
-        }
+        @extend %advanced-filtering-dialog !optional;
     }
 }

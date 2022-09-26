@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use './excel-filtering-theme' as *;
+@use '../query-builder/query-builder-theme' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
@@ -2923,6 +2924,24 @@
     }
 
     @include excel-filtering($theme, $palette);
+
+    %advanced-filtering-dialog {
+        background: var-get($theme, 'filtering-row-background');
+        box-shadow: elevation($elevation: 12);
+
+        igx-query-builder {
+            --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
+            --igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
+            --igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
+            --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
+            --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
+            box-shadow: none;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
+        }
+    }
 
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {

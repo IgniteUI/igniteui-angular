@@ -14,6 +14,7 @@
     $palette: null,
     $schema: $light-schema,
     $elevations: null,
+
     $background: null,
     $background-and: null,
     $background-and--focus: null,
@@ -85,15 +86,13 @@
         align-items: center;
         padding: $vertical-space-comfortable;
         color: color(null, 'grays', 700);
+        user-select: none;
 
         @if $bootstrap-theme {
             background-color: color(null, 'grays', 100, .5);
         } @else {
             background-color: color(null, 'grays', 100);
         }
-
-        user-select: none;
-        cursor: grab;
 
         h4,
         .igx-typography__h6 {
