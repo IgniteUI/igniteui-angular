@@ -6,6 +6,8 @@
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @prop {Color} background [null] - The background color of the filtering row.
+/// @prop {Color} header-background [null] - The background color of the query builder header.
+/// @prop {Color} header-foreground [null] - The foreground color of the query builder header.
 /// @prop {Map} background-and [null] - The background color of advanced filtering "AND" condition.
 /// @prop {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
 /// @prop {Map} background-or [null] - The background color of advanced filtering "OR" condition.
@@ -16,6 +18,8 @@
     $elevations: null,
 
     $background: null,
+    $header-background: null,
+    $header-foreground: null,
     $background-and: null,
     $background-and--focus: null,
     $background-or: null,
@@ -33,12 +37,18 @@
 
     $theme: apply-palette($query-builder-schema, $palette);
 
+    @if not($header-foreground) and $header-background {
+        $header-foreground: text-contrast($header-background);
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
         palette: $palette,
 
         background: $background,
+        header-background: $header-background,
+        header-foreground: $header-foreground,
         background-and: $background-and,
         background-and--focus: $background-and--focus,
         background-or: $background-or,
@@ -85,14 +95,9 @@
         display: flex;
         align-items: center;
         padding: $vertical-space-comfortable;
-        color: color(null, 'grays', 700);
+        background-color: var-get($theme, 'header-background');
+        color: var-get($theme, 'header-foreground');
         user-select: none;
-
-        @if $bootstrap-theme {
-            background-color: color(null, 'grays', 100, .5);
-        } @else {
-            background-color: color(null, 'grays', 100);
-        }
 
         h4,
         .igx-typography__h6 {
@@ -142,7 +147,6 @@
     }
 
     %filter-tree__line--and {
-
         background: var-get($theme, 'background-and');
 
         &-selected {
