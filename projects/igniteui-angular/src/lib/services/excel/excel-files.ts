@@ -231,7 +231,7 @@ export class WorksheetFile implements IExcelFile {
 
         yieldingLoop(worksheetData.rowCount - worksheetData.multiColumnHeaderRows - 1, 1000,
             (i) => {
-                if(!worksheetData.isEmpty){
+                if (!worksheetData.isEmpty){
                     if (!isHierarchicalGrid) {
                         if (hasUserSetIndex) {
                             recordHeaders = worksheetData.rootKeys;
