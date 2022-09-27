@@ -529,16 +529,10 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
-    public areAllRowSelected(): boolean {
-        if (!this.grid.data) {
-            return false;
-        }
-        if (this.allRowsSelected !== undefined) {
-            return this.allRowsSelected;
-        }
-
+    public areAllRowSelected(newSelection?): boolean {
+        const selectedData = newSelection ? newSelection : [...this.rowSelection]
         const allData = this.getRowIDs(this.allData);
-        const unSelectedRows = allData.filter(row => ![...this.rowSelection].includes(row));
+        const unSelectedRows = allData.filter(row => !selectedData.includes(row));
         return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
     }
 
@@ -562,7 +556,7 @@ export class IgxGridSelectionService {
 
         const args = {
             oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected()
+            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection)
         };
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {

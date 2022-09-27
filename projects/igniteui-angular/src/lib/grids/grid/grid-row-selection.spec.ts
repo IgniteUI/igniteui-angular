@@ -139,7 +139,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: allRowsArray,
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: true
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -157,7 +157,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: allRowsArray,
                 event: jasmine.anything() as any,
                 cancel: false,
-                allRowsSelected: true
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });

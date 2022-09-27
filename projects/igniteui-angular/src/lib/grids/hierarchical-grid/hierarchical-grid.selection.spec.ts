@@ -716,7 +716,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 newSelection: ['1', '0', '2', '3', '4'],
                 oldSelection: ['1'],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: true
             });
         });
         it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {
