@@ -135,7 +135,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
         if (parentConfig && parent) {
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
+            const componentType = this._componentFactory.componentType;
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType.isPrototypeOf(componentType));
 
             for (const query of contentQueries) {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
