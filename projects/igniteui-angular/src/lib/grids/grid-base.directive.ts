@@ -3770,6 +3770,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorSuppress */
     /**
      * @hidden
      * @internal
