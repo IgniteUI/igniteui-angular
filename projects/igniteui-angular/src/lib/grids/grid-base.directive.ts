@@ -3507,10 +3507,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
         }
-        this.resetForOfCache();
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.resetForOfCache();
         this.hasVisibleColumns = undefined;
         this._columnGroups = this._columns.some(col => col.columnGroup);
     }
