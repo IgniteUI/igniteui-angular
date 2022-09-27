@@ -132,7 +132,7 @@
             [checked]="grid.selectionService.areAllRowSelected()"
             [disableRipple]="true"
             [ngStyle]="{'visibility': grid.isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-            [indeterminate]="grid.selectionService.hasSomeRowSelected()"
+            [indeterminate]="context.selectedCount > 0 && grid.selectionService.hasSomeRowSelected()"
             [aria-label]="grid.headSelectorBaseAriaLabel"
             #headerCheckbox>
         </igx-checkbox>
