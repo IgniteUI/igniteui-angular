@@ -1,8 +1,8 @@
 import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
-import { JSZipFiles } from './jszip-helper.spec';
+import { ZipFiles } from './zip-helper.spec';
 
-export class JSZipWrapper {
+export class ZipWrapper {
     private _zip: Object;
     private _filesAndFolders: string[];
     private _files: Map<string, Uint8Array>;
@@ -14,18 +14,18 @@ export class JSZipWrapper {
         this._files = new Map<string, Uint8Array>();
         this._filesAndFolders = [];
         this.createFilesAndFolders(this._zip, '');
-        this._hasValues = this._filesAndFolders.length > JSZipFiles.templatesNames.length;
+        this._hasValues = this._filesAndFolders.length > ZipFiles.templatesNames.length;
         this._filesContent = [];
     }
 
-    /* Asserts the JSZip contains the files it should contain. */
+    /* Asserts the zip contains the files it should contain. */
     public verifyStructure(isHGrid: boolean = false, message = '') {
-        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
-        const template = isHGrid ? JSZipFiles.hGridDataFilesAndFoldersNames : JSZipFiles.dataFilesAndFoldersNames;
+        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, ZipFiles.templatesNames);
+        const template = isHGrid ? ZipFiles.hGridDataFilesAndFoldersNames : ZipFiles.dataFilesAndFoldersNames;
 
         result = (this.hasValues) ?
             result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
-            result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
+            result && this._filesAndFolders.length === ZipFiles.templatesNames.length;
 
         expect(result).toBe(true, message + ' Unexpected zip structure!');
     }
@@ -33,7 +33,7 @@ export class JSZipWrapper {
     /* Verifies the contents of all template files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
     public async verifyTemplateFilesContent(message = '', hasDates = false) {
-        JSZipFiles.hasDates = hasDates;
+        ZipFiles.hasDates = hasDates;
 
         let result;
         const msg = (message !== '') ? message + '\r\n' : '';
@@ -70,11 +70,11 @@ export class JSZipWrapper {
     }
 
     public get templateFilesAndFolders(): string[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.templatesNames.indexOf(name) !== -1);
+        return this._filesAndFolders.filter((name) => ZipFiles.templatesNames.indexOf(name) !== -1);
     }
 
     public get dataFilesAndFolders(): string[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
+        return this._filesAndFolders.filter((name) => ZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
     }
 
     public get dataFilesOnly(): string[] {
@@ -112,13 +112,13 @@ export class JSZipWrapper {
 
     private async readTemplateFiles() {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-            f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         await this.readFiles(actualTemplates);
     }
 
     public get templateFilesContent(): IFileContent[] {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-            f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 
@@ -141,7 +141,7 @@ export class JSZipWrapper {
     private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string, isHGrid) {
         let result = true;
         let differences = '';
-        const expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues, isHGrid);
+        const expectedFile = ZipFiles.createExpectedXML(fileType, fileData, this.hasValues, isHGrid);
         const expectedContent = expectedFile.content;
         result = ObjectComparer.AreEqualXmls(currentContent, expectedContent);
         if (!result) {
@@ -188,13 +188,13 @@ export class JSZipWrapper {
 
     /* Returns file's name based on its type. */
     private getFileNameByType(type: ExcelFileTypes) {
-        const file = JSZipFiles.files.find((f) => f.type === type);
+        const file = ZipFiles.files.find((f) => f.type === type);
         return (file !== undefined) ? file.name : '';
     }
 
     /* Returns file's type based on its name. */
     private getFileTypeByName(name: string) {
-        const file = JSZipFiles.files.find((f) => f.name === name);
+        const file = ZipFiles.files.find((f) => f.name === name);
         return (file !== undefined) ? file.type : undefined;
     }
 }

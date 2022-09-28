@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { JSZipFiles } from './jszip-helper.spec';
-import { IFileContent } from './jszip-verification-wrapper.spec';
+import { ZipFiles } from './zip-helper.spec';
+import { IFileContent } from './zip-verification-wrapper.spec';
 
 @Injectable()
 export class ExportTestDataService {
@@ -242,15 +242,15 @@ export class FileContentData {
 
     public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string, appData: string, isHGrid: boolean = false): IFileContent[] {
         this._fileContentCollection = [
-            {  fileName: JSZipFiles.dataFiles[1].name, fileContent : worksheetData },
-            {  fileName: JSZipFiles.dataFiles[3].name, fileContent : sharedStringsData },
-            {  fileName: JSZipFiles.templateFiles[6].name, fileContent : workbookData },
-            {  fileName: JSZipFiles.templateFiles[1].name, fileContent : appData },
+            {  fileName: ZipFiles.dataFiles[1].name, fileContent : worksheetData },
+            {  fileName: ZipFiles.dataFiles[3].name, fileContent : sharedStringsData },
+            {  fileName: ZipFiles.templateFiles[6].name, fileContent : workbookData },
+            {  fileName: ZipFiles.templateFiles[1].name, fileContent : appData },
         ];
 
         if (!isHGrid) {
             this._fileContentCollection.push({
-              fileName: JSZipFiles.dataFiles[2].name, fileContent : tableData
+              fileName: ZipFiles.dataFiles[2].name, fileContent : tableData
             });
         }
 

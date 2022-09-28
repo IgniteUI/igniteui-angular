@@ -11,7 +11,9 @@ import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
 
-export interface IExcelExportEndedEventArgs extends IBaseEventArgs { zipStructure: Object }
+export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
+    xlsx?: Object
+}
 
 const EXCEL_MAX_ROWS = 1048576;
 const EXCEL_MAX_COLS = 16384;
@@ -53,8 +55,6 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      * @memberof IgxExcelExporterService
      */
     public exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
-
-    // private _xlsx: JSZip;
 
     private static async populateZipFileConfig(fileStructure: Object, folder: IExcelFolder, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
@@ -138,7 +138,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             .then(() => {
                 zip(fileData, (_, result) => {
                     this.saveFile(result, options.fileName);
-                    this.exportEnded.emit({ zipStructure: fileData });
+                    this.exportEnded.emit({ xlsx: fileData });
                     done();
                 });
             });
