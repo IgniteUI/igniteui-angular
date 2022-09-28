@@ -351,6 +351,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.locale = this.locale || this._localeId;
     }
 
+    /**
+     * @hidden @internal
+     */
     public ngAfterViewInit(): void {
         this.overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
