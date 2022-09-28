@@ -17,7 +17,8 @@ import {
     GridExportGroupedDataComponent,
     MultiColumnHeadersExportComponent,
     GridWithEmptyColumnsComponent,
-    ColumnsAddedOnInitComponent
+    ColumnsAddedOnInitComponent,
+    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -62,7 +63,8 @@ describe('Excel Exporter', () => {
                 MultiColumnHeadersExportComponent,
                 IgxHierarchicalGridMultiColumnHeadersExportComponent,
                 ColumnsAddedOnInitComponent,
-                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
+                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
+                GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -1193,6 +1195,15 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportEmptyGridWithMultiColumnHeadersData, false);
+        });
+
+        it('should export grid with three levels of multi column headers which have only two rows', async () => {
+            fix = TestBed.createComponent(GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.grid;
+            
+            await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
         });
     });
 
