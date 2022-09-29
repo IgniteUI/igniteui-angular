@@ -4,6 +4,7 @@ import { NgModule, Injector } from '@angular/core';
 import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
 import {
     IgxColumnComponent,
+    IgxColumnGroupComponent,
     IgxGridColumnModule,
     IgxGridComponent,
     IgxGridModule,
@@ -49,6 +50,10 @@ export class AppModule {
 
     const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid", grid);
+
+    const columnGroups = createIgxCustomElement<IgxColumnGroupComponent>(IgxColumnGroupComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-column-group", columnGroups);
+
     const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column", column);
 

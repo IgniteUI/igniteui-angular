@@ -135,7 +135,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
         if (parentConfig && parent) {
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
+            const componentType = this._componentFactory.componentType;
+            // TODO - look into more cases where query expects a certain base class but gets a subclass.
+            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType.isPrototypeOf(componentType));
 
             for (const query of contentQueries) {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
