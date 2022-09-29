@@ -103,7 +103,6 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    styleUrls: ['./query-builder.component.css']
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
     /**

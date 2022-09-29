@@ -10,16 +10,17 @@
 /// @requires {mixin} bem-mod
 ////
 @mixin component {
+    @include _builder-legend();
+    @include _advanced-filtering-tree();
+    @include _advanced-filtering-con-menu();
+    @include _advanced-filtering-empty();
+
     @include b(igx-query-builder) {
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: ()
         );
-        @include _builder-legend();
-        @include _advanced-filtering-tree();
-        @include _advanced-filtering-con-menu();
-        @include _advanced-filtering-empty();
 
         @extend %advanced-filter !optional;
 
