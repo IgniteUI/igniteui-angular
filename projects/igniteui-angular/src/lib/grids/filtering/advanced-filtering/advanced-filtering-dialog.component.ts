@@ -32,8 +32,8 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      * @hidden @internal
      */
     @ViewChild('queryBuilder', { read: IgxQueryBuilderComponent })
-    public queryBuilder: IgxQueryBuilderComponent;    
-    
+    public queryBuilder: IgxQueryBuilderComponent;
+
     /**
      * @hidden @internal
      */
@@ -43,7 +43,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public inline = true;    
+    public inline = true;
 
     /**
      * @hidden @internal
@@ -52,7 +52,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
 
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
-    private _overlayService: IgxOverlayService;    
+    private _overlayService: IgxOverlayService;
     private _grid: GridType;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
@@ -70,7 +70,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      */
     public get displayDensity(): DisplayDensity {
         return this.grid.displayDensity;
-    }    
+    }
 
     /**
      * An @Input property that sets the grid.
@@ -83,7 +83,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
             this._grid.filteringService.registerSVGIcons();
         }
 
-        this.assignResourceStrings();        
+        this.assignResourceStrings();
     }
 
     /**
@@ -118,7 +118,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
         const deltaY = e.nextPageY - e.pageY;
         e.cancel = true;
         this._overlayService.setOffset(this._overlayComponentId, deltaX, deltaY);
-    }   
+    }
 
     /**
      * @hidden @internal
@@ -130,9 +130,9 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
             this.queryBuilder.clearSelection();
         } else if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
-        }        
+        }
     }
-    
+
     /**
      * @hidden @internal
      */
@@ -142,7 +142,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
-    }    
+    }
 
     /**
      * @hidden @internal
@@ -190,63 +190,25 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
 
     private assignResourceStrings() {
         // If grid has custom resource strings set for the advanced filtering,
-        // they are passed to the query builder resource strings. 
+        // they are passed to the query builder resource strings.
         const gridRS = this.grid.resourceStrings;
 
         if (gridRS !== GridResourceStringsEN) {
             const queryBuilderRS = CurrentResourceStrings.QueryBuilderResStrings;
-
-            queryBuilderRS.igx_query_builder_date_placeholder = gridRS.igx_grid_filter_row_date_placeholder;
-            queryBuilderRS.igx_query_builder_time_placeholder = gridRS.igx_grid_filter_row_time_placeholder;
-            queryBuilderRS.igx_query_builder_filter_operator_and = gridRS.igx_grid_filter_operator_and;
-            queryBuilderRS.igx_query_builder_filter_operator_or = gridRS.igx_grid_filter_operator_or;
-            queryBuilderRS.igx_query_builder_filter_contains = gridRS.igx_grid_filter_contains;
-            queryBuilderRS.igx_query_builder_filter_doesNotContain = gridRS.igx_grid_filter_doesNotContain;
-            queryBuilderRS.igx_query_builder_filter_startsWith = gridRS.igx_grid_filter_startsWith;
-            queryBuilderRS.igx_query_builder_filter_endsWith = gridRS.igx_grid_filter_endsWith;
-            queryBuilderRS.igx_query_builder_filter_equals = gridRS.igx_grid_filter_equals;
-            queryBuilderRS.igx_query_builder_filter_doesNotEqual = gridRS.igx_grid_filter_doesNotEqual;
-            queryBuilderRS.igx_query_builder_filter_empty = gridRS.igx_grid_filter_empty;
-            queryBuilderRS.igx_query_builder_filter_notEmpty = gridRS.igx_grid_filter_notEmpty;
-            queryBuilderRS.igx_query_builder_filter_null = gridRS.igx_grid_filter_null;
-            queryBuilderRS.igx_query_builder_filter_notNull = gridRS.igx_grid_filter_notNull;
-            queryBuilderRS.igx_query_builder_filter_before = gridRS.igx_grid_filter_before;
-            queryBuilderRS.igx_query_builder_filter_after = gridRS.igx_grid_filter_after;
-            queryBuilderRS.igx_query_builder_filter_at = gridRS.igx_grid_filter_at;
-            queryBuilderRS.igx_query_builder_filter_not_at = gridRS.igx_grid_filter_not_at;
-            queryBuilderRS.igx_query_builder_filter_at_before = gridRS.igx_grid_filter_at_before;
-            queryBuilderRS.igx_query_builder_filter_at_after = gridRS.igx_grid_filter_at_after;
-            queryBuilderRS.igx_query_builder_filter_today = gridRS.igx_grid_filter_today;
-            queryBuilderRS.igx_query_builder_filter_yesterday = gridRS.igx_grid_filter_yesterday;
-            queryBuilderRS.igx_query_builder_filter_thisMonth = gridRS.igx_grid_filter_thisMonth;
-            queryBuilderRS.igx_query_builder_filter_lastMonth = gridRS.igx_grid_filter_lastMonth;
-            queryBuilderRS.igx_query_builder_filter_nextMonth = gridRS.igx_grid_filter_nextMonth;
-            queryBuilderRS.igx_query_builder_filter_thisYear = gridRS.igx_grid_filter_thisYear;
-            queryBuilderRS.igx_query_builder_filter_lastYear = gridRS.igx_grid_filter_lastYear;
-            queryBuilderRS.igx_query_builder_filter_nextYear = gridRS.igx_grid_filter_nextYear;
-            queryBuilderRS.igx_query_builder_filter_greaterThan = gridRS.igx_grid_filter_greaterThan;
-            queryBuilderRS.igx_query_builder_filter_lessThan = gridRS.igx_grid_filter_lessThan;
-            queryBuilderRS.igx_query_builder_filter_greaterThanOrEqualTo = gridRS.igx_grid_filter_greaterThanOrEqualTo;
-            queryBuilderRS.igx_query_builder_filter_lessThanOrEqualTo = gridRS.igx_grid_filter_lessThanOrEqualTo;
-            queryBuilderRS.igx_query_builder_filter_true = gridRS.igx_grid_filter_true;
-            queryBuilderRS.igx_query_builder_filter_false = gridRS.igx_grid_filter_false;
-            queryBuilderRS.igx_query_builder_filter_all = gridRS.igx_grid_filter_all;
-            queryBuilderRS.igx_query_builder_title = gridRS.igx_grid_advanced_filter_title;
-            queryBuilderRS.igx_query_builder_and_group = gridRS.igx_grid_advanced_filter_and_group;
-            queryBuilderRS.igx_query_builder_or_group = gridRS.igx_grid_advanced_filter_or_group;
-            queryBuilderRS.igx_query_builder_end_group = gridRS.igx_grid_advanced_filter_end_group;
-            queryBuilderRS.igx_query_builder_and_label = gridRS.igx_grid_advanced_filter_and_label;
-            queryBuilderRS.igx_query_builder_or_label = gridRS.igx_grid_advanced_filter_or_label;
-            queryBuilderRS.igx_query_builder_add_condition = gridRS.igx_grid_advanced_filter_add_condition;
-            queryBuilderRS.igx_query_builder_create_and_group = gridRS.igx_grid_advanced_filter_create_and_group;            
-            queryBuilderRS.igx_query_builder_create_or_group = gridRS.igx_grid_advanced_filter_create_or_group;
-            queryBuilderRS.igx_query_builder_ungroup = gridRS.igx_grid_advanced_filter_ungroup;
-            queryBuilderRS.igx_query_builder_delete = gridRS.igx_grid_advanced_filter_delete;
-            queryBuilderRS.igx_query_builder_delete_filters = gridRS.igx_grid_advanced_filter_delete_filters;
-            queryBuilderRS.igx_query_builder_initial_text = gridRS.igx_grid_advanced_filter_initial_text;
-            queryBuilderRS.igx_query_builder_column_placeholder = gridRS.igx_grid_advanced_filter_column_placeholder;
-            queryBuilderRS.igx_query_builder_condition_placeholder = gridRS.igx_grid_filter_condition_placeholder;
-            queryBuilderRS.igx_query_builder_value_placeholder = gridRS.igx_grid_advanced_filter_value_placeholder;
+            Object.keys(gridRS).forEach((prop) => {
+                const reg = /^igx_grid_(advanced_)?filter_(row_)?/;
+                if (!reg.test(prop)) {
+                    return;
+                }
+                const affix = prop.replace(reg, '');
+                const filterProp = `igx_query_builder_filter_${affix}`;
+                const generalProp = `igx_query_builder_${affix}`
+                if (queryBuilderRS[filterProp] !== undefined) {
+                    queryBuilderRS[filterProp] = gridRS[prop];
+                } else if (queryBuilderRS[generalProp] !== undefined) {
+                    queryBuilderRS[generalProp] = gridRS[prop];
+                }
+            });
         }
     }
 }
