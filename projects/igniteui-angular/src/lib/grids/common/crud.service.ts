@@ -101,9 +101,9 @@ export class IgxCell {
         public _editValue: any,
         public rowData: any,
         public grid: GridType) {
-        this.grid.validation.create(id.rowID, rowData);
+        const formGroup = this.grid.validation.create(id.rowID, rowData);
         if (this.grid.validationTrigger === 'change') {
-            this.editValue = this._editValue;
+            formGroup.get(column.field).setValue(value);
         }
     }
 

@@ -4547,7 +4547,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this as any);
                 const formControl = this.validation.getFormControl(cell.id.rowID, cell.column.field);
                 formControl.setValue(value);
-                formControl.markAsUntouched();
                 this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
