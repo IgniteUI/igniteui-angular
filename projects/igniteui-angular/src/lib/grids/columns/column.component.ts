@@ -32,7 +32,7 @@ import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
@@ -1157,7 +1157,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public get summaryTemplate(): TemplateRef<IgxSummaryTemplateContext> {
+    public get summaryTemplate(): TemplateRef<any> {
         return this._summaryTemplate;
     }
     /**
@@ -1176,7 +1176,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public set summaryTemplate(template: TemplateRef<IgxSummaryTemplateContext>) {
+    public set summaryTemplate(template: TemplateRef<any>) {
         this._summaryTemplate = template;
     }
 
@@ -1191,7 +1191,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input('cellTemplate')
-    public get bodyTemplate(): TemplateRef<IgxCellTemplateContext> {
+    public get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
     /**
@@ -1211,7 +1211,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public set bodyTemplate(template: TemplateRef<IgxCellTemplateContext>) {
+    public set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
     }
     /**
@@ -1225,7 +1225,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public get headerTemplate(): TemplateRef<IgxColumnTemplateContext> {
+    public get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
     /**
@@ -1246,7 +1246,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public set headerTemplate(template: TemplateRef<IgxColumnTemplateContext>) {
+    public set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
     }
     /**
@@ -1260,7 +1260,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input('cellEditorTemplate')
-    public get inlineEditorTemplate(): TemplateRef<IgxCellTemplateContext> {
+    public get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
     /**
@@ -1278,7 +1278,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public set inlineEditorTemplate(template: TemplateRef<IgxCellTemplateContext>) {
+    public set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
     }
 
@@ -1291,7 +1291,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input('errorTemplate')
-    public get errorTemplate(): TemplateRef<IgxCellTemplateContext> {
+    public get errorTemplate(): TemplateRef<any> {
         return this._errorTemplate;
     }
     /**
@@ -1309,7 +1309,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * this.column.errorTemplate = this.errorTemplate;
      * ```
      */
-    public set errorTemplate(template: TemplateRef<IgxCellTemplateContext>) {
+    public set errorTemplate(template: TemplateRef<any>) {
         this._errorTemplate = template;
     }
 
@@ -1324,7 +1324,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input('filterCellTemplate')
-    public get filterCellTemplate(): TemplateRef<IgxColumnTemplateContext> {
+    public get filterCellTemplate(): TemplateRef<any> {
         return this._filterCellTemplate;
     }
     /**
@@ -1342,7 +1342,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @memberof IgxColumnComponent
      */
-    public set filterCellTemplate(template: TemplateRef<IgxColumnTemplateContext>) {
+    public set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
 
@@ -1662,27 +1662,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _bodyTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _bodyTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    protected _errorTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _errorTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    protected _headerTemplate: TemplateRef<IgxColumnTemplateContext>;
+    protected _headerTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    protected _summaryTemplate: TemplateRef<IgxSummaryTemplateContext>;
+    protected _summaryTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    protected _inlineEditorTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _inlineEditorTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    protected _filterCellTemplate: TemplateRef<IgxColumnTemplateContext>;
+    protected _filterCellTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
