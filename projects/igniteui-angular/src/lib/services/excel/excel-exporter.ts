@@ -79,6 +79,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
+        const isPivotGrid = firstDataElement?.type === ExportRecordType.PivotGridRecord;
 
         let rootKeys;
         let columnCount;
@@ -120,7 +121,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
-                columnCount = columns.length;
+                columnCount = isPivotGrid ? columns.length + this.pivotGridFilterFieldsCount : columns.length;
                 rootKeys = columns.map(c => c.field);
             }
         } else {

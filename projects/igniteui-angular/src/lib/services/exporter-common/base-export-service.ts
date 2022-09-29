@@ -26,7 +26,8 @@ export enum ExportRecordType {
 
 export enum HeaderType {
     ColumnHeader = 'ColumnHeader',
-    MultiColumnHeader = 'MultiColumnHeader'
+    MultiColumnHeader = 'MultiColumnHeader',
+    PivotGridRowHeader = 'PivotGridRowHeader',
 }
 
 export interface IExportRecord {
@@ -191,12 +192,13 @@ export abstract class IgxBaseExporter {
     public columnExporting = new EventEmitter<IColumnExportingEventArgs>();
 
     protected _sort = null;
+    protected pivotGridFilterFieldsCount: number;
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
-    private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
-    private pivotGridRowDimensionsMap: Map<string, string>;
+    private flatRecords: IExportRecord[] = [];
     private pivotGridColumns: IColumnInfo[] = []
+    private pivotGridRowDimensionsMap: Map<string, string>;
     private pivotGridKeyValueMap = new Map<string, string>();
 
     /**
@@ -1073,6 +1075,7 @@ export abstract class IgxBaseExporter {
         const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, i) => ({ name: r.memberName, level: i }));
 
         this.preparePivotGridColumns(enabledRows);
+        this.pivotGridFilterFieldsCount = enabledRows.length;
 
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
         columnList.columns.unshift(...this.pivotGridColumns);
@@ -1113,7 +1116,7 @@ export abstract class IgxBaseExporter {
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
+                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiColumnHeader : HeaderType.PivotGridRowHeader,
             };
 
             if (columnGroupParent) {
