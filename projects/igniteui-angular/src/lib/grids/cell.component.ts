@@ -871,6 +871,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.editMode && changes.editMode.currentValue && this.formControl) {
+            // ensure when values change, form control is forced to be marked as touche.
+            this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
+                this.formControl.markAsTouched();
+            });
             // while in edit mode subscribe to value changes on the current form control and set to editValue
             this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
