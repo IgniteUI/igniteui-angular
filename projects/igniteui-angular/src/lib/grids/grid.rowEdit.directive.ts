@@ -1,49 +1,29 @@
 import { Directive, ElementRef, HostListener, Inject } from '@angular/core';
-import { GridType, IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE } from './common/grid.interface';
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxRowEdit]'
 })
-export class IgxRowEditTemplateDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
-        context: unknown): context is IgxGridRowEditTemplateContext { 
-        return true;
-    };
- }
+export class IgxRowEditTemplateDirective { }
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxRowEditText]'
 })
-export class IgxRowEditTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
-        context: unknown): context is IgxGridRowEditTextTemplateContext { 
-        return true;
-    };
- }
+export class IgxRowEditTextDirective { }
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxRowAddText]'
 })
-export class IgxRowAddTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
-        context: unknown): context is IgxGridEmptyTemplateContext { 
-        return true;
-    };
- }
+export class IgxRowAddTextDirective { }
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxRowEditActions]'
 })
-export class IgxRowEditActionsDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
-        context: unknown): context is IgxGridRowEditActionsTemplateContext { 
-        return true;
-    };
- }
+export class IgxRowEditActionsDirective { }
 
 
 // TODO: Refactor circular ref, deps and logic
