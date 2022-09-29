@@ -64,6 +64,10 @@ export class WorksheetData {
         return this._isTreeGrid;
     }
 
+    public get multiColumnHeaderRows(): number {
+        return !this.options.ignoreMultiColumnHeaders ? Array.from(this.owners.values()).map(c => c.maxLevel).reduce((a,b) => a + b) : 0;
+    }
+
     private initializeData() {
         this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
 
@@ -92,6 +96,6 @@ export class WorksheetData {
         }
 
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0].data);
-        this._rowCount = this._data.length + 1;
+        this._rowCount = this._data.length + this.multiColumnHeaderRows + 1;
     }
 }
