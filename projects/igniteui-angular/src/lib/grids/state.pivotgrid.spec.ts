@@ -230,6 +230,25 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         expect(rowDimensionHeaders).toEqual(expectedHeaders);
     });
 
+    it('should successfully restore the selected rows.', () => {
+        pivotGrid.rowSelection = 'single';
+        const state = fixture.componentInstance.state;
+        expect(state).toBeDefined('IgxGridState directive is initialized');
+        const headerRow = fixture.nativeElement.querySelector('igx-pivot-row-dimension-content');
+        const header = headerRow.querySelector('igx-pivot-row-dimension-header');
+        header.click();
+        fixture.detectChanges();
+        expect(pivotGrid.selectedRows.length).toBe(2);
+        const jsonString = state.getState(true);
+        // clear
+        pivotGrid. selectionService.rowSelection.clear();
+        expect(pivotGrid.selectedRows.length).toBe(0);
+        // set old state
+        state.setState(jsonString);
+        fixture.detectChanges();
+        expect(pivotGrid.selectedRows.length).toBe(2);
+    });
+
     it('should allow setting back custom functions on init.', async() => {
         const state = fixture.componentInstance.state;
         const customFunc = () => 'All';

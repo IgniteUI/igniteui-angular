@@ -55,7 +55,8 @@
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
@@ -67,7 +68,8 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -112,7 +114,8 @@
         <igx-input-group [formGroup]="formGroup">
             <input
                 type="text"
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
                 [igxDateTimeEditor]="column.defaultDateTimeFormat" 
@@ -125,7 +128,8 @@
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -138,7 +142,8 @@
         <igx-input-group displayDensity="compact" [formGroup]="formGroup">
             <input
                 igxInput
-                [attr.aria-errormessage]="ariaErrorMessage"
+                [attr.aria-describedby]="ariaDescribeBy"
+                [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -152,7 +157,7 @@
     <div #indicator
          class="igx-grid__tree-grouping-indicator"
          (click)="toggle($event)" (focus)="onIndicatorFocus()">
-         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  row }">
         </ng-container>
     </div>
 </ng-container>
@@ -161,7 +166,7 @@
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>
 <ng-container *ngIf="isInvalid">
-    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" 
+    <igx-icon #errorIcon [igxTooltipTarget]="tooltipRef" [igxToggleOutlet]="grid.outlet"
     (mouseover)='errorShowing = true' (mouseout)='errorShowing = false'>error</igx-icon>
     <div [id]="ariaErrorMessage"
     igxTooltip #error #tooltipRef="tooltip">

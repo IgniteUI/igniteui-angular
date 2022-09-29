@@ -21,7 +21,7 @@
 ///
 /// @prop {Map} inactive-text-color [color: ('gray', 400)] - The text color for previous and next month dates.
 /// @prop {Map} label-color [color: ('gray', 400)] - The text color for weekday labels.
-/// @prop {Map} weekend-text-color [color: ('gray', 500)] - The text color for weekend days.
+/// @prop {Map} weekend-text-color [contrast-color: 'surface'] - The text color for weekend days.
 ///
 /// @prop {Map} year-current-text-color [color: ('secondary', 500)] - The text color for the current/selected year.
 /// @prop {Map} year-hover-text-color [color: ('secondary', 500)] - The year hover text color.
@@ -124,7 +124,7 @@ $light-calendar: extend(
         ),
 
         weekend-text-color: (
-            color: ('gray', 500),
+            contrast-color: 'surface',
         ),
 
         year-current-text-color: (
@@ -504,7 +504,6 @@ $bootstrap-calendar: extend(
             color: ('primary', 500)
         ),
 
-
         date-selected-background: (
             color: ('primary', 300),
         ),
@@ -564,7 +563,7 @@ $bootstrap-calendar: extend(
 /// @prop {Map} date-disabled-text-color [color: ('gray', 300)] - The text color for disabled dates.
 /// @prop {Map} inactive-text-color [color: ('gray', 600)] - The text color for previous and next month dates.
 /// @prop {Map} label-color [color: ('gray', 600)] - The text color for weekday labels.
-/// @prop {Map} weekend-text-color [color: ('gray', 600)] - The text color for weekend days.
+/// @prop {Map} weekend-text-color [color: ('gray', 900)] - The text color for weekend days.
 /// @prop {Color} month-hover-background [transparent] - The month hover text color.
 /// @prop {Map} month-hover-text-color [color: ('primary', 500)] - The month hover text color.
 /// @prop {Map} date-selected-current-hover-foreground [contrast-color: ('primary', 500)] - The hover text color for the selected/current date.
@@ -634,7 +633,7 @@ $indigo-calendar: extend(
         ),
 
         weekend-text-color: (
-            color: ('gray', 600)
+            color: ('gray', 900)
         ),
 
         month-hover-background: transparent,

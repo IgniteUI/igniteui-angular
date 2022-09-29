@@ -137,8 +137,8 @@
     }
 
     %igx-navbar-icon-display {
-        igx-icon,
-        button[igxButton='icon'] {
+        >igx-icon,
+        [igxButton='icon'] {
             cursor: pointer;
             color: var-get($theme, 'idle-icon-color');
             transition: color .15s $out-quad;
