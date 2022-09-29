@@ -155,6 +155,29 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
+    public override setInputValue(property: string, value: any): void {
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+            // const oldValue = this.getInputValue(property);
+            value = this.templateWrapper.addTemplate(value);
+            // TODO: discard oldValue
+        }
+        super.setInputValue(property, value);
+    }
+
+    public override getInputValue(property: string): any {
+        let returnValue = super.getInputValue(property);
+
+        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+            returnValue = this.templateWrapper.getTemplateFunction(returnValue) || returnValue;
+        }
+
+        return returnValue;
+    }
+
     /**
      * assignTemplateCallback
      */

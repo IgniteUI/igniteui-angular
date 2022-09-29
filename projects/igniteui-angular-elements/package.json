@@ -1,6 +1,6 @@
 {
   "name": "igniteui-elements-grids",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Ignite UI for Web Components Grids",
   "main": "elements.js",
   "scripts": {
