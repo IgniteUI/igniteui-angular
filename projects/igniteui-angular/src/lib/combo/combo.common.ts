@@ -304,16 +304,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      */
     @Input()
     public get data(): any[] | null {
+        return this._data;
+    }
+    public set data(val: any[] | null) {
         // igxFor directive ignores undefined values
         // if the combo uses simple data and filtering is applied
         // an error will occur due to the mismatch of the length of the data
         // this can occur during filtering for the igx-combo and
         // during filtering & selection for the igx-simple-combo
         // since the simple combo's input is both a container for the selection and a filter
-        return this._data.filter(x => x !== undefined);
-    }
-    public set data(val: any[] | null) {
-        this._data = (val) ? val : [];
+        this._data = (val) ? val.filter(x => x !== undefined) : [];
     }
 
     /**
