@@ -1,5 +1,4 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { IgxPivotGridValueTemplateContext } from './pivot-grid.interface';
 /**
  * @hidden
  */
@@ -7,9 +6,7 @@ import { IgxPivotGridValueTemplateContext } from './pivot-grid.interface';
     selector: '[igxPivotValueChip]'
 })
 export class IgxPivotValueChipTemplateDirective {
-    constructor(public template: TemplateRef<IgxPivotGridValueTemplateContext>) { }
-    public static ngTemplateContextGuard(_directive: IgxPivotValueChipTemplateDirective,
-        context: unknown): context is IgxPivotGridValueTemplateContext { 
-        return true;
-    };
+
+    constructor(public template: TemplateRef<any>) { }
+
 }
