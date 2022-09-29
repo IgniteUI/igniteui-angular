@@ -660,6 +660,14 @@ describe('IgxSimpleCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
+        it('should remove undefined from array of primitive data', () => {
+            fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+            combo.data = ['New York', 'Sofia', undefined, 'Istanbul','Paris'];
+
+            expect(combo.data).toEqual(['New York', 'Sofia', 'Istanbul','Paris']);
+        });
         it('should bind combo data to array of objects', () => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
             fixture.detectChanges();
