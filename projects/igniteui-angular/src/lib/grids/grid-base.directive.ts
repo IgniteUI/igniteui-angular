@@ -124,26 +124,7 @@ import {
     IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import {
-    ColumnType,
-    GridServiceType,
-    GridType,
-    IGridFormGroupCreatedEventArgs,
-    IGridValidationStatusEventArgs,
-    IgxGridEmptyTemplateContext,
-    IgxGridHeaderTemplateContext,
-    IgxGridRowDragGhostContext,
-    IgxGridRowEditActionsTemplateContext,
-    IgxGridRowEditTemplateContext,
-    IgxGridRowEditTextTemplateContext,
-    IgxGridRowTemplateContext,
-    IgxGridTemplateContext,
-    IgxHeadSelectorTemplateContext,
-    IgxRowSelectorTemplateContext,
-    IGX_GRID_SERVICE_BASE,
-    ISizeInfo,
-    RowType
-} from './common/grid.interface';
+import { ColumnType, GridServiceType, GridType, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, ISizeInfo, RowType } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxColumnComponent } from './columns/column.component';
@@ -1225,7 +1206,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
-    public dragGhostCustomTemplates: QueryList<TemplateRef<IgxGridRowDragGhostContext>>;
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
@@ -1324,81 +1305,81 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditTemplateDirective, { descendants: false, read: TemplateRef })
-    public rowEditCustomDirectives: QueryList<TemplateRef<IgxGridRowEditTemplateContext>>;
+    public rowEditCustomDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditTextDirective, { descendants: false, read: TemplateRef })
-    public rowEditTextDirectives: QueryList<TemplateRef<IgxGridRowEditTextTemplateContext>>;
+    public rowEditTextDirectives: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
-    public rowAddText: TemplateRef<IgxGridEmptyTemplateContext>;
+    public rowAddText: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
-    public rowEditActionsDirectives: QueryList<TemplateRef<IgxGridRowEditActionsTemplateContext>>;
+    public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
 
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef })
-    public rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+    public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a row collapse indicator.
      */
     @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef })
-    public rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+    public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header expand indicator.
      */
     @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
-    public headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
+    public headerExpandIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header collapse indicator.
      */
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
-    public headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
+    public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
-    public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      */
     @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
-    public sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
     @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
-    public sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
      */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
-    public sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public sortHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
      * @internal
      */
     @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
-    public dragIndicatorIconTemplates: QueryList<TemplateRef<IgxGridEmptyTemplateContext>>;
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden @internal
@@ -1475,7 +1456,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
-    private defaultRowEditTemplate: TemplateRef<IgxGridRowEditTemplateContext>;
+    private defaultRowEditTemplate: TemplateRef<any>;
 
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
@@ -2308,7 +2289,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
+    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
         if (this.headSelectorsTemplates && this.headSelectorsTemplates.first) {
             return this.headSelectorsTemplates.first.templateRef;
         }
@@ -2336,7 +2317,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
+    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
             return this.rowSelectorsTemplates.first.templateRef;
         }
@@ -2362,7 +2343,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditCustom(): TemplateRef<IgxGridRowEditTemplateContext> {
+    public get rowEditCustom(): TemplateRef<any> {
         if (this.rowEditCustomDirectives && this.rowEditCustomDirectives.first) {
             return this.rowEditCustomDirectives.first;
         }
@@ -2372,7 +2353,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditText(): TemplateRef<IgxGridRowEditTextTemplateContext> {
+    public get rowEditText(): TemplateRef<any> {
         if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
             return this.rowEditTextDirectives.first;
         }
@@ -2382,7 +2363,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditActions(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
+    public get rowEditActions(): TemplateRef<any> {
         if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
             return this.rowEditActionsDirectives.first;
         }
@@ -2392,18 +2373,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowEditContainer(): TemplateRef<IgxGridRowEditTemplateContext> {
+    public get rowEditContainer(): TemplateRef<any> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
 
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      */
-    public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
 
-    public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
         this._customDragIndicatorIconTemplate = val;
     }
 
@@ -2872,7 +2853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _currentRowState: any;
     private _filteredSortedData = null;
 
-    private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
