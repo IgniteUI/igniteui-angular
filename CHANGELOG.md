@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 14.2.0
+
+- `IgxDropDown`
+    - The `aria-label` attribute of the `IgxDropDownItemBase` can now be se to a custom value for its descendants (of which `IgxDropDownItem`) by the `ariaLabel` property.
 
 ## 14.2.0
 
