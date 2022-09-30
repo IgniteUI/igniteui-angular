@@ -217,7 +217,3 @@ export interface IPivotGridGroupRecord extends IPivotGridRecord {
     height?: number;
     rowSpan?: number;
 }
-
-export interface IgxPivotGridValueTemplateContext {
-    $implicit: IPivotValue;
-}

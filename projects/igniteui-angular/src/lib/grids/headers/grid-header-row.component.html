@@ -56,7 +56,7 @@
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
                 (click)="grid.toggleAllGroupRows()"
                 (pointerdown)="$event.preventDefault()">
-                <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>
+                <ng-container *ngTemplateOutlet="grid.iconTemplate"></ng-container>
             </div>
         </ng-container>
 
