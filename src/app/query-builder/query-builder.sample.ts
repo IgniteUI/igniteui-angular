@@ -20,7 +20,7 @@ export class QueryBuilderComponent implements OnInit {
     public fields: Array<any>;
     public displayDensities;
     public density: DisplayDensity = 'comfortable';
-    public advancedFilteringTree: IExpressionTree;
+    public expressionTree: IExpressionTree;
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -74,7 +74,7 @@ export class QueryBuilderComponent implements OnInit {
             ignoreCase: true
         });
 
-        this.advancedFilteringTree = tree;
+        this.expressionTree = tree;
     }
 
     public selectDensity(event) {

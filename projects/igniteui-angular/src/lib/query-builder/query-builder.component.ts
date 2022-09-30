@@ -1,12 +1,12 @@
-import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { editor } from '@igniteui/material-icons-extended';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
@@ -307,7 +307,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-    public columnSelectOverlaySettings: OverlaySettings = {
+    public fieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false
@@ -332,7 +332,6 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _currentGroupButtonsContainer: ElementRef;
     private _fields: FieldType[];
     private _expressionTree: IExpressionTree;
-    private _filteringChange: Subscription;
     private _locale;
     private _resourceStrings = CurrentResourceStrings.QueryBuilderResStrings;
 
@@ -355,7 +354,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public ngAfterViewInit(): void {
         this.overlaySettings.outlet = this.overlayOutlet;
-        this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.fieldSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
     }
 
@@ -428,16 +427,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     public set expressionTree(expressionTree: IExpressionTree) {
         this._expressionTree = expressionTree;
 
-        if (this._expressionTree && this._fields) {
-            this._fields.forEach(field => {
-                this.setFilters(field);
-                this.setFormat(field);
-            });
-
-            this.init();
-        }
-
-        this.expressionTreeChange.emit();
+        this.init();
     }
 
     /**
@@ -486,7 +476,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      *  <igx-query-builder (expressionTreeChange)='onExpressionTreeChange()'></igx-query-builder>
      * ```
      */
-    @Output() public expressionTreeChange = new EventEmitter();
+    @Output()
+    public expressionTreeChange = new EventEmitter();
 
     /**
      * @hidden @internal
@@ -572,6 +563,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
         }
+
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
+        this.expressionTreeChange.emit();
     }
 
     /**
@@ -682,9 +676,9 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
         this.cdr.detectChanges();
 
-        this.columnSelectOverlaySettings.target = this.fieldSelect.element;
-        this.columnSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
-        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        this.fieldSelectOverlaySettings.target = this.fieldSelect.element;
+        this.fieldSelectOverlaySettings.excludeFromOutsideClick = [this.fieldSelect.element as HTMLElement];
+        this.fieldSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
         this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
         this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
@@ -1236,7 +1230,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.expressionTree)
+        this.rootGroup = this.createExpressionGroupItem(this.expressionTree);
         this.currentGroup = this.rootGroup;
     }
 
