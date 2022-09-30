@@ -66,9 +66,4 @@ export interface IgxGridToolbarTemplateContext {
 @Directive({ selector: '[igxGridToolbar]'})
 export class IgxGridToolbarDirective {
     constructor(public template: TemplateRef<IgxGridToolbarTemplateContext>) {}
-
-    public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective, 
-        ctx: unknown): ctx is IgxGridToolbarTemplateContext { 
-        return true
-    };
 }
