@@ -14,11 +14,20 @@ import {
 import { DisplayDensity } from '../../core/displayDensity';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
-import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';
+import { ColumnType, GridType } from '../common/grid.interface';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
+
+export interface IgxGridRowSelectorsTemplateContext {
+    $implicit: {
+        selectedCount: number;
+        totalCount: number;
+        selectAll?: () => void;
+        deselectAll?: () => void;
+    };
+}
 
 /**
  *
@@ -127,7 +136,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     public headerGroupContainer: ElementRef<HTMLElement>;
 
     @ViewChild('headSelectorBaseTemplate')
-    public headSelectorBaseTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
+    public headSelectorBaseTemplate: TemplateRef<IgxGridRowSelectorsTemplateContext>;
 
     @ViewChild(IgxGridFilteringRowComponent)
     public filterRow: IgxGridFilteringRowComponent;
@@ -163,13 +172,13 @@ export class IgxGridHeaderRowComponent implements DoCheck {
         return `igx-grid__header-indentation igx-grid__row-indentation--level-${this.grid.groupingExpressions.length}`;
     }
 
-    public get rowSelectorsContext(): IgxHeadSelectorTemplateContext {
+    public get rowSelectorsContext(): IgxGridRowSelectorsTemplateContext {
         const ctx = {
             $implicit: {
                 selectedCount: this.grid.selectionService.filteredSelectedRowIds.length as number,
                 totalCount: this.grid.totalRowsCountAfterFilter as number
             }
-        } as IgxHeadSelectorTemplateContext;
+        } as IgxGridRowSelectorsTemplateContext;
 
         if (this.isHierarchicalGrid) {
             ctx.$implicit.selectAll = () => this.grid.selectAllRows();
