@@ -25,9 +25,10 @@ export enum ExportRecordType {
 }
 
 export enum HeaderType {
+    RowHeader = 'RowHeader',
     ColumnHeader = 'ColumnHeader',
+    MultiRowHeader = 'MultiRowHeader',
     MultiColumnHeader = 'MultiColumnHeader',
-    PivotGridRowHeader = 'PivotGridRowHeader',
 }
 
 export interface IExportRecord {
@@ -43,6 +44,7 @@ export interface IColumnList {
     columnWidths: number[];
     indexOfLastPinnedColumn: number;
     maxLevel?: number;
+    maxRowLevel?: number;
 }
 
 export interface IColumnInfo {
@@ -195,6 +197,7 @@ export abstract class IgxBaseExporter {
     protected pivotGridFilterFieldsCount: number;
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
+    private isPivotGridExport: boolean;
     private options: IgxExporterOptionsBase;
     private flatRecords: IExportRecord[] = [];
     private pivotGridColumns: IColumnInfo[] = []
@@ -234,6 +237,7 @@ export abstract class IgxBaseExporter {
             }
         } else if (tagName === 'igx-pivot-grid') {
             this.pivotGridColumns = [];
+            this.isPivotGridExport = true;
             this.pivotGridKeyValueMap = new Map<string, string>();
             this.pivotGridRowDimensionsMap = new Map<string, string>();
 
@@ -420,7 +424,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -440,7 +444,13 @@ export abstract class IgxBaseExporter {
                             rawValue = rawValue.toString();
                         }
 
-                        a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+
+                        if (this.isPivotGridExport && !isNaN(parseFloat(formattedValue))) {
+                            formattedValue = parseFloat(formattedValue);
+                        }
+
+                        a[e.field] = formattedValue;
                     }
                     return a;
                 }, {});
@@ -1081,6 +1091,7 @@ export abstract class IgxBaseExporter {
         columnList.columns.unshift(...this.pivotGridColumns);
         columnList.columnWidths.unshift(...Array(this.pivotGridColumns.length).fill(200));
         columnList.indexOfLastPinnedColumn = enabledRows.length - 1;
+        columnList.maxRowLevel = enabledRows.length;
         this._ownersMap.set(DEFAULT_OWNER, columnList);
     }
 
@@ -1116,7 +1127,7 @@ export abstract class IgxBaseExporter {
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiColumnHeader : HeaderType.PivotGridRowHeader,
+                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiRowHeader : HeaderType.RowHeader,
             };
 
             if (columnGroupParent) {
