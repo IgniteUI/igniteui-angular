@@ -1135,9 +1135,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
-                if (this.grid.validationTrigger === 'blur') {
-                    this.grid.tbody.nativeElement.focus({ preventScroll: true });
-                }
                 editableArgs = this.grid.crudService.updateCell(false, event);
 
                 /* This check is related with the following issue #6517:
