@@ -423,6 +423,7 @@ export class WorksheetFile implements IExcelFile {
             if (isSummaryRecord && cellValue) {
                 const dimensionMapKey = isHierarchicalOrTreeGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, fullRow.level);
+                return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
             }
 
             return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
@@ -491,20 +492,21 @@ export class WorksheetFile implements IExcelFile {
             // case "avg":
             //     return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "count":
-                return `"Count - "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
+                return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
-                return `"Min - "&amp;_xlfn.AGGREGATE(5, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Min: "&amp;_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
             case "max":
-                return `"Max - "&amp;_xlfn.AGGREGATE(4, 3, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Max: "&amp;_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
             case "sum":
-                return `"Sum - "&amp;_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Sum: "&amp;_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "avg":
-                debugger
-                return `"Avg - "&amp;_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                return `"Avg: "&amp;_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "earliest":
-                return `CONCATENATE("Earliest - ", TEXT(MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+                // TODO: get date format from locale
+                return `"Earliest: "&amp;_xlfn.TEXT(_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "MM/dd/yyyy")`
             case "latest":
-                return `CONCATENATE("Latest - ", TEXT(MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate}), "MM/DD/YYYY"))`
+                // TODO: get date format from locale
+                return `"Latest: "&amp;_xlfn.TEXT(_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "MM/dd/yyyy")`
         }
     }
 
