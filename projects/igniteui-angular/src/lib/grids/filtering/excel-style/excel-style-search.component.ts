@@ -31,11 +31,7 @@ import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_
     selector: '[igxExcelStyleLoading]'
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
-        return true
-    };
-    constructor(public template: TemplateRef<undefined>) { }
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -75,14 +71,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @ViewChild('addToCurrentFilterCheckbox', { read: IgxCheckboxComponent, static: false })
-    public addToCurrentFilterCheckbox: IgxCheckboxComponent;
+     @ViewChild('addToCurrentFilterCheckbox', { read: IgxCheckboxComponent, static: false })
+     public addToCurrentFilterCheckbox: IgxCheckboxComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('tree', { read: IgxTreeComponent, static: false })
-    public tree: IgxTreeComponent;
+     @ViewChild('tree', { read: IgxTreeComponent, static: false })
+     public tree: IgxTreeComponent;
 
     /**
      * @hidden @internal
@@ -299,7 +295,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onNodeSelectionChange(eventArgs: ITreeNodeSelectionEvent) {
+     public onNodeSelectionChange(eventArgs: ITreeNodeSelectionEvent) {
         eventArgs.added.forEach(node => {
             (node.data as FilterListItem).isSelected = true;
         });
@@ -353,7 +349,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get applyButtonDisabled(): boolean {
         return (this._selectAllItem && !this._selectAllItem.isSelected && !this._selectAllItem.indeterminate) ||
-            (this.displayedListData && this.displayedListData.length === 0);
+                (this.displayedListData && this.displayedListData.length === 0);
     }
 
     /**
@@ -559,7 +555,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public isTreeEmpty() {
+     public isTreeEmpty() {
         return this.esf.isHierarchical && this.displayedListData.length === 0;
     }
 

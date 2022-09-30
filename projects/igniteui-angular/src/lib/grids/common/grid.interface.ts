@@ -36,7 +36,7 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
-import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { FormGroup, ValidationErrors } from '@angular/forms';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
@@ -76,17 +76,6 @@ export interface CellType {
     activate?(event: FocusEvent | KeyboardEvent): void;
     onDoubleClick?(event: MouseEvent): void;
     onClick?(event: MouseEvent): void;
-}
-
-export interface HeaderType {
-    nativeElement: HTMLElement;
-    column: ColumnType;
-    density: DisplayDensity;
-    sorted: boolean;
-    selectable: boolean;
-    selected: boolean;
-    title: boolean;
-    sortDirection: SortingDirection;
 }
 
 export interface RowType {
@@ -362,16 +351,16 @@ export interface GridType extends IGridDataBindable {
     pinnedColumnsCount: number;
 
     iconTemplate?: TemplateRef<any>;
-    groupRowTemplate?: TemplateRef<IgxGroupByRowTemplateContext>;
-    groupByRowSelectorTemplate?: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
+    groupRowTemplate?: TemplateRef<any>;
+    groupByRowSelectorTemplate?: TemplateRef<any>;
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
-    headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
-    rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
-    sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
-    sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
-    sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
-    headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
-    headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headSelectorTemplate: TemplateRef<any>;
+    rowSelectorTemplate: TemplateRef<any>;
+    sortHeaderIconTemplate: TemplateRef<any>;
+    sortAscendingHeaderIconTemplate: TemplateRef<any>;
+    sortDescendingHeaderIconTemplate: TemplateRef<any>;
+    headerCollapseIndicatorTemplate: TemplateRef<any>;
+    headerExpandIndicatorTemplate: TemplateRef<any>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
@@ -453,9 +442,9 @@ export interface GridType extends IGridDataBindable {
 
     cdr: ChangeDetectorRef;
     document: Document;
-    rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
-    rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
-    excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    rowExpandedIndicatorTemplate: TemplateRef<any>;
+    rowCollapsedIndicatorTemplate: TemplateRef<any>;
+    excelStyleHeaderIconTemplate: TemplateRef<any>;
 
     selectRowOnClick: boolean;
     cellSelection: GridSelectionMode;
@@ -708,94 +697,4 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
-}
-
-export interface IgxGridMasterDetailContext {
-    $implicit: any;
-    index: number;
-}
-
-export interface IgxGroupByRowTemplateContext {
-    $implicit: IGroupByRecord;
-}
-
-export interface IgxGridTemplateContext {
-    $implicit: GridType
-}
-
-export interface IgxGridRowTemplateContext {
-    $implicit: RowType
-}
-
-export interface IgxGridRowDragGhostContext {
-    $implicit: any, // this is the row data
-    data: any, // this is also the row data for some reason.
-    grid: GridType
-}
-
-export interface IgxGridEmptyTemplateContext {
-    $implicit: undefined
-}
-
-export interface IgxGridRowEditTemplateContext {
-    $implicit: undefined,
-    rowChangesCount: number,
-    endEdit:  (commit: boolean, event?: Event) => void
-}
-
-export interface IgxGridRowEditTextTemplateContext {
-    $implicit: number
-}
-
-export interface IgxGridRowEditActionsTemplateContext {
-    $implicit: (commit: boolean, event?: Event) => void
-}
-
-export interface IgxGridHeaderTemplateContext {
-    $implicit: HeaderType
-}
-
-export interface IgxColumnTemplateContext {
-    $implicit: ColumnType,
-    column: ColumnType
-}
-
-export interface IgxCellTemplateContext {
-    $implicit: any,
-    additionalTemplateContext: any,
-    formControl?: FormControl<any>,
-    defaultErrorTemplate?: TemplateRef<any>,
-    cell?: CellType
-}
-
-export interface IgxRowSelectorTemplateContext {
-    $implicit: {
-        index: number,
-        rowID: any,
-        key: any,
-        selected: boolean,
-        select?: () => void,
-        deselect?: () => void
-    }
-}
-
-export interface IgxGroupByRowSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number,
-        totalCount: number,
-        groupRow: IGroupByRecord
-    }
-}
-
-export interface IgxHeadSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
-}
-
-export interface IgxSummaryTemplateContext {
-    $implicit: IgxSummaryResult[]
 }
