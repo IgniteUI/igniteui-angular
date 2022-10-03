@@ -9,7 +9,7 @@ export class GroupedRecords extends Array<any> {}
 export interface IGroupByRecord {
     expression: ISortingExpression;
     level: number;
-    /* alternateType: any[] */
+    /* wcAlternateType: any[] */
     records: GroupedRecords;
     value: any;
     groupParent: IGroupByRecord;

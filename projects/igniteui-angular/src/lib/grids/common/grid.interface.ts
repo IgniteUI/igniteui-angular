@@ -109,6 +109,7 @@ export interface RowType {
     deleted?: boolean;
     inEditMode?: boolean;
     children?: RowType[];
+    /* blazorAlternateName: RowParent */
     parent?: RowType;
     hasChildren?: boolean;
     treeRow?: ITreeGridRecord;
@@ -506,6 +507,7 @@ export interface GridType extends IGridDataBindable {
     hasChildrenKey?: any;
     /* blazorSuppress */
     loadingRows?: Set<any>;
+    /* blazorAlternateName: GridParent */
     parent?: GridType;
     highlightedRowID?: any;
     updateOnRender?: boolean;
