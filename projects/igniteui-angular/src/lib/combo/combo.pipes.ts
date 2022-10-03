@@ -35,6 +35,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection) {
+        // TODO: should filteredData be changed here?
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
