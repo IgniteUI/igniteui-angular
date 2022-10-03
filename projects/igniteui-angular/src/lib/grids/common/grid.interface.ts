@@ -609,6 +609,7 @@ export interface GridType extends IGridDataBindable {
     resetHorizontalVirtualization(): void;
     hasVerticalScroll(): boolean;
     getVisibleContentHeight(): number;
+    /* blazorSuppress */
     getDragGhostCustomTemplate(): TemplateRef<any> | null;
     openRowOverlay(id: any): void;
     openAdvancedFilteringDialog(): void;

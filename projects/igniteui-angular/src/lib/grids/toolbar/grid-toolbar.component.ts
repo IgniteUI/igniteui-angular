@@ -16,7 +16,7 @@ import { IgxGridToolbarActionsDirective } from './common';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 
-
+/* mustUseNGParentAnchor */
 /**
  * Provides a context-aware container component for UI operations for the grid components.
  *

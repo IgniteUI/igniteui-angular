@@ -28,6 +28,7 @@ export class IgxPaginatorTemplateDirective {
     public cssClass = 'igx-paginator-content';
 }
 
+/* mustUseNGParentAnchor */
 /**
  * Paginator component description
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *
