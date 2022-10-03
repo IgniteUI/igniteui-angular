@@ -1631,6 +1631,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get filteringExpressionsTree(): FilteringExpressionsTree {
         return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
     }
+    /* alternateName: parentColumn */
     /**
      * Sets/gets the parent column.
      * ```typescript

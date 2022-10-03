@@ -30,7 +30,9 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     newValue?: any;
     /* blazorSuppress */
     event?: Event;
+    /* blazorAlternateType: GridColumn */
     column?: ColumnType;
+    /* blazorAlternateType: Grid */
     owner?: GridType;
     isAddRow?: boolean;
     valid?: boolean;

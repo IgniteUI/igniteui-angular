@@ -206,6 +206,7 @@ export interface ColumnType {
     columnLayoutChild: boolean;
     width: string;
     topLevelParent?: ColumnType;
+    /* alternateName: parentColumn */
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;

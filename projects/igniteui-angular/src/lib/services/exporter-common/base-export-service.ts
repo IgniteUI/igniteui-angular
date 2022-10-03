@@ -193,6 +193,7 @@ export abstract class IgxBaseExporter {
     private flatRecords: IExportRecord[] = [];
     private options: IgxExporterOptionsBase;
 
+    /* alternateName: exportGrid */
     /**
      * Method for exporting IgxGrid component's data.
      * ```typescript
