@@ -4,7 +4,8 @@ import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo } from '../exporter-common/base-export-service';
+import { WorksheetDataDictionary } from './worksheet-data-dictionary';
 
 /**
  * @hidden
@@ -58,6 +59,7 @@ export class ThemeFile implements IExcelFile {
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.43;
     private maxOutlineLevel = 0;
+    private sheetData = '';
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
@@ -83,15 +85,15 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
-        let sheetData = '';
+        this.sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
         this.rowIndex = 0;
 
         if (worksheetData.isEmpty && (!worksheetData.options.alwaysExportHeaders || worksheetData.owner.columns.length === 0)) {
-            sheetData += '<sheetData/>';
+            this.sheetData += '<sheetData/>';
             this.dimension = 'A1';
-            done('', sheetData);
+            done('', this.sheetData);
         } else {
             const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.isHierarchical;
@@ -101,50 +103,15 @@ export class WorksheetFile implements IExcelFile {
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
-            const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
+            this.sheetData += `<sheetData>`;
 
-            sheetData += `<sheetData>`;
+            let headersForLevel: IColumnInfo[] = [];
 
             for(let i = 0; i <= owner.maxRowLevel; i++) {
-                const headersForLevel =  owner.columns.filter(c => c.level === i && c.rowSpan > 0 && !c.skip)
+                headersForLevel =  owner.columns.filter(c => c.level === i && c.rowSpan > 0 && !c.skip)
 
-                let startValue = 0;
-                let str = '';
-
-                for (const currentCol of headersForLevel) {
-                    if (currentCol.level === i) {
-                        let columnCoordinate;
-                        columnCoordinate = ExcelStrings.getExcelColumn(this.rowIndex) + (startValue + 1 + (owner.maxLevel + 1));
-                        const columnValue = dictionary.saveValue(currentCol.header, true);
-                        str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
-
-                        if (this.pivotGridRowHeadersMap.has(startValue + 1 + (owner.maxLevel + 1))) {
-                            this.pivotGridRowHeadersMap.set(startValue + 1 + (owner.maxLevel + 1), this.pivotGridRowHeadersMap.get(startValue + 1+ (owner.maxLevel + 1)) + str)
-                        } else {
-                            this.pivotGridRowHeadersMap.set(startValue + 1 + (owner.maxLevel + 1), str)
-                        }
-
-                        if (i !== owner.maxRowLevel) {
-                            this.mergeCellsCounter++;
-                            this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
-
-                            if (currentCol.headerType === HeaderType.ColumnHeader) {
-                                columnCoordinate = ExcelStrings.getExcelColumn(owner.maxRowLevel) + (startValue + 1 + (owner.maxLevel + 1));
-                            } else {
-                                for (let k = 1; k < currentCol.rowSpan; k++) {
-                                    columnCoordinate = ExcelStrings.getExcelColumn(this.rowIndex) + (startValue + k + 1 + (owner.maxLevel + 1));
-                                    str = `<c r="${columnCoordinate}"${rowStyle} />`;
-                                    this.pivotGridRowHeadersMap.set(startValue + k + 1+ (owner.maxLevel + 1), str)
-                                }
-                            }
-
-                            this.mergeCellStr += `${columnCoordinate}" />`;
-                        }
-                    }
-
-                    startValue += currentCol.rowSpan;
-                }
+                this.printHeaders(worksheetData, headersForLevel, i, true);
 
                 this.rowIndex++;
             }
@@ -154,11 +121,11 @@ export class WorksheetFile implements IExcelFile {
             for (let i = 0; i <= owner.maxLevel; i++) {
                 this.rowIndex++;
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
-                sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
+                this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
                 const allowedColumns = owner.columns.filter(c => c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader);
 
-                const headersForLevel = hasMultiColumnHeader ?
+                headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
                         .filter(c => (c.level < i &&
                             c.headerType !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
@@ -170,37 +137,9 @@ export class WorksheetFile implements IExcelFile {
                             .sort((a, b) => a.startIndex - b.startIndex)
                             .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
-                let startValue = 0;
+                this.printHeaders(worksheetData, headersForLevel, i, false);
 
-                for (const currentCol of headersForLevel) {
-                    if (currentCol.level === i) {
-                        let columnCoordinate;
-                        columnCoordinate = ExcelStrings.getExcelColumn(startValue + worksheetData.owner.maxRowLevel) + this.rowIndex;
-                        const columnValue = dictionary.saveValue(currentCol.header, true);
-                        sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
-
-                        if (i !== owner.maxLevel) {
-                            this.mergeCellsCounter++;
-                            this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
-
-                            if (currentCol.headerType === HeaderType.ColumnHeader) {
-                                columnCoordinate = ExcelStrings.getExcelColumn(startValue + + worksheetData.owner.maxRowLevel) + (owner.maxLevel + 1);
-                            } else {
-                                for (let k = 1; k < currentCol.columnSpan; k++) {
-                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue + k + worksheetData.owner.maxRowLevel) + this.rowIndex;
-                                    sheetData += `<c r="${columnCoordinate}"${rowStyle} />`;
-                                }
-                            }
-
-                            this.mergeCellStr += `${columnCoordinate}" />`;
-                        }
-                    }
-
-                    startValue += currentCol.columnSpan;
-                }
-
-
-                sheetData += `</row>`;
+                this.sheetData += `</row>`;
             }
 
             const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
@@ -258,14 +197,14 @@ export class WorksheetFile implements IExcelFile {
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
-                sheetData += rows;
-                sheetData += '</sheetData>';
+                this.sheetData += rows;
+                this.sheetData += '</sheetData>';
 
                 if ((hasMultiColumnHeader || hasMultiRowHeader) && this.mergeCellsCounter > 0) {
-                    sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
+                    this.sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
                 }
 
-                done(cols, sheetData);
+                done(cols, this.sheetData);
             });
         }
     }
@@ -432,6 +371,88 @@ export class WorksheetFile implements IExcelFile {
             const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+        }
+    }
+
+    private printHeaders(worksheetData: WorksheetData, headersForLevel: IColumnInfo[], i: number, isVertical: boolean) {
+        let startValue = 0;
+        let str = '';
+
+        const isHierarchicalGrid = worksheetData.isHierarchical;
+        let rowStyle = isHierarchicalGrid ? ' s="3"' : '';
+        const dictionary = worksheetData.dataDictionary;
+        const owner = worksheetData.owner;
+        const maxLevel = isVertical
+            ? owner.maxRowLevel
+            : owner.maxLevel;
+
+        for (const currentCol of headersForLevel) {
+            const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
+
+            if (currentCol.level === i) {
+                let columnCoordinate;
+                const column = isVertical
+                    ? this.rowIndex
+                    : startValue + (owner.maxRowLevel ?? 0)
+
+                const rowCoordinate = isVertical
+                    ? startValue + owner.maxLevel + 2
+                    : this.rowIndex
+
+                const columnValue = dictionary.saveValue(currentCol.header, true);
+
+                columnCoordinate = ExcelStrings.getExcelColumn(column) + rowCoordinate;
+                rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
+                str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
+
+                if (isVertical) {
+                    if (this.pivotGridRowHeadersMap.has(rowCoordinate)) {
+                        this.pivotGridRowHeadersMap.set(rowCoordinate, this.pivotGridRowHeadersMap.get(rowCoordinate) + str)
+                    } else {
+                        this.pivotGridRowHeadersMap.set(rowCoordinate, str)
+                    }
+                } else {
+                    this.sheetData += str;
+                }
+
+                if (i !== maxLevel) {
+                    this.mergeCellsCounter++;
+                    this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
+
+                    if (currentCol.headerType === HeaderType.ColumnHeader) {
+                        const col = isVertical
+                            ? maxLevel
+                            : startValue + (owner.maxRowLevel ?? 0);
+
+                        const row = isVertical
+                            ? rowCoordinate
+                            : owner.maxLevel + 1;
+
+                        columnCoordinate = ExcelStrings.getExcelColumn(col) + row;
+                    } else {
+                        for (let k = 1; k < spanLength; k++) {
+                            const col = isVertical
+                                ? column
+                                : column + k;
+
+                            const row = isVertical
+                                ? rowCoordinate + k
+                                : this.rowIndex;
+
+                            columnCoordinate = ExcelStrings.getExcelColumn(col) + row;
+                            str = `<c r="${columnCoordinate}"${rowStyle} />`;
+
+                            isVertical
+                                ? this.pivotGridRowHeadersMap.set(row, str)
+                                : this.sheetData += str
+                        }
+                    }
+
+                    this.mergeCellStr += `${columnCoordinate}" />`;
+                }
+            }
+
+            startValue += spanLength;
         }
     }
 }
