@@ -624,6 +624,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellClasses: any;
 
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the column cells.
      * Similar to `ngStyle` it accepts an object literal where the keys are

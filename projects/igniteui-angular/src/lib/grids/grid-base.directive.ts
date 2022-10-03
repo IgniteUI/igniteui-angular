@@ -1415,10 +1415,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @HostBinding('attr.role')
     public hostRole = 'grid';
 
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: GridToolbarCollection */
+    /* ngQueryListName: toolbar */
     /** @hidden @internal */
     @ContentChildren(IgxGridToolbarComponent)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
+    /* blazorInclude */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PaginatorCollection */
+    /* ngQueryListName: paginationComponents */
     /** @hidden @internal */
     @ContentChildren(IgxPaginatorComponent)
     protected paginationComponents: QueryList<IgxPaginatorComponent>;
@@ -4114,6 +4122,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.featureColumnsWidth();
     }
 
+    /* ngQueryListName: columnList */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ColumnCollection */
     /**

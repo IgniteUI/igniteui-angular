@@ -38,6 +38,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._templateWrapper;
     }
 
+    public override setInputValue(property: string, value: any): void { 
+        (this as any).runInZone(() => {
+            if ((this as any).componentRef === null ||
+            !(this as any).componentRef.instance) {
+              (this as any).initialInputValues.set(property, value);
+              return;
+            } else {
+                super.setInputValue(property, value);
+            }
+        });
+    }
 
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
         super(_componentFactory, _injector);

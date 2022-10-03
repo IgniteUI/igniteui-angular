@@ -48,7 +48,7 @@ export class TemplateWrapperComponent {
     public addTemplate(templateFunc: TemplateFunction): TemplateRef<any> {
         this.templateFunctions.push(templateFunc);
         this.cdr.detectChanges();
-        return new TemplateRefWrapper(this.templateRefs.last);
+        return new TemplateRefWrapper(this.templateRefs.last, templateFunc);
     }
 }
 
