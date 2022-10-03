@@ -480,14 +480,12 @@ export class IgxGridSelectionService {
             this.rowSelection.clear();
         }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
-        this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
     }
 
     /** Deselect specified rows. No event is emitted. */
     public deselectRowsWithNoEvent(rowIDs: any[]): void {
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
-        this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
     }
 
@@ -513,7 +511,6 @@ export class IgxGridSelectionService {
 
     /** Select range from last selected row to the current specified row. */
     public selectMultipleRows(rowID, rowData, event?): void {
-        this.allRowsSelected = undefined;
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
             this.selectRowById(rowID);
             return;
@@ -533,7 +530,7 @@ export class IgxGridSelectionService {
         const selectedData = newSelection ? newSelection : [...this.rowSelection]
         const allData = this.getRowIDs(this.allData);
         const unSelectedRows = allData.filter(row => !selectedData.includes(row));
-        return this.allRowsSelected = this.allData.length > 0 && unSelectedRows.length === 0;
+        return this.allData.length > 0 && unSelectedRows.length === 0;
     }
 
     public hasSomeRowSelected(): boolean {
@@ -577,15 +574,10 @@ export class IgxGridSelectionService {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
 
-    public clearHeaderCBState(): void {
-        this.allRowsSelected = undefined;
-    }
-
     /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
         this.indeterminateRows.clear();
-        this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
 
