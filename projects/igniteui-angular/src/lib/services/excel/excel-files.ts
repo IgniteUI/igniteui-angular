@@ -210,14 +210,18 @@ export class WorksheetFile implements IExcelFile {
                 }
             } else {
                 const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
-                const maxColumn = worksheetData.hasSummaries ? worksheetData.columnCount + 2 : worksheetData.columnCount;
-                cols += `<cols><col min="1" max="${maxColumn}" width="${columnWidth}" customWidth="1"/></cols>`;
+                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
+
                 if (worksheetData.options.freezeHeaders) {
                     const firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
                     this.freezePane =
                         `<pane xSplit="0" ySplit="${freezeHeaders - 1}"
                          topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
+            }
+
+            if (worksheetData.hasSummaries) {
+                cols += `<cols><col min="${worksheetData.columnCount + 2}" max="${worksheetData.columnCount + 2}" hidden="1"/></cols>`;
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
@@ -394,8 +398,6 @@ export class WorksheetFile implements IExcelFile {
             this.setRootSummaryStartCoordinate(column, key);
         }
 
-
-
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
         } else if ((worksheetData.hasSummaries && (isValidRecordType || isHeaderRecord)) || !worksheetData.hasSummaries) {
@@ -470,7 +472,6 @@ export class WorksheetFile implements IExcelFile {
                a.endCoordinate = `${colName}${this.rowIndex}`;
             }
         }
-
     }
 
     private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number): string {
@@ -479,18 +480,6 @@ export class WorksheetFile implements IExcelFile {
         const levelDimensions = dimensionMap.get(GRID_LEVEL_COL);
 
         switch(type.toLowerCase()) {
-            // case "count":
-            //     return `"Count - "&amp;SUMPRODUCT(--(NOT(_xlfn.ISFORMULA(${dimensions.startCoordinate}:${dimensions.endCoordinate}))))`
-            // case "countnum":
-            //     return `"Count - "&amp;COUNT(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            // case "min":
-            //     return `"Min - "&amp;MIN(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            // case "max":
-            //     return `"Max - "&amp;MAX(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            // case "sum":
-            //     return `"Sum - "&amp;SUM(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
-            // case "avg":
-            //     return `"Avg - "&amp;AVERAGE(${dimensions.startCoordinate}:${dimensions.endCoordinate})`
             case "count":
                 return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":

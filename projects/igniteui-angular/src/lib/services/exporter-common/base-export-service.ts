@@ -1005,8 +1005,6 @@ export abstract class IgxBaseExporter {
             } else {
                 const rowRecords = record.records;
 
-               // const summaryKey = `{ ${summaryKeysArr.join(', ')} }`
-
                 for (const rowRecord of rowRecords) {
                     const currentRecord: IExportRecord = {
                         data: rowRecord,
@@ -1021,23 +1019,12 @@ export abstract class IgxBaseExporter {
 
                     this.flatRecords.push(currentRecord);
                 }
-
-                // Add summaries only in last child
-
-                // if (this._setChildSummaries) {
-                //     this.setSummaries(key3, record.level + 1, !(expanded && parentExpanded));
-                // }
-
-                //summaryKeysArr.pop()
             }
-
-            // Add summaries for every single group (as in grid UI)
 
             if (this._setChildSummaries) {
                 this.setSummaries(summaryKey, record.level + 1, !(expanded && parentExpanded));
                 summaryKeysArr.pop();
             }
-
         }
     }
 
