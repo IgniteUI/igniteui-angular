@@ -1,31 +1,31 @@
-import * as JSZip from 'jszip';
+import { strFromU8 } from 'fflate';
 import { ExcelFileTypes } from './excel-enums';
-import { JSZipFiles } from './jszip-helper.spec';
+import { ZipFiles } from './zip-helper.spec';
 
-export class JSZipWrapper {
-    private _zip: JSZip;
+export class ZipWrapper {
+    private _zip: Object;
     private _filesAndFolders: string[];
-    private _fileContent = '';
-    private _files: {[key: string]: JSZip.JSZipObject};
+    private _files: Map<string, Uint8Array>;
     private _filesContent: IFileContent[] = [];
     private _hasValues = true;
 
-    constructor(currentZip: JSZip) {
+    constructor(currentZip: Object) {
         this._zip = currentZip;
-        this._files = currentZip.files;
-        this.createFilesAndFolders();
-        this._hasValues = this._filesAndFolders.length > JSZipFiles.templatesNames.length;
+        this._files = new Map<string, Uint8Array>();
+        this._filesAndFolders = [];
+        this.createFilesAndFolders(this._zip, '');
+        this._hasValues = this._filesAndFolders.length > ZipFiles.templatesNames.length;
         this._filesContent = [];
     }
 
-    /* Asserts the JSZip contains the files it should contain. */
+    /* Asserts the zip contains the files it should contain. */
     public verifyStructure(isHGrid: boolean = false, message = '') {
-        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
-        const template = isHGrid ? JSZipFiles.hGridDataFilesAndFoldersNames : JSZipFiles.dataFilesAndFoldersNames;
+        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, ZipFiles.templatesNames);
+        const template = isHGrid ? ZipFiles.hGridDataFilesAndFoldersNames : ZipFiles.dataFilesAndFoldersNames;
 
         result = (this.hasValues) ?
-                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
-                    result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
+            result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
+            result && this._filesAndFolders.length === ZipFiles.templatesNames.length;
 
         expect(result).toBe(true, message + ' Unexpected zip structure!');
     }
@@ -33,7 +33,7 @@ export class JSZipWrapper {
     /* Verifies the contents of all template files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
     public async verifyTemplateFilesContent(message = '', hasDates = false) {
-        JSZipFiles.hasDates = hasDates;
+        ZipFiles.hasDates = hasDates;
 
         let result;
         const msg = (message !== '') ? message + '\r\n' : '';
@@ -56,16 +56,25 @@ export class JSZipWrapper {
         });
     }
 
-    private createFilesAndFolders() {
-        this._filesAndFolders = Object.keys(this._files).map(f => f);
+    private createFilesAndFolders(obj: Object, prefix: string) {
+        Object.keys(obj).forEach((key) => {
+            if (ArrayBuffer.isView(obj[key])) {
+                this._files.set(`${prefix}${key}`, obj[key]);
+                this._filesAndFolders.push(`${prefix}${key}`);
+            } else {
+                const newPrefix = `${prefix}${key}/`;
+                this._filesAndFolders.push(newPrefix);
+                this.createFilesAndFolders(obj[key], newPrefix);
+            }
+        });
     }
 
     public get templateFilesAndFolders(): string[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.templatesNames.indexOf(name) !== -1);
+        return this._filesAndFolders.filter((name) => ZipFiles.templatesNames.indexOf(name) !== -1);
     }
 
     public get dataFilesAndFolders(): string[] {
-        return this._filesAndFolders.filter((name) => JSZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
+        return this._filesAndFolders.filter((name) => ZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
     }
 
     public get dataFilesOnly(): string[] {
@@ -81,32 +90,18 @@ export class JSZipWrapper {
     }
 
     private getFiles(collection: string[]) {
-        return collection.filter((f) => this._files[f].dir === false);
-    }
-
-    /* Loads and reads a file asynchronously. */
-    private async readFile(fileName: string) {
-        if (this._zip === undefined) {
-            return 'Zip file not found!';
-        }
-
-        await this._files[fileName].async('text')
-        .then((txt) => {
-                this._fileContent = txt;
-        });
+        return collection.filter((f) => f.endsWith('/') === false);
     }
 
     /* Reads all files and stores their contents in this._filesContent. */
-    private async readFiles(files: string[]) {
+    private readFiles(files: string[]) {
         // const self = this;
         this._filesContent = [];
         for (const file of files) {
-            await this.readFile(file).then(() => {
-                const content = this._fileContent;
-                this._filesContent.push({
-                    fileName : file,
-                    fileContent : content
-                });
+            const content = strFromU8(this._files.get(file));
+            this._filesContent.push({
+                fileName: file,
+                fileContent: content
             });
         }
     }
@@ -117,13 +112,13 @@ export class JSZipWrapper {
 
     private async readTemplateFiles() {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         await this.readFiles(actualTemplates);
     }
 
     public get templateFilesContent(): IFileContent[] {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
-                                f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
+            f !== ZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 
@@ -146,7 +141,7 @@ export class JSZipWrapper {
     private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string, isHGrid) {
         let result = true;
         let differences = '';
-        const expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues, isHGrid);
+        const expectedFile = ZipFiles.createExpectedXML(fileType, fileData, this.hasValues, isHGrid);
         const expectedContent = expectedFile.content;
         result = ObjectComparer.AreEqualXmls(currentContent, expectedContent);
         if (!result) {
@@ -193,13 +188,13 @@ export class JSZipWrapper {
 
     /* Returns file's name based on its type. */
     private getFileNameByType(type: ExcelFileTypes) {
-        const file = JSZipFiles.files.find((f) => f.type === type);
+        const file = ZipFiles.files.find((f) => f.type === type);
         return (file !== undefined) ? file.name : '';
     }
 
     /* Returns file's type based on its name. */
     private getFileTypeByName(name: string) {
-        const file = JSZipFiles.files.find((f) => f.name === name);
+        const file = ZipFiles.files.find((f) => f.name === name);
         return (file !== undefined) ? file.type : undefined;
     }
 }

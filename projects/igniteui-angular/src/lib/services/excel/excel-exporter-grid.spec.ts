@@ -6,7 +6,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { JSZipWrapper } from './jszip-verification-wrapper.spec';
+import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import {
     ReorderedColumnsComponent,
@@ -1208,9 +1208,9 @@ describe('Excel Exporter', () => {
     });
 
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
-        const exportData = new Promise<JSZipWrapper>((resolve) => {
+        const exportData = new Promise<ZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {
-                const wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new ZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
             exporter.export(grid, exportOptions);
