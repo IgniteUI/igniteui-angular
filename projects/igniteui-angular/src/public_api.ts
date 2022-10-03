@@ -116,6 +116,8 @@ export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
 export * from './lib/grids/pivot-grid/public_api';
+export * from './lib/query-builder/query-builder.component'
+export * from './lib/query-builder/query-builder-header.component'
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -138,6 +140,7 @@ export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
+export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';

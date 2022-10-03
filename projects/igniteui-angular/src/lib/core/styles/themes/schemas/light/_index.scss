@@ -48,6 +48,7 @@
 @use './overlay' as *;
 @use './pie-chart' as *;
 @use './progress' as *;
+@use './query-builder' as *;
 @use './radio' as *;
 @use './ripple' as *;
 @use './scrollbar' as *;
@@ -114,6 +115,7 @@
 /// @property {Map} pie-chart [$light-pie-chart]
 /// @property {Map} igx-progress-linear [$light-progress-linear]
 /// @property {Map} igx-progress-circular [$light-progress-circular]
+/// @property {Map} igx-query-builder [$light-query-builder]
 /// @property {Map} igx-radio [$light-radio]
 /// @property {Map} igx-ripple [$light-ripple]
 /// @property {Map} igx-scrollbar [$light-scrollbar]
@@ -176,6 +178,7 @@ $light-schema: (
     igx-linear-bar: $light-progress-linear,
     igx-circular-bar: $light-progress-circular,
     pie-chart: $light-pie-chart,
+    igx-query-builder: $light-query-builder,
     igx-radio: $light-radio,
     igx-ripple: $light-ripple,
     shape-chart: $light-shape-chart,
@@ -252,6 +255,7 @@ $light-fluent-schema: (
     igx-radio: $fluent-radio,
     igx-ripple: $fluent-ripple,
     shape-chart: $fluent-shape-chart,
+    igx-query-builder: $fluent-query-builder,
     igx-scrollbar: $fluent-scrollbar,
     igx-slider: $fluent-slider,
     igx-snackbar: $fluent-snackbar,
@@ -319,6 +323,7 @@ $light-bootstrap-schema: (
     pie-chart: $bootstrap-pie-chart,
     igx-radio: $bootstrap-radio,
     igx-ripple: $bootstrap-ripple,
+    igx-query-builder: $bootstrap-query-builder,
     shape-chart: $bootstrap-shape-chart,
     igx-scrollbar: $bootstrap-scrollbar,
     igx-slider: $bootstrap-slider,
@@ -388,6 +393,7 @@ $light-indigo-schema: (
     igx-radio: $indigo-radio,
     shape-chart: $indigo-shape-chart,
     igx-ripple: $indigo-ripple,
+    igx-query-builder: $indigo-query-builder,
     igx-scrollbar: $indigo-scrollbar,
     igx-slider: $indigo-slider,
     igx-snackbar: $indigo-snackbar,
