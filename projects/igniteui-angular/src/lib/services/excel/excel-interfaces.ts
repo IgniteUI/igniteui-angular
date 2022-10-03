@@ -1,5 +1,3 @@
-import * as JSZip from 'jszip';
-
 import {
     ExcelFileTypes,
     ExcelFolderTypes
@@ -9,7 +7,7 @@ import { WorksheetData } from './worksheet-data';
 
 /** @hidden */
 export interface IExcelFile {
-    writeElement(folder: JSZip, data: WorksheetData): void;
+    writeElement(folder: Object, data: WorksheetData): void;
 }
 
 /** @hidden */

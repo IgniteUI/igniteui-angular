@@ -1,4 +1,4 @@
-import * as JSZip from 'jszip';
+import { zip } from 'fflate';
 
 import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
@@ -12,7 +12,7 @@ import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
-    xlsx?: JSZip;
+    xlsx?: Object
 }
 
 const EXCEL_MAX_ROWS = 1048576;
@@ -43,7 +43,6 @@ const EXCEL_MAX_COLS = 16384;
     providedIn: 'root',
 })
 export class IgxExcelExporterService extends IgxBaseExporter {
-    private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
 
     /**
      * This event is emitted when the export process finishes.
@@ -57,21 +56,19 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      */
     public exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
-    private _xlsx: JSZip;
-
-    private static async populateFolderAsync(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData) {
+    private static async populateZipFileConfig(fileStructure: Object, folder: IExcelFolder, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
             const folderInstance = ExcelElementsFactory.getExcelFolder(childFolder);
-            const zipFolder = zip.folder(folderInstance.folderName);
-            await IgxExcelExporterService.populateFolderAsync(folderInstance, zipFolder, worksheetData);
+            const childStructure = fileStructure[folderInstance.folderName] = {};
+            await IgxExcelExporterService.populateZipFileConfig(childStructure, folderInstance, worksheetData);
         }
 
         for (const childFile of folder.childFiles(worksheetData)) {
             const fileInstance = ExcelElementsFactory.getExcelFile(childFile);
             if (fileInstance instanceof WorksheetFile) {
-                await (fileInstance as WorksheetFile).writeElementAsync(zip, worksheetData);
+                await (fileInstance as WorksheetFile).writeElementAsync(fileStructure, worksheetData);
             } else {
-                fileInstance.writeElement(zip, worksheetData);
+                fileInstance.writeElement(fileStructure, worksheetData);
             }
         }
     }
@@ -88,11 +85,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
         const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
             isHierarchicalGrid ?
-                data.some(d =>  Object.keys(d.data).length > EXCEL_MAX_COLS) :
+                data.some(d => Object.keys(d.data).length > EXCEL_MAX_COLS) :
                 Object.keys(firstDataElement.data).length > EXCEL_MAX_COLS :
             false;
 
-        if(data.length > EXCEL_MAX_ROWS || columnsExceedLimit) {
+        if (data.length > EXCEL_MAX_ROWS || columnsExceedLimit) {
             throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
         }
 
@@ -110,7 +107,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             if (isHierarchicalGrid) {
                 columnCount = data
                     .map(a => this._ownersMap.get(a.owner).columns.filter(c => !c.skip).length + a.level)
-                    .sort((a,b) => b - a)[0];
+                    .sort((a, b) => b - a)[0];
 
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.filter(c => !c.skip).map(c => c.field);
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
@@ -135,22 +132,20 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn,
                 columnWidths, defaultOwner, this._ownersMap);
 
-        this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
-
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
-
-        IgxExcelExporterService.populateFolderAsync(rootFolder, this._xlsx, worksheetData)
-        .then(() => {
-            this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
-                this.saveFile(result, options.fileName);
-                this.exportEnded.emit({ xlsx: this._xlsx });
-                done();
+        const fileData = {};
+        IgxExcelExporterService.populateZipFileConfig(fileData, rootFolder, worksheetData)
+            .then(() => {
+                zip(fileData, (_, result) => {
+                    this.saveFile(result, options.fileName);
+                    this.exportEnded.emit({ xlsx: fileData });
+                    done();
+                });
             });
-        });
     }
 
-    private saveFile(data: string, fileName: string): void {
-        const blob = new Blob([ExportUtilities.stringToArrayBuffer(atob(data))], {
+    private saveFile(data: Uint8Array, fileName: string): void {
+        const blob = new Blob([data], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 
