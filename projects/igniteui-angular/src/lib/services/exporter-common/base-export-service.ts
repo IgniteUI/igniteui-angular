@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, formatCurrency, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { DatePipe } from '@angular/common';
+import { DatePipe, getLocaleCurrencyCode } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
@@ -63,6 +63,9 @@ export interface IColumnInfo {
     pinnedIndex?: number;
     columnGroupParent?: ColumnType | string;
     columnGroup?: ColumnType | string;
+    currencyCode?: string;
+    displayFormat?: string;
+    digitsInfo?: string;
 }
 /**
  * rowExporting event arguments
@@ -197,6 +200,7 @@ export abstract class IgxBaseExporter {
     protected pivotGridFilterFieldsCount: number;
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
+    private locale: string
     private isPivotGridExport: boolean;
     private options: IgxExporterOptionsBase;
     private flatRecords: IExportRecord[] = [];
@@ -218,6 +222,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
+        this.locale = grid.locale;
         let columns = grid.columns;
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -442,6 +447,8 @@ export abstract class IgxBaseExporter {
                             rawValue = new Date(rawValue);
                         } else if (e.dataType === 'string' && rawValue instanceof Date) {
                             rawValue = rawValue.toString();
+                        } else if (e.dataType === 'currency') {
+                            rawValue = formatCurrency(rawValue, e.currencyCode, e.displayFormat, e.digitsInfo, this.locale);
                         }
 
                         let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
@@ -969,6 +976,20 @@ export abstract class IgxBaseExporter {
                 columnGroupParent: column.parent ? column.parent : null,
                 columnGroup: isMultiColHeader ? column : null
             };
+
+            if (column.dataType === 'currency') {
+                columnInfo.currencyCode = column.pipeArgs.currencyCode
+                    ? column.pipeArgs.currencyCode
+                    : getLocaleCurrencyCode(this.locale);
+
+                columnInfo.displayFormat = column.pipeArgs.display
+                    ? column.pipeArgs.display
+                    : 'symbol';
+
+                columnInfo.digitsInfo = column.pipeArgs.digitsInfo
+                    ? column.pipeArgs.digitsInfo
+                    : '1.0-2';
+            }
 
             if (this.options.ignoreColumnsOrder) {
                 if (columnInfo.startIndex !== columnInfo.pinnedIndex) {
