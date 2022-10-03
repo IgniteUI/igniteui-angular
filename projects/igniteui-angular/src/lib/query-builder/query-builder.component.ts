@@ -1117,6 +1117,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         if (!expressionItem.parent) {
             this.rootGroup = null;
             this.currentGroup = null;
+            this._expressionTree = null;
             return;
         }
 
@@ -1127,10 +1128,13 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         const children = expressionItem.parent.children;
         const index = children.indexOf(expressionItem);
         children.splice(index, 1);
+        this._expressionTree = this.createExpressionTreeFromGroupItem(this.rootGroup);
 
         if (!children.length) {
             this.deleteItem(expressionItem.parent);
         }
+
+        this.expressionTreeChange.emit();
     }
 
     private createGroup(operator: FilteringLogic) {
