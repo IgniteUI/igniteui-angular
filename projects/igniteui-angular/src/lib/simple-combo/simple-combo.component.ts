@@ -179,6 +179,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.selectionService.select_items(this.id, value !== undefined ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
+        this.filterValue = this._internalFilter = this._value?.toString();
     }
 
     /** @hidden @internal */
