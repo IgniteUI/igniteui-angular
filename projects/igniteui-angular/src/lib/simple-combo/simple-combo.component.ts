@@ -176,7 +176,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, value !== undefined ? [value] : [], true);
+        const isValid = this.ngControl?.validator
+            ? value !== null && value !== '' && value !== undefined
+            : value !== undefined;
+        this.selectionService.select_items(this.id, isValid ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
         this.filterValue = this._internalFilter = this._value?.toString();
@@ -405,7 +408,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = args.newSelection !== undefined
+            const isValid = this.ngControl?.validator
+                ? args.newSelection !== null && args.newSelection !== '' && args.newSelection !== undefined
+                : args.newSelection !== undefined;
+
+            let argsSelection = isValid
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
