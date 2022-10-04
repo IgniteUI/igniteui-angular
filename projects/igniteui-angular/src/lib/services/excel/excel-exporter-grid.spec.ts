@@ -41,6 +41,8 @@ import { IgxHierarchicalGridModule,
 } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent, IgxPivotGridModule } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -64,9 +66,11 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridMultiColumnHeadersExportComponent,
                 ColumnsAddedOnInitComponent,
                 IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
-                GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
+                GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
+                IgxPivotGridMultipleRowComponent,
+                IgxPivotGridTestComplexHierarchyComponent
             ],
-            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -1204,6 +1208,33 @@ describe('Excel Exporter', () => {
             grid = fix.componentInstance.grid;
             
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
+        });
+    });
+
+    describe('', () => {
+        let fix;
+        let grid: IgxPivotGridComponent;
+
+        beforeEach(waitForAsync(() => {
+            options = createExportOptions('PivotGridGridExcelExport');
+        }));
+
+        it('should export pivot grid', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridData, false);
+        });
+
+        it('should export hierarchical pivot grid', async () => {
+            fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.pivotGrid;
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalData, false);
         });
     });
 
