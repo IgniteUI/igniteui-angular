@@ -5,6 +5,8 @@
         [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected"
         placeholder="Dimension(s)" searchPlaceholder="Search...">
     </igx-combo>
+
+    <button (click)="exportButtonHandler()">Export To Excel</button><br />
 </div>
 <igx-pivot-grid   [superCompactMode]="true" #grid1 [data]="origData" [pivotConfiguration]="pivotConfigHierarchy" (dimensionsChange)='dimensionChange($event)' [defaultExpandState]='true'>
 </igx-pivot-grid>
