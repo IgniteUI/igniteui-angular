@@ -13,7 +13,6 @@ import { DatePipe, getLocaleCurrencyCode } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
-import { IPivotDimension } from '../../grids/pivot-grid/public_api';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -288,7 +287,7 @@ export abstract class IgxBaseExporter {
         this.exportGridRecordsData(records);
     }
 
-    private addToRowDimensionsMap(rowDimension: IPivotDimension, rootParentName: string) {
+    private addToRowDimensionsMap(rowDimension: any, rootParentName: string) {
         this.pivotGridRowDimensionsMap[rowDimension.memberName] = rootParentName;
         if (rowDimension.childLevel) {
             this.addToRowDimensionsMap(rowDimension.childLevel, rootParentName)
@@ -1117,6 +1116,10 @@ export abstract class IgxBaseExporter {
     }
 
     private preparePivotGridColumns(keys: any, columnGroupParent?: string): any {
+        if (keys.length === 0) {
+            return;
+        }
+
         let startIndex = 0;
         const key = keys[0];
         const records = this.flatRecords.map(r => r.data);

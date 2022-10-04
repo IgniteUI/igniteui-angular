@@ -5,7 +5,6 @@ import { WorksheetData } from './worksheet-data';
 import { strToU8 } from 'fflate';
 import { yieldingLoop } from '../../core/utils';
 import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo } from '../exporter-common/base-export-service';
-import { WorksheetDataDictionary } from './worksheet-data-dictionary';
 
 /**
  * @hidden
