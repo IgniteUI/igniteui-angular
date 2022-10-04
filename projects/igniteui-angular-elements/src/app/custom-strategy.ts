@@ -38,18 +38,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._templateWrapper;
     }
 
-    public override setInputValue(property: string, value: any): void { 
-        (this as any).runInZone(() => {
-            if ((this as any).componentRef === null ||
-            !(this as any).componentRef.instance) {
-              (this as any).initialInputValues.set(property, value);
-              return;
-            } else {
-                super.setInputValue(property, value);
-            }
-        });
-    }
-
     constructor(private _componentFactory: ComponentFactory<any>, private _injector: Injector, private config: ComponentConfig[]) {
         super(_componentFactory, _injector);
     }
@@ -166,13 +154,21 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
-    public override setInputValue(property: string, value: any): void {
+   
+     
+
+    public override setInputValue(property: string, value: any): void {        
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
             // const oldValue = this.getInputValue(property);
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
+        }
+        if ((this as any).componentRef === null ||
+            !(this as any).componentRef.instance) {
+            (this as any).initialInputValues.set(property, value);
+                return;
         }
         super.setInputValue(property, value);
     }

@@ -46,6 +46,9 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             set: function(val) {
                 val[CONTEXT_PROP] = val;
                 original.set.call(this, val);
+                if (isBridged) {
+                    this._templateFunction.___onTemplateContextChanged(this._templateFunction, this.elementRef.nativeElement, val);
+                }
             },
             get: function() {
                 return original.get.call(this);
