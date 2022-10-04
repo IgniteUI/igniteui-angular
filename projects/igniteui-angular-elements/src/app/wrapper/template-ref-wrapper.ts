@@ -9,11 +9,11 @@ const CONTEXT_PROP = 'context';
 export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
     get elementRef(): ElementRef<any> {
-        return this._templateRef.elementRef;
+        return this.innerTemplateRef.elementRef;
     }
 
     /** Create a wrapper around TemplateRef with the context exposed */
-    constructor(private _templateRef: TemplateRef<C>, private _templateFunction: any) {
+    constructor(public innerTemplateRef: TemplateRef<C>, private _templateFunction: any) {
         super();
     }
 
@@ -34,14 +34,24 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             this._templateFunction.___onTemplateInit(this._templateFunction, this.elementRef.nativeElement, contentContext);
         }
 
-        let view = this._templateRef.createEmbeddedView(context, injector);
+        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
         if (isBridged) {
-            view.onDestroy(() => {
+            viewRef.onDestroy(() => {
                 this.destroyingBridgedView(contentContext);
             });
         }
 
-        return view;
+        var original = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(viewRef), 'context');
+        Object.defineProperty(viewRef, "context", {
+            set: function(val) {
+                val[CONTEXT_PROP] = val;
+                original.set.call(this, val);
+            },
+            get: function() {
+                return original.get.call(this);
+            }
+        });
+        return viewRef;
     }
 
     destroyingBridgedView(contentContext: TemplateRefWrapperContentContext) {

@@ -50,6 +50,14 @@ export class TemplateWrapperComponent {
         this.cdr.detectChanges();
         return new TemplateRefWrapper(this.templateRefs.last, templateFunc);
     }
+
+    public getTemplateFunction(templateRef: TemplateRefWrapper<any>): TemplateFunction | undefined {
+        if (!templateRef) {
+            return;
+        }
+        const index = this.templateRefs.toArray().indexOf(templateRef.innerTemplateRef);
+        return this.templateFunctions[index - 1];
+    }
 }
 
 @NgModule({

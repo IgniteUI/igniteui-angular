@@ -98,6 +98,26 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                     })
                 }
             }
+
+            // template props:
+            const templateProps = type.getProperties()
+                .filter(x => isProperty(x))
+                .filter(x => isPublic(x))
+                .filter(x => {
+                    const type = typeChecker.getTypeAtLocation(x.valueDeclaration);
+                    if(type.getFlags() & ts.TypeFlags.Object && (type as ts.ObjectType).objectFlags & ts.ObjectFlags.Reference) {
+                        const target = (type as ts.TypeReference).target;
+                        // TODO: check it's declared in @angular/core?
+                        return target.symbol.escapedName === 'TemplateRef';
+                    }
+                    return false;
+                })
+                .filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
+
+            if (templateProps.length) {
+                componentMetadata.templateProps = templateProps.map(x => x.escapedName.toString());
+            }
+
             componentList.set(type.symbol.escapedName.toString(), { type, ...componentMetadata });
         }
     }
@@ -105,13 +125,14 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
     // componentList = new Map(componentList.entries().filter(x => x));
 
     // Filter component list into the config map:
-    for (let [ name, { type, parents, contentQueries } ] of componentList) {
+    for (let [ name, { type, parents, contentQueries, templateProps } ] of componentList) {
 
         if (configComponents.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             ComponentConfigMap.set(type, {
                 contentQueries: filterRelevantQueries(contentQueries, name),
                 parents: parents.map(x => componentList.get(x).type), // these should always be empty, but just in case?
-                methods: getPublicMethods(type.getProperties())
+                methods: getPublicMethods(type.getProperties()),
+                templateProps
             });
         }
 
@@ -121,7 +142,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 contentQueries: filterRelevantQueries(contentQueries, name),
                 // filter out parents that don't lead to config components:
                 parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type),
-                methods: getPublicMethods(type.getProperties())
+                methods: getPublicMethods(type.getProperties()),
+                templateProps
             });
         }
     }
@@ -263,14 +285,16 @@ function printConfiguration() {
 
 function createMetaLiteralObject(value: [ts.InterfaceType, ComponentMetadata<ts.InterfaceType>]) {
     const [type, meta] = value;
-    return ts.factory.createObjectLiteralExpression(
-        [
-            ts.factory.createPropertyAssignment('component', ts.factory.createIdentifier(type.symbol.name)),
-            ts.factory.createPropertyAssignment('parents', ts.factory.createArrayLiteralExpression(meta.parents.map(x => ts.factory.createIdentifier(x.symbol.name)))),
-            ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => createContentQueryLiteral(x)))),
-            ts.factory.createPropertyAssignment('methods', ts.factory.createArrayLiteralExpression(meta.methods.map(x => ts.factory.createStringLiteral(x.name))))
-        ]
-    );
+    const properties = [
+        ts.factory.createPropertyAssignment('component', ts.factory.createIdentifier(type.symbol.name)),
+        ts.factory.createPropertyAssignment('parents', ts.factory.createArrayLiteralExpression(meta.parents.map(x => ts.factory.createIdentifier(x.symbol.name)))),
+        ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => createContentQueryLiteral(x)))),
+        ts.factory.createPropertyAssignment('methods', ts.factory.createArrayLiteralExpression(meta.methods.map(x => ts.factory.createStringLiteral(x.name))))
+    ];
+    if (meta.templateProps?.length) {
+        properties.push(ts.factory.createPropertyAssignment('templateProps', ts.factory.createArrayLiteralExpression(meta.templateProps.map(x => ts.factory.createStringLiteral(x)))));
+    }
+    return ts.factory.createObjectLiteralExpression(properties);
 }
 
 function createContentQueryLiteral(query: ContentQuery) {
@@ -313,7 +337,8 @@ function importContainsType(importDecl: ts.ImportDeclaration, type: ts.Type) {
 interface ComponentMetadata<ParentType = ts.InterfaceType> {
     parents: ParentType[],
     contentQueries: ContentQuery[],
-    methods: MethodInfo[]
+    methods: MethodInfo[],
+    templateProps?: string[]
 }
 
 interface ContentQuery {
@@ -337,19 +362,26 @@ function getDecoratorName(decorator: ts.Decorator): string | null {
 function getPublicMethods(symbols: ts.Symbol[]): MethodInfo[] {
     const methods = symbols
         .filter(x => isMethod(x))
-        .filter(x => isPublic(x.valueDeclaration))
-        .filter(x => !x.getJsDocTags().some(x => ['hidden', 'internal'].includes(x.name)));
+        .filter(x => isPublic(x));
     return methods.map(x => ({ name: x.name }));
 }
 
-function isPublic(node: ts.Declaration) {
-    if(!node) return false;
+function isPublic(symbol: ts.Symbol) {
+    if(!symbol || !symbol.valueDeclaration) return false;
     // TODO: Public flag only present w/ explicit keyword in code (currently enforced by lint)
     // Consider !protected & !private to be public instead as more robust?
-    return (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Public) !== ts.ModifierFlags.None;
+    if ((ts.getCombinedModifierFlags(symbol.valueDeclaration) & ts.ModifierFlags.Public) !== ts.ModifierFlags.None) {
+        return !symbol.getJsDocTags().some(x => ['hidden', 'internal'].includes(x.name));
+    }
+    return false;
 }
 
 function isMethod(symbol: ts.Symbol) {
     if(!symbol) return false;
     return (symbol.getFlags() & ts.SymbolFlags.Method) !== ts.SymbolFlags.None;
+}
+
+function isProperty(symbol: ts.Symbol) {
+    if(!symbol) return false;
+    return (symbol.getFlags() & ts.SymbolFlags.PropertyOrAccessor) !== ts.SymbolFlags.None;
 }
