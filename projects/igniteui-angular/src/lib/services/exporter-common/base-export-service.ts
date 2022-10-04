@@ -527,7 +527,7 @@ export abstract class IgxBaseExporter {
 
         switch (tagName) {
             case 'igx-pivot-grid': {
-                this.preparePivotGridData(grid/*, hasFiltering, hasSorting*/);
+                this.preparePivotGridData(grid);
                 break;
             }
             case 'igx-hierarchical-grid': {
@@ -545,7 +545,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private preparePivotGridData(grid: GridType/*, hasFiltering: boolean, hasSorting: boolean*/) {
+    private preparePivotGridData(grid: GridType) {
         for (const record of grid.filteredSortedData) {
             const recordData = Object.fromEntries(record.aggregationValues);
             record.dimensionValues.forEach((value, key) => {

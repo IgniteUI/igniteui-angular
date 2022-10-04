@@ -1561,7 +1561,8 @@ export class FileContentData {
             `count="40" uniqueCount="19"><si><t>All Cities</t></si><si><t>Ciudad de la Costa</t></si><si><t>London</t></si><si><t>New York</t></si><si><t>Plovdiv</t></si><si><t>Sofia</t></si><si><t>Yokohama</t></si><si><t>AllProducts</t></si><si><t>Bikes</t></si><si><t>Clothing</t></si><si><t>Accessories</t></si><si><t>Components</t></si><si><t>Bulgaria</t></si><si><t>US</t></si><si><t>Uruguay</t></si><si><t>UK</t></si><si><t>Japan</t></si><si><t>UnitsSold</t></si><si><t>Amount of Sale</t></si>`;
 
         this._worksheetData =
-            `<dimension ref="A1:L20"/>
+            `<sheetPr><outlinePr summaryBelow="0"/></sheetPr>
+            <dimension ref="A1:L20"/>
             <sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane xSplit="2" ySplit="0"
             topLeftCell="C1" activePane="topRight" state="frozen"/></sheetView></sheetViews>
             <sheetFormatPr defaultRowHeight="15" outlineLevelRow="1" x14ac:dyDescent="0.25"/>

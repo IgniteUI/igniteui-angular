@@ -1222,6 +1222,7 @@ describe('Excel Exporter', () => {
         it('should export pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fix.detectChanges();
+            await wait(300);
 
             grid = fix.componentInstance.pivotGrid;
 
@@ -1231,6 +1232,7 @@ describe('Excel Exporter', () => {
         it('should export hierarchical pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
+            await wait(300);
 
             grid = fix.componentInstance.pivotGrid;
 
