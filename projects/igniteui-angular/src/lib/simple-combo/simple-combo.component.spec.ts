@@ -1382,6 +1382,164 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             }));
+            it('should not select null, undefined and empty string in a template form with required', () => {
+                // array of objects
+                combo.valueKey = 'value';
+                combo.displayKey = 'field';
+                combo.groupKey = undefined;
+                combo.data = [
+                    { field: '0', value: 0 },
+                    { field: 'false', value: false },
+                    { field: '', value: '' },
+                    { field: 'null', value: null },
+                    { field: 'NaN', value: NaN },
+                    { field: 'undefined', value: undefined },
+                ];
+
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+
+                // empty string
+                combo.open();
+                fixture.detectChanges();
+                const item1 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+                item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                // null
+                combo.open();
+                fixture.detectChanges();
+                const item2 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+                item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                // undefined
+                combo.open();
+                fixture.detectChanges();
+                const item3 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[5];
+                item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                // primitive data - undefined is not displayed in the dropdown
+                combo.valueKey = undefined;
+                combo.displayKey = undefined;
+                combo.groupKey = undefined;
+                combo.data = [ 0, false, '', null, NaN, undefined];
+
+                fixture.componentInstance.form.resetForm();
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+
+                // empty string
+                combo.open();
+                fixture.detectChanges();
+                const item4 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[2];
+                item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                // null
+                combo.open();
+                fixture.detectChanges();
+                const item5 = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[3];
+                item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+            });
+            it('should not select null, undefined and empty string with "writeValue" method in a template form with required', () => {
+                // array of objects
+                combo.valueKey = 'value';
+                combo.displayKey = 'field';
+                combo.groupKey = undefined;
+                combo.data = [
+                    { field: '0', value: 0 },
+                    { field: 'false', value: false },
+                    { field: '', value: '' },
+                    { field: 'null', value: null },
+                    { field: 'NaN', value: NaN },
+                    { field: 'undefined', value: undefined },
+                ];
+
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+
+                combo.onBlur();
+                fixture.detectChanges();
+
+                combo.writeValue(null);
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                combo.writeValue('');
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                combo.writeValue(undefined);
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                // primitive data - undefined is not displayed in the dropdown
+                combo.valueKey = undefined;
+                combo.displayKey = undefined;
+                combo.groupKey = undefined;
+                combo.data = [ 0, false, '', null, NaN, undefined];
+
+                fixture.componentInstance.form.resetForm();
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+
+                combo.onBlur();
+                fixture.detectChanges();
+
+                combo.writeValue(null);
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                combo.writeValue('');
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                combo.writeValue(undefined);
+                expect(combo.value).toBe('');
+                expect(combo.selection).toEqual([]);
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+            });
         });
     });
 
