@@ -22,7 +22,7 @@ export interface MRLResizeColumnInfo {
     spanUsed: number;
 }
 
-export interface IColumnPipeArgs {
+export interface IFieldPipeArgs {
     /** The date/time components that a date column will display, using predefined options or a custom format string. */
     format?: string;
     /** A timezone offset (such as '+0430'), or a standard UTC/GMT or continental US timezone abbreviation. */
@@ -45,6 +45,10 @@ export interface IColumnPipeArgs {
 
     /** The first week day to be displayed in calendar when filtering or editing a date column */
     weekStart?: WEEKDAYS | number;
+}
+
+export interface IColumnPipeArgs extends IFieldPipeArgs {
+    
 }
 
 export interface ISortingOptions {

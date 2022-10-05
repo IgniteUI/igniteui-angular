@@ -1,0 +1,14 @@
+<div class="igx-query-builder__header">    
+    <h4 class="igx-typography__h6" style="pointer-events: none;">
+        {{ title }}
+        <ng-content></ng-content>
+    </h4>    
+    <div *ngIf="showLegend" class="igx-builder-legend" >
+        <div class="igx-builder-legend__item--and">
+            <span>{{this.resourceStrings.igx_query_builder_and_label}}</span>
+        </div>
+        <div class="igx-builder-legend__item--or">
+            <span>{{this.resourceStrings.igx_query_builder_or_label}}</span>
+        </div>
+    </div>
+</div>
