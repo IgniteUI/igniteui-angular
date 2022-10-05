@@ -412,11 +412,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            const isValid = this.ngControl?.validator
-                ? args.newSelection !== null && args.newSelection !== '' && args.newSelection !== undefined
-                : args.newSelection !== undefined;
-
-            let argsSelection = isValid
+            let argsSelection = this.isValid(args.newSelection)
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
