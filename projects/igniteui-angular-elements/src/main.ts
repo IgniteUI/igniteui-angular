@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let grid1 = document.querySelector('igc-grid#grid1') as any;
     // grid1.sortHeaderIconTemplate = (context) => html`⬇(${context.$implicit.title})`;
     grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
+    grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
     grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
     grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
         html`

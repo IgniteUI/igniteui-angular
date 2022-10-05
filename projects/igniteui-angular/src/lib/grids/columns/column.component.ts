@@ -774,7 +774,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /** @hidden */
     @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<any>;
+    public collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * Row index where the current field should end.
