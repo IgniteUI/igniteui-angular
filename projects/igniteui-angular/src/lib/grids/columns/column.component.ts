@@ -61,6 +61,11 @@ const DEFAULT_TIME_FORMAT = 'mediumTime';
 const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
+/* blazorElement */
+/* blazorAlternateName: GridColumn */
+/* contentParent: Grid */
+/* contentParent: ColumnGroup */
+/* wcElementTag: igc-column */
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)
@@ -71,8 +76,6 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  *
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, IgxRowIslandComponent, IgxColumnGroupComponent
  */
-/* blazorElement */
-/* blazorAlternateName: GridColumn */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',
@@ -1645,6 +1648,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public parent = null;
+
+    /* blazorSuppress */
     /**
      * Sets/gets the children columns.
      * ```typescript

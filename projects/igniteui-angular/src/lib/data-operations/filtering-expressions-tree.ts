@@ -67,6 +67,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public fieldName?: string;
 
+    /* alternateName: treeType */
     /**
      * Sets/gets the type of the filtering expressions tree.
      * ```typescript

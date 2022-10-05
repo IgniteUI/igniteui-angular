@@ -40,6 +40,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
+/* blazorAdditionalDependency: Column */
+/* blazorAdditionalDependency: ColumnGroup */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
