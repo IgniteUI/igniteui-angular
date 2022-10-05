@@ -176,10 +176,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = this.selection;
-        const isValid = this.ngControl?.validator
-            ? value !== null && value !== '' && value !== undefined
-            : value !== undefined;
-        this.selectionService.select_items(this.id, isValid ? [value] : [], true);
+        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
         this.filterValue = this._internalFilter = this._value?.toString();
@@ -229,6 +226,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.filterValue = this._internalFilter = this.comboInput.value;
         });
+
+        // in reactive form the control is not present initially
+        // and sets the selection to an invalid value in writeValue method
+        if (!this.isValid(this.selectedItem)) {
+            this.selectionService.clear(this.id);
+            this._value = '';
+        }
 
         super.ngAfterViewInit();
     }
@@ -475,6 +479,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (!this.collapsed) {
             this.close();
         }
+    }
+
+    private isValid(value: any): boolean {
+        return this.required
+        ? value !== null && value !== '' && value !== undefined
+        : value !== undefined;
     }
 }
 

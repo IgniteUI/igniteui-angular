@@ -1303,6 +1303,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
     }
 
+    protected get required(): boolean {
+        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
+    }
+
     public abstract get filteredData(): any[] | null;
     public abstract set filteredData(val: any[] | null);
 
