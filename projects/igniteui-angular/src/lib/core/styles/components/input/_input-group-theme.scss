@@ -396,13 +396,10 @@
 
     %form-group-display--filled {
         igx-prefix,
-        [igxPrefix] {
-            @extend %form-group-prefix--filled;
-        }
-
+        [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            @extend %form-group-suffix--filled;
+            @extend %form-group-prefix--filled;
         }
     }
 
@@ -1426,8 +1423,7 @@
         padding: 0;
     }
 
-    %form-group-prefix--filled,
-    %form-group-suffix--filled {
+    %form-group-prefix--filled {
         color: var-get($theme, 'filled-text-color');
     }
 
