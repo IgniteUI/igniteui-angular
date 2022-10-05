@@ -19,7 +19,7 @@ import {
     scaleOutCenter,
     VerticalAlignment
 } from 'igniteui-angular';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { IComboFilteringOptions } from 'projects/igniteui-angular/src/lib/combo/combo.common';
 import { take } from 'rxjs/operators';
 import { RemoteNWindService } from './remote-nwind.service';
