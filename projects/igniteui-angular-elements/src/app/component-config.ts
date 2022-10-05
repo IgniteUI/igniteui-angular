@@ -10,4 +10,5 @@ export interface ComponentConfig {
         isQueryList: boolean;
     }[];
     methods: string[];
+    templateProps?: string[];
 }

@@ -39,7 +39,7 @@
 
 
   <div>
-    <igc-grid id="grid1" moving="true" paging="true" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
         <igc-grid-toolbar>
         <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
         <igc-grid-toolbar-actions>
@@ -49,8 +49,10 @@
         </igc-grid-toolbar-actions>
         </igc-grid-toolbar>
 
+        <igc-column-group header="Test">
         <igc-column field="ProductID" header="Product ID" data-type="number"></igc-column>
         <igc-column field="ProductName" header="Product Name" sortable="true"></igc-column>
+        </igc-column-group>
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
         <igc-column field="InStock" header="In Stock" data-type="number"></igc-column>
 

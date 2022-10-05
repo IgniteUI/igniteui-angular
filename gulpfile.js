@@ -30,6 +30,14 @@ const STYLES = {
     }
 };
 
+const ELEMENTS_STYLES = {
+    SRC: './projects/igniteui-angular-elements/src/themes/**/*',
+    DIST: './dist/igniteui-angular-elements/themes',
+    CONFIG: {
+        outputStyle: 'compressed'
+    }
+};
+
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
 const TYPEDOC_THEME = {
@@ -58,6 +66,24 @@ module.exports.buildStyle = () => {
         .pipe(prefixer)
         .pipe(sourcemaps.write(STYLES.MAPS))
         .pipe(gulp.dest(STYLES.DIST))
+};
+
+module.exports.buildElementsStyles = () => {
+    const prefixer = postcss([autoprefixer({
+        cascade: false,
+        grid: true
+    })]);
+
+    const myEventEmitter = new EventEmitter();
+
+    return gulp.src(ELEMENTS_STYLES.SRC)
+        .pipe(sass.sync(ELEMENTS_STYLES.CONFIG).on('error', err => {
+            sass.logError.bind(myEventEmitter)(err);
+            myEventEmitter.emit('end');
+            process.exit(1);
+        }))
+        .pipe(prefixer)
+        .pipe(gulp.dest(ELEMENTS_STYLES.DIST))
 };
 
 module.exports.copyGitHooks = async (cb) => {

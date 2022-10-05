@@ -135,7 +135,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
         if (parentConfig && parent) {
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === this._componentFactory.componentType);
+            const componentType = this._componentFactory.componentType;
+            // TODO - look into more cases where query expects a certain base class but gets a subclass.
+            // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType.isPrototypeOf(componentType));
 
             for (const query of contentQueries) {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
@@ -150,6 +153,29 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 parentRef.changeDetectorRef.detectChanges();
             }
         }
+    }
+
+    public override setInputValue(property: string, value: any): void {
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+            // const oldValue = this.getInputValue(property);
+            value = this.templateWrapper.addTemplate(value);
+            // TODO: discard oldValue
+        }
+        super.setInputValue(property, value);
+    }
+
+    public override getInputValue(property: string): any {
+        let returnValue = super.getInputValue(property);
+
+        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        if (componentRef && componentConfig?.templateProps?.includes(property)) {
+            returnValue = this.templateWrapper.getTemplateFunction(returnValue) || returnValue;
+        }
+
+        return returnValue;
     }
 
     /**

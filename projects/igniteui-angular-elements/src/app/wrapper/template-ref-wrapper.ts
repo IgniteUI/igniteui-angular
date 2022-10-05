@@ -9,16 +9,27 @@ const CONTEXT_PROP = 'context';
 export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
     get elementRef(): ElementRef<any> {
-        return this._templateRef.elementRef;
+        return this.innerTemplateRef.elementRef;
     }
 
     /** Create a wrapper around TemplateRef with the context exposed */
-    constructor(private _templateRef: TemplateRef<C>) {
+    constructor(public innerTemplateRef: TemplateRef<C>) {
         super();
     }
     createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
         context[CONTEXT_PROP] = context;
-        return this._templateRef.createEmbeddedView(context, injector);
+        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
+        var original = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(viewRef), 'context');
+        Object.defineProperty(viewRef, "context", {
+            set: function(val) {
+                val[CONTEXT_PROP] = val;
+                original.set.call(this, val);
+            },
+            get: function() {
+                return original.get.call(this);
+            }
+        });
+        return viewRef;
     }
 
 }

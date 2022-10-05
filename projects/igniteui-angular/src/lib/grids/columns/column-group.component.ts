@@ -15,12 +15,18 @@ import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
 import { CellType } from '../common/grid.interface';
 
-
+/**
+ * **Ignite UI for Angular Column Group**
+ *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: ``
+    template: `<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
+</div>`
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
