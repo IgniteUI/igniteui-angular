@@ -228,7 +228,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<any>;
+    public emptyGridTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -239,7 +239,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public addRowEmptyTemplate: TemplateRef<any>;
+    public addRowEmptyTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template when loading.
@@ -250,7 +250,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<any>;
+    public loadingGridTemplate: TemplateRef<void>;
 
     /**
      * Get/Set IgxSummaryRow height

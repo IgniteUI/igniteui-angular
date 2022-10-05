@@ -372,7 +372,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @interal
      */
     @Input()
-    public addRowEmptyTemplate: TemplateRef<any>;
+    public addRowEmptyTemplate: TemplateRef<void>;
 
     /**
      * @hidden @internal
@@ -2170,7 +2170,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * ```
      */
     @Input()
-    public emptyPivotGridTemplate: TemplateRef<any>;
+    public emptyPivotGridTemplate: TemplateRef<void>;
 
     /**
     * @hidden @internal
