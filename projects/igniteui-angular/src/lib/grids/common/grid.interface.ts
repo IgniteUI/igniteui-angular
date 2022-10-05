@@ -716,3 +716,12 @@ export interface ISizeInfo {
     width: number,
     padding: number
 }
+
+export interface IgxGridMasterDetailContext {
+    $implicit: any;
+    index: number;
+}
+
+export interface IgxGroupByRowTemplateContext {
+    $implicit: IGroupByRecord;
+}
