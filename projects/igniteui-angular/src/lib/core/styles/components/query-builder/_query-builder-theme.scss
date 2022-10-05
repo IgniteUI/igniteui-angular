@@ -186,6 +186,10 @@
         + %filter-tree__expression-item {
             margin-top: $vertical-space-comfortable;
         }
+
+        > igx-chip igx-prefix {
+            display: flex;
+        }
     }
 
     %filter-tree__expression-column {
@@ -232,6 +236,7 @@
     %filter-tree__inputs {
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         igx-select + igx-select,
         igx-select + igx-input-group,
