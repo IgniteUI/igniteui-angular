@@ -13,7 +13,7 @@ import {
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType } from '../common/grid.interface';
+import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 /**
  * **Ignite UI for Angular Column Group**
@@ -177,7 +177,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<any>;
+    public collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * Returns a reference to the inline editor template.
