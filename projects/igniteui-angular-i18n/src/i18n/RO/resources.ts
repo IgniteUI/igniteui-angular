@@ -10,6 +10,7 @@ import { TreeResourceStringsRO } from './tree-resources';
 import { InputResourceStringsRO } from './input-resources';
 import { ChipResourceStringsRO } from './chip-resources';
 import { ComboResourceStringsRO } from './combo-resources';
+import { QueryBuilderResourceStringsRO } from './query-builder-resources';
 
 /**
  * Romanian resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsRO = {
     ...TreeResourceStringsRO,
     ...InputResourceStringsRO,
     ...ChipResourceStringsRO,
-    ...ComboResourceStringsRO
+    ...ComboResourceStringsRO,
+    ...QueryBuilderResourceStringsRO
 };

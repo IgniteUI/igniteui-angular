@@ -25,6 +25,13 @@ const queue = {};
 let counter = 0;
 let eventListenerAdded = false;
 
+declare global {
+    interface Window {
+        setImmediate: any;
+        clearImmediate: any;
+    }
+}
+
 const run = (id) => {
     if (queue.hasOwnProperty(id)) {
         const fn = queue[id];
