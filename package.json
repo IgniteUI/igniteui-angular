@@ -48,8 +48,8 @@
     "lint:i18n": "eslint projects/igniteui-angular-i18n/src/**/*.ts",
     "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
     "postinstall": "gulp copyGitHooks",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:open": "cypress open --config-file=cypress.config.ts",
+    "cypress:run": "cypress run --config-file=cypress.config.ts"
   },
   "private": true,
   "dependencies": {
