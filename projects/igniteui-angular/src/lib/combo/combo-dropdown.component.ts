@@ -113,7 +113,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigateFirst() {
-        this.navigateItem(this.virtDir.igxForOf.findIndex(e => !e.isHeader));
+        this.navigateItem(this.virtDir.igxForOf.findIndex(e => !e?.isHeader));
         this.combo.setActiveDescendant();
     }
 
