@@ -279,7 +279,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         return this._data;
     }
     public set data(val: any[] | null) {
-        this._data = (val) ? val : [];
+        // igxFor directive ignores undefined values
+        // if the combo uses simple data and filtering is applied
+        // an error will occur due to the mismatch of the length of the data
+        // this can occur during filtering for the igx-combo and
+        // during filtering & selection for the igx-simple-combo
+        // since the simple combo's input is both a container for the selection and a filter
+        this._data = (val) ? val.filter(x => x !== undefined) : [];
     }
 
     /**
@@ -1236,6 +1242,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.registerRemoteEntries(addedItems);
         this.registerRemoteEntries(removedItems, false);
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+    }
+
+    protected get required(): boolean {
+        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
     }
 
     public abstract get filteredData(): any[] | null;

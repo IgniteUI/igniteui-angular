@@ -155,7 +155,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public select(item: any): void {
-        if (item !== null && item !== undefined) {
+        if (item !== undefined) {
             const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
             this.setSelection(newSelection);
         }
@@ -176,9 +176,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, value ? [value] : [], true);
+        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
+        this.filterValue = this._internalFilter = this._value?.toString();
     }
 
     /** @hidden @internal */
@@ -186,7 +187,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
-                    let current = e[this.valueKey];
+                    let current = e? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
@@ -225,6 +226,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.filterValue = this._internalFilter = this.comboInput.value;
         });
+
+        // in reactive form the control is not present initially
+        // and sets the selection to an invalid value in writeValue method
+        if (!this.isValid(this.selectedItem)) {
+            this.selectionService.clear(this.id);
+            this._value = '';
+        }
 
         super.ngAfterViewInit();
     }
@@ -399,17 +407,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        // additional checks when selecting and clearing an item with valueKey=undefined
-        // as the event should emit when args.newSelection differs from args.oldSelection
-        // however in this case both args.newSelection and args.oldSelection are 'undefined'
-        if (args.newSelection !== args.oldSelection
-            || args.newSelection === undefined && newSelection?.size > 0
-            || args.oldSelection === undefined && oldSelectionAsArray.length > 0) {
+        if (args.newSelection !== args.oldSelection) {
             this.selectionChanging.emit(args);
         }
         // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = newSelection?.size > 0
+            let argsSelection = this.isValid(args.newSelection)
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
@@ -472,6 +475,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (!this.collapsed) {
             this.close();
         }
+    }
+
+    private isValid(value: any): boolean {
+        return this.required
+        ? value !== null && value !== '' && value !== undefined
+        : value !== undefined;
     }
 }
 
