@@ -525,7 +525,7 @@ export class WorksheetFile implements IExcelFile {
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
                     ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
-                    : ExcelStrings.getExcelColumn(column)) + this.rowIndex;
+                    : ExcelStrings.getExcelColumn(column)) + rowCoordinate;
 
                 rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
                 str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
