@@ -13,7 +13,9 @@ import {
     IgxStringFilteringOperand,
     PivotDimensionType,
     IPivotGridRecord,
-    IPivotGridColumn
+    IPivotGridColumn,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -55,7 +57,7 @@ export class PivotGridSampleComponent {
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
-    constructor() {
+    constructor(private excelExportService: IgxExcelExporterService) {
         this.filterExpTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('equals'),
@@ -378,5 +380,9 @@ export class PivotGridSampleComponent {
                 }
             ]
         };
+    }
+
+    public exportButtonHandler() {
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
     }
 }

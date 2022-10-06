@@ -2,7 +2,7 @@ import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/cor
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
-import { RowType } from './common/grid.interface';
+import { IgxGridEmptyTemplateContext, IgxGridRowDragGhostContext, RowType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -172,6 +172,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 })
 
 export class IgxDragIndicatorIconDirective {
+    public static ngTemplateContextGuard(_directive: IgxDragIndicatorIconDirective,
+        context: unknown): context is IgxGridEmptyTemplateContext {
+        return true;
+    };
 }
 
 /**
@@ -182,7 +186,11 @@ export class IgxDragIndicatorIconDirective {
 })
 
 export class IgxRowDragGhostDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
+    constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
+    public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
+        context: unknown): context is IgxGridRowDragGhostContext { 
+        return true;
+    };
 }
 
 @NgModule({

@@ -279,7 +279,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected _filterStrategy = new TreeGridFilteringStrategy();
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     private _data;
-    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
     private _filteredData = null;
 
@@ -379,11 +379,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get rowLoadingIndicatorTemplate(): TemplateRef<any> {
+    public get rowLoadingIndicatorTemplate(): TemplateRef<void> {
         return this._rowLoadingIndicatorTemplate;
     }
 
-    public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
+    public set rowLoadingIndicatorTemplate(value: TemplateRef<void>) {
         this._rowLoadingIndicatorTemplate = value;
         this.notifyChanges();
     }
