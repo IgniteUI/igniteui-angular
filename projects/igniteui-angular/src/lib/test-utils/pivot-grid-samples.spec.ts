@@ -131,6 +131,8 @@ export class IgxPivotGridTestBaseComponent {
     </igx-pivot-grid>`
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
+
     public defaultExpand = true;
     constructor() {
         super();
@@ -291,7 +293,7 @@ export class IgxPivotGridPersistanceComponent {
     </igx-pivot-grid>`
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
-
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
 
     constructor() {
         super();

@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, formatCurrency, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { DatePipe } from '@angular/common';
+import { DatePipe, getLocaleCurrencyCode } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
@@ -23,11 +23,14 @@ export enum ExportRecordType {
     HierarchicalGridRecord = 'HierarchicalGridRecord',
     HeaderRecord = 'HeaderRecord',
     SummaryRecord = 'SummaryRecord',
+    PivotGridRecord = 'PivotGridRecord'
 }
 
 export enum HeaderType {
+    RowHeader = 'RowHeader',
     ColumnHeader = 'ColumnHeader',
-    MultiColumnHeader = 'MultiColumnHeader'
+    MultiRowHeader = 'MultiRowHeader',
+    MultiColumnHeader = 'MultiColumnHeader',
 }
 
 export interface IExportRecord {
@@ -45,6 +48,7 @@ export interface IColumnList {
     columnWidths: number[];
     indexOfLastPinnedColumn: number;
     maxLevel?: number;
+    maxRowLevel?: number;
 }
 
 export interface IColumnInfo {
@@ -57,11 +61,15 @@ export interface IColumnInfo {
     headerType?: HeaderType;
     startIndex?: number;
     columnSpan?: number;
+    rowSpan?: number;
     level?: number;
     exportIndex?: number;
     pinnedIndex?: number;
-    columnGroupParent?: ColumnType;
-    columnGroup?: ColumnType;
+    columnGroupParent?: ColumnType | string;
+    columnGroup?: ColumnType | string;
+    currencyCode?: string;
+    displayFormat?: string;
+    digitsInfo?: string;
 }
 /**
  * rowExporting event arguments
@@ -197,13 +205,19 @@ export abstract class IgxBaseExporter {
     public columnExporting = new EventEmitter<IColumnExportingEventArgs>();
 
     protected _sort = null;
+    protected pivotGridFilterFieldsCount: number;
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
+    private locale: string
     private _setChildSummaries: boolean = false
-    private flatRecords: IExportRecord[] = [];
+    private isPivotGridExport: boolean;
     private options: IgxExporterOptionsBase;
     private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
     private rowIslandCounter = 0;
+    private flatRecords: IExportRecord[] = [];
+    private pivotGridColumns: IColumnInfo[] = []
+    private pivotGridRowDimensionsMap: Map<string, string>;
+    private pivotGridKeyValueMap = new Map<string, string>();
 
     /**
      * Method for exporting IgxGrid component's data.
@@ -219,6 +233,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
+        this.locale = grid.locale;
         let columns = grid.columns;
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -226,7 +241,6 @@ export abstract class IgxBaseExporter {
         }
 
         const columnList = this.getColumns(columns);
-
         const tagName = grid.nativeElement.tagName.toLowerCase();
 
         if (tagName === 'igx-hierarchical-grid') {
@@ -237,6 +251,17 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
             }
+        } else if (tagName === 'igx-pivot-grid') {
+            this.pivotGridColumns = [];
+            this.isPivotGridExport = true;
+            this.pivotGridKeyValueMap = new Map<string, string>();
+            this.pivotGridRowDimensionsMap = new Map<string, string>();
+
+            grid.pivotConfiguration.rows.filter(r => r.enabled).forEach(rowDimension => {
+                this.addToRowDimensionsMap(rowDimension, rowDimension.memberName);
+            });
+
+            this._ownersMap.set(DEFAULT_OWNER, columnList);
         } else {
             this._ownersMap.set(DEFAULT_OWNER, columnList);
         }
@@ -248,6 +273,7 @@ export abstract class IgxBaseExporter {
         this.addLevelColumns();
         this.prepareData(grid);
         this.addLevelData();
+        this.addPivotGridColumns(grid);
         this.exportGridRecordsData(this.flatRecords, grid);
     }
 
@@ -277,6 +303,13 @@ export abstract class IgxBaseExporter {
         });
 
         this.exportGridRecordsData(records);
+    }
+
+    private addToRowDimensionsMap(rowDimension: any, rootParentName: string) {
+        this.pivotGridRowDimensionsMap[rowDimension.memberName] = rootParentName;
+        if (rowDimension.childLevel) {
+            this.addToRowDimensionsMap(rowDimension.childLevel, rootParentName)
+        }
     }
 
     private exportGridRecordsData(records: IExportRecord[], grid?: GridType) {
@@ -412,7 +445,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -432,9 +465,17 @@ export abstract class IgxBaseExporter {
                             rawValue = new Date(rawValue);
                         } else if (e.dataType === 'string' && rawValue instanceof Date) {
                             rawValue = rawValue.toString();
+                        } else if (e.dataType === 'currency') {
+                            rawValue = formatCurrency(rawValue, e.currencyCode, e.displayFormat, e.digitsInfo, this.locale);
                         }
 
-                        a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                        let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+
+                        if (this.isPivotGridExport && !isNaN(parseFloat(formattedValue))) {
+                            formattedValue = parseFloat(formattedValue);
+                        }
+
+                        a[e.field] = formattedValue;
                     }
                     return a;
                 }, {});
@@ -505,6 +546,10 @@ export abstract class IgxBaseExporter {
         let setSummaryOwner = false;
 
         switch (tagName) {
+            case 'igx-pivot-grid': {
+                this.preparePivotGridData(grid);
+                break;
+            }
             case 'igx-hierarchical-grid': {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 setSummaryOwner = true;
@@ -524,6 +569,24 @@ export abstract class IgxBaseExporter {
             setSummaryOwner ?
                 this.setSummaries(GRID_ROOT_SUMMARY, 0, false, grid) :
                 this.setSummaries(GRID_ROOT_SUMMARY);
+        }
+    }
+
+    private preparePivotGridData(grid: GridType) {
+        for (const record of grid.filteredSortedData) {
+            const recordData = Object.fromEntries(record.aggregationValues);
+            record.dimensionValues.forEach((value, key) => {
+                const actualKey = this.pivotGridRowDimensionsMap[key];
+                recordData[actualKey] = value;
+            });
+
+            const pivotGridRecord: IExportRecord = {
+                data: recordData,
+                level: record.level,
+                type: ExportRecordType.PivotGridRecord
+            };
+
+            this.flatRecords.push(pivotGridRecord);
         }
     }
 
@@ -1071,6 +1134,20 @@ export abstract class IgxBaseExporter {
                 columnGroup: isMultiColHeader ? column : null
             };
 
+            if (column.dataType === 'currency') {
+                columnInfo.currencyCode = column.pipeArgs.currencyCode
+                    ? column.pipeArgs.currencyCode
+                    : getLocaleCurrencyCode(this.locale);
+
+                columnInfo.displayFormat = column.pipeArgs.display
+                    ? column.pipeArgs.display
+                    : 'symbol';
+
+                columnInfo.digitsInfo = column.pipeArgs.digitsInfo
+                    ? column.pipeArgs.digitsInfo
+                    : '1.0-2';
+            }
+
             if (this.options.ignoreColumnsOrder) {
                 if (columnInfo.startIndex !== columnInfo.pinnedIndex) {
                     columnInfo.pinnedIndex = Number.MAX_VALUE;
@@ -1176,6 +1253,82 @@ export abstract class IgxBaseExporter {
         };
 
         return result;
+    }
+
+    public addPivotGridColumns(grid: any) {
+        if (grid.nativeElement.tagName.toLowerCase() !== 'igx-pivot-grid') {
+            return;
+        }
+
+        const enabledRows = grid.pivotConfiguration.rows.filter(r => r.enabled).map((r, i) => ({ name: r.memberName, level: i }));
+
+        this.preparePivotGridColumns(enabledRows);
+        this.pivotGridFilterFieldsCount = enabledRows.length;
+
+        const columnList = this._ownersMap.get(DEFAULT_OWNER);
+        columnList.columns.unshift(...this.pivotGridColumns);
+        columnList.columnWidths.unshift(...Array(this.pivotGridColumns.length).fill(200));
+        columnList.indexOfLastPinnedColumn = enabledRows.length - 1;
+        columnList.maxRowLevel = enabledRows.length;
+        this._ownersMap.set(DEFAULT_OWNER, columnList);
+    }
+
+    private preparePivotGridColumns(keys: any, columnGroupParent?: string): any {
+        if (keys.length === 0) {
+            return;
+        }
+
+        let startIndex = 0;
+        const key = keys[0];
+        const records = this.flatRecords.map(r => r.data);
+        const groupedRecords = records.reduce((hash, obj) => ({...hash, [obj[key.name]]:( hash[obj[key.name]] || []).concat(obj)}), {})
+
+        if (columnGroupParent) {
+            const mapKeys = [...this.pivotGridKeyValueMap.keys()];
+            const mapValues = [...this.pivotGridKeyValueMap.values()];
+
+            for (const k of Object.keys(groupedRecords)) {
+                groupedRecords[k] = groupedRecords[k].filter(row => mapKeys.every(mk => Object.keys(row).includes(mk))
+                    && mapValues.every(mv => Object.values(row).includes(mv)));
+
+                if (groupedRecords[k].length === 0) {
+                    delete groupedRecords[k];
+                }
+            }
+        }
+
+        for (const k of Object.keys(groupedRecords)) {
+            const rowSpan = groupedRecords[k].length;
+
+            const rowDimensionColumn: IColumnInfo = {
+                rowSpan,
+                field: k,
+                header: k,
+                startIndex,
+                skip: false,
+                pinnedIndex: 0,
+                level: key.level,
+                dataType: 'string',
+                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiRowHeader : HeaderType.RowHeader,
+            };
+
+            if (columnGroupParent) {
+                rowDimensionColumn.columnGroupParent = columnGroupParent;
+            } else {
+                rowDimensionColumn.columnGroup = k;
+            }
+
+            this.pivotGridColumns.push(rowDimensionColumn);
+
+            if (keys.length > 1) {
+                this.pivotGridKeyValueMap.set(key.name, k);
+                const newKeys = keys.filter(kdd => kdd !== key);
+                this.preparePivotGridColumns(newKeys, k)
+                this.pivotGridKeyValueMap.delete(key.name);
+            }
+
+            startIndex += rowSpan;
+        }
     }
 
     private addLevelColumns() {

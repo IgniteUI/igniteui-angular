@@ -2,16 +2,16 @@ import { IExcelFile } from './excel-interfaces';
 import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
-import * as JSZip from 'jszip';
+import { strToU8 } from 'fflate';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
  */
 export class RootRelsFile implements IExcelFile {
-    public writeElement(folder: JSZip) {
-        folder.file('.rels', ExcelStrings.getRels());
+    public writeElement(folder: Object) {
+        folder['.rels'] = strToU8(ExcelStrings.getRels());
     }
 }
 
@@ -19,8 +19,8 @@ export class RootRelsFile implements IExcelFile {
  * @hidden
  */
 export class AppFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('app.xml', ExcelStrings.getApp(worksheetData.options.worksheetName));
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
+        folder['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName));
     }
 }
 
@@ -28,8 +28,8 @@ export class AppFile implements IExcelFile {
  * @hidden
  */
 export class CoreFile implements IExcelFile {
-    public writeElement(folder: JSZip) {
-        folder.file('core.xml', ExcelStrings.getCore());
+    public writeElement(folder: Object) {
+        folder['core.xml'] = strToU8(ExcelStrings.getCore());
     }
 }
 
@@ -37,9 +37,9 @@ export class CoreFile implements IExcelFile {
  * @hidden
  */
 export class WorkbookRelsFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings));
+        folder['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
 
@@ -47,8 +47,8 @@ export class WorkbookRelsFile implements IExcelFile {
  * @hidden
  */
 export class ThemeFile implements IExcelFile {
-    public writeElement(folder: JSZip) {
-        folder.file('theme1.xml', ExcelStrings.getTheme());
+    public writeElement(folder: Object) {
+        folder['theme1.xml'] = strToU8(ExcelStrings.getTheme());
     }
 }
 
@@ -63,6 +63,7 @@ interface Dimensions {
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.43;
     private maxOutlineLevel = 0;
+    private sheetData = '';
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
@@ -70,6 +71,7 @@ export class WorksheetFile implements IExcelFile {
     private mergeCellStr = '';
     private mergeCellsCounter = 0;
     private rowIndex = 0;
+    private pivotGridRowHeadersMap = new Map<number, string>();
 
     private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
     private hierarchicalDimensionMap: Map<any,  Map<string, Dimensions>> = new Map<any,  Map<string, Dimensions>>();
@@ -79,13 +81,13 @@ export class WorksheetFile implements IExcelFile {
 
     public writeElement() {}
 
-    public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
+    public async writeElementAsync(folder: Object, worksheetData: WorksheetData) {
         return new Promise<void>(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
                     && worksheetData.options.exportAsTable;
 
-                folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(
                     this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
                 resolve();
             });
@@ -93,76 +95,61 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
-        let sheetData = '';
+        this.sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
         this.rowIndex = 0;
 
         if (worksheetData.isEmpty && (!worksheetData.options.alwaysExportHeaders || worksheetData.owner.columns.length === 0)) {
-            sheetData += '<sheetData/>';
+            this.sheetData += '<sheetData/>';
             this.dimension = 'A1';
-            done('', sheetData);
+            done('', this.sheetData);
         } else {
             const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.isHierarchical;
             const hasMultiColumnHeader = worksheetData.hasMultiColumnHeader;
+            const hasMultiRowHeader = worksheetData.hasMultiRowHeader;
 
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
-            const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
+            this.sheetData += `<sheetData>`;
 
-            sheetData += `<sheetData>`;
+            let headersForLevel: IColumnInfo[] = [];
+
+            for(let i = 0; i <= owner.maxRowLevel; i++) {
+                headersForLevel =  owner.columns.filter(c => c.level === i && c.rowSpan > 0 && !c.skip)
+
+                this.printHeaders(worksheetData, headersForLevel, i, true);
+
+                this.rowIndex++;
+            }
+
+            this.rowIndex = 0;
 
             for (let i = 0; i <= owner.maxLevel; i++) {
                 this.rowIndex++;
-                sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>`;
+                const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
+                this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
 
-                const headersForLevel = hasMultiColumnHeader ?
-                    owner.columns
+                const allowedColumns = owner.columns.filter(c => c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader);
+
+                headersForLevel = hasMultiColumnHeader ?
+                    allowedColumns
                         .filter(c => (c.level < i &&
                             c.headerType !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
                     hasUserSetIndex ?
-                        owner.columns.filter(c => !c.skip) :
-                        owner.columns.filter(c => !c.skip)
+                        allowedColumns.filter(c => !c.skip) :
+                        allowedColumns.filter(c => !c.skip)
                             .sort((a, b) => a.startIndex - b.startIndex)
                             .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
-                let startValue = 0;
+                this.printHeaders(worksheetData, headersForLevel, i, false);
 
-                for (const currentCol of headersForLevel) {
-                    if (currentCol.level === i) {
-                        let columnCoordinate;
-                        columnCoordinate = (currentCol.field === GRID_LEVEL_COL
-                            ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
-                            : ExcelStrings.getExcelColumn(startValue)) + this.rowIndex;
-                        const columnValue = dictionary.saveValue(currentCol.header, true);
-                        sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
-
-                        if (i !== owner.maxLevel) {
-                            this.mergeCellsCounter++;
-                            this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
-
-                            if (currentCol.headerType === HeaderType.ColumnHeader) {
-                                columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (owner.maxLevel + 1);
-                            } else {
-                                for (let k = 1; k < currentCol.columnSpan; k++) {
-                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + this.rowIndex;
-                                    sheetData += `<c r="${columnCoordinate}"${rowStyle} />`;
-                                }
-                            }
-
-                            this.mergeCellStr += `${columnCoordinate}" />`;
-                        }
-                    }
-
-                    startValue += currentCol.columnSpan;
-                }
-
-                sheetData += `</row>`;
+                this.sheetData += `</row>`;
             }
 
             const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
@@ -225,14 +212,14 @@ export class WorksheetFile implements IExcelFile {
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
-                sheetData += rows;
-                sheetData += '</sheetData>';
+                this.sheetData += rows;
+                this.sheetData += '</sheetData>';
 
-                if (hasMultiColumnHeader && this.mergeCellsCounter > 0) {
-                    sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
+                if ((hasMultiColumnHeader || hasMultiRowHeader) && this.mergeCellsCounter > 0) {
+                    this.sheetData += `<mergeCells count="${this.mergeCellsCounter}">${this.mergeCellStr}</mergeCells>`;
                 }
 
-                done(cols, sheetData);
+                done(cols, this.sheetData);
             });
         }
     }
@@ -255,7 +242,7 @@ export class WorksheetFile implements IExcelFile {
                             recordHeaders = worksheetData.rootKeys;
                         } else {
                             recordHeaders = worksheetData.owner.columns
-                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.MultiRowHeader && c.headerType !== HeaderType.RowHeader && !c.skip)
                                 .sort((a, b) => a.startIndex-b.startIndex)
                                 .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
                                 .map(c => c.field);
@@ -348,7 +335,9 @@ export class WorksheetFile implements IExcelFile {
         const sHidden = record.hidden ? ` hidden="1"` : '';
 
         this.rowIndex++;
-        rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
+        const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
+
+        rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>${pivotGridColumns}`;
 
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
         const isDataOrHierarchicalRecord = record.type === ExportRecordType.DataRecord || record.type === ExportRecordType.HierarchicalGridRecord || record.type === ExportRecordType.TreeGridRecord;
@@ -359,7 +348,7 @@ export class WorksheetFile implements IExcelFile {
         }
 
         for (let j = 0; j < keys.length; j++) {
-            const col = j + (isHierarchicalGrid ? rowLevel : 0);
+            const col = j + (isHierarchicalGrid ? rowLevel : worksheetData.isPivotGrid ? worksheetData.owner.maxRowLevel : 0);
 
             const cellData = this.getCellData(worksheetData, i, col, keys[j]);
 
@@ -506,14 +495,99 @@ export class WorksheetFile implements IExcelFile {
             this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
         }
     }
+
+    private printHeaders(worksheetData: WorksheetData, headersForLevel: IColumnInfo[], i: number, isVertical: boolean) {
+        let startValue = 0;
+        let str = '';
+
+        const isHierarchicalGrid = worksheetData.isHierarchical;
+        let rowStyle = isHierarchicalGrid ? ' s="3"' : '';
+        const dictionary = worksheetData.dataDictionary;
+        const owner = worksheetData.owner;
+        const maxLevel = isVertical
+            ? owner.maxRowLevel
+            : owner.maxLevel;
+
+        for (const currentCol of headersForLevel) {
+            const spanLength = isVertical ? currentCol.rowSpan : currentCol.columnSpan;
+
+            if (currentCol.level === i) {
+                let columnCoordinate;
+                const column = isVertical
+                    ? this.rowIndex
+                    : startValue + (owner.maxRowLevel ?? 0)
+
+                const rowCoordinate = isVertical
+                    ? startValue + owner.maxLevel + 2
+                    : this.rowIndex
+
+                const columnValue = dictionary.saveValue(currentCol.header, true);
+
+                columnCoordinate = (currentCol.field === GRID_LEVEL_COL
+                    ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
+                    : ExcelStrings.getExcelColumn(column)) + this.rowIndex;
+
+                rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
+                str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
+
+                if (isVertical) {
+                    if (this.pivotGridRowHeadersMap.has(rowCoordinate)) {
+                        this.pivotGridRowHeadersMap.set(rowCoordinate, this.pivotGridRowHeadersMap.get(rowCoordinate) + str)
+                    } else {
+                        this.pivotGridRowHeadersMap.set(rowCoordinate, str)
+                    }
+                } else {
+                    this.sheetData += str;
+                }
+
+                if (i !== maxLevel) {
+                    this.mergeCellsCounter++;
+                    this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
+
+                    if (currentCol.headerType === HeaderType.ColumnHeader) {
+                        const col = isVertical
+                            ? maxLevel
+                            : startValue + (owner.maxRowLevel ?? 0);
+
+                        const row = isVertical
+                            ? rowCoordinate
+                            : owner.maxLevel + 1;
+
+                        columnCoordinate = ExcelStrings.getExcelColumn(col) + row;
+                    } else {
+                        for (let k = 1; k < spanLength; k++) {
+                            const col = isVertical
+                                ? column
+                                : column + k;
+
+                            const row = isVertical
+                                ? rowCoordinate + k
+                                : this.rowIndex;
+
+                            columnCoordinate = ExcelStrings.getExcelColumn(col) + row;
+                            str = `<c r="${columnCoordinate}"${rowStyle} />`;
+
+                            isVertical
+                                ? this.pivotGridRowHeadersMap.set(row, str)
+                                : this.sheetData += str
+                        }
+                    }
+
+                    this.mergeCellStr += `${columnCoordinate}" />`;
+                }
+            }
+
+            startValue += spanLength;
+        }
+    }
 }
 
 /**
  * @hidden
  */
 export class StyleFile implements IExcelFile {
-    public writeElement(folder: JSZip) {
-        folder.file('styles.xml', ExcelStrings.getStyles());
+    public writeElement(folder: Object) {
+        folder['styles.xml'] = strToU8(ExcelStrings.getStyles());
     }
 }
 
@@ -521,8 +595,8 @@ export class StyleFile implements IExcelFile {
  * @hidden
  */
 export class WorkbookFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('workbook.xml', ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
+        folder['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }
 
@@ -530,9 +604,9 @@ export class WorkbookFile implements IExcelFile {
  * @hidden
  */
 export class ContentTypesFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
+        folder['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
 
@@ -540,7 +614,7 @@ export class ContentTypesFile implements IExcelFile {
  * @hidden
  */
 export class SharedStringsFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
         const dict = worksheetData.dataDictionary;
         const sortedValues = dict.getKeys();
         const sharedStrings = new Array<string>(sortedValues.length);
@@ -549,7 +623,7 @@ export class SharedStringsFile implements IExcelFile {
             sharedStrings[dict.getSanitizedValue(value)] = '<si><t>' + value + '</t></si>';
         }
 
-        folder.file('sharedStrings.xml', ExcelStrings.getSharedStringXML(
+        folder['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
                         dict.stringsCount,
                         sortedValues.length,
                         sharedStrings.join(''))
@@ -561,7 +635,7 @@ export class SharedStringsFile implements IExcelFile {
  * @hidden
  */
 export class TablesFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: Object, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const autoFilterDimension = 'A1:' + lastColumn;
@@ -594,7 +668,7 @@ export class TablesFile implements IExcelFile {
             sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
         }
 
-        folder.file('table1.xml', ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
+        folder['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
     }
 }
 
@@ -602,7 +676,7 @@ export class TablesFile implements IExcelFile {
  * @hidden
  */
 export class WorksheetRelsFile implements IExcelFile {
-    public writeElement(folder: JSZip) {
-        folder.file('sheet1.xml.rels', ExcelStrings.getWorksheetRels());
+    public writeElement(folder: Object) {
+        folder['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels());
     }
 }
