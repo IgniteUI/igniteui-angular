@@ -21,8 +21,8 @@ export class IgxComboFilteringPipe implements PipeTransform {
                 return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
                     e[displayKey]?.toString().toLowerCase().includes(searchTerm));
             } else {
-                return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                    e.toString().toLowerCase().includes(searchTerm));
+                return collection.filter(e => filteringOptions.caseSensitive ? e?.includes(searchTerm) :
+                    e?.toString().toLowerCase().includes(searchTerm));
             }
         }
     }
@@ -35,6 +35,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection) {
+        // TODO: should filteredData be changed here?
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
