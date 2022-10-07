@@ -153,6 +153,7 @@ export interface FieldType {
     label?: string;
     field: string;
     header?: string;
+    /* alternateType: GridColumnDataType */
     dataType: DataType;
     filters: IgxFilteringOperand;
     pipeArgs: IFieldPipeArgs;
@@ -823,6 +824,7 @@ export interface IgxColumnTemplateContext {
 export interface IgxCellTemplateContext {
     $implicit: any,
     additionalTemplateContext: any,
+    /* blazorSuppress */
     formControl?: FormControl<any>,
     defaultErrorTemplate?: TemplateRef<any>,
     cell?: CellType

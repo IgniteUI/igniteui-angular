@@ -160,7 +160,7 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    */
   setInputValue(property: string, value: any): void {
     this.runInZone(() => {
-      if (this.componentRef === null) {
+      if (this.componentRef === null || !this.componentRef.instance) {
         this.initialInputValues.set(property, value);
         return;
       }

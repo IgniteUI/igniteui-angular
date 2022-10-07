@@ -24,17 +24,29 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
         let isBridged = !!this._templateFunction.___isBridged;
 
+        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
+        
         let contentContext: TemplateRefWrapperContentContext;
         if (isBridged) {
+            let root = viewRef.rootNodes[0];
+            
+
             contentContext = new TemplateRefWrapperContentContext();
             let contentId = uuidv4() as string;
             (context as any).___contentId = contentId;
             contentContext._id = contentId;
+            root._id = contentId;
+            contentContext.root = root;
+            contentContext.templateFunction = this._templateFunction;
+
             this._contentContext.set(contentId, contentContext);
-            this._templateFunction.___onTemplateInit(this._templateFunction, this.elementRef.nativeElement, contentContext);
+            this._templateFunction.___onTemplateInit(this._templateFunction, root, contentContext);
+            contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, context);
         }
 
-        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
+        
+        
+
         if (isBridged) {
             viewRef.onDestroy(() => {
                 this.destroyingBridgedView(contentContext);
@@ -47,7 +59,7 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
                 val[CONTEXT_PROP] = val;
                 original.set.call(this, val);
                 if (isBridged) {
-                    this._templateFunction.___onTemplateContextChanged(this._templateFunction, this.elementRef.nativeElement, val);
+                    contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, val);
                 }
             },
             get: function() {
@@ -58,12 +70,14 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
     }
 
     destroyingBridgedView(contentContext: TemplateRefWrapperContentContext) {
-        this._templateFunction.___onTemplateTeardown(this._templateFunction, this.elementRef.nativeElement, contentContext);
+        this._templateFunction.___onTemplateTeardown(this._templateFunction, contentContext.root, contentContext);
+        this._contentContext.delete(contentContext._id);
     }
 
 }
 
 class TemplateRefWrapperContentContext {
     _id: string;
-
+    root: any;
+    templateFunction: any;
 }
