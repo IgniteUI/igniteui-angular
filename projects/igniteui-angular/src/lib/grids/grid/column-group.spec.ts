@@ -135,7 +135,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         }));
 
-        it('Should render dynamic column group header correctly (#12165).', fakeAsync(() => {
+        it('Should render dynamic column group header correctly (#12165).', () => {
             fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
             (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 1;
             (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.secondGroupRepeats = 1;
@@ -172,7 +172,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             firstSixHeaders = allHeaders.slice(0, 6).map(x => x.column.field);
             expect(allHeaders.length).toEqual(15);
             expect(firstSixHeaders).toEqual(['ID', 'Missing', 'ID', 'ID', 'ID', 'CompanyName']);
-        }));
+        });
 
         it('Should not render empty column group.', () => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
