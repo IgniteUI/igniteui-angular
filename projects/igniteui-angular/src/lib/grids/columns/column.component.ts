@@ -66,6 +66,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 /* contentParent: Grid */
 /* contentParent: ColumnGroup */
 /* wcElementTag: igc-column */
+/* blazorIndirectRender */
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)

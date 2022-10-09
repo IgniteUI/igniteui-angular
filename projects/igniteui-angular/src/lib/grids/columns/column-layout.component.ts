@@ -8,7 +8,8 @@ import {
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnGroupComponent } from './column-group.component';
 
-
+/* blazorIndirectRender */
+/* blazorElement */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],

@@ -87,6 +87,7 @@ export interface CellType {
 }
 
 export interface HeaderType {
+    /* blazorSuppress */
     nativeElement: HTMLElement;
     column: ColumnType;
     density: DisplayDensity;

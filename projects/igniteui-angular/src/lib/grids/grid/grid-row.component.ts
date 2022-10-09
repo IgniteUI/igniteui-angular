@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, forwardRef } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 
+/* blazorIndirectRender */
 /* blazorElement */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
