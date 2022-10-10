@@ -786,32 +786,37 @@ export interface IgxCellTemplateContext {
     cell?: CellType
 }
 
+export interface IgxRowSelectorTemplateDetails {
+    index: number;
+    /** @deprecated Use `key` */
+    rowID: any;
+    key: any;
+    selected: boolean;
+    select?: () => void;
+    deselect?: () => void;
+}
+
 export interface IgxRowSelectorTemplateContext {
-    $implicit: {
-        index: number,
-        rowID: any,
-        key: any,
-        selected: boolean,
-        select?: () => void,
-        deselect?: () => void
-    }
+    $implicit: IgxRowSelectorTemplateDetails;
 }
 
+export interface IgxGroupByRowSelectorTemplateDetails {
+    selectedCount: number;
+    totalCount: number;
+    groupRow: IGroupByRecord;
+}
 export interface IgxGroupByRowSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number,
-        totalCount: number,
-        groupRow: IGroupByRecord
-    }
+    $implicit: IgxGroupByRowSelectorTemplateDetails;
 }
 
+export interface IgxHeadSelectorTemplateDetails {
+    selectedCount: number;
+    totalCount: number;
+    selectAll?: () => void;
+    deselectAll?: () => void;
+}
 export interface IgxHeadSelectorTemplateContext {
-    $implicit: {
-        selectedCount: number;
-        totalCount: number;
-        selectAll?: () => void;
-        deselectAll?: () => void;
-    };
+    $implicit: IgxHeadSelectorTemplateDetails;
 }
 
 export interface IgxSummaryTemplateContext {
