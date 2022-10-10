@@ -5,6 +5,7 @@ import { createCustomElement, NgElement, WithProperties } from '@angular/element
 import {
     IgxColumnComponent,
     IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
     IgxGridColumnModule,
     IgxGridComponent,
     IgxGridModule,
@@ -53,6 +54,9 @@ export class AppModule {
 
     const columnGroups = createIgxCustomElement<IgxColumnGroupComponent>(IgxColumnGroupComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column-group", columnGroups);
+
+    const columnLayout = createIgxCustomElement<IgxColumnLayoutComponent>(IgxColumnLayoutComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-column-layout", columnLayout);
 
     const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column", column);

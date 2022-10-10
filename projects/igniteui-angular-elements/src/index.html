@@ -67,9 +67,35 @@
     <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
   </div>
 
+  <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+    <igc-grid-toolbar>
+    <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+    <igc-grid-toolbar-actions>
+        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+        <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+    </igc-grid-toolbar-actions>
+    </igc-grid-toolbar>
+
+    <igc-column-layout header="Product ID">
+        <igc-column rowStart="1" colStart="1" rowEnd="3" field="ProductID" header="Product ID" width="136px"></igc-column>
+    </igc-column-layout>
+    <igc-column-layout header="Product Details">
+        <igc-column rowStart="1" colStart="1" colEnd="3" field="ProductName" header="Product Name" width="200px"></igc-column>
+        <igc-column rowStart="2" colStart="1" colEnd="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
+        <igc-column rowStart="2" colStart="2" colEnd="3" field="ImageUrl" width="200px"></igc-column>
+    </igc-column-layout>
+    <igc-column-layout header="Product Stock">
+        <igc-column rowStart="1" colStart="1" colEnd="3" field="InStock" header="In Stock" width="136px"></igc-column>
+    </igc-column-layout>
+
+    <igc-paginator per-page="10"></igc-paginator>
+  </igc-grid>
+
   <script src="assets/data/nw-products.js"></script>
   <script>
     grid1.data = northwindProducts;
+    grid2.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
         // let columns = [
         //     { field: 'ProductID', header: 'Product Id', dataType: 'number' },
