@@ -241,7 +241,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         if (children.length && !query.descendants) {
             // combined parent selectors tad assuming, but for now it just covers column+group in single query so might be fine
-            const parents = new Set(...childConfigs.map(x => x.parents));
+            const parents = new Set(childConfigs.map(x => x.parents).flat());
             const parentSelectors = this.config.filter(x => parents.has(x.component)).map(x => x.selector).filter(x => x).join(',');
 
             children = children.filter(x => x.parentElement.closest(parentSelectors) === element);
