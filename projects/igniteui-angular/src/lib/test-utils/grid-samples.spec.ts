@@ -2443,6 +2443,13 @@ export class MultiColumnHeadersExportComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: GridTemplateStrings.declareGrid(`height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
+})
+export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent extends BasicGridComponent {
+    public data = SampleTestData.contactInfoDataTwoRecords();
+}
+
+@Component({
     template: `
     <igx-grid #grid1 [data]="data">
         <igx-column>

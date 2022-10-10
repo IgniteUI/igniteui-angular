@@ -235,7 +235,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        const selection = Array.isArray(value) ? value : [];
+        const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, selection, true);
         this.cdr.markForCheck();
@@ -355,6 +355,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
+        if (itemID === undefined) {
+            return;
+        }
         if (select) {
             this.select([itemID], false, event);
         } else {
