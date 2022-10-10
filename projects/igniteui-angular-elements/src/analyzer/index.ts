@@ -73,10 +73,11 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 const expression = decorator.expression as ts.CallExpression;
                 const firstArg = expression.arguments && expression.arguments[0];
                 let queryType: ts.Identifier | null;
+                let descendants = false;
                 if (firstArg && ts.isIdentifier(firstArg)) {
                     queryType = firstArg;
                 }
-                //
+
                 if (expression.arguments.length === 2 && expression.arguments[1].kind === ts.SyntaxKind.ObjectLiteralExpression) {
                     const ojectLiteral = expression.arguments[1] as ts.ObjectLiteralExpression;
                     const readProp = ojectLiteral.properties.find(x => x.name?.getText() === 'read') as ts.PropertyAssignment;
@@ -87,14 +88,17 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                         queryType = null;
                     }
 
-                    // TODO: descendants: true/false? For HGrid
+                    // descendants:
+                    const descendantsProp = ojectLiteral.properties.find(x => x.name?.getText() === 'descendants') as ts.PropertyAssignment;
+                    descendants = descendantsProp?.initializer.kind === ts.SyntaxKind.TrueKeyword;
                 }
                 if (queryType) {
                     console.log(prop.escapedName, getDecoratorName(decorator), `(${queryType.getText()})`);
                     componentMetadata.contentQueries.push({
                         property: prop.escapedName.toString(),
                         childType: typeChecker.getTypeAtLocation(queryType) as ts.InterfaceType, // TODO
-                        isQueryList: getDecoratorName(decorator) === 'ContentChildren'
+                        isQueryList: getDecoratorName(decorator) === 'ContentChildren',
+                        descendants
                     })
                 }
             }
@@ -307,6 +311,10 @@ function createContentQueryLiteral(query: ContentQuery) {
         properties.push(ts.factory.createPropertyAssignment('isQueryList', ts.factory.createToken(ts.SyntaxKind.TrueKeyword)));
     }
 
+    if (query.descendants) {
+        properties.push(ts.factory.createPropertyAssignment('descendants', ts.factory.createToken(ts.SyntaxKind.TrueKeyword)));
+    }
+
     return ts.factory.createObjectLiteralExpression(properties);
 }
 
@@ -345,6 +353,7 @@ interface ContentQuery {
     property: string;
     childType: ts.InterfaceType,
     isQueryList: boolean;
+    descendants: boolean;
 }
 
 /** Method info container, tentatively with just name */
