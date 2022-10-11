@@ -213,7 +213,7 @@ export abstract class IgxBaseExporter {
     private isPivotGridExport: boolean;
     private options: IgxExporterOptionsBase;
     private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
-    private rowIslandCounter = 0;
+    private rowIslandCounter = -1;
     private flatRecords: IExportRecord[] = [];
     private pivotGridColumns: IColumnInfo[] = []
     private pivotGridRowDimensionsMap: Map<string, string>;
@@ -835,7 +835,7 @@ export abstract class IgxBaseExporter {
 
         if (skipOperations) {
             if (hasGrouping) {
-                this.addGroupedData(grid, grid.groupsRecords, groupedGridGroupingState);
+                this.addGroupedData(grid, grid.groupsRecords, groupedGridGroupingState, true);
             } else {
                 this.addFlatData(grid.filteredSortedData);
             }
@@ -870,7 +870,7 @@ export abstract class IgxBaseExporter {
             }
 
             if (hasGrouping && !this.options.ignoreGrouping) {
-                this.addGroupedData(grid, gridData, groupedGridGroupingState);
+                this.addGroupedData(grid, gridData, groupedGridGroupingState, true);
             } else {
                 this.addFlatData(gridData);
             }
@@ -1012,7 +1012,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addGroupedData(grid: GridType, records: IGroupByRecord[], groupingState: IGroupingState, parentExpanded: boolean = true, summaryKeysArr: string[] = []) {
+    private addGroupedData(grid: GridType, records: IGroupByRecord[], groupingState: IGroupingState, setGridParent: boolean, parentExpanded: boolean = true, summaryKeysArr: string[] = []) {
         if (!records) {
             return;
         }
@@ -1022,7 +1022,7 @@ export abstract class IgxBaseExporter {
 
         for (const record of records) {
             let recordVal = record.value;
-
+            const hierarchicalOwner = setGridParent ? GRID_PARENT : `${GRID_CHILD}${++this.rowIslandCounter}`;
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
                 isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }], hierarchy));
@@ -1048,6 +1048,7 @@ export abstract class IgxBaseExporter {
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.GroupedRecord,
+                hierarchicalOwner
             };
 
             this.flatRecords.push(groupExpression);
@@ -1061,10 +1062,11 @@ export abstract class IgxBaseExporter {
                 previousKey = currKey;
                 summaryKeysArr.push(currKey);
                 summaryKey = `{ ${summaryKeysArr.join(', ')} }`;
+                groupExpression.summaryKey = summaryKey;
             }
 
             if (record.groups.length > 0) {
-                this.addGroupedData(grid, record.groups, groupingState, expanded && parentExpanded, summaryKeysArr);
+                this.addGroupedData(grid, record.groups, groupingState, false, expanded && parentExpanded, summaryKeysArr);
             } else {
                 const rowRecords = record.records;
 
@@ -1074,6 +1076,7 @@ export abstract class IgxBaseExporter {
                         level: record.level + 1,
                         hidden: !(expanded && parentExpanded),
                         type: ExportRecordType.DataRecord,
+                        hierarchicalOwner
                     };
 
                     if (summaryKey) {
@@ -1085,7 +1088,7 @@ export abstract class IgxBaseExporter {
             }
 
             if (this._setChildSummaries) {
-                this.setSummaries(summaryKey, record.level + 1, !(expanded && parentExpanded));
+                this.setSummaries(summaryKey, record.level + 1, !(expanded && parentExpanded), null, null, hierarchicalOwner);
                 summaryKeysArr.pop();
             }
         }

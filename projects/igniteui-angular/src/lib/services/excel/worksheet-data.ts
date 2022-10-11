@@ -14,6 +14,7 @@ export class WorksheetData {
     private _hasSummaries: boolean;
     private _isPivotGrid: boolean;
     private _isTreeGrid: boolean;
+    private _isGroupedGrid: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -72,6 +73,14 @@ export class WorksheetData {
 
     public get isPivotGrid(): boolean {
         return this._isPivotGrid;
+    }
+
+    public get isGroupedGrid(): boolean {
+        return this._data.some(d => d.type === ExportRecordType.GroupedRecord);
+    }
+
+    public get maxLevel(): number {
+        return [...new Set(this._data.map(item => item.level))].sort((a,b) => (a > b ? -1 : 1))[0];
     }
 
     public get multiColumnHeaderRows(): number {

@@ -317,6 +317,11 @@ export class ColumnDefinitions {
         </igx-column>
     `;
 
+    public static generatedGroupableWithSummariesAndDataType = `
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
+        </igx-column>
+    `;
+
     public static generatedEditable = `
     <igx-column *ngFor="let col of columns"
             [field]="col.key"
