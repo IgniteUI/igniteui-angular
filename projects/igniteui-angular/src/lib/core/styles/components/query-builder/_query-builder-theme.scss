@@ -1,5 +1,61 @@
 @use '../../base' as *;
+@use '../../themes/schemas' as *;
 @use 'sass:map';
+
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
+///
+/// @prop {Color} background [null] - The background color of the filtering row.
+/// @prop {Color} header-background [null] - The background color of the query builder header.
+/// @prop {Color} header-foreground [null] - The foreground color of the query builder header.
+/// @prop {Map} background-and [null] - The background color of advanced filtering "AND" condition.
+/// @prop {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @prop {Map} background-or [null] - The background color of advanced filtering "OR" condition.
+/// @prop {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+@function query-builder-theme(
+    $palette: null,
+    $schema: $light-schema,
+    $elevations: null,
+
+    $background: null,
+    $header-background: null,
+    $header-foreground: null,
+    $background-and: null,
+    $background-and--focus: null,
+    $background-or: null,
+    $background-or--focus: null,
+) {
+    $name: 'igx-query-builder';
+    $selector: 'igx-query-builder';
+    $query-builder-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $query-builder-schema: map.get($schema, $name);
+    } @else {
+        $query-builder-schema: $schema;
+    }
+
+    $theme: apply-palette($query-builder-schema, $palette);
+
+    @if not($header-foreground) and $header-background {
+        $header-foreground: text-contrast($header-background);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        selector: $selector,
+        palette: $palette,
+
+        background: $background,
+        header-background: $header-background,
+        header-foreground: $header-foreground,
+        background-and: $background-and,
+        background-and--focus: $background-and--focus,
+        background-or: $background-or,
+        background-or--focus: $background-or--focus,
+    ));
+}
 
 ////
 /// @group themes
@@ -13,10 +69,10 @@
 /// @requires color
 /// @requires rem
 /// @requires var-get
-@mixin advanced-filtering($theme, $palette) {
+@mixin query-builder($theme) {
     $variant: map.get($theme, variant);
-    $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
+    $not-bootstrap-theme: not($bootstrap-theme);
 
     $vertical-space-comfortable: rem(16px);
     $vertical-space-cosy: rem(12px);
@@ -26,31 +82,23 @@
     $horizontal-space-compact: rem(8px);
     $icon-size: rem(18px);
 
-    $bootstrap-theme: $variant == 'bootstrap';
+    @include css-vars($theme);
 
     %advanced-filter {
-        width: 660px;
+        width: auto;
         min-width: 660px;
-        max-width: 720px;
-        background-color: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation($elevation: 12);
+        background-color: var-get($theme, 'background');
         border-radius: border-radius(rem(4px));
+        box-shadow: elevation($elevation: 12);
     }
 
     %advanced-filter__header {
         display: flex;
         align-items: center;
         padding: $vertical-space-comfortable;
-        color: color($palette, 'grays', 700);
-
-        @if $bootstrap-theme {
-            background-color: color($palette, 'grays', 100, .5);
-        } @else {
-            background-color: color($palette, 'grays', 100);
-        }
-
+        background-color: var-get($theme, 'header-background');
+        color: var-get($theme, 'header-foreground');
         user-select: none;
-        cursor: grab;
 
         h4,
         .igx-typography__h6 {
@@ -100,27 +148,26 @@
     }
 
     %filter-tree__line--and {
-
-        background: var-get($theme, 'filtering-background-and');
+        background: var-get($theme, 'background-and');
 
         &-selected {
-            background: var-get($theme, 'filtering-background-and--focus');
+            background: var-get($theme, 'background-and--focus');
         }
 
         &:focus {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'filtering-background-and--focus');
+            box-shadow: inset 0 0 0 2px var-get($theme, 'background-and--focus');
         }
     }
 
     %filter-tree__line--or {
-        background: var-get($theme, 'filtering-background-or');
+        background: var-get($theme, 'background-or');
 
         &-selected {
-            background-color: var-get($theme, 'filtering-background-or--focus');
+            background-color: var-get($theme, 'background-or--focus');
         }
 
         &:focus {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'filtering-background-or--focus');
+            box-shadow: inset 0 0 0 2px var-get($theme, 'background-or--focus');
         }
     }
 
@@ -139,6 +186,10 @@
         + %filter-tree__expression-item {
             margin-top: $vertical-space-comfortable;
         }
+
+        > igx-chip igx-prefix {
+            display: flex;
+        }
     }
 
     %filter-tree__expression-column {
@@ -151,12 +202,12 @@
 
         igx-icon {
             cursor: pointer;
-            color: color($palette, 'grays', 500);
+            color: color(null, 'grays', 500);
             outline-style: none;
 
             &:hover,
             &:focus {
-                color: color($palette, 'grays', 800);
+                color: color(null, 'grays', 800);
             }
         }
 
@@ -185,6 +236,7 @@
     %filter-tree__inputs {
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         igx-select + igx-select,
         igx-select + igx-input-group,
@@ -240,11 +292,11 @@
     }
 
     %filter-legend__item--and::before {
-        background: var-get($theme, 'filtering-background-and');
+        background: var-get($theme, 'background-and');
     }
 
     %filter-legend__item--or::before {
-        background: var-get($theme, 'filtering-background-or');
+        background: var-get($theme, 'background-or');
     }
 
     %filter-con-menu {
@@ -252,11 +304,11 @@
         display: flex;
         flex-flow: column;
         width: 196px;
-        background-color: var-get($theme, 'filtering-row-background');
+        background-color: var-get($theme, 'background');
         padding: rem(16px);
         margin-inline-start: rem(16px);
         border-radius: border-radius(rem(4px));
-        border: 1px solid color($palette, 'grays', 200);
+        border: 1px solid color(null, 'grays', 200);
 
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
@@ -279,19 +331,19 @@
     }
 
     %filter-con-menu__delete-btn {
-        color: color($palette, 'error');
+        color: color(null, 'error');
         @if $bootstrap-theme {
-            border-color: color($palette, 'error');
+            border-color: color(null, 'error');
         }
 
         &:hover,
         &:focus {
             @if $bootstrap-theme {
-                background: color($palette, 'error');
-                border-color: color($palette, 'error');
-                color: color($palette, 'grays', 100);
+                background: color(null, 'error');
+                border-color: color(null, 'error');
+                color: color(null, 'grays', 100);
             } @else {
-                color: color($palette, 'error');
+                color: color(null, 'error');
             }
         }
     }
@@ -300,13 +352,13 @@
         position: absolute;
         top: rem(-18px);
         inset-inline-end: rem(-18px);
-        background-color: var-get($theme, 'filtering-row-background');
-        border: 1px solid color($palette, 'grays', 200);
+        background-color: var-get($theme, 'background');
+        border: 1px solid color(null, 'grays', 200);
 
         &:hover,
         &:focus {
             @if $not-bootstrap-theme {
-                background-color: var-get($theme, 'filtering-row-background');
+                background-color: var-get($theme, 'background');
             }
         }
     }
@@ -319,7 +371,7 @@
     }
 
     %filter-empty__title {
-        color: color($palette, 'grays', 500);
+        color: color(null, 'grays', 500);
     }
 
     %advanced-filter--cosy {

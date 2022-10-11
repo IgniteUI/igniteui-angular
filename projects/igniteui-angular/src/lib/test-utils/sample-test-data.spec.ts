@@ -1772,7 +1772,7 @@ export class SampleTestData {
             JobTitle: 'Director'
         }
     ]);
-    
+
     public static employeeGroupByData = () => ([
         {
             ID: 475,
