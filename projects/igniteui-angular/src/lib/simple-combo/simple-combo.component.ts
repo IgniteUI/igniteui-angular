@@ -203,7 +203,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 }
             }
         });
-        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (args.cancel) {
+                return;
+            }
             this._collapsing = false;
             const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === undefined || filtered === null) {
@@ -219,6 +222,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._internalFilter = this.comboInput.value;
         });
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (args.cancel) {
+                return;
+            }
             if (this.getEditElement() && !args.event) {
                 this._collapsing = true;
             } else {
