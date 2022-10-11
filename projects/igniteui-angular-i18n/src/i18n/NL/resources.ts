@@ -10,6 +10,7 @@ import { TreeResourceStringsNL } from './tree-resources';
 import { InputResourceStringsNL } from './input-resources';
 import { ChipResourceStringsNL } from './chip-resources';
 import { ComboResourceStringsNL } from './combo-resources';
+import { QueryBuilderResourceStringsNL } from './query-builder-resources';
 
 /**
  * Dutch resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsNL = {
     ...TreeResourceStringsNL,
     ...InputResourceStringsNL,
     ...ChipResourceStringsNL,
-    ...ComboResourceStringsNL
+    ...ComboResourceStringsNL,
+    ...QueryBuilderResourceStringsNL
 };

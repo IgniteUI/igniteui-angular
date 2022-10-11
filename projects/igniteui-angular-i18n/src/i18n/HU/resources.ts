@@ -10,6 +10,7 @@ import { TreeResourceStringsHU } from './tree-resources';
 import { InputResourceStringsHU } from './input-resources';
 import { ChipResourceStringsHU } from './chip-resources';
 import { ComboResourceStringsHU } from './combo-resources';
+import { QueryBuilderResourceStringsHU } from './query-builder-resources';
 
 /**
  * Hungarian resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsHU = {
     ...TreeResourceStringsHU,
     ...InputResourceStringsHU,
     ...ChipResourceStringsHU,
-    ...ComboResourceStringsHU
+    ...ComboResourceStringsHU,
+    ...QueryBuilderResourceStringsHU
 };

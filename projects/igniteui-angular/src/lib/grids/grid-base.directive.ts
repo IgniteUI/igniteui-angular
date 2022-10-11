@@ -3338,7 +3338,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
                     instance.lastActiveNode = this.navigation.activeNode;
-                    instance.setAddButtonFocus();
+                    instance.queryBuilder.setAddButtonFocus();
                 }
                 return;
             }

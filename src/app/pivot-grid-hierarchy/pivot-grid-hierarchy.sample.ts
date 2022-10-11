@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IDimensionsChange, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
+import { IDimensionsChange, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -47,6 +47,9 @@ export class PivotGridHierarchySampleComponent {
         }
     ];
     public selected: IPivotDimension[] = [ this.dimensions[1], this.dimensions[2]];
+
+    constructor(private excelExportService: IgxExcelExporterService) {
+    }
 
     public handleChange(event) {
         let isColumnChange = false
@@ -105,5 +108,10 @@ export class PivotGridHierarchySampleComponent {
         const allDims = this.pivotConfigHierarchy.rows.concat(this.pivotConfigHierarchy.columns).concat(this.pivotConfigHierarchy.filters);
         const allEnabled = allDims.filter(x => x && x.enabled);
         this.selected = allEnabled;
+    }
+
+    
+    public exportButtonHandler() {
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
     }
 }

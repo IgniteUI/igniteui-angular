@@ -14,7 +14,6 @@ export class RemoteNWindService {
     }
 
     public getData(data?: IForOfState, searchText?: string, cb?: (any) => void): any {
-        debugger;
         const dataState = data;
         return this.http
             .get(this.buildUrl(dataState, searchText))

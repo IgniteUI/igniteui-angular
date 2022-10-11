@@ -6,7 +6,7 @@ import {
     ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 interface CompanyData {

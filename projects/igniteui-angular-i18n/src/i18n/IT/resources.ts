@@ -10,6 +10,7 @@ import { TreeResourceStringsIT } from './tree-resources';
 import { InputResourceStringsIT } from './input-resources';
 import { ChipResourceStringsIT } from './chip-resources';
 import { ComboResourceStringsIT } from './combo-resources';
+import { QueryBuilderResourceStringsIT } from './query-builder-resources';
 
 /**
  * Italian resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsIT = {
     ...TreeResourceStringsIT,
     ...InputResourceStringsIT,
     ...ChipResourceStringsIT,
-    ...ComboResourceStringsIT
+    ...ComboResourceStringsIT,
+    ...QueryBuilderResourceStringsIT
 };
