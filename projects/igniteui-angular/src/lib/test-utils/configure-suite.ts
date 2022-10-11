@@ -10,8 +10,8 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 export const configureTestSuite = (configureAction?: () => void) => {
 
-    const testBedApi: any = getTestBed();
-    const originReset = TestBed.resetTestingModule;
+    const testBed: any = getTestBed();
+    const originReset = testBed.resetTestingModule;
 
     const clearStyles = () => {
         document.querySelectorAll('style').forEach(tag => tag.remove());
@@ -22,8 +22,8 @@ export const configureTestSuite = (configureAction?: () => void) => {
     };
 
     beforeAll(() => {
-        TestBed.resetTestingModule();
-        TestBed.resetTestingModule = () => TestBed;
+        testBed.resetTestingModule();
+        testBed.resetTestingModule = () => TestBed;
         resizeObserverIgnoreError();
     });
 
@@ -37,15 +37,15 @@ export const configureTestSuite = (configureAction?: () => void) => {
     afterEach(() => {
         clearStyles();
         clearSVGContainer();
-        testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+        testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
         // reset ViewEngine TestBed
-        testBedApi._instantiated = false;
+        testBed._instantiated = false;
         // reset Ivy TestBed
-        testBedApi._testModuleRef = null;
+        testBed._testModuleRef = null;
     });
 
     afterAll(() => {
-        TestBed.resetTestingModule = originReset;
-        TestBed.resetTestingModule();
+        testBed.resetTestingModule = originReset;
+        testBed.resetTestingModule();
     });
 };

@@ -34,6 +34,7 @@
         "projects/igniteui-angular/schematics/",
         "projects/igniteui-angular/cypress/",
         "cypress/",
+        "./cypress.config.ts",
         "e2e/"
     ],
     "angularCompilerOptions": {
