@@ -201,6 +201,10 @@ export class IgxCellCrudState {
             return;
         }
 
+        if (this.grid.validationTrigger === 'blur') {
+            this.grid.tbody.nativeElement.focus({ preventScroll: true });
+        }
+
         let doneArgs;
         if (isEqual(this.cell.value, this.cell.editValue)) {
             doneArgs = this.exitCellEdit(event);
@@ -237,7 +241,6 @@ export class IgxCellCrudState {
         if (!this.cell) {
             return;
         }
-
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
