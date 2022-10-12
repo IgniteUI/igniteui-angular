@@ -469,6 +469,15 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
+     * An @Input property that allows to open combo drop down on clear when it's collapsed. The default is `false`.
+     * ```html
+     * <igx-combo [openOnClear]="true">
+     * ```
+     */
+     @Input()
+     public openOnClear = false;
+
+    /**
      * Emitted before the dropdown is opened
      *
      * ```html

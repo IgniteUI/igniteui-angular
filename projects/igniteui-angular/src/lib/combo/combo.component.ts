@@ -267,6 +267,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         }
         this.deselectAllItems(true, event);
         if (this.collapsed) {
+            if(this.openOnClear){
+                this.open();
+            }
             this.getEditElement().focus();
         } else {
             this.focusSearchInput(true);

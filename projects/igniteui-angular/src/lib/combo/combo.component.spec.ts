@@ -690,6 +690,30 @@ describe('igxCombo', () => {
             combo.handleClearItems(spyObj);
             expect(combo.value).toEqual(item[0]);
         });
+        it('should open the combo when openOnClear is true', () => {
+            const selectionService = new IgxSelectionAPIService();
+            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
+                mockIconService, null, null, mockInjector);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'selectItem']);
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
+            spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+            combo.openOnClear = true;
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            const item = combo.data.slice(0, 1);
+            combo.select(item, true);
+            combo.comboInput = {
+                nativeElement: {
+                    focus: () => {}
+                }
+            } as any;
+            dropdown.collapsed = true;
+            combo.handleClearItems(spyObj);
+            expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
+        });
 
         it('should allow canceling and overwriting of item addition', fakeAsync(() => {
             const selectionService = new IgxSelectionAPIService();

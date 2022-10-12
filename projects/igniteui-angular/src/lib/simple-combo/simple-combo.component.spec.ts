@@ -425,6 +425,28 @@ describe('IgxSimpleCombo', () => {
             combo.handleClear(spyObj);
             expect(combo.value).toEqual(item[0]);
         });
+        it('should not open the combo when openOnClear is false', () => {
+            const selectionService = new IgxSelectionAPIService();
+            combo = new IgxSimpleComboComponent(elementRef, mockCdr, selectionService, mockComboService,
+                mockIconService, platformUtil, null, null, mockInjector);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'navigateFirst' ,'selectItem', 'focusedItem']);
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
+            spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+            combo.openOnClear = false;
+            const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value', 'focus']);
+            comboInput.value = 'test';
+            combo.comboInput = comboInput;
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            const item = combo.data.slice(0, 1);
+            combo.select(item);
+            dropdown.collapsed = true;
+            combo.handleClear(spyObj);
+            expect(combo.dropdown.open).toHaveBeenCalledTimes(0);
+        });
     });
 
     describe('Initialization and rendering tests: ', () => {

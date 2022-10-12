@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 15.0.0
+
+### New Features
+- `IgxCombo`
+    - `openOnClear` input is added. By default in the `IgxCombo` component when clear the drop down of the combo doesn't open. The new property allows to open the combo drop down on clear. 
+- `IgxSimpleComboComponent`    
+    - `openOnClear` input is added. In the `IgxSimpleCombo` component by default when clear the drop down of the simple combo opens. The new property allows to prevent the simple combo drop down from opening on clear.
+
 ## 14.2.0
 
 ### New Features

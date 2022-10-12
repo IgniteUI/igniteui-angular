@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    NgModule, Optional, Output, ViewChild
+    Input, NgModule, Optional, Output, ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -70,6 +70,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     @ViewChild(IgxComboAddItemComponent)
     public addItem: IgxComboAddItemComponent;
+
+    /**
+     * An @Input property that allows to prevent the simple combo drop down from opening on clear when it's collapsed. The default is `true`.
+     * ```html
+     * <igx-combo [openOnClear]="false">
+     * ```
+     */
+    public openOnClear = true;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -333,7 +341,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.clearSelection(true);
         if (this.collapsed) {
-            this.open();
+            if(this.openOnClear){
+                this.open();
+            }
             this.dropdown.navigateFirst();
         } else {
             this.focusSearchInput(true);
