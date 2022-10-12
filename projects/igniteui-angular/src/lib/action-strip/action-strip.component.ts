@@ -42,6 +42,8 @@ export class IgxActionStripMenuItemDirective {
  *
  * @igxGroup Data Entry & Display
  *
+ * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, *
+ *
  * @remarks
  * The Ignite UI Action Strip is a container, overlaying its parent container,
  * and displaying action buttons with action applicable to the parent component the strip is instantiated or shown for.
@@ -153,6 +155,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     private _hidden = false;
     private _resourceStrings;
+    private _originalParent!: HTMLElement;
 
     constructor(
         private _viewContainer: ViewContainerRef,
@@ -160,6 +163,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
+        this._originalParent = this._viewContainer.element.nativeElement?.parentElement;
     }
 
     /**
@@ -181,12 +185,15 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      */
     @HostBinding('attr.class')
     public get hostClasses(): string {
-        const classes = [this.getComponentDensityClass('igx-action-strip')];
+        const classes = this.hostClass?.split(' ').filter(x => x) || [];
         // The custom classes should be at the end.
-        if (!classes.includes('igx-action-strip')) {
-            classes.push('igx-action-strip');
+        const densityClass = this.getComponentDensityClass('igx-action-strip');
+        if (!classes.includes(densityClass)) {
+            classes.unshift(densityClass);
         }
-        classes.push(this.hostClass);
+        if (!classes.includes('igx-action-strip')) {
+            classes.unshift('igx-action-strip');
+        }
         return classes.join(' ');
     }
 
@@ -281,7 +288,8 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         this.hidden = true;
         this.closeMenu();
         if (this.context && this.context.element) {
-            this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
+            // D.P. fix(elements) don't detach native DOM, instead move back. Might not matter for Angular, but Elements will destroy
+            this.renderer.appendChild(this._originalParent, this._viewContainer.element.nativeElement);
         }
     }
 

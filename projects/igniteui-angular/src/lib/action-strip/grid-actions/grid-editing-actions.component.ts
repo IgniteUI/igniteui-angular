@@ -3,6 +3,11 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/utils';
 import { addRow, addChild  } from '@igniteui/material-icons-extended';
 
+/**
+ * Grid Editing Actions for the Action Strip
+ *
+ * @igxParent IgxActionStripComponent
+ */
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',

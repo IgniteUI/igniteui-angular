@@ -40,7 +40,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      */
     public get isRowContext(): boolean {
-        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
+        return this.isRow(this.strip?.context) && !this.strip.context.inEditMode;
     }
 
     constructor(protected iconService: IgxIconService,

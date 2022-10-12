@@ -3,7 +3,7 @@ import { AbstractType, Type } from '@angular/core';
 export interface ContentQueryMeta {
     property: string;
     childType: Type<any>;
-    isQueryList: boolean;
+    isQueryList?: boolean;
     descendants?: boolean;
 }
 export interface ComponentConfig {

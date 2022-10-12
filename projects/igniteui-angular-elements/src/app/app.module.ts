@@ -3,12 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
 import {
+    IgxActionStripComponent,
     IgxColumnComponent,
     IgxColumnGroupComponent,
     IgxColumnLayoutComponent,
     IgxGridColumnModule,
     IgxGridComponent,
-    IgxGridModule,
+    IgxGridEditingActionsComponent,
+    IgxGridPinningActionsComponent,
     IgxGridToolbarActionsDirective,
     IgxGridToolbarComponent,
     IgxGridToolbarExporterComponent,
@@ -78,6 +80,13 @@ export class AppModule {
 
     const toolbar = createIgxCustomElement(IgxGridToolbarComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar", toolbar);
+
+    const actionStrip = createIgxCustomElement(IgxActionStripComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-action-strip", actionStrip);
+    const editingActions = createIgxCustomElement(IgxGridEditingActionsComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-editing-actions", editingActions);
+    const pinningActions = createIgxCustomElement(IgxGridPinningActionsComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-pinning-actions", pinningActions);
 
     /**
      * WARN: createCustomElement default setup is ONLY FOR ROOT ELEMENTS!

@@ -2456,6 +2456,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     public get hostClass(): string {
+        // TODO: This blocks further updates to the class (dynamic custom, different density)
         if (this._class === '') {
             const classes = [this.getComponentDensityClass('igx-grid')];
             // The custom classes should be at the end.

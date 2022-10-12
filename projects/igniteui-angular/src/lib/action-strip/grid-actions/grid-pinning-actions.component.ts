@@ -1,6 +1,12 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
+
+/**
+ * Grid Pinning Actions for the Action Strip
+ *
+ * @igxParent IgxActionStripComponent
+ */
 @Component({
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',

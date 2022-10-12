@@ -56,6 +56,11 @@
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
         <igc-column field="InStock" header="In Stock" data-type="number"></igc-column>
 
+        <igc-action-strip>
+            <igc-grid-pinning-actions></igc-grid-pinning-actions>
+            <igc-grid-editing-actions add-row="true"></igc-grid-editing-actions>
+        </igc-action-strip>
+
         <igc-paginator per-page="10"></igc-paginator>
     </igc-grid>
 
