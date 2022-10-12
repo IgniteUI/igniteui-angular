@@ -107,6 +107,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
          (this as any).implementsOnChanges = isFunction(((this as any).componentRef.instance as OnChanges).ngOnChanges);
 
+         //we need a name ref on the WC element to be copied down for the purposes of blazor.
+         //alternatively we need to be able to hop back out to the WC element on demand.
+         if (element) {
+            if ((this as any).componentRef.instance) {
+                (this as any).componentRef.instance.___wcElement = element;
+            }
+         }
+
          this.initializeInputs();
          this.initializeOutputs((this as any).componentRef);
 
