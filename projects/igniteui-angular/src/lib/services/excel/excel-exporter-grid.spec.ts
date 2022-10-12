@@ -1225,7 +1225,7 @@ describe('Excel Exporter', () => {
             options = createExportOptions('GirdSummariesExcelExport', 50);
         }));
 
-        fit('should export grid with summaries based on summaryCalculationMode', async () => {
+        it('should export grid with summaries based on summaryCalculationMode', async () => {
             fix = TestBed.createComponent(GroupedGridWithSummariesComponent);
             fix.detectChanges();
             await wait(300);
