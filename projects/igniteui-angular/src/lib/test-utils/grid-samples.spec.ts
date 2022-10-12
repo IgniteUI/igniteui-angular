@@ -2508,7 +2508,7 @@ export class GroupedGridWithSummariesComponent extends BasicGridComponent implem
             { dataType: 'number', field: 'PTODays', groupable: false },
         ];
 
-        this.data = SampleTestData.contactInfoDataFull();
+        this.data = SampleTestData.contactInfoWithPTODaysData();
     }
 }
 
