@@ -5,9 +5,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxCombo`
-    - `openOnClear` input is added. By default in the `IgxCombo` component when clear the drop down of the combo doesn't open. The new property allows to open the combo drop down on clear. 
+    - `openOnClear` input is added. By default it's value is `false` and when the combo's input is cleared, the drop-down doesn't open. If it is set to `true`, the drop-down will open when the input is cleared.
 - `IgxSimpleComboComponent`    
-    - `openOnClear` input is added. In the `IgxSimpleCombo` component by default when clear the drop down of the simple combo opens. The new property allows to prevent the simple combo drop down from opening on clear.
+    - `openOnClear` input is added. By default it's value is `true` and when the simple combo's input is cleared, the drop-down opens. If it is set to `false`, the drop-down will not open when the input is cleared.
 
 ## 14.2.0
 

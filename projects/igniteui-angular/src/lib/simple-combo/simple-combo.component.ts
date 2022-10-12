@@ -72,7 +72,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public addItem: IgxComboAddItemComponent;
 
     /**
-     * An @Input property that allows to prevent the simple combo drop down from opening on clear when it's collapsed. The default is `true`.
+     * An @Input property that determines whether the simple combo drop down should be opened when its input is cleared. The default is `true`.
      * ```html
      * <igx-combo [openOnClear]="false">
      * ```
