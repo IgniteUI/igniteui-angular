@@ -61,6 +61,10 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
             if (parents) {
                 // skip * for components that can be standalone:
                 componentMetadata.parents = parents.filter(x => x !== '*');
+
+                // only assign provideAs for child components:
+                const provideAsNode = getProvideAs(component, type);
+                componentMetadata.provideAs = provideAsNode && typeChecker.getTypeAtLocation(provideAsNode);
             }
 
             // content queries:
@@ -129,14 +133,15 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
     // componentList = new Map(componentList.entries().filter(x => x));
 
     // Filter component list into the config map:
-    for (let [ name, { type, parents, contentQueries, templateProps } ] of componentList) {
+    for (let [ name, { type, parents, contentQueries, templateProps, provideAs } ] of componentList) {
 
         if (configComponents.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             ComponentConfigMap.set(type, {
                 contentQueries: filterRelevantQueries(contentQueries, name),
                 parents: parents.map(x => componentList.get(x).type), // these should always be empty, but just in case?
                 methods: getPublicMethods(type.getProperties()),
-                templateProps
+                templateProps,
+                provideAs
             });
         }
 
@@ -147,7 +152,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 // filter out parents that don't lead to config components:
                 parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type),
                 methods: getPublicMethods(type.getProperties()),
-                templateProps
+                templateProps,
+                provideAs // TODO: filter out provide if unrelated to any parent query
             });
         }
     }
@@ -228,8 +234,58 @@ function isChildOfConfigComponent(parents: string[]): boolean {
  * @returns the filtered query
  */
 function filterRelevantQueries(contentQueries: ContentQuery[], name: string): ContentQuery[] {
-    return contentQueries.filter(x => componentList.get(x.childType.symbol.escapedName.toString())?.parents.includes(name));
+    return contentQueries.filter(x => {
+        const childType = x.childType.symbol.escapedName.toString();
+        const childComponent = componentList.get(childType) || Array.from(componentList.values()).find(x => x.provideAs?.symbol.escapedName.toString() === childType);
+        return childComponent?.parents.includes(name)
+    });
 }
+
+/**
+ * Looks through the component decorator for providers that match the existing class to a different type/token, such as:
+ * `providers: [{ provide: IgxColumnComponent, useExisting: IgxColumnGroupComponent }],`
+ * @param component The component node
+ * @param type The resolved type of the component
+ * @returns Alternative type/token the component is provided as OR null
+ */
+function getProvideAs(component: ts.ClassDeclaration, type: ts.InterfaceType): ts.Identifier | null {
+    const expression = component.decorators.find(x => getDecoratorName(x) === 'Component').expression;
+    if (ts.isCallExpression(expression) && ts.isObjectLiteralExpression(expression.arguments[0])) {
+        const objectLiteral = expression.arguments[0];
+        const providers: any = objectLiteral.properties.find(x => x.name.getText() === 'providers');
+        if (providers && ts.isPropertyAssignment(providers) && ts.isArrayLiteralExpression(providers.initializer)) {
+            const useExisting = providers.initializer.elements.filter(ts.isObjectLiteralExpression).find(x => x.properties.find(x => x.name.getText() === 'useExisting'));
+            if (isUseExistingType(useExisting, type)) {
+                const provideValue = useExisting?.properties.find(x => x.name.getText() === 'provide') as ts.PropertyAssignment;
+                return provideValue.initializer as ts.Identifier;
+            }
+            return null;
+        }
+    }
+    return null;
+}
+
+/** Check if given useExisting assignment references a given type  */
+function isUseExistingType(useExisting: ts.ObjectLiteralExpression, type: ts.InterfaceType): boolean {
+    const useExistingValue = useExisting?.properties.find(x => x.name.getText() === 'useExisting') as ts.PropertyAssignment;
+    if (!useExistingValue) {
+        return false;
+    }
+
+    const initializer = useExistingValue.initializer;
+    if (ts.isIdentifier(initializer)) {
+        // `useExisting: <type>`
+        return initializer.getText() === type.symbol.escapedName;
+    }
+    if (ts.isCallExpression(initializer)
+        && initializer.expression.getText() === 'forwardRef'
+        && ts.isArrowFunction(initializer.arguments[0])) {
+        // `useExisting: forwardRef(() => <type>)`
+        return initializer.arguments[0].body.getText() === type.symbol.escapedName;
+    }
+    return false;
+}
+
 
 //#region config file
 
@@ -247,7 +303,8 @@ function printConfiguration() {
     const lastImportIndex = config.statements.indexOf(imports[imports.length -1]); // TODO: .at(-1), update lib
     let source = config;
 
-    for (const [type, meta] of ComponentConfigMap) {
+    const types = Array.from(ComponentConfigMap.entries()).map(([key, value]) => [key, value.provideAs]).flat().filter(Boolean);
+    for (const type of types) {
         // TODO: edit existing imports maybe, lazy approach:
         if (!imports.some(x => importContainsType(x, type))) {
             const namedImport = ts.factory.createNamedImports(
@@ -298,6 +355,9 @@ function createMetaLiteralObject(value: [ts.InterfaceType, ComponentMetadata<ts.
     if (meta.templateProps?.length) {
         properties.push(ts.factory.createPropertyAssignment('templateProps', ts.factory.createArrayLiteralExpression(meta.templateProps.map(x => ts.factory.createStringLiteral(x)))));
     }
+    if (meta.provideAs) {
+        properties.push(ts.factory.createPropertyAssignment('provideAs', ts.factory.createIdentifier(meta.provideAs.symbol.name)));
+    }
     return ts.factory.createObjectLiteralExpression(properties);
 }
 
@@ -318,7 +378,7 @@ function createContentQueryLiteral(query: ContentQuery) {
     return ts.factory.createObjectLiteralExpression(properties);
 }
 
-function getImportPathToType(type: ts.InterfaceType) {
+function getImportPathToType(type: ts.Type) {
     let importPath = type.symbol.valueDeclaration.getSourceFile().fileName;
     importPath = path.posix.relative(path.posix.dirname(ELEMENTS_CONFIG), importPath);
     importPath = importPath.replace(path.extname(importPath), "");
@@ -346,7 +406,8 @@ interface ComponentMetadata<ParentType = ts.InterfaceType> {
     parents: ParentType[],
     contentQueries: ContentQuery[],
     methods: MethodInfo[],
-    templateProps?: string[]
+    templateProps?: string[],
+    provideAs?: ts.Type
 }
 
 interface ContentQuery {

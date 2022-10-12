@@ -93,7 +93,8 @@
                 "projects/igniteui-angular-elements/src/analyzer/index.ts"
             ],
             "env": {
-                "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
+                "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json",
+                "TS_NODE_COMPILER_OPTIONS": "{ \"lib\": [\"es2019\"] }"
             }
         },
     ]

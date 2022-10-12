@@ -1,4 +1,4 @@
-import { Type } from '@angular/core';
+import { AbstractType, Type } from '@angular/core';
 
 export interface ContentQueryMeta {
     property: string;
@@ -13,4 +13,5 @@ export interface ComponentConfig {
     contentQueries: ContentQueryMeta[];
     methods: string[];
     templateProps?: string[];
+    provideAs?: Type<any> | AbstractType<any>;
 }
