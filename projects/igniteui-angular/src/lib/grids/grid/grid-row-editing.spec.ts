@@ -2862,5 +2862,55 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(states[0]['newValue']['cloned']).toEqual(true);
             expect(trans.cloneStrategy).toBeInstanceOf(ObjectCloneStrategy);
         });
+
+        it(`Should calculate changes in a new row correctly`, () => {
+            spyOn(trans, 'add').and.callThrough();
+            const addRowData = {
+                ProductID: 200,
+                ProductName: 'Added',
+                InStock: true,
+                UnitsInStock: 20000,
+                OrderDate: new Date(1)
+            };
+            grid.addRow(addRowData);
+            expect(trans.add).toHaveBeenCalled();
+
+            grid.updateRow({ InStock: false }, 200);
+
+            let cellElem = grid.gridAPI.get_cell_by_index(10, 'InStock');
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.getState(200)).toEqual({
+                value: {
+                    ProductID: 200,
+                    ProductName: 'Added',
+                    InStock: false,
+                    UnitsInStock: 20000,
+                    OrderDate: new Date(1)
+                },
+                recordRef: undefined,
+                type: "add",
+                newValue: { InStock: false }
+            });
+            expect(grid.rowChangesCount).toEqual(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('escape', GridFunctions.getGridContent(fix));
+            fix.detectChanges();
+
+            grid.updateRow({ InStock: true }, 200);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+
+            expect(trans.getState(200)).toEqual({
+                value: addRowData,
+                recordRef: undefined,
+                type: "add",
+                newValue: {}
+            });
+            expect(grid.rowChangesCount).toEqual(0);
+        });
     });
 });
