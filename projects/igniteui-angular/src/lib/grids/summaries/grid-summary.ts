@@ -3,11 +3,10 @@ export interface ISummaryExpression {
     customSummary?: any;
 }
 
-/* wcAlternateName: GridSummaryResult */
-/* blazorAlternateName: GridSummaryResult */
 export interface IgxSummaryResult {
     key: string;
     label: string;
+    /* blazorAlternateName: Result */
     summaryResult: any;
     /**
      * Apply default formatting based on the grid column type.
@@ -34,8 +33,6 @@ const clear = (el) => el === 0 || Boolean(el);
 const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
 
-/* wcAlternateName: GridSummaryOperand */
-/* blazorAlternateName: GridSummaryOperand */
 export class IgxSummaryOperand {
     /**
      * Counts all the records in the data source.

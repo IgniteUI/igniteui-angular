@@ -62,7 +62,7 @@ export interface CellType {
     editMode: boolean;
     /* blazorSuppress */
     nativeElement?: HTMLElement;
-    /* blazorAlternateType: GridColumn */
+    /* blazorAlternateType: Column */
     column: ColumnType;
     /* blazorSuppress */
     row: RowType;

@@ -62,7 +62,6 @@ const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /* blazorElement */
-/* blazorAlternateName: GridColumn */
 /* contentParent: Grid */
 /* contentParent: ColumnGroup */
 /* wcElementTag: igc-column */
