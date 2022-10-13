@@ -33,6 +33,7 @@ export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
+    newValue?: any;
 }
 
 export interface Action<T extends Transaction> {
