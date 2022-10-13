@@ -7,9 +7,9 @@
   "allowedNonPeerDependencies": [
     "@types/hammerjs",
     "hammerjs",
-    "jszip",
+    "fflate",
     "igniteui-trial-watermark",
-    "lodash.mergewith",
+    "lodash-es",
     "uuid",
     "@igniteui/material-icons-extended"
   ]

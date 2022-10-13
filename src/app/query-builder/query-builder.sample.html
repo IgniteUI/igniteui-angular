@@ -1,0 +1,19 @@
+<div class="sample-content">
+    <div class="sample-column">
+        <div class="density-chooser">
+            <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        </div>
+
+        <igx-query-builder #queryBuilder
+            [displayDensity]="this.density"
+            [fields]="this.fields"
+            [expressionTree]="this.expressionTree">
+            <!-- Custom header -->
+            <!-- <igx-query-builder-header [title]="'Builder'" [showLegend]="false"><span>Custom Title</span></igx-query-builder-header> -->
+        </igx-query-builder>
+
+        <div class="sample-buttons">
+            <button igxButton="raised" igxRipple (click)="changeLocale('fr')">Change locale to France</button>
+        </div>
+    </div>
+</div>

@@ -388,15 +388,12 @@
         }
     }
 
-    %form-group-display--error {
+    %form-group-display--filled {
         igx-prefix,
-        [igxPrefix] {
-            @extend %form-group-prefix--error;
-        }
-
+        [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            @extend %form-group-suffix--error;
+            @extend %form-group-prefix--filled;
         }
     }
 
@@ -1420,9 +1417,8 @@
         padding: 0;
     }
 
-    %form-group-prefix--error,
-    %form-group-suffix--error {
-        color: var-get($theme, 'error-secondary-color');
+    %form-group-prefix--filled {
+        color: var-get($theme, 'filled-text-color');
     }
 
     %form-group-border {

@@ -61,6 +61,7 @@
 @use '../components/paginator/paginator-component' as paginator;
 @use '../components/progress/progress-component' as progress;
 @use '../components/radio/radio-component' as radio;
+@use '../components/query-builder/query-builder-component' as query-builder;
 @use '../components/scrollbar/scrollbar-component' as scrollbar;
 @use '../components/slider/slider-component' as slider;
 @use '../components/splitter/splitter-component' as splitter;
@@ -83,7 +84,7 @@
     $print-layout: true,
     $enhanced-accessibility: false
 ) {
-    @include color.configure($enhanced-accessibility);
+    @include color.configure-colors($enhanced-accessibility);
 
     // Angular hack for binding to [hidden] property
     // not working
@@ -156,6 +157,7 @@
     @include paginator.component();
     @include progress.component();
     @include radio.component();
+    @include query-builder.component();
     @include scrollbar.component();
     @include slider.component();
     @include splitter.component();

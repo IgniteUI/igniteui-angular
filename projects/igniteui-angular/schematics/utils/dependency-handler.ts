@@ -21,11 +21,11 @@ const schematicsPackage = '@igniteui/angular-schematics';
 export const DEPENDENCIES_MAP: PackageEntry[] = [
     // dependencies
     { name: 'hammerjs', target: PackageTarget.REGULAR },
-    { name: 'jszip', target: PackageTarget.REGULAR },
+    { name: 'fflate', target: PackageTarget.REGULAR },
     { name: 'tslib', target: PackageTarget.NONE },
     { name: '@types/hammerjs', target: PackageTarget.DEV },
     { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-    { name: 'lodash.mergewith', target: PackageTarget.NONE },
+    { name: 'lodash-es', target: PackageTarget.NONE },
     { name: 'uuid', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     // peerDependencies
