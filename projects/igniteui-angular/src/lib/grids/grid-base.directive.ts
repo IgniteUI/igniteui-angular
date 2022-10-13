@@ -660,6 +660,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted after cell has been edited and editing has been committed.
      *
