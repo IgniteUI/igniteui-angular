@@ -84,12 +84,30 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         if (!state && !pendingState) {
             return null;
         }
+        if (!pendingState && state?.type === TransactionType.ADD && state?.newValue) {
+            this.removeProperties(state.newValue, state.value, false);
+            if (!state.newValue) {
+                return null;
+            }
+        }
 
         const pendingChange = super.getAggregatedValue(id, false);
         const change = state && state.value;
         let aggregatedValue = this.mergeValues(change, pendingChange);
+
+        if (state?.type === TransactionType.ADD) {
+            state.newValue = this.mergeValues(state.newValue, pendingChange);
+            aggregatedValue = state.newValue;
+        }
         if (mergeChanges) {
-            const originalValue = state ? state.recordRef : pendingState.recordRef;
+            let originalValue = state ? state.recordRef : pendingState.recordRef;
+            if (state?.type === TransactionType.ADD) {
+                originalValue = this._transactions.find(tr => tr.id === id && tr.type === TransactionType.ADD).newValue;
+                if (aggregatedValue && !pendingState) {
+                    this.removeProperties(state.newValue, originalValue);
+                    aggregatedValue = state.newValue;
+                }
+            }
             aggregatedValue = this.mergeValues(originalValue, aggregatedValue);
         }
         return aggregatedValue;
@@ -269,6 +287,16 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                 case TransactionType.UPDATE:
                     if (isObject(state.value)) {
                         if (state.type === TransactionType.ADD) {
+                            if (!state.newValue) {
+                                state.newValue = Object.assign({}, transaction.newValue);
+                                this.removeProperties(state.newValue, state.value);
+                            } else {
+                                Object.keys(state.value).forEach(key => {
+                                    if (state.value[key] !== transaction.newValue[key]) {
+                                        state.newValue[key] = transaction.newValue[key];
+                                    }
+                                });
+                            }
                             state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
@@ -348,5 +376,15 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                 }
                 break;
         }
+    }
+
+    private removeProperties(obj1: any, obj2: any, hasEqualValues = true): void {
+        Object.keys(obj1).forEach(key => {
+            if (hasEqualValues && obj1[key] === obj2[key]) {
+                delete obj1[key];
+            } else if (!hasEqualValues && obj1[key] !== obj2[key]) {
+                delete obj1[key];
+            }
+        });
     }
 }

@@ -170,7 +170,8 @@ describe('IgxTransaction', () => {
             expect(trans.getState(addTransaction.id)).toEqual({
                 value: addTransaction.newValue,
                 recordRef: undefined,
-                type: addTransaction.type
+                type: addTransaction.type,
+                newValue: undefined
             });
             expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
 
