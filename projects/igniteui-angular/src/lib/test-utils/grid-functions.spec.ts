@@ -1755,9 +1755,10 @@ export class GridFunctions {
         return items;
     }
 
-    public static getAdvancedFilteringCalendar(fix: ComponentFixture<any>) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const calendar = gridNativeElement.querySelector('.igx-calendar');
+    public static getAdvancedFilteringCalendar() {
+        const overlay = document.getElementsByClassName('igx-overlay')[0];
+        const calendar = overlay.querySelector('igx-calendar');
+
         return calendar;
     }
 
