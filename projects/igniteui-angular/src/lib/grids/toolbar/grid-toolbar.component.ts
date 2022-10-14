@@ -17,6 +17,8 @@ import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid
 import { IgxToolbarToken } from './token';
 
 /* mustUseNGParentAnchor */
+/* contentParent: Grid */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a context-aware container component for UI operations for the grid components.
  *

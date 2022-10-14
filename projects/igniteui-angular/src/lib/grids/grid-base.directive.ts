@@ -1436,6 +1436,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @HostBinding('attr.role')
     public hostRole = 'grid';
 
+    /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: GridToolbarCollection */
@@ -1444,6 +1445,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxGridToolbarComponent)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
+    /* contentChildren */
     /* blazorInclude */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: PaginatorCollection */

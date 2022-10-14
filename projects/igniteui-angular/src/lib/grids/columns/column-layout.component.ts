@@ -10,6 +10,10 @@ import { IgxColumnGroupComponent } from './column-group.component';
 
 /* blazorIndirectRender */
 /* blazorElement */
+/* omitModule */
+/* wcElementTag: igc-column-group */
+/* jsonAPIManageCollectionInMarkup */
+/* contentParent: Grid */
 /**
  * Column layout for declaration of Multi-row Layout
  *

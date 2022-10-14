@@ -42,6 +42,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 
 /* blazorAdditionalDependency: Column */
 /* blazorAdditionalDependency: ColumnGroup */
+/* blazorAdditionalDependency: ColumnLayout */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *

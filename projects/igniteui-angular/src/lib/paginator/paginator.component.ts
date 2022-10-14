@@ -29,6 +29,8 @@ export class IgxPaginatorTemplateDirective {
 }
 
 /* mustUseNGParentAnchor */
+/* contentParent: Grid */
+/* jsonAPIManageCollectionInMarkup */
 /**
  * Paginator component description
  * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxPivotGridComponent, *

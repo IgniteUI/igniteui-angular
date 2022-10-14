@@ -64,6 +64,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 /* blazorElement */
 /* contentParent: Grid */
 /* contentParent: ColumnGroup */
+/* contentParent: ColumnLayout */
 /* wcElementTag: igc-column */
 /* blazorIndirectRender */
 /**
