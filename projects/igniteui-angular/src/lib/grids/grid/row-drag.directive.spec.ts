@@ -451,7 +451,7 @@ describe('Row Drag Tests #grid', () => {
 
                 const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
                 expect(ghostText).toEqual(' Moving a row! ');
-                const pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
                 rowDragDirective.onPointerUp(pointerUpEvent);
             });
 
@@ -484,7 +484,7 @@ describe('Row Drag Tests #grid', () => {
                 const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
                 expect(ghostText.trim()).toEqual('CUSTOM');
 
-                const pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
                 rowDragDirective.onPointerUp(pointerUpEvent);
 
             });
@@ -789,7 +789,7 @@ describe('Row Drag Tests #grid', () => {
 
             const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
             const ghostElement = ghostElements[0];
-            expect(ghostElements.length).toEqual(2);
+            expect(ghostElements.length).toEqual(1);
             expect(ghostElement.classList.contains(CSS_CLASS_SELECTED_ROW)).toBeFalsy();
 
             pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
