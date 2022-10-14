@@ -796,6 +796,7 @@ export interface IgxGridRowDragGhostContext {
 }
 
 export interface IgxGridEmptyTemplateContext {
+    /* blazorSuppress */
     $implicit: undefined
 }
 
@@ -827,6 +828,7 @@ export interface IgxCellTemplateContext {
     additionalTemplateContext: any,
     /* blazorSuppress */
     formControl?: FormControl<any>,
+    /* blazorSuppress */
     defaultErrorTemplate?: TemplateRef<any>,
     cell?: CellType
 }
