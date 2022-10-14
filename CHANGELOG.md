@@ -1,6 +1,15 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 15.0.0
+
+### New Features
+- `igxGrid` - exposing new Input properties:
+    - `headSelectorTemplate` - Gets/Sets the header row selector template.
+    - `rowSelectorTemplate` - Gets/Sets the custom template used for row selectors.
+    - `groupByRowSelectorTemplate` - Gets/Sets the custom template used for the group row selectors.
+
 ## 14.2.0
 
 ### New Features

@@ -1191,15 +1191,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
-    public headSelectorsTemplates: QueryList<IgxHeadSelectorDirective>;
+    @ContentChildren(IgxHeadSelectorDirective, { read: TemplateRef, descendants: false })
+    public headSelectorsTemplates: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
-    public rowSelectorsTemplates: QueryList<IgxRowSelectorDirective>;
+    @ContentChildren(IgxRowSelectorDirective, { read: TemplateRef, descendants: false })
+    public rowSelectorsTemplates: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden
@@ -2286,15 +2286,27 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
+     * Gets the header row selector template.
      */
-    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
-        if (this.headSelectorsTemplates && this.headSelectorsTemplates.first) {
-            return this.headSelectorsTemplates.first.templateRef;
-        }
+    public get headSelectorTemplate(): TemplateRef<any> {
+        return this._headSelectorTemplate || this.headSelectorsTemplates.first;
+    }
 
-        return null;
+    /**
+     * Sets the header row selector template.
+     * ```html
+     * <ng-template #template igxHeadSelector let-headContext>
+     * {{ headContext.selectedCount }} / {{ headContext.totalCount  }}
+     * </ng-template>
+     *  * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.headSelectorTemplate = this.template;
+     * ```
+     * ```
+     */
+    public set headSelectorTemplate(template: TemplateRef<any>) {
+        this._headSelectorTemplate = template;
     }
 
     /**
@@ -2313,18 +2325,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
-    /**
-     * @hidden
-     * @internal
+    /** 
+     * Gets the row selector template.
      */
-    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
-        if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
-            return this.rowSelectorsTemplates.first.templateRef;
-        }
-
-        return null;
+    public get rowSelectorTemplate(): TemplateRef<any> {
+        return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
     }
 
+    /**
+         * Sets a custom template for the row selectors.
+         * ```html
+         * <ng-template #template igxRowSelector let-rowContext>
+         *    <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+         * </ng-template>
+         * ```
+         * ```typescript
+         * @ViewChild("'template'", {read: TemplateRef })
+         * public template: TemplateRef<any>;
+         * this.grid.rowSelectorTemplate = this.template;
+         * ```
+         */
+    public set rowSelectorTemplate(template: TemplateRef<any>) {
+        this._rowSelectorTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -2854,6 +2877,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _rowSelectorTemplate: TemplateRef<any>;
+    private _headSelectorTemplate: TemplateRef<any>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
