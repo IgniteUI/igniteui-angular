@@ -1,12 +1,13 @@
 import { ApplicationRef, ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges, QueryList, Type, ViewContainerRef } from '@angular/core';
 import { NgElement, NgElementStrategy, NgElementStrategyFactory,  } from '@angular/elements';
-import { ComponentConfig } from './component-config';
+import { ComponentConfig, ContentQueryMeta } from './component-config';
 
 // TODO: Should be from '@angular/elements' when actually public
 import { ComponentNgElementStrategy, ComponentNgElementStrategyFactory, extractProjectableNodes, isFunction } from './ng-element-strategy';
 import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 
 export const ComponentRefKey = Symbol('ComponentRef');
+const SCHEDULE_DELAY = 10;
 
 abstract class IgcNgElement extends NgElement {
     public override readonly ngElementStrategy: IgxCustomNgElementStrategy;
@@ -17,6 +18,9 @@ abstract class IgcNgElement extends NgElement {
  */
 class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
+    // public override componentRef: ComponentRef<any>|null = null;
+
+    protected element: IgcNgElement;
     private setComponentRef: (value: ComponentRef<any>) => void;
 
     /**
@@ -49,6 +53,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks
             return;
         }
+        this.element = element as IgcNgElement;
 
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
@@ -60,7 +65,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
-        let parent: IgcNgElement;
+        const parents: IgcNgElement[] = [];
         let parentConfig: ComponentConfig;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
         if (componentConfig) {
@@ -72,23 +77,28 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             .filter(x => x.selector);
 
         if (configParents?.length) {
+            let node = element as IgcNgElement;
+            while (node?.parentElement) {
+                node = node.parentElement.closest<IgcNgElement>(configParents.map(x => x.selector).join(','));
+                if (node) {
+                    parents.push(node);
+                }
+            }
             // select closest of all possible config parents
-            parent = element.parentElement.closest(configParents.map(x => x.selector).join(',')) as IgcNgElement;
-            // find the respective config entry
-            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+            let parent = parents[0];
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
             parentInjector = parentComponentRef?.injector;
-        }
 
-        // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
-        if (element.tagName.toLocaleLowerCase() === 'igc-grid-toolbar'
-            || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
-            // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
-            // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-            const parentComponentRef = await parent.ngElementStrategy[ComponentRefKey];
-            parentAnchor = parentComponentRef?.instance.anchor;
+            // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
+            if (element.tagName.toLocaleLowerCase() === 'igc-grid-toolbar'
+                || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
+                // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
+                // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
+                const parentComponentRef = await parent.ngElementStrategy[ComponentRefKey];
+                parentAnchor = parentComponentRef?.instance.anchor;
+            }
         }
 
         // need to be able to reset the injector (as protected) to the parent's to call super normally
@@ -141,23 +151,24 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // componentRef should also likely be protected:
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
-        if (parentConfig && parent) {
+        for (const parent of parents) {
+            // find the respective config entry
+            parentConfig = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+
             const componentType = this._componentFactory.componentType;
             // TODO - look into more cases where query expects a certain base class but gets a subclass.
             // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
-            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType.isPrototypeOf(componentType));
+            const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
 
             for (const query of contentQueries) {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
 
                 if (query.isQueryList) {
-                    const list = parentRef.instance[query.property] as QueryList<any>;
-                    list.reset([...list.toArray(), componentRef.instance]);
-                    list.notifyOnChanges();
+                    parent.ngElementStrategy.scheduleQueryUpdate(query.property);
                 } else {
                     parentRef.instance[query.property] = componentRef.instance;
+                    parentRef.changeDetectorRef.detectChanges();
                 }
-                parentRef.changeDetectorRef.detectChanges();
             }
         }
     }
@@ -193,6 +204,68 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         return returnValue;
     }
+
+    //#region schedule query update
+    private schedule = new Map<string, () => void>();
+
+    /**
+     * Schedule an update for a content query for the component
+     * @param queryName The name of the query property to update
+     */
+    public scheduleQueryUpdate(queryName: string) {
+        if (this.schedule.has(queryName)) {
+            this.schedule.get(queryName)();
+        }
+
+        const id = setTimeout(() => this.updateQuery(queryName), SCHEDULE_DELAY);
+        this.schedule.set(queryName, () => clearTimeout(id));
+    }
+
+    private updateQuery(queryName: string) {
+        this.schedule.delete(queryName);
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        if (componentRef) {
+            const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+            const query = componentConfig.contentQueries.find(x => x.property === queryName);
+            const children = this.runQueryInDOM(this.element, query);
+            const childRefs = [];
+            for (const child of children) {
+                // D.P. Use sync componentRef to avoid having this being stuck waiting while another update is queued
+                // While for initialized comps resolved promises will almost certainly yield within the same cycle https://stackoverflow.com/a/64371201 (tested)
+                // On the off chance one of many component is stuck initializing(async) and the update runs, don't want it to be stuck waiting for that too
+                // Also the newly initialized comp will schedule an update again anyway
+                // const childRef = await child.ngElementStrategy[ComponentRefKey];
+                const childRef = (child.ngElementStrategy as any).componentRef as ComponentRef<any>;
+                if (childRef?.instance) {
+                    childRefs.push(childRef.instance);
+                }
+            }
+            const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
+            list.reset(childRefs);
+            list.notifyOnChanges();
+        }
+    }
+
+    private runQueryInDOM(element: HTMLElement, query: ContentQueryMeta): IgcNgElement[] {
+        const childConfigs = this.config.filter(x => x.component === query.childType || query.childType === x.provideAs);
+        const childSelector = childConfigs
+                .map(x => x.selector)
+                .filter(x => x)
+                .join(',');
+
+        let children = Array.from(element.querySelectorAll<IgcNgElement>(childSelector));
+
+        if (children.length && !query.descendants) {
+            // combined parent selectors tad assuming, but for now it just covers column+group in single query so might be fine
+            const parents = new Set(childConfigs.map(x => x.parents).flat());
+            const parentSelectors = this.config.filter(x => parents.has(x.component)).map(x => x.selector).filter(x => x).join(',');
+
+            children = children.filter(x => x.parentElement.closest(parentSelectors) === element);
+        }
+        return children;
+    }
+
+    //#endregion schedule query update
 
     /**
      * assignTemplateCallback

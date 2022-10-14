@@ -10,11 +10,18 @@ import { IgxColumnGroupComponent } from './column-group.component';
 
 /* blazorIndirectRender */
 /* blazorElement */
+/**
+ * Column layout for declaration of Multi-row Layout
+ *
+ * @igxParent IgxGridComponent
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: ``
+    template: `<div #sink style="display: none;">
+    <ng-content select="igx-column,igc-column"></ng-content>
+</div>`
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     public childrenVisibleIndexes = [];

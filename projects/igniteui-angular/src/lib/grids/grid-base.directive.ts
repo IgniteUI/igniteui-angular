@@ -2474,6 +2474,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     public get hostClass(): string {
+        // TODO: This blocks further updates to the class (dynamic custom, different density)
         if (this._class === '') {
             const classes = [this.getComponentDensityClass('igx-grid')];
             // The custom classes should be at the end.
@@ -3551,10 +3552,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (recalcFeatureWidth) {
             this._headerFeaturesWidth = NaN;
         }
-        this.resetForOfCache();
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.resetForOfCache();
         this.hasVisibleColumns = undefined;
         this._columnGroups = this._columns.some(col => col.columnGroup);
     }

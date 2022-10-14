@@ -10,6 +10,7 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
@@ -335,6 +336,15 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.collapsible) {
             this.setExpandCollapseState();
         }
+
+        this.children.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                change.forEach(x => x.parent = this);
+                if (this.collapsible) {
+                    this.setExpandCollapseState();
+                }
+            });
     }
 
     /**
