@@ -7,7 +7,7 @@ import {
 } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
-import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions } from './template-strings.spec';
+import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -2294,8 +2294,18 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
         '',
         '',
         TemplateDefinitions.sortIconTemplates)
+        +  ExternalTemplateDefinitions.sortIconTemplates
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+     @ViewChild('sortIcon', {read: TemplateRef })
+     public sortIconTemplate: TemplateRef<any>;
+
+     @ViewChild('sortAscIcon', {read: TemplateRef })
+     public sortAscIconTemplate: TemplateRef<any>;
+
+     @ViewChild('sortDescIcon', {read: TemplateRef })
+     public sortDescIconTemplate: TemplateRef<any>;
+
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
