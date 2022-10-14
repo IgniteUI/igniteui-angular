@@ -1,6 +1,13 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 15.0.0
+
+### New Features
+- `igxGrid` - exposing new Input properties:
+    - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
+    - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
 ## 14.2.0
 
 ### New Features
