@@ -420,10 +420,12 @@ describe('Row Drag Tests #grid', () => {
                     ]
                 });
             }));
-            it('should correctly create custom ghost element', () => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
                 grid = fixture.componentInstance.instance;
                 fixture.detectChanges();
+            }));
+            it('should correctly create custom ghost element', () => {
                 dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
                 rows = grid.rowList.toArray();
                 dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
@@ -449,12 +451,11 @@ describe('Row Drag Tests #grid', () => {
 
                 const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
                 expect(ghostText).toEqual(' Moving a row! ');
+                const pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                rowDragDirective.onPointerUp(pointerUpEvent);
             });
 
             it('should allow setting custom drag icon and ghost element via Input.', () => {
-                fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
-                grid = fixture.componentInstance.instance as IgxGridComponent;
-                fixture.detectChanges();
                 dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
                 grid.dragIndicatorIconTemplate = fixture.componentInstance.rowDragTemplate;
                 grid.dragGhostCustomTemplate = fixture.componentInstance.rowDragGhostTemplate;
@@ -482,6 +483,9 @@ describe('Row Drag Tests #grid', () => {
 
                 const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
                 expect(ghostText.trim()).toEqual('CUSTOM');
+
+                const pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                rowDragDirective.onPointerUp(pointerUpEvent);
 
             });
         });
