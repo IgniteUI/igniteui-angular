@@ -28,8 +28,11 @@ export class IgxPaginatorTemplateDirective {
     public cssClass = 'igx-paginator-content';
 }
 
+/* blazorElement */
 /* mustUseNGParentAnchor */
-/* contentParent: Grid */
+/* wcElementTag: igc-paginator */
+/* blazorIndirectRender */
+/* contentParent: GridBaseDirective */
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Paginator component description
