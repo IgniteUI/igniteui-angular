@@ -1122,7 +1122,7 @@
         height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
-    %form-group-upload-button {
+    %form-group-upload-button[igxButton] {
         margin-bottom: rem(10px);
     }
 
