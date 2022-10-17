@@ -43,6 +43,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return width;
     }
 
+    /* blazorSuppress */
     public set width(val: any) { }
 
     public get columnLayout() {
