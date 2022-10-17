@@ -2288,6 +2288,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets the header row selector template.
      */
+    @Input()
     public get headSelectorTemplate(): TemplateRef<any> {
         return this._headSelectorTemplate || this.headSelectorsTemplates.first;
     }
@@ -2298,11 +2299,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <ng-template #template igxHeadSelector let-headContext>
      * {{ headContext.selectedCount }} / {{ headContext.totalCount  }}
      * </ng-template>
-     *  * ```typescript
+     * ```
+     * ```typescript
      * @ViewChild("'template'", {read: TemplateRef })
      * public template: TemplateRef<any>;
      * this.grid.headSelectorTemplate = this.template;
-     * ```
      * ```
      */
     public set headSelectorTemplate(template: TemplateRef<any>) {
@@ -2328,6 +2329,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** 
      * Gets the row selector template.
      */
+    @Input()
     public get rowSelectorTemplate(): TemplateRef<any> {
         return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
     }

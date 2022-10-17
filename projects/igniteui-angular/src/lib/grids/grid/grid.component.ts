@@ -534,6 +534,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Gets the group by row selector template.
      */
+    @Input()
     public get groupByRowSelectorTemplate(): TemplateRef<any> {
         return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates.first;
     }
