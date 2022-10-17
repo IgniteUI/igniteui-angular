@@ -9,7 +9,9 @@ export class WorksheetData {
     private _dataDictionary: WorksheetDataDictionary;
     private _isSpecialData: boolean;
     private _hasMultiColumnHeader: boolean;
+    private _hasMultiRowHeader: boolean;
     private _isHierarchical: boolean;
+    private _isPivotGrid: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -50,8 +52,16 @@ export class WorksheetData {
         return this._hasMultiColumnHeader;
     }
 
+    public get hasMultiRowHeader(): boolean {
+        return this._hasMultiRowHeader;
+    }
+
     public get isHierarchical(): boolean {
         return this._isHierarchical;
+    }
+
+    public get isPivotGrid(): boolean {
+        return this._isPivotGrid;
     }
 
     public get multiColumnHeaderRows(): number {
@@ -64,10 +74,15 @@ export class WorksheetData {
         this._hasMultiColumnHeader = Array.from(this.owners.values())
             .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader));
 
+        this._hasMultiRowHeader = Array.from(this.owners.values())
+            .some(o => o.columns.some(col => !col.skip && col.headerType === HeaderType.MultiRowHeader));
+
         this._isHierarchical = this.data[0]?.type === ExportRecordType.HierarchicalGridRecord
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');
 
-        if (this._isHierarchical || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
+        this._isPivotGrid = this.data[0]?.type === ExportRecordType.PivotGridRecord;
+
+        if (this._isHierarchical || this._isPivotGrid || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
             this.options.exportAsTable = false;
         }
 

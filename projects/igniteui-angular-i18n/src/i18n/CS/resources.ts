@@ -10,6 +10,7 @@ import { TreeResourceStringsCS } from './tree-resources';
 import { InputResourceStringsCS } from './input-resources';
 import { ChipResourceStringsCS } from './chip-resources';
 import { ComboResourceStringsCS } from './combo-resources';
+import { QueryBuilderResourceStringsCS } from './query-builder-resources';
 
 /**
  * Czech resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsCS = {
     ...TreeResourceStringsCS,
     ...InputResourceStringsCS,
     ...ChipResourceStringsCS,
-    ...ComboResourceStringsCS
+    ...ComboResourceStringsCS,
+    ...QueryBuilderResourceStringsCS
 };

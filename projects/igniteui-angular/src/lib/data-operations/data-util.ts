@@ -26,7 +26,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
 /**
  * @hidden
  */
-export const GridColumnDataType = mkenum({
+ export const DataType = mkenum({
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -36,6 +36,12 @@ export const GridColumnDataType = mkenum({
     Currency: 'currency',
     Percent: 'percent'
 });
+export type DataType = (typeof DataType)[keyof typeof DataType];
+
+/**
+ * @hidden
+ */
+export const GridColumnDataType = DataType;
 export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridColumnDataType];
 
 /**
