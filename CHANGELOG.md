@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 15.0.0
+
+### New Features
+- `igxGrid` - exposing new Input properties:
+    - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
+    - `groupRowTemplate` - Gets/Sets the template reference for the group row.
+
 ## 14.2.0
 
 ### New Features
