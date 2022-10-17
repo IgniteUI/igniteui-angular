@@ -603,6 +603,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
      */
+    @Input()
     public get groupRowTemplate(): TemplateRef<any> {
         return this._groupRowTemplate;
     }

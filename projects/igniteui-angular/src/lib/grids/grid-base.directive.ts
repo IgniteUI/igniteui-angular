@@ -1354,7 +1354,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
-    public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
+    public excelStyleHeaderIconDirectiveTemplate: TemplateRef<any> = null;
+
+    /**
+     * Gets the excel style header icon.
+    */
+    @Input()
+    public get excelStyleHeaderIconTemplate(): TemplateRef<any> {
+        return this._excelStyleHeaderIconTemplate || this.excelStyleHeaderIconDirectiveTemplate;
+    }
+
+    /**
+     * Sets the excel style header icon.
+     *```html
+     *<ng-template #template igxExcelStyleHeaderIcon>
+     * <igx-icon>filter_alt</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.excelStyleHeaderIconTemplate = this.template;
+     * ```
+    */
+    public set excelStyleHeaderIconTemplate(template: TemplateRef<any>) {
+        this._excelStyleHeaderIconTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
@@ -2854,6 +2879,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _excelStyleHeaderIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
