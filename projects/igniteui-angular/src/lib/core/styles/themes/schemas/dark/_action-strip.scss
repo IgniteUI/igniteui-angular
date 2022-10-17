@@ -16,12 +16,17 @@ $dark-action-strip: $light-action-strip;
 
 /// Generates a dark fluent action strip schema.
 /// @type {Map}
+/// @prop {Map} actions-background [color: ('grays', 600)] - The color used for actions background.
 /// @requires {function} extend
-/// @requires $dark-action-strip
+/// @requires $fluent-action-strip
 $dark-fluent-action-strip: extend(
-    $dark-action-strip,
+    $fluent-action-strip,
     (
-        variant: 'fluent'
+        variant: 'fluent',
+
+        actions-background: (
+            color: ('grays', 600)
+        ),
     )
 );
 
@@ -29,9 +34,9 @@ $dark-fluent-action-strip: extend(
 /// @type {Map}
 /// @prop {Map} actions-background [color: ('gray', 100)] - The color used for actions background.
 /// @requires {function} extend
-/// @requires $dark-action-strip
+/// @requires $bootstrap-action-strip
 $dark-bootstrap-action-strip: extend(
-    $dark-action-strip,
+    $bootstrap-action-strip,
     (
         variant: 'bootstrap',
 

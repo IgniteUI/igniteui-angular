@@ -190,7 +190,7 @@
                 color: var-get($theme, 'icon-color');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo-design' or $variant == 'fluent' {
                 border-radius: var-get($theme, 'actions-border-radius');
             }
         }
