@@ -1314,10 +1314,58 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowEditTextDirectives: QueryList<TemplateRef<any>>;
 
     /**
+     * Gets the row edit text template.
+     */
+    @Input()
+    public get rowEditTextTemplate(): TemplateRef<any> {
+        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+    }
+    /**
+     * Sets the row edit text template.
+     *```html
+     * <ng-template #template igxRowEditText let-rowChangesCount>
+     * Changes: {{rowChangesCount}}
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditTextTemplate = this.template;
+     * ```
+     */
+    public set rowEditTextTemplate(template: TemplateRef<any>) {
+        this._rowEditTextTemplate = template;
+    }
+
+    /**
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
     public rowAddText: TemplateRef<any>;
+
+    /**
+     * Gets the row add text template.
+     */
+    @Input()
+    public get rowAddTextTemplate(): TemplateRef<any> {
+        return this._rowAddTextTemplate || this.rowAddText;
+    }
+    /**
+     * Sets the row add text template.
+     *```html
+     * <ng-template #template igxRowAddText>
+     * Adding Row
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowAddTextTemplate = this.template;
+     * ```
+     */
+    public set rowAddTextTemplate(template: TemplateRef<any>) {
+        this._rowAddTextTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -1325,6 +1373,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
     public rowEditActionsDirectives: QueryList<TemplateRef<any>>;
 
+    /**
+     * Gets the row edit actions template.
+     */
+    @Input()
+    public get rowEditActionsTemplate(): TemplateRef<any> {
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+    }
+    /**
+     * Sets the row edit actions template.
+     *```html
+     * <ng-template #template igxRowEditActions let-endRowEdit>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditActionsTemplate = this.template;
+     * ```
+     */
+    public set rowEditActionsTemplate(template: TemplateRef<any>) {
+        this._rowEditActionsTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
@@ -2854,6 +2926,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _rowEditTextTemplate: TemplateRef<any>;
+    private _rowAddTextTemplate: TemplateRef<any>;
+    private _rowEditActionsTemplate: TemplateRef<any>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
