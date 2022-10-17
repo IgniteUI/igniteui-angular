@@ -22,7 +22,7 @@ import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
-import mergeWith from 'lodash.mergewith';
+import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

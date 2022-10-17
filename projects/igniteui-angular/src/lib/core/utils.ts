@@ -1,7 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import mergeWith from 'lodash.mergewith';
+import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,

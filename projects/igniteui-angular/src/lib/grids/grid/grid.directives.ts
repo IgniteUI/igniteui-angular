@@ -2,7 +2,7 @@ import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } fr
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
-import { ColumnType, IgxGridMasterDetailContext, IgxGroupByRowTemplateContext } from '../common/grid.interface';
+import { ColumnType } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -11,12 +11,8 @@ import { ColumnType, IgxGridMasterDetailContext, IgxGroupByRowTemplateContext } 
     selector: '[igxGroupByRow]'
 })
 export class IgxGroupByRowTemplateDirective {
-    public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective,
-        ctx: unknown): ctx is IgxGroupByRowTemplateContext {
-        return true
-    };
 
-    constructor(public template: TemplateRef<IgxGroupByRowTemplateContext>) { }
+    constructor(public template: TemplateRef<any>) { }
 
 }
 
@@ -27,10 +23,6 @@ export class IgxGroupByRowTemplateDirective {
     selector: '[igxGridDetail]'
 })
 export class IgxGridDetailTemplateDirective {
-    public static ngTemplateContextGuard(_dir: IgxGridDetailTemplateDirective,
-        ctx: unknown): ctx is IgxGridMasterDetailContext {
-        return true
-    };
 }
 
 /**
@@ -82,7 +74,7 @@ export class IgxExcelStyleHeaderIconDirective {
 /**
  * @hidden
  */
-@Directive({
+ @Directive({
     selector: '[igxSortHeaderIcon]'
 })
 export class IgxSortHeaderIconDirective {

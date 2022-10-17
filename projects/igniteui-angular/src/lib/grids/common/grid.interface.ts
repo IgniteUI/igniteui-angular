@@ -25,9 +25,9 @@ import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/
 import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { DataType, GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
+import { IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
@@ -113,7 +113,20 @@ export interface RowType {
     unpin?: () => void;
 }
 
-export interface ColumnType {
+export interface FieldType {
+    label?: string;
+    field: string;
+    header?: string;
+    dataType: DataType;
+    filters: IgxFilteringOperand;
+    pipeArgs: IFieldPipeArgs;
+    defaultTimeFormat: string;
+    defaultDateTimeFormat: string;
+
+    formatter(value: any, rowData?: any): any;
+}
+
+export interface ColumnType extends FieldType {
     grid: GridType;
     children: QueryList<ColumnType>;
     allChildren: ColumnType[];
@@ -138,7 +151,6 @@ export interface ColumnType {
     minWidthPercent: number;
     maxWidthPercent: number;
 
-    field: string;
     header?: string;
     index: number;
     dataType: GridColumnDataType;
@@ -160,7 +172,6 @@ export interface ColumnType {
     sortStrategy: ISortingStrategy;
     sortingIgnoreCase: boolean;
     filterCell: any;
-    filters: IgxFilteringOperand;
     filteringIgnoreCase: boolean;
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
@@ -184,8 +195,6 @@ export interface ColumnType {
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
     additionalTemplateContext: any;
     isLastPinned: boolean;
     isFirstPinned: boolean;
@@ -201,7 +210,6 @@ export interface ColumnType {
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
-    formatter(value: any, rowData?: any): any;
     populateVisibleIndexes?(): void;
 }
 
@@ -697,13 +705,4 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
-}
-
-export interface IgxGridMasterDetailContext {
-    $implicit: any;
-    index: number;
-}
-
-export interface IgxGroupByRowTemplateContext {
-    $implicit: IGroupByRecord;
 }
