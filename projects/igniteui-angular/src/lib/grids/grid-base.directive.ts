@@ -1212,13 +1212,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets the custom template, if any, used for row drag ghost.
      */
+    @Input()
     public get dragGhostCustomTemplate() {
         return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
     }
 
     /**
      * Sets a custom template for the row drag ghost.
-     * * ```html
+     *```html
      * <ng-template #template igxRowDragGhost>
      *    <igx-icon>menu</igx-icon>
      * </ng-template>
@@ -2413,7 +2414,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sets a custom template that should be used when rendering the row drag indicator icon.
-     * * ```html
+     *```html
      * <ng-template #template igxDragIndicatorIcon>
      *    <igx-icon>expand_less</igx-icon>
      * </ng-template>
