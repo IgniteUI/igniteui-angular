@@ -102,17 +102,22 @@
   </section>
 
   <script src="assets/data/nw-products.js"></script>
-  <script>
+  <script type="module">
+    import { html } from "./lit-html.js";
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
-        // let columns = [
-        //     { field: 'ProductID', header: 'Product Id', dataType: 'number' },
-        //     { field: 'ProductName', sortable: true },
-        //     { field: 'CategoryName', sortable: true, groupable: true },
-        //     { field: 'InStock', dataType: 'number' }
-        // ];
-        // grid1.columns = columns;
+        grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
+        grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
+        grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
+        grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
+            html`
+                <input autofocus id="range" type="range"
+                    .value="${context.$implicit}"
+                    @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
+                    />
+                <output .value="${context.$implicit}"></output>
+            `;
     });
 
     function changeColumns() {
