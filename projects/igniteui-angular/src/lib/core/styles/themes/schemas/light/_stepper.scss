@@ -320,13 +320,6 @@ $fluent-stepper: extend(
 /// @property {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
 /// @property {Map} indicator-outline [color: ('grays', 300)] - The outline color of the incomplete step indicator.
 ///
-/// @property {Map} current-title-color [color: ('primary', 500)] - The color of the current step title.
-/// @property {Map} current-title-hover-color [color: ('primary', 500)] - The color of the current step title on hover.
-/// @property {Map} current-title-focus-color [color: ('primary', 500)] - The color of the current step title on focus.
-/// @property {Map} current-subtitle-color [color: ('primary', 500)] - The color of the current step subtitle.
-/// @property {Map} current-subtitle-hover-color [color: ('primary', 500)] - The color of the current step subtitle on hover.
-/// @property {Map} current-subtitle-focus-color [color: ('primary', 500)] - The color of the current step subtitle on focus.
-///
 /// @property {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
 /// @property {Map} disabled-indicator-outline [color: ('grays', 300)] - The outline color of the disabled step indicator.
 ///
@@ -389,26 +382,6 @@ $bootstrap-stepper: extend(
             color: ('grays', 400)
         ),
         indicator-color: (
-            color: ('primary', 500)
-        ),
-
-        // Current
-        current-title-color: (
-            color: ('primary', 500)
-        ),
-        current-title-hover-color: (
-            color: ('primary', 500)
-        ),
-        current-title-focus-color: (
-            color: ('primary', 500)
-        ),
-        current-subtitle-color: (
-            color: ('primary', 500)
-        ),
-        current-subtitle-hover-color: (
-            color: ('primary', 500)
-        ),
-        current-subtitle-focus-color: (
             color: ('primary', 500)
         ),
 

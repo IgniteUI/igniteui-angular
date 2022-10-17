@@ -10,6 +10,7 @@ import { TreeResourceStringsSV } from './tree-resources';
 import { InputResourceStringsSV } from './input-resources';
 import { ChipResourceStringsSV } from './chip-resources';
 import { ComboResourceStringsSV } from './combo-resources';
+import { QueryBuilderResourceStringsSV } from './query-builder-resources';
 
 /**
  * Swedish resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsSV = {
     ...TreeResourceStringsSV,
     ...InputResourceStringsSV,
     ...ChipResourceStringsSV,
-    ...ComboResourceStringsSV
+    ...ComboResourceStringsSV,
+    ...QueryBuilderResourceStringsSV
 };

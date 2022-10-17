@@ -55,19 +55,20 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item  [role]="item.isHeader? 'group' : 'option'" [singleMode]="true"
+        <igx-combo-item  [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
             [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
                 | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
                 | comboGrouping:groupKey:valueKey:groupSortingDirection;
                 index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-                [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
-            <ng-container *ngIf="item.isHeader">
+                [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
+            <ng-container *ngIf="item?.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                     context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
                 </ng-container>
             </ng-container>
-            <ng-container *ngIf="!item.isHeader">
+            <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
+            <ng-container *ngIf="!item?.isHeader">
                 <ng-container #listItem
                     *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                 </ng-container>

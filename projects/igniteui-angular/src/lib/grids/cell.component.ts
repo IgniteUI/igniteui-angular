@@ -469,14 +469,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public get readonly(): boolean {
         return !this.editable;
     }
+
     /** @hidden @internal */
     @HostBinding('attr.aria-describedby')
-    public get describeBy() {
-        return this.grid.id + '_' + this.column.field;
+    public get ariaDescribeBy() {
+        let describeBy = (this.gridID + '_' + this.column.field).replace('.', '_');
+        if (this.isInvalid) {
+            describeBy += ' ' + this.ariaErrorMessage;
+        }
+        return describeBy;
     }
 
     /** @hidden @internal */
-    @HostBinding('attr.aria-errormessage')
     public get ariaErrorMessage() {
         return this.grid.id + '_' + this.column.field + '_' + this.intRow.index + '_error';
     }
@@ -1131,9 +1135,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
-                if (this.grid.validationTrigger === 'blur') {
-                    this.grid.tbody.nativeElement.focus({ preventScroll: true });
-                }
                 editableArgs = this.grid.crudService.updateCell(false, event);
 
                 /* This check is related with the following issue #6517:
