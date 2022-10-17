@@ -1,7 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use './excel-filtering-theme' as *;
-@use './advanced-filtering-theme' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
@@ -1399,7 +1398,7 @@
             border-bottom-color: var-get($theme, 'cell-active-border-color');
         }
     }
-    
+
     %grid-cell--invalid {
         padding-inline-end: rem(4px) !important;
 
@@ -1410,7 +1409,7 @@
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
         }
-        
+
         %grid-cell-text {
             width: 100%;
         }
@@ -2924,7 +2923,24 @@
     }
 
     @include excel-filtering($theme, $palette);
-    @include advanced-filtering($theme, $palette);
+
+    %advanced-filtering-dialog {
+        background: var-get($theme, 'filtering-row-background');
+        box-shadow: elevation($elevation: 12);
+
+        igx-query-builder {
+            --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};
+            --igx-query-builder-background-and: #{var-get($theme, 'filtering-background-and')};
+            --igx-query-builder-background-and--focus: #{var-get($theme, 'filtering-background-and--focus')};
+            --igx-query-builder-background-or: #{var-get($theme, 'filtering-background-or')};
+            --igx-query-builder-background-or--focus: #{var-get($theme, 'filtering-background-or--focus')};
+            box-shadow: none;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
+        }
+    }
 
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {

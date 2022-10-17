@@ -23,13 +23,10 @@ describe('IgxSelectionAPIService', () => {
         const selection3 = service.add_item(componentId, null);
         expect(selection3.has(null)).toBe(true);
 
-        const selection4 = service.add_item(componentId, undefined);
-        expect(selection4.has(undefined)).toBe(true);
+        const selection4 = service.add_item(componentId, '');
+        expect(selection4.has('')).toBe(true);
 
-        const selection5 = service.add_item(componentId, '');
-        expect(selection5.has('')).toBe(true);
-
-        const selection6 = service.add_item(componentId, NaN);
-        expect(selection6.has(NaN)).toBe(true);
+        const selection5 = service.add_item(componentId, NaN);
+        expect(selection5.has(NaN)).toBe(true);
     });
 });

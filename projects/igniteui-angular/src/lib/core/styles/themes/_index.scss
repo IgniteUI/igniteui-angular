@@ -381,6 +381,12 @@
         ));
     }
 
+    @if is-used('igx-query-builder', $exclude) {
+        @include query-builder(query-builder-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-scrollbar', $exclude) {
         @include scrollbar(scrollbar-theme(
             $schema: $schema
