@@ -11,7 +11,7 @@ import { IgxColumnGroupComponent } from './column-group.component';
 /* blazorIndirectRender */
 /* blazorElement */
 /* omitModule */
-/* wcElementTag: igc-column-group */
+/* wcElementTag: igc-column-layout */
 /* jsonAPIManageCollectionInMarkup */
 /**
  * Column layout for declaration of Multi-row Layout
