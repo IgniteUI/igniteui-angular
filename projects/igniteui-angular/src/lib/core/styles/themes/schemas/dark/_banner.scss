@@ -21,8 +21,8 @@ $dark-fluent-banner: $fluent-banner;
 /// Generates a dark bootstrap banner schema.
 /// @type {Map}
 /// @property {Map} banner-background [color: ('surface')] - The background color used banner background.
-/// @property {Map} banner-message-color [color: ('grays', 600)] - The color used for banner label.
-/// @property {Map} banner-illustration-color [color: ('grays', 600)] - The color used banner illustration.
+/// @property {Map} banner-message-color [color: ('gray', 600)] - The color used for banner label.
+/// @property {Map} banner-illustration-color [color: ('gray', 600)] - The color used banner illustration.
 /// @requires {function} extend
 /// @requires $bootstrap-banner
 $dark-bootstrap-banner: extend(
@@ -33,11 +33,11 @@ $dark-bootstrap-banner: extend(
         ),
 
         banner-message-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         ),
 
         banner-illustration-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         )
     )
 );

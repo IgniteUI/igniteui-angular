@@ -33,6 +33,7 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@angular/common', target: PackageTarget.NONE },
     { name: '@angular/core', target: PackageTarget.NONE },
     { name: '@angular/animations', target: PackageTarget.NONE },
+    { name: 'igniteui-theming', target: PackageTarget.NONE },
     // igxDevDependencies
     { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];

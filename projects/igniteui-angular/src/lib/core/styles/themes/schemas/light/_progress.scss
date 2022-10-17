@@ -9,14 +9,14 @@
 /// Generates a light progress-linear schema.
 /// @type {Map}
 ///
-/// @property {Map} track-color [color: ('grays', 300)] - The main track color.
+/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
 /// @property {Map} fill-color-default [color: ('primary', 500)] - The track default fill color.
 /// @property {Map} fill-color-danger [color: ('error')] - The track danger fill color.
 /// @property {Map} fill-color-warning [color: ('warn')] - The track warning fill color.
 /// @property {Map} fill-color-info [color: ('info')] - The track info fill color.
 /// @property {Map} fill-color-success [color: ('success')] - The track success fill color.
-/// @property {Map} stripes-color [color: ('grays', 50, .7)] - The track stripes color.
-/// @property {Map} text-color [color: ('grays', 700)] - The track value text color.
+/// @property {Map} stripes-color [color: ('gray', 50, .7)] - The track stripes color.
+/// @property {Map} text-color [color: ('gray', 700)] - The track value text color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
@@ -26,7 +26,7 @@ $light-progress-linear: extend(
         variant: 'material',
 
         track-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         fill-color-default: (
@@ -50,11 +50,11 @@ $light-progress-linear: extend(
         ),
 
         stripes-color: (
-            color: ('grays', 50, .7)
+            color: ('gray', 50, .7)
         ),
 
         text-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         track-border-radius: rem(0)
@@ -76,8 +76,8 @@ $fluent-progress-linear: extend(
 /// Generates a bootstrap progress-linear schema.
 /// @type {Map}
 ///
-/// @property {Map} track-color [color: ('grays', 200)] - The main track color.
-/// @property {Map} stripes-color [color: ('grays', 50, .15)] - The track stripes color.
+/// @property {Map} track-color [color: ('gray', 200)] - The main track color.
+/// @property {Map} stripes-color [color: ('gray', 50, .15)] - The track stripes color.
 /// @prop {Number} track-border-radius [4px] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
@@ -88,11 +88,11 @@ $bootstrap-progress-linear: extend(
         variant: 'bootstrap',
 
         track-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         stripes-color: (
-            color: ('grays', 50, .15)
+            color: ('gray', 50, .15)
         ),
 
         track-border-radius: rem(4px)
@@ -101,8 +101,8 @@ $bootstrap-progress-linear: extend(
 
 /// Generates an indigo progress-linear schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('grays', 300)] - The main track color.
-/// @property {Map} stripes-color [color: ('grays', 50, .45)] - The track stripes color.
+/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
+/// @property {Map} stripes-color [color: ('gray', 50, .45)] - The track stripes color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $light-progress-linear
@@ -112,11 +112,11 @@ $indigo-progress-linear: extend(
         variant: 'indigo-design',
 
         track-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         stripes-color: (
-            color: ('grays', 50, .45)
+            color: ('gray', 50, .45)
         ),
     )
 );
@@ -124,9 +124,9 @@ $indigo-progress-linear: extend(
 /// Generates a light progress-circular schema.
 /// @type {Map}
 ///
-/// @property {Map} base-circle-color [color: ('grays', 300)] - The base circle fill color.
+/// @property {Map} base-circle-color [color: ('gray', 300)] - The base circle fill color.
 /// @property {Map} progress-circle-color [color: ('primary', 500)] - The progress circle fill color.
-/// @property {Map} text-color [color: ('grays', 700)] - The value text color.
+/// @property {Map} text-color [color: ('gray', 700)] - The value text color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @see $default-palette
@@ -135,7 +135,7 @@ $light-progress-circular: extend(
         variant: 'material',
 
         base-circle-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         progress-circle-color: (
@@ -143,7 +143,7 @@ $light-progress-circular: extend(
         ),
 
         text-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         track-border-radius: rem(0)
@@ -162,7 +162,7 @@ $fluent-progress-circular: extend(
 
 /// Generates a bootstrap progress-circular schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('grays', 200)] - The main track color.
+/// @property {Map} track-color [color: ('gray', 200)] - The main track color.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-progress-circular
@@ -172,14 +172,14 @@ $bootstrap-progress-circular: extend(
         variant: 'bootstrap',
 
         track-color: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
     )
 );
 
 /// Generates an indigo progress-circular schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('grays', 300)] - The main track color.
+/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
 /// @requires {function} extend
 /// @requires {Map} $light-progress-circular
 $indigo-progress-circular: extend(
@@ -188,7 +188,7 @@ $indigo-progress-circular: extend(
         variant: 'indigo-design',
 
         track-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
     )
 );

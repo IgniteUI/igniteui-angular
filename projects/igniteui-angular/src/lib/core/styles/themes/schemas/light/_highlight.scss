@@ -8,18 +8,18 @@
 
 /// Generates a light highlight schema.
 /// @type {Map}
-/// @property {Map} resting-background [color: ('grays', 300)] - The background color used for the highlight in its resting state.
-/// @property {Map} resting-color [contrast-color: ('grays', 300)] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-background [color: ('gray', 300)] - The background color used for the highlight in its resting state.
+/// @property {Map} resting-color [contrast-color: ('gray', 300)] - The icon color used for the highlight in its resting state.
 /// @property {Map} active-background [color: ('secondary', A100)] - The background color used for the highlight in its active state.
 /// @property {Map} active-color [contrast-color: ('secondary', A100) - The text color used for the highlight in its active state.
 /// @see $default-palette
 $light-highlight: (
     resting-background: (
-        color: ('grays', 300)
+        color: ('gray', 300)
     ),
 
     resting-color: (
-        contrast-color: ('grays', 300),
+        contrast-color: ('gray', 300),
     ),
 
     active-background: (
@@ -45,7 +45,7 @@ $bootstrap-highlight: $light-highlight;
 /// @type {Map}
 /// @property {Map} active-background [color: ('primary', 500)] - The background color used for the highlight in its active state.
 /// @property {Map} active-color [contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
-/// @property {Map} resting-color [contrast-color: ( color: ('grays', 300))] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-color [contrast-color: ( color: ('gray', 300))] - The icon color used for the highlight in its resting state.
 /// @requires {function} extend
 /// @requires {Map} $light-highlight
 $indigo-highlight: extend(
@@ -60,7 +60,7 @@ $indigo-highlight: extend(
         ),
 
         resting-color: (
-            contrast-color: ('grays', 300),
+            contrast-color: ('gray', 300),
         )
     )
 );

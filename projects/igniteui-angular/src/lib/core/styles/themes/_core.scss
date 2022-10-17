@@ -3,7 +3,8 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-@use 'utilities' as *;
+// Used to configure color accessibility for charts
+@use 'igniteui-theming/sass/color/functions' as color;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -81,9 +82,9 @@
 /// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
-    $enhanced-accessibility: $enhanced-accessibility
+    $enhanced-accessibility: false
 ) {
-    $enhanced-accessibility: $enhanced-accessibility !global;
+    @include color.configure-colors($enhanced-accessibility);
 
     // Angular hack for binding to [hidden] property
     // not working
@@ -97,7 +98,8 @@
     @include drag.component();
 
     // Includes the base for each theme.
-    [class^='igx-'] {
+    [class^='igx-'],
+    [class^='ig-'] {
         &,
         *,
         *::before,

@@ -8,13 +8,13 @@
 
 /// Generates a light checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('grays', 50)] - The checked mark color.
-/// @prop {Color} label-color [color: ('grays', 900)]- The text color used for the label text.
-/// @prop {Color} empty-color [color: ('grays', 600)] - The unchecked border color.
+/// @prop {Color} tick-color [color: ('gray', 50)] - The checked mark color.
+/// @prop {Color} label-color [color: ('gray', 900)]- The text color used for the label text.
+/// @prop {Color} empty-color [color: ('gray', 600)] - The unchecked border color.
 /// @prop {Color} fill-color [color: ('secondary', 500)] - The checked border and fill colors.
-/// @prop {Color} disabled-color [color: ('grays', 400)] - The disabled border and fill colors.
+/// @prop {Color} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
 /// @prop {Color} disabled-indeterminate-color [color: ('secondary', 200)] - The disabled border and fill colors in indeterminate state.
-/// @prop {Color} disabled-color-label [color: ('grays', 400)] - The disabled color of the label.
+/// @prop {Color} disabled-color-label [color: ('gray', 400)] - The disabled color of the label.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [24px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 ///
@@ -25,15 +25,15 @@ $light-checkbox: extend(
         variant: 'material',
 
         tick-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         label-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         empty-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         ),
 
         fill-color: (
@@ -41,7 +41,7 @@ $light-checkbox: extend(
         ),
 
         disabled-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         disabled-indeterminate-color: (
@@ -49,7 +49,7 @@ $light-checkbox: extend(
         ),
 
         disabled-color-label: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         border-radius: rem(2px),
@@ -60,12 +60,12 @@ $light-checkbox: extend(
 
 /// Generates a fluent checkbox schema.
 /// @type {Map}
-/// @prop {Map} empty-color [color: ('grays', 900)] - The unchecked border color.
+/// @prop {Map} empty-color [color: ('gray', 900)] - The unchecked border color.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
-/// @prop {Map} disabled-color [color: ('grays', 400)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Map} focus-outline-color [color: ('grays', 800)] - The focus outlined color.
+/// @property {Map} focus-outline-color [color: ('gray', 800)] - The focus outlined color.
 ///
 /// @requires {function} extend
 /// @requires {Map} $light-checkbox
@@ -75,11 +75,11 @@ $fluent-checkbox: extend(
         variant: 'fluent',
 
         focus-outline-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         empty-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         fill-color: (
@@ -87,7 +87,7 @@ $fluent-checkbox: extend(
         ),
 
         disabled-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         border-radius: rem(2px),
@@ -99,7 +99,7 @@ $fluent-checkbox: extend(
 /// Generates a bootstrap checkbox schema.
 /// @type {Map}
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
-/// @prop {Map} empty-color [color: ('grays', 500)] - The unchecked border color.
+/// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and fill colors.
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
@@ -121,7 +121,7 @@ $bootstrap-checkbox: extend(
         ),
 
         empty-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         disabled-color: (
@@ -138,12 +138,12 @@ $bootstrap-checkbox: extend(
 /// @type {Map}
 /// @prop {Color} tick-color [color: 'surface'] - The checked mark color.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
-/// @prop {Map} empty-color [color: ('grays', 500)] - The unchecked border color.
-/// @prop {Map} disabled-color [color: ('grays', 300)] - The disabled border and fill colors.
-/// @prop {Color} disabled-color-label [color: ('grays', 300)] - The disabled label color.
+/// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
+/// @prop {Map} disabled-color [color: ('gray', 300)] - The disabled border and fill colors.
+/// @prop {Color} disabled-color-label [color: ('gray', 300)] - The disabled label color.
 /// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Map} focus-outline-color [color: ('grays', 300)] - The focus outlined color.
+/// @property {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @property {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 ///
 /// @requires {function} extend
@@ -154,7 +154,7 @@ $indigo-checkbox: extend(
         variant: 'indigo-design',
 
         focus-outline-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         focus-outline-color-focused: (
@@ -170,15 +170,15 @@ $indigo-checkbox: extend(
         ),
 
         empty-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         disabled-color: (
-            color: ('grays', 300),
+            color: ('gray', 300),
         ),
 
         disabled-color-label: (
-            color: ('grays', 300),
+            color: ('gray', 300),
         ),
 
         border-radius: rem(3px),

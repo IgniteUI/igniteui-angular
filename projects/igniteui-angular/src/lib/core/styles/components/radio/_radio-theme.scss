@@ -1,10 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
-@use 'sass:map';
-@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
@@ -26,9 +25,8 @@
 /// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// Set light to true when the surrounding area is dark.
@@ -37,7 +35,6 @@
 ///   // Pass the theme to the radio component mixin
 ///   @include radio($my-radio-theme);
 @function radio-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $label-color: null,
@@ -59,11 +56,10 @@
         $radio-schema: $schema;
     }
 
-    $theme: apply-palette($radio-schema, $palette);
+    $theme: digest-schema($radio-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
@@ -400,17 +396,15 @@
 /// Adds typography styles for the igx-radio component.
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin radio-typography(
-    $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %radio-label {
-        @include type-style($type-scale, $label) {
+        @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
         }

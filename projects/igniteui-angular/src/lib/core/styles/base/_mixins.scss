@@ -1,0 +1,110 @@
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'variables' as *;
+@use 'functions' as *;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+
+////
+/// @group Utilities
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Registers a component to the list of known components.
+/// @access private
+/// @param {String} $name - The component name to register.
+@mixin register-component($name, $deps: ()) {
+    $component: map.get($components, $name);
+
+    @if $component == null {
+        $components: map.merge($components, (
+            #{$name}: (
+                usedBy: ()
+            ),
+        )) !global;
+    }
+
+    @each $dep in $deps {
+        @include register-component($dep);
+
+        @if map.has-key($components, $dep) {
+            $component: map.get($components, $dep);
+            $usedBy: map.get($component, 'usedBy');
+
+            $components: map.merge($components, (
+                #{$dep}: map.merge($component, (
+                    usedBy: list.append($usedBy, $name, $separator: comma)
+                ))
+            )) !global;
+        }
+    }
+}
+
+/// Generates a CSS class name for a color from a
+/// given name, variant, prefix and suffix
+/// @access private
+/// @param {string} $name - The main class name.
+/// @param {string} $variant - An additional string to be attached to the main class name.
+/// @param {string} $prefix - A prefix to be attached to the name and variant string.
+/// @param {string} $prefix - A suffix to be attached to the name and variant string.
+@mixin gen-color-class($name, $variant, $prefix, $suffix) {
+    $prefix: if($prefix, '#{$prefix}-', '');
+    $suffix: if($suffix, '-#{$suffix}', '');
+
+    .#{$prefix}#{$name}-#{$variant}#{$suffix} {
+        @content;
+    }
+}
+
+// stylelint-disable max-nesting-depth
+/// Generates CSS class names for all colors from
+/// for a given property and color palette, with
+/// optional prefix and suffix attached to the class name.
+/// @access private
+/// @param {string} $prop - The CSS property to assign the palette color to.
+/// @param {string} $prefix - A prefix to be attached to the class name.
+/// @param {string} $suffix - A suffix to be attached to the class name.
+/// @param {Map} $palette [$default-palette] - The palette to use to generate css class names for.
+/// @example scss Generate background classes with colors from the palette.
+///   // Will generate class names like
+///   // .my-primary-500-bg { ... };
+///   @include gen-color-classes(
+///     $prop: 'background-color',
+///     $prefix: 'my',
+///     $suffix: 'bg'
+///   );
+/// @requires {mixin} gen-color-class
+@mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
+    @each $name, $color in $palette {
+        @each $variant, $value in $color {
+            @if meta.type-of($value) != 'map' {
+                @include gen-color-class($name, $variant, $prefix, $suffix) {
+                    #{$prop}: color($color: $name, $variant: $variant);
+                }
+            }
+        }
+    }
+}
+
+/// Generates CSS class names for all colors from
+/// for a given property and color palette, with
+/// optional prefix and suffix attached to the class name.
+/// @access public
+/// @param {string} $prop - The CSS property to assign the palette color to.
+/// @param {string} $prefix [igx] - A prefix to be attached to the class name.
+/// @param {string} $suffix [null] - A suffix to be attached to the class name.
+/// @param {Map} $palette [$default-palette] - The igx palette to use to generate css class names for.
+/// @example scss Generate background classes with colors from the palette.
+///   // Will generate class names like
+///   // .igx-primary-500-bg { ... };
+///   @include color-classes(
+///     $prop: 'background-color',
+///     $suffix: 'bg'
+///   );
+/// @requires {mixin} gen-color-classes
+@mixin color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
+    @include gen-color-classes($prop, $prefix, $suffix, $palette);
+}

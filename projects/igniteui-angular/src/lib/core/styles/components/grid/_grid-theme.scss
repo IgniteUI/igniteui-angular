@@ -1,10 +1,11 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use './excel-filtering-theme' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
 @use 'sass:math';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use './excel-filtering-theme' as *;
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -13,7 +14,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -118,14 +118,12 @@
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires luminance
 /// @requires text-contrast
 /// @requires to-opaque
 /// @requires extend
 /// @requires elevation
 @function grid-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -242,7 +240,7 @@
         $grid-schema: $schema;
     }
 
-    $theme: apply-palette($grid-schema, $palette);
+    $theme: digest-schema($grid-schema);
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -259,7 +257,7 @@
     }
 
     @if $header-background and meta.type-of($header-background) == 'color' {
-        $header-background: to-opaque($header-background, color($palette, 'surface'));
+        $header-background: to-opaque($header-background, color($color: 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -418,9 +416,9 @@
 
     @if not($filtering-header-background) and $header-background {
         @if meta.type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-header-background: to-opaque(lighten-color($header-background, 5%));
+            $filtering-header-background: to-opaque(color.scale($header-background, $lightness: 5%));
         } @else {
-            $filtering-header-background: to-opaque(darken-color($header-background, 5%));
+            $filtering-header-background: to-opaque(color.scale($header-background, $lightness: -5%));
         }
     }
 
@@ -430,9 +428,9 @@
 
     @if not($filtering-row-background) and $header-background {
         @if meta.type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-row-background: to-opaque(lighten-color($header-background, 5%));
+            $filtering-row-background: to-opaque(color.scale($header-background, $lightness: 5%));
         } @else {
-            $filtering-row-background: to-opaque(darken-color($header-background, 5%));
+            $filtering-row-background: to-opaque(color.scale($header-background, $lightness: -5%));
         }
     }
 
@@ -450,12 +448,12 @@
 
     @if not($grid-shadow) {
         $grid-elevation: map.get($grid-schema, 'grid-elevation');
-        $grid-shadow: elevation($elevations, $grid-elevation);
+        $grid-shadow: elevation($grid-elevation);
     }
 
     @if not($drag-shadow) {
         $drag-elevation: map.get($grid-schema, 'drag-elevation');
-        $drag-shadow: elevation($elevations, $drag-elevation);
+        $drag-shadow: elevation($drag-elevation);
     }
 
     @if not($drop-area-border-radius) {
@@ -465,7 +463,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
 
         header-background: $header-background,
         header-text-color: $header-text-color,
@@ -596,8 +593,6 @@
 
     @include scale-in-ver-center();
 
-    $palette: map.get($theme, 'palette');
-
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -625,7 +620,7 @@
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
-    $grid-cell-pinned-border-color: color($palette, 'grays', 300);
+    $grid-cell-pinned-border-color: color($color: 'gray', $variant: 300);
 
     $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
 
@@ -1166,13 +1161,13 @@
         }
 
         %igx-icon--error {
-            color: color($palette, 'grays', 500);
+            color: color($color: 'gray', $variant: 500);
         }
     }
 
     %igx-grid__td--bool-true {
         %igx-icon--success {
-            color: color($palette, 'grays', 700);
+            color: color($color: 'gray', $variant: 700);
         }
     }
 
@@ -1404,7 +1399,7 @@
 
         > igx-icon {
             margin-inline-start: auto;
-            color: color($palette, 'error', 500);
+            color: color($color: 'error');
             width: var(--igx-icon-size, rem(18px));
             height: var(--igx-icon-size, rem(18px));
             font-size: var(--igx-icon-size, rem(18px));
@@ -1424,7 +1419,7 @@
     }
 
     %grid-cell--valid {
-        box-shadow: inset 0 0 0 rem(2px) color($palette, 'success', 500) !important;
+        box-shadow: inset 0 0 0 rem(2px) color($color: 'success') !important;
     }
 
     %grid-cell--pinned-selected,
@@ -1534,7 +1529,7 @@
         }
 
         &.igx-grid__td--invalid {
-            box-shadow: inset 0 0 0 rem(2px) color($palette, 'error', 500) !important;
+            box-shadow: inset 0 0 0 rem(2px) color($color: 'error') !important;
             padding-inline-end: rem(4px) !important;
         }
 
@@ -1950,7 +1945,7 @@
 
     %grid-summaries-patch {
         @if $bootstrap-theme {
-            background: color($palette, 'grays', 100);
+            background: color($color: 'gray', $variant: 100);
         } @else {
             background: inherit;
         }
@@ -2653,7 +2648,7 @@
                 outline-style: none;
 
                 &:focus {
-                    color: color($palette, 'secondary');
+                    color: color($color: 'secondary');
                 }
 
                 + igx-icon {
@@ -2922,11 +2917,11 @@
         }
     }
 
-    @include excel-filtering($theme, $palette);
+    @include excel-filtering($theme);
 
     %advanced-filtering-dialog {
         background: var-get($theme, 'filtering-row-background');
-        box-shadow: elevation($elevation: 12);
+        box-shadow: elevation(12);
 
         igx-query-builder {
             --igx-query-builder-background: #{var-get($theme, 'filtering-row-background')};

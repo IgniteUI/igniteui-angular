@@ -1,7 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -11,7 +10,6 @@
 ////
 
 /// Column actions Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
@@ -19,7 +17,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
@@ -30,7 +28,6 @@
 ///   @include igx-column-actions($column-actions-theme);
 ////
 @function column-actions-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -46,7 +43,7 @@
         $column-actions-schema: $schema;
     }
 
-    $theme: apply-palette($column-actions-schema, $palette);
+    $theme: digest-schema($column-actions-schema);
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);
@@ -54,7 +51,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         elevations: $elevations,
         title-color: $title-color,
         background-color: $background-color
@@ -72,7 +68,7 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background-color');
-        box-shadow: elevation(map.get($theme, 'elevations'), 8);
+        box-shadow: elevation(8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);
@@ -113,14 +109,13 @@
 /// Uses the 'subtitle-1'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin column-actions-typography($type-scale, $categories: (title: 'subtitle-1')) {
+@mixin column-actions-typography($categories: (title: 'subtitle-1')) {
     $title: map.get($categories, 'title');
 
     %column-actions-title {
-        @include type-style($type-scale, $title) {
+        @include type-style($title) {
             margin: 0;
         }
     }
