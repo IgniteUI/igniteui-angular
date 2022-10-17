@@ -1396,6 +1396,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
+    @Input()
     public get sortDescendingHeaderIconTemplate() {
         return this._sortDescendingHeaderIconTemplate;
     }
