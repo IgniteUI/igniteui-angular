@@ -1374,7 +1374,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
-     * * ```html
+     *```html
      * <ng-template #template igxSortAscendingHeaderIcon>
      *    <igx-icon>expand_less</igx-icon>
      * </ng-template>
@@ -1403,7 +1403,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
-     * * ```html
+     *```html
      * <ng-template #template igxSortDescendingHeaderIcon>
      *    <igx-icon>expand_more</igx-icon>
      * </ng-template>
@@ -1435,7 +1435,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
-     * * ```html
+     *```html
      * <ng-template #template igxSortHeaderIcon>
      *    <igx-icon>unfold_more</igx-icon>
      * </ng-template>
