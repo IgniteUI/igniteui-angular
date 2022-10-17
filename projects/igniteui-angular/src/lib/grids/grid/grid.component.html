@@ -252,7 +252,7 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
                 context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
             </ng-container>
         </span>
@@ -260,7 +260,7 @@
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
+                *ngTemplateOutlet="rowEditActionsTemplate ? rowEditActionsTemplate : defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
             </ng-container>
         </div>
     </div>

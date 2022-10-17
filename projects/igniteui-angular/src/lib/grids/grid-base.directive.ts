@@ -2423,24 +2423,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public get rowEditText(): TemplateRef<any> {
-        if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
-            return this.rowEditTextDirectives.first;
-        }
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get rowEditActions(): TemplateRef<any> {
-        if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
-            return this.rowEditActionsDirectives.first;
-        }
-        return null;
-    }
 
     /**
      * @hidden @internal
