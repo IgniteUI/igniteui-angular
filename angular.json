@@ -307,7 +307,9 @@
             "styles": [
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+                { "input": "./node_modules/lit-html/lit-html.js", "inject": false }
+            ]
           },
           "configurations": {
             "production": {
