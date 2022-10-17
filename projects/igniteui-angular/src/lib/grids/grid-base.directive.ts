@@ -435,6 +435,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public oddRowCSS = 'igx-grid__tr--odd';
 
+    /* treatAsRef */
     /**
      * Sets a conditional class selector to the grid's row element.
      * Accepts an object literal, containing key-value pairs,
@@ -453,6 +454,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public rowClasses: any;
 
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the grid row element.
      * It accepts an object literal where the keys are

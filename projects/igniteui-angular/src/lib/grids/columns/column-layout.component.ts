@@ -28,6 +28,8 @@ import { IgxColumnGroupComponent } from './column-group.component';
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     public childrenVisibleIndexes = [];
+    
+     /* blazorSuppress */
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -89,6 +91,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return vIndex;
     }
 
+     /* blazorSuppress */
     /*
      * Gets whether the column layout is hidden.
      * ```typescript
@@ -101,6 +104,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return this._hidden;
     }
 
+     /* blazorSuppress */
     /**
      * Sets the column layout hidden property.
      * ```typescript
