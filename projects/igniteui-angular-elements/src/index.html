@@ -35,11 +35,9 @@
         childComp.template = tmpl;
     </script> -->
 
-  <!-- IgxGridComponent -->
-
-
-  <div>
-    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+  <section>
+    <h3 class="igx-typography__h6">Flat Grid (column groups, toolbar, paginator, row actions)</h3>
+    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-selection="multiple" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
         <igc-grid-toolbar>
         <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
         <igc-grid-toolbar-actions>
@@ -70,32 +68,38 @@
     <button onclick="grid1.displayDensity = 'compact'">Compact</button>
     <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
     <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
-  </div>
 
-  <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-    <igc-grid-toolbar>
-    <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
-    <igc-grid-toolbar-actions>
-        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
-        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
-        <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
-    </igc-grid-toolbar-actions>
-    </igc-grid-toolbar>
+    <h3 class="igx-typography__h6">Standalone paginator</h3>
+    <igc-paginator per-page="25" total-records="150"></igc-paginator>
+  </section>
 
-    <igc-column-layout header="Product ID">
-        <igc-column rowStart="1" colStart="1" rowEnd="3" field="ProductID" header="Product ID" width="136px"></igc-column>
-    </igc-column-layout>
-    <igc-column-layout header="Product Details">
-        <igc-column rowStart="1" colStart="1" colEnd="3" field="ProductName" header="Product Name" width="200px"></igc-column>
-        <igc-column rowStart="2" colStart="1" colEnd="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
-        <igc-column rowStart="2" colStart="2" colEnd="3" field="ImageUrl" width="200px"></igc-column>
-    </igc-column-layout>
-    <igc-column-layout header="Product Stock">
-        <igc-column rowStart="1" colStart="1" colEnd="3" field="InStock" header="In Stock" width="136px"></igc-column>
-    </igc-column-layout>
+  <section>
+      <h3 class="igx-typography__h6">Flat Grid (MRL column layout)</h3>
+      <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
 
-    <igc-paginator per-page="10"></igc-paginator>
-  </igc-grid>
+        <igc-column-layout header="Product ID">
+            <igc-column rowStart="1" colStart="1" rowEnd="3" field="ProductID" header="Product ID" width="136px"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Details">
+            <igc-column rowStart="1" colStart="1" colEnd="3" field="ProductName" header="Product Name" width="200px"></igc-column>
+            <igc-column rowStart="2" colStart="1" colEnd="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
+            <igc-column rowStart="2" colStart="2" colEnd="3" field="ImageUrl" width="200px"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Stock">
+            <igc-column rowStart="1" colStart="1" colEnd="3" field="InStock" header="In Stock" width="136px"></igc-column>
+        </igc-column-layout>
+
+        <igc-paginator per-page="10"></igc-paginator>
+      </igc-grid>
+  </section>
 
   <script src="assets/data/nw-products.js"></script>
   <script>
@@ -120,7 +124,6 @@
         grid1.columns = columns;
     }
   </script>
-  <!-- END IgxGridComponent -->
 
   <!-- IgxTreeGridComponent -->
   <igc-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
