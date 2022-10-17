@@ -1290,13 +1290,19 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
                 <igx-excel-style-search></igx-excel-style-search>
             </igx-excel-style-filter-operations>
         </igx-grid-excel-style-filtering>
-    </igx-grid>`
+    </igx-grid>
+    <ng-template #template igxExcelStyleHeaderIcon>
+            <igx-icon>search</igx-icon>
+    </ng-template>
+    `
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
     public data = SampleTestData.excelFilteringData();
+    @ViewChild('template', {read: TemplateRef })
+    public customExcelHeaderIcon: TemplateRef<any>;
 }
 
 @Component({
