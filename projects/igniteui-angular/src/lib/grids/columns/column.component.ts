@@ -1875,25 +1875,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     public getInitialChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<MRLColumnSizeInfo> {
         const columnSizes: MRLColumnSizeInfo[] = [];
+        let colStart;
         // find the smallest col spans
         children.forEach(col => {
             if (!col.colStart) {
                 return;
             }
-            const newWidthSet = col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
-            const newSpanSmaller = columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan;
-            const bothWidthsSet = col.widthSetByUser && columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].widthSetByUser;
-            const bothWidthsNotSet = !col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+            colStart = parseInt(col.colStart as any, 10);
+            const newWidthSet = col.widthSetByUser && columnSizes[colStart - 1] && !columnSizes[colStart - 1].widthSetByUser;
+            const newSpanSmaller = columnSizes[colStart - 1] && columnSizes[colStart - 1].colSpan > col.gridColumnSpan;
+            const bothWidthsSet = col.widthSetByUser && columnSizes[colStart - 1] && columnSizes[colStart - 1].widthSetByUser;
+            const bothWidthsNotSet = !col.widthSetByUser && columnSizes[colStart - 1] && !columnSizes[colStart - 1].widthSetByUser;
 
-            if (columnSizes[col.colStart - 1] === undefined) {
+            if (columnSizes[colStart - 1] === undefined) {
                 // If nothing is defined yet take any column at first
                 // We use colEnd to know where the column actually ends, because not always it starts where we have it set in columnSizes.
-                columnSizes[col.colStart - 1] = {
+                columnSizes[colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
                         col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
-                    colEnd: col.colStart + col.gridColumnSpan,
+                    colEnd: colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
                 };
             } else if (newWidthSet || (newSpanSmaller && ((bothWidthsSet) || (bothWidthsNotSet)))) {
@@ -1907,9 +1909,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     // Start from where the new column set would end and apply the old column to the rest depending on how much it spans.
                     // We have not yet replaced it so we can use it directly from the columnSizes collection.
                     // This is where colEnd is used because the colStart of the old column is not actually i + 1.
-                    for (let i = col.colStart - 1 + col.gridColumnSpan; i < columnSizes[col.colStart - 1].colEnd - 1; i++) {
+                    for (let i = colStart - 1 + col.gridColumnSpan; i < columnSizes[colStart - 1].colEnd - 1; i++) {
                         if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
-                            columnSizes[i] = columnSizes[col.colStart - 1];
+                            columnSizes[i] = columnSizes[colStart - 1];
                         } else {
                             break;
                         }
@@ -1917,26 +1919,26 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 }
 
                 // Replace the old column with the new one.
-                columnSizes[col.colStart - 1] = {
+                columnSizes[colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
                         col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                     colSpan: col.gridColumnSpan,
-                    colEnd: col.colStart + col.gridColumnSpan,
+                    colEnd: colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
                 };
-            } else if (bothWidthsSet && columnSizes[col.colStart - 1].colSpan < col.gridColumnSpan) {
+            } else if (bothWidthsSet && columnSizes[colStart - 1].colSpan < col.gridColumnSpan) {
                 // If the column already in the columnSizes has smaller span, we still need to fill any empty places with the current col.
                 // Start from where the smaller column set would end and apply the bigger column to the rest depending on how much it spans.
                 // Since here we do not have it in columnSizes we set it as a new column keeping the same colSpan.
-                for (let i = col.colStart - 1 + columnSizes[col.colStart - 1].colSpan; i < col.colStart - 1 + col.gridColumnSpan; i++) {
+                for (let i = colStart - 1 + columnSizes[colStart - 1].colSpan; i < colStart - 1 + col.gridColumnSpan; i++) {
                     if (!columnSizes[i] || !columnSizes[i].widthSetByUser) {
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
                                 col.widthSetByUser || this.grid.columnWidthSetByUser ? parseInt(col.calcWidth, 10) : null,
                             colSpan: col.gridColumnSpan,
-                            colEnd: col.colStart + col.gridColumnSpan,
+                            colEnd: colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
                         };
                     } else {
