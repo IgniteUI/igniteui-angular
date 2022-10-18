@@ -30,7 +30,9 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 describe('IgxGrid - multi-column headers #grid', () => {
     let fixture; let grid: IgxGridComponent; let componentInstance;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
@@ -51,7 +53,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        });
+        })
+        .compileComponents();
     }));
 
     describe('Initialization and rendering tests: ', () => {
@@ -1741,5 +1744,9 @@ class NestedColGroupsTests {
             masterSlaveColGroupDepth * grid.defaultRowHeight, ci.masterColGroupTitle,
             'slaveColGroup', masterColGroupChildrenCount);
     }
+}
+
+function waitForAsync(arg0: () => void): (done: DoneFn) => Promise<void> {
+    throw new Error('Function not implemented.');
 }
 /* eslint-enable max-len */

@@ -28,10 +28,10 @@ export const configureTestSuite = (configureAction?: () => void) => {
     });
 
     if (configureAction) {
-        beforeAll((done: DoneFn) => (async () => {
+        beforeAll(async () => {
             configureAction();
             await TestBed.compileComponents();
-        })().then(done).catch(done.fail));
+        });
     }
 
     afterEach(() => {
