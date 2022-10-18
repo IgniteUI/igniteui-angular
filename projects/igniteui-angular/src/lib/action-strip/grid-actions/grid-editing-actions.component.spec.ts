@@ -198,7 +198,7 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
 
-            setTimeout(()=>{
+            fixture.whenStable().then(() => {
                 const row = grid.getRowByIndex(0);
                 const rowElem = grid.rowList.first;
                 actionStrip.show(row);
@@ -209,7 +209,7 @@ describe('igxGridEditingActions #grid ', () => {
                 fixture.detectChanges();
 
                 expect(actionStrip.hidden).toBeTrue();
-            }, 100);
+            });
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
