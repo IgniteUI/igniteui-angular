@@ -1,8 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use 'sass:map';
+@use '../../base' as *;
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -13,8 +13,10 @@
 /// @prop {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
 /// @prop {Map} background-or [null] - The background color of advanced filtering "OR" condition.
 /// @prop {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+/// @requires digest-schema
+/// @requires text-contrast
+/// @requires extend
 @function query-builder-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -36,7 +38,7 @@
         $query-builder-schema: $schema;
     }
 
-    $theme: apply-palette($query-builder-schema, $palette);
+    $theme: digest-schema($query-builder-schema);
 
     @if not($header-foreground) and $header-background {
         $header-foreground: text-contrast($header-background);
@@ -45,7 +47,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
 
         background: $background,
         header-background: $header-background,
@@ -65,7 +66,6 @@
 ////
 
 /// @param {Map} $theme - The grid theme used to style the component.
-/// @param {Map} $palette - The palette map used as base for the component.
 /// @requires color
 /// @requires rem
 /// @requires var-get
@@ -89,7 +89,7 @@
         min-width: 660px;
         background-color: var-get($theme, 'background');
         border-radius: border-radius(rem(4px));
-        box-shadow: elevation($elevation: 12);
+        box-shadow: elevation(12);
     }
 
     %advanced-filter__header {
@@ -101,7 +101,7 @@
         user-select: none;
 
         h4,
-        .igx-typography__h6 {
+        .ig-typography__h6 {
             margin-bottom: 0;
         }
     }
@@ -202,12 +202,12 @@
 
         igx-icon {
             cursor: pointer;
-            color: color(null, 'grays', 500);
+            color: color(null, 'gray', 500);
             outline-style: none;
 
             &:hover,
             &:focus {
-                color: color(null, 'grays', 800);
+                color: color(null, 'gray', 800);
             }
         }
 
@@ -308,7 +308,7 @@
         padding: rem(16px);
         margin-inline-start: rem(16px);
         border-radius: border-radius(rem(4px));
-        border: 1px solid color(null, 'grays', 200);
+        border: 1px solid color(null, 'gray', 200);
 
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
@@ -341,7 +341,7 @@
             @if $bootstrap-theme {
                 background: color(null, 'error');
                 border-color: color(null, 'error');
-                color: color(null, 'grays', 100);
+                color: color(null, 'gray', 100);
             } @else {
                 color: color(null, 'error');
             }
@@ -353,7 +353,7 @@
         top: rem(-18px);
         inset-inline-end: rem(-18px);
         background-color: var-get($theme, 'background');
-        border: 1px solid color(null, 'grays', 200);
+        border: 1px solid color(null, 'gray', 200);
 
         &:hover,
         &:focus {
@@ -371,7 +371,7 @@
     }
 
     %filter-empty__title {
-        color: color(null, 'grays', 500);
+        color: color(null, 'gray', 500);
     }
 
     %advanced-filter--cosy {

@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,16 +9,14 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the watermark directive.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Number} $border-radius [null] - The border radius used for the link.
 /// @param {Color} $border-color [null] - The border color used for the  link.
 /// @param {Color} $link-background [null] - The background color used for the link.
 /// @param {Color} $color [null] - The color used for the link text.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 ///
@@ -27,7 +25,6 @@
 ///   // Pass the theme to the watermark component mixin
 ///   @include watermark($my-watermark-theme);
 @function watermark-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -45,7 +42,7 @@
         $watermark-schema: $schema;
     }
 
-    $theme: apply-palette($watermark-schema, $palette);
+    $theme: digest-schema($watermark-schema);
 
     @if not($color) and $link-background {
         $color: text-contrast($link-background);
@@ -57,7 +54,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background-image: $background-image,
         link-background: $link-background,
         border-radius: $border-radius,
