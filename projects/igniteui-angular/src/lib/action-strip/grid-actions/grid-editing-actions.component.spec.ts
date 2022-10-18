@@ -29,7 +29,8 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripPinEditComponent,
                 IgxActionStripEditMenuComponent,
                 IgxHierarchicalGridActionStripComponent,
-                IgxTreeGridEditActionsComponent
+                IgxTreeGridEditActionsComponent,
+                IgxActionStripOneRowComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -191,6 +192,25 @@ describe('igxGridEditingActions #grid ', () => {
             expect(actionStrip.context).toBe(row);
             expect(actionStrip.hidden).toBeFalse();
         });
+        it('should auto-hide on mouse leave of row.', () => {
+            fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+
+            setTimeout(()=>{
+                const row = grid.getRowByIndex(0);
+                const rowElem = grid.rowList.first;
+                actionStrip.show(row);
+                fixture.detectChanges();
+
+                expect(actionStrip.hidden).toBeFalse();
+                UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+                fixture.detectChanges();
+
+                expect(actionStrip.hidden).toBeTrue();
+            }, 100);
+        });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
             actionStrip.show(row);
@@ -329,6 +349,7 @@ class IgxActionStripTestingComponent implements OnInit {
     public grid: IgxGridComponent;
 
     private data: any[];
+    private dataOneRow: any[];
     private columns: any[];
 
     public ngOnInit() {
@@ -377,6 +398,10 @@ class IgxActionStripTestingComponent implements OnInit {
             { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
         /* eslint-enable max-len */
+
+        this.dataOneRow = [
+            { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
+        ];
     }
 }
 
@@ -413,4 +438,22 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 `
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="data1" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
 }
