@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
@@ -1744,9 +1744,5 @@ class NestedColGroupsTests {
             masterSlaveColGroupDepth * grid.defaultRowHeight, ci.masterColGroupTitle,
             'slaveColGroup', masterColGroupChildrenCount);
     }
-}
-
-function waitForAsync(arg0: () => void): (done: DoneFn) => Promise<void> {
-    throw new Error('Function not implemented.');
 }
 /* eslint-enable max-len */
