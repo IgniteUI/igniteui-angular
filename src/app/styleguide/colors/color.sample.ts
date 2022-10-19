@@ -46,7 +46,7 @@ export class ColorsSampleComponent {
             ]
         },
         {
-            name: 'grays',
+            name: 'gray',
             variants: [
                 50,
                 100,

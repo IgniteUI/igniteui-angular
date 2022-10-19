@@ -11,7 +11,7 @@
 
 :host ::ng-deep {
     .hamburger {
-        color: var(--igc-surface-500-contrast);
+        color: var(--ig-surface-500-contrast);
         margin-right: rem(16px);
 
         [dir='rtl'] & {
@@ -26,11 +26,11 @@
     align-items: center;
     height: rem(90px);
     padding: 0 rem(16px);
-    background: hsla(var(--igx-primary-500));
+    background: hsla(var(--ig-primary-500));
     overflow: hidden;
 
     .title {
-        color: hsla(var(--igx-primary-500-contrast));
+        color: hsla(var(--ig-primary-500-contrast));
         margin: 0;
         text-transform: capitalize;
         white-space: nowrap;

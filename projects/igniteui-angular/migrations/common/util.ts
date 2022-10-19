@@ -170,7 +170,7 @@ export class FileChange {
  * @param filePath
  * @param encoding
  */
-export const parseFile = (parser: HtmlParser, host: Tree, filePath: string, encoding = 'utf8') =>
+export const parseFile = (parser: HtmlParser, host: Tree, filePath: string, encoding: BufferEncoding = 'utf8') =>
     parser.parse(host.read(filePath).toString(encoding), filePath).rootNodes;
 // export const parseFile = async (host: Tree, filePath: string, encoding = 'utf8') => {
 //     const { HtmlParser } = await import('@angular/compiler')

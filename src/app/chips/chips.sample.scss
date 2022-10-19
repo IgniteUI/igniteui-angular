@@ -38,7 +38,7 @@ igx-chip {
     display: flex;
     align-items: center;
     max-width: 640px;
-    border-bottom: 1px solid color($default-palette, 'grays', 400);
+    border-bottom: 1px solid color($default-palette, 'gray', 400);
     min-height: 48px;
     flex-wrap: wrap;
 }
@@ -51,7 +51,7 @@ igx-chip {
     visibility: hidden;
 
     &.dragOver {
-        color: color($default-palette, 'grays', 700);
-        background-color: color($default-palette, 'grays', 200);
+        color: color($default-palette, 'gray', 700);
+        background-color: color($default-palette, 'gray', 200);
     }
 }

@@ -34,8 +34,10 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
 
+    configureTestSuite();
+
     describe('IgxGrid - input properties', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -47,7 +49,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 imports: [
                     NoopAnimationsModule, IgxGridModule
                 ]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should initialize a grid with columns from markup', () => {
@@ -642,14 +645,16 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - virtualization tests', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it('should change chunk size for every record after enlarging the grid and the horizontal dirs are scrambled', async () => {
@@ -775,7 +780,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -786,7 +791,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should init columns with width >= 136px when 5 rows and 5 columns are rendered', () => {
@@ -1822,15 +1828,17 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - API methods', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
                     IgxGridWrappedInContComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
@@ -2236,14 +2244,16 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - Integration with other Igx Controls', () => {
         let fix;
 
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
-            });
+                    NoopAnimationsModule, IgxGridModule, IgxTabsModule
+                ]
+            })
+            .compileComponents();
         }));
 
         beforeEach(waitForAsync(() => {
@@ -2393,14 +2403,15 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - footer section', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should be able to display custom content', () => {
@@ -2419,14 +2430,17 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - with custom pagination template', () => {
-        configureTestSuite((() => {
+
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it('should have access to grid context', fakeAsync(() => {
@@ -2454,7 +2468,7 @@ describe('IgxGrid Component Tests #grid', () => {
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent
@@ -2464,12 +2478,12 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridModule,
                     IgxTabsModule
                 ]
-            });
+            })
+            .compileComponents();
         }));
+
         afterEach(() => {
-            if (observer) {
-                observer.disconnect();
-            }
+            observer?.disconnect();
         });
 
         it('should render the grid in a certain amount of time', async () => {

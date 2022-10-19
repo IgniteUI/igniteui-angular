@@ -9,10 +9,10 @@
 
 /// Generates a base dark drop-down schema.
 /// @type {Map}
-/// @prop {Map} border-color [color: ('grays', 100)] - The border color used for drop-down component.
+/// @prop {Map} border-color [color: ('gray', 100)] - The border color used for drop-down component.
 $base-dark-drop-down: (
     border-color: (
-        color: ('grays', 100),
+        color: ('gray', 100),
     ),
 );
 
