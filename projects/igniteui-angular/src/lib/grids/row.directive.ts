@@ -419,7 +419,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     @HostListener('mouseleave')
     public hideActionStrip() {
-        if (this.grid.actionStrip) {
+        if (this.grid.actionStrip && this.grid.actionStrip.hideOnRowLeave) {
             this.grid.actionStrip.hide();
         }
     }
