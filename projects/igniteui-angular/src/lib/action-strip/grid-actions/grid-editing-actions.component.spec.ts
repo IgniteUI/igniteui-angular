@@ -30,7 +30,8 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripEditMenuComponent,
                 IgxHierarchicalGridActionStripComponent,
                 IgxTreeGridEditActionsComponent,
-                IgxActionStripOneRowComponent
+                IgxActionStripOneRowComponent,
+                IgxActionStripMenuOneRowComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -154,6 +155,28 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowList.first.data['ID']).toBe('ANATR');
         });
+        it('should not auto-hide on mouse leave of row if action strip is menu', () => {
+            fixture = TestBed.createComponent(IgxActionStripMenuOneRowComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+
+            const row = grid.getRowByIndex(0);
+            row.pin();
+            const rowElem = grid.pinnedRows[0];
+            row.unpin();
+
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+                
+            UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+            fixture.detectChanges();
+                
+            expect(actionStrip.hidden).toBeFalse();
+        });
     });
 
     describe('integration with pinning actions ', () => {
@@ -192,24 +215,24 @@ describe('igxGridEditingActions #grid ', () => {
             expect(actionStrip.context).toBe(row);
             expect(actionStrip.hidden).toBeFalse();
         });
-        it('should auto-hide on mouse leave of row.', () => {
+        it('should auto-hide on mouse leave of row.', async () => {
             fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
+            
+            const row = grid.getRowByIndex(0);
+            row.pin();
+            const rowElem = grid.pinnedRows[0];
+            
+            actionStrip.show(row);
+            fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                const row = grid.getRowByIndex(0);
-                const rowElem = grid.rowList.first;
-                actionStrip.show(row);
-                fixture.detectChanges();
+            expect(actionStrip.hidden).toBeFalse();
+            UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+            fixture.detectChanges();
 
-                expect(actionStrip.hidden).toBeFalse();
-                UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
-                fixture.detectChanges();
-
-                expect(actionStrip.hidden).toBeTrue();
-            });
+            expect(actionStrip.hidden).toBeTrue();
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
@@ -442,7 +465,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 
 @Component({
     template: `
-<igx-grid #grid [data]="data1" [width]="'800px'" [height]="'500px'"
+<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
     [rowEditable]="true" [primaryKey]="'ID'">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
@@ -456,4 +479,21 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 `
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
 }
