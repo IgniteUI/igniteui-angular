@@ -29,7 +29,7 @@
     $track-background: null,
 ) {
     $name: 'igx-scrollbar';
-    $selector: '.igx-scrollbar';
+    $selector: '.ig-scrollbar';
     $scrollbar-schema: ();
 
     @if map.has-key($schema, $name) {
