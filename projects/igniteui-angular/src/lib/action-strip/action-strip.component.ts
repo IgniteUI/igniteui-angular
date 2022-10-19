@@ -148,8 +148,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         });
         if(this._menuItems.length > 0){
             return false;
-        }
-        else{
+        } else{
             return true;
         }
     }
