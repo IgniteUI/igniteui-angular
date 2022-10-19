@@ -55,7 +55,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(fix.componentInstance.dragElems.last.dragIgnoredElems.first.element.nativeElement).toEqual(ignoredElem);
     });
 
-    it('should create drag ghost element and trigger ghostCreate/ghostDestroy.', (async () => {
+    it('should create drag ghost element and trigger ghostCreate/ghostDestroy.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -95,9 +95,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
         expect(firstDrag.ghostCreate.emit).toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should trigger dragStart/dragMove/dragEnd events in that order.', (async () => {
+    it('should trigger dragStart/dragMove/dragEnd events in that order.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -143,9 +143,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
         expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should trigger dragStart/dragMove/dragEnd events in that order when pointer is lost', (async () => {
+    it('should trigger dragStart/dragMove/dragEnd events in that order when pointer is lost', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -191,9 +191,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
         expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should not create drag ghost element when the dragged amount is less than dragTolerance.', (async () => {
+    it('should not create drag ghost element when the dragged amount is less than dragTolerance.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -236,9 +236,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).not.toHaveBeenCalled();
         expect(firstDrag.dragClick.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should position ghost at the same position relative to the mouse when drag started.', (async () => {
+    it('should position ghost at the same position relative to the mouse when drag started.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -267,9 +267,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should move ghost only horizontally when drag direction is set to horizontal.', (async () => {
+    it('should move ghost only horizontally when drag direction is set to horizontal.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -299,9 +299,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should move ghost only vertically when drag direction is set to vertical.', (async () => {
+    it('should move ghost only vertically when drag direction is set to vertical.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -331,9 +331,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should position ghost relative to the mouse using offsetX and offsetY correctly.', (async () => {
+    it('should position ghost relative to the mouse using offsetX and offsetY correctly.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -363,9 +363,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should position ghost at the same position relative to the mouse when drag started when host is defined.', (async () => {
+    it('should position ghost at the same position relative to the mouse when drag started when host is defined.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -396,10 +396,10 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
     it(`should create ghost at the same position relative to the mouse
-        when drag started when host has custom style position.`, (async () => {
+        when drag started when host has custom style position.`, async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -419,9 +419,9 @@ describe('General igxDrag/igxDrop', () => {
 
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 60);
         expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 60);
-    }));
+    });
 
-    it('should allow customizing of ghost element by passing template reference and position it correctly.', (async () => {
+    it('should allow customizing of ghost element by passing template reference and position it correctly.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -453,9 +453,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should position custom ghost relative to the mouse using offsetX and offsetY correctly.', (async () => {
+    it('should position custom ghost relative to the mouse using offsetX and offsetY correctly.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -490,9 +490,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should correctly move igxDrag element when ghost is disabled and trigger dragStart/dragMove/dragEnd events.', (async () => {
+    it('should correctly move igxDrag element when ghost is disabled and trigger dragStart/dragMove/dragEnd events.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -546,9 +546,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
         expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should move igxDrag element only horizontally when ghost is disabled and direction is set to horizontal.', (async () => {
+    it('should move igxDrag element only horizontally when ghost is disabled and direction is set to horizontal.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -587,9 +587,9 @@ describe('General igxDrag/igxDrop', () => {
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
-    }));
+    });
 
-    it('should move igxDrag element only vertically when ghost is disabled and direction is set to vertical.', (async () => {
+    it('should move igxDrag element only vertically when ghost is disabled and direction is set to vertical.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -628,9 +628,9 @@ describe('General igxDrag/igxDrop', () => {
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
-    }));
+    });
 
-    it('should prevent dragging if it does not exceed dragTolerance and ghost is disabled.', (async () => {
+    it('should prevent dragging if it does not exceed dragTolerance and ghost is disabled.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -679,9 +679,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
         expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
         expect(firstDrag.dragClick.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should correctly apply dragTolerance of 0 when it is set to 0 and ghost is disabled.', (async () => {
+    it('should correctly apply dragTolerance of 0 when it is set to 0 and ghost is disabled.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -726,9 +726,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 4);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 4);
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should position the base element relative to the mouse using offsetX and offsetY correctly.', (async () => {
+    it('should position the base element relative to the mouse using offsetX and offsetY correctly.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -763,9 +763,9 @@ describe('General igxDrag/igxDrop', () => {
         UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
         await wait();
-    }));
+    });
 
-    it('should correctly set location using setLocation() method when ghost is disabled', (async () => {
+    it('should correctly set location using setLocation() method when ghost is disabled', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -812,9 +812,9 @@ describe('General igxDrag/igxDrop', () => {
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
-    }));
+    });
 
-    it('should correctly set location using setLocation() method when ghost is rendered.', (async () => {
+    it('should correctly set location using setLocation() method when ghost is rendered.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -858,9 +858,9 @@ describe('General igxDrag/igxDrop', () => {
         await wait();
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
-    }));
+    });
 
-    it('should correctly drag using drag handle and not the whole element', (async () => {
+    it('should correctly drag using drag handle and not the whole element', async () => {
         const thirdDrag = fix.componentInstance.dragElems.last;
         const thirdElement = thirdDrag.element.nativeElement;
         const startingX = (dragDirsRects[2].left + dragDirsRects[2].right) / 2;
@@ -916,9 +916,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(thirdElement.getBoundingClientRect().left).toEqual(dragDirsRects[2].left + 20);
         expect(thirdElement.getBoundingClientRect().top).toEqual(dragDirsRects[2].top + 20);
         expect(thirdDrag.dragStart.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('should trigger enter, dropped and leave events when element is dropped inside igxDrop element.', (async () => {
+    it('should trigger enter, dropped and leave events when element is dropped inside igxDrop element.', async () => {
         fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
 
@@ -999,9 +999,9 @@ describe('General igxDrag/igxDrop', () => {
         });
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(2);
         expect(dropArea.element.nativeElement.children.length).toEqual(1);
-    }));
+    });
 
-    it('should return the base element to its original position with transitionToOrigin() after dragging.', (async (done) => {
+    it('should return the base element to its original position with transitionToOrigin() after dragging.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -1017,8 +1017,6 @@ describe('General igxDrag/igxDrop', () => {
             expect(firstDrag.originLocation.pageY).toEqual(dragDirsRects[0].top);
             expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
             expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
-
-            done();
         });
 
         expect(firstDrag.originLocation.pageX).toEqual(dragDirsRects[0].left);
@@ -1062,9 +1060,9 @@ describe('General igxDrag/igxDrop', () => {
         expect(dragDirsRects[0].left < currLeft && currLeft <= (dragDirsRects[0].left + 20)).toBeTruthy();
         expect(dragDirsRects[0].top < currTop && currTop <= (dragDirsRects[0].top + 20)).toBeTruthy();
 
-    }));
+    });
 
-    it('should return the ghost element to its original position with transitionToOrigin() after dragging.', (async (done) => {
+    it('should return the ghost element to its original position with transitionToOrigin() after dragging.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -1076,7 +1074,6 @@ describe('General igxDrag/igxDrop', () => {
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.ghostElement).not.toBeTruthy();
-            done();
         });
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
@@ -1111,9 +1108,9 @@ describe('General igxDrag/igxDrop', () => {
         const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
         expect(dragDirsRects[0].left < currLeft && currLeft <= (dragDirsRects[0].left + 20)).toBeTruthy();
         expect(dragDirsRects[0].top < currTop && currTop <= (dragDirsRects[0].top + 20)).toBeTruthy();
-    }));
+    });
 
-    it('should not create ghost element when executing transitionToOrigin() when no dragging is performed without start.', (async () => {
+    it('should not create ghost element when executing transitionToOrigin() when no dragging is performed without start.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
         spyOn(firstDrag.transitioned, 'emit');
@@ -1121,18 +1118,18 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.ghostElement).not.toBeTruthy();
 
         firstDrag.transitionToOrigin();
+        await wait();
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
         expect(firstDrag.transitioned.emit).not.toHaveBeenCalled();
-    }));
+    });
 
 
-    it('should create ghost element when executing transitionToOrigin() when no dragging is performed with start.', (async (done) => {
+    it('should create ghost element when executing transitionToOrigin() when no dragging is performed with start.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.ghostElement).not.toBeTruthy();
-            done();
         });
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
@@ -1152,22 +1149,22 @@ describe('General igxDrag/igxDrop', () => {
         // origin top < current top <= start top
         expect(dragDirsRects[0].top).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 50);
-    }));
+    });
 
-    it('should transition the base element to location with transitionTo().', (async (done) => {
+    it('should transition the base element to location with transitionTo().', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         firstDrag.ghost = false;
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 50);
             expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 50);
-            done();
         });
 
         expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
 
         firstDrag.transitionTo(new IgxDragLocation(dragDirsRects[0].left + 50, dragDirsRects[0].top + 50));
+        await wait();
 
         const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
         const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
@@ -1179,16 +1176,15 @@ describe('General igxDrag/igxDrop', () => {
         // start top <= current top < target top
         expect(dragDirsRects[0].top).toBeLessThanOrEqual(currTop);
         expect(currTop).toBeLessThan(dragDirsRects[0].top + 50);
-    }));
+    });
 
-    it('should transition the base element to location with transitionTo() with starting location.', (async (done) => {
+    it('should transition the base element to location with transitionTo() with starting location.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         firstDrag.ghost = false;
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 50);
             expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 50);
-            done();
         });
 
         expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -1199,6 +1195,7 @@ describe('General igxDrag/igxDrop', () => {
             {},
             new IgxDragLocation(dragDirsRects[0].left + 100, dragDirsRects[0].top + 100)
         );
+        await wait();
 
         const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
         const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
@@ -1210,9 +1207,9 @@ describe('General igxDrag/igxDrop', () => {
         // target top < current top <= start top
         expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
-    }));
+    });
 
-    it('should transition the ghost element to location with transitionTo() after dragging.', (async (done) => {
+    it('should transition the ghost element to location with transitionTo() after dragging.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -1224,7 +1221,6 @@ describe('General igxDrag/igxDrop', () => {
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.ghostElement).not.toBeTruthy();
-            done();
         });
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
@@ -1265,9 +1261,9 @@ describe('General igxDrag/igxDrop', () => {
         // last top < current top <= target top
         expect(dragDirsRects[0].top + 20).toBeLessThanOrEqual(currTop);
         expect(currTop).toBeLessThan(dragDirsRects[0].top + 50);
-    }));
+    });
 
-    it('should transition the ghost element to location with transitionTo() after dragging with start location.', (async (done) => {
+    it('should transition the ghost element to location with transitionTo() after dragging with start location.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -1283,7 +1279,6 @@ describe('General igxDrag/igxDrop', () => {
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.ghostElement).not.toBeTruthy();
-            done();
         });
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
@@ -1324,14 +1319,13 @@ describe('General igxDrag/igxDrop', () => {
         // target top < current top <= start top
         expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
-    }));
+    });
 
-    it('should create ghost element to location with transitionTo() and start location set.', (async (done) => {
+    it('should create ghost element to location with transitionTo() and start location set.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {
             expect(firstDrag.ghostElement).not.toBeTruthy();
-            done();
         });
 
         expect(firstDrag.ghostElement).not.toBeTruthy();
@@ -1355,7 +1349,7 @@ describe('General igxDrag/igxDrop', () => {
         // target left < current left <= start left
         expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
-    }));
+    });
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
@@ -1375,7 +1369,7 @@ describe('Linked igxDrag/igxDrop ', () => {
         .compileComponents();
     }));
 
-    it('should trigger enter/onDrop/leave events when element is dropped inside and is linked with it.', (async () => {
+    it('should trigger enter/onDrop/leave events when element is dropped inside and is linked with it.', async () => {
         const fix = TestBed.createComponent(TestDragDropLinkedSingleComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
@@ -1417,9 +1411,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.leave.emit).toHaveBeenCalled();
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(2);
         expect(dropArea.element.nativeElement.children.length).toEqual(1);
-    }));
+    });
 
-    it('should not trigger enter/onDrop/leave events when element is dropped inside and is not linked with it.', (async () => {
+    it('should not trigger enter/onDrop/leave events when element is dropped inside and is not linked with it.', async () => {
         const fix = TestBed.createComponent(TestDragDropLinkedSingleComponent);
         fix.detectChanges();
 
@@ -1460,10 +1454,10 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.leave.emit).not.toHaveBeenCalled();
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
         expect(dropArea.element.nativeElement.children.length).toEqual(0);
-    }));
+    });
 
     it(`should not trigger enter/onDrop/leave events when element is dropped inside and is not linked with it
-            but linked with multiple other types of channels.`, (async () => {
+            but linked with multiple other types of channels.`, async () => {
         const fix = TestBed.createComponent(TestDragDropLinkedMixedComponent);
         fix.detectChanges();
 
@@ -1504,9 +1498,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.leave.emit).not.toHaveBeenCalled();
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
         expect(dropArea.element.nativeElement.children.length).toEqual(0);
-    }));
+    });
 
-    it('Should not perform any action by default when an element is dropped inside.', (async () => {
+    it('Should not perform any action by default when an element is dropped inside.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.detectChanges();
 
@@ -1551,9 +1545,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(fix.componentInstance.container.nativeElement.children[0]).toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[0]).not.toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[1]).not.toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
-    it('Should put dropped element as a last child when Append drop strategy is used.', (async () => {
+    it('Should put dropped element as a last child when Append drop strategy is used.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
         fix.detectChanges();
@@ -1597,9 +1591,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.element.nativeElement.children.length).toEqual(3);
         // Should be appended at the end
         expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
-    it('Should put dropped element as a first child when Prepend drop strategy is used.', (async () => {
+    it('Should put dropped element as a first child when Prepend drop strategy is used.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxPrependDropStrategy;
         fix.detectChanges();
@@ -1643,10 +1637,10 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.element.nativeElement.children.length).toEqual(3);
         // Should be appended at the end
         expect(dropArea.element.nativeElement.children[0]).toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
     it(`Should put dropped element as a second child when Insert drop strategy is used
-     and element is dropped over the second child already in the igxDrop area.`, (async () => {
+     and element is dropped over the second child already in the igxDrop area.`, async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
@@ -1690,9 +1684,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.element.nativeElement.children.length).toEqual(3);
         // Should be inserted between other chips
         expect(dropArea.element.nativeElement.children[1]).toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
-    it('Should cancel drop strategy when the dropped event is canceled.', (async () => {
+    it('Should cancel drop strategy when the dropped event is canceled.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
@@ -1743,10 +1737,10 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(fix.componentInstance.container.nativeElement.children[0]).toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[0]).not.toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[1]).not.toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
 
-    it('Should allow dragging when the dragChannel is array and dropChannel is primitive.', (async () => {
+    it('Should allow dragging when the dragChannel is array and dropChannel is primitive.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
         fix.detectChanges();
@@ -1793,9 +1787,9 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.element.nativeElement.children.length).toEqual(3);
         // Should be appended at the end
         expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 
-    it('Should allow dragging when the dragChannel is primitive and dropChannel is array.', (async () => {
+    it('Should allow dragging when the dragChannel is primitive and dropChannel is array.', async () => {
         const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
         fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
         fix.componentInstance.dropArea.dropChannel = [1, 2, 3];
@@ -1842,7 +1836,7 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(dropArea.element.nativeElement.children.length).toEqual(3);
         // Should be appended at the end
         expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
-    }));
+    });
 });
 
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
