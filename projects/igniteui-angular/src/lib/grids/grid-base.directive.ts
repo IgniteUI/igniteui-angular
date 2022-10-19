@@ -474,6 +474,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public rowStyles = null;
 
+    /* alternateType: string */
     /**
      * Gets/Sets the primary key.
      *
