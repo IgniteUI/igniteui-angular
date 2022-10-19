@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -12,10 +12,10 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
-        require('karma-jasmine'),
-        require('karma-chrome-launcher'),
-        require('karma-jasmine-spec-tags'),
-        require('@angular-devkit/build-angular/plugins/karma')
+        'karma-jasmine',
+        'karma-chrome-launcher',
+        'karma-spec-reporter',
+        '@angular-devkit/build-angular/plugins/karma'
     ],
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
@@ -25,7 +25,7 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    reporters: ['progress'],
+    reporters: ['spec'],
     specReporter: {
         suppressSkipped: true,
         suppressErrorSummary: false,
