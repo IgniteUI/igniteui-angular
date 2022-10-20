@@ -20,7 +20,7 @@ import { GridSelectionMode } from '../common/enums';
 import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
 
-fdescribe('IgxHierarchicalGrid selection #hGrid', () => {
+describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
