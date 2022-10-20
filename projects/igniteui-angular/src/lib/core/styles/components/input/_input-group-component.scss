@@ -132,6 +132,8 @@
         }
 
         @include m(filled) {
+            @extend %form-group-display--filled !optional;
+
             @include e(label) {
                 @extend %form-group-label--float !optional;
             }
@@ -150,8 +152,6 @@
         }
 
         @include m(invalid) {
-            @extend %form-group-display--error !optional;
-
             @include e(label) {
                 @extend %form-group-label--error !optional;
             }

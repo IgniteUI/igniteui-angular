@@ -1,31 +1,31 @@
 .dialog {
     width: 100px;
     height: 50px;
-    background-color: #cccccc;
+    background-color: #ccc;
     color: black;
     display: flex;
     cursor: move;
     align-items: center;
     justify-content: center;
-    transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-    box-shadow: 0px 0px 3px -2px var(--igx-surface-500-contrast);
+    transition: box-shadow 200ms cubic-bezier(0, 0, .2, 1);
+    box-shadow: 0 0 3px -2px var(--ig-surface-500-contrast);
 }
 
 .dialog:active {
-    box-shadow: 0px 5px 15px 3px var(--igx-surface-500-contrast);
+    box-shadow: 0 5px 15px 3px var(--ig-surface-500-contrast);
 }
 
 .dragWithGhostDefault {
     width: 100px;
     height: 50px;
-    background-color: #cccccc;
+    background-color: #ccc;
     color: black;
     display: flex;
     cursor: move;
     align-items: center;
     justify-content: center;
-    transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-    box-shadow: 0px 0px 3px -2px var(--igx-surface-500-contrast);
+    transition: box-shadow 200ms cubic-bezier(0, 0, .2, 1);
+    box-shadow: 0 0 3px -2px var(--ig-surface-500-contrast);
 }
 
 .dragWithGhostPlaceholder {
@@ -37,21 +37,21 @@
     cursor: move;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 4px 0px var(--igx-surface-500-contrast);
+    box-shadow: 0 0 4px 0 var(--ig-surface-500-contrast);
 }
 
 .customGhost {
     width: 100px;
     height: 50px;
-    background-color: #cccccc;
+    background-color: #ccc;
     color: black;
     display: flex;
     cursor: move;
     user-select: none;
     align-items: center;
     justify-content: center;
-    transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-    box-shadow: 0px 5px 15px 3px var(--igx-surface-500-contrast);
+    transition: box-shadow 200ms cubic-bezier(0, 0, .2, 1);
+    box-shadow: 0 5px 15px 3px var(--ig-surface-500-contrast);
 }
 
 .dialogHeader {
@@ -73,11 +73,11 @@
     display: flex;
     flex-flow: row;
     height: 100px;
-    border: 1px var(--igx-surface-500-contrast) dotted;
+    border: 1px var(--ig-surface-500-contrast) dotted;
 }
 
 .initialArea.dragOver {
-    background-color: rgba(0, 128, 0, 0.7);
+    background-color: rgba(0, 128, 0, .7);
 }
 
 .draggableElem {
@@ -106,21 +106,21 @@
 }
 
 .cageArea.dragOver {
-    background-color: rgba(205, 67, 67, 0.7);
+    background-color: rgba(205, 67, 67, .7);
 }
 
 .listArea {
     width: 300px;
     min-height: 50px;
     border-radius: 4px;
-    box-shadow: 0 2px 6px 0 rgba(var(--igx-surface-500-contrast), 0.26), 0 3px 3px 0 rgba(var(--igx-surface-500-contrast), 0.12), 0 4px 2px -2px rgba(var(--igx-surface-500-contrast), 0.08);
+    box-shadow: 0 2px 6px 0 rgba(var(--ig-surface-500-contrast), .26), 0 3px 3px 0 rgba(var(--ig-surface-500-contrast), .12), 0 4px 2px -2px rgba(var(--ig-surface-500-contrast), .08);
     background-color: #d4d4d4;
 }
 
 .listItem {
     padding: 20px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgba(var(--igx-surface-500-contrast), 0.15);
+    border-bottom: 1px solid rgba(var(--ig-surface-500-contrast), .15);
     background-color: #bebdbd;
     color: black;
     position: relative;
@@ -129,14 +129,14 @@
 
 .dragClickable {
     cursor: pointer;
-    width: 0.5em;
+    width: .5em;
     font-size: 1.2em;
-    margin-left: 0.2em;
+    margin-left: .2em;
 }
 
 .dragRow {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
 }
 
 .dragScrollContainer {

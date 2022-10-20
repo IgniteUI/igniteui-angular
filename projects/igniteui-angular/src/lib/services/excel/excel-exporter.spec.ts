@@ -1,7 +1,7 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { JSZipWrapper } from './jszip-verification-wrapper.spec';
+import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -118,9 +118,9 @@ describe('Excel Exporter', () => {
     });
 
     const getExportedData = (data: any[], exportOptions: IgxExcelExporterOptions) => {
-        const result = new Promise<JSZipWrapper>((resolve) => {
+        const result = new Promise<ZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {
-                const wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new ZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
             exporter.exportData(data, exportOptions);

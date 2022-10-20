@@ -10,6 +10,7 @@ import { TreeResourceStringsBG } from './tree-resources';
 import { InputResourceStringsBG } from './input-resources';
 import { ChipResourceStringsBG} from './chip-resources';
 import { ComboResourceStringsBG } from './combo-resources';
+import { QueryBuilderResourceStringsBG } from './query-builder-resources';
 
 /**
  * Bulgarian resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsBG = {
     ...TreeResourceStringsBG,
     ...InputResourceStringsBG,
     ...ChipResourceStringsBG,
-    ...ComboResourceStringsBG
+    ...ComboResourceStringsBG,
+    ...QueryBuilderResourceStringsBG,
 };

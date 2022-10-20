@@ -6,7 +6,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { JSZipWrapper } from './jszip-verification-wrapper.spec';
+import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import {
     ReorderedColumnsComponent,
@@ -17,7 +17,8 @@ import {
     GridExportGroupedDataComponent,
     MultiColumnHeadersExportComponent,
     GridWithEmptyColumnsComponent,
-    ColumnsAddedOnInitComponent
+    ColumnsAddedOnInitComponent,
+    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -40,6 +41,8 @@ import { IgxHierarchicalGridModule,
 } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridComponent, IgxPivotGridModule } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -62,9 +65,12 @@ describe('Excel Exporter', () => {
                 MultiColumnHeadersExportComponent,
                 IgxHierarchicalGridMultiColumnHeadersExportComponent,
                 ColumnsAddedOnInitComponent,
-                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent
+                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
+                GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
+                IgxPivotGridMultipleRowComponent,
+                IgxPivotGridTestComplexHierarchyComponent
             ],
-            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -1194,12 +1200,50 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportEmptyGridWithMultiColumnHeadersData, false);
         });
+
+        it('should export grid with three levels of multi column headers which have only two rows', async () => {
+            fix = TestBed.createComponent(GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
+        });
+    });
+
+    describe('', () => {
+        let fix;
+        let grid: IgxPivotGridComponent;
+
+        beforeEach(waitForAsync(() => {
+            options = createExportOptions('PivotGridGridExcelExport');
+        }));
+
+        it('should export pivot grid', async () => {
+            fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.pivotGrid;
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridData, false);
+        });
+
+        it('should export hierarchical pivot grid', async () => {
+            fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.pivotGrid;
+
+            await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalData, false);
+        });
     });
 
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
-        const exportData = new Promise<JSZipWrapper>((resolve) => {
+        const exportData = new Promise<ZipWrapper>((resolve) => {
             exporter.exportEnded.pipe(first()).subscribe((value) => {
-                const wrapper = new JSZipWrapper(value.xlsx);
+                const wrapper = new ZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
             exporter.export(grid, exportOptions);

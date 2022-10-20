@@ -22,7 +22,7 @@ export class ServerHost implements ts.server.ServerHost {
      * Read a file's content from the Virtual Tree
      * If file does not exist in virtual tree, check in physical FS
      */
-    public readFile(path: string, encoding?: string): string | undefined {
+    public readFile(path: string, encoding?: BufferEncoding): string | undefined {
         let content;
         // ensure the path is relative, so it can be found in the Tree, reflecting latest state
         path = pathFs.relative(this.getCurrentDirectory(), path);

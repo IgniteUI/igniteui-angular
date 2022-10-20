@@ -1,7 +1,7 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
 
 ////
 /// @group themes
@@ -9,11 +9,9 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 @function pivot-data-selector-theme(
-    $palette: null,
     $schema: $light-schema,
     $background: null
 ) {
@@ -27,11 +25,10 @@
         $pivot-data-selector-schema: $schema;
     }
 
-    $theme: apply-palette($pivot-data-selector-schema, $palette);
+    $theme: digest-schema($pivot-data-selector-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
     ));
 }
 
@@ -134,10 +131,10 @@
         %igx-expansion-panel__header-inner {
             background: var-get($theme, 'header-color');
             padding: $panel-padding;
-    
+
             .dragOver & {
-                background: color($color: 'grays', $variant: 300);
-                box-shadow: inset 0 0 0 1px color($color: 'grays', $variant: 400);
+                background: color($color: 'gray', $variant: 300);
+                box-shadow: inset 0 0 0 1px color($color: 'gray', $variant: 400);
             }
         }
     }
@@ -217,8 +214,8 @@
         height: auto;
         padding: 0 rem(2px) 0 rem(4px);
         cursor: grabbing;
-        box-shadow: elevation($elevations, 24);
-        border: 1px solid color($color: 'grays', $variant: 100);
+        box-shadow: elevation(24);
+        border: 1px solid color($color: 'gray', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
     }
