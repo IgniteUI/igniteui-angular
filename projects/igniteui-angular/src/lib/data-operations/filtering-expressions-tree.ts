@@ -12,6 +12,7 @@ export declare interface IExpressionTree {
     fieldName?: string;
 }
 
+/* marshalByValue */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     /* alternateName: treeType */
@@ -21,6 +22,7 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     findIndex(fieldName: string): number;
 }
 
+/* marshalByValue */
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**

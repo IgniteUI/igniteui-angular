@@ -1547,6 +1547,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._visibleWhenCollapsed;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * @remarks
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
@@ -1574,6 +1575,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.grid.summaryService.clearSummaryCache();
         this.grid.pipeTrigger++;
     }
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
     }

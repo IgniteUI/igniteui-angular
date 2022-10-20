@@ -5,6 +5,7 @@ export enum FilteringLogic {
     Or
 }
 
+/* marshalByValue */
 /**
  * Represents filtering expressions.
  */

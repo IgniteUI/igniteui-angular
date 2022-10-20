@@ -7,6 +7,7 @@ export enum SortingDirection {
     Desc = 2
 }
 
+/* marshalByValue */
 export interface ISortingExpression extends IBaseEventArgs {
     fieldName: string;
     dir: SortingDirection;
