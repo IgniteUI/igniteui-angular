@@ -10,6 +10,7 @@ export enum SortingDirection {
 /* marshalByValue */
 export interface ISortingExpression extends IBaseEventArgs {
     fieldName: string;
+    /* mustCoerceToInt */
     dir: SortingDirection;
     ignoreCase?: boolean;
     strategy?: ISortingStrategy;
