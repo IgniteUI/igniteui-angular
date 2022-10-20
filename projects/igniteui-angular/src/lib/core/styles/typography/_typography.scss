@@ -26,7 +26,7 @@
         .ig-typography {
             font-family: var(--ig-font-family);
             font-size: theming.$browser-context;
-            line-height: 27px;
+            line-height: theming.rem(27px);
 
             @include charts.typography($type-scale);
 

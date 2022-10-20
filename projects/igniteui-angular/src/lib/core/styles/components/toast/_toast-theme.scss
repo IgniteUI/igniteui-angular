@@ -82,7 +82,7 @@
 
     @include css-vars($theme);
 
-    $width: 52px;
+    $width: rem(52px);
     $margin: rem(42px) auto;
 
     $padding: map.get((
@@ -95,7 +95,7 @@
     $border: map.get((
         'material': none,
         'fluent': none,
-        'bootstrap': 1px solid color(null, 'gray', 300),
+        'bootstrap': rem(1px) solid color(null, 'gray', 300),
         'indigo-design': none
     ), $variant);
 

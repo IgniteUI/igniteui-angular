@@ -463,7 +463,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: 290px;
+        min-width: rem(290px);
         background: var-get($theme, 'content-background');
         outline: none;
         border-radius: var-get($theme, 'border-radius');
@@ -508,7 +508,7 @@
     igx-month-picker {
         %cal-picker-display {
             @if $bootstrap-theme {
-                border-bottom: 1px solid var-get($theme, 'border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
             }
         }
     }
@@ -694,7 +694,7 @@
             @if $bootstrap-theme {
                 margin-top: 0;
                 background: var-get($theme, 'picker-background-color');
-                border-bottom: 1px solid var-get($theme, 'border-color');
+                border-bottom: rem(1px) solid var-get($theme, 'border-color');
                 padding-bottom: $cal-picker-padding;
                 padding-top: $cal-picker-padding;
             }
@@ -871,8 +871,8 @@
             position: absolute; content: '';
             width: calc(100% - 4px);
             height: calc(100% - 4px);
-            top: 2px;
-            inset-inline-start: 2px;
+            top: rem(2px);
+            inset-inline-start: rem(2px);
             border-radius: inherit;
             z-index: -1;
         }
@@ -1037,7 +1037,7 @@
             inset-inline-start: 0;
             inset-inline-end: 0;
             transform: translateY(-50%);
-            height: 48px;
+            height: rem(48px);
             background: transparent;
             border-radius: var-get($theme, 'month-border-radius');
             transition: background-color .15s ease-out;

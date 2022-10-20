@@ -285,8 +285,8 @@
         indigo-design: null
     ), $variant);
 
-    $item-padding: 4px;
-    $chip-item-padding: 0 rem($item-padding);
+    $item-padding: rem(4px);
+    $chip-item-padding: 0 $item-padding;
 
     $chip-avatar-inset: map.get((
         material: 0,
@@ -483,7 +483,7 @@
     %igx-chip__select {
         display: inline-flex;
         align-items: center;
-        width: 18px;
+        width: rem(18px);
         opacity: 1;
         z-index: 1;
         transition: opacity 120ms $out-quad, width 120ms $out-quad;
@@ -518,7 +518,7 @@
         padding: $chip-item-padding;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
-        border-width: 1px;
+        border-width: rem(1px);
         border-style: solid;
         border-color: var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
@@ -643,7 +643,7 @@
     %igx-chip__ghost--compact {
         %igx-chip__content {
             @include type-style($text) {
-                font-size: 12px;
+                font-size: rem(12px);
                 font-weight: 600;
             }
         }

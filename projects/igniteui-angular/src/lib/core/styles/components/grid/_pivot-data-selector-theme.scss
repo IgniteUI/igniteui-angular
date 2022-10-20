@@ -46,7 +46,7 @@
         compact: rem(18px)
     );
 
-    $chip-item-padding: 0 rem(2px);
+    $chip-item-padding: 0 #{rem(2px)};
     $panel-padding: rem(4px, 16px);
 
     %selector-base {
@@ -134,7 +134,7 @@
 
             .dragOver & {
                 background: color($color: 'gray', $variant: 300);
-                box-shadow: inset 0 0 0 1px color($color: 'gray', $variant: 400);
+                box-shadow: inset 0 0 0 rem(1px) color($color: 'gray', $variant: 400);
             }
         }
     }
@@ -148,8 +148,8 @@
             display: flex;
             flex-direction: column;
             padding: rem(8px) rem(4px);
-            min-height: 186px;
-            max-height: 208px;
+            min-height: rem(186px);
+            max-height: rem(208px);
             overflow-y: auto;
         }
 
@@ -215,7 +215,7 @@
         padding: 0 rem(2px) 0 rem(4px);
         cursor: grabbing;
         box-shadow: elevation(24);
-        border: 1px solid color($color: 'gray', $variant: 100);
+        border: rem(1px) solid color($color: 'gray', $variant: 100);
         border-radius: border-radius(rem(2px));
         z-index: 10;
     }
@@ -244,7 +244,7 @@
 
     %selector-item-text {
         @include ellipsis();
-        max-width: calc(100% - 18px + 8px);
+        max-width: calc(100% - rem(18px) + rem(8px));
     }
 
     %selector-item-text,

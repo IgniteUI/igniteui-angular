@@ -225,8 +225,8 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 
-    $item-min-width: 90px;
-    $item-max-width: 360px;
+    $item-min-width: rem(90px);
+    $item-max-width: rem(360px);
 
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
 
@@ -285,7 +285,7 @@
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
-                height: 1px;
+                height: rem(1px);
                 background: var-get($theme, 'border-color');
                 z-index: 0;
             }
@@ -374,13 +374,13 @@
         }
 
         @if $bootstrap-theme {
-            border: 1px solid transparent;
+            border: rem(1px) solid transparent;
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }
 
         @if $indigo-theme {
-            border-bottom: 1px solid var-get($theme, 'border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
         }
 
         &::-moz-focus-inner {
@@ -416,11 +416,11 @@
 
         @if $not-bootstrap-theme {
             transition: all .3s $tabs-animation-function;
-            border: 1px solid var-get($theme, 'border-color');
+            border: rem(1px) solid var-get($theme, 'border-color');
 
             &:hover,
             &:focus {
-                border: 1px solid var-get($theme, 'border-color--hover');
+                border: rem(1px) solid var-get($theme, 'border-color--hover');
             }
         }
 
@@ -468,7 +468,7 @@
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
-                height: 1px;
+                height: rem(1px);
                 background: var-get($theme, 'item-active-background');
                 z-index: 1;
             }
@@ -530,7 +530,7 @@
         // We need to explicitly set the default for IE 11
         left: 0;
         transform: translateX(0);
-        height: 2px;
+        height: rem(2px);
         min-width: $item-min-width;
         background: var-get($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
