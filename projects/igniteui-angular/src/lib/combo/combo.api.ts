@@ -41,7 +41,9 @@ export class IgxComboAPIService {
 
     public set_selected_item(itemID: any, event?: Event): void {
         const selected = this.combo.isItemSelected(itemID);
-
+        if (itemID === undefined) {
+            return;
+        }
         if (!selected) {
             this.combo.select([itemID], false, event);
         } else {

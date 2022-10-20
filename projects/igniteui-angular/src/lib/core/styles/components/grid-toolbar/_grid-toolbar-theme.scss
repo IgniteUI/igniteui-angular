@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,7 +9,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
@@ -21,9 +20,8 @@
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema(
 /// @requires extend
 /// @requires elevation
 /// @requires text-contrast
@@ -36,7 +34,6 @@
 ///   @include grid-toolbar($my-toolbar-theme);
 
 @function grid-toolbar-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -60,7 +57,8 @@
         $grid-toolbar-schema: $schema;
     }
 
-    $theme: apply-palette($grid-toolbar-schema, $palette);
+    $theme: digest-schema($grid-toolbar-schema);
+
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -89,7 +87,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         elevations: $elevations,
         background-color: $background-color,
         title-text-color: $title-text-color,
@@ -144,9 +141,9 @@
         font-size: $grid-toolbar-fs;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 100);
+            border-bottom: 1px solid color($color: 'gray', $variant: 100);
         } @else {
-            border-bottom: 1px solid color(map.get($theme, 'palette'), 'grays', 300);
+            border-bottom: 1px solid color($color: 'gray', $variant: 300);
         }
 
         background: var-get($theme, 'background-color');
@@ -262,22 +259,22 @@
             border-radius: 0;
 
             &:first-child > div {
-                background: color(map.get($theme, 'palette'), 'secondary');
+                background: color($color: 'secondary');
             }
         }
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
-        border-color: color(map.get($theme, 'palette'), 'secondary') !important;
+        border-color: color($color: 'secondary') !important;
 
         @if $bootstrap-theme {
             border-width: 2px;
-            border-color: color(map.get($theme, 'palette'), 'primary', 800) !important;
-            color: color(map.get($theme, 'palette'), 'primary', 800);
+            border-color: color($color: 'primary', $variant: 800) !important;
+            color: color($color: 'primary', $variant: 800);
 
             &:hover,
             &:focus {
-                background: color(map.get($theme, 'palette'), 'primary', 800);
+                background: color($color: 'primary', $variant: 800);
             }
         }
     }
@@ -291,7 +288,7 @@
         background: var-get($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: elevation($elevation: 8);
+        box-shadow: elevation(8);
     }
 
     %igx-grid-toolbar__dd-list-items {

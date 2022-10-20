@@ -26,7 +26,8 @@ const STYLES = {
         DIST: './dist/igniteui-angular/lib/core/styles'
     },
     CONFIG: {
-        outputStyle: 'compressed'
+        outputStyle: 'compressed',
+        includePaths: ['node_modules']
     }
 };
 

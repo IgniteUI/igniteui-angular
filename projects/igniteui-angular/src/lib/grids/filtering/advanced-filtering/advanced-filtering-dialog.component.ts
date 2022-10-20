@@ -27,7 +27,7 @@ import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html'
 })
-export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
+export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
@@ -56,6 +56,12 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     private _grid: GridType;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit(): void {
+        this.queryBuilder.setPickerOutlet(this.grid.outlet);
+    }
 
     /**
      * @hidden @internal
