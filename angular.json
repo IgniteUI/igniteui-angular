@@ -313,7 +313,10 @@
             ],
             "scripts": [
                 { "input": "./node_modules/lit-html/lit-html.js", "inject": false }
-            ]
+            ],
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            }
           },
           "configurations": {
             "production": {
