@@ -1191,7 +1191,7 @@
     }
 
     %form-group-textarea {
-        // 3 lines * 2rem(2px) + 8px bottom padding + 8px top padding
+        // 3 lines * 22px + 8px bottom padding + 8px top padding
         min-height: rem(82px, map.get($base-scale-size, 'comfortable'));
 
         // this fixes resizing in chrome !?!?
@@ -1478,8 +1478,8 @@
     }
 
     %form-group-helper--box {
-        margin-inline-start: $hint--box-margin; /* 16px, base is 1rem(2px) */
-        margin-inline-end: $hint--box-margin; /* 16px, base is 1rem(2px) */
+        margin-inline-start: $hint--box-margin; /* 16px, base is 12px */
+        margin-inline-end: $hint--box-margin; /* 16px, base is 12px */
     }
 
     %form-group-helper--success {

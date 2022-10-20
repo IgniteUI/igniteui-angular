@@ -306,7 +306,7 @@
             // important is needed to override the typography margins
             margin: rem(15px) $drawer-item-margin !important;
             padding: rem(4px);
-            gap: calc(3rem(2px) - #{$text-side-padding});
+            gap: calc(rem(32px) - #{$text-side-padding});
         }
 
         cursor: pointer;
