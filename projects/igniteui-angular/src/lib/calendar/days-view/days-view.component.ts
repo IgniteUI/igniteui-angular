@@ -176,6 +176,17 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     }
 
     /**
+     * Multi/Range selection with shift key
+     *
+     * @hidden
+     * @internal
+     */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerdown(event: MouseEvent) {
+        this.shiftKey = event.button === 0 && event.shiftKey;
+    }
+
+    /**
      * @hidden
      */
     @HostListener('keydown.arrowleft', ['$event'])

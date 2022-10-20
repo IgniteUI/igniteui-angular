@@ -148,6 +148,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    protected shiftKey: boolean = false;
+
+    /**
+     * @hidden
+     */
     protected _onTouchedCallback: () => void = noop;
     /**
      * @hidden
@@ -173,6 +178,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _viewDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _lastSelectedDate: Date;
 
     /**
      * @hidden
@@ -642,9 +652,34 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
         } else {
             const valueDateOnly = this.getDateOnly(value);
-            const newSelection = [];
-            if (this.selectedDates.every((date: Date) => date.getTime() !== valueDateOnly.getTime())) {
+            let newSelection = [];
+
+            if (this.shiftKey && this._lastSelectedDate) {
+                let start: Date;
+                let end: Date;
+
+                if (this._lastSelectedDate.getTime() < valueDateOnly.getTime()) {
+                    start = this._lastSelectedDate;
+                    end = valueDateOnly;
+                } else {
+                    start = valueDateOnly;
+                    end = this._lastSelectedDate;
+                }
+
+                // select all dates from last selected to shift clicked day
+                if (this.selectedDates.some((date: Date) => date.getTime() === this._lastSelectedDate.getTime())) {
+
+                    newSelection = [start, ...this.generateDateRange(start, end)];
+                } else {
+                    // delesect all dates from last deselected to shift clicked day
+                    this.selectedDates = this.selectedDates.filter(
+                        (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
+                    );
+                }
+
+            } else if (this.selectedDates.every((date: Date) => date.getTime() !== valueDateOnly.getTime())) {
                 newSelection.push(valueDateOnly);
+
             } else {
                 this.selectedDates = this.selectedDates.filter(
                     (date: Date) => date.getTime() !== valueDateOnly.getTime()
@@ -652,9 +687,20 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             }
 
             if (newSelection.length > 0) {
-                this.selectedDates = this.selectedDates.concat(newSelection);
+
+                if (this.shiftKey) {
+                    const newDates = newSelection.map(v => this.getDateOnly(v).getTime());
+                    const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
+
+                    this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
+                } else {
+                    this.selectedDates = this.selectedDates.concat(newSelection);
+                }
             }
+
+            this._lastSelectedDate = valueDateOnly;
         }
+
         this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
@@ -668,32 +714,68 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         let end: Date;
 
         if (Array.isArray(value)) {
-            // this.rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             start = this.getDateOnly(value[0]);
             end = this.getDateOnly(value[value.length - 1]);
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
-        } else {
-            if (!this.rangeStarted) {
-                this.rangeStarted = true;
-                this.selectedDates = [value];
-            } else {
-                this.rangeStarted = false;
 
-                if (this.selectedDates[0].getTime() === value.getTime()) {
-                    this.selectedDates = [];
-                    this._onChangeCallback(this.selectedDates);
-                    return;
-                }
+        } else if (this.shiftKey && this._lastSelectedDate) {
 
-                this.selectedDates.push(value);
-                this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-
-                start = this.selectedDates.shift();
-                end = this.selectedDates.pop();
-                this.selectedDates = [start, ...this.generateDateRange(start, end)];
+            if (this._lastSelectedDate.getTime() === value.getTime()) {
+                this.selectedDates = this.selectedDates.length === 1 ? [] : [value];
+                this.rangeStarted = !!this.selectedDates.length;
+                this._onChangeCallback(this.selectedDates);
+                return;
             }
+
+            // shortens the range when selecting a date inside of it
+            if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
+
+                if (this._lastSelectedDate.getTime() < value.getTime()) {
+                    start = value;
+                    end = this.selectedDates.pop();
+                } else {
+                    start = this.selectedDates.shift();
+                    end = value;
+                }
+            } else {
+                // extends the range when selecting a date outside of it
+                // allows selection from last deselected to current selected date
+                if (this._lastSelectedDate.getTime() < value.getTime()) {
+                    start = this.selectedDates.shift() ?? this._lastSelectedDate;
+                    end = value;
+                } else {
+                    start = value;
+                    end = this.selectedDates.pop() ?? this._lastSelectedDate;
+                }
+            }
+
+            this.rangeStarted = false;
+
+        } else if (!this.rangeStarted) {
+            this.rangeStarted = true;
+            this.selectedDates = [value];
+        } else {
+            this.rangeStarted = false;
+
+            if (this.selectedDates[0].getTime() === value.getTime()) {
+                this.selectedDates = [];
+                this._onChangeCallback(this.selectedDates);
+                return;
+            }
+
+            this.selectedDates.push(value);
+            this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+
+            start = this.selectedDates.shift();
+            end = this.selectedDates.pop();
         }
+
+        if (start && end) {
+            this.selectedDates = [start, ...this.generateDateRange(start, end)];
+        }
+
+        this._lastSelectedDate = Array.isArray(value) ? value[0] : value;
 
         if (excludeDisabledDates) {
             this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
