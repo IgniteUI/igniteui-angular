@@ -1,6 +1,15 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 15.0.0
+
+### New Features
+- `IgxCalendar`
+
+    Added support for shift key + mouse click interactions.
+    - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
+    - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
 ## 14.2.0
 
 ### New Features
