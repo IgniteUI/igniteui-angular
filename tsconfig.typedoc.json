@@ -2,11 +2,13 @@
     "extends": "./tsconfig.json",
     "exclude": [
         "dist",
+        "e2e",
         "projects/igniteui-angular/migrations/",
         "projects/igniteui-angular/schematics/",
-        "e2e",
+        "projects/igniteui-angular-elements/",
+        "projects/igniteui-angular/cypress/",
         "cypress",
-        "projects/igniteui-angular/cypress/"
+        "./cypress.config.ts"
     ],
     "typedocOptions": {
         "out": "dist/igniteui-angular/docs/typescript",

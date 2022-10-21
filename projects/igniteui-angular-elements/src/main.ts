@@ -22,18 +22,18 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 // treeGrid.childDataKey // <-- doc w/ angular example :(
 // treeGrid.reflow() // <-- wrong, better WithProps TODO?
 
-document.addEventListener('DOMContentLoaded', () => {
-    let grid1 = document.querySelector('igc-grid#grid1') as any;
-    // grid1.sortHeaderIconTemplate = (context) => html`⬇(${context.$implicit.title})`;
-    grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
-    grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
-    grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
-    grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
-        html`
-            <input autofocus id="range" type="range"
-                .value="${context.$implicit}"
-                @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
-                />
-            <output .value="${context.$implicit}"></output>
-        `;
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     let grid1 = document.querySelector('igc-grid#grid1') as any;
+//     // grid1.sortHeaderIconTemplate = (context) => html`⬇(${context.$implicit.title})`;
+//     grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
+//     grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
+//     grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
+//     grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
+//         html`
+//             <input autofocus id="range" type="range"
+//                 .value="${context.$implicit}"
+//                 @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
+//                 />
+//             <output .value="${context.$implicit}"></output>
+//         `;
+// });

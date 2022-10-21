@@ -17,7 +17,7 @@
     }
   </style>
 </head>
-<body class="igx-typography">
+<body class="ig-typography">
     <!-- <app-wrapper>
         <app-child-standalone id="childComp">
             <button onclick="changeText()">Change from child</button>
@@ -35,11 +35,9 @@
         childComp.template = tmpl;
     </script> -->
 
-  <!-- IgxGridComponent -->
-
-
-  <div>
-    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+  <section>
+    <h3 class="ig-typography__h6">Flat Grid (column groups, toolbar, paginator, row actions)</h3>
+    <igc-grid id="grid1" moving="true" paging="true" primary-key="ProductID" row-selection="multiple" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
         <igc-grid-toolbar>
         <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
         <igc-grid-toolbar-actions>
@@ -70,45 +68,56 @@
     <button onclick="grid1.displayDensity = 'compact'">Compact</button>
     <button onclick="grid1.displayDensity = 'cosy'">Cosy</button>
     <button onclick="grid1.displayDensity = 'comfortable'">Comfortable</button>
-  </div>
 
-  <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-    <igc-grid-toolbar>
-    <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
-    <igc-grid-toolbar-actions>
-        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
-        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
-        <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
-    </igc-grid-toolbar-actions>
-    </igc-grid-toolbar>
+    <h3 class="ig-typography__h6">Standalone paginator</h3>
+    <igc-paginator per-page="25" total-records="150"></igc-paginator>
+  </section>
 
-    <igc-column-layout header="Product ID">
-        <igc-column rowStart="1" colStart="1" rowEnd="3" field="ProductID" header="Product ID" width="136px"></igc-column>
-    </igc-column-layout>
-    <igc-column-layout header="Product Details">
-        <igc-column rowStart="1" colStart="1" colEnd="3" field="ProductName" header="Product Name" width="200px"></igc-column>
-        <igc-column rowStart="2" colStart="1" colEnd="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
-        <igc-column rowStart="2" colStart="2" colEnd="3" field="ImageUrl" width="200px"></igc-column>
-    </igc-column-layout>
-    <igc-column-layout header="Product Stock">
-        <igc-column rowStart="1" colStart="1" colEnd="3" field="InStock" header="In Stock" width="136px"></igc-column>
-    </igc-column-layout>
+  <section>
+      <h3 class="ig-typography__h6">Flat Grid (MRL column layout)</h3>
+      <igc-grid id="grid2" moving="true" paging="true" primary-key="ProductID" row-editable="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+        <igc-grid-toolbar>
+        <igc-grid-toolbar-title>My new toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+        </igc-grid-toolbar>
 
-    <igc-paginator per-page="10"></igc-paginator>
-  </igc-grid>
+        <igc-column-layout header="Product ID">
+            <igc-column row-start="1" col-start="1" row-end="3" field="ProductID" header="Product ID" width="136px"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Details">
+            <igc-column row-start="1" col-start="1" col-end="3" field="ProductName" header="Product Name" width="200px"></igc-column>
+            <igc-column row-start="2" col-start="1" col-end="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
+            <igc-column row-start="2" col-start="2" col-end="3" field="ImageUrl" width="200px"></igc-column>
+        </igc-column-layout>
+        <igc-column-layout header="Product Stock">
+            <igc-column row-start="1" col-start="1" col-end="3" field="InStock" header="In Stock" width="136px"></igc-column>
+        </igc-column-layout>
+
+        <igc-paginator per-page="10"></igc-paginator>
+      </igc-grid>
+  </section>
 
   <script src="assets/data/nw-products.js"></script>
-  <script>
+  <script type="module">
+    import { html } from "./lit-html.js";
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
-        // let columns = [
-        //     { field: 'ProductID', header: 'Product Id', dataType: 'number' },
-        //     { field: 'ProductName', sortable: true },
-        //     { field: 'CategoryName', sortable: true, groupable: true },
-        //     { field: 'InStock', dataType: 'number' }
-        // ];
-        // grid1.columns = columns;
+        grid1.emptyGridTemplate = () => html`<div>¯\(°_o)/¯ no data</div>`;
+        grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
+        grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
+        grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
+            html`
+                <input autofocus id="range" type="range"
+                    .value="${context.$implicit}"
+                    @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
+                    />
+                <output .value="${context.$implicit}"></output>
+            `;
     });
 
     function changeColumns() {
@@ -120,7 +129,6 @@
         grid1.columns = columns;
     }
   </script>
-  <!-- END IgxGridComponent -->
 
   <!-- IgxTreeGridComponent -->
   <igc-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">

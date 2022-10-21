@@ -2,7 +2,7 @@
   "name": "igniteui-elements-grids",
   "version": "0.0.5",
   "description": "Ignite UI for Web Components Grids",
-  "main": "elements.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -37,7 +37,10 @@
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "aot": false
+            "aot": false,
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            }
           },
           "configurations": {
             "production": {
@@ -292,7 +295,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/igniteui-angular-elements",
             "index": "projects/igniteui-angular-elements/src/index.html",
@@ -302,12 +305,18 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/igniteui-angular-elements/src/favicon.ico",
-              "projects/igniteui-angular-elements/src/assets"
+              "projects/igniteui-angular-elements/src/assets",
+              "projects/igniteui-angular-elements/src/index.js"
             ],
             "styles": [
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+                { "input": "./node_modules/lit-html/lit-html.js", "inject": false }
+            ],
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            }
           },
           "configurations": {
             "production": {
@@ -329,7 +338,9 @@
                   "with": "projects/igniteui-angular-elements/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "none"
+              "outputHashing": "none",
+              "optimization": true,
+              "externalDependencies": ["lit-html"]
             },
             "development": {
               "buildOptimizer": false,

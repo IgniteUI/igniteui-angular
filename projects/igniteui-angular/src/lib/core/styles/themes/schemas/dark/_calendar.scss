@@ -9,36 +9,36 @@
 
 /// Generates a dark calendar schema.
 /// @type {Map}
-/// @prop {Map} week-number-background [color: ('grays', 100, .3)] - The background color of the week number column.
-/// @prop {Map} date-hover-background [color: ('grays', 100)] - The hover date background color.
-/// @prop {Map} month-hover-background [color: ('grays', 100, .5)] - The month hover text color.
-/// @prop {Map} date-selected-hover-foreground [contrast-color: ('grays', 100)] - The hover text color for the selected date.
-/// @prop {Map} date-selected-focus-foreground [contrast-color: ('grays', 100)] - The focus text color for the selected date.
+/// @prop {Map} week-number-background [color: ('gray', 100, .3)] - The background color of the week number column.
+/// @prop {Map} date-hover-background [color: ('gray', 100)] - The hover date background color.
+/// @prop {Map} month-hover-background [color: ('gray', 100, .5)] - The month hover text color.
+/// @prop {Map} date-selected-hover-foreground [contrast-color: ('gray', 100)] - The hover text color for the selected date.
+/// @prop {Map} date-selected-focus-foreground [contrast-color: ('gray', 100)] - The focus text color for the selected date.
 $dark-base-calendar: (
     week-number-background: (
-        color: ('grays', 100, .3),
+        color: ('gray', 100, .3),
     ),
 
     date-hover-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     month-hover-background: (
-        color: ('grays', 100, .5)
+        color: ('gray', 100, .5)
     ),
 
     date-selected-hover-foreground: (
-        contrast-color: ('grays', 100)
+        contrast-color: ('gray', 100)
     ),
 
     date-selected-focus-foreground: (
-        contrast-color: ('grays', 100)
+        contrast-color: ('gray', 100)
     ),
 );
 
 /// Generates a dark calendar schema.
 /// @type {Map}
-/// @prop {Map} date-disabled-text-color [color: ('grays', 500)] - The text color for disabled dates.
+/// @prop {Map} date-disabled-text-color [color: ('gray', 500)] - The text color for disabled dates.
 /// @prop {Map} date-selected-hover-foreground [contrast-color: ('secondary', 500)] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-foreground [contrast-color: ('secondary', 500)] - The focus text color for the selected date.
 /// @requires {function} extend
@@ -50,7 +50,7 @@ $dark-calendar: extend(
     $dark-base-calendar,
     (
         date-disabled-text-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         date-selected-hover-foreground: (
@@ -71,15 +71,15 @@ $dark-fluent-calendar: extend($fluent-calendar, $dark-base-calendar);
 
 /// Generates a dark bootstrap calendar schema.
 /// @type {Map}
-/// @prop {Map} content-background [color: ('grays', 50)] - The main content background color.
-/// @prop {Color} picker-background-color [color: ('grays', 100, .5)] - The igx calendar picker background color.
-/// @prop {Map} border-color [color: ('grays', 100)] - The calendar border color.
+/// @prop {Map} content-background [color: ('gray', 50)] - The main content background color.
+/// @prop {Color} picker-background-color [color: ('gray', 100, .5)] - The igx calendar picker background color.
+/// @prop {Map} border-color [color: ('gray', 100)] - The calendar border color.
 /// @prop {Map} picker-text-color [contrast-color: ('surface')]- The idle picker month/year color.
 /// @prop {Map} date-selected-text-color [contrast-color: ('secondary', 600)] - The text color for the selected date.
 /// @prop {Map} date-current-text-color [contrast-color: 'surface'] - The text color for the current date.
 /// @prop {Map} date-current-hover-text-color [color: ('surface')] - The hover text color for the current date.
 /// @prop {Map} date-current-focus-text-color [color: ('surface')] - The focus text color for the current date.
-/// @prop {Map} week-number-background [('grays', 300, .2)] - The background color of the week number column.
+/// @prop {Map} week-number-background [('gray', 300, .2)] - The background color of the week number column.
 /// @prop {Map} date-selected-hover-text-color [contrast-color: ('surface')] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-text-color [contrast-color: ('surface')] - The focus text color for the selected date.
 /// @requires {function} extend
@@ -90,15 +90,15 @@ $dark-bootstrap-calendar: extend(
     $dark-base-calendar,
     (
         content-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         picker-background-color: (
-            color: ('grays', 100, .5)
+            color: ('gray', 100, .5)
         ),
 
         border-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         picker-text-color: (
@@ -130,7 +130,7 @@ $dark-bootstrap-calendar: extend(
         ),
 
         week-number-background: (
-            color: ('grays', 300, .2),
+            color: ('gray', 300, .2),
         ),
     )
 );
@@ -138,12 +138,12 @@ $dark-bootstrap-calendar: extend(
 /// Generates a dark indigo calendar schema.
 /// @type {Map}
 /// @prop {Map} content-text-color [contrast-color: ('surface')] - The main content text color.
-/// @prop {Map} inactive-text-color [color: ('grays', 700)] - The text color for previous and next month dates.
-/// @prop {Map} label-color [color: ('grays', 700)] - The text color for weekday labels.
-/// @prop {Map} weekend-text-color [color: ('grays', 700)] - The text color for weekend days.
-/// @prop {Map} picker-arrow-color [color: ('grays', 800)] - The idle picker arrow color.
+/// @prop {Map} inactive-text-color [color: ('gray', 700)] - The text color for previous and next month dates.
+/// @prop {Map} label-color [color: ('gray', 700)] - The text color for weekday labels.
+/// @prop {Map} weekend-text-color [color: ('gray', 700)] - The text color for weekend days.
+/// @prop {Map} picker-arrow-color [color: ('gray', 800)] - The idle picker arrow color.
 /// @prop {Map} picker-arrow-hover-color [contrast-color: ('surface')] - The picker hover arrow color.
-/// @prop {Map} picker-text-color [color: ('grays', 800)]- The idle picker month/year color.
+/// @prop {Map} picker-text-color [color: ('gray', 800)]- The idle picker month/year color.
 /// @prop {Map} picker-text-hover-color [contrast-color: ('surface')]-  The hover picker month/year color.
 /// @prop {Map} month-hover-text-color [color: ('primary', 300)] - The month hover text color.
 /// @prop {Map} year-hover-text-color [color: ('primary', 300)] - The year hover text color.
@@ -153,9 +153,9 @@ $dark-bootstrap-calendar: extend(
 /// @prop {Map} date-selected-hover-text-color [contrast-color: ('surface')] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-text-color [contrast-color: ('surface')] - The focus text color for the selected date.
 /// @prop {Map} date-current-hover-text-color [color: ('primary', 200)] - The hover text color for the current date.
-/// @prop {Map} date-current-focus-text-color [color: ('grays', 100)] - The focus text color for the current date.
-/// @prop {Map} date-current-hover-bg-color [color: ('grays', 100)] - The hover background color for the current date.
-/// @prop {Map} date-current-focus-bg-color [color: ('grays', 100)] - The focus background color for the current date.
+/// @prop {Map} date-current-focus-text-color [color: ('gray', 100)] - The focus text color for the current date.
+/// @prop {Map} date-current-hover-bg-color [color: ('gray', 100)] - The hover background color for the current date.
+/// @prop {Map} date-current-focus-bg-color [color: ('gray', 100)] - The focus background color for the current date.
 /// @requires {function} extend
 /// @requires $indigo-calendar
 /// @requires $dark-base-calendar
@@ -168,11 +168,11 @@ $dark-indigo-calendar: extend(
         ),
 
         date-current-hover-bg-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         date-current-focus-bg-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         date-current-hover-text-color: (
@@ -184,7 +184,7 @@ $dark-indigo-calendar: extend(
         ),
 
         inactive-text-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         date-selected-hover-text-color: (
@@ -196,15 +196,15 @@ $dark-indigo-calendar: extend(
         ),
 
         label-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         weekend-text-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         picker-arrow-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         picker-arrow-hover-color: (
@@ -212,7 +212,7 @@ $dark-indigo-calendar: extend(
         ),
 
         picker-text-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         picker-text-hover-color: (

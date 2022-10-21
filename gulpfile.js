@@ -27,7 +27,8 @@ const STYLES = {
         DIST: './dist/igniteui-angular/lib/core/styles'
     },
     CONFIG: {
-        outputStyle: 'compressed'
+        outputStyle: 'compressed',
+        includePaths: ['node_modules']
     }
 };
 
@@ -35,7 +36,8 @@ const ELEMENTS_STYLES = {
     SRC: './projects/igniteui-angular-elements/src/themes/**/*',
     DIST: './dist/igniteui-angular-elements/themes',
     CONFIG: {
-        outputStyle: 'compressed'
+        outputStyle: 'compressed',
+        includePaths: ['node_modules']
     }
 };
 

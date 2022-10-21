@@ -96,7 +96,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
                 // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
                 // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-                const parentComponentRef = await parent.ngElementStrategy[ComponentRefKey];
+                const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentAnchor = parentComponentRef?.instance.anchor;
             }
         }

@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { IgxGridToolbarActionsDirective } from './common';
+import { IgxGridToolbarActionsComponent } from './common';
 import { GridServiceType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxToolbarToken } from './token';
 
@@ -75,8 +75,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnDes
      * @hidden
      * @internal
      */
-    @ContentChild(IgxGridToolbarActionsDirective)
-    public hasActions: IgxGridToolbarActionsDirective;
+    @ContentChild(IgxGridToolbarActionsComponent)
+    public hasActions: IgxGridToolbarActionsComponent;
 
     /**
      * @hidden

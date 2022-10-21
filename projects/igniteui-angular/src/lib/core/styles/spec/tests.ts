@@ -3,4 +3,4 @@ import * as sassTrue from 'sass-true';
 import {} from 'jasmine';
 
 const file = path.join(__dirname, '_index.scss');
-sassTrue.runSass({ file }, { describe, it });
+sassTrue.runSass({ file, includePaths: ['node_modules'] }, { describe, it });

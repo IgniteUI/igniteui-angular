@@ -307,6 +307,11 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
+     public pickerOutlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+     * @hidden @internal
+     */
     public fieldSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
@@ -482,7 +487,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-     public overlaySettings: OverlaySettings = {
+    public overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
@@ -492,7 +497,14 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     /**
      * @hidden @internal
      */
-     public get isContextMenuVisible(): boolean {
+    public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
+        this.pickerOutlet = outlet;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isContextMenuVisible(): boolean {
         return !this.contextMenuToggle.collapsed;
     }
 

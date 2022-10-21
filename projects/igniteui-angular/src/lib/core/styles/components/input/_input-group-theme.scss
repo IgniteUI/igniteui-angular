@@ -1,15 +1,14 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a> //
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.  /
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
@@ -64,9 +63,8 @@
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -76,7 +74,6 @@
 ///   // Pass the theme to the input-group component mixin
 ///   @include input-group($my-input-group-theme);
 @function input-group-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -144,7 +141,7 @@
         $input-group-schema: $schema;
     }
 
-    $theme: apply-palette($input-group-schema, $palette);
+    $theme: digest-schema($input-group-schema);
 
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
@@ -159,15 +156,15 @@
     }
 
     @if not($search-resting-shadow) {
-        $search-resting-shadow: elevation($elevations, $search-resting-elevation);
+        $search-resting-shadow: elevation($search-resting-elevation);
     }
 
     @if not($search-hover-shadow) {
-        $search-hover-shadow: elevation($elevations, $search-hover-elevation);
+        $search-hover-shadow: elevation($search-hover-elevation);
     }
 
     @if not($search-disabled-shadow) {
-        $search-disabled-shadow: elevation($elevations, $search-disabled-elevation);
+        $search-disabled-shadow: elevation($search-disabled-elevation);
     }
 
     @if not($box-border-radius) {
@@ -183,7 +180,6 @@
     }
 
     @return extend($theme, (
-        palette: $palette,
         name: $name,
         selector: $selector,
 
@@ -254,9 +250,7 @@
 @mixin input-group($theme) {
     @include css-vars($theme);
 
-    $palette: map.get($theme, 'palette');
-
-    $transition-timing: .25s $ease-out-cubic;
+    $transition-timing: .25s $out-cubic;
 
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
@@ -394,15 +388,12 @@
         }
     }
 
-    %form-group-display--error {
+    %form-group-display--filled {
         igx-prefix,
-        [igxPrefix] {
-            @extend %form-group-prefix--error;
-        }
-
+        [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            @extend %form-group-suffix--error;
+            @extend %form-group-prefix--filled;
         }
     }
 
@@ -873,7 +864,7 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(null, 'gray', 800);
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -889,7 +880,7 @@
     }
 
     %fluent-label-disabled {
-        color: color(map.get($theme, 'palette'), 'grays', 500);
+        color: color(null, 'gray', 500);
     }
 
     %fluent-label-filled {
@@ -897,7 +888,7 @@
     }
 
     %fluent-label-focused {
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1131,19 +1122,19 @@
         height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
-    %form-group-upload-button {
+    %form-group-upload-button[igxButton] {
         margin-bottom: rem(10px);
     }
 
     %form-group-clear-icon {
         &:focus {
             border-radius: border-radius(rem(4px));
-            background-color: color($palette, 'primary', 500);
-            color: contrast-color($palette, 'primary', 500);
+            background-color: color($color: 'primary', $variant: 500);
+            color: contrast-color($color: 'primary', $variant: 500);
 
             @if $variant == 'material' {
                 background-color: transparent;
-                color: color($palette, 'secondary', 500);
+                color: color($color: 'secondary', $variant: 500);
             }
 
             @if $variant == 'fluent' {
@@ -1152,7 +1143,7 @@
 
             @if $variant == 'bootstrap' {
                 border-radius: 0;
-                color: contrast-color($palette, 'primary', 600);
+                color: contrast-color($color: 'primary', $variant: 600);
             }
         }
     }
@@ -1361,9 +1352,9 @@
 
     %form-group-prefix-fluent,
     %form-group-suffix-fluent {
-        .igx-typography [igx-button],
-        .igx-typography igx-button,
-        .igx-typography button,
+        .ig-typography [igx-button],
+        .ig-typography igx-button,
+        .ig-typography button,
         button {
             border-radius: rem(1px) 0 0 rem(1px);
         }
@@ -1426,9 +1417,8 @@
         padding: 0;
     }
 
-    %form-group-prefix--error,
-    %form-group-suffix--error {
-        color: var-get($theme, 'error-secondary-color');
+    %form-group-prefix--filled {
+        color: var-get($theme, 'filled-text-color');
     }
 
     %form-group-border {
@@ -1759,33 +1749,34 @@
 /// Uses the 'body-1', 'caption'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin input-group-typography($type-scale, $categories: (
-    helper-text: 'caption',
-    input-text: 'subtitle-1')
+@mixin input-group-typography(
+    $categories: (
+        helper-text: 'caption',
+        input-text: 'subtitle-1'
+    )
 ) {
     $helper-text: map.get($categories, 'helper-text');
     $input-text: map.get($categories, 'input-text');
-    $input-text-props: type-scale-category($type-scale, $input-text);
 
     %form-group-input {
-        @include type-style($type-scale, $input-text) {
+        @include type-style($input-text) {
             margin: 0;
         }
     }
 
     %form-group-helper {
-        @include type-style($type-scale, $helper-text) {
+        @include type-style($helper-text) {
             margin: 0;
         }
     }
 
     %form-group-prefix,
     %form-group-suffix {
-        @include type-style($type-scale, $input-text) {
+        @include type-style($input-text) {
             margin: 0;
         }
     }
 }
+
