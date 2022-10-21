@@ -2,10 +2,9 @@
 @use '../../../../igniteui-angular/src/lib/core/styles/themes' as igx;
 @use '../variables' as vars;
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 $palette: igx.$light-indigo-palette;
 
 @include igx.core();
-@include igx.typography();
+@include igx.typography($font-family: igx.$indigo-typeface, $type-scale: igx.$indigo-type-scale);
 @include igx.indigo-light-theme($palette: $palette, $exclude: vars.$unused-themes);
