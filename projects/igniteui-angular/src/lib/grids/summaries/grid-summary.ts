@@ -1,8 +1,10 @@
+/* marshalByValue */
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
 }
 
+/* marshalByValue */
 export interface IgxSummaryResult {
     key: string;
     label: string;
