@@ -11,11 +11,12 @@ import {
     IgxGridComponent,
     IgxGridEditingActionsComponent,
     IgxGridPinningActionsComponent,
-    IgxGridToolbarActionsDirective,
+    IgxGridToolbarActionsComponent,
     IgxGridToolbarComponent,
     IgxGridToolbarExporterComponent,
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
+    IgxGridToolbarTitleComponent,
     IgxHierarchicalGridComponent,
     IgxPaginatorComponent,
     IgxPivotGridComponent,
@@ -95,6 +96,12 @@ export class AppModule {
      * after the parent is CREATED - i.e. this should be a custom form of *child def for igc-grid-toolbar*
      * which means custom factory more than likely to handle the component creation process.
      */
+    const toolbarTitle = createIgxCustomElement(IgxGridToolbarTitleComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-toolbar-title", toolbarTitle);
+
+    const toolbarActions = createIgxCustomElement(IgxGridToolbarActionsComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-toolbar-actions", toolbarActions);
+
     const toolbarHiding = createIgxCustomElement(IgxGridToolbarHidingComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar-hiding", toolbarHiding);
 
@@ -103,12 +110,6 @@ export class AppModule {
 
     const toolbarExport = createIgxCustomElement(IgxGridToolbarExporterComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar-exporter", toolbarExport);
-
-    // const toolbarActions = createCustomElement(IgxGridToolbarActionsDirective, { injector: this.injector, strategyFactory: new IgxCustomNgElementStrategyFactory(IgxGridToolbarActionsDirective, this.injector) });
-    // customElements.define("igc-grid-toolbar-actions", toolbarActions);
-
-    // const column = createCustomElement(IgxColumnComponent, { injector: this.injector });
-    // customElements.define("igc-column", column);
   }
 
 }
