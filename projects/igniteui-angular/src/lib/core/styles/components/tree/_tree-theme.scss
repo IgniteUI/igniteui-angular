@@ -272,7 +272,7 @@
     }
 
     %node-wrapper--focused {
-        box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
     }
 
     %node-wrapper--disabled {

@@ -183,7 +183,7 @@
         transition-timing-function: $out-quad, $out-quad;
         box-shadow: var-get($theme, 'shadow');
         @if $variant != 'indigo-design' {
-            border-inline-end: 1px solid var-get($theme, 'border-color');
+            border-inline-end: rem(1px) solid var-get($theme, 'border-color');
         }
         border-radius: var-get($theme, 'border-radius');
     }
@@ -230,7 +230,7 @@
         inset-inline-start: auto;
         inset-inline-end: 0;
         border-inline-end: none;
-        border-inline-start: 1px solid var-get($theme, 'border-color');
+        border-inline-start: rem(1px) solid var-get($theme, 'border-color');
     }
 
     %aside--mini {
@@ -306,7 +306,7 @@
             // important is needed to override the typography margins
             margin: rem(15px) $drawer-item-margin !important;
             padding: rem(4px);
-            gap: calc(32px - #{$text-side-padding});
+            gap: calc(rem(32px) - #{$text-side-padding});
         }
 
         cursor: pointer;
