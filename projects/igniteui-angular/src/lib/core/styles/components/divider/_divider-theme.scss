@@ -51,24 +51,24 @@
 
     %igx-divider-display {
         display: block;
-        height: 1px;
+        height: rem(1px);
         background: var-get($theme, 'color');
     }
 
     %igx-divider--dashed {
         background: linear-gradient(to right, var-get($theme, 'color') 50%, transparent 50%);
-        background-size: 10px 1px; /* dash size */
+        background-size: rem(10px) rem(1px); /* dash size */
     }
 
     %igx-divider--vertical {
         display: inline-block;
-        width: 1px;
-        min-width: 1px;
+        width: rem(1px);
+        min-width: rem(1px);
         height: auto;
     }
 
     %igx-divider--vertical-dashed {
         background: linear-gradient(to bottom, var-get($theme, 'color') 50%, transparent 50%);
-        background-size: 1px 10px; /* dash size */
+        background-size: rem(1px) rem(10px); /* dash size */
     }
 }

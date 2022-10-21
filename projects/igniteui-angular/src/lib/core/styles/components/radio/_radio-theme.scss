@@ -326,7 +326,7 @@
                 position: absolute;
                 top: -$focus-outline-offset-top;
                 inset-inline-start: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
@@ -335,14 +335,14 @@
         @if $variant == 'bootstrap' {
             %radio-composite {
                 border-radius: $border-radius;
-                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %radio-composite {
                 border-radius: $border-radius;
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -350,7 +350,7 @@
     %igx-radio--focused-checked {
         @if $variant == 'indigo-design' {
             %radio-composite {
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }

@@ -144,7 +144,7 @@
         backface-visibility: hidden;
 
         @if $not-material-theme {
-            border: 1px solid var-get($theme, 'outline-color');
+            border: rem(1px) solid var-get($theme, 'outline-color');
         }
 
         &:hover {
@@ -154,7 +154,7 @@
 
     %igx-card--outlined {
         box-shadow: none;
-        border: 1px solid var-get($theme, 'outline-color');
+        border: rem(1px) solid var-get($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;
@@ -348,7 +348,7 @@
         flex-flow: row nowrap;
 
         [igxButton] ~ [igxButton] {
-            margin-inline-start: 8px;
+            margin-inline-start: rem(8px);
         }
     }
 
