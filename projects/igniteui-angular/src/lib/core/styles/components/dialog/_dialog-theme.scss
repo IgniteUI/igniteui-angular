@@ -142,11 +142,11 @@
         overflow: hidden;
 
         .igx-calendar {
-            width: rem(320px);
+            min-width: rem(320px);
         }
 
         .igx-calendar--vertical {
-            width: rem(496px);
+            min-width: rem(496px);
         }
     }
 
