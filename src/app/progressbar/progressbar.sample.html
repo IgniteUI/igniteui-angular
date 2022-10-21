@@ -91,8 +91,8 @@
             <div class="circular-container">
                  <igx-circular-bar class="circular-sample" [value]="currentValue" [textVisibility]="true">
                     <ng-template igxProcessBarText let-process>
-                        <svg:tspan x="50" dy="-25" >Value is:</tspan>
-                        <svg:tspan x="50" dy="25" font-weight="bold" font-size="30">{{process.value}}</tspan>
+                        <div>{{process.value}}</div>
+                        <small class="sample-label">TOTAL%</small>
                     </ng-template>
                 </igx-circular-bar>
             </div>
