@@ -175,7 +175,7 @@
         color: var-get($theme, 'icon-color');
         border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
-        max-height: 36px;
+        max-height: rem(36px);
 
         &:last-child {
             margin-inline-end: 0;
