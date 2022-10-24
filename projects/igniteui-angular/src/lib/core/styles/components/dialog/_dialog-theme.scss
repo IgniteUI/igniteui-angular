@@ -135,18 +135,18 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background');
         box-shadow: var-get($theme, 'shadow');
         overflow: hidden;
 
         .igx-calendar {
-            width: rem(320px);
+            min-width: rem(320px);
         }
 
         .igx-calendar--vertical {
-            width: rem(496px);
+            min-width: rem(496px);
         }
     }
 
@@ -156,7 +156,7 @@
         padding: $dialog-title-padding;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid var-get($theme, 'border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
         }
     }
 
@@ -190,7 +190,7 @@
         padding: $dialog-actions-padding;
 
         @if $bootstrap-theme {
-            border-top: 1px solid var-get($theme, 'border-color');
+            border-top: rem(1px) solid var-get($theme, 'border-color');
         }
 
         button + button {

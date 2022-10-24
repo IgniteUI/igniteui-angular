@@ -89,7 +89,7 @@
 
     $theme: digest-schema($button-group-schema);
 
-    $border: 1px solid map.get($theme, 'item-selected-border-color');
+    $border: rem(1px) solid map.get($theme, 'item-selected-border-color');
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -170,8 +170,8 @@
 /// @requires var-get
 @mixin button-group($theme) {
     @include css-vars($theme);
-    $group-item-min-width: 24px;
-    $group-item-border-thickness: 1px;
+    $group-item-min-width: rem(24px);
+    $group-item-border-thickness: rem(1px);
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $in-out-quad;
 
@@ -215,7 +215,7 @@
         }
 
         &:not(:nth-child(0)) {
-            margin-inline-start: -1px;
+            margin-inline-start: rem(-1px);
         }
 
         &:first-of-type {
@@ -253,7 +253,7 @@
 
     %igx-group-item-vertical {
         &:not(:nth-child(0)) {
-            margin-top: -1px;
+            margin-top: rem(-1px);
             margin-inline-start: 0;
         }
 

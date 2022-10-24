@@ -141,9 +141,9 @@
         font-size: $grid-toolbar-fs;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid color($color: 'gray', $variant: 100);
+            border-bottom: rem(1px) solid color($color: 'gray', $variant: 100);
         } @else {
-            border-bottom: 1px solid color($color: 'gray', $variant: 300);
+            border-bottom: rem(1px) solid color($color: 'gray', $variant: 300);
         }
 
         background: var-get($theme, 'background-color');
@@ -268,7 +268,7 @@
         border-color: color($color: 'secondary') !important;
 
         @if $bootstrap-theme {
-            border-width: 2px;
+            border-width: rem(2px);
             border-color: color($color: 'primary', $variant: 800) !important;
             color: color($color: 'primary', $variant: 800);
 

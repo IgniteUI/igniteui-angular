@@ -89,7 +89,7 @@
         padding: rem(2px) rem(4px);
         line-height: normal;
         border-radius: var-get($theme, 'border-radius');
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         color: var-get($theme, 'color');
         z-index: 10002;
         background-color: var-get($theme, 'link-background');
