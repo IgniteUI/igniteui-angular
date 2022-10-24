@@ -68,9 +68,9 @@
     $variant: map.get($theme, 'variant');
 
     $banner-padding: (
-        comfortable: rem(8),
-        cosy: rem(8),
-        compact: rem(8)
+        comfortable: rem(8px),
+        cosy: rem(8px),
+        compact: rem(8px)
     );
 
     %igx-banner-host {
@@ -95,7 +95,7 @@
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
-        grid-gap: 8px;
+        grid-gap: rem(8px);
         padding-inline-start: calc(#{map.get($banner-padding, 'comfortable') * 2});
         padding-inline-end: map.get($banner-padding, 'comfortable');
         padding-block-start: map.get($banner-padding, 'comfortable');
@@ -105,19 +105,19 @@
 
     %igx-banner__illustration {
         justify-content: center;
-        width: rem(40);
-        min-width: rem(40);
-        height: rem(40);
+        width: rem(40px);
+        min-width: rem(40px);
+        height: rem(40px);
         color: var-get($theme, 'banner-illustration-color');
     }
 
     %igx-banner__border-top {
-        border-block-start: 1px solid var-get($theme, 'banner-border-color');
-        inset-block-start: -1px
+        border-block-start: rem(1px) solid var-get($theme, 'banner-border-color');
+        inset-block-start: rem(-1px);
     }
 
     %igx-banner__border-bottom {
-        border-block-end: 1px solid var-get($theme, 'banner-border-color');
+        border-block-end: rem(1px) solid var-get($theme, 'banner-border-color');
         inset-block-start: 0;
     }
 
@@ -157,7 +157,7 @@
         align-items: flex-end;
         align-self: flex-end;
         gap: rem(8px);
-        min-height: rem(40);
+        min-height: rem(40px);
     }
 }
 

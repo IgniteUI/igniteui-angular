@@ -72,7 +72,7 @@
         padding: rem(8px) rem(16px);
         margin: 0 !important;
         z-index: 26;
-        border-bottom: 1px dashed var-get($theme, 'search-separator-border-color');
+        border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
     }
 
     %igx-combo__content {
