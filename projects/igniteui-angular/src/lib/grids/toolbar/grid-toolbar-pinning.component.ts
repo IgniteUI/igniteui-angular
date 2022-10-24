@@ -3,6 +3,10 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-pinning */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured column pinning component for the grid.
  *

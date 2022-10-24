@@ -4,6 +4,10 @@ import { IgxColumnHidingDirective } from '../column-actions/column-hiding.direct
 import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
 
 
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-hiding */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured column hiding component for the grid.
  *

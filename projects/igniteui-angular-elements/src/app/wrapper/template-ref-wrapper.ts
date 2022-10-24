@@ -35,6 +35,7 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             let contentId = uuidv4() as string;
             (context as any).___contentId = contentId;
             (context as any).___immediate = true;
+            (context as any).___root = root;
             contentContext._id = contentId;
             root._id = contentId;
             contentContext.root = root;
@@ -61,6 +62,7 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
                 if (isBridged) {
                     (val as any).___contentId = contentContext._id;
                     (val as any).___immediate = true;
+                    (val as any).___root = contentContext.root;
                 }
                 original.set.call(this, val);
                 // if (isBridged) {

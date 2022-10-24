@@ -11,7 +11,10 @@ import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../s
 import { IgxToolbarToken } from './token';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 
-
+/* blazorInclude */
+/* blazorElement */
+/* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarBaseAction */
 /**
  * Base class for the pinning/hiding column and exporter actions.
  *
@@ -148,7 +151,8 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     }
 }
 
-
+/* blazorElement */
+/* blazorIndirectRender */
 /**
  * @hidden @internal
  * Base class for pinning/hiding column actions

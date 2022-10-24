@@ -20,11 +20,17 @@ export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions
 
 export interface IgxExporterEvent {
     exporter: IgxBaseExporter;
+    /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;
     grid: GridType;
     cancel: boolean;
 }
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-toolbar-exporter */
+/* blazorIndirectRender */
+/* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured exporter component for the grid.
  *
@@ -100,6 +106,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
         super(toolbar);
     }
 
+    /* alternateName: exportGrid */
     public export(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective): void {
         let options: IgxExporterOptions;
         let exporter: IgxBaseExporter;
