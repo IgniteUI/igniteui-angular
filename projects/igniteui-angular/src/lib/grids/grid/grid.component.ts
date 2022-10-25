@@ -51,6 +51,9 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 /* blazorAdditionalDependency: GridToolbarHiding */
 /* blazorAdditionalDependency: GridToolbarPinning */
 /* blazorAdditionalDependency: ActionStrip */
+/* blazorAdditionalDependency: GridActionsBaseDirective */
+/* blazorAdditionalDependency: GridEditingActions */
+/* blazorAdditionalDependency: GridPinningActions */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *

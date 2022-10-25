@@ -3,6 +3,10 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/utils';
 import { addRow, addChild  } from '@igniteui/material-icons-extended';
 
+
+/* blazorElement */
+/* wcElementTag: igc-grid-editing-actions */
+/* blazorIndirectRender */
 /**
  * Grid Editing Actions for the Action Strip
  *
@@ -13,6 +17,7 @@ import { addRow, addChild  } from '@igniteui/material-icons-extended';
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }]
 })
+
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
 

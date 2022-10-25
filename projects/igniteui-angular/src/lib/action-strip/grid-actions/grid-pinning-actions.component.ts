@@ -2,6 +2,9 @@ import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
 
+/* blazorElement */
+/* wcElementTag: igc-grid-pinning-actions */
+/* blazorIndirectRender */
 /**
  * Grid Pinning Actions for the Action Strip
  *

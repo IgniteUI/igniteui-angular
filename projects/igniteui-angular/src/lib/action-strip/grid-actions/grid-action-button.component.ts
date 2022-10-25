@@ -1,14 +1,19 @@
 import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef } from '@angular/core';
+
+/* blazorElement */
+/* wcElementTag: igc-grid-action-button */
+/* blazorIndirectRender */
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html'
 })
-
 export class IgxGridActionButtonComponent {
 
+    /* blazorSuppress */
     @ViewChild('container')
     public container: ElementRef;
 
+    /* blazorSuppress */
     /**
      * Event emitted when action button is clicked.
      *

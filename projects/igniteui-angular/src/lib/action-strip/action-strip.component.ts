@@ -87,6 +87,10 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
 
+    /* blazorInclude */
+    /* contentChildren */
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: GridActionsBaseDirectiveCollection */
     /**
      * ActionButton as ContentChildren inside the Action Strip
      *
