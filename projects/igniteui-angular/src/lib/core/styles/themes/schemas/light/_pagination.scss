@@ -8,30 +8,30 @@
 
 /// Generates a light pagination schema.
 /// @type {Map}
-/// @prop {Map} text-color [color: ('grays', 800)] - The text color.
-/// @prop {Map} background-color [color: ('grays', 100)] - The background color of the paging panel.
-/// @prop {Map} border-color [color: ('grays', 200)] - The border color of the paging panel.
+/// @prop {Map} text-color [color: ('gray', 800)] - The text color.
+/// @prop {Map} background-color [color: ('gray', 100)] - The background color of the paging panel.
+/// @prop {Map} border-color [color: ('gray', 200)] - The border color of the paging panel.
 /// @see $default-palette
 $light-pagination: (
     variant: 'material',
 
     text-color: (
-        color: ('grays', 800)
+        color: ('gray', 800)
     ),
 
     background-color: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     border-color: (
-        color: ('grays', 200)
+        color: ('gray', 200)
     )
 );
 
 /// Generates a light pagination schema.
 /// @type {Map}
 /// @prop {Map} background-color [color: 'surface'] - The background color of the paging panel.
-/// @prop {Map} border-color [color: ('grays', 100)] - The border color of the paging panel.
+/// @prop {Map} border-color [color: ('gray', 100)] - The border color of the paging panel.
 /// @requires {function} extend
 /// @requires {Map} $light-pagination
 $fluent-pagination: extend(
@@ -44,39 +44,39 @@ $fluent-pagination: extend(
         ),
 
         border-color: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         )
     )
 );
 
 /// Generates a bootstrap pagination schema.
 /// @type {Map}
-/// @prop {Map} background-color [color: ('grays', 50)] - The background color of the paging panel.
+/// @prop {Map} background-color [color: ('gray', 50)] - The background color of the paging panel.
 /// @requires {Map} $light-pagination
 $bootstrap-pagination: extend(
     $light-pagination,
     (
         background-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
     )
 );
 
 /// Generates an indigo pagination schema.
 /// @type {Map}
-/// @prop {Map} text-color [color: ('grays', 700)] - The text color.
-/// @prop {Map} border-color [color: ('grays', 100)] - The border color of the paging panel.
+/// @prop {Map} text-color [color: ('gray', 700)] - The text color.
+/// @prop {Map} border-color [color: ('gray', 100)] - The border color of the paging panel.
 /// @requires {function} extend
 /// @requires {Map} $light-pagination
 $indigo-pagination: extend(
     $light-pagination,
     (
         text-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         border-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         )
     )
 );

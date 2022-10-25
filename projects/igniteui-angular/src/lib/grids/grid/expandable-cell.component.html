@@ -157,7 +157,7 @@
     <div #indicator
          class="igx-grid__tree-grouping-indicator"
          (click)="toggle($event)" (focus)="onIndicatorFocus()">
-         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  row }">
         </ng-container>
     </div>
 </ng-container>
