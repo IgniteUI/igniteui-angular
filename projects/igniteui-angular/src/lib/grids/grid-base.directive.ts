@@ -1442,7 +1442,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
-    public sortHeaderIconDirectiveTemplate: TemplateRef<any> = null;
+    public sortHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * Gets custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
@@ -3025,9 +3025,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private _autoSize = false;
-    private _sortHeaderIconTemplate: TemplateRef<any> = null;
-    private _sortAscendingHeaderIconTemplate: TemplateRef<any> = null;
-    private _sortDescendingHeaderIconTemplate: TemplateRef<any> = null;
+    private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * @hidden @internal
