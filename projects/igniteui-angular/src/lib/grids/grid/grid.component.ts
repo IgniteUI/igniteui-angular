@@ -155,7 +155,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef })
-    public detailTemplateDirective: TemplateRef<any>;
+    public detailTemplateDirective: TemplateRef<IgxGridMasterDetailContext>;
 
 
     /**
