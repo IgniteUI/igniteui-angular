@@ -1,4 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { IgxHeadSelectorTemplateContext, IgxGroupByRowSelectorTemplateContext, IgxRowSelectorTemplateContext } from '../common/grid.interface';
 
 /**
  * @hidden
@@ -8,7 +9,12 @@ import { Directive, TemplateRef } from '@angular/core';
     selector: '[igxRowSelector]'
 })
 export class IgxRowSelectorDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
+    constructor(public templateRef: TemplateRef<IgxRowSelectorTemplateContext>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective,
+        context: unknown): context is IgxRowSelectorTemplateContext { 
+        return true
+    };
 }
 
 /**
@@ -19,7 +25,12 @@ export class IgxRowSelectorDirective {
     selector: '[igxGroupByRowSelector]'
 })
 export class IgxGroupByRowSelectorDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
+    constructor(public templateRef: TemplateRef<IgxGroupByRowSelectorTemplateContext>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective,
+        context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
+        return true
+    };
 }
 
 /**
@@ -30,5 +41,10 @@ export class IgxGroupByRowSelectorDirective {
     selector: '[igxHeadSelector]'
 })
 export class IgxHeadSelectorDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
+    constructor(public templateRef: TemplateRef<IgxHeadSelectorTemplateContext>) { }
+
+    public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective,
+        context: unknown): context is IgxHeadSelectorTemplateContext { 
+        return true
+    };
 }
