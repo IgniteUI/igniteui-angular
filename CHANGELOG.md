@@ -10,6 +10,9 @@ All notable changes for each version of this project will be documented in this 
     - `sortHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
     - `sortAscendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
     - `sortDescendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+    - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
+    - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
+    - `detailTemplate` - Gets/Sets the master-detail template.
 
 ## 14.2.0
 
