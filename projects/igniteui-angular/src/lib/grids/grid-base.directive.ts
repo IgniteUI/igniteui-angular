@@ -2308,7 +2308,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets the header row selector template.
      */
     @Input()
-        public get headSelectorTemplate(): TemplateRef <IgxHeadSelectorTemplateContext> {
+    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
         return this._headSelectorTemplate || this.headSelectorsTemplates.first;
     }
 
