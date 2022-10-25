@@ -9,15 +9,15 @@
 
 /// Generates a dark base toast schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 500, .9)] - The background color used for the toast.
-/// @prop {Map} text-color [contrast-color: ('grays', 500)] - The text-color used for the toast.
+/// @prop {Map} background [color: ('gray', 500, .9)] - The background color used for the toast.
+/// @prop {Map} text-color [contrast-color: ('gray', 500)] - The text-color used for the toast.
 $dark-base-toast: (
     background: (
-        color: ('grays', 500, .9)
+        color: ('gray', 500, .9)
     ),
 
     text-color: (
-        contrast-color: ('grays', 500)
+        contrast-color: ('gray', 500)
     )
 );
 
@@ -35,7 +35,7 @@ $dark-fluent-toast: extend($fluent-toast, $dark-base-toast);
 /// Generates a dark bootstrap toast schema.
 /// @type {Map}
 /// @prop {Map} background [contrast-color: ('surface')] - The background color used for the toast.
-/// @prop {Map} text-color [contrast-color: ('grays', 600)] - The text-color used for the toast.
+/// @prop {Map} text-color [contrast-color: ('gray', 600)] - The text-color used for the toast.
 /// @requires {function} extend
 /// @requires $bootstrap-toast
 $dark-bootstrap-toast: extend(
@@ -45,7 +45,7 @@ $dark-bootstrap-toast: extend(
         ),
 
         text-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         )
     )
 );
@@ -58,4 +58,3 @@ $dark-indigo-toast: extend(
     $indigo-toast,
     $dark-base-toast
 );
-

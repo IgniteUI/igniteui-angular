@@ -9,8 +9,8 @@
 
 /// Generates a light bottom navigation scheme.
 /// @type {Map}
-/// @prop {Color} background [color: ('grays', 50))] - The background color used for the toast.
-/// @prop {Map} idle-item-color [color: ('grays', 700)] - The text-color used for the idle color.
+/// @prop {Color} background [color: ('gray', 50))] - The background color used for the toast.
+/// @prop {Map} idle-item-color [color: ('gray', 700)] - The text-color used for the idle color.
 /// @prop {Map} active-item-color [color: ('primary', 500)] - The text-color used for the active color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the bottom nav.
 /// @requires {function} extend
@@ -20,11 +20,11 @@ $light-bottom-nav: extend(
     $default-elevation-bottom-nav,
     (
         background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         idle-item-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         active-item-color: (

@@ -9,8 +9,8 @@
 /// Generates a light tooltip schema.
 /// @type {Map}
 ///
-/// @property {Map} background [color: ('grays', 700, .8),] - The background color of the tooltip.
-/// @property {Map} text-color [contrast-color: ('grays', 700)] - The text color of the tooltip.
+/// @property {Map} background [color: ('gray', 700, .8),] - The background color of the tooltip.
+/// @property {Map} text-color [contrast-color: ('gray', 700)] - The text color of the tooltip.
 /// @property {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
@@ -20,11 +20,11 @@ $light-tooltip: extend(
         variant: 'material',
 
         background: (
-            color: ('grays', 700, .9),
+            color: ('gray', 700, .9),
         ),
 
         text-color: (
-            contrast-color: ('grays', 700),
+            contrast-color: ('gray', 700),
         ),
 
         border-radius: rem(4px)
@@ -33,8 +33,8 @@ $light-tooltip: extend(
 
 /// Generates a light fluent tooltip schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 900, .8)] - The background color of the tooltip.
-/// @prop {Map} text-color [contrast-color: ('grays', 900)] - The text color of the tooltip.
+/// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
+/// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [2px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $light-tooltip
@@ -44,11 +44,11 @@ $fluent-tooltip: extend(
         variant: 'fluent',
 
         background: (
-            color: ('grays', 900, .8)
+            color: ('gray', 900, .8)
         ),
 
         text-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
 
         border-radius: rem(2px)
@@ -57,8 +57,8 @@ $fluent-tooltip: extend(
 
 /// Generates a bootstrap tooltip schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 900, .8)] - The background color of the tooltip.
-/// @prop {Map} text-color [contrast-color: ('grays', 900)] - The text color of the tooltip.
+/// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
+/// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $light-tooltip
@@ -68,10 +68,10 @@ $bootstrap-tooltip: extend(
         variant: 'bootstrap',
 
         background: (
-            color: ('grays', 900, .8)
+            color: ('gray', 900, .8)
         ),
         text-color: (
-            contrast-color: ('grays', 900)
+            contrast-color: ('gray', 900)
         ),
     )
 );

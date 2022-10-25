@@ -27,6 +27,12 @@
     z-index: 24;
 }
 
+.sample-label {
+    display: block;
+    font-size: 6px;
+    white-space: nowrap;
+}
+
 .custom-gradient {
     // $circ-theme: igx-progress-circular-theme(
     //     $progress-circle-color: purple orange,

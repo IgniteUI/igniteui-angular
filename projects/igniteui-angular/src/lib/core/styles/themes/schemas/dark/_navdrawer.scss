@@ -9,10 +9,10 @@
 
 /// Generates a base dark navdrawer schema.
 /// @type {Map}
-/// @prop {Map} item-hover-background [color: ('grays', 100, .5)] - The item's hover background color.
+/// @prop {Map} item-hover-background [color: ('gray', 100, .5)] - The item's hover background color.
 $dark-base-navdrawer: (
     item-hover-background: (
-        color: ('grays', 100, .5),
+        color: ('gray', 100, .5),
     ),
 );
 
@@ -49,14 +49,14 @@ $dark-fluent-navdrawer: extend(
 
 /// Generates a dark bootstrap navdrawer schema.
 /// @type {Map}
-/// @prop {Map} item-hover-background [color: ('grays', 100)] - The item's hover background color.
+/// @prop {Map} item-hover-background [color: ('gray', 100)] - The item's hover background color.
 /// @requires $bootstrap-navdrawer
 $dark-bootstrap-navdrawer: extend(
     $bootstrap-navdrawer,
     $dark-base-navdrawer,
     (
         item-hover-background: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         )
     )
 );
@@ -64,44 +64,44 @@ $dark-bootstrap-navdrawer: extend(
 
 /// Generates a dark indigo navdrawer schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 500)] - The navigation drawer background color.
-/// @prop {Map} item-header-text-color [contrast-color: ('grays', 50)] - The header's idle text color.
-/// @prop {Map} item-text-color [contrast-color: ('grays', 100) - The item's idle text color.
-/// @prop {Map} item-icon-color [contrast-color: ('grays', 100)] - The item's icon color.
-/// @prop {Map} item-active-background [contrast-color: ('grays', 400, .5)] - The item's active background color.
-/// @prop {Map} item-hover-text-color [contrast-color: ('grays', 50)] - The item's hover text color.
-/// @prop {Map} item-hover-icon-color [contrast-color: ('grays', 50)] - The item's hover icon color.
+/// @prop {Map} background [color: ('gray', 500)] - The navigation drawer background color.
+/// @prop {Map} item-header-text-color [contrast-color: ('gray', 50)] - The header's idle text color.
+/// @prop {Map} item-text-color [contrast-color: ('gray', 100) - The item's idle text color.
+/// @prop {Map} item-icon-color [contrast-color: ('gray', 100)] - The item's icon color.
+/// @prop {Map} item-active-background [contrast-color: ('gray', 400, .5)] - The item's active background color.
+/// @prop {Map} item-hover-text-color [contrast-color: ('gray', 50)] - The item's hover text color.
+/// @prop {Map} item-hover-icon-color [contrast-color: ('gray', 50)] - The item's hover icon color.
 /// @requires {function} extend
 /// @requires $indigo-navdrawer
 $dark-indigo-navdrawer: extend(
     $indigo-navdrawer,
     (
         background: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         item-header-text-color: (
-            color: ('grays', 50),
+            color: ('gray', 50),
         ),
 
         item-text-color: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
 
         item-icon-color: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
 
         item-hover-text-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         item-hover-icon-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         item-active-background: (
-            color: ('grays', 400, .5),
+            color: ('gray', 400, .5),
         ),
     )
 );
