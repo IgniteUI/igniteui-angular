@@ -209,7 +209,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @internal
      */
     @ContentChildren(IgxGroupByRowSelectorDirective, { read: TemplateRef, descendants: false })
-    protected groupByRowSelectorsTemplates: QueryList<TemplateRef<any>>;
+    protected groupByRowSelectorsTemplates: QueryList<TemplateRef<IgxGroupByRowSelectorTemplateContext>>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -268,7 +268,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
-    private _groupByRowSelectorTemplate: TemplateRef<any>;
+    private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.

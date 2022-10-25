@@ -1598,7 +1598,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     <ng-template #customHeader igxHeadSelector let-headContext>
         <span>CUSTOM HEADER SELECTOR</span>
     </ng-template>
-    <ng-template #customGroupRow igxHeadSelector let-headContext>
+    <ng-template #customGroupRow igxGroupByRowSelector>
         <span>CUSTOM GROUP SELECTOR</span>
     </ng-template>
     `
