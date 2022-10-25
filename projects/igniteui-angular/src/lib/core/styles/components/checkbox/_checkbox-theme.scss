@@ -1,10 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-component' as *;
 @use '../ripple/ripple-theme' as *;
-@use 'sass:map';
-@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -14,7 +14,6 @@
 ////
 
 /// Checkbox Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
@@ -30,7 +29,7 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// @example scss Change the checked fill color
@@ -38,7 +37,6 @@
 ///   // Pass the theme to the igx-checkbox component mixin
 ///   @include igx-checkbox($my-checkbox-theme);
 @function checkbox-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -61,7 +59,7 @@
         $checkbox-schema: $schema;
     }
 
-    $theme: apply-palette($checkbox-schema, $palette);
+    $theme: digest-schema($checkbox-schema);
 
     @if not($border-radius) {
         $border-radius: border-radius(map.get($theme, 'border-radius'));
@@ -73,7 +71,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
@@ -100,6 +97,7 @@
 /// @requires var-get
 @mixin checkbox($theme) {
     @include css-vars($theme);
+    $variant: map.get($theme, 'variant');
 
     @include scale-in-out($start-scale: .9);
 
@@ -265,7 +263,7 @@
         @if $variant == 'material' {
             %cbx-composite--x--disabled {
                 border: var-get($theme, 'disabled-indeterminate-color');
-        
+
                 &::after {
                     background: var-get($theme, 'disabled-indeterminate-color');
                 }
@@ -299,7 +297,7 @@
 
             %cbx-composite--x--disabled {
                 background: transparent;
-        
+
                 &::after {
                     background: transparent;
                 }
@@ -382,7 +380,7 @@
                 position: absolute;
                 top: -$focus-outline-offset-top;
                 inset-inline-start: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
@@ -391,14 +389,14 @@
         @if $variant == 'bootstrap' {
             %cbx-composite {
                 border-radius: var-get($theme, 'border-radius');
-                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %cbx-composite {
                 border-radius: var-get($theme, 'border-radius');
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -407,7 +405,7 @@
         @if $variant == 'indigo-design' {
             %cbx-composite {
                 border-radius: var-get($theme, 'border-radius');
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }
@@ -462,17 +460,15 @@
 /// Adds typography styles for the igx-checkbox component.
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin checkbox-typography(
-    $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %cbx-label {
-        @include type-style($type-scale, $label) {
+        @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
         }

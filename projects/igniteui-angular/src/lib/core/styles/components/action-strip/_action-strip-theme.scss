@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -10,7 +10,6 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $icon-color [null] - The color used for the actions icons.
@@ -20,7 +19,7 @@
 /// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
 ///
 /// @requires extend
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires text-contrast
 ///
 /// @example scss Change the background and icon colors in action strip
@@ -28,7 +27,6 @@
 ///   // Pass the theme to the action-strip component mixin
 ///   @include action-strip($my-action-strip-theme);
 @function action-strip-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $background: null,
@@ -46,7 +44,7 @@
         $action-strip-schema: $schema;
     }
 
-    $theme: apply-palette($action-strip-schema, $palette);
+    $theme: digest-schema($action-strip-schema);
 
     @if not($icon-color) and $actions-background {
         $icon-color: text-contrast($actions-background);
@@ -58,7 +56,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         actions-background: $actions-background,
         icon-color: $icon-color,
@@ -157,10 +154,10 @@
     }
 
     %igx-action-strip__menu-item--danger {
-        color: color(map.get($theme, 'palette'), 'error');
+        color: color($color: 'error');
 
         &:hover {
-            color: color(map.get($theme, 'palette'), 'error');
+            color: color($color: 'error');
         }
     }
 
@@ -178,7 +175,7 @@
         color: var-get($theme, 'icon-color');
         border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
-        max-height: 36px;
+        max-height: rem(36px);
 
         &:last-child {
             margin-inline-end: 0;
@@ -193,7 +190,7 @@
                 color: var-get($theme, 'icon-color');
             }
 
-            @if $variant == 'indigo-design' {
+            @if $variant == 'indigo-design' or $variant == 'fluent' {
                 border-radius: var-get($theme, 'actions-border-radius');
             }
         }

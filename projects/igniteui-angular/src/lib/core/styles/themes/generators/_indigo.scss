@@ -1,0 +1,57 @@
+@use 'base' as *;
+@use '../schemas' as *;
+@use 'igniteui-theming/sass/color' as *;
+
+/// Creates a global indigo theme that can be used with light backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+@mixin indigo-light-theme(
+    $palette,
+    $exclude: (),
+    $roundness: 1,
+    $elevation: true,
+) {
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #fff),
+            $gray: #060716,
+        ),
+        $schema: $light-indigo-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// Creates a global indigo theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+@mixin indigo-dark-theme(
+    $palette,
+    $exclude: (),
+    $roundness: 1,
+    $elevation: true,
+) {
+    $primary: color($palette, 'primary');
+    $secondary: color($palette, 'secondary');
+    $surface: color($palette, 'surface');
+
+    @include theme(
+        $palette: palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != white, $surface, #2a2b2f),
+            $gray: #fff
+        ),
+        $schema: $dark-indigo-schema,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}

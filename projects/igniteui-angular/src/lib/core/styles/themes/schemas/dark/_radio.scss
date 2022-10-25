@@ -37,44 +37,44 @@ $dark-fluent-radio: extend($fluent-radio, (
 /// @requires $bootstrap-radio
 $dark-bootstrap-radio: extend($bootstrap-radio, (
     fill-hover-border-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     fill-color-hover: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 ));
 
 /// Generates a dark indigo radio schema.
 /// @type {Map}
-/// @property {Map} fill-hover-border-color [color: ('grays', 900)] - The text color used for the label text.
-/// @property {Map} empty-color [color: ('grays', 700)] - The unchecked border color.
-/// @property {Map} fill-color [color: ('grays', 900)] - The checked border and dot colors.
-/// @property {Map} fill-color-hover [color: ('grays', 900)] - The checked border and dot colors on hover.
-/// @property {Map} disabled-color [color: ('grays', 400)] - The disabled border and dot colors.
+/// @property {Map} fill-hover-border-color [color: ('gray', 900)] - The text color used for the label text.
+/// @property {Map} empty-color [color: ('gray', 700)] - The unchecked border color.
+/// @property {Map} fill-color [color: ('gray', 900)] - The checked border and dot colors.
+/// @property {Map} fill-color-hover [color: ('gray', 900)] - The checked border and dot colors on hover.
+/// @property {Map} disabled-color [color: ('gray', 400)] - The disabled border and dot colors.
 /// @requires {function} extend
 /// @requires $indigo-radio
 $dark-indigo-radio: extend(
     $indigo-radio,
     (
         fill-hover-border-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         fill-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         fill-color-hover: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         empty-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         disabled-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
     )
 );

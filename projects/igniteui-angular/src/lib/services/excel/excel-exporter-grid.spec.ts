@@ -1206,7 +1206,7 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             grid = fix.componentInstance.grid;
-            
+
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
         });
     });
