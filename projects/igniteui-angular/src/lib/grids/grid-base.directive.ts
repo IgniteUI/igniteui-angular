@@ -1227,6 +1227,33 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
     public dragGhostCustomTemplates: QueryList<TemplateRef<IgxGridRowDragGhostContext>>;
 
+
+    /**
+     * Gets the custom template, if any, used for row drag ghost.
+     */
+    @Input()
+    public get dragGhostCustomTemplate() {
+        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
+    }
+
+    /**
+     * Sets a custom template for the row drag ghost.
+     *```html
+     * <ng-template #template igxRowDragGhost>
+     *    <igx-icon>menu</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.dragGhostCustomTemplate = this.template;
+     * ```
+     */
+    public set dragGhostCustomTemplate(template: TemplateRef<IgxGridRowDragGhostContext>) {
+        this._dragGhostCustomTemplate = template;
+    }
+
+
     /**
      * @hidden @internal
      */
@@ -2453,10 +2480,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      */
+    @Input()
     public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
 
+    /**
+     * Sets a custom template that should be used when rendering the row drag indicator icon.
+     *```html
+     * <ng-template #template igxDragIndicatorIcon>
+     *    <igx-icon>expand_less</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.dragIndicatorIconTemplate = this.template;
+     * ```
+     */
     public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._customDragIndicatorIconTemplate = val;
     }
@@ -2930,6 +2971,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditTextTemplate: TemplateRef<IgxGridRowEditTextTemplateContext>;
     private _rowAddTextTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _rowEditActionsTemplate: TemplateRef<IgxGridRowEditActionsTemplateContext>;
+    private _dragGhostCustomTemplate: TemplateRef<IgxGridRowDragGhostContext>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
@@ -3820,11 +3862,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public getDragGhostCustomTemplate() {
-        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
-            return this.dragGhostCustomTemplates.first;
-        }
 
-        return null;
+        return this.dragGhostCustomTemplate;
     }
 
     /**
