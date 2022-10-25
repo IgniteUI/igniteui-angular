@@ -1,7 +1,7 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,7 +9,6 @@
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @param {List} $brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
@@ -66,7 +65,6 @@
 /// @param {Color} $y-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the Y-axis.
 /// @param {Number} $y-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the Y-axis.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -74,7 +72,6 @@
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($custom-chart-theme);
 @function category-chart-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $margin: null,
@@ -142,7 +139,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
     $margin-default: map.get($theme, 'margin');
     $title-margin-default: map.get($theme, 'title-margin');
     $subtitle-margin-default: map.get($theme, 'subtitle-margin');

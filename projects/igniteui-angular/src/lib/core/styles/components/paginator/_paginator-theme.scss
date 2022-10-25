@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -10,15 +10,13 @@
 ////
 
 /// Grid Paging Theme
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $text-color [currentColor] - The text color.
 /// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 ///
 /// @example scss Change the stripes color
@@ -28,7 +26,6 @@
 ///   // Pass the theme to the paginator component mixin
 ///   @include paginator($my-paginator-theme);
 @function paginator-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $text-color: null,
@@ -44,7 +41,7 @@
         $grid-paginator-schema: $schema;
     }
 
-    $theme: apply-palette($grid-paginator-schema, $palette);
+    $theme: digest-schema($grid-paginator-schema);
 
 
     @if not($text-color) and $background-color {
@@ -53,7 +50,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         text-color: $text-color,
         background-color: $background-color,
         border-color: $border-color
@@ -86,8 +82,8 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
         grid-row: 7;
-        font-size: 12px;
-        border-top: 1px solid var-get($theme, 'border-color');
+        font-size: rem(12px);
+        border-top: rem(1px) solid var-get($theme, 'border-color');
         z-index: 1;
         padding: map.get($paginator-padding, 'comfortable');
         height: map.get($paginator-height, 'comfortable');
@@ -129,8 +125,8 @@
 
     %igx-page-size__select {
         display: flex;
-        max-width: 90px;
-        min-width: 80px;
+        max-width: rem(90px);
+        min-width: rem(80px);
     }
 
     %igx-page-nav {

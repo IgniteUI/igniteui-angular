@@ -21,10 +21,10 @@ Here's a list of all 13 category styles as defined in Ignite UI for Angular:
 
 An application can define multiple `scales` that may share scale categories with each other. A `scale category` is a set of `type styles`, containing information about `font-family`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, and `text-transform`.
 
-Ignite UI for Angular defines a `$default-type-scale`, which is in turn used by the `igx-typography` mixin to set the initial typography styles. The user can, however, pass a different type scale to be used by `igx-typography` mixin.
+Ignite UI for Angular defines a `$default-type-scale`, which is in turn used by the `typography` mixin to set the initial typography styles. The user can, however, pass a different type scale to be used by `typography` mixin.
 
 ## Usage
-By default we don't apply any typography styling. To use our typography in your application you have to set the `igx-typography` CSS class on a top-level element. All of its children will then use our typography styles.
+By default we don't apply any typography styling. To use our typography in your application you have to set the `ig-typography` CSS class on a top-level element. All of its children will then use our typography styles.
 
 We have selected [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) to be the default font for Ignite UI for Angular. To use it you have to host it yourself, or include it from Google Fonts:
 
@@ -34,20 +34,20 @@ We have selected [Titillium Web](https://fonts.google.com/selection?selection.fa
 
 There are a several mixins and functions that are used to set and retrieve category styles to/from a type scale. Those are:
 
-- `igx-type-style` [function] - Returns a set of style rules to be used by a type scale category.
+- `type-style` [function] - Returns a set of style rules to be used by a type scale category.
 - `type-scale` [function] - Returns a set of 13 style categories.
 - `type-scale-category` [function] - Returns a map of style rules from a type scale and category.
-- `igx-type-style` [mixin] - Adds style rules to a selector from a specific type scale and category.
-- `igx-typography` [mixin] - Defines the global application typography styles.
+- `type-style` [mixin] - Adds style rules to a selector from a specific type scale and category.
+- `typography` [mixin] - Defines the global application typography styles.
 
 
 Let's take a close look at what each one of the aforementioned mixins and functions do.
 
 ### The type style
-The `igx-type-style` function is an interface-like function that simply ensures that certain arguments are passed as part of the style set for a scale category. Say, for instance, that we want to define a new set of style rules for the `h1` scale category. To do so, we would simply write:
+The `type-style` function is an interface-like function that simply ensures that certain arguments are passed as part of the style set for a scale category. Say, for instance, that we want to define a new set of style rules for the `h1` scale category. To do so, we would simply write:
 
 ```scss
-$h1-style: igx-type-style(
+$h1-style: type-style(
     $font-size: 112px,
     $font-weight: 600,
     $line-height: 96px
@@ -65,7 +65,7 @@ The type scale is a map of type styles for all 13 scale categories. To generate 
 $my-type-scale: type-scale();
 ```
 
-This will produce a map, which is exactly the same as the `$default-scale-map` that the `igx-typography` mixin uses by default.
+This will produce a map, which is exactly the same as the `$default-scale-map` that the `typography` mixin uses by default.
 
 We can use the `$h1-style` we defined in our previous example to produce a slightly modified type scale.
 
@@ -85,10 +85,10 @@ It currently accepts 3 arguments:
 - `$font-family` - The global font family to be used by the application.
 - `$type-scale` - The default type scale to be used by the application.
 
-To overwrite the default typography, include the `igx-typography` mixin anywhere after the `igx-core` mixin. Let's take advantage of the type scale `$my-type-scale` we defined above and make it the default type scale.
+To overwrite the default typography, include the `typography` mixin anywhere after the `igx-core` mixin. Let's take advantage of the type scale `$my-type-scale` we defined above and make it the default type scale.
 
 ```scss
-@include igx-typography(
+@include typography(
     $font-family: "'Roboto', sans-serif",
     $type-scale: $my-type-scale
 );
@@ -124,14 +124,14 @@ $my-h5: type-style($font-size: 18px);
 $my-type-scale: type-scale($h5: $my-h5);
 
 // Pass the custom scale to the global typography mixin
-@include igx-typography($type-scale: $my-type-scale);
+@include typography($type-scale: $my-type-scale);
 ```
 
 Note, however, that the above code will modify the `h5` scale category globally, which will affect the look and feel of all components that use the `h5` scale. This is done for consistency so that all `h5` elements look the same across your app. We understand that you may want to apply the modification for `h5` to specific components only, like the `igx-card` component in our case. This is why every component has its own typography mixin, which accepts a type scale itself, as well as a category configuration.
 
 ```scss
 // Create a custom h5 scale category style
-$my-h5: igx-type-style($font-size: 18px);
+$my-h5: type-style($font-size: 18px);
 
 // Create a custom type scale with the modified h5
 $my-type-scale: type-scale($h5: $my-h5);
@@ -140,7 +140,7 @@ $my-type-scale: type-scale($h5: $my-h5);
 @include igx-card-typography($type-scale: $my-type-scale);
 ```
 
-We no longer include the `igx-typography` mixin by passing it the `$my-type-scale` scale with our modification to the `h5` category. Now all we do is pass the custom scale we created to the `igx-card-typography` mixin. The only component that uses our `$my-type-scale` scale is the card now.
+We no longer include the `typography` mixin by passing it the `$my-type-scale` scale with our modification to the `h5` category. Now all we do is pass the custom scale we created to the `igx-card-typography` mixin. The only component that uses our `$my-type-scale` scale is the card now.
 
 Typography style mixins can be scope to specific selectors. Say we wanted our custom card typography styles to be applied for all `igx-card` components with class name of `my-cool-card`. 
 
@@ -166,24 +166,24 @@ Now the card component will use the `overline` scale category to style the title
 
 ## CSS Classes
 
-In addition to adding text styles for all components based on type scale categories, we also style the default h1-h6 and p elements. We also separate semantics from styling. So fo instance, even though the `h1` tag has some default styling that we provide when using `igx-typography`, you can modify it to look like an `h3` by giving it a class of `igx-typography__h3`.
+In addition to adding text styles for all components based on type scale categories, we also style the default h1-h6 and p elements. We also separate semantics from styling. So fo instance, even though the `h1` tag has some default styling that we provide when using `ig-typography`, you can modify it to look like an `h3` by giving it a class of `ig-typography__h3`.
 
 ```html
-<h1 class="igx-typography__h3">Some text</h1>
+<h1 class="ig-typography__h3">Some text</h1>
 ```
 
 Here's a list of all CSS classes we provide by default:
 
-- `igx-typography__h1`
-- `igx-typography__h2`
-- `igx-typography__h3`
-- `igx-typography__h4`
-- `igx-typography__h5`
-- `igx-typography__h6`
-- `igx-typography__subtitle-1`
-- `igx-typography__subtitle-2`
-- `igx-typography__body-1`
-- `igx-typography__body-2`
-- `igx-typography__button`
-- `igx-typography__caption`
-- `igx-typography__overline`
+- `ig-typography__h1`
+- `ig-typography__h2`
+- `ig-typography__h3`
+- `ig-typography__h4`
+- `ig-typography__h5`
+- `ig-typography__h6`
+- `ig-typography__subtitle-1`
+- `ig-typography__subtitle-2`
+- `ig-typography__body-1`
+- `ig-typography__body-2`
+- `ig-typography__button`
+- `ig-typography__caption`
+- `ig-typography__overline`
