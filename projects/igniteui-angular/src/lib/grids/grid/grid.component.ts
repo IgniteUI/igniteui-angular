@@ -54,6 +54,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 /* blazorAdditionalDependency: GridActionsBaseDirective */
 /* blazorAdditionalDependency: GridEditingActions */
 /* blazorAdditionalDependency: GridPinningActions */
+/* blazorIndirectRender */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -73,7 +74,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  * </igx-grid>
  * ```
  */
-/* blazorIndirectRender */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,

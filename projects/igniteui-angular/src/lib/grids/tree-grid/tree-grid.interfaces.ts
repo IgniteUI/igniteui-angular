@@ -1,4 +1,5 @@
 
+/* marshalByValue */
 export interface ITreeGridRecord {
     key: any;
     data: any;
