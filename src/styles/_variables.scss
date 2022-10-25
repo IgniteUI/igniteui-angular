@@ -1,129 +1,127 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typeface: $material-typeface;
-$type-scale: $material-type-scale;
+$palette: $light-bootstrap-palette;
+$schema: $light-bootstrap-schema;
+$typeface: $bootstrap-typeface;
+$type-scale: $bootstrap-type-scale;
 
-$background-color: contrast-color($palette, 'grays', 900);
-$foreground-color: color($palette, 'grays', 900);
+$background-color: contrast-color($palette, 'gray', 900);
+$foreground-color: color($palette, 'gray', 900);
 
-$default-palette: $palette;
-
-$handmade-palette: (
-    primary: (
-        50: to-hsl(#e6eff8),
-        '50-contrast': black,
-        100: to-hsl(#bfd7f2),
-        '100-contrast': black,
-        200: to-hsl(#98bfec),
-        '200-contrast': black,
-        300: to-hsl(#85b5e9),
-        '300-contrast': white,
-        400: to-hsl(#73a6e4),
-        '400-contrast': white,
-        500: to-hsl(#6797de),
-        '500-contrast': white,
-        600: to-hsl(#3681dd),
-        '600-contrast': white,
-        700: to-hsl(#357fda),
-        '700-contrast': white,
-        800: to-hsl(#306dc8),
-        '800-contrast': white,
-        900: to-hsl(#284ea8),
-        '900-contrast': white,
-        'A100': to-hsl(#98bfec),
-        'A100-contrast': white,
-        'A200': to-hsl(#73a6e4),
-        'A200-contrast': white,
-        'A400': to-hsl(#3681dd),
-        'A400-contrast': white,
-        'A700': to-hsl(#284ea8),
-        'A700-contrast': white
-    ),
-    secondary: (
-        50: to-hsl(#fef7e2),
-        '50-contrast': black,
-        100: to-hsl(#fdeab7),
-        '100-contrast': black,
-        200: to-hsl(#fbdd89),
-        '200-contrast': black,
-        300: to-hsl(#fad15c),
-        '300-contrast': black,
-        400: to-hsl(#f9c63f),
-        '400-contrast': black,
-        500: to-hsl(#f7bd32),
-        '500-contrast': white,
-        600: to-hsl(#f6b02d),
-        '600-contrast': white,
-        700: to-hsl(#f49e2a),
-        '700-contrast': white,
-        800: to-hsl(#f38e28),
-        '800-contrast': white,
-        900: to-hsl(#f38e28),
-        '900-contrast': white,
-        'A100': to-hsl(#fbdd89),
-        'A100-contrast': black,
-        'A200': to-hsl(#f9c63f),
-        'A200-contrast': black,
-        'A400': to-hsl(#f6b02d),
-        'A400-contrast': white,
-        'A700': to-hsl(#f38e28),
-        'A700-contrast': white
-    ),
-    grays: (
-        50: to-hsl(#fff),
-        '50-contrast': black,
-        100: to-hsl(#fafafa),
-        '100-contrast': black,
-        200: to-hsl(#f5f5f5),
-        '200-contrast': black,
-        300: to-hsl(#f0f0f0),
-        '300-contrast': black,
-        400: to-hsl(#dedede),
-        '400-contrast': black,
-        500: to-hsl(#b3b2b2),
-        '500-contrast': black,
-        600: to-hsl(#979696),
-        '600-contrast': white,
-        700: to-hsl(#7b7a7a),
-        '700-contrast': white,
-        800: to-hsl(#404040),
-        '800-contrast': white,
-        900: to-hsl(#1a1a1a),
-        '900-contrast': white
-    ),
-    info: (
-        500: to-hsl(rgb(18, 118, 211)),
-        '500-contrast': black
-    ),
-    success: (
-        500: to-hsl(rgb(76, 184, 96)),
-        '500-contrast': black
-    ),
-    warn: (
-        500: to-hsl(rgb(251, 178, 60)),
-        '500-contrast': black
-    ),
-    error: (
-        500: to-hsl(rgb(255, 20, 75)),
-        '500-contrast': black
-    ),
-    surface: (
-        500: to-hsl(rgb(255, 255, 255)),
-        '500-contrast': black
-    )
-);
+// $handmade-palette: (
+//     primary: (
+//         50: to-hsl(#e6eff8),
+//         '50-contrast': black,
+//         100: to-hsl(#bfd7f2),
+//         '100-contrast': black,
+//         200: to-hsl(#98bfec),
+//         '200-contrast': black,
+//         300: to-hsl(#85b5e9),
+//         '300-contrast': white,
+//         400: to-hsl(#73a6e4),
+//         '400-contrast': white,
+//         500: to-hsl(#6797de),
+//         '500-contrast': white,
+//         600: to-hsl(#3681dd),
+//         '600-contrast': white,
+//         700: to-hsl(#357fda),
+//         '700-contrast': white,
+//         800: to-hsl(#306dc8),
+//         '800-contrast': white,
+//         900: to-hsl(#284ea8),
+//         '900-contrast': white,
+//         'A100': to-hsl(#98bfec),
+//         'A100-contrast': white,
+//         'A200': to-hsl(#73a6e4),
+//         'A200-contrast': white,
+//         'A400': to-hsl(#3681dd),
+//         'A400-contrast': white,
+//         'A700': to-hsl(#284ea8),
+//         'A700-contrast': white
+//     ),
+//     secondary: (
+//         50: to-hsl(#fef7e2),
+//         '50-contrast': black,
+//         100: to-hsl(#fdeab7),
+//         '100-contrast': black,
+//         200: to-hsl(#fbdd89),
+//         '200-contrast': black,
+//         300: to-hsl(#fad15c),
+//         '300-contrast': black,
+//         400: to-hsl(#f9c63f),
+//         '400-contrast': black,
+//         500: to-hsl(#f7bd32),
+//         '500-contrast': white,
+//         600: to-hsl(#f6b02d),
+//         '600-contrast': white,
+//         700: to-hsl(#f49e2a),
+//         '700-contrast': white,
+//         800: to-hsl(#f38e28),
+//         '800-contrast': white,
+//         900: to-hsl(#f38e28),
+//         '900-contrast': white,
+//         'A100': to-hsl(#fbdd89),
+//         'A100-contrast': black,
+//         'A200': to-hsl(#f9c63f),
+//         'A200-contrast': black,
+//         'A400': to-hsl(#f6b02d),
+//         'A400-contrast': white,
+//         'A700': to-hsl(#f38e28),
+//         'A700-contrast': white
+//     ),
+//     gray: (
+//         50: to-hsl(#fff),
+//         '50-contrast': black,
+//         100: to-hsl(#fafafa),
+//         '100-contrast': black,
+//         200: to-hsl(#f5f5f5),
+//         '200-contrast': black,
+//         300: to-hsl(#f0f0f0),
+//         '300-contrast': black,
+//         400: to-hsl(#dedede),
+//         '400-contrast': black,
+//         500: to-hsl(#b3b2b2),
+//         '500-contrast': black,
+//         600: to-hsl(#979696),
+//         '600-contrast': white,
+//         700: to-hsl(#7b7a7a),
+//         '700-contrast': white,
+//         800: to-hsl(#404040),
+//         '800-contrast': white,
+//         900: to-hsl(#1a1a1a),
+//         '900-contrast': white
+//     ),
+//     info: (
+//         500: to-hsl(rgb(18, 118, 211)),
+//         '500-contrast': black
+//     ),
+//     success: (
+//         500: to-hsl(rgb(76, 184, 96)),
+//         '500-contrast': black
+//     ),
+//     warn: (
+//         500: to-hsl(rgb(251, 178, 60)),
+//         '500-contrast': black
+//     ),
+//     error: (
+//         500: to-hsl(rgb(255, 20, 75)),
+//         '500-contrast': black
+//     ),
+//     surface: (
+//         500: to-hsl(rgb(255, 255, 255)),
+//         '500-contrast': black
+//     )
+// );
 
 // :root {
-//     --igx-primary-a: 1;
-//     --igx-secondary-a: 1;
-//     --igx-info-a: 1;
-//     --igx-success-a: 1;
-//     --igx-warn-a: 1;
-//     --igx-error-a: 1;
-//     --igx-grays-a: 1;
-//     --igx-surface-a: 1;
+//     --ig-primary-a: 1;
+//     --ig-secondary-a: 1;
+//     --ig-info-a: 1;
+//     --ig-success-a: 1;
+//     --ig-warn-a: 1;
+//     --ig-error-a: 1;
+//     --ig-gray-a: 1;
+//     --ig-surface-a: 1;
 // }
 
 // $palette: $handmade-palette;

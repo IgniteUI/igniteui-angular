@@ -15,48 +15,48 @@ $dark-checkbox: $light-checkbox;
 
 /// Generates a dark fluent checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('grays', 900)] - The checked mark color.
+/// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
 /// @requires {function} extend
 /// @requires $fluent-checkbox
 $dark-fluent-checkbox: extend($fluent-checkbox, (
     tick-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     )
 ));
 
 /// Generates a dark bootstrap checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('grays', 900)] - The checked mark color.
+/// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
 /// @requires {function} extend
 /// @requires $bootstrap-checkbox
 $dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
     tick-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     )
 ));
 
 /// Generates a dark indigo checkbox schema.
 /// @type {Map}
-/// @prop {Color} fill-color [color: ('grays', 900)] - The checked border and fill colors.
-/// @prop {Color} empty-color [color: ('grays', 700)] - The unchecked border color.
-/// @prop {Color} disabled-color [color: ('grays', 400)] - The disabled border and fill colors.
-/// @prop {Color} disabled-color-label [color: ('grays', 400)] - The disabled label color.
+/// @prop {Color} fill-color [color: ('gray', 900)] - The checked border and fill colors.
+/// @prop {Color} empty-color [color: ('gray', 700)] - The unchecked border color.
+/// @prop {Color} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
+/// @prop {Color} disabled-color-label [color: ('gray', 400)] - The disabled label color.
 /// @requires {function} extend
 /// @requires $indigo-checkbox
 $dark-indigo-checkbox: extend($indigo-checkbox, (
     fill-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     empty-color: (
-        color: ('grays', 700)
+        color: ('gray', 700)
     ),
 
     disabled-color: (
-        color: ('grays', 400),
+        color: ('gray', 400),
     ),
 
     disabled-color-label: (
-        color: ('grays', 400),
+        color: ('gray', 400),
     )
 ));

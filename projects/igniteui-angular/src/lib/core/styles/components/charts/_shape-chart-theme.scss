@@ -1,7 +1,7 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,7 +9,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @param {Color} $title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
@@ -52,7 +51,6 @@
 /// @param {Color} $y-axis-title-color [null] - Sets color of title on the Y-axis.
 /// @param {List} $y-axis-title-margin [null] - Sets the margin around the title on the Y-axis.
 /// @requires $light-schema
-/// @requires apply-palette
 /// @requires extend
 ///
 /// @example scss
@@ -60,7 +58,6 @@
 ///   // Pass the theme to the css-vars mixin
 ///   @include css-vars($my-chart-theme);
 @function shape-chart-theme(
-    $palette: null,
     $schema: $light-schema,
     $margin: null,
     $title-text-color: null,
@@ -111,7 +108,7 @@
         $chart-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: digest-schema($chart-schema);
     $margin-default: map.get($theme, 'margin');
     $title-margin-default: map.get($theme, 'title-margin');
     $subtitle-margin-default: map.get($theme, 'subtitle-margin');

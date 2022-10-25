@@ -36,8 +36,8 @@ $dark-bootstrap-bottom-nav: extend($bootstrap-bottom-nav, $base-dark-bottom-nav)
 /// Generates a dark indigo bottom-nav schema based on a mix of $indigo-bottom-nav and $base-dark-bottom-nav
 /// @type {Map}
 /// @prop {Map} background [color: 'surface'] - The background color used for the bottom-nav.
-/// @prop {Color} active-item-color [color: ('grays', 700)] - The text-color used for the active color.
-/// @prop {Map} idle-item-color [color: ('grays', 400)] - The text-color used for the idle color.
+/// @prop {Color} active-item-color [color: ('gray', 700)] - The text-color used for the active color.
+/// @prop {Map} idle-item-color [color: ('gray', 400)] - The text-color used for the idle color.
 /// @requires {function} extend
 /// @requires $indigo-bottom-nav
 /// @requires $base-dark-bottom-nav
@@ -50,11 +50,11 @@ $dark-indigo-bottom-nav: extend(
         ),
 
         active-item-color:(
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         idle-item-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
     )
 );

@@ -12,12 +12,13 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
-        require('karma-parallel'),
-        require('karma-jasmine'),
-        require('karma-coverage'),
-        require('karma-chrome-launcher'),
-        require('karma-jasmine-spec-tags'),
-        require('@angular-devkit/build-angular/plugins/karma')
+        'karma-parallel',
+        'karma-jasmine',
+        'karma-coverage',
+        'karma-chrome-launcher',
+        'karma-jasmine-spec-tags',
+        'karma-spec-reporter',
+        '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
       executors: 2,
@@ -39,7 +40,7 @@ module.exports = function (config) {
         { type: 'lcov' },
       ]
     },
-    reporters: ['progress'],
+    reporters: ['spec'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
