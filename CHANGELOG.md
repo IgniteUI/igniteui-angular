@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 - `igxGrid` - exposing new Input properties:
     - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
+    - `detailTemplate` - Gets/Sets the master-detail template.
+
 ## 14.2.0
 
 ### New Features
