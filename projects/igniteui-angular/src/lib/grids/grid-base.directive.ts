@@ -1472,7 +1472,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
-    public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public excelStyleHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
+    /**
+     * Gets the excel style header icon.
+    */
+    @Input()
+    public get excelStyleHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._excelStyleHeaderIconTemplate || this.excelStyleHeaderIconDirectiveTemplate;
+    }
+
+    /**
+     * Sets the excel style header icon.
+     *```html
+     *<ng-template #template igxExcelStyleHeaderIcon>
+     * <igx-icon>filter_alt</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.excelStyleHeaderIconTemplate = this.template;
+     * ```
+    */
+    public set excelStyleHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._excelStyleHeaderIconTemplate = template;
+    }
 
 
     /**
@@ -3069,6 +3094,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     private _rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
     private _headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
     private _rowEditTextTemplate: TemplateRef<IgxGridRowEditTextTemplateContext>;
