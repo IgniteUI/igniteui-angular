@@ -167,7 +167,7 @@
     ), $variant);
 
     // Slider Label
-    $slider-label-width: 36px;
+    $slider-label-width: rem(36px);
     $slider-label-height: $slider-label-width;
     $slider-label-radius: math.div($slider-label-width, 2);
     $slider-label-padding: 0 rem(2px);

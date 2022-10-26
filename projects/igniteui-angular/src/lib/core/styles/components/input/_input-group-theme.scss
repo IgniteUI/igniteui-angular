@@ -256,7 +256,7 @@
     $indigo-theme: $variant == 'indigo-design';
 
     $required-symbol: '*';
-    $required-symbol-margin: 2px;
+    $required-symbol-margin: rem(2px);
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -432,7 +432,7 @@
         flex-flow: row nowrap;
         max-width: 100%;
         padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
     }
 
@@ -448,7 +448,7 @@
         padding: 0;
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'box-background');
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'idle-bottom-line-color');
 
         igx-suffix,
         [igxSuffix] {
@@ -461,7 +461,7 @@
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: transparent;
         transition: background $transition-timing, box-shadow $transition-timing;
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
 
         &:hover,
         &:focus {
@@ -479,16 +479,16 @@
     }
 
     %form-group-bundle-success--indigo {
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'success-secondary-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'success-secondary-color');
     }
 
     %form-group-bundle-error--indigo {
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'error-secondary-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle-error--indigo--hover {
         border-color: var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'error-secondary-color');
     }
 
     %form-group-helper--indigo--disabled {
@@ -518,40 +518,40 @@
     %form-group-bundle--hover {
         cursor: pointer;
         @if not $indigo-theme {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'hover-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'hover-bottom-line-color');
         } @else {
-            box-shadow: inset 0 -1px 0 0 var-get($theme, 'hover-bottom-line-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'hover-bottom-line-color');
         }
     }
 
     %form-group-bundle--focus {
         caret-color: var-get($theme, 'focused-secondary-color');
         @if not $indigo-theme {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'interim-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'interim-bottom-line-color');
         } @else {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'focused-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'focused-bottom-line-color');
         }
     }
 
     %form-group-bundle--success {
         caret-color: var-get($theme, 'success-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'success-secondary-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
         caret-color: var-get($theme, 'error-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'error-secondary-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle--disabled {
         @if not $indigo-theme {
             box-shadow: none;
         } @else {
-            box-shadow: inset 0 -1px 0 0 var-get($theme, 'disabled-bottom-line-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
         }
         background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
-        background-size: 4px 1px;
+        background-size: rem(4px) rem(1px);
         background-repeat: repeat-x;
 
         [dir='rtl'] & {
@@ -570,7 +570,7 @@
     %form-group-bundle--border {
         padding: 0;
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
 
@@ -602,39 +602,39 @@
 
     %form-group-bundle-border--hover {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'hover-border-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'hover-border-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'hover-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'hover-border-color');
         }
     }
 
     %form-group-bundle-border--focus {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'focused-border-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'focused-border-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'focused-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focused-border-color');
         }
     }
 
     %form-group-bundle-border--error {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'error-secondary-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'error-secondary-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'error-secondary-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'error-secondary-color');
         }
     }
 
     %form-group-bundle-border--success {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'success-secondary-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'success-secondary-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'success-secondary-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'success-secondary-color');
         }
     }
 
     %form-group-bundle-border--disabled {
         background: var-get($theme, 'border-disabled-background');
-        box-shadow: inset 0 0 0 1px var-get($theme, 'disabled-border-color');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'disabled-border-color');
     }
 
     // FLUENT START
@@ -769,8 +769,8 @@
     // Bundle
     %form-group-bundle--fluent {
         padding: 0;
-        min-height: 32px;
-        border: 1px solid var-get($theme, 'border-color');
+        min-height: rem(32px);
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
         position: relative;
@@ -1050,7 +1050,7 @@
             content: '#{$required-symbol}';
             font-size: inherit;
             vertical-align: top;
-            margin-inline-start: $required-symbol-margin; /* 2px base is 16px */
+            margin-inline-start: $required-symbol-margin; /* rem(2px) base is 16px */
             display: inline-block;
         }
     }
@@ -1601,7 +1601,7 @@
 
     %form-group-prefix--bootstrap,
     %form-group-suffix--bootstrap {
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         padding: map.get($bootstrap-padding, 'comfortable');
         z-index: -1;
         width: auto;
@@ -1632,7 +1632,7 @@
 
     %form-group-prefix--disabled-bootstrap,
     %form-group-suffix--disabled-bootstrap {
-        border: 1px solid var-get($theme, 'disabled-border-color');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
         color: var-get($theme, 'disabled-text-color');
     }
 
@@ -1695,7 +1695,7 @@
         line-height: 1.5 !important;
         margin: 0;
         border-radius: var-get($theme, 'box-border-radius');
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
         transition: box-shadow .15s ease-out, border .15s ease-out;

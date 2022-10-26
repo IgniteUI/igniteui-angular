@@ -7,7 +7,7 @@ import {
 } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
-import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions } from './template-strings.spec';
+import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -1770,6 +1770,38 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
 }
 
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+    </igx-grid>
+    <ng-template #editActions igxRowEditActions>
+        CUSTOM EDIT ACTIONS
+    </ng-template>
+    <ng-template #addText igxRowAddText>
+        CUSTOM ADD TEXT
+    </ng-template>
+    <ng-template #editText igxRowEditText>
+        CUSTOM EDIT TEXT
+    </ng-template>
+    `
+})
+export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('editActions', {read: TemplateRef })
+    public editActions: TemplateRef<any>;
+
+    @ViewChild('addText', {read: TemplateRef })
+    public addText: TemplateRef<any>;
+
+    @ViewChild('editText', {read: TemplateRef })
+    public editText: TemplateRef<any>;
+}
+
 @Component({
     template: `
     <igx-grid #grid [data]="data" [batchEditing]="true" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true" >
@@ -2294,8 +2326,18 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
         '',
         '',
         TemplateDefinitions.sortIconTemplates)
+        +  ExternalTemplateDefinitions.sortIconTemplates
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+     @ViewChild('sortIcon', {read: TemplateRef })
+     public sortIconTemplate: TemplateRef<any>;
+
+     @ViewChild('sortAscIcon', {read: TemplateRef })
+     public sortAscIconTemplate: TemplateRef<any>;
+
+     @ViewChild('sortDescIcon', {read: TemplateRef })
+     public sortDescIconTemplate: TemplateRef<any>;
+
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
