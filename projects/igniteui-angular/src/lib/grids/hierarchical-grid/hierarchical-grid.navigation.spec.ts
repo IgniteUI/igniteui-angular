@@ -17,7 +17,7 @@ const DEBOUNCE_TIME = 30;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
-fdescribe('IgxHierarchicalGrid Navigation', () => {
+describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
