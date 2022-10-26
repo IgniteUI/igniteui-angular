@@ -1360,10 +1360,58 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowEditTextDirectives: QueryList<TemplateRef<IgxGridRowEditTextTemplateContext>>;
 
     /**
+     * Gets the row edit text template.
+     */
+    @Input()
+    public get rowEditTextTemplate(): TemplateRef<IgxGridRowEditTextTemplateContext> {
+        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+    }
+    /**
+     * Sets the row edit text template.
+     *```html
+     * <ng-template #template igxRowEditText let-rowChangesCount>
+     * Changes: {{rowChangesCount}}
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditTextTemplate = this.template;
+     * ```
+     */
+    public set rowEditTextTemplate(template: TemplateRef<IgxGridRowEditTextTemplateContext>) {
+        this._rowEditTextTemplate = template;
+    }
+
+    /**
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
     public rowAddText: TemplateRef<IgxGridEmptyTemplateContext>;
+
+    /**
+     * Gets the row add text template.
+     */
+    @Input()
+    public get rowAddTextTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
+        return this._rowAddTextTemplate || this.rowAddText;
+    }
+    /**
+     * Sets the row add text template.
+     *```html
+     * <ng-template #template igxRowAddText>
+     * Adding Row
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowAddTextTemplate = this.template;
+     * ```
+     */
+    public set rowAddTextTemplate(template: TemplateRef<IgxGridEmptyTemplateContext>) {
+        this._rowAddTextTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -1371,6 +1419,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
     public rowEditActionsDirectives: QueryList<TemplateRef<IgxGridRowEditActionsTemplateContext>>;
 
+    /**
+     * Gets the row edit actions template.
+     */
+    @Input()
+    public get rowEditActionsTemplate(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+    }
+    /**
+     * Sets the row edit actions template.
+     *```html
+     * <ng-template #template igxRowEditActions let-endRowEdit>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditActionsTemplate = this.template;
+     * ```
+     */
+    public set rowEditActionsTemplate(template: TemplateRef<IgxGridRowEditActionsTemplateContext>) {
+        this._rowEditActionsTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
@@ -2473,24 +2545,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public get rowEditText(): TemplateRef<IgxGridRowEditTextTemplateContext> {
-        if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
-            return this.rowEditTextDirectives.first;
-        }
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get rowEditActions(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
-        if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
-            return this.rowEditActionsDirectives.first;
-        }
-        return null;
-    }
 
     /**
      * @hidden @internal
@@ -2990,6 +3044,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _rowEditTextTemplate: TemplateRef<IgxGridRowEditTextTemplateContext>;
+    private _rowAddTextTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _rowEditActionsTemplate: TemplateRef<IgxGridRowEditActionsTemplateContext>;
     private _dragGhostCustomTemplate: TemplateRef<IgxGridRowDragGhostContext>;
     private _cdrRequests = false;
     private _resourceStrings;
