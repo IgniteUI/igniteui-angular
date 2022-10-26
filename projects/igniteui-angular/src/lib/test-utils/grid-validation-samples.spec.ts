@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Directive } from '@angular/core';
+import { Component, Input, ViewChild, Directive, TemplateRef } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import {  IgxGridComponent, IgxTreeGridComponent } from 'igniteui-angular';
 import { data } from '../../../../../src/app/shared/data';
@@ -80,6 +80,32 @@ export class IgxGridValidationTestCustomErrorComponent {
     public data = [...data];
 
     @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `
+    <igx-grid #grid primaryKey="ProductID" [data]="data" [rowEditable]="rowEditable"
+        [width]="'1200px'" [height]="'800px'">
+        <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
+            *ngFor="let c of columns"
+            [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
+            [header]="c.field" [width]="c.width" [resizable]='true' [dataType]="c.dataType">
+        </igx-column>
+    </igx-grid>
+    <ng-template #modelTemplate igxCellEditor let-cell="cell">
+       <input [(ngModel)]="cell.editValue"/>
+    </ng-template>
+    <ng-template #formControlTemplate igxCellEditor let-cell="cell" let-fc='formControl'>
+        <input [formControl]="fc"/>
+    </ng-template>
+    `
+})
+export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomErrorComponent {
+    @ViewChild('modelTemplate', {read: TemplateRef })
+    public modelTemplate: TemplateRef<any>;
+
+    @ViewChild('formControlTemplate', {read: TemplateRef })
+    public formControlTemplate: TemplateRef<any>;
 }
 
 @Component({
