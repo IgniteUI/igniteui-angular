@@ -6,9 +6,16 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `igxGrid` - exposing new Input properties:
+
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
     - `rowSelectorTemplate` - Gets/Sets the custom template used for row selectors.
     - `groupByRowSelectorTemplate` - Gets/Sets the custom template used for the group row selectors.
+    - `rowEditActionsTemplate` - Gets/Sets the row edit actions template.
+    - `rowAddTextTemplate` - Gets/Sets the row add text template.
+    - `rowEditTextTemplate` - Gets/Sets the row edit text template.
+    - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
+    - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
+    - `detailTemplate` - Gets/Sets the master-detail template.
 
 ## 14.2.0
 
