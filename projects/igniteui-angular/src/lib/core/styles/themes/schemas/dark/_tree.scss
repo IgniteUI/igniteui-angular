@@ -9,19 +9,19 @@
 
 /// Generates a base dark tree schema.
 /// @type {Map}
-/// @prop {Map} background-active [color: ('grays', 100)] - The background color used for the active tree node.
-/// @prop {Map} foreground-active [color: ('grays', 900)] - The color used for the content in active state of the tree node.
+/// @prop {Map} background-active [color: ('gray', 100)] - The background color used for the active tree node.
+/// @prop {Map} foreground-active [color: ('gray', 900)] - The color used for the content in active state of the tree node.
 $base-dark-tree: (
     background-active: (
-        color: ('grays', 100),
+        color: ('gray', 100),
     ),
 
     foreground-active: (
-        color: ('grays', 900),
+        color: ('gray', 900),
     ),
 
     hover-color: (
-        color: ('grays', 50, .1)
+        color: ('gray', 50, .1)
     ),
 );
 
@@ -34,11 +34,11 @@ $dark-tree: extend($light-tree, $base-dark-tree);
 
 /// Generates a dark fluent tree schema.
 /// @type {Map}
-/// @prop {Map} background-active [color: ('grays', 100)] - The background color used for the active tree node.
-/// @prop {Map} background-selected [color: ('grays', 100)] - The background color used for the selected tree node.
-/// @prop {Map} foreground-selected [color: ('grays', 900)] - The color used for the content of the selected tree node.
-/// @prop {Map} background-active-selected [color: ('grays', 200)] - The background color used for the active selected tree node.
-/// @prop {Map} foreground-active-selected [color: ('grays', 900)] - The color used for the content of the active selected tree node.
+/// @prop {Map} background-active [color: ('gray', 100)] - The background color used for the active tree node.
+/// @prop {Map} background-selected [color: ('gray', 100)] - The background color used for the selected tree node.
+/// @prop {Map} foreground-selected [color: ('gray', 900)] - The color used for the content of the selected tree node.
+/// @prop {Map} background-active-selected [color: ('gray', 200)] - The background color used for the active selected tree node.
+/// @prop {Map} foreground-active-selected [color: ('gray', 900)] - The color used for the content of the active selected tree node.
 /// @requires {function} extend
 /// @requires $fluent-tree
 /// @requires $base-dark-tree
@@ -47,27 +47,27 @@ $dark-fluent-tree: extend(
     $base-dark-tree,
     (
         background-active: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         background-selected: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         foreground-selected: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         background-active-selected: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         foreground-active-selected: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         hover-color: (
-            color: ('grays', 200, .5)
+            color: ('gray', 200, .5)
         ),
     )
 );
@@ -82,7 +82,7 @@ $dark-bootstrap-tree: extend(
     $base-dark-tree,
     (
         hover-color: (
-            color: ('grays', 500, .3)
+            color: ('gray', 500, .3)
         )
     )
 );

@@ -4,7 +4,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 @Component({
     template: `
-       <div class="igx-typography">
+       <div class="ig-typography">
            <igx-list>
                <igx-list-item>
                    <igx-icon igxListThumbnail>face</igx-icon>

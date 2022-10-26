@@ -2,12 +2,11 @@
 
 # Current Milestone
 
-## Milestone 24, version 14.2 (Due by October, 2022)
+## Milestone 24, version 15.0 (Due by October, 2022)
 
-1. Angular query builder component (Angular Tree Grid Advanced Filtering without the tree grid) [#11750](https://github.com/IgniteUI/igniteui-angular/issues/11750)
-2. [PivotGrid] Export to Excel [#11742](https://github.com/IgniteUI/igniteui-angular/issues/11742)
-3. Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
-4. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
+1. Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
+2. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
+3. Support for Angular 15
 
 ## Going down the road
 
@@ -20,6 +19,11 @@
 7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 
 # Previous Milestone
+
+## Milestone 24, version 14.2 (Released October 06th, 2022)
+
+1. **[DONE]** Angular query builder component (Angular Tree Grid Advanced Filtering without the tree grid) [#11750](https://github.com/IgniteUI/igniteui-angular/issues/11750)
+2. **[DONE]** [PivotGrid] Export to Excel [#11742](https://github.com/IgniteUI/igniteui-angular/issues/11742)
 
 ## Milestone 23, version 14.1 (Released September 13th, 2022)
 

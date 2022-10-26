@@ -227,7 +227,7 @@ describe('IgxCircularBar', () => {
             expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(true);
 
             // Expect text in indeterminate bar to be hidden;
-            expect(getComputedStyle(bar.querySelector('text').firstElementChild).visibility).toEqual('hidden');
+            expect(getComputedStyle(bar.querySelector('span')).visibility).toEqual('hidden');
         });
 
         it('should manipulate progressbar with floating point numbers', () => {
@@ -241,26 +241,26 @@ describe('IgxCircularBar', () => {
 
             const progressRepresentation = toPercent(val, maxVal);
             const progressBarElem = fixture.debugElement.nativeElement;
-            const valueInPercent = progressBarElem.querySelector('text').firstElementChild;
+            const valueInPercent = progressBarElem.querySelector('span');
             expect(valueInPercent.textContent.trim()).toBe(`${progressRepresentation}%`);
         });
 
         it('should respond to passed values correctly', () => {
             const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
-            const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
+            const textElement = fixture.debugElement.query(By.css('span')).nativeElement;
             let expectedTextContent = progress.value + '%';
 
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(progress.value.toString());
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(progress.max.toString());
 
-            expect(textElement.children[0].classList.value).toBe(CIRCULAR_TEXT_CLASS);
-            expect(textElement.children[0].textContent.trim()).toMatch(expectedTextContent);
+            expect(textElement.classList.value).toBe(CIRCULAR_TEXT_CLASS);
+            expect(textElement.textContent.trim()).toMatch(expectedTextContent);
 
             expectedTextContent = 'No progress';
             progress.text = expectedTextContent;
             fixture.detectChanges();
 
-            expect(textElement.children[0].textContent.trim()).toMatch(expectedTextContent);
+            expect(textElement.textContent.trim()).toMatch(expectedTextContent);
         });
 
         it('should respond correctly to passed maximum value', () => {
@@ -295,7 +295,7 @@ describe('IgxCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
-            const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
+            const textElement = fixture.debugElement.query(By.css('span')).nativeElement;
 
             fixture.detectChanges();
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
@@ -320,7 +320,7 @@ describe('IgxCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
-            const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
+            const textElement = fixture.debugElement.query(By.css('span')).nativeElement;
 
             fixture.detectChanges();
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
@@ -328,7 +328,7 @@ describe('IgxCircularBar', () => {
             expect(progressBarElem.children[0]).toHaveClass(CIRCULAR_INNER_CLASS);
             expect(progressBarElem.children[1]).toHaveClass(CIRCULAR_OUTER_CLASS);
 
-            expect(textElement.children[0].textContent.trim()).toBe('20%');
+            expect(textElement.textContent.trim()).toBe('20%');
 
             componentInstance.progressbar.textVisibility = false;
             fixture.detectChanges();

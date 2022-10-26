@@ -10,6 +10,7 @@ import { TreeResourceStringsZHHANT } from './tree-resources';
 import { InputResourceStringsZHHANT } from './input-resources';
 import { ChipResourceStringsZHHANT } from './chip-resources';
 import { ComboResourceStringsZHHANT } from './combo-resources';
+import { QueryBuilderResourceStringsZHHANT } from './query-builder-resources';
 
 /**
  * Traditional Chinese (zh-Hant) resource strings for all components
@@ -26,5 +27,6 @@ export const IgxResourceStringsZHHANT = {
     ...TreeResourceStringsZHHANT,
     ...InputResourceStringsZHHANT,
     ...ChipResourceStringsZHHANT,
-    ...ComboResourceStringsZHHANT
+    ...ComboResourceStringsZHHANT,
+    ...QueryBuilderResourceStringsZHHANT
 };

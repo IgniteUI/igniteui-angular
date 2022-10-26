@@ -1,8 +1,46 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 15.0.0
+
+### New Features
+- `igxGrid` - exposing new Input properties:
+
+    - `sortHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
+    - `sortAscendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+    - `sortDescendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+    - `rowEditActionsTemplate` - Gets/Sets the row edit actions template.
+    - `rowAddTextTemplate` - Gets/Sets the row add text template.
+    - `rowEditTextTemplate` - Gets/Sets the row edit text template.
+    - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
+    - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
+    - `detailTemplate` - Gets/Sets the master-detail template.
+
 ## 14.2.0
 
+### New Features
+- The filtering logic inside the grid's Advanced Filtering  is now extracted as a separate  `IgxQueryBuilder` component. The Query Builder allows you to build complex queries by specifying AND/OR operators, conditions and values using the UI. It outputs an object describing the structure of the query. Use the `locale` property to modify the locale settings. The default value is resolved to the global Angular application locale. The `resourceStrings` allows changing the displayed strings.
+    
+    - Code example below:
+
+    ```html
+    <igx-query-builder [fields]="fields">
+        <!-- Custom header -->
+        <igx-query-builder-header [title]="'Custom title'"
+            [showLegend]="false">
+        </igx-query-builder-header>
+    </igx-query-builder>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/query-builder/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Query-Builder) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/query-builder).
+
+- `IgxExcelExporterService`
+    - Added support for exporting `igxPivotGrid`.
+
+### General
+
+- **Breaking Changes** - The Excel exporter service `exportEnded` event has its `xlsx` argument type changed as `igniteui-angular` no longer depends on `JSZip`. Instead of providing a `JSZip` instance it is now an object describing the structure of the Excel file with property names corresponding to folders or files, folders being objects themselves that can be traversed down, while files have their contents as `Uint8Array`. The same structure is used to package as a zip file by `fflate`'s API.
 - `IgxDropDown`
     - The `aria-label` attribute of the `IgxDropDownItemBase` can now be se to a custom value for its descendants (of which `IgxDropDownItem`) by the `ariaLabel` property.
 

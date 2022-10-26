@@ -71,10 +71,10 @@
     "dependencies": {
         "@types/hammerjs": "^2.0.40",
         "hammerjs": "^2.0.8",
-        "jszip": "^3.10.0",
+        "fflate": "^0.7.3",
         "tslib": "^2.3.0",
         "igniteui-trial-watermark": "^1.0.3",
-        "lodash.mergewith": "^4.6.2",
+        "lodash-es": "^4.17.21",
         "uuid": "^8.3.0",
         "@igniteui/material-icons-extended": "^2.10.0"
     },
@@ -82,7 +82,8 @@
         "@angular/common": "^14.0.0",
         "@angular/core": "^14.0.0",
         "@angular/animations": "^14.0.0",
-        "@angular/forms": "^14.0.0"
+        "@angular/forms": "^14.0.0",
+        "igniteui-theming": "^1.0.0-beta.11"
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~14.0.1000"
