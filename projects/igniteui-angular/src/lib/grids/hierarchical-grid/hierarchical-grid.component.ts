@@ -536,14 +536,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public get resolveRowEditActions() {
-        return this.parentIsland ? this.parentIsland.rowEditActions : this.rowEditActions;
+        return this.parentIsland ? this.parentIsland.rowEditActionsTemplate : this.rowEditActionsTemplate;
     }
 
     /**
      * @hidden
      */
     public get resolveRowEditText() {
-        return this.parentIsland ? this.parentIsland.rowEditText : this.rowEditText;
+        return this.parentIsland ? this.parentIsland.rowEditTextTemplate : this.rowEditTextTemplate;
     }
 
     /** @hidden */
