@@ -48,6 +48,7 @@
     "build:i18n": "tsc --project projects/igniteui-angular-i18n/tsconfig.build.json",
     "lint:i18n": "eslint projects/igniteui-angular-i18n/src/**/*.ts",
     "test:i18n:dist": "eslint -c projects/igniteui-angular-i18n/.eslintrc.dist.i18n.json dist/igniteui-angular-i18n/**/*.d.ts --no-eslintrc",
+    "build:elements:config": "ts-node --project ./projects/igniteui-angular/migrations/tsconfig.json --compiler-options {\\\"lib\\\":[\\\"es2019\\\"]} ./projects/igniteui-angular-elements/src/analyzer/index.ts",
     "build:elements": "ng build igniteui-angular-elements && npm run pack:elements && gulp copyPackageForElements",
     "pack:elements": "esbuild dist/igniteui-angular-elements/index.js --bundle --outfile=dist/igniteui-angular-elements/elements.js --minify --external:lit-html --format=esm && gulp buildElementsStyles",
     "postinstall": "gulp copyGitHooks",

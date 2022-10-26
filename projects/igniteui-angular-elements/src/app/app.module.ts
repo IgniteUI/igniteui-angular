@@ -16,6 +16,7 @@ import {
     IgxGridToolbarExporterComponent,
     IgxGridToolbarHidingComponent,
     IgxGridToolbarPinningComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
     IgxGridToolbarTitleComponent,
     IgxHierarchicalGridComponent,
     IgxPaginatorComponent,
@@ -110,6 +111,9 @@ export class AppModule {
 
     const toolbarExport = createIgxCustomElement(IgxGridToolbarExporterComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid-toolbar-exporter", toolbarExport);
+
+    const toolbarFilter = createIgxCustomElement(IgxGridToolbarAdvancedFilteringComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-grid-toolbar-advanced-filtering", toolbarFilter);
   }
 
 }
