@@ -17,7 +17,7 @@ const DEBOUNCE_TIME = 30;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
-describe('IgxHierarchicalGrid Navigation', () => {
+fdescribe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
@@ -853,19 +853,21 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture.detectChanges();
             await wait();
 
-            const child2LastCell = childGrid2.gridAPI.get_cell_by_index(0, 'childData2');
+            const child2LastCell = childGrid2.dataRowList.first.cells.first;
             GridFunctions.focusCell(fixture, child2LastCell);
 
             const childGridContent = fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            let childLastCell = childGrid.selectedCells;
+            expect(childLastCell.length).toBe(0);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            const childLastCell = childGrid.gridAPI.get_cell_by_index(9, 'childData');
-            expect(childLastCell.selected).toBeTruthy();
-            expect(childLastCell.active).toBeTruthy();
+            childLastCell = childGrid.selectedCells;
+            expect(childLastCell.length).toBe(1);
+            expect(childLastCell[0].active).toBeTruthy();
         });
     });
 
