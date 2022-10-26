@@ -163,7 +163,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('home', childGridContent, false, false, true);
         fixture.detectChanges();
-        await wait();
+        await wait(DEBOUNCE_TIME);
 
         const selectedCell = fixture.componentInstance.selectedCell;
         expect(selectedCell.value).toEqual(0);
@@ -494,8 +494,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const subChild = child1.gridAPI.getChildGrids(false)[0];
         subChild.data = [];
         subChild.cdr.detectChanges();
-        await wait();
         fixture.detectChanges();
+        await wait();
 
         const fchildRowCell = row.cells.first;
         GridFunctions.focusCell(fixture, fchildRowCell);
@@ -503,7 +503,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, false);
         fixture.detectChanges();
-        await wait();
+        await wait(DEBOUNCE_TIME);
 
         // second child row should be in view
         const sChildRowCell = child1.getRowByIndex(2).cells[0];
