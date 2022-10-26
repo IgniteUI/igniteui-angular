@@ -39,12 +39,15 @@ $light-action-strip: extend(
 
 /// Generates a fluent action strip schema.
 /// @type {Map}
+/// @prop {Number} actions-border-radius [24px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-action-strip
 $fluent-action-strip: extend(
     $light-action-strip,
     (
         variant: 'fluent',
+
+        actions-border-radius: rem(0)
     )
 );
 

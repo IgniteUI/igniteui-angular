@@ -7,11 +7,6 @@
     [attr.aria-valuenow]="value">
     <svg:circle class="igx-circular-bar__inner" cx="50" cy="50" r="46" />
     <svg:circle #circle class="igx-circular-bar__outer" cx="50" cy="50" r="46" />
-    <svg:text *ngIf="textVisibility" text-anchor="middle" x="50" y="60">
-        <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
-            context: context">
-        </ng-container>
-    </svg:text>
 
     <svg:defs>
         <ng-container
@@ -20,12 +15,6 @@
         </ng-container>
     </svg:defs>
 
-    <ng-template #defaultTextTemplate>
-        <svg:tspan class="igx-circular-bar__text">
-            {{textContent ? textContent: valueInPercent + '%'}}
-        </svg:tspan>
-    </ng-template>
-
     <ng-template #defaultGradientTemplate>
         <svg:linearGradient [id]="gradientId" gradientTransform="rotate(90)">
           <stop offset="0%"   class="igx-circular-bar__gradient-start" />
@@ -33,4 +22,14 @@
         </svg:linearGradient>
     </ng-template>
 </svg>
+
+<span class="igx-circular-bar__text" *ngIf="textVisibility">
+    <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate;
+            context: context">
+    </ng-container>
+</span>
+
+<ng-template #defaultTextTemplate>
+    {{textContent ? textContent: valueInPercent + '%'}}
+</ng-template>
 
