@@ -1227,6 +1227,33 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
     public dragGhostCustomTemplates: QueryList<TemplateRef<IgxGridRowDragGhostContext>>;
 
+
+    /**
+     * Gets the custom template, if any, used for row drag ghost.
+     */
+    @Input()
+    public get dragGhostCustomTemplate() {
+        return this._dragGhostCustomTemplate || this.dragGhostCustomTemplates.first;
+    }
+
+    /**
+     * Sets a custom template for the row drag ghost.
+     *```html
+     * <ng-template #template igxRowDragGhost>
+     *    <igx-icon>menu</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.dragGhostCustomTemplate = this.template;
+     * ```
+     */
+    public set dragGhostCustomTemplate(template: TemplateRef<IgxGridRowDragGhostContext>) {
+        this._dragGhostCustomTemplate = template;
+    }
+
+
     /**
      * @hidden @internal
      */
@@ -1333,10 +1360,58 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowEditTextDirectives: QueryList<TemplateRef<IgxGridRowEditTextTemplateContext>>;
 
     /**
+     * Gets the row edit text template.
+     */
+    @Input()
+    public get rowEditTextTemplate(): TemplateRef<IgxGridRowEditTextTemplateContext> {
+        return this._rowEditTextTemplate || this.rowEditTextDirectives.first;
+    }
+    /**
+     * Sets the row edit text template.
+     *```html
+     * <ng-template #template igxRowEditText let-rowChangesCount>
+     * Changes: {{rowChangesCount}}
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditTextTemplate = this.template;
+     * ```
+     */
+    public set rowEditTextTemplate(template: TemplateRef<IgxGridRowEditTextTemplateContext>) {
+        this._rowEditTextTemplate = template;
+    }
+
+    /**
      * @hidden @internal
      */
     @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
     public rowAddText: TemplateRef<IgxGridEmptyTemplateContext>;
+
+    /**
+     * Gets the row add text template.
+     */
+    @Input()
+    public get rowAddTextTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
+        return this._rowAddTextTemplate || this.rowAddText;
+    }
+    /**
+     * Sets the row add text template.
+     *```html
+     * <ng-template #template igxRowAddText>
+     * Adding Row
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowAddTextTemplate = this.template;
+     * ```
+     */
+    public set rowAddTextTemplate(template: TemplateRef<IgxGridEmptyTemplateContext>) {
+        this._rowAddTextTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -1344,6 +1419,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxRowEditActionsDirective, { descendants: false, read: TemplateRef })
     public rowEditActionsDirectives: QueryList<TemplateRef<IgxGridRowEditActionsTemplateContext>>;
 
+    /**
+     * Gets the row edit actions template.
+     */
+    @Input()
+    public get rowEditActionsTemplate(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
+        return this._rowEditActionsTemplate || this.rowEditActionsDirectives.first;
+    }
+    /**
+     * Sets the row edit actions template.
+     *```html
+     * <ng-template #template igxRowEditActions let-endRowEdit>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+     * <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+     * </ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowEditActionsTemplate = this.template;
+     * ```
+     */
+    public set rowEditActionsTemplate(template: TemplateRef<IgxGridRowEditActionsTemplateContext>) {
+        this._rowEditActionsTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a row expand indicator.
@@ -1375,23 +1474,99 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
     public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
+    public sortAscendingHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      */
-    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
-    public sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    @Input()
+    public get sortAscendingHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._sortAscendingHeaderIconTemplate;
+    }
+
+    /**
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+     *```html
+     * <ng-template #template igxSortAscendingHeaderIcon>
+     *    <igx-icon>expand_less</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortAscendingHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortAscendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._sortAscendingHeaderIconTemplate = template;
+    }
+
+
+    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
+    public sortDescendingHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
-    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
-    public sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    @Input()
+    public get sortDescendingHeaderIconTemplate() {
+        return this._sortDescendingHeaderIconTemplate;
+    }
 
     /**
-     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+     *```html
+     * <ng-template #template igxSortDescendingHeaderIcon>
+     *    <igx-icon>expand_more</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortDescendingHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortDescendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+            this._sortDescendingHeaderIconTemplate = template;
+    }
+
+    /**
+     * @hidden
+     * @internal
      */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
-    public sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public sortHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
+    /**
+     * Gets custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     */
+    @Input()
+    public get sortHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._sortHeaderIconTemplate;
+    }
+
+    /**
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
+     *```html
+     * <ng-template #template igxSortHeaderIcon>
+     *    <igx-icon>unfold_more</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._sortHeaderIconTemplate = template;
+    }
 
     /**
      * @hidden
@@ -2370,24 +2545,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public get rowEditText(): TemplateRef<IgxGridRowEditTextTemplateContext> {
-        if (this.rowEditTextDirectives && this.rowEditTextDirectives.first) {
-            return this.rowEditTextDirectives.first;
-        }
-        return null;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get rowEditActions(): TemplateRef<IgxGridRowEditActionsTemplateContext> {
-        if (this.rowEditActionsDirectives && this.rowEditActionsDirectives.first) {
-            return this.rowEditActionsDirectives.first;
-        }
-        return null;
-    }
 
     /**
      * @hidden @internal
@@ -2399,10 +2556,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      */
+    @Input()
     public get dragIndicatorIconTemplate(): TemplateRef<IgxGridEmptyTemplateContext> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
 
+    /**
+     * Sets a custom template that should be used when rendering the row drag indicator icon.
+     *```html
+     * <ng-template #template igxDragIndicatorIcon>
+     *    <igx-icon>expand_less</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.dragIndicatorIconTemplate = this.template;
+     * ```
+     */
     public set dragIndicatorIconTemplate(val: TemplateRef<IgxGridEmptyTemplateContext>) {
         this._customDragIndicatorIconTemplate = val;
     }
@@ -2873,6 +3044,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _rowEditTextTemplate: TemplateRef<IgxGridRowEditTextTemplateContext>;
+    private _rowAddTextTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _rowEditActionsTemplate: TemplateRef<IgxGridRowEditActionsTemplateContext>;
+    private _dragGhostCustomTemplate: TemplateRef<IgxGridRowDragGhostContext>;
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
@@ -2949,6 +3124,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private _autoSize = false;
+    private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * @hidden @internal
@@ -3522,6 +3700,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public ngAfterContentInit() {
+        if (this.sortHeaderIconDirectiveTemplate) {
+            this.sortHeaderIconTemplate = this.sortHeaderIconDirectiveTemplate;
+        }
+
+        if (this.sortAscendingHeaderIconDirectiveTemplate) {
+            this.sortAscendingHeaderIconTemplate = this.sortAscendingHeaderIconDirectiveTemplate;
+        }
+
+        if (this.sortDescendingHeaderIconDirectiveTemplate) {
+            this.sortDescendingHeaderIconTemplate = this.sortDescendingHeaderIconDirectiveTemplate;
+        }
+
         this.setupColumns();
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
@@ -3763,11 +3953,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public getDragGhostCustomTemplate() {
-        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
-            return this.dragGhostCustomTemplates.first;
-        }
 
-        return null;
+        return this.dragGhostCustomTemplate;
     }
 
     /**
