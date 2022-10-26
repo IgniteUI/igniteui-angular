@@ -49,7 +49,7 @@
 }
 
 .toggle-group:nth-child(odd) {
-    background: var(--igx-surface-500);
+    background: hsl(var(--ig-surface-500));
 }
 
 .paging-config {
@@ -57,7 +57,7 @@
     margin-bottom: 48px;
 }
 
-.igx-form-group~.igx-form-group {
+.igx-form-group ~ .igx-form-group {
     margin-top: 16px;
     /*background: red;*/
 }
@@ -70,7 +70,7 @@ igx-card {
     flex: 1 1 0%;
 }
 
-igx-card~igx-card {
+igx-card ~ igx-card {
     margin-left: 16px;
 }
 

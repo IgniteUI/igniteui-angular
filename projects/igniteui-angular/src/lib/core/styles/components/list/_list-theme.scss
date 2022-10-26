@@ -1,8 +1,9 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:color';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -11,7 +12,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The list background color.
@@ -48,9 +48,8 @@
 /// @param {Color} $border-width [null] - The list border width.
 /// @param {Number} $border-color [null] - The list border color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires luminance
@@ -60,7 +59,6 @@
 ///   // Pass the theme to the list component mixin
 ///   @include list($my-list-theme);
 @function list-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -98,7 +96,7 @@
         $list-schema: $schema;
     }
 
-    $theme: apply-palette($list-schema, $palette);
+    $theme: digest-schema($list-schema);
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -118,17 +116,17 @@
 
     @if not($item-background-hover) and $item-background {
         @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-hover: lighten-color($item-background, 8%);
+            $item-background-hover: color.scale($item-background, $lightness: 8%);
         } @else {
-            $item-background-hover: darken-color($item-background, 8%);
+            $item-background-hover: color.scale($item-background, $lightness: -8%);
         }
     }
 
     @if not($item-background-active) and $item-background {
         @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-active: lighten-color($item-background, 8%);
+            $item-background-active: color.scale($item-background, $lightness: 8%);
         } @else {
-            $item-background-active: darken-color($item-background, 8%);
+            $item-background-active: color.scale($item-background, $lightness: -8%);
         }
     }
 
@@ -224,7 +222,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         border-radius: $border-radius,
         item-border-radius: $item-border-radius,
         background: $background,
@@ -548,7 +545,7 @@
     }
 
     %igx-list-item-content--inactive {
-        transition: transform .3s $ease-out-quad;
+        transition: transform .3s $out-quad;
     }
 }
 
@@ -556,11 +553,9 @@
 /// Uses the 'caption' and 'subtitle-1'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin list-typography(
-    $type-scale,
     $categories: (
         header: 'overline',
         item: 'subtitle-1',
@@ -574,26 +569,26 @@
     $subtitle: map.get($categories, 'subtitle');
 
     %igx-list-header {
-        @include type-style($type-scale, $header) {
+        @include type-style($header) {
             margin: 0;
         }
     }
 
     %igx-list-item {
-        @include type-style($type-scale, $item) {
+        @include type-style($item) {
             margin: 0;
         }
     }
 
     %igx-list__item-lines,
     %igx-list__item-line-title {
-        @include type-style($type-scale, $title) {
+        @include type-style($title) {
             margin: 0;
         }
     }
 
     %igx-list__item-line-subtitle {
-        @include type-style($type-scale, $subtitle) {
+        @include type-style($subtitle) {
             margin: 0;
         }
     }

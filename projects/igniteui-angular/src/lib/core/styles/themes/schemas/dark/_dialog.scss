@@ -9,10 +9,10 @@
 
 /// Generates a base dark dialog schema.
 /// @type {Map}
-/// @prop {Map} message-color [color: ('grays', 500)] - The dialog message text color.
+/// @prop {Map} message-color [color: ('gray', 500)] - The dialog message text color.
 $base-dark-dialog: (
     message-color: (
-        color: ('grays', 500)
+        color: ('gray', 500)
     ),
 );
 
@@ -33,7 +33,7 @@ $dark-fluent-dialog: extend($fluent-dialog, $base-dark-dialog);
 
 /// Generates a dark bootstrap dialog schema.
 /// @type {Map}
-/// @prop {Map} border-color [color: ('grays', 100)] - The border color for dialog component.
+/// @prop {Map} border-color [color: ('gray', 100)] - The border color for dialog component.
 /// @requires {function} extend
 /// @requires $bootstrap-dialog
 /// @requires $base-dark-dialog
@@ -42,7 +42,7 @@ $dark-bootstrap-dialog: extend(
     $base-dark-dialog,
     (
         border-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         )
     )
 );
