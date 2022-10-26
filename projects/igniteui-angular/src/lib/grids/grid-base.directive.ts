@@ -4539,6 +4539,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
     }
 
+    /* csSuppress */
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
      *
@@ -4895,6 +4896,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.unpin(index);
     }
 
+    /* csSuppress */
     /**
      * Pin the row by its id.
      *
@@ -4938,6 +4940,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return true;
     }
 
+    /* csSuppress */
     /**
      * Unpin the row by its id.
      *
@@ -6224,6 +6227,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* csSuppress */
     /**
      * Enters add mode by spawning the UI at the specified index.
      *
