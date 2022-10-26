@@ -1597,13 +1597,32 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
             <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"
                 (click)="onHeaderCheckboxClick($event, headContext)"></igx-checkbox>
         </ng-template>
-    </igx-grid>`
+    </igx-grid>
+    <ng-template #customRow igxRowSelector let-rowContext>
+            <span class="rowNumber">CUSTOM SELECTOR: {{ rowContext.index }}</span>
+    </ng-template>
+    <ng-template #customHeader igxHeadSelector let-headContext>
+        <span>CUSTOM HEADER SELECTOR</span>
+    </ng-template>
+    <ng-template #customGroupRow igxGroupByRowSelector>
+        <span>CUSTOM GROUP SELECTOR</span>
+    </ng-template>
+    `
 })
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
     @ViewChild('gridCustomSelectors', { static: true })
     public grid: IgxGridComponent;
     public rowCheckboxClick: any;
     public headerCheckboxClick: any;
+    @ViewChild('customRow', {read: TemplateRef, static: true })
+    public customRowTemplate: TemplateRef<any>;
+
+    @ViewChild('customHeader', {read: TemplateRef, static: true })
+    public customHeaderTemplate: TemplateRef<any>;
+
+    @ViewChild('customGroupRow', {read: TemplateRef, static: true })
+    public customGroupRowTemplate: TemplateRef<any>;
+
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
     }
