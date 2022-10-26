@@ -1474,23 +1474,99 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
     public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
+    public sortAscendingHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in asc order.
      */
-    @ContentChild(IgxSortAscendingHeaderIconDirective, { read: TemplateRef })
-    public sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    @Input()
+    public get sortAscendingHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._sortAscendingHeaderIconTemplate;
+    }
+
+    /**
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+     *```html
+     * <ng-template #template igxSortAscendingHeaderIcon>
+     *    <igx-icon>expand_less</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortAscendingHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortAscendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._sortAscendingHeaderIconTemplate = template;
+    }
+
+
+    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
+    public sortDescendingHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * The custom template, if any, that should be used when rendering a header sorting indicator when columns are sorted in desc order.
      */
-    @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
-    public sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    @Input()
+    public get sortDescendingHeaderIconTemplate() {
+        return this._sortDescendingHeaderIconTemplate;
+    }
 
     /**
-     * The custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+     *```html
+     * <ng-template #template igxSortDescendingHeaderIcon>
+     *    <igx-icon>expand_more</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortDescendingHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortDescendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+            this._sortDescendingHeaderIconTemplate = template;
+    }
+
+    /**
+     * @hidden
+     * @internal
      */
     @ContentChild(IgxSortHeaderIconDirective, { read: TemplateRef })
-    public sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public sortHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
+    /**
+     * Gets custom template, if any, that should be used when rendering a header sorting indicator when columns are not sorted.
+     */
+    @Input()
+    public get sortHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._sortHeaderIconTemplate;
+    }
+
+    /**
+     * Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
+     *```html
+     * <ng-template #template igxSortHeaderIcon>
+     *    <igx-icon>unfold_more</igx-icon>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.sortHeaderIconTemplate = this.template;
+     * ```
+     */
+    public set sortHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._sortHeaderIconTemplate = template;
+    }
 
     /**
      * @hidden
@@ -3048,6 +3124,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private _autoSize = false;
+    private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
     /**
      * @hidden @internal
@@ -3621,6 +3700,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public ngAfterContentInit() {
+        if (this.sortHeaderIconDirectiveTemplate) {
+            this.sortHeaderIconTemplate = this.sortHeaderIconDirectiveTemplate;
+        }
+
+        if (this.sortAscendingHeaderIconDirectiveTemplate) {
+            this.sortAscendingHeaderIconTemplate = this.sortAscendingHeaderIconDirectiveTemplate;
+        }
+
+        if (this.sortDescendingHeaderIconDirectiveTemplate) {
+            this.sortDescendingHeaderIconTemplate = this.sortDescendingHeaderIconDirectiveTemplate;
+        }
+
         this.setupColumns();
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
