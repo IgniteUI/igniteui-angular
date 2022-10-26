@@ -154,8 +154,43 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ContentChildren(IgxGridDetailTemplateDirective, { read: TemplateRef })
-    public detailTemplate: QueryList<TemplateRef<IgxGridMasterDetailContext>> = new QueryList();
+    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef })
+    public detailTemplateDirective: TemplateRef<IgxGridMasterDetailContext>;
+
+
+    /**
+     * Returns a reference to the master-detail template.
+     * ```typescript
+     * let detailTemplate = this.grid.detailTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input('detailTemplate')
+    public get detailTemplate(): TemplateRef<IgxGridMasterDetailContext> {
+        return this._detailTemplate;
+    }
+    /**
+     * Sets the master-detail template.
+     * ```html
+     * <ng-template #detailTemplate igxGridDetail let-dataItem>
+     *    <div>
+     *       <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+     *       <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+     *    </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'detailTemplate'", {read: TemplateRef })
+     * public detailTemplate: TemplateRef<any>;
+     * this.grid.detailTemplate = this.detailTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public set detailTemplate(template: TemplateRef<IgxGridMasterDetailContext>) {
+        this._detailTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -268,6 +303,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+    private _detailTemplate;
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.
@@ -562,7 +598,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public get hasDetails() {
-        return !!this.detailTemplate.length;
+        return !!this.detailTemplate;
     }
 
     /**
@@ -920,6 +956,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
+        }
+
+        if (this.detailTemplateDirective) {
+            this._detailTemplate = this.detailTemplateDirective;
         }
 
 
