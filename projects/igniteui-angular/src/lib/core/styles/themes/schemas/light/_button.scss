@@ -527,11 +527,11 @@ $fluent-raised-button: extend(
         ),
 
         focus-visible-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 600)
         ),
 
         active-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 800)
         ),
 
         background: (
