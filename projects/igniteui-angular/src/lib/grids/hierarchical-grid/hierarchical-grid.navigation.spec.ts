@@ -78,15 +78,15 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const childFirstCell =  childGrid.dataRowList.first.cells.first;
             GridFunctions.focusCell(fixture, childFirstCell);
 
-             // arrow up in child
-             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
-             UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
-             fixture.detectChanges();
+            // arrow up in child
+            const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
+            fixture.detectChanges();
 
-             // verify selection in parent.
-             const selectedCell = fixture.componentInstance.selectedCell;
-             expect(selectedCell.value).toEqual(0);
-             expect(selectedCell.column.field).toMatch('ID');
+            // verify selection in parent.
+            const selectedCell = fixture.componentInstance.selectedCell;
+            expect(selectedCell.value).toEqual(0);
+            expect(selectedCell.column.field).toMatch('ID');
         });
 
         it('should allow navigating down in child grid when child grid selected cell moves outside the parent view port.', async () => {
