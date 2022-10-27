@@ -3640,6 +3640,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden @internal */
     public setUpPaginator() {
         if (this.paginator) {
+            if (this._rendered) {
+                // D.P.: update existing pipe pagingState if none was set
+                this.pipeTrigger++;
+            }
             this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
                 .subscribe((page: number) => {
                     this.pageChange.emit(page);
