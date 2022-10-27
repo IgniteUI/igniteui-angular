@@ -2229,6 +2229,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._sortingOptions;
     }
 
+    /* blazorByValueArray */
     /**
      * Gets/Sets the current selection state.
      *
