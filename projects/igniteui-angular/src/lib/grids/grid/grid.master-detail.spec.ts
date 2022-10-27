@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -345,6 +345,17 @@ describe('IgxGrid Master Detail #grid', () => {
             grid.rowList.toArray().forEach(row => {
                 expect(row.expanded).toBeFalsy();
             });
+        });
+
+        it('should allow setting external details template via Input.', () => {
+            grid = fix.componentInstance.grid;
+            grid.detailTemplate = fix.componentInstance.detailTemplate;
+            fix.detectChanges();
+            grid.toggleRow(fix.componentInstance.data[0].ID);
+            fix.detectChanges();
+            const gridRows = grid.rowList.toArray();
+            const firstDetail = GridFunctions.getMasterRowDetail(gridRows[0]);
+            expect(firstDetail.textContent.trim()).toBe('NEW TEMPLATE');
         });
     });
 
@@ -1257,11 +1268,19 @@ describe('IgxGrid Master Detail #grid', () => {
                 </div>
             </ng-template>
         </igx-grid>
+        <ng-template igxGridDetail let-dataItem #detailTemplate>
+                <div>
+                    NEW TEMPLATE
+                </div>
+    </ng-template>
     `
 })
 export class DefaultGridMasterDetailComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+
+    @ViewChild('detailTemplate', { read: TemplateRef, static: true })
+    public detailTemplate: TemplateRef<any>;
 
     public width = '800px';
     public height = '500px';

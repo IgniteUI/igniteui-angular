@@ -288,11 +288,11 @@
             border: 0;
 
             @if $bootstrap-theme {
-                border-top: 1px dashed color($color: 'gray', $variant: 100);
-                border-bottom: 1px dashed color($color: 'gray', $variant: 100);
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             } @else {
-                border-top: 1px dashed color($color: 'gray', $variant: 300);
-                border-bottom: 1px dashed color($color: 'gray', $variant: 300);
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
             }
         }
 
@@ -303,11 +303,11 @@
             flex: 1;
 
             @if $bootstrap-theme {
-                border-top: 1px dashed color($color: 'gray', $variant: 100);
-                border-bottom: 1px dashed color($color: 'gray', $variant: 100);
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 100);
             } @else {
-                border-top: 1px dashed color($color: 'gray', $variant: 300);
-                border-bottom: 1px dashed color($color: 'gray', $variant: 300);
+                border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
+                border-bottom: rem(1px) dashed color($color: 'gray', $variant: 300);
             }
 
             igx-icon {
@@ -479,8 +479,8 @@
     }
 
     %grid-excel-menu__secondary {
-        width: 520px;
-        min-width: 520px;
+        width: rem(520px);
+        min-width: rem(520px);
         background: var-get($theme, 'filtering-row-background');
         box-shadow: elevation(12);
         border-radius: border-radius(rem(4px));
@@ -524,22 +524,22 @@
 
     %grid-excel-menu__secondary-header {
         @if $bootstrap-theme {
-            border-bottom: 1px solid color($color: 'gray', $variant: 100);
+            border-bottom: rem(1px) solid color($color: 'gray', $variant: 100);
         } @else {
-            border-bottom: 1px solid color($color: 'gray', $variant: 300);
+            border-bottom: rem(1px) solid color($color: 'gray', $variant: 300);
         }
     }
 
     %grid-excel-menu__secondary-main {
-        height: 232px;
+        height: rem(232px);
         overflow: auto;
     }
 
     %grid-excel-menu__secondary-footer {
         @if $bootstrap-theme {
-            border-top: 1px dashed color($color: 'gray', $variant: 100);
+            border-top: rem(1px) dashed color($color: 'gray', $variant: 100);
         } @else {
-            border-top: 1px dashed color($color: 'gray', $variant: 300);
+            border-top: rem(1px) dashed color($color: 'gray', $variant: 300);
         }
 
         %grid-excel-filter__apply,

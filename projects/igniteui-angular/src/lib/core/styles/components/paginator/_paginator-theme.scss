@@ -82,8 +82,8 @@
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
         grid-row: 7;
-        font-size: 12px;
-        border-top: 1px solid var-get($theme, 'border-color');
+        font-size: rem(12px);
+        border-top: rem(1px) solid var-get($theme, 'border-color');
         z-index: 1;
         padding: map.get($paginator-padding, 'comfortable');
         height: map.get($paginator-height, 'comfortable');
@@ -125,8 +125,8 @@
 
     %igx-page-size__select {
         display: flex;
-        max-width: 90px;
-        min-width: 80px;
+        max-width: rem(90px);
+        min-width: rem(80px);
     }
 
     %igx-page-nav {

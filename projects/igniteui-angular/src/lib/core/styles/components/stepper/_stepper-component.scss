@@ -10,7 +10,7 @@
 @mixin component {
     @include b(igx-stepper) {
         $block: bem--selector-to-string(&);
-        @include register-component($block);
+        @include register-component(string.slice($block, 2, -1));
 
         @extend %stepper-display !optional;
 
