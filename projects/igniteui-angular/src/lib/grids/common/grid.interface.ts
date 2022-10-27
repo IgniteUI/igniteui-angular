@@ -811,6 +811,7 @@ export interface IgxGridRowEditTextTemplateContext {
 }
 
 export interface IgxGridRowEditActionsTemplateContext {
+    /* csSuppress */
     $implicit: (commit: boolean, event?: Event) => void
 }
 
