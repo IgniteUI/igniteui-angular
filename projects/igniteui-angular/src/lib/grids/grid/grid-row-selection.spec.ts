@@ -2192,5 +2192,26 @@ describe('IgxGrid - Row Selection #grid', () => {
             const firstRootRow = grid.gridAPI.get_row_by_index(0);
             expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
         });
+
+        it('Should allow setting row, group row and header custom templates via Input.', () => {
+            grid.rowSelectorTemplate = fix.componentInstance.customRowTemplate;
+            grid.headSelectorTemplate = fix.componentInstance.customHeaderTemplate;
+            grid.groupByRowSelectorTemplate = fix.componentInstance.customGroupRowTemplate;
+
+            fix.detectChanges();
+            grid.groupBy({
+                fieldName: 'CompanyName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+            const rowDOM = grid.dataRowList.toArray()[0].nativeElement;
+            const groupRowDOM = grid.groupsRowList.toArray()[0].nativeElement
+            const rowSelector = rowDOM.querySelector(`.igx-grid__cbx-selection`);
+            const groupRowSelector = groupRowDOM.querySelector(`.igx-grid__cbx-selection`);
+            const headerSelector = GridSelectionFunctions.getHeaderRow(fix).querySelector(`.igx-grid__cbx-selection`);
+
+            expect(rowSelector.textContent).toBe('CUSTOM SELECTOR: 0');
+            expect(groupRowSelector.textContent).toBe('CUSTOM GROUP SELECTOR');
+            expect(headerSelector.textContent).toBe('CUSTOM HEADER SELECTOR');
+        });
     });
 });
