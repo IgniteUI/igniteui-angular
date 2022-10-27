@@ -10,14 +10,14 @@
 /// @type {Map}
 /// @prop {Map} background [ color: ('surface')] - The background color used for the tree node.
 /// @prop {Map} background-selected [color: ('secondary', 200)] - The background color used for the selected tree node.
-/// @prop {Map} background-active [color: ('grays', 200)] - The background color used for the active tree node.
+/// @prop {Map} background-active [color: ('gray', 200)] - The background color used for the active tree node.
 /// @prop {Map} background-active-selected [color: ('secondary', 300)] - The background color used for the active selected tree node.
 /// @prop {Map} background-disabled [color: ('surface')] - The background color used for the tree node in disabled state.
 /// @prop {Map} foreground [contrast-color: ('surface')] - The color used for the tree node content.
 /// @prop {Map} foreground-selected [contrast-color: ('secondary', 200)] - The color used for the content of the selected tree node.
-/// @prop {Map} foreground-active [contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
+/// @prop {Map} foreground-active [contrast-color: ('gray', 200)] - The color used for the content in active state of the tree node.
 /// @prop {Map} foreground-active-selected [contrast-color: ('secondary', 300)] - The color used for the content of the active selected tree node.
-/// @prop {Map} foreground-disabled [color: ('grays', 500)] - The color used for the content of the disabled tree node.
+/// @prop {Map} foreground-disabled [color: ('gray', 500)] - The color used for the content of the disabled tree node.
 /// @prop {Map} drop-area-color [color: ('secondary'] - The background color used for the tree node drop aria.
 /// @prop {Map} border-color [color: ('secondary')] - The outline shadow color used for tree node in focus state.
 /// @requires {function} extend
@@ -42,11 +42,11 @@ $light-tree: (
     ),
 
     background-active: (
-        color: ('grays', 200),
+        color: ('gray', 200),
     ),
 
     foreground-active: (
-        contrast-color: ('grays', 200),
+        contrast-color: ('gray', 200),
     ),
 
     background-active-selected: (
@@ -68,7 +68,7 @@ $light-tree: (
     ),
 
     foreground-disabled: (
-        color: ('grays', 500)
+        color: ('gray', 500)
     ),
 
     drop-area-color: (
@@ -76,7 +76,7 @@ $light-tree: (
     ),
 
     hover-color: (
-        color: ('grays', 900, .1)
+        color: ('gray', 900, .1)
     )
 );
 
@@ -84,13 +84,13 @@ $light-tree: (
 /// @type {Map}
 /// @prop {Map} background [ color: ('surface')] - The background color used for the tree node.
 /// @prop {Map} foreground [contrast-color: ('surface')] - The color used for the tree node content.
-/// @prop {Map} background-selected [color: ('grays', 200)] - The background color used for the selected tree node.
-/// @prop {Map} foreground-selected [contrast-color: ('grays', 200)] - The color used for the content of the selected tree node.
-/// @prop {Map} background-active [color: ('grays', 200)] - The background color used for the active tree node.
-/// @prop {Map} foreground-active [contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
-/// @prop {Map} background-active-selected [color: ('grays', 300)] - The background color used for the active selected tree node.
-/// @prop {Map} foreground-active-selected [contrast-color: ('grays', 300)] - The color used for the content of the active selected tree node.
-/// @prop {Map} border-color [color: ('grays', 800)] - The outline shadow color used for tree node in focus state.
+/// @prop {Map} background-selected [color: ('gray', 200)] - The background color used for the selected tree node.
+/// @prop {Map} foreground-selected [contrast-color: ('gray', 200)] - The color used for the content of the selected tree node.
+/// @prop {Map} background-active [color: ('gray', 200)] - The background color used for the active tree node.
+/// @prop {Map} foreground-active [contrast-color: ('gray', 200)] - The color used for the content in active state of the tree node.
+/// @prop {Map} background-active-selected [color: ('gray', 300)] - The background color used for the active selected tree node.
+/// @prop {Map} foreground-active-selected [contrast-color: ('gray', 300)] - The color used for the content of the active selected tree node.
+/// @prop {Map} border-color [color: ('gray', 800)] - The outline shadow color used for tree node in focus state.
 /// @requires {function} extend
 /// @requires {Map} $light-tree
 $fluent-tree: extend(
@@ -107,31 +107,31 @@ $fluent-tree: extend(
         ),
 
         background-selected: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         foreground-selected: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
 
         background-active: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         foreground-active: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
 
         background-active-selected: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         foreground-active-selected: (
-            contrast-color: ('grays', 300),
+            contrast-color: ('gray', 300),
         ),
 
         border-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
     )
 );
@@ -176,7 +176,7 @@ $bootstrap-tree: extend(
         ),
 
         hover-color: (
-            color: ('grays', 900, .1)
+            color: ('gray', 900, .1)
         )
     )
 );

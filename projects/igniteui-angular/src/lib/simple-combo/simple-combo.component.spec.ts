@@ -1106,6 +1106,23 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(1);
         });
 
+        it('should clear input on blur when dropdown is collapsed with no match', () => {
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('new', input);
+
+            const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
+            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.value).toEqual('');
+            expect(combo.selection.length).toEqual(0);
+        });
+
         it('should empty any invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';

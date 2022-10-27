@@ -1,8 +1,8 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:math';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -11,7 +11,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $track-color [null] - The color of the track.
@@ -37,9 +36,8 @@
 /// @param {Color} $tick-label-color [null] - The color of the tick label.
 /// @param {Color} $tick-color [null] - The background-color of the tick.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 ///
@@ -48,7 +46,6 @@
 ///   // Pass the theme to the slider component mixin
 ///   @include slider($my-slider-theme);
 @function slider-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $track-color: null,
@@ -81,7 +78,7 @@
         $slider-schema: $schema;
     }
 
-    $theme: apply-palette($slider-schema, $palette);
+    $theme: digest-schema($slider-schema);
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
@@ -89,7 +86,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         track-color: $track-color,
         track-step-color: $track-step-color,
         track-step-size: $track-step-size,
@@ -118,7 +114,6 @@
 @mixin slider($theme) {
     @include css-vars($theme);
 
-    $palette: map.get($theme, 'palette');
     $variant: map.get($theme, variant);
 
     $slider-height: rem(48px);
@@ -172,7 +167,7 @@
     ), $variant);
 
     // Slider Label
-    $slider-label-width: 36px;
+    $slider-label-width: rem(36px);
     $slider-label-height: $slider-label-width;
     $slider-label-radius: math.div($slider-label-width, 2);
     $slider-label-padding: 0 rem(2px);
@@ -186,7 +181,7 @@
         height: $slider-height;
         flex-grow: 1;
         align-items: center;
-        transition: all .2s $ease-out-quad;
+        transition: all .2s $out-quad;
 
         &:hover {
             %igx-slider-track-fill {
@@ -239,7 +234,7 @@
         width: 100%;
         height: inherit;
         background: var-get($theme, 'base-track-color');
-        transition: background .2s $ease-out-quad;
+        transition: background .2s $out-quad;
         border-radius: inherit;
 
         @if $variant == 'material' {
@@ -307,7 +302,7 @@
         transform: translate(-50%);
         line-height: .7;
         opacity: 1;
-        transition: opacity .2s $ease-in-out-quad;
+        transition: opacity .2s $in-out-quad;
 
         [dir='rtl'] & {
             left: 100%;
@@ -549,7 +544,7 @@
             margin-inline-start: calc((#{$thumb-size} - #{$thumb-radius}) * -1);
             background: var-get($theme, 'thumb-color');
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
-            transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
+            transition: transform .1s $out-quad, border-radius .1s $out-quad;
             border-radius: border-radius(rem($thumb-radius));
         }
 
@@ -565,7 +560,7 @@
                 opacity: 0;
                 transform: scale(0);
                 transform-origin: center center;
-                transition: transform .1s $ease-out-quad, opacity .1s $ease-out-quad;
+                transition: transform .1s $out-quad, opacity .1s $out-quad;
                 border-radius: border-radius(50%);
                 overflow: hidden;
             }
@@ -604,11 +599,9 @@
 /// Uses the 'caption'
 /// categories from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
 @mixin slider-typography(
-    $type-scale,
     $categories: (
         ticks-label: 'caption',
         thumb-label: 'caption',
@@ -618,10 +611,10 @@
     $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
-        @include type-style($type-scale, $thumb-label)
+        @include type-style($thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include type-style($type-scale, $ticks-label)
+        @include type-style($ticks-label)
     }
 }

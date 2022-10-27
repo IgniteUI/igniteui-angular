@@ -1,13 +1,13 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -19,7 +19,6 @@
 /// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
 ///
 @function splitter-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -39,7 +38,7 @@
         $splitter-schema: $schema;
     }
 
-    $theme: apply-palette($splitter-schema, $palette);
+    $theme: digest-schema($splitter-schema);
 
     @if not($handle-color) and $bar-color {
         $handle-color: text-contrast($bar-color);
@@ -55,7 +54,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         bar-color: $bar-color,
         handle-color: $handle-color,
         expander-color: $expander-color,
@@ -72,7 +70,7 @@
 @mixin splitter($theme) {
     @include css-vars($theme);
     $splitter-color: var-get($theme, 'bar-color');
-    $hitbox-size: 4px;
+    $hitbox-size: rem(4px);
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, .24);
 
@@ -106,10 +104,10 @@
         justify-content: center;
         align-items: center;
         background: $splitter-color;
-        border: 1px solid $splitter-color;
+        border: rem(1px) solid $splitter-color;
         z-index: 99;
         opacity: .68;
-        transition: opacity .15s $ease-out-quad !important;
+        transition: opacity .15s $out-quad !important;
 
         &::before {
             @extend %handle-area;
@@ -129,8 +127,8 @@
 
     %igx-splitter-bar--focus {
         // Remove the default browser outline styles
-        outline: transparent solid 1px;
-        box-shadow: inset 0 0 0 1px var-get($theme, 'focus-color');
+        outline: transparent solid rem(1px);
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focus-color');
 
         @if $variant == 'indigo-design' {
             background: var-get($theme, 'focus-color');
