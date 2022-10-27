@@ -1210,15 +1210,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
-    public headSelectorsTemplates: QueryList<IgxHeadSelectorDirective>;
+    @ContentChildren(IgxHeadSelectorDirective, { read: TemplateRef, descendants: false })
+    public headSelectorsTemplates: QueryList<TemplateRef<IgxHeadSelectorTemplateContext>>;
 
     /**
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
-    public rowSelectorsTemplates: QueryList<IgxRowSelectorDirective>;
+    @ContentChildren(IgxRowSelectorDirective, { read: TemplateRef, descendants: false })
+    public rowSelectorsTemplates: QueryList<TemplateRef<IgxRowSelectorTemplateContext>>;
 
     /**
      * @hidden
@@ -1472,7 +1472,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
-    public excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+    public excelStyleHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
+
+    /**
+     * Gets the excel style header icon.
+    */
+    @Input()
+    public get excelStyleHeaderIconTemplate(): TemplateRef<IgxGridHeaderTemplateContext> {
+        return this._excelStyleHeaderIconTemplate || this.excelStyleHeaderIconDirectiveTemplate;
+    }
+
+    /**
+     * Sets the excel style header icon.
+     *```html
+     *<ng-template #template igxExcelStyleHeaderIcon>
+     * <igx-icon>filter_alt</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.excelStyleHeaderIconTemplate = this.template;
+     * ```
+    */
+    public set excelStyleHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
+        this._excelStyleHeaderIconTemplate = template;
+    }
 
 
     /**
@@ -2480,15 +2505,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
+     * Gets the header row selector template.
      */
+    @Input()
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorTemplateContext> {
-        if (this.headSelectorsTemplates && this.headSelectorsTemplates.first) {
-            return this.headSelectorsTemplates.first.templateRef;
-        }
+        return this._headSelectorTemplate || this.headSelectorsTemplates.first;
+    }
 
-        return null;
+    /**
+     * Sets the header row selector template.
+     * ```html
+     * <ng-template #template igxHeadSelector let-headContext>
+     * {{ headContext.selectedCount }} / {{ headContext.totalCount  }}
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.headSelectorTemplate = this.template;
+     * ```
+     */
+    public set headSelectorTemplate(template: TemplateRef<IgxHeadSelectorTemplateContext>) {
+        this._headSelectorTemplate = template;
     }
 
     /**
@@ -2507,18 +2545,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
-    /**
-     * @hidden
-     * @internal
+    /** 
+     * Gets the row selector template.
      */
+    @Input()
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorTemplateContext> {
-        if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
-            return this.rowSelectorsTemplates.first.templateRef;
-        }
-
-        return null;
+        return this._rowSelectorTemplate || this.rowSelectorsTemplates.first;
     }
 
+    /**
+         * Sets a custom template for the row selectors.
+         * ```html
+         * <ng-template #template igxRowSelector let-rowContext>
+         *    <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+         * </ng-template>
+         * ```
+         * ```typescript
+         * @ViewChild("'template'", {read: TemplateRef })
+         * public template: TemplateRef<any>;
+         * this.grid.rowSelectorTemplate = this.template;
+         * ```
+         */
+    public set rowSelectorTemplate(template: TemplateRef<IgxRowSelectorTemplateContext>) {
+        this._rowSelectorTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -3044,10 +3094,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
+    private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    private _rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
+    private _headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
     private _rowEditTextTemplate: TemplateRef<IgxGridRowEditTextTemplateContext>;
     private _rowAddTextTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _rowEditActionsTemplate: TemplateRef<IgxGridRowEditActionsTemplateContext>;
     private _dragGhostCustomTemplate: TemplateRef<IgxGridRowDragGhostContext>;
+
     private _cdrRequests = false;
     private _resourceStrings;
     private _emptyGridMessage = null;
@@ -4751,6 +4805,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 };
 
                 const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this as any);
+                const formControl = this.validation.getFormControl(cell.id.rowID, cell.column.field);
+                formControl.setValue(value);
                 this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
