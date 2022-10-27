@@ -56,6 +56,18 @@ export class AppModule {
     const grid = createIgxCustomElement<IgxGridComponent>(IgxGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-grid", grid);
 
+    const treegrid = createIgxCustomElement(IgxTreeGridComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-tree-grid", treegrid);
+
+    const hgrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-hierarchical-grid", hgrid);
+
+    const pivot = createIgxCustomElement(IgxPivotGridComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-pivot-grid", pivot);
+
+    const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
+    customElements.define("igc-row-island", ri);
+
     const columnGroups = createIgxCustomElement<IgxColumnGroupComponent>(IgxColumnGroupComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column-group", columnGroups);
 
@@ -64,18 +76,6 @@ export class AppModule {
 
     const column = createIgxCustomElement<IgxColumnComponent>(IgxColumnComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-column", column);
-
-    const treegrid = createIgxCustomElement(IgxTreeGridComponent, { injector: this.injector, registerConfig });
-    customElements.define("igc-tree-grid", treegrid);
-
-    const hgrid = createIgxCustomElement(IgxHierarchicalGridComponent, { injector: this.injector, registerConfig });
-    customElements.define("igc-hierarchical-grid", hgrid);
-
-    const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
-    customElements.define("igc-row-island", ri);
-
-    const pivot = createIgxCustomElement(IgxPivotGridComponent, { injector: this.injector, registerConfig });
-    customElements.define("igc-pivot-grid", pivot);
 
     const pager = createIgxCustomElement(IgxPaginatorComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-paginator", pager);
