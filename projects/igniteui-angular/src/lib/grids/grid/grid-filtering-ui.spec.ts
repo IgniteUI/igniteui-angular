@@ -5852,6 +5852,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('filter_alt');
         }));
+
+        it('should allow setting excel style filter icon via Input.', () => {
+            grid.excelStyleHeaderIconTemplate = fix.componentInstance.customExcelHeaderIcon;
+            fix.detectChanges();
+            const header = GridFunctions.getColumnHeader('AnotherField', fix);
+            fix.detectChanges();
+            const icon = GridFunctions.getHeaderFilterIcon(header);
+            fix.detectChanges();
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('search');
+        });
     });
 
     describe('Load values on demand', () => {
