@@ -872,11 +872,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.editMode && changes.editMode.currentValue && this.formControl) {
-            // while in edit mode subscribe to value changes on the current form control and set to editValue
+            // ensure when values change, form control is forced to be marked as touche.
             this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
-                this.editValue = value;
                 this.formControl.markAsTouched();
             });
+            // while in edit mode subscribe to value changes on the current form control and set to editValue
             this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
                     this.cdr.detectChanges();
@@ -949,7 +949,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        this.formControl.setValue(val);
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
@@ -1061,6 +1060,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         const isTargetErrorIcon = event && event.target && event.target === this.errorIcon?.el.nativeElement
         if (this.isInvalid && !isTargetErrorIcon) {
+            this.cdr.detectChanges();
             this.openErrorTooltip();
             this.grid.activeNodeChange.pipe(first()).subscribe(() => {
                 this.closeErrorTooltip();

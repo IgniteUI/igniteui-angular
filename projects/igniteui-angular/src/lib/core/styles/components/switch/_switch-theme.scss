@@ -275,7 +275,7 @@
         align-items: center;
         width: rem($switch-width);
         height: rem($switch-height);
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
         cursor: pointer;
@@ -283,7 +283,7 @@
         transition: $input-transition;
 
         @if $variant == 'indigo-design' {
-            border: 2px solid var-get($theme, 'border-color');
+            border: rem(2px) solid var-get($theme, 'border-color');
         }
 
         @if $variant != 'bootstrap' {
@@ -391,7 +391,7 @@
                     position: absolute;
                     top: -$focus-outline-offset-top;
                     inset-inline-start: -$focus-outline-offset-left;
-                    box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                     width: calc(100% + (#{$focus-outline-offset-left} * 2));
                     height: calc(100% + (#{$focus-outline-offset-top} * 2));
                 }
@@ -401,7 +401,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 4px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
             }
 
             %switch-composite-thumb {
@@ -412,7 +412,7 @@
         @if $variant == 'indigo-design' {
             %switch-composite {
                 border-radius: var-get($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -430,7 +430,7 @@
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }

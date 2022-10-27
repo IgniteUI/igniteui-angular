@@ -132,11 +132,11 @@
     @include scale-in-center();
     @include scale-out-center();
 
-    $carousel-arrow-margin: 0 16px;
-    $carousel-indicators-margin: 16px 0;
+    $carousel-arrow-margin: 0 rem(16px);
+    $carousel-indicators-margin: rem(16px) 0;
     $carousel-indicators-padding: 0;
-    $carousel-indicator-margin: 0 5px;
-    $indicator-border-style: 2px solid;
+    $carousel-indicator-margin: 0 rem(5px);
+    $indicator-border-style: rem(2px) solid;
 
     $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -155,8 +155,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 46px;
-        height: 46px;
+        width: rem(46px);
+        height: rem(46px);
         cursor: pointer;
         @if $not-bootstrap-theme {
             border-radius: border-radius(50%);
@@ -253,9 +253,9 @@
 
     %igx-nav-dot {
         position: relative;
-        width: 12px;
-        height: 12px;
-        text-indent: -9999px;
+        width: rem(12px);
+        height: rem(12px);
+        text-indent: rem(-9999px);
 
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
@@ -274,7 +274,7 @@
             content: '';
             position: absolute;
             @if $variant != 'indigo-design' {
-                inset: 1px;
+                inset: rem(1px);
             } @else {
                 inset: 0;
             }
@@ -310,8 +310,8 @@
         overflow: hidden;
         outline-style: none;
         border-radius: var-get($theme, 'border-radius');
-        min-height: 300px;
-        min-width: 300px;
+        min-height: rem(300px);
+        min-width: rem(300px);
     }
 
     %igx-carousel-slide {
