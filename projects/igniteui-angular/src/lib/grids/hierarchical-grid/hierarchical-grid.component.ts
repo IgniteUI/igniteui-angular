@@ -1057,7 +1057,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     protected resizeNotifyHandler() {
         // do not trigger reflow if element is detached or if it is child grid.
-        if (this.document.contains(this.nativeElement) && !this.parent) {
+        if (this.nativeElement?.isConnected && !this.parent) {
             this.notifyChanges(true);
         }
     }
@@ -1117,6 +1117,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             this.updateColumns(topCols);
+            if (recalcColSizes && this.columns.length !== colLength) {
+                this.calculateGridSizes(false);
+            }
+        } else if (colLength) {
+            // temp(D.P.): Without layouts (or not loaded), colsArray is empty, so init w/ gathered columns
+            this.updateColumns(this.columnList.toArray());
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
