@@ -393,6 +393,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private childDetailTemplates: Map<any, any> = new Map();
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * Gets/Sets the group by state.
      *

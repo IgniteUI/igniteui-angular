@@ -1746,6 +1746,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._filteringExpressionsTree.operator = value;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * Gets/Sets the filtering state.
      *
@@ -2722,6 +2723,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return `${this.getComponentDensityClass('igx-banner')} ${position}`;
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * Gets/Sets the sorting state.
      *

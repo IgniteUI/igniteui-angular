@@ -649,6 +649,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @WatchColumnChanges()
     @Input()
     public cellStyles = null;
+
+    /* csTreatAsEvent: CellValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * Applies display format to cell values in the column. Does not modify the underlying data.
      *
@@ -687,6 +690,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public formatter: (value: any, rowData?: any) => any;
 
+    /* csTreatAsEvent: SummaryValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * The summaryFormatter is used to format the display of the column summaries.
      *
