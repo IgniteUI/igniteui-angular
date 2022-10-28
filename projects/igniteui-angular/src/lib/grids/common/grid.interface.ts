@@ -98,6 +98,7 @@ export interface HeaderType {
     sortDirection: SortingDirection;
 }
 
+/* marshalByValue */
 export interface RowType {
     /* blazorSuppress */
     nativeElement?: HTMLElement;

@@ -9,7 +9,7 @@ import { CellType, GridServiceType, GridType, IGridValidationState, RowType, Val
 
 abstract class BaseRow implements RowType {
     public index: number;
-    /* blazorAlternateType: Grid */
+    /* blazorAlternateType: GridBaseDirective */
     /**
      * The grid that contains the row.
      */
