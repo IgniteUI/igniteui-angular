@@ -10,7 +10,7 @@
 ////
 
 @mixin component {
-    @include b(igc-dock-manager) {
+    @include b(igc-dockmanager) {
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
         @include register-component(
