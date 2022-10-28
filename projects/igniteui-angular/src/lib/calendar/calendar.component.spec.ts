@@ -1769,7 +1769,7 @@ describe('IgxCalendar - ', () => {
                 expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(expected));
             });
 
-            it('Should deselect all dates from last deselected to shift clicked date in "multi" mode.', () => {
+            it('Should deselect all dates from last clicked to shift clicked date in "multi" mode.', () => {
                 calendar.selection = 'multi';
                 fixture.detectChanges();
 
@@ -1791,19 +1791,19 @@ describe('IgxCalendar - ', () => {
                 fixture.detectChanges();
                 expect((calendar.value as Date[]).length).toEqual(7);
 
-                // deselect all dates from June 11th (last deselected) to June 13th
+                // deselect all dates from June 11th (last clicked) to June 13th
                 UIInteractions.simulateClickAndSelectEvent(june11th);
                 UIInteractions.simulateClickAndSelectEvent(june13th, true);
                 fixture.detectChanges();
-                expect((calendar.value as Date[]).length).toEqual(4);
-                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(3)));
+                expect((calendar.value as Date[]).length).toEqual(5);
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(2)));
 
-                // deselect all dates from June 17th (last deselected) to June 15th
+                // deselect all dates from June 17th (last clicked) to June 15th
                 UIInteractions.simulateClickAndSelectEvent(june17th);
                 UIInteractions.simulateClickAndSelectEvent(june15th, true);
                 fixture.detectChanges();
-                expect((calendar.value as Date[]).length).toEqual(1);
-                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(3, 4)));
+                expect((calendar.value as Date[]).length).toEqual(3);
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(2, 5)));
             });
         });
 

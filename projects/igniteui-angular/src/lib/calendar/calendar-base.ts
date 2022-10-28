@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -148,11 +148,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected shiftKey: boolean = false;
-
-    /**
-     * @hidden
-     */
     protected _onTouchedCallback: () => void = noop;
     /**
      * @hidden
@@ -178,6 +173,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _viewDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _shiftKey: boolean = false;
 
     /**
      * @hidden
@@ -472,6 +472,17 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
+     * Multi/Range selection with shift key
+     *
+     * @hidden
+     * @internal
+     */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerdown(event: MouseEvent) {
+        this._shiftKey = event.button === 0 && event.shiftKey;
+    }
+
+    /**
      * Performs deselection of a single value, when selection is multi
      * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
      *
@@ -651,54 +662,49 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
             this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
         } else {
-            const valueDateOnly = this.getDateOnly(value);
             let newSelection = [];
 
-            if (this.shiftKey && this._lastSelectedDate) {
+            if (this._shiftKey && this._lastSelectedDate) {
                 let start: Date;
                 let end: Date;
 
-                if (this._lastSelectedDate.getTime() < valueDateOnly.getTime()) {
-                    start = this._lastSelectedDate;
-                    end = valueDateOnly;
-                } else {
-                    start = valueDateOnly;
-                    end = this._lastSelectedDate;
-                }
+                [start, end] = this._lastSelectedDate.getTime() < value.getTime()
+                    ? [this._lastSelectedDate, value]
+                    : [value, this._lastSelectedDate];
 
-                // select all dates from last selected to shift clicked day
-                if (this.selectedDates.some((date: Date) => date.getTime() === this._lastSelectedDate.getTime())) {
+                const unselectedDates = [start, ...this.generateDateRange(start, end)]
+                    .filter(date => !this.isDateDisabled(date)
+                        && this.selectedDates.map(d => d.getTime()).indexOf(date.getTime()) === -1
+                    );
 
-                    newSelection = [start, ...this.generateDateRange(start, end)];
+                // select all dates from last selected to shift clicked date
+                if (this.selectedDates.some((date: Date) => date.getTime() === this._lastSelectedDate.getTime())
+                    && unselectedDates.length) {
+
+                    newSelection = unselectedDates.map(d => new Date(d));
                 } else {
-                    // delesect all dates from last deselected to shift clicked day
+                    // delesect all dates from last clicked to shift clicked date (excluding)
                     this.selectedDates = this.selectedDates.filter(
                         (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
                     );
+
+                    this.selectedDates.push(value);
                 }
 
-            } else if (this.selectedDates.every((date: Date) => date.getTime() !== valueDateOnly.getTime())) {
-                newSelection.push(valueDateOnly);
+            } else if (this.selectedDates.every((date: Date) => date.getTime() !== value.getTime())) {
+                newSelection.push(value);
 
             } else {
                 this.selectedDates = this.selectedDates.filter(
-                    (date: Date) => date.getTime() !== valueDateOnly.getTime()
+                    (date: Date) => date.getTime() !== value.getTime()
                 );
             }
 
             if (newSelection.length > 0) {
-
-                if (this.shiftKey) {
-                    const newDates = newSelection.map(v => this.getDateOnly(v).getTime());
-                    const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
-
-                    this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
-                } else {
-                    this.selectedDates = this.selectedDates.concat(newSelection);
-                }
+                this.selectedDates = this.selectedDates.concat(newSelection);
             }
 
-            this._lastSelectedDate = valueDateOnly;
+            this._lastSelectedDate = value;
         }
 
         this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
@@ -717,65 +723,64 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             start = this.getDateOnly(value[0]);
             end = this.getDateOnly(value[value.length - 1]);
-            this.selectedDates = [start, ...this.generateDateRange(start, end)];
-
-        } else if (this.shiftKey && this._lastSelectedDate) {
-
-            if (this._lastSelectedDate.getTime() === value.getTime()) {
-                this.selectedDates = this.selectedDates.length === 1 ? [] : [value];
-                this.rangeStarted = !!this.selectedDates.length;
-                this._onChangeCallback(this.selectedDates);
-                return;
-            }
-
-            // shortens the range when selecting a date inside of it
-            if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
-
-                if (this._lastSelectedDate.getTime() < value.getTime()) {
-                    start = value;
-                    end = this.selectedDates.pop();
-                } else {
-                    start = this.selectedDates.shift();
-                    end = value;
-                }
-            } else {
-                // extends the range when selecting a date outside of it
-                // allows selection from last deselected to current selected date
-                if (this._lastSelectedDate.getTime() < value.getTime()) {
-                    start = this.selectedDates.shift() ?? this._lastSelectedDate;
-                    end = value;
-                } else {
-                    start = value;
-                    end = this.selectedDates.pop() ?? this._lastSelectedDate;
-                }
-            }
-
-            this.rangeStarted = false;
-
-        } else if (!this.rangeStarted) {
-            this.rangeStarted = true;
-            this.selectedDates = [value];
         } else {
-            this.rangeStarted = false;
 
-            if (this.selectedDates[0].getTime() === value.getTime()) {
-                this.selectedDates = [];
-                this._onChangeCallback(this.selectedDates);
-                return;
+            if (this._shiftKey && this._lastSelectedDate) {
+
+                if (this._lastSelectedDate.getTime() === value.getTime()) {
+                    this.selectedDates = this.selectedDates.length === 1 ? [] : [value];
+                    this.rangeStarted = !!this.selectedDates.length;
+                    this._onChangeCallback(this.selectedDates);
+                    return;
+                }
+
+                // shortens the range when selecting a date inside of it
+                if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
+                    if (this._lastSelectedDate.getTime() < value.getTime()) {
+                        start = value;
+                        end = this.selectedDates.pop();
+                    } else {
+                        start = this.selectedDates.shift();
+                        end = value;
+                    }
+
+                } else {
+                    // extends the range when selecting a date outside of it
+                    // allows selection from last deselected to current selected date
+                    if (this._lastSelectedDate.getTime() < value.getTime()) {
+                        start = this.selectedDates.shift() ?? this._lastSelectedDate;
+                        end = value;
+                    } else {
+                        start = value;
+                        end = this.selectedDates.pop() ?? this._lastSelectedDate;
+                    }
+                }
+
+                this.rangeStarted = false;
+
+            } else if (!this.rangeStarted) {
+                this.rangeStarted = true;
+                this.selectedDates = [value];
+            } else {
+                this.rangeStarted = false;
+
+                if (this.selectedDates[0].getTime() === value.getTime()) {
+                    this.selectedDates = [];
+                    this._onChangeCallback(this.selectedDates);
+                    return;
+                }
+
+                [start, end] = this._lastSelectedDate.getTime() < value.getTime()
+                    ? [this._lastSelectedDate, value]
+                    : [value, this._lastSelectedDate];
             }
 
-            this.selectedDates.push(value);
-            this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-
-            start = this.selectedDates.shift();
-            end = this.selectedDates.pop();
+            this._lastSelectedDate = value;
         }
 
         if (start && end) {
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
         }
-
-        this._lastSelectedDate = Array.isArray(value) ? value[0] : value;
 
         if (excludeDisabledDates) {
             this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));

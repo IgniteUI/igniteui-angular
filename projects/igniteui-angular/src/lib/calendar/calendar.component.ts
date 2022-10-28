@@ -587,17 +587,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
-    /**
-     * Multi/Range selection with shift key
-     *
-     * @hidden
-     * @internal
-     */
-    @HostListener('pointerdown', ['$event'])
-    public onPointerdown(event: MouseEvent) {
-        this.shiftKey = event.button === 0 && event.shiftKey;
-    }
-
     public ngAfterViewInit() {
         this.setSiblingMonths(this.monthViews);
         this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
