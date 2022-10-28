@@ -1607,10 +1607,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
                 this.syncService.setMaster(this);
                 this.igxForContainerSize = args.containerSize;
-                const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
-                if (sizeDiff && this.igxForScrollOrientation === 'vertical') {
-                    this._adjustScrollPositionAfterSizeChange(sizeDiff);
+                if (this.igxForContainerSize !== args.containerSize) {
+                    const sizeDiff = this._updateSizeCache(changes);
+                    if (sizeDiff && this.igxForScrollOrientation === 'vertical') {
+                        this._adjustScrollPositionAfterSizeChange(sizeDiff);
+                    }
                 }
                 this._updateScrollOffset();
                 this.dataChanged.emit();
