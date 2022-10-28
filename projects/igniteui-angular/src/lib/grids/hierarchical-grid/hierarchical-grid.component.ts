@@ -1120,6 +1120,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
+        } else if (colLength) {
+            // temp(D.P.): Without layouts (or not loaded), colsArray is empty, so init w/ gathered columns
+            this.updateColumns(this.columnList.toArray());
+            if (recalcColSizes && this.columns.length !== colLength) {
+                this.calculateGridSizes(false);
+            }
         }
     }
 

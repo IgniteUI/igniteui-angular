@@ -149,10 +149,21 @@
   </script>
   <!-- END IgxTreeGridComponent -->
 
-  <igc-hierarchical-grid id="hgrid1" moving="true" auto-generate="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
-      <igc-row-island auto-generate="true" key="Developers">
+  <igc-hierarchical-grid id="hgrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact">
+
+    <igc-column field="ProjectId" data-type="number" header="Project Id" sortable="true" selectable="false"></igc-column>
+    <igc-column field="Name" data-type="string" header="Name" sortable="true" selectable="false"></igc-column>
+    <igc-column field="StartDate" data-type="date" header="Start Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="EndDate" data-type="date" header="End Date" sortable="true" selectable="false"></igc-column>
+    <igc-column field="IsPostponed" data-type="boolean" header="Postponed" sortable="true" selectable="false"></igc-column>
+
+      <igc-row-island key="Developers">
+        <igc-column field="Name" header="Name" sortable="true"></igc-column>
+        <igc-column field="Position" header="Position" sortable="true"></igc-column>
+        <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
+
         <igc-row-island auto-generate="true" key="VirtualMachines"></igc-row-island>
-      </igc-row-island>
+        </igc-row-island>
   </igc-hierarchical-grid>
 
   <!-- IgxPivotGridComponent -->
