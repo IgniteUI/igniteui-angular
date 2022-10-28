@@ -119,6 +119,7 @@
                     />
                 <output .value="${context.$implicit}"></output>
             `;
+        grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.$implicit.InStock}</span></div>`;
     });
 
     function changeColumns() {
