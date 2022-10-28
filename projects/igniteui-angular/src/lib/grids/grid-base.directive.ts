@@ -2551,7 +2551,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
-    /** 
+    /**
      * Gets the row selector template.
      */
     @Input()
@@ -3583,7 +3583,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .subscribe(() => {
                 this.zone.run(() => {
                     // do not trigger reflow if element is detached.
-                    if (this.document.contains(this.nativeElement)) {
+                    if (this.nativeElement?.isConnected) {
                         this.notifyChanges(true);
                     }
                 });

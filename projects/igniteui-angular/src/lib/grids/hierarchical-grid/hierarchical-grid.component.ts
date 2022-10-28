@@ -1057,7 +1057,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     protected resizeNotifyHandler() {
         // do not trigger reflow if element is detached or if it is child grid.
-        if (this.document.contains(this.nativeElement) && !this.parent) {
+        if (this.nativeElement?.isConnected && !this.parent) {
             this.notifyChanges(true);
         }
     }
