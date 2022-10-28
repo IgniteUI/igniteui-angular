@@ -6973,7 +6973,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected getTheadRowHeight(): number {
-        const height = this.getComputedHeight(this.theadRow.nativeElement);
+        // D.P.: Before CSS loads,theadRow computed height will be 'auto'->NaN, so use 0 fallback
+        const height = this.getComputedHeight(this.theadRow.nativeElement) || 0;
         return (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
             height - this.getFilterCellHeight() :
             height;
