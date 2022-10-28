@@ -7024,18 +7024,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected checkContainerSizeChange() {
-        const origHeight = this.nativeElement.parentElement.offsetHeight;
+        const parentElement = this.nativeElement.parentElement || (this.nativeElement.getRootNode() as any).host;
+        const origHeight = parentElement.offsetHeight;
         this.nativeElement.style.display = 'none';
-        const height = this.nativeElement.parentElement.offsetHeight;
+        const height = parentElement.offsetHeight;
         this.nativeElement.style.display = '';
         return origHeight !== height;
     }
 
     protected _shouldAutoSize(renderedHeight) {
         this.tbody.nativeElement.style.display = 'none';
-        let res = !this.nativeElement.parentElement ||
-            this.nativeElement.parentElement.clientHeight === 0 ||
-            this.nativeElement.parentElement.clientHeight === renderedHeight;
+        const parentElement = this.nativeElement.parentElement || (this.nativeElement.getRootNode() as any).host;
+        let res = !parentElement ||
+        parentElement.clientHeight === 0 ||
+        parentElement.clientHeight === renderedHeight;
         if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
