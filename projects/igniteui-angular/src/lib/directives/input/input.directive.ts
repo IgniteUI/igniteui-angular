@@ -217,6 +217,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener('focus')
     public onFocus() {
         this.inputGroup.isFocused = true;
+        this.nativeElement.selectionStart = 0;
     }
     /**
      * @param event The event to invoke the handler
