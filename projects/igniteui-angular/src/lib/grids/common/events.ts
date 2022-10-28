@@ -30,9 +30,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     newValue?: any;
     /* blazorSuppress */
     event?: Event;
-    /* blazorAlternateType: Column */
     column?: ColumnType;
-    /* blazorAlternateType: Grid */
     owner?: GridType;
     isAddRow?: boolean;
     valid?: boolean;
@@ -71,7 +69,6 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 }
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
-    /* blazorAlternateType: Grid */
     owner: GridType;
 }
 
