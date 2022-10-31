@@ -5,7 +5,7 @@
     <span #ref>
         <ng-content></ng-content>
     </span>
-    <span *ngIf="!ref.childNodes.length">
+    <span *ngIf="!ref.textContent.trim()">
         {{ grid?.resourceStrings.igx_grid_toolbar_exporter_button_label }}
     </span>
     <igx-icon>arrow_drop_down</igx-icon>
