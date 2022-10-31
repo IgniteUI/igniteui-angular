@@ -13,5 +13,7 @@ export interface ComponentConfig {
     contentQueries: ContentQueryMeta[];
     methods: string[];
     templateProps?: string[];
+    numericProps?: string[];
+    boolProps?: string[];
     provideAs?: Type<any> | AbstractType<any>;
 }

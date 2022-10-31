@@ -173,15 +173,15 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
-   
-     
 
-    public override setInputValue(property: string, value: any): void {     
+
+
+    public override setInputValue(property: string, value: any): void {
         if ((this as any).componentRef === null ||
             !(this as any).componentRef.instance) {
             (this as any).initialInputValues.set(property, value);
                 return;
-        }   
+        }
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
@@ -189,7 +189,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
         }
-        
+        if (componentRef && componentConfig?.boolProps?.includes(property)) {
+            // bool coerce:
+            value = value != null && `${value}` !== 'false';
+        }
+        if (componentRef && componentConfig?.numericProps?.includes(property)) {
+            // number coerce:
+            if (!isNaN(Number(value) - parseFloat(value))) {
+                value = Number(value);
+            }
+            // TODO: reject value if not? Or fallback value?
+        }
         super.setInputValue(property, value);
     }
 

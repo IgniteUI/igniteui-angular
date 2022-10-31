@@ -44,12 +44,16 @@
             <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
             <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
             <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter>
+                <span excelText>Export Excel</span>
+                <span csvText>Export CSV</span>
+            </igc-grid-toolbar-exporter>
             <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
         </igc-grid-toolbar-actions>
         </igc-grid-toolbar>
 
         <igc-column-group header="Test">
-        <igc-column field="ProductID" header="Product ID" data-type="number"></igc-column>
+        <igc-column field="ProductID" header="Product ID" data-type="number" filterable="false"></igc-column>
         <igc-column field="ProductName" header="Product Name" sortable="true"></igc-column>
         </igc-column-group>
         <igc-column field="CategoryName" header="Category Name" sortable="true" groupable="true"></igc-column>
@@ -82,9 +86,7 @@
         <igc-grid-toolbar-actions>
             <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
             <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
-            <igc-grid-toolbar-exporter>
-                <span excelText>Custom text for the excel export entry</span>
-            </igc-grid-toolbar-exporter>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
         </igc-grid-toolbar-actions>
         </igc-grid-toolbar>
 
@@ -166,7 +168,7 @@
         <igc-column field="Position" header="Position" sortable="true"></igc-column>
         <igc-column field="HireDate" header="HireDate" data-type="date" sortable="true"></igc-column>
 
-        <igc-row-island auto-generate="true" key="VirtualMachines"></igc-row-island>
+        <igc-row-island auto-generate key="VirtualMachines"></igc-row-island>
         </igc-row-island>
     <igc-paginator per-page="10"></igc-paginator>
   </igc-hierarchical-grid>
