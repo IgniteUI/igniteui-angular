@@ -174,6 +174,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             value = this.templateWrapper.addTemplate(value);
             // TODO: discard oldValue
         }
+        if (componentRef && componentConfig?.boolProps?.includes(property)) {
+            // bool coerce:
+            value = value != null && `${value}` !== 'false';
+        }
         super.setInputValue(property, value);
     }
 
