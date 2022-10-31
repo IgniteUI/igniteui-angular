@@ -31,6 +31,10 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { IFilterFactory } from '../common/grid.interface';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxTimeFilteringOperand, IgxDateTimeFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 let NEXT_ID = 0;
 
@@ -1343,5 +1347,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    public getFilterFactory(): IFilterFactory {
+        return {
+            stringFilteringOperand: IgxStringFilteringOperand.instance(),
+            numberFilteringOperand: IgxNumberFilteringOperand.instance(),
+            timeFilteringOperand: IgxTimeFilteringOperand.instance(),
+            dateTimeFilteringOperand: IgxDateTimeFilteringOperand.instance(),
+            dateFilteringOperand: IgxDateFilteringOperand.instance(),
+            booleanFilteringOperand: IgxBooleanFilteringOperand.instance(),
+            createFilteringExpressionTree: (operator: FilteringLogic, fieldName?: string) => {
+                return new FilteringExpressionsTree(operator, fieldName);
+            }
+        };
     }
 }

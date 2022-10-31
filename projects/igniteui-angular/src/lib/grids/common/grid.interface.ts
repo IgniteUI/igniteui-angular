@@ -869,3 +869,13 @@ export interface IgxHeadSelectorTemplateContext {
 export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
 }
+
+export interface IFilterFactory {
+    stringFilteringOperand: IgxFilteringOperand;
+    numberFilteringOperand: IgxFilteringOperand;
+    timeFilteringOperand: IgxFilteringOperand;
+    dateTimeFilteringOperand: IgxFilteringOperand;
+    dateFilteringOperand: IgxFilteringOperand;
+    booleanFilteringOperand: IgxFilteringOperand;
+    createFilteringExpressionTree(operator: FilteringLogic, fieldName?: string): FilteringExpressionsTree;
+}
