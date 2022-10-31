@@ -178,6 +178,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // bool coerce:
             value = value != null && `${value}` !== 'false';
         }
+        if (componentRef && componentConfig?.numericProps?.includes(property)) {
+            // number coerce:
+            if (!isNaN(Number(value) - parseFloat(value))) {
+                value = Number(value);
+            }
+            // TODO: reject value if not? Or fallback value?
+        }
         super.setInputValue(property, value);
     }
 

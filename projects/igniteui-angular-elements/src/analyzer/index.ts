@@ -138,6 +138,15 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 componentMetadata.boolProps = boolProps.map(x => x.escapedName.toString());
             }
 
+            //numeric props:
+            const numericProps = inputProps.filter(x => {
+                const type = typeChecker.getTypeAtLocation(x.valueDeclaration);
+                return type.getFlags() & ts.TypeFlags.Number && !type.isUnionOrIntersection();
+            });
+            if (numericProps.length) {
+                componentMetadata.numericProps = numericProps.map(x => x.escapedName.toString());
+            }
+
             componentList.set(type.symbol.escapedName.toString(), { type, ...componentMetadata });
         }
     }
@@ -145,7 +154,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
     // componentList = new Map(componentList.entries().filter(x => x));
 
     // Filter component list into the config map:
-    for (let [ name, { type, parents, contentQueries, templateProps, boolProps, provideAs } ] of componentList) {
+    for (let [ name, { type, parents, contentQueries, templateProps, boolProps, numericProps, provideAs } ] of componentList) {
 
         if (configComponents.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             ComponentConfigMap.set(type, {
@@ -153,6 +162,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 parents: parents.map(x => componentList.get(x).type), // these should always be empty, but just in case?
                 methods: getPublicMethods(type.getProperties()),
                 templateProps,
+                numericProps,
                 boolProps,
                 provideAs
             });
@@ -166,6 +176,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type),
                 methods: getPublicMethods(type.getProperties()),
                 templateProps,
+                numericProps,
                 boolProps,
                 provideAs // TODO: filter out provide if unrelated to any parent query
             });
@@ -369,6 +380,9 @@ function createMetaLiteralObject(value: [ts.InterfaceType, ComponentMetadata<ts.
     if (meta.templateProps?.length) {
         properties.push(ts.factory.createPropertyAssignment('templateProps', ts.factory.createArrayLiteralExpression(meta.templateProps.map(x => ts.factory.createStringLiteral(x)))));
     }
+    if (meta.numericProps?.length) {
+        properties.push(ts.factory.createPropertyAssignment('numericProps', ts.factory.createArrayLiteralExpression(meta.numericProps.map(x => ts.factory.createStringLiteral(x)))));
+    }
     if (meta.boolProps?.length) {
         properties.push(ts.factory.createPropertyAssignment('boolProps', ts.factory.createArrayLiteralExpression(meta.boolProps.map(x => ts.factory.createStringLiteral(x)))));
     }
@@ -425,6 +439,7 @@ interface ComponentMetadata<ParentType = ts.InterfaceType> {
     methods: MethodInfo[],
     templateProps?: string[],
     boolProps?: string[],
+    numericProps?: string[],
     provideAs?: ts.Type
 }
 
