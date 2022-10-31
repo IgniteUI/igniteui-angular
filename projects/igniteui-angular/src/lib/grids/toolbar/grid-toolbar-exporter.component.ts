@@ -1,7 +1,6 @@
-import { Component, ContentChild, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
-import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -41,20 +40,6 @@ export interface IgxExporterEvent {
     templateUrl: './grid-toolbar-exporter.component.html'
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxExcelTextDirective)
-    public hasExcelAttr: IgxExcelTextDirective;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(IgxCSVTextDirective)
-    public hasCSVAttr: IgxCSVTextDirective;
 
     /**
      * Show entry for CSV export.
