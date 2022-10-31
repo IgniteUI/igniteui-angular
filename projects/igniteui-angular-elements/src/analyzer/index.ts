@@ -107,10 +107,14 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 }
             }
 
-            // template props:
-            const templateProps = type.getProperties()
+            const publicProps = type.getProperties()
                 .filter(x => isProperty(x))
-                .filter(x => isPublic(x))
+                .filter(x => isPublic(x));
+            const inputProps = publicProps
+                .filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
+
+            // template props:
+            const templateProps = inputProps
                 .filter(x => {
                     const type = typeChecker.getTypeAtLocation(x.valueDeclaration);
                     if(type.getFlags() & ts.TypeFlags.Object && (type as ts.ObjectType).objectFlags & ts.ObjectFlags.Reference) {
@@ -119,11 +123,28 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                         return target.symbol.escapedName === 'TemplateRef';
                     }
                     return false;
-                })
-                .filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
+                });
 
             if (templateProps.length) {
                 componentMetadata.templateProps = templateProps.map(x => x.escapedName.toString());
+            }
+
+            //bool props:
+            const boolProps = inputProps.filter(x => {
+                const type = typeChecker.getTypeAtLocation(x.valueDeclaration);
+                return type.getFlags() & ts.TypeFlags.Boolean;
+            });
+            if (boolProps.length) {
+                componentMetadata.boolProps = boolProps.map(x => x.escapedName.toString());
+            }
+
+            //numeric props:
+            const numericProps = inputProps.filter(x => {
+                const type = typeChecker.getTypeAtLocation(x.valueDeclaration);
+                return type.getFlags() & ts.TypeFlags.Number && !type.isUnionOrIntersection();
+            });
+            if (numericProps.length) {
+                componentMetadata.numericProps = numericProps.map(x => x.escapedName.toString());
             }
 
             componentList.set(type.symbol.escapedName.toString(), { type, ...componentMetadata });
@@ -133,7 +154,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
     // componentList = new Map(componentList.entries().filter(x => x));
 
     // Filter component list into the config map:
-    for (let [ name, { type, parents, contentQueries, templateProps, provideAs } ] of componentList) {
+    for (let [ name, { type, parents, contentQueries, templateProps, boolProps, numericProps, provideAs } ] of componentList) {
 
         if (configComponents.find(x => x.symbol.escapedName === type.symbol.escapedName)) {
             ComponentConfigMap.set(type, {
@@ -141,6 +162,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 parents: parents.map(x => componentList.get(x).type), // these should always be empty, but just in case?
                 methods: getPublicMethods(type.getProperties()),
                 templateProps,
+                numericProps,
+                boolProps,
                 provideAs
             });
         }
@@ -153,6 +176,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 parents: parents.filter(x => isChildOfConfigComponent([x])).map(x => componentList.get(x).type),
                 methods: getPublicMethods(type.getProperties()),
                 templateProps,
+                numericProps,
+                boolProps,
                 provideAs // TODO: filter out provide if unrelated to any parent query
             });
         }
@@ -355,6 +380,12 @@ function createMetaLiteralObject(value: [ts.InterfaceType, ComponentMetadata<ts.
     if (meta.templateProps?.length) {
         properties.push(ts.factory.createPropertyAssignment('templateProps', ts.factory.createArrayLiteralExpression(meta.templateProps.map(x => ts.factory.createStringLiteral(x)))));
     }
+    if (meta.numericProps?.length) {
+        properties.push(ts.factory.createPropertyAssignment('numericProps', ts.factory.createArrayLiteralExpression(meta.numericProps.map(x => ts.factory.createStringLiteral(x)))));
+    }
+    if (meta.boolProps?.length) {
+        properties.push(ts.factory.createPropertyAssignment('boolProps', ts.factory.createArrayLiteralExpression(meta.boolProps.map(x => ts.factory.createStringLiteral(x)))));
+    }
     if (meta.provideAs) {
         properties.push(ts.factory.createPropertyAssignment('provideAs', ts.factory.createIdentifier(meta.provideAs.symbol.name)));
     }
@@ -407,6 +438,8 @@ interface ComponentMetadata<ParentType = ts.InterfaceType> {
     contentQueries: ContentQuery[],
     methods: MethodInfo[],
     templateProps?: string[],
+    boolProps?: string[],
+    numericProps?: string[],
     provideAs?: ts.Type
 }
 
