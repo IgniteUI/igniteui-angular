@@ -1,7 +1,7 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
-@use 'sass:map';
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,6 @@
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
 ///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
@@ -24,9 +23,8 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the snackbar component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
+/// @requires digest-schema
 /// @requires extend
 /// @requires text-contrast
 /// @requires elevation
@@ -36,7 +34,6 @@
 ///   // Pass the theme to the snackbar component mixin
 ///   @include snackbar($my-snackbar-theme);
 @function snackbar-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -55,7 +52,7 @@
         $snackbar-schema: $schema;
     }
 
-    $theme: apply-palette($snackbar-schema, $palette);
+    $theme: digest-schema($snackbar-schema);
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -67,7 +64,7 @@
 
     @if not($shadow) {
         $elevation: map.get($snackbar-schema, 'elevation');
-        $shadow: elevation($elevations, $elevation);
+        $shadow: elevation($elevation);
     }
 
     @if not($border-radius) {
@@ -76,7 +73,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         border-radius: $border-radius,
         background: $background,
         text-color: $text-color,
@@ -93,6 +89,8 @@
     @include css-vars($theme);
     @include fade-in();
 
+    $variant: map.get($theme, 'variant');
+
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
     $snackbar-button-left-margin: rem(24px);
@@ -107,7 +105,7 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
-        margin: 8px;
+        margin: rem(8px);
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         backface-visibility: hidden;
@@ -147,13 +145,12 @@
 /// Uses the 'body-2'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} type-style
-@mixin snackbar-typography($type-scale, $categories: (text: 'body-2')) {
+@mixin snackbar-typography($categories: (text: 'body-2')) {
     $text: map.get($categories, 'text');
 
     %igx-snackbar-message {
-        @include type-style($type-scale, $text);
+        @include type-style($text);
     }
 }

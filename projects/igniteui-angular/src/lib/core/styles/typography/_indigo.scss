@@ -1,0 +1,73 @@
+@use '../components/banner/banner-theme' as *;
+@use '../components/bottom-nav/bottom-nav-theme' as *;
+@use '../components/button/button-theme' as *;
+@use '../components/calendar/calendar-theme' as *;
+@use '../components/card/card-theme' as *;
+@use '../components/checkbox/checkbox-theme' as *;
+@use '../components/chip/chip-theme' as *;
+@use '../components/column-actions/column-actions-theme' as *;
+@use '../components/date-range-picker/date-range-picker-theme' as *;
+@use '../components/dialog/dialog-theme' as *;
+@use '../components/dock-manager/dock-manager-theme' as *;
+@use '../components/drop-down/drop-down-theme' as *;
+@use '../components/expansion-panel/expansion-panel-theme' as *;
+@use '../components/grid/excel-filtering-theme' as *;
+@use '../components/input/input-group-theme' as *;
+@use '../components/list/list-theme' as *;
+@use '../components/navbar/navbar-theme' as *;
+@use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/radio/radio-theme' as *;
+@use '../components/slider/slider-theme' as *;
+@use '../components/snackbar/snackbar-theme' as *;
+@use '../components/switch/switch-theme' as *;
+@use '../components/stepper/stepper-theme' as *;
+@use '../components/tabs/tabs-theme' as *;
+@use '../components/time-picker/time-picker-theme' as *;
+@use '../components/toast/toast-theme' as *;
+@use '../components/tooltip/tooltip-theme' as *;
+@use '../components/tree/tree-theme' as *;
+
+@mixin typography() {
+    @include banner-typography();
+    @include bottom-nav-typography();
+    @include button-typography();
+    @include calendar-typography();
+    @include card-typography();
+    @include checkbox-typography($categories: (
+        label: 'body-1',
+    ));
+    @include chip-typography();
+    @include column-actions-typography();
+    @include date-range-typography();
+    @include dialog-typography();
+    @include dock-manager-typography();
+    @include drop-down-typography();
+    @include expansion-panel-typography($categories: (
+        title: 'h5',
+        description: 'subtitle-2',
+        body: 'body-1'
+    ));
+    @include excel-filtering-typography();
+    @include input-group-typography($categories: (
+        helper-text: 'caption',
+        input-text: 'body-1'
+    ));
+    @include list-typography($categories: (
+        header: 'overline',
+        item: 'subtitle-1',
+        title: 'subtitle-1',
+        subtitle: 'body-2'
+    ));
+    @include navbar-typography();
+    @include navdrawer-typography();
+    @include radio-typography();
+    @include slider-typography();
+    @include snackbar-typography();
+    @include switch-typography();
+    @include tabs-typography();
+    @include time-picker-typography();
+    @include stepper-typography();
+    @include toast-typography();
+    @include tooltip-typography();
+    @include tree-typography();
+}

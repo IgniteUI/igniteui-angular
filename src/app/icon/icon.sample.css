@@ -9,5 +9,5 @@
 }
 
 .color {
-    color: var(--igx-primary-300);
+    color: hsl(var(--ig-primary-300));
 }

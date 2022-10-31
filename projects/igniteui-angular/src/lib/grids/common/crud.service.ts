@@ -91,16 +91,36 @@ export interface IgxAddRowParent {
 export class IgxCell {
     public primaryKey: any;
     public state: any;
+    public pendingValue: any;
 
     constructor(
         public id,
         public rowIndex: number,
         public column,
         public value: any,
-        public editValue: any,
+        public _editValue: any,
         public rowData: any,
         public grid: GridType) {
         this.grid.validation.create(id.rowID, rowData);
+    }
+
+    public get editValue() {
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+        if (formControl) {
+            return formControl.value;
+        }
+    }
+
+    public set editValue(value) {
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+        
+        if (this.grid.validationTrigger === 'change') {
+            // in case trigger is change, mark as touched.
+            formControl.setValue(value);
+            formControl.markAsTouched();
+        } else {
+            this.pendingValue = value;
+        }
     }
 
     public castToNumber(value: any): any {
@@ -201,6 +221,13 @@ export class IgxCellCrudState {
             return;
         }
 
+        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
+        if (this.grid.validationTrigger === 'blur' && this.cell.pendingValue !== undefined) {
+            // in case trigger is blur, update value if there's a pending one and mark as touched.
+            formControl.setValue(this.cell.pendingValue);
+            formControl.markAsTouched();
+        }
+
         if (this.grid.validationTrigger === 'blur') {
             this.grid.tbody.nativeElement.focus({ preventScroll: true });
         }
@@ -245,11 +272,11 @@ export class IgxCellCrudState {
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
         this.cell.value = newValue;
-
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
     }
+
 
     /** Clears cell editing state */
     public endCellEdit() {
@@ -647,11 +674,11 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return args.cancel;
             }
         } else {
+            this.exitCellEdit(event);
             if (!this.grid.rowEditable && this.cell) {
                 const value = this.grid.transactions.getAggregatedValue(this.cell.id.rowID, true) || this.cell.rowData;
                 this.grid.validation.update(this.cell.id.rowID, value);
             }
-            this.exitCellEdit(event);
         }
 
         args = this.updateRow(commit, event);

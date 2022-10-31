@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -12,12 +12,12 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
-        require('karma-parallel'),
-        require('karma-jasmine'),
-        require('karma-coverage'),
-        require('karma-chrome-launcher'),
-        require('karma-jasmine-spec-tags'),
-        require('@angular-devkit/build-angular/plugins/karma')
+        'karma-parallel',
+        'karma-jasmine',
+        'karma-coverage',
+        'karma-chrome-launcher',
+        'karma-spec-reporter',
+        '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
       executors: 2,
@@ -39,7 +39,7 @@ module.exports = function (config) {
         { type: 'lcov' },
       ]
     },
-    reporters: ['progress'],
+    reporters: ['spec'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

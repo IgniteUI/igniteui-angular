@@ -22,7 +22,8 @@ import {
     IgxGridCustomOverlayComponent,
     IgxGridEmptyRowEditTemplateComponent,
     VirtualGridComponent,
-    ObjectCloneStrategy
+    ObjectCloneStrategy,
+    IgxGridCustomRowEditTemplateComponent
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -46,6 +47,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridRowEditingWithoutEditableColumnsComponent,
                 IgxGridCustomOverlayComponent,
                 IgxGridEmptyRowEditTemplateComponent,
+                IgxGridCustomRowEditTemplateComponent,
                 VirtualGridComponent
             ],
             imports: [
@@ -2127,6 +2129,32 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'ProductName');
             expect(cell.editMode).toBe(true);
         }));
+
+        it('should allow setting custom templates via Input.', () => {
+            const fix = TestBed.createComponent(IgxGridCustomRowEditTemplateComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+
+            grid.rowAddTextTemplate = fix.componentInstance.addText;
+            grid.rowEditTextTemplate = fix.componentInstance.editText;
+            grid.rowEditActionsTemplate = fix.componentInstance.editActions;
+            fix.detectChanges();
+
+            // enter edit mode
+            const cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('CUSTOM EDIT TEXT');
+            const bannerRow = GridFunctions.getRowEditingBannerRow(fix);
+            expect(bannerRow.textContent.trim()).toBe('CUSTOM EDIT ACTIONS');
+
+            grid.endEdit();
+
+            grid.beginAddRowByIndex(0);
+            fix.detectChanges();
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('CUSTOM ADD TEXT');
+        });
     });
 
     describe('Transaction', () => {

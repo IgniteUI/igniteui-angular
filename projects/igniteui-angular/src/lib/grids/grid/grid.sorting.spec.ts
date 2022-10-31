@@ -571,6 +571,29 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('expand_more');
         });
 
+        it('Should allow setting custom templates for header sorting none/ascending/descending icons via Input.', () => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            grid.sortHeaderIconTemplate = fixture.componentInstance.sortIconTemplate;
+            grid.sortAscendingHeaderIconTemplate = fixture.componentInstance.sortAscIconTemplate;
+            grid.sortDescendingHeaderIconTemplate = fixture.componentInstance.sortDescIconTemplate;
+            fixture.detectChanges();
+            const header = GridFunctions.getColumnHeader('Name', fixture, grid);
+            let icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_right');
+
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_drop_up');
+
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+            icon = GridFunctions.getHeaderSortIcon(header);
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_drop_down');
+        });
+
         it('Should be able to set single sorting mode and sort one column at a time', fakeAsync(() => {
             fixture = TestBed.createComponent(SortByParityComponent);
             fixture.detectChanges();

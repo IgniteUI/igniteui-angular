@@ -519,6 +519,20 @@ export class TemplateDefinitions {
     `;
 }
 
+export class ExternalTemplateDefinitions {
+    public static sortIconTemplates = `
+        <ng-template #sortIcon igxSortHeaderIcon>
+            <igx-icon>arrow_right</igx-icon>
+        </ng-template>
+        <ng-template #sortAscIcon igxSortAscendingHeaderIcon>
+            <igx-icon>arrow_drop_up</igx-icon>
+        </ng-template>
+        <ng-template #sortDescIcon igxSortDescendingHeaderIcon>
+            <igx-icon>arrow_drop_down</igx-icon>
+        </ng-template>
+    `;
+}
+
 export class EventSubscriptions {
 
     public static columnInit = ` (columnInit)="columnInit($event)"`;

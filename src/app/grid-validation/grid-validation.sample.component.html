@@ -11,6 +11,9 @@
         </igx-column>
         <igx-column field='ProductID' [editable]='false'></igx-column>
         <igx-column field='ProductName' appForbiddenName='bob' required [editable]='true'>
+            <ng-template igxCellEditor let-cell="cell" let-value let-fc='formControl'>
+                <input  [(ngModel)]="cell.editValue"/>
+            </ng-template> 
             <ng-template igxCellValidationError let-cell='cell' let-defaultErr='defaultErrorTemplate'>
                 <ng-container *ngTemplateOutlet="defaultErr" >
                 </ng-container>

@@ -1,5 +1,5 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
@@ -9,6 +9,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
     ForbiddenValidatorDirective,
+    IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
     IgxTreeGridValidationTestComponent
@@ -25,10 +26,11 @@ describe('IgxGrid - Validation #grid', () => {
             declarations: [
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
+                IgxGridCustomEditorsComponent,
                 IgxTreeGridValidationTestComponent,
                 ForbiddenValidatorDirective
             ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule, ReactiveFormsModule]
         });
     }));
 
@@ -313,6 +315,82 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             GridFunctions.verifyCellValid(cell, true);
+        });
+    });
+
+    describe('Custom Editor Templates - ', () => {
+        let fixture;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxGridCustomEditorsComponent);
+            fixture.componentInstance.grid.batchEditing = true;
+            fixture.detectChanges();
+        }));
+
+        it('should trigger validation on change when using custom editor bound via formControl.', () => {
+            // template bound via formControl
+            const template = fixture.componentInstance.formControlTemplate;
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const col = grid.columns[1];
+            col.inlineEditorTemplate = template;
+            fixture.detectChanges();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            const input = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(input, 'bob');
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+        });
+
+        it('should trigger validation on change when using custom editor bound via editValue.', () => {
+            // template bound via ngModel to editValue
+            const template = fixture.componentInstance.modelTemplate;
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const col = grid.columns[1];
+            col.inlineEditorTemplate = template;
+            fixture.detectChanges();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            const input = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(input, 'bob');
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
+        });
+
+        it('should trigger validation on blur when using custom editor bound via editValue.', () => {
+            // template bound via ngModel to editValue
+            const template = fixture.componentInstance.modelTemplate;
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            const col = grid.columns[1];
+            col.inlineEditorTemplate = template;
+            grid.validationTrigger = 'blur';
+            fixture.detectChanges();
+
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            const input = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(input, 'bob');
+            fixture.detectChanges();
+
+            // invalid value is entered, but no blur has happened yet.
+            // Hence validation state is still valid.
+            GridFunctions.verifyCellValid(cell, true);
+            expect(cell.errorTooltip.length).toBe(0);
+
+            // exit edit mode
+            grid.crudService.endEdit(true);
+            fixture.detectChanges();
+            GridFunctions.verifyCellValid(cell, false);
+            const erorrMessage = cell.errorTooltip.first.elementRef.nativeElement.children[0].textContent;
+            expect(erorrMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
     });
 
