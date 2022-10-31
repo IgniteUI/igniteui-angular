@@ -243,8 +243,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
-    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: TemplateRef, descendants: false })
+    protected groupByRowSelectorsTemplates: QueryList<TemplateRef<IgxGroupByRowSelectorTemplateContext>>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -303,7 +303,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+
+    private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     private _detailTemplate;
+
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.
@@ -567,14 +570,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @hidden
-     * @internal
+     * Gets the group by row selector template.
      */
-    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorTemplateContext> {
-        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
-            return this.groupByRowSelectorsTemplates.first.templateRef;
-        }
-        return null;
+    @Input()
+    public get groupByRowSelectorTemplate(): TemplateRef <IgxGroupByRowSelectorTemplateContext> {
+        return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates.first;
+    }
+
+    /**
+     * Sets the group by row selector template.
+     * ```html
+     * <ng-template #template igxGroupByRowSelector let-groupByRowContext>
+     * {{ groupByRowContext.selectedCount }} / {{ groupByRowContext.totalCount  }}
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.groupByRowSelectorTemplate = this.template;
+     * ```
+     */
+    public set groupByRowSelectorTemplate(template: TemplateRef<IgxGroupByRowSelectorTemplateContext>) {
+        this._groupByRowSelectorTemplate = template;
     }
 
     /**
@@ -639,6 +656,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
      */
+    @Input()
     public get groupRowTemplate(): TemplateRef<IgxGroupByRowTemplateContext> {
         return this._groupRowTemplate;
     }
