@@ -31,8 +31,14 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
-    @include palette($palette);
-    @include elevations($elevations);
+
+    @if not(list.index($exclude, 'palette')) {
+        @include palette($palette);
+    }
+
+    @if not(list.index($exclude, 'elevations')) {
+        @include elevations($elevations);
+    }
 
     @if $elevation == false {
         #{$scope} {
