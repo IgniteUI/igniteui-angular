@@ -1349,6 +1349,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
+    /* blazorSuppress */
     public getFilterFactory(): IFilterFactory {
         return {
             stringFilteringOperand: IgxStringFilteringOperand.instance(),
