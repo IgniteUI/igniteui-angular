@@ -1728,7 +1728,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
         fixture.detectChanges();
 
-        const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+        const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0] as IgxHierarchicalGridComponent;
         expect(childGrid.excelStyleFilteringComponent).toBe(ri.excelStyleFilteringComponent);
     });
 

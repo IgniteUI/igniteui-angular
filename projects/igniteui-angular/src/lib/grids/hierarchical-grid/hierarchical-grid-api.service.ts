@@ -42,7 +42,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
     }
 
     public getChildGrids(inDepth?: boolean) {
-        const allChildren = [];
+        const allChildren: GridType [] = [];
         this.childGrids.forEach((layoutMap) => {
             layoutMap.forEach((grid) => {
                 allChildren.push(grid);
