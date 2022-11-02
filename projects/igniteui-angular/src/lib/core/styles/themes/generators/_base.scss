@@ -368,7 +368,7 @@
         ));
     }
 
-    @if is-used('igx-scrollbar', $exclude) {
+    @if is-used('ig-scrollbar', $exclude) {
         @include scrollbar(scrollbar-theme(
             $schema: $schema
         ));
