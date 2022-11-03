@@ -147,4 +147,28 @@ describe(`Update to ${version}`, () => {
 `@include igniteui.elevations($material-elevations);`
         );
     });
+
+    it('should remove the disabled property from the igx-radio-group', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+            <igx-radio-group disabled="true"></igx-radio-group>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+            <igx-radio-group></igx-radio-group>`);
+    });
+
+    it('should remove the labelPosition property from the igx-radio-group', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+            <igx-radio-group labelPosition="before"></igx-radio-group>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+            <igx-radio-group></igx-radio-group>`);
+    });
 });
