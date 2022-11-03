@@ -6,7 +6,7 @@
             "remove": "true",
             "owner": {
                 "selector": "igx-radio-group",
-                "type": "directive"
+                "type": "component"
             }
         },
         {
@@ -14,7 +14,7 @@
             "remove": "true",
             "owner": {
                 "selector": "igx-radio-group",
-                "type": "directive"
+                "type": "component"
             }
         }
     ]
