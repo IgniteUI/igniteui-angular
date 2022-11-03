@@ -2802,6 +2802,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorSuppress */
     /**
      * Get transactions service for the grid.
      */
@@ -5883,6 +5884,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
 
+    
     /**
      * Select specified columns.
      *
