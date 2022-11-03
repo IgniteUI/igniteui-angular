@@ -1,0 +1,21 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "disabled",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-radio-group",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "labelPosition",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-radio-group",
+                "type": "directive"
+            }
+        }
+    ]
+}
