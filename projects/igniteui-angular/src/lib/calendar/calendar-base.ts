@@ -118,6 +118,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    public shiftKey: boolean = false;
+
+     /**
+     * @hidden
+     */
+    public lastSelectedDate: Date;
+
+    /**
+     * @hidden
+     */
     protected formatterWeekday;
 
     /**
@@ -155,6 +165,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     protected _onChangeCallback: (_: Date) => void = noop;
 
     /**
+      * @hidden
+      */
+    protected _deselectDate: boolean;
+
+    /**
      * @hidden
      */
     private selectedDatesWithoutFocus;
@@ -173,16 +188,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _viewDate: Date;
-
-    /**
-     * @hidden
-     */
-    private _shiftKey: boolean = false;
-
-    /**
-     * @hidden
-     */
-    private _lastSelectedDate: Date;
 
     /**
      * @hidden
@@ -479,20 +484,38 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @HostListener('pointerdown', ['$event'])
     public onPointerdown(event: MouseEvent) {
-        this._shiftKey = event.button === 0 && event.shiftKey;
+        this.shiftKey = event.button === 0 && event.shiftKey;
     }
 
     /**
-     * Performs deselection of a single value, when selection is multi
+     * Performs deselection of date/dates, when selection is multi
      * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
      *
      * @hidden
      */
     public deselectMultipleInMonth(value: Date) {
-        const valueDateOnly = this.getDateOnly(value);
-        this.selectedDates = this.selectedDates.filter(
-            (date: Date) => date.getTime() !== valueDateOnly.getTime()
-        );
+        // deselect multiple dates from last clicked to shift clicked date (excluding)
+        if (this.shiftKey) {
+            let start: Date;
+            let end: Date;
+
+            [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                ? [this.lastSelectedDate, value]
+                : [value, this.lastSelectedDate];
+
+            this.selectedDates = this.selectedDates.filter(
+                (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
+            );
+
+            this.selectedDates.push(value);
+
+        } else {
+            // deselect a single date
+            const valueDateOnly = this.getDateOnly(value);
+            this.selectedDates = this.selectedDates.filter(
+                (date: Date) => date.getTime() !== valueDateOnly.getTime()
+            );
+        }
     }
 
     /**
@@ -664,13 +687,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         } else {
             let newSelection = [];
 
-            if (this._shiftKey && this._lastSelectedDate) {
+            if (this.shiftKey && this.lastSelectedDate) {
                 let start: Date;
                 let end: Date;
 
-                [start, end] = this._lastSelectedDate.getTime() < value.getTime()
-                    ? [this._lastSelectedDate, value]
-                    : [value, this._lastSelectedDate];
+                [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                    ? [this.lastSelectedDate, value]
+                    : [value, this.lastSelectedDate];
 
                 const unselectedDates = [start, ...this.generateDateRange(start, end)]
                     .filter(date => !this.isDateDisabled(date)
@@ -678,7 +701,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     );
 
                 // select all dates from last selected to shift clicked date
-                if (this.selectedDates.some((date: Date) => date.getTime() === this._lastSelectedDate.getTime())
+                if (this.selectedDates.some((date: Date) => date.getTime() === this.lastSelectedDate.getTime())
                     && unselectedDates.length) {
 
                     newSelection = unselectedDates.map(d => new Date(d));
@@ -687,8 +710,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     this.selectedDates = this.selectedDates.filter(
                         (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
                     );
-
                     this.selectedDates.push(value);
+
+                    this._deselectDate = true;
                 }
 
             } else if (this.selectedDates.every((date: Date) => date.getTime() !== value.getTime())) {
@@ -698,13 +722,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 this.selectedDates = this.selectedDates.filter(
                     (date: Date) => date.getTime() !== value.getTime()
                 );
+
+                this._deselectDate = true;
             }
 
             if (newSelection.length > 0) {
                 this.selectedDates = this.selectedDates.concat(newSelection);
+                this._deselectDate = false;
             }
 
-            this._lastSelectedDate = value;
+            this.lastSelectedDate = value;
         }
 
         this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
@@ -725,9 +752,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             end = this.getDateOnly(value[value.length - 1]);
         } else {
 
-            if (this._shiftKey && this._lastSelectedDate) {
+            if (this.shiftKey && this.lastSelectedDate) {
 
-                if (this._lastSelectedDate.getTime() === value.getTime()) {
+                if (this.lastSelectedDate.getTime() === value.getTime()) {
                     this.selectedDates = this.selectedDates.length === 1 ? [] : [value];
                     this.rangeStarted = !!this.selectedDates.length;
                     this._onChangeCallback(this.selectedDates);
@@ -736,7 +763,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
                 // shortens the range when selecting a date inside of it
                 if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
-                    if (this._lastSelectedDate.getTime() < value.getTime()) {
+                    if (this.lastSelectedDate.getTime() < value.getTime()) {
                         start = value;
                         end = this.selectedDates.pop();
                     } else {
@@ -747,12 +774,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 } else {
                     // extends the range when selecting a date outside of it
                     // allows selection from last deselected to current selected date
-                    if (this._lastSelectedDate.getTime() < value.getTime()) {
-                        start = this.selectedDates.shift() ?? this._lastSelectedDate;
+                    if (this.lastSelectedDate.getTime() < value.getTime()) {
+                        start = this.selectedDates.shift() ?? this.lastSelectedDate;
                         end = value;
                     } else {
                         start = value;
-                        end = this.selectedDates.pop() ?? this._lastSelectedDate;
+                        end = this.selectedDates.pop() ?? this.lastSelectedDate;
                     }
                 }
 
@@ -770,12 +797,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     return;
                 }
 
-                [start, end] = this._lastSelectedDate.getTime() < value.getTime()
-                    ? [this._lastSelectedDate, value]
-                    : [value, this._lastSelectedDate];
+                [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                    ? [this.lastSelectedDate, value]
+                    : [value, this.lastSelectedDate];
             }
 
-            this._lastSelectedDate = value;
+            this.lastSelectedDate = value;
         }
 
         if (start && end) {
