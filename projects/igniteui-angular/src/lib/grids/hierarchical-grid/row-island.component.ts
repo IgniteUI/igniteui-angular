@@ -41,13 +41,14 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
+import { CellType, GridType, IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxGridCell } from '../grid-public-cell';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -383,6 +384,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public calculateGridHeight() { }
+
+    /**
+     * @hidden @internal
+     */
+     public getCellByKey(_rowSelector: any, _columnField: string): CellType {
+        return new IgxGridCell(this, 0, '');
+    }
 
     protected _childColumns = [];
 

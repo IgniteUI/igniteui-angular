@@ -30,7 +30,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
+import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
@@ -75,6 +75,7 @@ import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxGridCell } from '../grid-public-cell';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -1391,6 +1392,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     * @hidden @internal
     */
     public previousPage(): void {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getCellByKey(_rowSelector: any, _columnField: string): CellType {
+        return new IgxGridCell(this, 0, '');
     }
 
     /**

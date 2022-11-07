@@ -26,7 +26,7 @@ import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { DataType, GridColumnDataType } from '../../data-operations/data-util';
-import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
+import { IFilteringOperation, IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -222,6 +222,8 @@ export interface ColumnType extends FieldType {
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
+    pin(index?: number): boolean;
+    unpin(index?: number): boolean;
 }
 
 export interface IGridFormGroupCreatedEventArgs {
@@ -648,7 +650,10 @@ export interface GridType extends IGridDataBindable {
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
     preventHeaderScroll?(args: any): void;
-
+    endEdit(commit: boolean, event?: Event): void;
+    getCellByKey(rowSelector: any, columnField: string): CellType;
+    filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean): void;
+    clearFilter(name?: string): void;
 }
 
 /**
