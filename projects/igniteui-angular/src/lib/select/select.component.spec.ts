@@ -1194,7 +1194,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: <IgxDropDownItemBaseDirective>{},
+                    oldSelection: {} as IgxDropDownItemBaseDirective,
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1228,7 +1228,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: <IgxDropDownItemBaseDirective>{},
+                    oldSelection: {} as IgxDropDownItemBaseDirective,
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1258,7 +1258,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: <IgxDropDownItemBaseDirective>{},
+                    oldSelection: {} as IgxDropDownItemBaseDirective,
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1330,7 +1330,7 @@ describe('igxSelect', () => {
                 let selectedItem = select.items[4];
                 spyOn(select.selectionChanging, 'emit');
                 const args: ISelectionEventArgs = {
-                    oldSelection: <IgxDropDownItemBaseDirective>{},
+                    oldSelection: {} as IgxDropDownItemBaseDirective,
                     newSelection: selectedItem,
                     cancel: false
                 };
