@@ -7,6 +7,11 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `igxGrid` - exposing new Input properties:
 
+    - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
+    - `groupRowTemplate` - Gets/Sets the template reference for the group row.
+    - `headSelectorTemplate` - Gets/Sets the header row selector template.
+    - `rowSelectorTemplate` - Gets/Sets the custom template used for row selectors.
+    - `groupByRowSelectorTemplate` - Gets/Sets the custom template used for the group row selectors.
     - `sortHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
     - `sortAscendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
     - `sortDescendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
