@@ -126,7 +126,7 @@
     }
 
     %date-picker--vertical {
-        min-width: 368px; /* 168px for header + 200px for the content */
+        min-width: rem(368px); /* 168px for header + 200px for the content */
     }
 
     %date-picker--dropdown {
