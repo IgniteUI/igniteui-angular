@@ -356,6 +356,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         if (grid.selectionService.isRowSelected(rowId)) {
             grid.selectionService.deselectRow(rowId);
+        } else {
+            grid.selectionService.clearHeaderCBState();
         }
         grid.pipeTrigger++;
         grid.notifyChanges();

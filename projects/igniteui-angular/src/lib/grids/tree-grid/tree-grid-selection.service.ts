@@ -57,6 +57,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
             this.rowSelection = new Set(this.rowsToBeSelected);
             this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
             // TODO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
+            this.clearHeaderCBState();
             this.selectedRowsChange.next();
             return;
         }
@@ -87,6 +88,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         }
         this.rowSelection = new Set(this.rowsToBeSelected);
         this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+        this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
 
@@ -96,6 +98,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
 
         this.rowSelection = new Set(this.rowsToBeSelected);
         this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+        this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
 
@@ -131,6 +134,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         if (this.areEqualCollections(Array.from(this.rowsToBeSelected), args.newSelection)) {
             this.rowSelection = new Set(this.rowsToBeSelected);
             this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+            this.clearHeaderCBState();
             this.selectedRowsChange.next();
         } else {
             // select the rows within the modified args.newSelection with no event

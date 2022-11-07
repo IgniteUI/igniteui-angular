@@ -129,7 +129,7 @@
         <igx-checkbox
             [tabindex]="-1"
             [readonly]="true"
-            [checked]="grid.selectionService.areAllRowSelected()"
+            [checked]="context.selectedCount > 0 && grid.selectionService.areAllRowSelected()"
             [disableRipple]="true"
             [ngStyle]="{'visibility': grid.isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [indeterminate]="context.selectedCount > 0 && grid.selectionService.hasSomeRowSelected()"

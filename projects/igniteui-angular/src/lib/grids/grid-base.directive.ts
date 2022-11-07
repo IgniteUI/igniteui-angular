@@ -1756,6 +1756,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
 
             this.filteringService.refreshExpressions();
+            this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this.notifyChanges();
         }
@@ -1791,6 +1792,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.filteredData = null;
         }
 
+        this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.notifyChanges();
 
@@ -3786,6 +3788,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public dataRebound(event) {
+        this.selectionService.clearHeaderCBState();
         this.dataChanged.emit(event);
     }
 
@@ -5032,6 +5035,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public refreshGridState(_args?) {
         this.crudService.endEdit(true);
+        this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.cdr.detectChanges();
     }
@@ -6484,6 +6488,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             });
         }
+        this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
         this.notifyChanges();
