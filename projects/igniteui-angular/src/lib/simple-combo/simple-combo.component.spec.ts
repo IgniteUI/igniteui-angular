@@ -914,6 +914,21 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should not clear selection on tab/blur after filtering and selecting a value', () => {
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+        });
+
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
@@ -1137,7 +1152,7 @@ describe('IgxSimpleCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(null);
+            expect(combo.value).toBe('');
 
             combo.open();
             fixture.detectChanges();
@@ -1164,7 +1179,7 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(undefined);
+            expect(combo.value).toBe('');
         });
 
         it('should select falsy values except "undefined"', () => {
