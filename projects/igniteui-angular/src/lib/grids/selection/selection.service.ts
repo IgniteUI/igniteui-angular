@@ -535,7 +535,6 @@ export class IgxGridSelectionService {
         if (this.allRowsSelected !== undefined && !newSelection) {
             return this.allRowsSelected;
         }
-
         const selectedData = newSelection ? newSelection : [...this.rowSelection]
         const allData = this.getRowIDs(this.allData);
         const unSelectedRows = allData.filter(row => !selectedData.includes(row));
