@@ -2547,13 +2547,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public getCellByKey(_rowSelector: any, _columnField: string): CellType {
-        return new IgxGridCell(this, 0, '');
-    }
-
     /** 
      * Gets the row selector template.
      */

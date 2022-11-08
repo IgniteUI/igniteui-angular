@@ -385,13 +385,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public calculateGridHeight() { }
 
-    /**
-     * @hidden @internal
-     */
-     public getCellByKey(_rowSelector: any, _columnField: string): CellType {
-        return new IgxGridCell(this, 0, '');
-    }
-
     protected _childColumns = [];
 
     protected updateColumnList() {

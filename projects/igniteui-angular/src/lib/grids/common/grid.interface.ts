@@ -651,7 +651,6 @@ export interface GridType extends IGridDataBindable {
     generateRowPath?(rowId: any): any[];
     preventHeaderScroll?(args: any): void;
     endEdit(commit: boolean, event?: Event): void;
-    getCellByKey(rowSelector: any, columnField: string): CellType;
     filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean): void;
     clearFilter(name?: string): void;
 }

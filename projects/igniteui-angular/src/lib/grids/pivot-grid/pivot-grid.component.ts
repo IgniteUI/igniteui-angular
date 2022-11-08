@@ -1395,13 +1395,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
-     * @hidden @internal
-     */
-    public getCellByKey(_rowSelector: any, _columnField: string): CellType {
-        return new IgxGridCell(this, 0, '');
-    }
-
-    /**
     * @hidden @internal
     */
     public refreshSearch(_updateActiveInfo?: boolean, _endEdit = true): number {
