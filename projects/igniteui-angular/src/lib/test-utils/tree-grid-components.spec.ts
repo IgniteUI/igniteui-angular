@@ -155,18 +155,34 @@ export class IgxTreeGridExpandingComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees" expansionDepth="2"
-        width="900px" height="500px" [perPage]="10">
+        width="900px" height="500px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
-        <igx-paginator></igx-paginator>
+        <igx-paginator [perPage]="10"></igx-paginator>
     </igx-tree-grid>
     `
 })
 export class IgxTreeGridCellSelectionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid primaryKey="ID" childDataKey="Employees" expansionDepth="2"
+        width="900px" height="500px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-paginator [perPage]="10"></igx-paginator>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridNoDataComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
 }
 
 // Test Component with 'string' dataType tree-column

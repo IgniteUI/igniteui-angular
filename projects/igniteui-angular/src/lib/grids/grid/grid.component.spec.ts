@@ -2661,6 +2661,40 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
         });
     });
+
+    describe('Setting null data', () => {
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridNoDataComponent,
+                    IgxGridTestComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
+        }));
+
+        it('should not throw error when data is null', () => {
+            const fix = TestBed.createComponent(IgxGridNoDataComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null and transactions are enabled', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+    });
 });
 
 @Component({
@@ -3257,4 +3291,17 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     public ngAfterViewInit() {
         this.delta = new Date().getTime() - this.startTime;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name"></igx-column>
+            <igx-paginator></igx-paginator>
+        </igx-grid>
+    `
+})
+export class IgxGridNoDataComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
