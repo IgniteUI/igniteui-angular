@@ -50,6 +50,7 @@
 @use './progress' as *;
 @use './radio' as *;
 @use './ripple' as *;
+@use './query-builder' as *;
 @use './scrollbar' as *;
 @use './shape-chart' as *;
 @use './slider' as *;
@@ -116,6 +117,7 @@
 /// @property {Map} pie-chart [$dark-pie-chart]
 /// @property {Map} igx-radio [$dark-radio]
 /// @property {Map} igx-ripple [$dark-ripple]
+/// @property {Map} igx-query-builder [$dark-query-builder]
 /// @property {Map} igx-scrollbar [$dark-scrollbar]
 /// @property {Map} shape-chart [$dark-shape-chart]
 /// @property {Map} igx-slider [$dark-slider]
@@ -178,6 +180,7 @@ $dark-schema: (
     pie-chart: $dark-pie-chart,
     igx-radio: $dark-radio,
     igx-ripple: $dark-ripple,
+    igx-query-builder: $dark-query-builder,
     igx-scrollbar: $dark-scrollbar,
     shape-chart: $dark-shape-chart,
     igx-slider: $dark-slider,
@@ -250,6 +253,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} pie-chart [$dark-fluent-pie-chart],
 /// @property {Map} igx-radio [$dark-fluent-radio],
 /// @property {Map} igx-ripple [$dark-fluent-ripple],
+/// @property {Map} igx-query-builder [$dark-fluent-query-builder],
 /// @property {Map} igx-scrollbar [$dark-fluent-scrollbar],
 /// @property {Map} shape-chart [$dark-fluent-shape-chart],
 /// @property {Map} igx-slider [$dark-fluent-slider],
@@ -312,6 +316,7 @@ $dark-fluent-schema: (
     pie-chart: $dark-fluent-pie-chart,
     igx-radio: $dark-fluent-radio,
     igx-ripple: $dark-fluent-ripple,
+    igx-query-builder: $dark-fluent-query-builder,
     igx-scrollbar: $dark-fluent-scrollbar,
     shape-chart: $dark-fluent-shape-chart,
     igx-slider: $dark-fluent-slider,
@@ -379,6 +384,7 @@ $dark-fluent-schema: (
 /// @property {Map} pie-chart [$dark-bootstrap-pie-chart],
 /// @property {Map} igx-radio [$dark-bootstrap-radio],
 /// @property {Map} igx-ripple [$dark-bootstrap-ripple],
+/// @property {Map} igx-query-builder [$dark-bootstrap-query-builder],
 /// @property {Map} igx-scrollbar [$dark-bootstrap-scrollbar],
 /// @property {Map} shape-chart [$dark-bootstrap-shape-chart],
 /// @property {Map} igx-slider [$dark-bootstrap-slider],
@@ -441,6 +447,7 @@ $dark-bootstrap-schema: (
     pie-chart: $dark-bootstrap-pie-chart,
     igx-radio: $dark-bootstrap-radio,
     igx-ripple: $dark-bootstrap-ripple,
+    igx-query-builder: $dark-bootstrap-query-builder,
     igx-scrollbar: $dark-bootstrap-scrollbar,
     shape-chart: $dark-bootstrap-shape-chart,
     igx-slider: $dark-bootstrap-slider,
@@ -508,6 +515,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} pie-chart [$dark-indigo-pie-chart]
 /// @property {Map} igx-radio [$dark-indigo-radio]
 /// @property {Map} igx-ripple [$dark-indigo-ripple]
+/// @property {Map} igx-query-builder [$dark-indigo-query-builder]
 /// @property {Map} igx-scrollbar [$dark-indigo-scrollbar]
 /// @property {Map} shape-chart [$dark-indigo-shape-chart]
 /// @property {Map} igx-slider [$dark-indigo-slider]
@@ -570,6 +578,7 @@ $dark-indigo-schema: (
     pie-chart: $dark-indigo-pie-chart,
     igx-radio: $dark-indigo-radio,
     igx-ripple: $dark-indigo-ripple,
+    igx-query-builder: $dark-indigo-query-builder,
     igx-scrollbar: $dark-indigo-scrollbar,
     shape-chart: $dark-indigo-shape-chart,
     igx-slider: $dark-indigo-slider,
@@ -585,4 +594,3 @@ $dark-indigo-schema: (
     igx-tree: $dark-indigo-tree,
     igx-watermark: $dark-indigo-watermark,
 );
-

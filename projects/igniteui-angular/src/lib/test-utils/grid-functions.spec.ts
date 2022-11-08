@@ -23,6 +23,7 @@ import { IgxRowDirective } from '../grids/row.directive';
 import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
+import { IgxGridCell } from 'igniteui-angular';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -52,6 +53,7 @@ const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const ACTIVE_HEADER_CLASS = 'igx-grid-th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const CELL_INVALID_CSS_CLASS = 'igx-grid__td--invalid';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid__td--active';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
@@ -1436,25 +1438,25 @@ export class GridFunctions {
 
     public static getAdvancedFilteringHeader(fix: ComponentFixture<any>) {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-        const header = advFilterDialog.querySelector('.igx-advanced-filter__header');
+        const header = advFilterDialog.querySelector('.igx-query-builder__header');
         return header;
     }
 
     public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const title = header.querySelector('h4');
+        const title = header.querySelector('.ig-typography__h6');
         return title.innerText;
     }
 
     public static getAdvancedFilteringHeaderLegendItemAnd(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const andLegendItem = header.querySelector('.igx-filter-legend__item--and');
+        const andLegendItem = header.querySelector('.igx-builder-legend__item--and');
         return andLegendItem;
     }
 
     public static getAdvancedFilteringHeaderLegendItemOr(fix: ComponentFixture<any>) {
         const header = GridFunctions.getAdvancedFilteringHeader(fix);
-        const orLegendItem = header.querySelector('.igx-filter-legend__item--or');
+        const orLegendItem = header.querySelector('.igx-builder-legend__item--or');
         return orLegendItem;
     }
 
@@ -1469,7 +1471,7 @@ export class GridFunctions {
      */
     public static getAdvancedFilteringExpressionsContainer(fix: ComponentFixture<any>) {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-        const exprContainer = advFilterDialog.querySelector('.igx-advanced-filter__main');
+        const exprContainer = advFilterDialog.querySelector('.igx-query-builder__main');
         return exprContainer;
     }
 
@@ -1736,7 +1738,7 @@ export class GridFunctions {
         if (!advFilteringDialog) {
             advFilteringDialog = fix.nativeElement.querySelector('igx-advanced-filtering-dialog');
         }
-        const outlet = advFilteringDialog.querySelector('.igx-advanced-filter__outlet');
+        const outlet = advFilteringDialog.querySelector('.igx-query-builder__outlet');
         return outlet;
     }
 
@@ -2076,6 +2078,11 @@ export class GridFunctions {
 
     public static getResizer(fix): DebugElement {
         return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+    }
+
+    public static verifyCellValid(cell: IgxGridCellComponent, valid = true) {
+        expect(cell.isInvalid).toEqual(!valid);
+        expect(cell.nativeElement.classList.contains(CELL_INVALID_CSS_CLASS)).not.toEqual(valid);
     }
 }
 export class GridSummaryFunctions {

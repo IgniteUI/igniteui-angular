@@ -314,6 +314,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Editing'
         },
         {
+            link: '/gridValidation',
+            icon: 'view_column',
+            name: 'Grid Validation'
+        },
+        {
             link: '/gridLocalization',
             icon: 'view_column',
             name: 'Grid Localization'
@@ -566,9 +571,15 @@ export class AppComponent implements OnInit {
             name: 'Noop Pivot Grid'
         },
         {
+            link: '/query-builder',
+            icon: 'view_column',
+            name: 'Query Builder'
+        },
+        {
             link: '/pivot-state',
             icon: 'view_column',
             name: 'Pivot Grid State Persistance'
+
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

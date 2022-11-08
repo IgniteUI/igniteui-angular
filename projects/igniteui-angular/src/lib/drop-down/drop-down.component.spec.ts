@@ -527,18 +527,18 @@ describe('IgxDropDown ', () => {
             it('should provide correct event argument when closing through keyboard', fakeAsync(() => {
                 spyOn(dropdown.closing, 'emit').and.callThrough();
                 const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
-    
+
                 dropdown.toggle();
                 tick();
                 fixture.detectChanges();
                 let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
                 expect(focusedItem).toBeDefined();
-    
+
                 let eventArgs: IBaseCancelableBrowserEventArgs;
                 dropdown.closing.pipe(take(1)).subscribe((args: IBaseCancelableBrowserEventArgs) => {
                     eventArgs = args;
                 });
-    
+
                 UIInteractions.triggerEventHandlerKeyDown('escape', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -546,17 +546,17 @@ describe('IgxDropDown ', () => {
                 expect(eventArgs.event).toBeDefined();
                 expect((eventArgs.event as KeyboardEvent).type).toEqual('keydown');
                 expect((eventArgs.event as KeyboardEvent).key).toEqual('escape');
-    
+
                 dropdown.toggle();
                 tick();
                 fixture.detectChanges();
                 focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
                 expect(focusedItem).toBeDefined();
-    
+
                 dropdown.closing.pipe(take(1)).subscribe((args: IBaseCancelableBrowserEventArgs) => {
                     eventArgs = args;
                 });
-    
+
                 UIInteractions.triggerEventHandlerKeyDown('enter', dropdownElement);
                 tick();
                 fixture.detectChanges();
@@ -598,14 +598,14 @@ describe('IgxDropDown ', () => {
 
                 spyOn(dropdown, 'selectItem').and.callThrough();
                 expect(() => {
- dropdown.selectItem(calledSelected);
-}).toThrow();
+                    dropdown.selectItem(calledSelected);
+                }).toThrow();
 
                 // Set non-IgxDropDownItemBaseDirective
                 expectedSelected = 7 as any;
                 expect(() => {
- dropdown.selectItem(calledSelected);
-}).toThrow();
+                    dropdown.selectItem(calledSelected);
+                }).toThrow();
 
                 subscription.unsubscribe();
             }));

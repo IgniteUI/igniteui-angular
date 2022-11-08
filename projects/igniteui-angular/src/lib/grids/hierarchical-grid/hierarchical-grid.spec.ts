@@ -919,6 +919,66 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(childGrid1.rowList.length).toEqual(1);
         expect(childGrid1.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
     }));
+
+    it('should allow binding to complex object.', fakeAsync(() => {
+        const rowIsland1 = fixture.componentInstance.rowIsland1 as IgxRowIslandComponent;
+        const rowIsland2 = fixture.componentInstance.rowIsland2 as IgxRowIslandComponent;
+        rowIsland1.key = 'childData.Records';
+        rowIsland2.key = 'childData2.Records';
+
+         hierarchicalGrid.childLayoutKeys = ['childData.Records', 'childData2.Records'];
+        const complexObjData = [
+            {
+                ID: 1,
+                ProductName : 'Parent Name',
+                childData: {
+                    Records: [
+                        {
+                            ID: 11,
+                            ProductName : 'Child11 ProductName'
+                        },
+                        {
+                            ID: 12,
+                            ProductName : 'Child12 ProductName'
+                        }
+                    ]
+                },
+                childData2: {
+                    Records: [
+                    {
+                        ID: 21,
+                        Col1: 'Child21 Col1',
+                        Col2: 'Child21 Col2',
+                        Col3: 'Child21 Col3'
+                    },
+                    {
+                        ID: 22,
+                        Col1: 'Child22 Col1',
+                        Col2: 'Child22 Col2',
+                        Col3: 'Child22 Col3'
+                    }
+                    ]
+                }
+            }
+        ];
+        fixture.componentInstance.data = complexObjData;
+        fixture.detectChanges();
+
+        const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(row.expander);
+        tick();
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const childGrid2 = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid1.data.length).toEqual(2);
+        expect(childGrid2.data.length).toEqual(2);
+
+        expect(childGrid1.data[0].ID).toBe(11);
+        expect(childGrid2.data[0].ID).toBe(21);
+    })
+    );
 });
 
 describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1668,7 +1728,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
         fixture.detectChanges();
 
-        const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+        const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0] as IgxHierarchicalGridComponent;
         expect(childGrid.excelStyleFilteringComponent).toBe(ri.excelStyleFilteringComponent);
     });
 

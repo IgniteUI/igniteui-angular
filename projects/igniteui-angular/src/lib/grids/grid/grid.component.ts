@@ -22,7 +22,7 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode, GridInstanceType } from '../common/enums';
-import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
+import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTemplateContext, IgxGroupByRowTemplateContext, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
@@ -30,6 +30,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
+import { IgxGridValidationService } from './grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -66,6 +67,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
+        IgxGridValidationService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxGridComponent },
         IgxFilteringService,
@@ -152,8 +154,43 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ContentChildren(IgxGridDetailTemplateDirective, { read: TemplateRef })
-    public detailTemplate: QueryList<TemplateRef<any>> = new QueryList();
+    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef })
+    public detailTemplateDirective: TemplateRef<IgxGridMasterDetailContext>;
+
+
+    /**
+     * Returns a reference to the master-detail template.
+     * ```typescript
+     * let detailTemplate = this.grid.detailTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input('detailTemplate')
+    public get detailTemplate(): TemplateRef<IgxGridMasterDetailContext> {
+        return this._detailTemplate;
+    }
+    /**
+     * Sets the master-detail template.
+     * ```html
+     * <ng-template #detailTemplate igxGridDetail let-dataItem>
+     *    <div>
+     *       <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+     *       <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+     *    </div>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'detailTemplate'", {read: TemplateRef })
+     * public detailTemplate: TemplateRef<any>;
+     * this.grid.detailTemplate = this.detailTemplate;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public set detailTemplate(template: TemplateRef<IgxGridMasterDetailContext>) {
+        this._detailTemplate = template;
+    }
 
     /**
      * @hidden @internal
@@ -206,8 +243,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
-    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: TemplateRef, descendants: false })
+    protected groupByRowSelectorsTemplates: QueryList<TemplateRef<IgxGroupByRowSelectorTemplateContext>>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -249,7 +286,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
-    protected _groupRowTemplate: TemplateRef<any>;
+    protected _groupRowTemplate: TemplateRef<IgxGroupByRowTemplateContext>;
     /**
      * @hidden
      */
@@ -266,6 +303,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+
+    private _groupByRowSelectorTemplate: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
+    private _detailTemplate;
+
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.
@@ -529,20 +570,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @hidden
-     * @internal
+     * Gets the group by row selector template.
      */
-    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorDirective> {
-        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
-            return this.groupByRowSelectorsTemplates.first.templateRef;
-        }
-        return null;
+    @Input()
+    public get groupByRowSelectorTemplate(): TemplateRef <IgxGroupByRowSelectorTemplateContext> {
+        return this._groupByRowSelectorTemplate || this.groupByRowSelectorsTemplates.first;
+    }
+
+    /**
+     * Sets the group by row selector template.
+     * ```html
+     * <ng-template #template igxGroupByRowSelector let-groupByRowContext>
+     * {{ groupByRowContext.selectedCount }} / {{ groupByRowContext.totalCount  }}
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'template'", {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.groupByRowSelectorTemplate = this.template;
+     * ```
+     */
+    public set groupByRowSelectorTemplate(template: TemplateRef<IgxGroupByRowSelectorTemplateContext>) {
+        this._groupByRowSelectorTemplate = template;
     }
 
     /**
      * @hidden @internal
      */
-    public getDetailsContext(rowData, index) {
+    public getDetailsContext(rowData, index): IgxGridDetailTemplateDirective {
         return {
             $implicit: rowData,
             index
@@ -560,7 +615,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public get hasDetails() {
-        return !!this.detailTemplate.length;
+        return !!this.detailTemplate;
     }
 
     /**
@@ -601,11 +656,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
      */
-    public get groupRowTemplate(): TemplateRef<any> {
+    @Input()
+    public get groupRowTemplate(): TemplateRef<IgxGroupByRowTemplateContext> {
         return this._groupRowTemplate;
     }
 
-    public set groupRowTemplate(template: TemplateRef<any>) {
+    public set groupRowTemplate(template: TemplateRef<IgxGroupByRowTemplateContext>) {
         this._groupRowTemplate = template;
         this.notifyChanges();
     }
@@ -917,6 +973,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
+        }
+
+        if (this.detailTemplateDirective) {
+            this._detailTemplate = this.detailTemplateDirective;
         }
 
 

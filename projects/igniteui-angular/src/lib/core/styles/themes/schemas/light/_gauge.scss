@@ -35,11 +35,11 @@ $light-gauge: (
     'backing-stroke-thickness': null,
 
     'font-brush': (
-        contrast-color: ('surface', 500, .62),
+        contrast-color: ('surface', 500),
     ),
 
     'minor-tick-brush': (
-        contrast-color: ('surface', 500, .62),
+        contrast-color: ('surface', 500),
     ),
 
     'minor-tick-stroke-thickness': null,
@@ -63,7 +63,7 @@ $light-gauge: (
     ),
 
     'tick-brush': (
-        contrast-color: ('surface', 500, .62)
+        contrast-color: ('surface', 500)
     ),
 
     'tick-stroke-thickness': null

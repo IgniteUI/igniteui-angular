@@ -43,6 +43,7 @@ import { IgxGridComponent } from '../grid/grid.component';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -234,6 +235,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
         IgxGridCRUDService,
+        IgxGridValidationService,
         IgxGridSelectionService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
@@ -534,14 +536,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public get resolveRowEditActions() {
-        return this.parentIsland ? this.parentIsland.rowEditActions : this.rowEditActions;
+        return this.parentIsland ? this.parentIsland.rowEditActionsTemplate : this.rowEditActionsTemplate;
     }
 
     /**
      * @hidden
      */
     public get resolveRowEditText() {
-        return this.parentIsland ? this.parentIsland.rowEditText : this.rowEditText;
+        return this.parentIsland ? this.parentIsland.rowEditTextTemplate : this.rowEditTextTemplate;
     }
 
     /** @hidden */

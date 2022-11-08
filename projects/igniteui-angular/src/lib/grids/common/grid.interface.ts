@@ -1,4 +1,4 @@
-import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition } from './enums';
+import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -25,9 +25,9 @@ import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/
 import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
-import { GridColumnDataType } from '../../data-operations/data-util';
+import { DataType, GridColumnDataType } from '../../data-operations/data-util';
 import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
-import { IColumnPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
+import { IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
@@ -36,6 +36,8 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -63,6 +65,7 @@ export interface CellType {
     grid: GridType;
     id?: { rowID: any; columnID: number; rowIndex: number };
     cellID?: any;
+    readonly validation?: IGridValidationState;
     readonly?: boolean;
     title?: any;
     width: string;
@@ -75,6 +78,17 @@ export interface CellType {
     onClick?(event: MouseEvent): void;
 }
 
+export interface HeaderType {
+    nativeElement: HTMLElement;
+    column: ColumnType;
+    density: DisplayDensity;
+    sorted: boolean;
+    selectable: boolean;
+    selected: boolean;
+    title: boolean;
+    sortDirection: SortingDirection;
+}
+
 export interface RowType {
     nativeElement?: HTMLElement;
     index: number;
@@ -84,6 +98,7 @@ export interface RowType {
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     key?: any;
+    readonly validation?: IGridValidationState;
     data?: any;
     cells?: QueryList<CellType> | CellType[];
     disabled?: boolean;
@@ -109,7 +124,20 @@ export interface RowType {
     unpin?: () => void;
 }
 
-export interface ColumnType {
+export interface FieldType {
+    label?: string;
+    field: string;
+    header?: string;
+    dataType: DataType;
+    filters: IgxFilteringOperand;
+    pipeArgs: IFieldPipeArgs;
+    defaultTimeFormat: string;
+    defaultDateTimeFormat: string;
+
+    formatter(value: any, rowData?: any): any;
+}
+
+export interface ColumnType extends FieldType {
     grid: GridType;
     children: QueryList<ColumnType>;
     allChildren: ColumnType[];
@@ -117,6 +145,7 @@ export interface ColumnType {
     headerGroup: any;
     // TYPE
     headerCell: any;
+    validators: any[];
 
     headerTemplate: TemplateRef<any>;
     collapsibleIndicatorTemplate?: TemplateRef<any>;
@@ -133,7 +162,6 @@ export interface ColumnType {
     minWidthPercent: number;
     maxWidthPercent: number;
 
-    field: string;
     header?: string;
     index: number;
     dataType: GridColumnDataType;
@@ -155,7 +183,6 @@ export interface ColumnType {
     sortStrategy: ISortingStrategy;
     sortingIgnoreCase: boolean;
     filterCell: any;
-    filters: IgxFilteringOperand;
     filteringIgnoreCase: boolean;
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
@@ -179,8 +206,6 @@ export interface ColumnType {
     parent?: ColumnType;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
-    defaultTimeFormat: string;
-    defaultDateTimeFormat: string;
     additionalTemplateContext: any;
     isLastPinned: boolean;
     isFirstPinned: boolean;
@@ -196,8 +221,33 @@ export interface ColumnType {
     getCellWidth(): string;
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
-    formatter(value: any, rowData?: any): any;
     populateVisibleIndexes?(): void;
+}
+
+export interface IGridFormGroupCreatedEventArgs {
+    formGroup: FormGroup,
+    owner: GridType
+}
+
+export interface IGridValidationStatusEventArgs {
+    status: ValidationStatus,
+    owner: GridType
+}
+
+export type ValidationStatus = 'VALID' | 'INVALID';
+
+export interface IGridValidationState {
+    readonly status: ValidationStatus;
+    readonly errors?: ValidationErrors;
+}
+
+export interface IRecordValidationState extends IGridValidationState {
+    key: any;
+    fields: IFieldValidationState[];
+}
+
+export interface IFieldValidationState extends IGridValidationState {
+    field: string
 }
 
 export interface GridServiceType {
@@ -320,16 +370,16 @@ export interface GridType extends IGridDataBindable {
     pinnedColumnsCount: number;
 
     iconTemplate?: TemplateRef<any>;
-    groupRowTemplate?: TemplateRef<any>;
-    groupByRowSelectorTemplate?: TemplateRef<any>;
+    groupRowTemplate?: TemplateRef<IgxGroupByRowTemplateContext>;
+    groupByRowSelectorTemplate?: TemplateRef<IgxGroupByRowSelectorTemplateContext>;
     rowLoadingIndicatorTemplate?: TemplateRef<any>;
-    headSelectorTemplate: TemplateRef<any>;
-    rowSelectorTemplate: TemplateRef<any>;
-    sortHeaderIconTemplate: TemplateRef<any>;
-    sortAscendingHeaderIconTemplate: TemplateRef<any>;
-    sortDescendingHeaderIconTemplate: TemplateRef<any>;
-    headerCollapseIndicatorTemplate: TemplateRef<any>;
-    headerExpandIndicatorTemplate: TemplateRef<any>;
+    headSelectorTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
+    rowSelectorTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
+    sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
+    headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
@@ -348,6 +398,7 @@ export interface GridType extends IGridDataBindable {
     _baseFontSize?: number;
     scrollSize: number;
 
+    validationTrigger: GridValidationTrigger;
     pinning: IPinningConfig;
     expansionStates: Map<any, boolean>;
     parentVirtDir: any;
@@ -379,6 +430,7 @@ export interface GridType extends IGridDataBindable {
     filteredSortedData: any[];
     dataWithAddedInTransactionRows: any[];
     transactions: TransactionService<Transaction, State>;
+    validation: IgxGridValidationService;
     defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
@@ -409,9 +461,9 @@ export interface GridType extends IGridDataBindable {
 
     cdr: ChangeDetectorRef;
     document: Document;
-    rowExpandedIndicatorTemplate: TemplateRef<any>;
-    rowCollapsedIndicatorTemplate: TemplateRef<any>;
-    excelStyleHeaderIconTemplate: TemplateRef<any>;
+    rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
 
     selectRowOnClick: boolean;
     cellSelection: GridSelectionMode;
@@ -484,6 +536,8 @@ export interface GridType extends IGridDataBindable {
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
+    formGroupCreated: EventEmitter<IGridFormGroupCreatedEventArgs>;
+    validationStatusChange: EventEmitter<IGridValidationStatusEventArgs>;
 
     toolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     rendered$: Observable<boolean>;
@@ -662,4 +716,94 @@ export interface GridSVGIcon {
 export interface ISizeInfo {
     width: number,
     padding: number
+}
+
+export interface IgxGridMasterDetailContext {
+    $implicit: any;
+    index: number;
+}
+
+export interface IgxGroupByRowTemplateContext {
+    $implicit: IGroupByRecord;
+}
+
+export interface IgxGridTemplateContext {
+    $implicit: GridType
+}
+
+export interface IgxGridRowTemplateContext {
+    $implicit: RowType
+}
+
+export interface IgxGridRowDragGhostContext {
+    $implicit: any, // this is the row data
+    data: any, // this is also the row data for some reason.
+    grid: GridType
+}
+
+export interface IgxGridEmptyTemplateContext {
+    $implicit: undefined
+}
+
+export interface IgxGridRowEditTemplateContext {
+    $implicit: undefined,
+    rowChangesCount: number,
+    endEdit:  (commit: boolean, event?: Event) => void
+}
+
+export interface IgxGridRowEditTextTemplateContext {
+    $implicit: number
+}
+
+export interface IgxGridRowEditActionsTemplateContext {
+    $implicit: (commit: boolean, event?: Event) => void
+}
+
+export interface IgxGridHeaderTemplateContext {
+    $implicit: HeaderType
+}
+
+export interface IgxColumnTemplateContext {
+    $implicit: ColumnType,
+    column: ColumnType
+}
+
+export interface IgxCellTemplateContext {
+    $implicit: any,
+    additionalTemplateContext: any,
+    formControl?: FormControl<any>,
+    defaultErrorTemplate?: TemplateRef<any>,
+    cell?: CellType
+}
+
+export interface IgxRowSelectorTemplateContext {
+    $implicit: {
+        index: number,
+        rowID: any,
+        key: any,
+        selected: boolean,
+        select?: () => void,
+        deselect?: () => void
+    }
+}
+
+export interface IgxGroupByRowSelectorTemplateContext {
+    $implicit: {
+        selectedCount: number,
+        totalCount: number,
+        groupRow: IGroupByRecord
+    }
+}
+
+export interface IgxHeadSelectorTemplateContext {
+    $implicit: {
+        selectedCount: number;
+        totalCount: number;
+        selectAll?: () => void;
+        deselectAll?: () => void;
+    };
+}
+
+export interface IgxSummaryTemplateContext {
+    $implicit: IgxSummaryResult[]
 }

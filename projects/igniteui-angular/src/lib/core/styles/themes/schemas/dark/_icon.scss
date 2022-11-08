@@ -15,14 +15,14 @@ $dark-icon: $light-icon;
 
 /// Generates a dark fluent icon schema.
 /// @type {Map}
-/// @property {Map} disabled-color [color: ('grays' 500)] - The icon color.
+/// @property {Map} disabled-color [color: ('gray' 500)] - The icon color.
 /// @requires {function} extend
 /// @requires $light-icon
 $dark-fluent-icon: extend(
     $fluent-icon,
     (
         disabled-color: (
-            color: ('grays' 500)
+            color: ('gray' 500)
         )
     )
 );

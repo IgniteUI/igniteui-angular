@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
@@ -30,7 +30,9 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 describe('IgxGrid - multi-column headers #grid', () => {
     let fixture; let grid: IgxGridComponent; let componentInstance;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
@@ -51,7 +53,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        });
+        })
+        .compileComponents();
     }));
 
     describe('Initialization and rendering tests: ', () => {
@@ -667,6 +670,33 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
+
+        it('column hiding - verify grid after hiding the last column group', async () => {
+            grid.navigateTo(0, 10);
+            await wait(100);
+            fixture.detectChanges();
+            await wait(250);
+            fixture.detectChanges();
+
+            let headerDisplayContainer = fixture.debugElement.query(By.css('.igx-grid-thead__wrapper >* .igx-display-container'));
+            let leftOffset = parseInt(headerDisplayContainer.styles.left, 10);
+            expect(leftOffset).toBeLessThan(-600);
+
+            const initialBodyHeight = parseInt(fixture.debugElement.query(By.css('.igx-grid__tbody-content')).styles.height, 10);
+            const contactInfoGroup = grid.columns.find(c => c.header === 'Contact Information');
+            const groupWidth = contactInfoGroup.width;
+            contactInfoGroup.hidden = true;
+            fixture.detectChanges();
+            await wait(200);
+            fixture.detectChanges();
+
+            headerDisplayContainer = fixture.debugElement.query(By.css('.igx-grid-thead__wrapper >* .igx-display-container'));
+            const expectedOffset = leftOffset - parseInt(groupWidth, 10);
+            leftOffset = parseInt(headerDisplayContainer.styles.left, 10);
+
+            expect(parseInt(fixture.debugElement.query(By.css('.igx-grid__tbody-content')).styles.height, 10)).toEqual(initialBodyHeight);
+            expect(leftOffset).toBeGreaterThanOrEqual(expectedOffset);
+        });
 
         it('column hiding - parent level', () => {
             const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];

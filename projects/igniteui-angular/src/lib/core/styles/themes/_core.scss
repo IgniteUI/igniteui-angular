@@ -3,7 +3,8 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-@use 'utilities' as *;
+// Used to configure color accessibility for charts
+@use 'igniteui-theming/sass/color/functions' as color;
 
 // Common components
 @use '../components/_common/igx-control';
@@ -60,6 +61,7 @@
 @use '../components/paginator/paginator-component' as paginator;
 @use '../components/progress/progress-component' as progress;
 @use '../components/radio/radio-component' as radio;
+@use '../components/query-builder/query-builder-component' as query-builder;
 @use '../components/scrollbar/scrollbar-component' as scrollbar;
 @use '../components/slider/slider-component' as slider;
 @use '../components/splitter/splitter-component' as splitter;
@@ -80,9 +82,9 @@
 /// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
-    $enhanced-accessibility: $enhanced-accessibility
+    $enhanced-accessibility: false
 ) {
-    $enhanced-accessibility: $enhanced-accessibility !global;
+    @include color.configure-colors($enhanced-accessibility);
 
     // Angular hack for binding to [hidden] property
     // not working
@@ -96,7 +98,8 @@
     @include drag.component();
 
     // Includes the base for each theme.
-    [class^='igx-'] {
+    [class^='igx-'],
+    [class^='ig-'] {
         &,
         *,
         *::before,
@@ -154,6 +157,7 @@
     @include paginator.component();
     @include progress.component();
     @include radio.component();
+    @include query-builder.component();
     @include scrollbar.component();
     @include slider.component();
     @include splitter.component();

@@ -6,15 +6,15 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 ///
-/// @property {Map} label-color [color: ('grays', 700)] - sets the color for the label.
+/// @property {Map} label-color [color: ('gray', 700)] - sets the color for the label.
 /// @property {Number} symbol-size [rem(36px)] - the size of the symbols.
-/// @property {Map} symbol-empty-color [color: ('grays', 900)] - sets the idle color for the symbol when it is a plane text.
+/// @property {Map} symbol-empty-color [color: ('gray', 900)] - sets the idle color for the symbol when it is a plane text.
 /// @property {Map} symbol-full-color [color: ('primary')] - sets the color in selected state for the symbol when it is a plane text.
 /// @property {Color} symbol-empty-filter [grayscale(100%) opacity(50%)] - the filter(s) used for the empty symbol.
 /// @property {Color} symbol-full-filter [grayscale(50%)] - the filter(s) used for the filled symbol.
-/// @property {Map} disabled-label-color [color: ('grays', 400)] - sets the color for the label in disabled state.
-/// @property {Map} disabled-empty-symbols-color [color: ('grays', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
-/// @property {Map} disabled-full-symbols-color [color: ('grays', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
+/// @property {Map} disabled-label-color [color: ('gray', 400)] - sets the color for the label in disabled state.
+/// @property {Map} disabled-empty-symbols-color [color: ('gray', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @property {Map} disabled-full-symbols-color [color: ('gray', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
 ///
 /// Generates a light rating schema.
 /// @type {Map}
@@ -26,13 +26,13 @@ $light-rating: (
     variant: 'material',
 
     label-color: (
-        color: ('grays', 700)
+        color: ('gray', 700)
     ),
 
     symbol-size: null,
 
     symbol-empty-color: (
-        color: ('grays', 600)
+        color: ('gray', 600)
     ),
 
     symbol-full-color: (
@@ -48,11 +48,11 @@ $light-rating: (
     ),
 
     disabled-label-color: (
-        color: ('grays', 400)
+        color: ('gray', 400)
     ),
 
     disabled-empty-symbol-color: (
-        color: ('grays', 400)
+        color: ('gray', 400)
     ),
 
     disabled-full-symbol-color: (
@@ -63,49 +63,49 @@ $light-rating: (
 
 /// Generates a fluent rating schema.
 /// @type {Map}
-/// @property {Map} label-color [color: ('grays', 900)] - sets the color for the label.
-/// @property {Map} disabled-idle-symbols-color [color: ('grays', 200)] - sets the idle color for the symbol in disabled state when it is a plane text.
-/// @property {Map} disabled-selected-symbols-color [color: ('grays', 500)] - sets the color for the symbol in selected/disabled state when it is a plane text.
+/// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
+/// @property {Map} disabled-idle-symbols-color [color: ('gray', 200)] - sets the idle color for the symbol in disabled state when it is a plane text.
+/// @property {Map} disabled-selected-symbols-color [color: ('gray', 500)] - sets the color for the symbol in selected/disabled state when it is a plane text.
 /// @requires {function} extend
 /// @requires {Map} $light-rating
 $fluent-rating: extend($light-rating, (
     variant: 'fluent',
 
     label-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     disabled-empty-symbols-color: (
-        color: ('grays', 200)
+        color: ('gray', 200)
     ),
 
     disabled-full-symbols-color: (
-        color: ('grays', 500)
+        color: ('gray', 500)
     ),
 ));
 
 /// Generates a bootstrap rating schema.
 /// @type {Map}
-/// @property {Map} label-color [color: ('grays', 900)] - sets the color for the label.
+/// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
 /// @requires {function} extend
 /// @requires {Map} $light-rating
 $bootstrap-rating: extend($light-rating, (
     variant: 'bootstrap',
 
     label-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 ));
 
 /// Generates an indigo rating schema.
 /// @type {Map}
-/// @property {Map} label-color [color: ('grays', 900)] - sets the color for the label.
+/// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
 /// @requires {function} extend
 /// @requires {Map} $light-rating
 $indigo-rating: extend($light-rating, (
     variant: 'indigo-design',
 
     label-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 ));

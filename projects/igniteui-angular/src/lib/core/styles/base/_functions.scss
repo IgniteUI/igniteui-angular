@@ -1,0 +1,49 @@
+@use 'variables' as *;
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:string';
+
+////
+/// @group Utilities
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @access private
+@function is-used($name, $checklist) {
+    $used: true;
+
+    @if list.index($checklist, $name) {
+        $deps: map.get($components, $name, 'usedBy');
+        $excluded: ();
+
+        @each $item in $checklist {
+            @if list.index($deps, $item) {
+                $excluded: list.append($excluded, $item);
+            }
+        }
+
+        $used: list.length($deps) != list.length($excluded);
+
+        @if not($used) {
+            $dropped-themes: list.append($dropped-themes, $name) !global;
+        } @else {
+            @warn string.unquote('You\'ve opted to exclude the "#{$name}" theme but it was held back as the following themes depend on it: "#{$deps}".');
+        }
+    }
+
+    @return $used;
+}
+
+/// Test if a component, or list of components is in the list of known components.
+/// @access private
+/// @param {String|List} $items - The components list to check in.
+/// @return {List} - The list of passed items.
+@function is-component($items) {
+    $register: map.keys($components);
+    @each $item in $items {
+        @if not(list.index($register, $item)) {
+            @warn string.unquote('Can\'t exclude "#{$item}" because it is not in the list of known components.');
+        }
+    }
+    @return $items;
+}

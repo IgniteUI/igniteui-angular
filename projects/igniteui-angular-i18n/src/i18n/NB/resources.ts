@@ -9,6 +9,8 @@ import { CalendarResourceStringsNB } from './calendar-resources';
 import { TreeResourceStringsNB } from './tree-resources';
 import { InputResourceStringsNB } from './input-resources';
 import { ChipResourceStringsNB } from './chip-resources';
+import { ComboResourceStringsNB } from './combo-resources';
+import { QueryBuilderResourceStringsNB } from './query-builder-resources';
 
 /**
  * Norwegian resource strings for all components
@@ -24,5 +26,7 @@ export const IgxResourceStringsNB = {
     ...CalendarResourceStringsNB,
     ...TreeResourceStringsNB,
     ...InputResourceStringsNB,
-    ...ChipResourceStringsNB
+    ...ChipResourceStringsNB,
+    ...ComboResourceStringsNB,
+    ...QueryBuilderResourceStringsNB
 };

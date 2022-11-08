@@ -40,6 +40,8 @@ import {
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './public_api';
+import { IComboResourceStrings } from '../core/i18n/combo-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -305,7 +307,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         return this._data;
     }
     public set data(val: any[] | null) {
-        this._data = (val) ? val : [];
+        // igxFor directive ignores undefined values
+        // if the combo uses simple data and filtering is applied
+        // an error will occur due to the mismatch of the length of the data
+        // this can occur during filtering for the igx-combo and
+        // during filtering & selection for the igx-simple-combo
+        // since the simple combo's input is both a container for the selection and a filter
+        this._data = (val) ? val.filter(x => x !== undefined) : [];
     }
 
     /**
@@ -441,6 +449,23 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     public set type(val: IgxInputGroupType) {
         this._type = val;
+    }
+
+    /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public get resourceStrings(): IComboResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
+        }
+        return this._resourceStrings;
+    }
+    public set resourceStrings(value: IComboResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
@@ -890,6 +915,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
+    protected _resourceStrings;
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
@@ -959,6 +985,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             this.dataPreLoad.emit(eventArgs);
         });
     }
+
+        /** @hidden @internal */
+        public ngDoCheck() {
+            if (this.data?.length && this.selection.length) {
+                this._value = this.createDisplayText(this.selection, []);
+            }
+        }
 
     /** @hidden @internal */
     public ngOnDestroy() {
@@ -1216,7 +1249,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value?.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        const searchValue = this.searchValue || this.comboInput?.value;
+        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {
@@ -1267,6 +1301,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.registerRemoteEntries(addedItems);
         this.registerRemoteEntries(removedItems, false);
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+    }
+
+    protected get required(): boolean {
+        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
     }
 
     public abstract get filteredData(): any[] | null;

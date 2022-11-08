@@ -4,8 +4,8 @@ import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } fro
 import { IgxGridCell } from './grid-public-cell';
 import { IgxSummaryResult } from './summaries/grid-summary';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
-import mergeWith from 'lodash.mergewith';
-import { CellType, GridServiceType, GridType, RowType } from './common/grid.interface';
+import { mergeWith } from 'lodash-es';
+import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -40,7 +40,7 @@ abstract class BaseRow implements RowType {
 
     /**
      * Gets if this represents add row UI
-     * 
+     *
      * ```typescript
      * let isAddRow = row.addRowUI;
      * ```
@@ -49,6 +49,17 @@ abstract class BaseRow implements RowType {
         return !!this.grid.crudService.row &&
             this.grid.crudService.row.getClassName() === IgxAddRow.name &&
             this.grid.crudService.row.id === this.key;
+    }
+
+    /** Gets the validation status and errors, if any.
+    * ```typescript
+    * let validation = row.validation;
+    * let errors = validation.errors;
+    * ```
+    */
+    public get validation(): IGridValidationState {
+        const formGroup = this.grid.validation.getFormGroup(this.key);
+        return { status: formGroup?.status as ValidationStatus || 'VALID', errors: formGroup?.errors } as const;
     }
 
     /**
