@@ -7,6 +7,13 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `igxGrid` - exposing new Input properties:
 
+    - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
+        * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
+        * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
+        * - `IgxGridComponent` - `GridType`
+        * - `IgxTreeGridComponent` - `TreeGridType` or `GridType`
+        * - `IgxHierarchicalGridComponent` - `HierarchicalGridType` or `GridType`
+
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
