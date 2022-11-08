@@ -3,7 +3,7 @@ import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
+import { IgxDropDownModule, IgxDropDownItemComponent, IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxHintDirective } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1205,7 +1205,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1239,7 +1239,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1269,7 +1269,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1341,7 +1341,7 @@ describe('igxSelect', () => {
                 let selectedItem = select.items[4];
                 spyOn(select.selectionChanging, 'emit');
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
