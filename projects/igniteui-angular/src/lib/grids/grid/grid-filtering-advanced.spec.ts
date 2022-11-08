@@ -908,6 +908,30 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
         }));
 
+        it('Should apply filters on Apply button click without prior Commit button click', fakeAsync(() => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
+
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+        }));
+
         it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
