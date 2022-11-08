@@ -437,7 +437,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxSimpleComboSampleComponent
+                    IgxSimpleComboSampleComponent,
+                    IgxSimpleComboEmptyComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -649,6 +650,13 @@ describe('IgxSimpleCombo', () => {
             const footerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`)).nativeElement;
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
+        });
+        it('should initialize the component with empty data and bindings', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
+            expect(() => {
+                fixture.detectChanges();
+            }).not.toThrow();
+            expect(fixture.componentInstance.combo).toBeDefined();
         });
     });
 
@@ -1866,6 +1874,17 @@ class IgxSimpleComboSampleComponent {
 
     public selectionChanging() {
     }
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`
+})
+export class IgxSimpleComboEmptyComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] = [];
+    public name!: string;
 }
 
 @Component({
