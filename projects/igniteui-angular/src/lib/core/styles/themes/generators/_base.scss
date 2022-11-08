@@ -31,8 +31,14 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
-    @include palette($palette);
-    @include elevations($elevations);
+
+    @if not(list.index($exclude, 'palette')) {
+        @include palette($palette);
+    }
+
+    @if not(list.index($exclude, 'elevations')) {
+        @include elevations($elevations);
+    }
 
     @if $elevation == false {
         #{$scope} {
@@ -362,7 +368,7 @@
         ));
     }
 
-    @if is-used('igx-scrollbar', $exclude) {
+    @if is-used('ig-scrollbar', $exclude) {
         @include scrollbar(scrollbar-theme(
             $schema: $schema
         ));
