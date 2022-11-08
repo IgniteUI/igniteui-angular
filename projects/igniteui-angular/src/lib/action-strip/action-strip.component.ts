@@ -141,15 +141,14 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * @internal
      */
      public get hideOnRowLeave(): boolean{
-        this.actionButtons.forEach(button => {
-            if (button.asMenuItems) {
+        if(this.menu.items.length === 0){
+            return true;
+        }else if(this.menu.items.length > 0){
+            if(this.menu.collapsed){
+                return true;
+            }else{
                 return false;
             }
-        });
-        if(this._menuItems.length > 0){
-            return false;
-        } else{
-            return true;
         }
     }
 
