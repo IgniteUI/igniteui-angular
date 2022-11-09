@@ -9,10 +9,10 @@
 @use 'bootstrap';
 @use 'fluent';
 @use 'indigo';
-@use 'charts';
 @use 'igniteui-theming/sass/utils/meta' as *;
 @use 'igniteui-theming/sass/typography' as theming;
 @use 'igniteui-theming/sass/typography/presets' as presets;
+@use 'igniteui-theming/sass/typography/charts' as *;
 
 /// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
 /// The produces styles are based on the passed typeface and type scale.
@@ -35,7 +35,7 @@
             line-height: theming.rem(27px);
 
             @if not(list.index($exclude, 'charts')) {
-                @include charts.typography($type-scale);
+                @include charts-typography($type-scale);
             }
 
             @if ($variant == 'material' or $variant == null) {

@@ -8,6 +8,7 @@
 @use 'igniteui-theming/sass/elevations/presets' as elevations;
 @use 'igniteui-theming/sass/utils' as *;
 @use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/charts' as *;
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
