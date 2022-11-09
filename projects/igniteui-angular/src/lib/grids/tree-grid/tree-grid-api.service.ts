@@ -23,9 +23,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
     public get_summary_data() {
         const grid = this.grid;
-        const data = grid.processedRootRecords.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
+        const data = grid.processedRootRecords?.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);
-        if (grid.transactions.enabled) {
+        if (data && grid.transactions.enabled) {
             const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
             deletedRows.forEach(rowID => {
                 const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
