@@ -87,7 +87,7 @@ export class IgxGridPagingPipe implements PipeTransform {
             index: page,
             recordsPerPage: perPage
         };
-        const total = this.grid._totalRecords >= 0 ? this.grid._totalRecords : collection.data.length;
+        const total = this.grid._totalRecords >= 0 ? this.grid._totalRecords : collection.data?.length;
         DataUtil.correctPagingState(state, total);
 
         const result = {
