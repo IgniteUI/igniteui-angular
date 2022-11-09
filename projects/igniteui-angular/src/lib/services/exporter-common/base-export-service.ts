@@ -266,7 +266,6 @@ export abstract class IgxBaseExporter {
             this._ownersMap.set(DEFAULT_OWNER, columnList);
         }
 
-        options.exportSummaries = true;
         this.summaries = this.prepareSummaries(grid);
         this._setChildSummaries =  this.summaries.size > 1 && grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly;
 
