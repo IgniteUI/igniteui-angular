@@ -465,7 +465,7 @@ export abstract class IgxBaseExporter {
                             rawValue = new Date(rawValue);
                         } else if (e.dataType === 'string' && rawValue instanceof Date) {
                             rawValue = rawValue.toString();
-                        } else if (e.dataType === 'currency') {
+                        } else if (e.dataType === 'currency' && record.type !== ExportRecordType.SummaryRecord) {
                             rawValue = formatCurrency(rawValue, e.currencyCode, e.displayFormat, e.digitsInfo, this.locale);
                         }
 
@@ -939,6 +939,7 @@ export abstract class IgxBaseExporter {
         for (const rc of recordChildren) {
             if (rc.children && rc.children.length > 0) {
                 this.addTreeGridData([rc], parentExpanded, hierarchicalOwner);
+                summaryLevel = rc.level;
             } else {
 
                 const currentRecord: IExportRecord = {
