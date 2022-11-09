@@ -697,14 +697,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
                 const unselectedDates = [start, ...this.generateDateRange(start, end)]
                     .filter(date => !this.isDateDisabled(date)
-                        && this.selectedDates.map(d => d.getTime()).indexOf(date.getTime()) === -1
+                        && this.selectedDates.every((d: Date) => d.getTime() !== date.getTime())
                     );
 
                 // select all dates from last selected to shift clicked date
                 if (this.selectedDates.some((date: Date) => date.getTime() === this.lastSelectedDate.getTime())
                     && unselectedDates.length) {
 
-                    newSelection = unselectedDates.map(d => new Date(d));
+                    newSelection = unselectedDates;
                 } else {
                     // delesect all dates from last clicked to shift clicked date (excluding)
                     this.selectedDates = this.selectedDates.filter(
