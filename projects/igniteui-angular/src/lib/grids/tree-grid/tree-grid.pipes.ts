@@ -23,6 +23,10 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
         const flatData: any[] = [];
 
+        if (!collection || !collection.length) {
+            return collection;
+        }
+
         if (primaryKey && foreignKey) {
             hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         } else if (childDataKey) {

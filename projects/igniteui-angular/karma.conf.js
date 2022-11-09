@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -16,7 +16,6 @@ module.exports = function (config) {
         'karma-jasmine',
         'karma-coverage',
         'karma-chrome-launcher',
-        'karma-jasmine-spec-tags',
         'karma-spec-reporter',
         '@angular-devkit/build-angular/plugins/karma'
     ],

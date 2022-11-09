@@ -2458,7 +2458,8 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
-    describe('IgxGrid - Performance tests #perf', () => {
+    // TODO: Enable performance tests again
+    xdescribe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;
@@ -2658,6 +2659,40 @@ describe('IgxGrid Component Tests #grid', () => {
             // UIInteractions.simulateClickAndSelectEvent(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
             await wait(16);
             fix.detectChanges();
+        });
+    });
+
+    describe('Setting null data', () => {
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridNoDataComponent,
+                    IgxGridTestComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
+        }));
+
+        it('should not throw error when data is null', () => {
+            const fix = TestBed.createComponent(IgxGridNoDataComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null and transactions are enabled', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
         });
     });
 });
@@ -3256,4 +3291,17 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     public ngAfterViewInit() {
         this.delta = new Date().getTime() - this.startTime;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name" [hasSummary]="true"></igx-column>
+            <igx-paginator></igx-paginator>
+        </igx-grid>
+    `
+})
+export class IgxGridNoDataComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
