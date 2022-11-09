@@ -6,7 +6,7 @@
 
 /// The global component registry map.
 /// @type List
-$components: () !default;
+$components: (palette: 'palette', elevations: 'elevations') !default;
 
 /// Stores a list of dropped component themes.
 $dropped-themes: () !default;
