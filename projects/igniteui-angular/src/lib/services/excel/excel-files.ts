@@ -432,6 +432,13 @@ export class WorksheetFile implements IExcelFile {
                 const level = worksheetData.isGroupedGrid ? worksheetData.maxLevel : fullRow.level;
 
                 summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level);
+
+                if (!summaryFunc) {
+                    const cellStr = `${cellValue.label}: ${cellValue.value}`;
+                    const savedValue = dictionary.saveValue(cellStr, false);
+                    return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
+                }
+
                 return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
             }
 
