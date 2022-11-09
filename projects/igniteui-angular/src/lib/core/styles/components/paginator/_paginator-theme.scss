@@ -81,7 +81,6 @@
         align-items: center;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background-color');
-        grid-row: 7;
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
         z-index: 1;
