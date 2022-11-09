@@ -3297,7 +3297,7 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     template: `
         <igx-grid>
             <igx-column field="ID"></igx-column>
-            <igx-column field="Name"></igx-column>
+            <igx-column field="Name" [hasSummary]="true"></igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
     `

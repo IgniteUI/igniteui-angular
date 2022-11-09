@@ -175,8 +175,8 @@ export class IgxTreeGridCellSelectionComponent {
         width="900px" height="500px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
-        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
-        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [hasSummary]="true"></igx-column>
         <igx-paginator [perPage]="10"></igx-paginator>
     </igx-tree-grid>
     `
