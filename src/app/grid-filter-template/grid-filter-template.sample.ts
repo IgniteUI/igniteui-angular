@@ -5,9 +5,10 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
-    IgxColumnComponent,
+    // ColumnType,
     GridSelectionMode
 } from 'igniteui-angular';
+import { ColumnType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
     providers: [],
@@ -511,7 +512,7 @@ export class GridFilterTemplateSampleComponent implements OnInit {
         this.selectionMode = GridSelectionMode.multiple;
     }
 
-    public onInput(input: any, column: IgxColumnComponent) {
+    public onInput(input: any, column: ColumnType) {
         let operand = null;
         let value = input.value;
 

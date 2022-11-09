@@ -20,6 +20,7 @@ class Person {
 export class RadioSampleComponent implements AfterContentInit {
     @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true })
     public radioGroup: IgxRadioGroupDirective;
+    public disabled = false;
 
     public selectedValue: any;
     public options = [0, 1, 2, 3, 4];
