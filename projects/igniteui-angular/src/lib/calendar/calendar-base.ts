@@ -192,6 +192,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    private _startDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _endDate: Date;
+
+    /**
+     * @hidden
+     */
     private _disabledDates: DateRangeDescriptor[];
 
     /**
@@ -688,14 +698,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             let newSelection = [];
 
             if (this.shiftKey && this.lastSelectedDate) {
-                let start: Date;
-                let end: Date;
 
-                [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                [this._startDate, this._endDate] = this.lastSelectedDate.getTime() < value.getTime()
                     ? [this.lastSelectedDate, value]
                     : [value, this.lastSelectedDate];
 
-                const unselectedDates = [start, ...this.generateDateRange(start, end)]
+                const unselectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)]
                     .filter(date => !this.isDateDisabled(date)
                         && this.selectedDates.every((d: Date) => d.getTime() !== date.getTime())
                     );
@@ -707,13 +715,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     newSelection = unselectedDates;
                 } else {
                     // delesect all dates from last clicked to shift clicked date (excluding)
-                    this.selectedDates = this.selectedDates.filter(
-                        (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
+                    this.selectedDates = this.selectedDates.filter((date: Date) =>
+                        date.getTime() < this._startDate.getTime() || date.getTime() > this._endDate.getTime()
                     );
-                    this.selectedDates.push(value);
 
+                    this.selectedDates.push(value);
                     this._deselectDate = true;
                 }
+
+                this._startDate = this._endDate = undefined;
 
             } else if (this.selectedDates.every((date: Date) => date.getTime() !== value.getTime())) {
                 newSelection.push(value);
@@ -743,13 +753,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private selectRange(value: Date | Date[], excludeDisabledDates: boolean = false) {
-        let start: Date;
-        let end: Date;
-
         if (Array.isArray(value)) {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-            start = this.getDateOnly(value[0]);
-            end = this.getDateOnly(value[value.length - 1]);
+            this._startDate = this.getDateOnly(value[0]);
+            this._endDate = this.getDateOnly(value[value.length - 1]);
         } else {
 
             if (this.shiftKey && this.lastSelectedDate) {
@@ -763,23 +770,20 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
                 // shortens the range when selecting a date inside of it
                 if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
-                    if (this.lastSelectedDate.getTime() < value.getTime()) {
-                        start = value;
-                        end = this.selectedDates.pop();
-                    } else {
-                        start = this.selectedDates.shift();
-                        end = value;
-                    }
+
+                    this.lastSelectedDate.getTime() < value.getTime()
+                        ? this._startDate = value
+                        : this._endDate = value;
 
                 } else {
                     // extends the range when selecting a date outside of it
                     // allows selection from last deselected to current selected date
                     if (this.lastSelectedDate.getTime() < value.getTime()) {
-                        start = this.selectedDates.shift() ?? this.lastSelectedDate;
-                        end = value;
+                        this._startDate = this._startDate ?? this.lastSelectedDate;
+                        this._endDate = value;
                     } else {
-                        start = value;
-                        end = this.selectedDates.pop() ?? this.lastSelectedDate;
+                        this._startDate = value;
+                        this._endDate = this._endDate ?? this.lastSelectedDate;
                     }
                 }
 
@@ -788,6 +792,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else if (!this.rangeStarted) {
                 this.rangeStarted = true;
                 this.selectedDates = [value];
+                this._startDate = this._endDate = undefined;
             } else {
                 this.rangeStarted = false;
 
@@ -797,7 +802,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     return;
                 }
 
-                [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                [this._startDate, this._endDate] = this.lastSelectedDate.getTime() < value.getTime()
                     ? [this.lastSelectedDate, value]
                     : [value, this.lastSelectedDate];
             }
@@ -805,8 +810,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.lastSelectedDate = value;
         }
 
-        if (start && end) {
-            this.selectedDates = [start, ...this.generateDateRange(start, end)];
+        if (this._startDate && this._endDate) {
+            this.selectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)];
         }
 
         if (excludeDisabledDates) {
