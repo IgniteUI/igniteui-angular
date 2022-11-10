@@ -118,7 +118,7 @@
 /// @property {Map} igx-query-builder [$light-query-builder]
 /// @property {Map} igx-radio [$light-radio]
 /// @property {Map} igx-ripple [$light-ripple]
-/// @property {Map} igx-scrollbar [$light-scrollbar]
+/// @property {Map} ig-scrollbar [$light-scrollbar]
 /// @property {Map} shape-chart [$light-shape-chart]
 /// @property {Map} igx-slider [$light-slider]
 /// @property {Map} igx-snackbar [$light-snackbar]
@@ -182,7 +182,7 @@ $light-schema: (
     igx-radio: $light-radio,
     igx-ripple: $light-ripple,
     shape-chart: $light-shape-chart,
-    igx-scrollbar: $light-scrollbar,
+    ig-scrollbar: $light-scrollbar,
     igx-slider: $light-slider,
     igx-snackbar: $light-snackbar,
     sparkline: $light-sparkline,
@@ -256,7 +256,7 @@ $light-fluent-schema: (
     igx-ripple: $fluent-ripple,
     shape-chart: $fluent-shape-chart,
     igx-query-builder: $fluent-query-builder,
-    igx-scrollbar: $fluent-scrollbar,
+    ig-scrollbar: $fluent-scrollbar,
     igx-slider: $fluent-slider,
     igx-snackbar: $fluent-snackbar,
     sparkline: $fluent-sparkline,
@@ -325,7 +325,7 @@ $light-bootstrap-schema: (
     igx-ripple: $bootstrap-ripple,
     igx-query-builder: $bootstrap-query-builder,
     shape-chart: $bootstrap-shape-chart,
-    igx-scrollbar: $bootstrap-scrollbar,
+    ig-scrollbar: $bootstrap-scrollbar,
     igx-slider: $bootstrap-slider,
     igx-snackbar: $bootstrap-snackbar,
     sparkline: $bootstrap-sparkline,
@@ -394,7 +394,7 @@ $light-indigo-schema: (
     shape-chart: $indigo-shape-chart,
     igx-ripple: $indigo-ripple,
     igx-query-builder: $indigo-query-builder,
-    igx-scrollbar: $indigo-scrollbar,
+    ig-scrollbar: $indigo-scrollbar,
     igx-slider: $indigo-slider,
     igx-snackbar: $indigo-snackbar,
     sparkline: $indigo-sparkline,
