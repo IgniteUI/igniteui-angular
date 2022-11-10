@@ -932,6 +932,56 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
+        it('Should close the dialog on Apply button click if not all expression inputs are set', fakeAsync(() => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the dialog is closed an no records are filtered
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            expect(grid.filteredData).toBe(null);
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            expect(grid.filteredData).toBe(null);
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            expect(grid.filteredData).toBe(null);
+        }));
+
         it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
