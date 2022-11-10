@@ -177,7 +177,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
-        this.queryBuilder.commitOperandEdit();
+        this.queryBuilder.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.queryBuilder.expressionTree as IFilteringExpressionsTree;
     }
 
