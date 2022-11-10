@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     IgxColumnComponent,
     IgxNumberSummaryOperand,
@@ -8,7 +8,9 @@ import {
     IgxExporterOptionsBase,
     IgxExcelExporterOptions,
     IColumnExportingEventArgs,
-    IRowExportingEventArgs
+    IRowExportingEventArgs,
+    IgxGridComponent,
+    IgxTreeGridComponent
 } from 'igniteui-angular';
 import { HGRID_DATA } from './hGridData';
 import { GRID_DATA } from './gridData';
@@ -68,6 +70,12 @@ class HGridChildSummary {
     templateUrl: 'grid-export.sample.html'
 })
 export class GridExportComponent {
+    @ViewChild('grid', { static: true })
+    private grid: IgxGridComponent;
+
+    @ViewChild('tGrid', { static: true })
+    private tGrid: IgxTreeGridComponent;
+
     public gridSummary = GridSummary;
     public hGridSummary = HGridSummary;
     public hGridChildSummary = HGridChildSummary;
@@ -85,6 +93,8 @@ export class GridExportComponent {
 
     public toggleSummary(column: IgxColumnComponent) {
         column.hasSummary = !column.hasSummary;
+        this.grid.summaryService.clearSummaryCache();
+        this.tGrid.summaryService.clearSummaryCache();
     }
 
     public configureExport(args: IGridToolbarExportEventArgs) {

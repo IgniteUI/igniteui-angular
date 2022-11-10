@@ -68,9 +68,15 @@ export abstract class IgxExporterOptionsBase {
     public ignoreMultiColumnHeaders = false;
 
     /**
+     * Specifies whether the exported data should include column summaries.
+     * ```typescript
+     * let exportSummaries = this.exportOptions.exportSummaries;
+     * this.exportOptions.exportSummaries = true;
+     * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
-    public exportSummaries = false;
+    public exportSummaries = true;
 
     /**
      * Specifies whether the exported data should have frozen headers.
