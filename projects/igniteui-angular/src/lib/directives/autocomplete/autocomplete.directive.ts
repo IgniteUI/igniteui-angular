@@ -211,6 +211,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
+    protected _composing: boolean;
     protected id: string;
     protected get model() {
         return this.ngModel || this.formControl;
@@ -232,6 +233,29 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('input')
     public onInput() {
         this.open();
+        console.log('input');
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionstart')
+    public onCompositionStart(): void {
+        if (!this._composing) {
+            // this._compositionStartIndex = this._start;
+            this._composing = true;
+            console.log('Composition START!');
+        }
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionend')
+    public onCompositionEnd(): void {
+        // this._start = this._compositionStartIndex;
+        // const end = this.selectionEnd;
+        // const valueToParse = this.inputValue.substring(this._start, end);
+        // this.updateInput(valueToParse);
+        // this._end = this.selectionEnd;
+        // this._compositionValue = this.inputValue;
+        console.log('Composition END!');
     }
 
     /** @hidden  @internal */
