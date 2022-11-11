@@ -10,7 +10,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         super(settings);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');

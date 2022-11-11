@@ -17,7 +17,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public clicked(event?) {// eslint-disable-line
         this.comboAPI.disableTransitions = false;
