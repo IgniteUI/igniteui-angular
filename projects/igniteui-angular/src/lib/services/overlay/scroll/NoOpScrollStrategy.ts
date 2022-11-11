@@ -7,12 +7,12 @@ export class NoOpScrollStrategy extends ScrollStrategy {
     constructor() {
         super();
     }
-    /** @inheritdoc */
+    /** @inheritDoc */
     public initialize() { }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public attach(): void { }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public detach(): void { }
 }
