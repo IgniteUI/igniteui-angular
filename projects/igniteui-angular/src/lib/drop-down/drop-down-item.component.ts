@@ -14,7 +14,7 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get focused(): boolean {
         let focusedState = this._focused;
@@ -27,13 +27,13 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
      public set focused(value: boolean) {
         this._focused = value;
     }
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
      public get selected(): boolean {
         if (this.hasIndex) {
@@ -44,7 +44,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
      public set selected(value: boolean) {
         if (this.isHeader) {
@@ -67,7 +67,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
      public clicked(event): void {
         if (!this.isSelectable) {
