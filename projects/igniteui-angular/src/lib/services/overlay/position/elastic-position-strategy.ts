@@ -6,7 +6,7 @@ import { BaseFitPositionStrategy } from './base-fit-position-strategy';
  * to fit in the view port in case the element is partially getting out of view
  */
 export class ElasticPositionStrategy extends BaseFitPositionStrategy {
-    /** @inheritdoc */
+    /** @inheritDoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         element.classList.add('igx-overlay__content--elastic');
         const transformString: string[] = [];

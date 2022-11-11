@@ -15,7 +15,7 @@ import { IPositionStrategy } from './IPositionStrategy';
  * It is possible to either pass a start point or an HTMLElement as a positioning base.
  */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
-  /** @inheritdoc */
+  /** @inheritDoc */
   public settings: PositionSettings;
 
   private _defaultSettings: PositionSettings = {
@@ -32,7 +32,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  /** @inheritdoc */
+  /** @inheritDoc */
   public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
     const targetElement = target || this.settings.target;
     const rects =  this.calculateElementRectangles(contentElement, targetElement);
@@ -40,7 +40,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   /**
-   * @inheritdoc
+   * @inheritDoc
    * Creates clone of this position strategy
    * @returns clone of this position strategy
    */

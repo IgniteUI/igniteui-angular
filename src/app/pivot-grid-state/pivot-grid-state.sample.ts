@@ -6,16 +6,7 @@ import {
     PivotAggregation,
     IgxPivotDateDimension,
     IPivotDimension,
-    IDimensionsChange,
-    DisplayDensity,
-    FilteringExpressionsTree,
-    FilteringLogic,
-    IgxStringFilteringOperand,
-    PivotDimensionType,
-    IPivotGridRecord,
-    IPivotGridColumn,
     IgxGridStateDirective,
-    IGridState,
     IGridStateOptions,
     IPivotValue
 } from 'igniteui-angular';
