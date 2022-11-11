@@ -455,9 +455,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.getRemoteSelection(newSelection, oldSelection);
         }
 
-        if (this.displayKey !== null && this.displayKey !== undefined
+        if (this.displayKey !== null
+            && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0]?.toString() || '';
+            return this.convertKeysToItems(newSelection).filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
         }
 
         return newSelection[0]?.toString() || '';
