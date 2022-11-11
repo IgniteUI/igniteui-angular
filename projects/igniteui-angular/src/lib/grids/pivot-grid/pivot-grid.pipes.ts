@@ -344,7 +344,7 @@ export class IgxFilterPivotItemsPipe implements PipeTransform {
     }
 }
 
-interface GridStyleCSSProperty {
+export interface GridStyleCSSProperty {
     [prop: string]: any;
 }
 

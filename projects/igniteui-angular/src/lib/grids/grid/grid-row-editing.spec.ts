@@ -787,6 +787,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should update row changes when focus overlay buttons on tabbing`, (async () => {
+            grid.getColumnByName("ID").hidden = true;
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
@@ -807,7 +808,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
             fix.detectChanges();
 
-            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row');
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row and 1 hidden columns');
 
             // go to last editable cell
             grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab', false, true));
@@ -827,7 +828,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
 
-            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 2 changes in this row');
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 2 changes in this row and 1 hidden columns');
         }));
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
