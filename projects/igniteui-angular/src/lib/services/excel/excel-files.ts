@@ -82,6 +82,14 @@ export class WorksheetFile implements IExcelFile {
     private isValidGrid: boolean;
     private lastValidRow: string;
 
+    private currencyStyleMap = new Map<string, number>([
+        ['USD', 5],
+        ['GBP', 6],
+        ['CNY', 7],
+        ['EUR', 8],
+        ['JPY', 9],
+    ]);
+
     public writeElement() {}
 
     public async writeElementAsync(folder: Object, worksheetData: WorksheetData) {
@@ -411,6 +419,9 @@ export class WorksheetFile implements IExcelFile {
 
             const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
 
+            const targetCol = worksheetData.owner.columns.filter(col => col.field === key)[0];
+            const isColumnCurrencyType = targetCol.dataType === 'currency';
+
             let value = isSavedAsString ? savedValue : cellValue;
 
             if (isSavedAsDate) {
@@ -421,7 +432,7 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode) || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {

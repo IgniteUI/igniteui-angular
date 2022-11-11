@@ -464,8 +464,6 @@ export abstract class IgxBaseExporter {
                             rawValue = new Date(rawValue);
                         } else if (e.dataType === 'string' && rawValue instanceof Date) {
                             rawValue = rawValue.toString();
-                        } else if (e.dataType === 'currency' && record.type !== ExportRecordType.SummaryRecord) {
-                            rawValue = formatCurrency(rawValue, e.currencyCode, e.displayFormat, e.digitsInfo, this.locale);
                         }
 
                         let formattedValue = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
