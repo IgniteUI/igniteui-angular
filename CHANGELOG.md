@@ -22,6 +22,9 @@ All notable changes for each version of this project will be documented in this 
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
 
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+
 - `IgxCalendar`
 
     Added support for shift key + mouse click interactions.
