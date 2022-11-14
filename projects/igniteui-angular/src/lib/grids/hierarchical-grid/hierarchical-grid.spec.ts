@@ -1585,7 +1585,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         const mainGridOverlayTextContent = mainGridOverlay.querySelector('.igx-banner__text').textContent;
         const mainGridOverlayActionsContent = mainGridOverlay.querySelector('.igx-banner__actions').textContent;
 
-        expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row\n');
+        expect(mainGridOverlayTextContent).toBe(' You have 0 changes in this row and 0 hidden columns\n');
         expect(mainGridOverlayActionsContent).toBe('CancelDone');
 
         hierarchicalGrid.expandRow(hierarchicalGrid.getRowByIndex(0).key);
