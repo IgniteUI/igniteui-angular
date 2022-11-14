@@ -419,8 +419,9 @@ export class WorksheetFile implements IExcelFile {
 
             const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
 
-            const targetCol = worksheetData.owner.columns.filter(col => col.field === key)[0];
-            const isColumnCurrencyType = targetCol.dataType === 'currency';
+            const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
+            const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
+            const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
 
             let value = isSavedAsString ? savedValue : cellValue;
 
