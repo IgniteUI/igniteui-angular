@@ -5,7 +5,7 @@ import { isObject, mergeObjects } from '../../core/utils';
 
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
@@ -15,21 +15,21 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     protected _states: Map<any, S> = new Map();
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get canUndo(): boolean {
         return this._undoStack.length > 0;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
@@ -38,7 +38,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getTransactionLog(id?: any): T[] {
         if (id !== undefined) {
@@ -48,7 +48,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
@@ -60,21 +60,21 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getState(id: any, pending: boolean = false): S {
         return pending ? this._pendingStates.get(id) : this._states.get(id);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get enabled(): boolean {
         return true;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
@@ -96,7 +96,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public endPending(commit: boolean): void {
         this._isPending = false;
@@ -119,7 +119,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public commit(data: any[], id?: any): void {
         if (id !== undefined) {
@@ -136,7 +136,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public clear(id?: any): void {
         if (id !== undefined) {
@@ -157,7 +157,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public undo(): void {
         if (this._undoStack.length <= 0) {
@@ -179,7 +179,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public redo(): void {
         if (this._redoStack.length > 0) {

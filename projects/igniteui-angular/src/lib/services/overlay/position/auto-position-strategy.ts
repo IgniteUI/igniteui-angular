@@ -9,7 +9,7 @@ import { BaseFitPositionStrategy } from './base-fit-position-strategy';
  */
 export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
