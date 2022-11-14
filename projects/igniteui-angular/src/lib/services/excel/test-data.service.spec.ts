@@ -1543,7 +1543,7 @@ export class FileContentData {
 
     public get exportPivotGridData() {
         this._sharedStringsData =
-            `count="38" uniqueCount="23"><si><t>Accessories</t></si><si><t>Bikes</t></si><si><t>Clothing</t></si><si><t>Components</t></si><si><t>USA</t></si><si><t>Uruguay</t></si><si><t>Bulgaria</t></si><si><t>04/07/2021</t></si><si><t>01/06/2020</t></si><si><t>01/05/2019</t></si><si><t>05/12/2020</t></si><si><t>01/01/2021</t></si><si><t>02/19/2020</t></si><si><t>12/08/2021</t></si><si><t>Stanley</t></si><si><t>Elisa</t></si><si><t>Lydia</t></si><si><t>David</t></si><si><t>John</t></si><si><t>Larry</t></si><si><t>Walter</t></si><si><t>UnitsSold</t></si><si><t>UnitPrice</t></si><`;
+            `count="38" uniqueCount="23"><si><t>Accessories</t></si><si><t>Bikes</t></si><si><t>Clothing</t></si><si><t>Components</t></si><si><t>USA</t></si><si><t>Uruguay</t></si><si><t>Bulgaria</t></si><si><t>04/07/2021</t></si><si><t>01/06/2020</t></si><si><t>01/05/2019</t></si><si><t>05/12/2020</t></si><si><t>01/01/2021</t></si><si><t>02/19/2020</t></si><si><t>12/08/2021</t></si><si><t>Stanley</t></si><si><t>Elisa</t></si><si><t>Lydia</t></si><si><t>David</t></si><si><t>John</t></si><si><t>Larry</t></si><si><t>Walter</t></si><si><t>UnitsSold</t></si><si><t>UnitPrice</t></si>`;
 
         this._worksheetData =
             `<dimension ref="A1:Q9"/>
