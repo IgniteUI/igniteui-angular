@@ -8,7 +8,7 @@ import { Optional } from '@angular/core';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    /** @inheritdoc */
+    /** @inheritDoc */
     public settings: PositionSettings;
 
     private _selectDefaultSettings = {
@@ -30,7 +30,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public position(contentElement: HTMLElement,
                     size: Size,
                     document?: Document,

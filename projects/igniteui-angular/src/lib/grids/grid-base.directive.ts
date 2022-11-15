@@ -3237,6 +3237,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             Object.keys(obj).forEach(key => isObject(obj[key]) ? changes += f(obj[key]) : changes++);
             return changes;
         };
+        if (this.transactions.getState(this.crudService.row.id)?.type === TransactionType.ADD) {
+            return this._columns.filter(c => c.field).length;
+        }
         const rowChanges = this.transactions.getAggregatedValue(this.crudService.row.id, false);
         return rowChanges ? f(rowChanges) : 0;
     }
