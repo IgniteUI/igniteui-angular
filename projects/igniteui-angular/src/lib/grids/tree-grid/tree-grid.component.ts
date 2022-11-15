@@ -698,7 +698,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getSelectedData(formatters = false, headers = false): any[] {
         let source = [];

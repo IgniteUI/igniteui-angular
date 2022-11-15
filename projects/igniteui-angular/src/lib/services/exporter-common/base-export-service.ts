@@ -232,7 +232,8 @@ export abstract class IgxBaseExporter {
         const columnList = this.getColumns(columns);
         const tagName = grid.nativeElement.tagName.toLowerCase();
 
-        if (tagName === 'igx-hierarchical-grid') {
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        if (/^ig.-hierarchical-grid$/.test(tagName)) {
             this._ownersMap.set(grid, columnList);
 
             const childLayoutList = grid.childLayoutList;
@@ -240,7 +241,7 @@ export abstract class IgxBaseExporter {
             for (const island of childLayoutList) {
                 this.mapHierarchicalGridColumns(island, grid.data[0]);
             }
-        } else if (tagName === 'igx-pivot-grid') {
+        } else if (/^ig.-pivot-grid$/.test(tagName)) {
             this.pivotGridColumns = [];
             this.isPivotGridExport = true;
             this.pivotGridKeyValueMap = new Map<string, string>();
@@ -526,16 +527,17 @@ export abstract class IgxBaseExporter {
         const expressions = grid.groupingExpressions ? grid.groupingExpressions.concat(grid.sortingExpressions || []) : grid.sortingExpressions;
         const hasSorting = expressions && expressions.length > 0;
 
-        switch (tagName) {
-            case 'igx-pivot-grid': {
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        switch (true) {
+            case /^ig.-pivot-grid$/.test(tagName): {
                 this.preparePivotGridData(grid);
                 break;
             }
-            case 'igx-hierarchical-grid': {
+            case /^ig.-hierarchical-grid$/.test(tagName): {
                 this.prepareHierarchicalGridData(grid, hasFiltering, hasSorting);
                 break;
             }
-            case 'igx-tree-grid': {
+            case /^ig.-tree-grid$/.test(tagName): {
                 this.prepareTreeGridData(grid, hasFiltering, hasSorting);
                 break;
             }
@@ -1099,7 +1101,8 @@ export abstract class IgxBaseExporter {
     }
 
     public addPivotGridColumns(grid: any) {
-        if (grid.nativeElement.tagName.toLowerCase() !== 'igx-pivot-grid') {
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        if (!/^ig.-pivot-grid$/.test(grid.nativeElement.tagName.toLowerCase())) {
             return;
         }
 

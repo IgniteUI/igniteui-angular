@@ -4,7 +4,7 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '.
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { copyDescriptors, isEqual } from '../../core/utils';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 export class IgxEditRow {
     public transactionState: any;
@@ -117,7 +117,7 @@ export class IgxCell {
 
     public set editValue(value) {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
-        
+
         if (this.grid.validationTrigger === 'change') {
             // in case trigger is change, mark as touched.
             formControl.setValue(value);
@@ -403,7 +403,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
                 this.grid.validation.clear(id);
             } else {
                 this.grid.validation.update(id, rowEditArgs.oldValue);
-            } 
+            }
         } else if (this.row.getClassName() === IgxEditRow.name) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);

@@ -241,11 +241,13 @@ export class IgxGridSummaryService {
     }
 
     private get isTreeGrid() {
-        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-tree-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        return /^ig.-tree-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
     }
 
     private get isHierarchicalGrid() {
-        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        return /^ig.-hierarchical-grid$/.test(this.grid.nativeElement.tagName.toLowerCase());
     }
 
 }
