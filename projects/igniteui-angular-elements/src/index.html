@@ -12,7 +12,7 @@
         gap: 16px;
         grid-auto-rows: minmax(400px, max-content);
     }
-    igc-grid {
+    igc-grid, igc-tree-grid {
         max-height: 550px;
     }
   </style>
@@ -138,10 +138,19 @@
 
   <!-- IgxTreeGridComponent -->
   <igc-tree-grid id="treegrid1" primary-key="id" row-editable="true" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
-      <igc-column field='id' header='Project Id' data-type='number' ></igc-column>
-      <igc-column field='tasks' sortable ></igc-column>
-      <igc-column field='start' data-type='date' sortable has-summary></igc-column>
-      <igc-column field='finish' data-type='date' has-summary></igc-column>
+    <igc-grid-toolbar>
+        <igc-grid-toolbar-title>Tree Grid Toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+    </igc-grid-toolbar>
+    <igc-column field='id' header='Project Id' data-type='number' ></igc-column>
+    <igc-column field='tasks' sortable ></igc-column>
+    <igc-column field='start' data-type='date' sortable has-summary></igc-column>
+    <igc-column field='finish' data-type='date' has-summary></igc-column>
     <igc-paginator per-page="10"></igc-paginator>
   </igc-tree-grid>
 
