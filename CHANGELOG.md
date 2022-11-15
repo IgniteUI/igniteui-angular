@@ -30,6 +30,12 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grid summaries.
     - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
 
+- `IgxCalendar`
+
+    Added support for shift key + mouse click interactions.
+    - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
+    - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
 ## 14.2.0
 
 ### New Features
