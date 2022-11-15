@@ -49,10 +49,6 @@
 /// @param {Number} $border-color [null] - The list border color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires luminance
 ///
 /// @example scss Change the list background color
 ///   $my-list-theme: list-theme($background: black);
@@ -251,9 +247,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin list($theme) {
     @include css-vars($theme);
 
@@ -554,7 +547,6 @@
 /// categories from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin list-typography(
     $categories: (
         header: 'overline',

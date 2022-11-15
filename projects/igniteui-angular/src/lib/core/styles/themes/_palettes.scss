@@ -51,7 +51,6 @@
 /// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
-/// @requires palette
 $default-palette: palettes.$light-material-palette;
 
 /// @access private
@@ -127,5 +126,4 @@ $bootstrap-dark-palette: palettes.$dark-bootstrap-palette;
 /// Assigned to the 500 variant of the gray color form the current $default-palette.
 /// @group palettes
 /// @type Color
-/// @requires color
 $overlay-color: color($default-palette, 'gray') !default;

@@ -33,7 +33,6 @@
 /// @prop {color} remove-icon-color ["'currentColor'"] - The remove icon color for the chip.
 /// @prop {Map} remove-icon-color-focus [color: ('error')] - The remove icon color on focus for the chip.
 ///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-chip
 /// @see $default-palette
 $light-chip: extend(
@@ -135,7 +134,6 @@ $light-chip: extend(
 /// @prop {Number} ghost-elevation [2] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-chip
 /// @requires {Map} $fluent-elevation-chip
 $fluent-chip: extend(
@@ -204,7 +202,6 @@ $fluent-chip: extend(
 /// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [4px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-chip
 /// @requires {Map} $bootstrap-elevation-chip
 $bootstrap-chip: extend(
@@ -270,7 +267,6 @@ $bootstrap-chip: extend(
 /// @prop {Map} border-color [color: ('gray', 400)] - The chip border color.
 /// @prop {Map} hover-border-color [color: ('gray', 400)] - The chip hover border color.
 /// @prop {Map} focus-border-color [color: ('gray', 400)] - The chip focus border color.
-/// @requires {function} extend
 /// @requires {Map} $light-chip
 /// @requires {Map} $indigo-elevation-chip
 $indigo-chip: extend(

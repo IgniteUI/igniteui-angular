@@ -15,9 +15,7 @@
 /// @param {Color} $active-background [null] - The background color used for the highlight in its active state.
 /// @param {Color} $active-color [null] - The text color used for the highlight in its active state.
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
+///
 ///
 /// @example scss Change the background and icon colors in icon highlight
 ///   $my-highlight-theme: highlight-theme($resting-background: black, $active-color: white);
@@ -61,9 +59,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin highlight($theme) {
     @include css-vars($theme);
 

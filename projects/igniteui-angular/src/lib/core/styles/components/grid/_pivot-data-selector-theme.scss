@@ -33,10 +33,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
-/// @requires rem
-/// @requires var-get
 @mixin pivot-data-selector($theme) {
     @include css-vars($theme);
 

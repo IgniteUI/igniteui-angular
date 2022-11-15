@@ -16,9 +16,8 @@
 /// @param {Color} $color [null] - The color used for the link text.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
+///
 ///
 /// @example scss Change the watermark link background
 ///   $my-watermark-theme: watermark-theme($link-background: magenta);
@@ -63,8 +62,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin watermark($theme) {
     @include css-vars($theme);
 

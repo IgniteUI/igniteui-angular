@@ -43,7 +43,6 @@ $dark-bootstrap-progress-linear: $bootstrap-progress-linear;
 
 /// Generates a dark indigo progress-linear schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @property {Map} track-color [color: ('gray', 100)] - The main track color.
 /// @property {Color} stripes-color [rgba(#222, .35)] - The track stripes color.
 /// @requires $indigo-progress-linear

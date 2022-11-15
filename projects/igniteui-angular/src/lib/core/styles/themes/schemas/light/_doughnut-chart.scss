@@ -32,19 +32,16 @@ $light-doughnut-chart: (
 
 /// Generates a fluent doughnut-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-doughnut-chart
 $fluent-doughnut-chart: $light-doughnut-chart;
 
 /// Generates a bootstrap doughnut-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-doughnut-chart
 $bootstrap-doughnut-chart: $light-doughnut-chart;
 
 /// Generates an indigo doughnut-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-doughnut-chart
 $indigo-doughnut-chart: $light-doughnut-chart;
 

@@ -100,19 +100,16 @@ $light-shape-chart: (
 
 /// Generates a fluent shaep-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $fluent-shape-chart: $light-shape-chart;
 
 /// Generates a bootstrap shape-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $bootstrap-shape-chart: $light-shape-chart;
 
 /// Generates an indigo shape-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $indigo-shape-chart: $light-shape-chart;
 

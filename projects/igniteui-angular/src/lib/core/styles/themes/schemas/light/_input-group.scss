@@ -64,7 +64,6 @@
 /// @prop {Color} label-floated-background [color: surface] - The background color of the label when floated for input of type border.
 /// @prop {Color} label-floated-disabled-background [color: surface] - The background color of the label when floated for input group of type border in its disabled state.
 ///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-input-group
 /// @see $default-palette
 $light-input-group: extend(
@@ -235,7 +234,6 @@ $light-input-group: extend(
 /// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-input-group
 /// @requires {Map} $fluent-elevation-input-group
 $fluent-input-group: extend(
@@ -300,7 +298,6 @@ $fluent-input-group: extend(
 /// @prop {Number} box-border-radius [4px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-input-group
 $bootstrap-input-group: extend(
     $light-input-group,
@@ -370,7 +367,6 @@ $bootstrap-input-group: extend(
 /// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-input-group
 /// @requires {Map} $indigo-elevation-input-group
 $indigo-input-group: extend(

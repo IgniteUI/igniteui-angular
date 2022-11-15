@@ -19,7 +19,6 @@ $base-dark-switch: (
 
 /// Generates a dark switch schema based on a mix of $light-switch and $base-dark-switch.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-switch
 /// @requires $base-dark-switch
 /// @see $default-palette
@@ -35,7 +34,6 @@ $dark-switch: extend($light-switch, $base-dark-switch);
 /// @property {Color} thumb-off-color [color: ('gray', 500)] - The color of the thumb when the switch is off.
 /// @property {Color} thumb-disabled-color [color: ('gray', 200)] - The color of the thumb when the switch is disabled.
 ///
-/// @requires {function} extend
 /// @requires $fluent-switch
 /// @requires $base-dark-switch
 $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
@@ -72,7 +70,6 @@ $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
 /// @type {Map}
 /// @property {Color} thumb-on-color [color: ('gray', 900)] - The color of the thumb when the switch is on.
 /// @property {Color} thumb-on-disabled-color [color: ('gray', 900)] - The color of the thumb when the switch is on and disabled.
-/// @requires {function} extend
 /// @requires $bootstrap-switch
 /// @requires $base-dark-switch
 $dark-bootstrap-switch: extend(
@@ -101,7 +98,6 @@ $dark-bootstrap-switch: extend(
 /// @property {Color} border-on-color [color: ('gray', 900)] - The border color of the on-switch.
 /// @property {Color} border-on-hover-color [color: ('gray', 900)] - The border color of the  on-switch.
 /// @property {Color} label-disabled-color [color: ('gray', 400)] - The color of the switch label when the switch is disabled
-/// @requires {function} extend
 /// @requires $indigo-switch
 $dark-indigo-switch: extend(
     $indigo-switch,

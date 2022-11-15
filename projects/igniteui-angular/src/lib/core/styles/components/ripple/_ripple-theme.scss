@@ -14,8 +14,7 @@
 /// @param {Color} $color [null] - The color of the ripple.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the color
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
@@ -46,8 +45,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin ripple($theme) {
     @include css-vars($theme);
 

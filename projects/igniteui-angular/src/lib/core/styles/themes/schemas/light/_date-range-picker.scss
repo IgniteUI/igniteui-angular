@@ -18,7 +18,6 @@ $light-date-range-picker: (
 
 /// Generates a fluent date-range-picker schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-date-range-picker
 $fluent-date-range-picker: $light-date-range-picker;
 

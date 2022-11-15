@@ -16,7 +16,6 @@ $light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3d
 /// @prop {Map} border-color [color: ('primary')] - The border color used for the link.
 /// @prop {Map} link-background [color: ('primary')] - The background color used for the link.
 /// @prop {Color} color [#fff] - The color used for the link text.
-/// @requires {function} extend
 $light-watermark: extend(
     (
         variant: 'material',
@@ -40,7 +39,7 @@ $light-watermark: extend(
 /// Generates a light fluent watermark schema.
 /// @type {Map}
 /// @prop {Number} border-radius [2px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-watermark
 $fluent-watermark: extend(
     $light-watermark,
@@ -56,7 +55,7 @@ $fluent-watermark: extend(
 /// Generates a bootstrap watermark schema.
 /// @type {Map}
 /// @prop {Number} border-radius [4px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-watermark
 $bootstrap-watermark: extend(
     $light-watermark,
@@ -73,7 +72,7 @@ $bootstrap-watermark: extend(
 /// @type {Map}
 /// @prop {Map} border-color [color: ('primary', 300)] - The border color for the link.
 /// @prop {Number} border-radius [16px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-watermark
 $indigo-watermark: extend(
     $light-watermark,

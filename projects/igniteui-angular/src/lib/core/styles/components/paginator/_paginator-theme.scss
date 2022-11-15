@@ -16,8 +16,7 @@
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the stripes color
 ///   $my-paginator-theme: paginator-theme(
@@ -57,9 +56,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin paginator($theme) {
     @include css-vars($theme);
 

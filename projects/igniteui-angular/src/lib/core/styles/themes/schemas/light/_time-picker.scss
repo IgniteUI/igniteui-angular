@@ -25,7 +25,7 @@
 /// @prop {Number} border-radius [4px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [15px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $default-elevation-time-picker
 /// @see $default-palette
 $light-time-picker: extend(
@@ -81,7 +81,7 @@ $light-time-picker: extend(
 /// @type {Map}
 /// @prop {Number} border-radius [2px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [2px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires $light-time-picker
 $fluent-time-picker: extend(
     $light-time-picker,
@@ -101,7 +101,7 @@ $fluent-time-picker: extend(
 /// @prop {Map} header-background [color: ('primary', 500)] - The header background color of a time picker.
 /// @prop {Number} border-radius [4px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [4px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires $light-time-picker
 $bootstrap-time-picker: extend(
     $light-time-picker,
@@ -134,7 +134,7 @@ $bootstrap-time-picker: extend(
 /// @prop {Map} header-time-period-color [contrast-color: ('primary', 500)] - The header AM/PM text color of a time picker.
 /// @prop {Number} border-radius [3px] - The border radius used for the overall shape of the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} active-item-border-radius [20px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires $light-time-picker
 $indigo-time-picker: extend(
     $light-time-picker,

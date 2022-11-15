@@ -9,21 +9,18 @@
 
 /// Generates a dark badge schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-badge
 /// @see $default-palette
 $dark-badge: $light-badge;
 
 /// Generates a dark fluent badge schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-badge
 $dark-fluent-badge: $fluent-badge;
 
 /// Generates a dark bootstrap badge schema.
 /// @type {Map}
 /// @prop {Map} border-color [contrast-color: ('gray', 50)] - The border color used.
-/// @requires {function} extend
 /// @requires $bootstrap-badge
 $dark-bootstrap-badge: extend(
     $bootstrap-badge,
@@ -36,6 +33,5 @@ $dark-bootstrap-badge: extend(
 
 /// Generates a dark indigo badge schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-badge
 $dark-indigo-badge: $indigo-badge;

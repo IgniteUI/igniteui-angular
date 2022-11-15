@@ -1,15 +1,8 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-////
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-/// @requires {mixin} bem-mods
-////
-
 @mixin component {
     @include b(igx-input-group) {
         $this: bem--selector-to-string(&);

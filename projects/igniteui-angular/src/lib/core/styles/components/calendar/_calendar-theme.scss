@@ -84,9 +84,6 @@
 /// @param {Color} $week-number-background [null] - The background color of the week number column.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
 ///
 /// @example scss Change the header and content background colors
 ///   $my-calendar-theme: calendar-theme(
@@ -404,12 +401,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {function} text-contrast
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires rem
-/// @requires {mixin} ellipsis
-/// @requires var-get
 @mixin calendar($theme) {
     @include css-vars($theme);
 
@@ -1210,7 +1201,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin calendar-typography($categories: (
     header-year: 'overline',
     header-date: 'h4',

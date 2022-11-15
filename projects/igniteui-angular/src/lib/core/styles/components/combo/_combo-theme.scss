@@ -14,10 +14,8 @@
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 @function combo-theme(
     $schema: $light-schema,
     $search-separator-border-color: null,
@@ -44,9 +42,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin combo($theme) {
     @include css-vars($theme);
 

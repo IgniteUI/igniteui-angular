@@ -9,27 +9,23 @@
 
 /// Generates a dark grid-toolbar schema based on a mix of $light-grid-toolbar and $base-dark-grid-toolbar.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-grid-toolbar
 /// @see $default-palette
 $dark-grid-toolbar: extend($light-grid-toolbar);
 
 /// Generates a dark fluent grid-toolbar schema based on a mix of $fluent-grid-toolbar and $base-dark-grid-toolbar..
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-grid-toolbar
 $dark-fluent-grid-toolbar: extend($fluent-grid-toolbar);
 
 /// Generates a dark bootstrap grid-toolbar schema based on a mix of $bootstrap-grid-toolbar and $base-dark-grid-toolbar..
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-grid-toolbar
 $dark-bootstrap-grid-toolbar: extend($bootstrap-grid-toolbar);
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
 /// @property {Map} background-color [color: 'surface'] - The toolbar background color.
-/// @requires {function} extend
 /// @requires $indigo-grid-toolbar
 $dark-indigo-grid-toolbar: extend(
     $indigo-grid-toolbar,

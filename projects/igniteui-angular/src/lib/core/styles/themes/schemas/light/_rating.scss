@@ -5,7 +5,7 @@
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-///
+
 /// @property {Map} label-color [color: ('gray', 700)] - sets the color for the label.
 /// @property {Number} symbol-size [rem(36px)] - the size of the symbols.
 /// @property {Map} symbol-empty-color [color: ('gray', 900)] - sets the idle color for the symbol when it is a plane text.
@@ -15,13 +15,8 @@
 /// @property {Map} disabled-label-color [color: ('gray', 400)] - sets the color for the label in disabled state.
 /// @property {Map} disabled-empty-symbols-color [color: ('gray', 400)] - sets the idle color for the symbol in disabled state when it is a plane text.
 /// @property {Map} disabled-full-symbols-color [color: ('gray', 600)] - sets the color for the symbol in selected/disabled state when it is a plane text.
-///
 /// Generates a light rating schema.
 /// @type {Map}
-///
-///
-/// @see $default-palette
-
 $light-rating: (
     variant: 'material',
 
@@ -66,7 +61,6 @@ $light-rating: (
 /// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
 /// @property {Map} disabled-idle-symbols-color [color: ('gray', 200)] - sets the idle color for the symbol in disabled state when it is a plane text.
 /// @property {Map} disabled-selected-symbols-color [color: ('gray', 500)] - sets the color for the symbol in selected/disabled state when it is a plane text.
-/// @requires {function} extend
 /// @requires {Map} $light-rating
 $fluent-rating: extend($light-rating, (
     variant: 'fluent',
@@ -87,7 +81,6 @@ $fluent-rating: extend($light-rating, (
 /// Generates a bootstrap rating schema.
 /// @type {Map}
 /// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
-/// @requires {function} extend
 /// @requires {Map} $light-rating
 $bootstrap-rating: extend($light-rating, (
     variant: 'bootstrap',
@@ -100,7 +93,6 @@ $bootstrap-rating: extend($light-rating, (
 /// Generates an indigo rating schema.
 /// @type {Map}
 /// @property {Map} label-color [color: ('gray', 900)] - sets the color for the label.
-/// @requires {function} extend
 /// @requires {Map} $light-rating
 $indigo-rating: extend($light-rating, (
     variant: 'indigo-design',

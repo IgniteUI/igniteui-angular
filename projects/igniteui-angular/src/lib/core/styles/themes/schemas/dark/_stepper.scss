@@ -55,7 +55,6 @@ $base-stepper: (
 
 /// Generates a dark stepper schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-stepper
 /// @requires $base-stepper
 /// @see $default-palette
@@ -67,7 +66,6 @@ $dark-stepper: extend(
 /// Generates a dark fluent stepper schema
 /// @type {Map}
 /// @property {Map} complete-indicator-background [color: ('gray', 100)] - The background color of the completed step indicator.
-/// @requires {function} extend
 /// @requires $fluent-stepper
 /// @requires $base-stepper
 /// @see $default-palette
@@ -86,7 +84,6 @@ $dark-fluent-stepper: extend(
 /// @property {Map} indicator-outline [color: (color: ('gray', 200)] - The outline color of the incomplete step indicator.
 /// @property {Map} disabled-indicator-outline [color: ('gray', 300)] - The outline color of the disabled step indicator.
 /// @property {Map} step-separator-color [color: ('gray', 100)] - The separator border-color of between the steps.
-/// @requires {function} extend
 /// @requires $bootstrap-stepper
 /// @requires $base-stepper
 /// @see $default-palette
@@ -113,7 +110,6 @@ $dark-bootstrap-stepper: extend(
 /// @property {Map} indicator-color [color: ('gray', 900)] - The text color of the incomplete step indicator.
 /// @property {Map} indicator-outline [color: ('gray', 600)] - The outline color of the incomplete step indicator.
 /// @property {Map} disabled-indicator-outline [color: ('gray', 300)] - The outline color of the disabled step indicator.
-/// @requires {function} extend
 /// @requires $indigo-stepper
 /// @requires $base-stepper
 /// @see $default-palette

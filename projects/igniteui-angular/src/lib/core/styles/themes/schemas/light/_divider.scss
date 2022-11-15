@@ -21,11 +21,9 @@ $fluent-divider: $light-divider;
 
 /// Generates a bootstrap divider schema.
 /// @type {Map}
-/// @requires {function} extend
 $bootstrap-divider: $light-divider;
 
 /// Generates an indigo divider schema.
 /// @type {Map}
-/// @requires {function} extend
 $indigo-divider: $light-divider;
 

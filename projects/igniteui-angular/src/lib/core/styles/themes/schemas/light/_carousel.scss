@@ -22,7 +22,6 @@
 /// @prop {Color} indicator-active-border-color [color: ('gray', 50)] - The active indicator border color.
 /// @prop {Number} button-elevation [1] - The elevation level, between 0-24, to be used for the carousel buttons.
 /// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-carousel
 /// @see $default-palette
 $light-carousel: extend(
@@ -80,7 +79,6 @@ $light-carousel: extend(
 /// @type {Map}
 /// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
-/// @requires {function} extend
 /// @requires {Map} $light-carousel
 /// @requires {Map} $fluent-elevation-carousel
 $fluent-carousel: extend(
@@ -95,7 +93,6 @@ $fluent-carousel: extend(
 /// @type {Map}
 /// @prop {Number} border-radius [4px] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
-/// @requires {function} extend
 /// @requires {Map} $light-carousel
 /// @requires {Map} $bootstrap-elevation-carousel
 $bootstrap-carousel: extend(
@@ -121,7 +118,6 @@ $bootstrap-carousel: extend(
 /// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-carousel
 /// @requires {Map} $indigo-elevation-carousel
 $indigo-carousel: extend(

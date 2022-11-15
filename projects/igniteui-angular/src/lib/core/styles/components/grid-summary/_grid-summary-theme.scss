@@ -23,8 +23,6 @@
 /// @param {Color} $label-hover-color [null] - The summaries hover label color.
 ///
 /// @requires $light-schema
-/// @requires extend
-/// @requires text-contrast
 ///
 /// @example scss Change the summaries background nad labels color
 ///   $my-summary-theme: grid-summary-theme(
@@ -90,10 +88,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
-/// @requires rem
-/// @requires var-get
 @mixin grid-summary($theme) {
     @include css-vars($theme);
 

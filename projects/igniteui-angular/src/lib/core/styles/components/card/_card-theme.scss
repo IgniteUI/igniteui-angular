@@ -24,12 +24,7 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for card component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
 ///
 /// @example scss Change the background and content text colors in card
 ///   $my-card-theme: card-theme(
@@ -115,9 +110,6 @@
 
 /// Card Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin card($theme) {
     $variant: map.get($theme, 'variant');
     $not-material-theme: $variant != 'material';
@@ -375,7 +367,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'h6', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin card-typography($categories: (
     title: 'h6',
     title-small: 'subtitle-2',

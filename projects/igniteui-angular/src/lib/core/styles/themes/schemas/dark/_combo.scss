@@ -9,25 +9,21 @@
 
 /// Generates a dark combo schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-combo
 /// @see $default-palette
 $dark-combo: $light-combo;
 
 /// Generates a dark fluent combo schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-combo
 $dark-fluent-combo: $fluent-combo;
 
 /// Generates a dark bootstrap combo schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-combo
 $dark-bootstrap-combo: extend($bootstrap-combo);
 
 /// Generates a dark indigo combo schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-combo
 $dark-indigo-combo: $indigo-combo;

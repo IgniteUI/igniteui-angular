@@ -17,7 +17,6 @@ $dark-radio: $light-radio;
 /// @type {Map}
 /// @property {Map} fill-hover-border-color [color: ('primary', 200)] - The text color used for the label text.
 /// @property {Map} fill-color-hover [color: ('primary', 200)] - The checked border and dot colors on hover.
-/// @requires {function} extend
 /// @requires $fluent-radio
 $dark-fluent-radio: extend($fluent-radio, (
     fill-hover-border-color: (
@@ -33,7 +32,6 @@ $dark-fluent-radio: extend($fluent-radio, (
 /// @type {Map}
 /// @property {Map} fill-hover-border-color [color: 'surface'] - The text color used for the label text.
 /// @property {Map} fill-color-hover [color: 'surface'] - The checked border and dot colors on hover.
-/// @requires {function} extend
 /// @requires $bootstrap-radio
 $dark-bootstrap-radio: extend($bootstrap-radio, (
     fill-hover-border-color: (
@@ -52,7 +50,6 @@ $dark-bootstrap-radio: extend($bootstrap-radio, (
 /// @property {Map} fill-color [color: ('gray', 900)] - The checked border and dot colors.
 /// @property {Map} fill-color-hover [color: ('gray', 900)] - The checked border and dot colors on hover.
 /// @property {Map} disabled-color [color: ('gray', 400)] - The disabled border and dot colors.
-/// @requires {function} extend
 /// @requires $indigo-radio
 $dark-indigo-radio: extend(
     $indigo-radio,

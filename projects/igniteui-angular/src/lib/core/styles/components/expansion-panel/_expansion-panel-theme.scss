@@ -24,11 +24,8 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
 ///
 /// @example scss Change the background color
 ///   $my-expansion-panel-theme: expansion-panel($header-background: black);
@@ -93,9 +90,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
@@ -227,7 +221,6 @@
 /// Adds typography styles for the igx-expansion-panel component.
 /// @group typography
 /// @param {Map} $categories [(title: 'h5', description: 'subtitle-2', body: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin expansion-panel-typography($categories: (
     title: 'h5',
     description: 'subtitle-2',

@@ -41,10 +41,6 @@
 /// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: button-theme(
@@ -216,9 +212,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin button($theme) {
     $button-width: rem(88px);
 
@@ -1009,7 +1002,6 @@
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
 /// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin button-typography($categories: (text: 'button')) {
     $text: map.get($categories, 'text');
 

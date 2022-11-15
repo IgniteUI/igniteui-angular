@@ -43,9 +43,8 @@
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
+///
+///
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
@@ -160,16 +159,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
 /// @requires {mixin} ripple
-/// @requires {mixin} hide-default
 /// @requires ripple-theme
-/// @requires em
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
-/// @requires var-get
 @mixin switch($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -527,7 +518,6 @@
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin switch-typography(
     $categories: (label: 'subtitle-1')
 ) {

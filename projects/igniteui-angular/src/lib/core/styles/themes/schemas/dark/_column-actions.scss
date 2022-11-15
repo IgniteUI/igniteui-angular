@@ -7,30 +7,23 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a dark column actions schema based on a mix of $light-column-actions and $base-dark-column-actions.
+/// Generates a dark column actions schema based on a mix of $light-column-actions.
 /// @type {Map}
-/// @requires extend
 /// @requires $light-column-actions
-/// @requires $base-dark-column-actions
 /// @see $default-palette
 $dark-column-actions: extend($light-column-actions);
 
-/// Generates a dark fluent column actions schema based on a mix of $luent-column-actions and $base-dark-column-actions.
+/// Generates a dark fluent column actions schema based on a mix of $luent-column-actions.
 /// @type {Map}
-/// @requires extend
 /// @requires $fluent-column-actions
-/// @requires $base-dark-column-actions
 $dark-fluent-column-actions: extend($fluent-column-actions);
 
-/// Generates a dark bootstrap column actions schema based on a mix of $bootstrap-column-actions and $base-dark-column-actions.
+/// Generates a dark bootstrap column actions schema based on a mix of $bootstrap-column-actions.
 /// @type {Map}
-/// @requires extend
 /// @requires $bootstrap-column-actions
-/// @requires $base-dark-column-actions
 $dark-bootstrap-column-actions: extend($bootstrap-column-actions);
 
-/// Generates a dark indigo column actions schema based on a mix of $indigo-column-actions and $base-dark-column-actions.
+/// Generates a dark indigo column actions schema based on a mix of $indigo-column-actions.
 /// @type {Map}
-/// @requires extend
 /// @requires $indigo-column-actions
 $dark-indigo-column-actions: extend($indigo-column-actions);

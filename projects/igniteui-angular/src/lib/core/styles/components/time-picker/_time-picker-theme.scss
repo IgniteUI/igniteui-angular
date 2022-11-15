@@ -32,10 +32,8 @@
 /// @param {border-radius} $active-item-border-radius [null] - The border radius used for the outline of the currently active item (hours, minutes, AM/PM).
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires elevation
-/// @requires extend
+///
+///
 ///
 /// @example scss Change the background and text colors in  time picker
 ///   $my-time-picker-theme: time-picker-theme(
@@ -146,9 +144,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin time-picker($theme) {
     @include css-vars($theme);
 
@@ -339,7 +334,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(header-time-period: 'subtitle-1', header-hour: 'h4', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin time-picker-typography($categories: (
     header-time-period: 'subtitle-1',
     header-hour: 'h4',

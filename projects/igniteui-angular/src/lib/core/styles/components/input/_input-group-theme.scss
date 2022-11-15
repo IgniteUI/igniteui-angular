@@ -64,10 +64,6 @@
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
 ///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -243,10 +239,6 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires {mixin} ellipsis
-/// @requires var-get
 @mixin input-group($theme) {
     @include css-vars($theme);
 
@@ -1750,7 +1742,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin input-group-typography(
     $categories: (
         helper-text: 'caption',

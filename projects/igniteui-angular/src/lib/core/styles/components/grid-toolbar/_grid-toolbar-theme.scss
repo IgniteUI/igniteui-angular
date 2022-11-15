@@ -21,10 +21,7 @@
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema(
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
+///
 ///
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
@@ -100,12 +97,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires color
-/// @requires {mixin} ellipsis
-/// @requires rem
-/// @requires em
-/// @requires var-get
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 

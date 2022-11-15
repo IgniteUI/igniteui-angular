@@ -116,13 +116,7 @@
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires luminance
-/// @requires text-contrast
-/// @requires to-opaque
-/// @requires extend
-/// @requires elevation
 @function grid-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -581,13 +575,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
 /// @requires {mixin} excel-filtering
-/// @requires color
-/// @requires contrast-color
-/// @requires rem
-/// @requires var-get
 @mixin grid($theme) {
     @include css-vars($theme);
 

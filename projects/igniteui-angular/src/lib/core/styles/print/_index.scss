@@ -1,6 +1,5 @@
 /// Defines printing styles for all components in the library.
 /// @group print
-/// @requires {mixin} igx-grid-print
 @mixin layout {
     @media print {
         html,

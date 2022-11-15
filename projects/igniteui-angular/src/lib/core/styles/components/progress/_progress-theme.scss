@@ -25,8 +25,7 @@
 /// @param {Number} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: progress-linear-theme(
@@ -96,9 +95,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin progress-linear($theme) {
     @include css-vars($theme);
 
@@ -380,8 +376,7 @@
 /// @param {Color} $text-color [null] - The value text color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: igx-progress-circular-theme(
@@ -432,10 +427,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires {mixin} rotate-center
-/// @requires var-get
 @mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();

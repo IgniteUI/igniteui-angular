@@ -26,8 +26,7 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
@@ -73,14 +72,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
-/// @requires {mixin} ripple
-/// @requires {mixin} hide-default
 /// @requires ripple-theme
-/// @requires em
-/// @requires var-get
 @mixin radio($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -397,7 +389,6 @@
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin radio-typography(
     $categories: (label: 'subtitle-1')
 ) {

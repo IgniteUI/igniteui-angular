@@ -14,8 +14,6 @@
 /// @prop {Map} text-color [contrast-color: ('gray', 700)] - The text-color used for the toast.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the toast.
 /// @prop {Number} border-radius [26px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-toast
 /// @see $default-palette
 $light-toast: extend(
@@ -38,7 +36,7 @@ $light-toast: extend(
 /// Generates a fluent toast schema.
 /// @type {Map}
 /// @prop {Number} border-radius [2px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires $light-toast
 $fluent-toast: extend(
     $light-toast,
@@ -55,7 +53,7 @@ $fluent-toast: extend(
 /// @prop {Map} text-color [color: ('gray', 600)] - The text-color used for the toast.
 /// @prop {Number} elevation [10] - The elevation level, between 0-24, to be used for the toast.
 /// @prop {Number} border-radius [4px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-toast
 /// @requires {Map} $bootstrap-elevation-toast
 $bootstrap-toast: extend(
@@ -81,7 +79,7 @@ $bootstrap-toast: extend(
 ///
 /// @prop {Number} border-radius [24px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $light-toast
 $indigo-toast: extend(
     $light-toast,

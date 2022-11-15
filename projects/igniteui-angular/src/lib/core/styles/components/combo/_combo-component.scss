@@ -3,11 +3,6 @@
 
 //// Combo
 /// @group components
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
-
 @mixin component {
     @include b(igx-combo) {
         $this: bem--selector-to-string(&);

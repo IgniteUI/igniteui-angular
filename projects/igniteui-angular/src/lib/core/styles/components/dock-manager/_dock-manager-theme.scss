@@ -46,11 +46,8 @@
 /// @param {Color} $tab-text [null] - Sets the text color for tabs.
 /// @param {Color} $tab-text-active [null] - Sets the text color for active tabs.
 /// @param {Color} $text-color [null] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
+///
 ///
 /// @example scss Change the background and icon colors in icon dock-managers
 ///   $my-dock-manager-theme: dock-manager-theme();
@@ -75,7 +72,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
 @mixin dock-manager($theme) {
     @include css-vars($theme);
 }
@@ -83,7 +79,6 @@
 /// Adds typography styles for the dock manager component.
 /// @access private
 /// @group typography
-/// @requires {mixin} type-style
 @mixin dock-manager-typography() {
     igx-dock-manager {
         --igc-font-family: var(--ig-font-family, inherit);

@@ -63,7 +63,6 @@ $light-radio: (
 /// @property {Color} fill-color-hover [color: ('primary',900)] - The checked border and dot colors on hover.
 /// @property {Color} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-radio
 $fluent-radio: extend(
     $light-radio,
@@ -104,7 +103,7 @@ $fluent-radio: extend(
 /// @property {Map} disabled-color [color: ('primary', 200)] - The disabled border and dot colors.
 /// @property {Color} fill-color-hover [color: ('gray', 50)] - The checked border and dot colors on hover.
 /// @property {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-radio
 $bootstrap-radio: extend(
     $light-radio,
@@ -148,7 +147,7 @@ $bootstrap-radio: extend(
 /// @property {Map} disabled-color [color: ('gray', 300)] - The disabled border and dot colors.
 /// @property {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @property {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-radio
 $indigo-radio: extend(
     $light-radio,

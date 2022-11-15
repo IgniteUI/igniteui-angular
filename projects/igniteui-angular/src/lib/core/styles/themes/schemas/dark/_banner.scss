@@ -23,7 +23,6 @@ $dark-fluent-banner: $fluent-banner;
 /// @property {Map} banner-background [color: ('surface')] - The background color used banner background.
 /// @property {Map} banner-message-color [color: ('gray', 600)] - The color used for banner label.
 /// @property {Map} banner-illustration-color [color: ('gray', 600)] - The color used banner illustration.
-/// @requires {function} extend
 /// @requires $bootstrap-banner
 $dark-bootstrap-banner: extend(
     $bootstrap-banner,

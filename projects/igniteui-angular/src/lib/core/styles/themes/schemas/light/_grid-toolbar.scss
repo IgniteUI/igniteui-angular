@@ -57,7 +57,6 @@ $light-grid-toolbar: (
 /// @type {Map}
 ///
 /// @property {Map} background-color [color: 'surface'] - The toolbar background color.
-/// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $fluent-grid-toolbar: extend(
     $light-grid-toolbar,
@@ -72,7 +71,6 @@ $fluent-grid-toolbar: extend(
 
 /// Generates a bootstrap grid-toolbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $bootstrap-grid-toolbar: extend(
     $light-grid-toolbar,
@@ -85,7 +83,6 @@ $bootstrap-grid-toolbar: extend(
 /// @type {Map}
 /// @property {Map} background-color [color: ('gray', 100)] - The toolbar background color.
 /// @property {Map} title-text-color [color: ('primary', 500)] - The toolbar title text color.
-/// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $indigo-grid-toolbar: extend(
     $light-grid-toolbar,

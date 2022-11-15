@@ -37,9 +37,7 @@
 /// @param {Color} $tick-color [null] - The background-color of the tick.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-slider-theme: slider-theme($thumb-color: black, $track-color: yellow);
@@ -108,9 +106,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin slider($theme) {
     @include css-vars($theme);
 
@@ -467,7 +462,7 @@
     }
 
     @if $variant == 'fluent' {
-        %igx-slider-thumb--focused { 
+        %igx-slider-thumb--focused {
             div::after {
                 $focus-outline-offset: rem(2px);
 
@@ -600,7 +595,6 @@
 /// categories from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin slider-typography(
     $categories: (
         ticks-label: 'caption',

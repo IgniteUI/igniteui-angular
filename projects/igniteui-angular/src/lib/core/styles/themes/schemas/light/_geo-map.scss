@@ -16,19 +16,16 @@ $light-geo-map: (
 
 /// Generates a fluent geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $fluent-geo-map: $light-geo-map;
 
 /// Generates a bootstrap geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $bootstrap-geo-map: $light-geo-map;
 
 /// Generates an indigo geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $indigo-geo-map: $light-geo-map;
 

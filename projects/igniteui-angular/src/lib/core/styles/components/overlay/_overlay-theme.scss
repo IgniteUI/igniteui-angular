@@ -15,8 +15,7 @@
 /// @param {Color} $background-color [null] - The background color used for modal overlays.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the background color
 ///   $my-overlay-theme: overlay-theme($background-color: rgba(yellow, .74));
@@ -46,11 +45,7 @@
     ));
 }
 
-///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
-///
 @mixin overlay($theme) {
     @include css-vars($theme);
 

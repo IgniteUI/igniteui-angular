@@ -119,7 +119,7 @@ $light-slider: (
 /// @property {Map} base-track-hover-color [color: ('gray', 600)] - The base background color of the track on hover.
 /// @property {Map} disabled-base-track-color [color: ('gray', 100)] - The base background color of the track when is disabled.
 /// @property {Map} disabled-fill-track-color [color: ('gray', 500)] - The background color of the fill track when is disabled.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-slider
 $fluent-slider: extend($light-slider, (
     variant: 'fluent',
@@ -188,7 +188,7 @@ $fluent-slider: extend($light-slider, (
 /// @property {Map} thumb-border-focus-color [color: ('surface', 500)] - The thumb border color when focused.
 /// @property {Map} thumb-focus-color [color: ('primary', 200)] - The focus outline color of the thumb.
 /// @property {Map} disabled-thumb-color [color: ('gray', 400)] - The thumb color when its disabled.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-slider
 $bootstrap-slider: extend(
     $fluent-slider,
@@ -235,7 +235,7 @@ $bootstrap-slider: extend(
 /// @property {Map} disabled-thumb-color [color: ('gray', 300)] - The thumb color when its disabled.
 /// @property {Map} disabled-base-track-color [color: ('gray', 300)] - The base background color of the track when is disabled.
 /// @property {Map} disabled-fill-track-color [color: ('gray', 300)] - The background color of the fill track when is disabled.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-slider
 $indigo-slider: extend(
     $light-slider,

@@ -29,7 +29,6 @@ $dark-bootstrap-snackbar: $bootstrap-snackbar;
 /// @property {Map} background [color: ('gray', 300)] - The background color used in the snackbar.
 /// @property {Map} text-color [contrast-color: ('gray', 200)] - The text color used in the snackbar.
 /// @property {Map} button-color [contrast-color: ('gray', 200)] - The button color used in the snackbar.
-/// @requires {function} extend
 /// @requires $indigo-snackbar
 $dark-indigo-snackbar: extend(
     $indigo-snackbar,

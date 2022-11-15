@@ -3,11 +3,7 @@
 
 /// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @author <a href="https://github.com/simeonoff" target="_blank">Maya Kirova</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
+/// @author <a href="https://github.com/MayaKirova" target="_blank">Maya Kirova</a>
 
 @mixin component {
     @include b(igx-splitter) {

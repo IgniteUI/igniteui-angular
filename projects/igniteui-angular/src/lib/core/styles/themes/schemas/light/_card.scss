@@ -19,7 +19,6 @@
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-card
 /// @see $default-palette
 $light-card: extend(
@@ -62,7 +61,6 @@ $light-card: extend(
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [2px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-card
 /// @requires {Map} $fluent-elevation-card
 $fluent-card: extend(
@@ -90,7 +88,6 @@ $fluent-card: extend(
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-card
 /// @requires {Map} $bootstrap-elevation-card
 $bootstrap-card: extend(
@@ -135,7 +132,6 @@ $bootstrap-card: extend(
 /// @prop {Number} resting-elevation [4] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [6] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [3px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-card
 /// @requires {Map} $indigo-elevation-card
 $indigo-card: extend(

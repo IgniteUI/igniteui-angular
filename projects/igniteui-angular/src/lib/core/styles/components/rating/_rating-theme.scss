@@ -21,8 +21,7 @@
 /// @param {Color} $disabled-full-symbol-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss
 ///   $my-rating-theme: rating-theme();
@@ -47,8 +46,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin rating($theme) {
     @include css-vars($theme: $theme);
 

@@ -24,9 +24,8 @@
 /// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
 /// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
+///
 /// @example scss Change the tree background
 ///   $my-tree-theme: tree-theme($background: magenta);
 ///   // Pass the theme to the tree component mixin
@@ -91,8 +90,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin tree($theme) {
     @include css-vars($theme);
 
@@ -335,7 +332,6 @@
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin tree-typography(
     $categories: (label: 'body-2')
 ) {

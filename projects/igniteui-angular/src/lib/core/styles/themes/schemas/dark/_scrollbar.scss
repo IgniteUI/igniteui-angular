@@ -10,14 +10,12 @@
 /// Generates a dark scrollbar schema.
 /// @type {Map}
 /// @property {String | Number} size [16px] - The size of the track.
-/// @requires {function} extend
 /// @requires $light-scrollbar
 /// @see $default-palette
 $dark-scrollbar: $light-scrollbar;
 
 /// Generates a dark fluent scrollbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-scrollbar
 $dark-fluent-scrollbar: $fluent-scrollbar;
 
@@ -25,7 +23,6 @@ $dark-fluent-scrollbar: $fluent-scrollbar;
 /// @type {Map}
 /// @property {Map} thumb-background [color: ('gray', 200, .5)] - The background color used for the thumb.
 /// @property {Color} track-background [color: ('gray', 100, .5)] - The background color used for the track.
-/// @requires {function} extend
 /// @requires $light-scrollbar
 $dark-bootstrap-scrollbar: extend(
     $bootstrap-scrollbar,
@@ -44,7 +41,6 @@ $dark-bootstrap-scrollbar: extend(
 /// @type {Map}
 /// @property {Map} thumb-background [color: ('gray', 100)] - The background color used for the thumb.
 /// @property {Color} track-background [color: ('gray', 50)] - The background color used for the track.
-/// @requires {function} extend
 /// @requires $indigo-scrollbar
 $dark-indigo-scrollbar: extend(
     $indigo-scrollbar,

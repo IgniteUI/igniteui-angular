@@ -42,12 +42,8 @@
 /// @param {Number} $border-radius [null] - The border radius used for drop-down component.
 /// @param {Number} $item-border-radius [null] - The border radius used for drop-down items.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
+///
 @function drop-down-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -196,9 +192,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin drop-down($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, variant);
@@ -481,7 +474,6 @@
 /// categories from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin drop-down-typography(
     $categories: (
         header: 'overline',

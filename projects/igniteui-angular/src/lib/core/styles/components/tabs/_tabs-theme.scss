@@ -45,10 +45,6 @@
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
 ///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: tabs-theme(
@@ -210,13 +206,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
 /// @requires ripple-theme
 /// @requires {mixin} ripple
-/// @requires elevation
-/// @requires rem
-/// @requires var-get
 @mixin tabs($theme) {
     @include css-vars($theme);
 
@@ -594,7 +585,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin tabs-typography($categories: (label: 'button')) {
     $label: map.get($categories, 'label');
 

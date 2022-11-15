@@ -55,7 +55,6 @@ $light-grid-summary: (
 /// @property {map} border-color [color: ('gray', 100)] - The summaries border color.
 /// @property {map} pinned-border-color [color: ('gray', 300)] - The border color of the summary panel.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-grid-summary
 $fluent-grid-summary: extend(
     $light-grid-summary,
@@ -85,7 +84,6 @@ $bootstrap-grid-summary: $light-grid-summary;
 /// @property {map} label-hover-color [color: ('primary', 900)] - The summaries hover label color.
 /// @property {map} border-color [color: ('primary', 50)] - The summaries border color.
 /// @property {map} pinned-border-color [color: ('primary', 200)] - The border color of the summary panel.
-/// @requires {function} extend
 /// @requires {Map} $light-grid-summary
 $indigo-grid-summary: extend(
     $light-grid-summary,

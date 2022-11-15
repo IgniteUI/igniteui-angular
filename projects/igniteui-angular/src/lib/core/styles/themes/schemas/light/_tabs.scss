@@ -35,8 +35,6 @@
 /// @property {Map} tab-ripple-color [color: ('gray', 100)] - The color used for the button background.
 /// @property {Map} button-ripple-color [color: ('gray', 100)] - The color used for the button background on hover.
 /// @property {Number} border-radius [0] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
 /// @see $default-palette
 $light-tabs: extend(
     (
@@ -137,7 +135,7 @@ $light-tabs: extend(
 /// @property {Map} button-hover-color [color: ('gray', 600)] - The color used for the button icon/text color on hover.
 /// @property {Map} button-disabled-color [color: ('gray', 400)] - The color used for the disabled button icon/text.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $light-tabs
 $fluent-tabs: extend(
     $light-tabs,
@@ -194,7 +192,7 @@ $fluent-tabs: extend(
 /// @property {map} border-color [color: ('gray', 300)] - The color used for the tab items border.
 /// @property {map} border-color--hover [color: ('gray', 200)] - The color used for the tab items border on hover.
 /// @property {Number} border-radius [4px] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-tabs
 $bootstrap-tabs: extend(
     $light-tabs,
@@ -287,7 +285,7 @@ $bootstrap-tabs: extend(
 /// @property {Color} button-background [transparent] - The color used for the button background.
 /// @property {Color} button-hover-background [transparent] - The color used for the button background on hover.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $light-tabs
 $indigo-tabs: extend(
     $light-tabs,

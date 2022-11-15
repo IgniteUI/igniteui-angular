@@ -28,8 +28,6 @@ $dark-bootstrap-tooltip: $bootstrap-tooltip;
 ///
 /// @property {Map} background [contrast-color: ('surface')] - The background color of the tooltip.
 /// @property {Map} text-color [text-color: (color: 'surface')] - The text color of the tooltip.
-///
-/// @requires {function} extend
 /// @requires $indigo-tooltip
 $dark-indigo-tooltip: extend(
     $indigo-tooltip,

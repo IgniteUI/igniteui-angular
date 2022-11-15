@@ -45,12 +45,7 @@
 /// @param {color} $remove-icon-color [null] - The remove icon color for the chip.
 /// @param {color} $remove-icon-color-focus [null] - The remove icon color on focus for the chip.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires luminance
 ///
 /// @example scss Change the background color
 ///   $my-chip-theme: igx-chip-theme($background: black);
@@ -240,9 +235,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin chip($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
@@ -627,7 +619,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin chip-typography(
     $categories: (text: 'body-2'))
 {

@@ -46,7 +46,6 @@ $bootstrap-highlight: $light-highlight;
 /// @property {Map} active-background [color: ('primary', 500)] - The background color used for the highlight in its active state.
 /// @property {Map} active-color [contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
 /// @property {Map} resting-color [contrast-color: ( color: ('gray', 300))] - The icon color used for the highlight in its resting state.
-/// @requires {function} extend
 /// @requires {Map} $light-highlight
 $indigo-highlight: extend(
     $light-highlight,

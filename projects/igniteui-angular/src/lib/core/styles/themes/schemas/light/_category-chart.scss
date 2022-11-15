@@ -213,18 +213,15 @@ $light-category-chart: (
 
 /// Generates a fluent category-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-category-chart
 $fluent-category-chart: $light-category-chart;
 
 /// Generates a bootstrap category-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-category-chart
 $bootstrap-category-chart: $light-category-chart;
 
 /// Generates an indigo category-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-category-chart
 $indigo-category-chart: $light-category-chart;

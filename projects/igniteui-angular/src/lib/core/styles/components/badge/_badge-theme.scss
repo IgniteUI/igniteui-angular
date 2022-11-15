@@ -23,11 +23,6 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for badge component.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
-/// @requires rem
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
@@ -91,10 +86,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires color
-/// @requires rem
-/// @requires var-get
 @mixin badge($theme) {
     @include css-vars($theme);
 

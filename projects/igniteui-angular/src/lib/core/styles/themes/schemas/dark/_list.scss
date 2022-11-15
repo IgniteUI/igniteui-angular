@@ -23,7 +23,6 @@ $base-dark-list: (
 
 /// Generates a base dark list schema based on a mix of $light-list and $base-dark-list.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-list
 /// @requires $base-dark-list
 /// @see $default-palette
@@ -31,7 +30,6 @@ $dark-list: extend($light-list, $base-dark-list);
 
 /// Generates a base dark fluent list schema based on a mix of $fluent-list and $base-dark-list..
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-list
 /// @requires $base-dark-list
 $dark-fluent-list: extend($fluent-list, $base-dark-list);
@@ -43,7 +41,6 @@ $dark-fluent-list: extend($fluent-list, $base-dark-list);
 /// @property {Map} item-background-hover [color: ('gray', 100)] - The list item hover background.
 /// @property {Map} item-background-active [color: ('gray', 100)] - The active list item background color.
 /// @property {Map} header-background [color: ('gray', 50)] - The list header background color.
-/// @requires {function} extend
 /// @requires $bootstrap-list
 /// @requires $base-dark-list
 $dark-bootstrap-list: extend(
@@ -76,7 +73,6 @@ $dark-bootstrap-list: extend(
 /// @property {Map} header-text-color [contrast-color: 'surface'] - The list header text color.
 /// @property {Map} item-background-hover [color: ('primary')] - The list item hover background.
 /// @property {Map} item-background-active [color: ('primary')] - The active list item background color.
-/// @requires {function} extend
 /// @requires $indigo-list
 $dark-indigo-list: extend(
     $indigo-list,

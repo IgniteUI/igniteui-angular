@@ -61,7 +61,6 @@ $light-grid-filtering: (
 /// Generates a fluent grid-filtering schema.
 /// @type {Map}
 /// @prop {Map} menu-background [color: 'surface'] - The idle menu background color.
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $fluent-grid-filtering: extend(
     $light-grid-filtering,
@@ -74,13 +73,11 @@ $fluent-grid-filtering: extend(
 
 /// Generates a bootstrap grid-filtering schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $bootstrap-grid-filtering: extend($light-grid-filtering);
 
 /// Generates an indigo grid-filtering schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $indigo-grid-filtering: extend($light-grid-filtering);
 

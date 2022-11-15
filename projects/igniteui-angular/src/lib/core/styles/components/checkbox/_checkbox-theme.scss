@@ -27,10 +27,8 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 /// Set to light when the surrounding area is dark.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
@@ -85,16 +83,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} hide-default
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
 /// @requires {mixin} ripple
 /// @requires ripple-theme
-/// @requires rem
-/// @requires em
-/// @requires var-get
 @mixin checkbox($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
@@ -461,7 +451,6 @@
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin checkbox-typography(
     $categories: (label: 'subtitle-1')
 ) {

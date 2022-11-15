@@ -94,7 +94,6 @@
 /// @prop {number} grid-elevation [2] - The elevation level, between 0-24, to be used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation level, between 0-24, to be used for movable elements (ex. column header).
 /// @prop {Number} drop-area-border-radius [16px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-grid
 /// @see $default-palette
 $light-grid: extend(
@@ -436,7 +435,6 @@ $light-grid: extend(
 /// @prop {Map} cell-selected-within-text-color [contrast-color: ('gray', 300)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('gray', 300)] - The selected row hover text color.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-grid
 /// @requires {Map} $fluent-elevation-grid
 $fluent-grid: extend(
@@ -567,7 +565,6 @@ $fluent-grid: extend(
 /// @prop {Map} cell-selected-within-background [color: ('primary', 100)] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [contrast-color: ('primary', 100)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('primary', 100)] - The selected row hover text color.
-/// @requires {function} extend
 /// @requires {Map} $light-grid
 $bootstrap-grid: extend(
     $light-grid,
@@ -712,7 +709,6 @@ $bootstrap-grid: extend(
 /// @prop {Map} cell-selected-within-text-color [contrast-color: ('primary', 200)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('primary', 50)] - The selected row hover text color.
 ///
-/// @requires {function} extend
 /// @requires {Map} $light-grid
 $indigo-grid: extend(
     $light-grid,

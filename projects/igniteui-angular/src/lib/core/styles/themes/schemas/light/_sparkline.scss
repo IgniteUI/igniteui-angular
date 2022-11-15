@@ -54,19 +54,16 @@ $light-sparkline: (
 
 /// Generates a fluent sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $fluent-sparkline: $light-sparkline;
 
 /// Generates a bootstrap sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $bootstrap-sparkline: $light-sparkline;
 
 /// Generates an indigo sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $indigo-sparkline: $light-sparkline;
 

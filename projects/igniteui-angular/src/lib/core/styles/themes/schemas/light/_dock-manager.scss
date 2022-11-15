@@ -163,7 +163,6 @@ $light-dock-manager: (
 /// @prop {Color} tab-border-color-active [color: 'surface'] - Sets the border color for active tabs.
 /// @prop {Color} tab-text-active [color: 'primary'] - Sets the text color for active tabs.
 /// @prop {Color} tab-text [color: ('gray', 700)] - Sets the text color for tabs.
-/// @requires {function} extend
 /// @requires {Map} $light-dock-manager
 $fluent-dock-manager: extend(
     $light-dock-manager,
@@ -254,7 +253,6 @@ $fluent-dock-manager: extend(
 /// @prop {Color} tab-border-color [color: 'surface'] - Sets the border color for tabs.
 /// @prop {Color} tab-text-active [color: ('gray', 800)] - Sets the text color for active tabs.
 /// @prop {Color} tab-text [color: 'primary'] - Sets the text color for tabs.
-/// @requires {function} extend
 /// @requires {Map} $light-dock-manager
 $bootstrap-dock-manager: extend(
     $light-dock-manager,
@@ -351,7 +349,6 @@ $bootstrap-dock-manager: extend(
 /// @prop {Color} tab-text-active [color: ('gray', 900)] - Sets the text color for active tabs.
 /// @prop {Color} tab-text [color: ('gray', 700)] - Sets the text color for tabs.
 /// @prop {Color} text-color [color: ('gray', 900)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
-/// @requires {function} extend
 /// @requires {Map} $light-dock-manager
 $indigo-dock-manager: extend(
     $light-dock-manager,

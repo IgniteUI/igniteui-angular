@@ -68,7 +68,6 @@ $base-dark-chip: (
 
 /// Generates a dark chip schema based on a mix of $light-chip and $base-dark-chip.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-chip
 /// @requires $base-dark-chip
 /// @see $default-palette
@@ -79,7 +78,6 @@ $dark-chip: extend($light-chip, $base-dark-chip);
 /// @prop {Map} background [color: ('gray', 100, .2)] - The chip background color.
 /// @prop {Map} hover-background [color: ('gray', 100, .8)] - The chip hover background color.
 /// @prop {Map} text-color [color: ('gray', 500)] - The chip text color.
-/// @requires {function} extend
 /// @requires $fluent-chip
 /// @requires $base-dark-chip
 $dark-fluent-chip: extend(
@@ -115,7 +113,6 @@ $dark-fluent-chip: extend(
 
 /// Generates a dark bootstrap chip schema based on a mix of $bootstrap-chip and $ase-dark-chip.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-chip
 /// @requires $base-dark-chip
 $dark-bootstrap-chip: extend(
@@ -165,7 +162,6 @@ $dark-bootstrap-chip: extend(
 /// @prop {Map} ghost-background [color: ('gray', 200)] - The chip ghost background color.
 /// @prop {Map} border-color [color: ('gray', 200)] - The chip border color.
 /// @prop {Map} hover-border-color [color: ('gray', 200)] - The chip hover border color.
-/// @requires {function} extend
 /// @requires $indigo-chip
 /// @requires $base-dark-chip
 $dark-indigo-chip: extend(

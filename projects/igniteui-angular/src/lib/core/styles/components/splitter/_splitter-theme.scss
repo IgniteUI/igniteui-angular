@@ -64,9 +64,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin splitter($theme) {
     @include css-vars($theme);
     $splitter-color: var-get($theme, 'bar-color');

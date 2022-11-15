@@ -39,10 +39,6 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
 ///
 /// @example scss Change the background, text, and border colors
 ///   $my-button-group-theme: button-group-theme(
@@ -165,9 +161,6 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires color
-/// @requires var-get
 @mixin button-group($theme) {
     @include css-vars($theme);
     $group-item-min-width: rem(24px);

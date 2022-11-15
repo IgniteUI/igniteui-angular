@@ -29,7 +29,7 @@ $light-scrollbar: extend(
 /// Generates a fluent scrollbar schema.
 /// @type {Map}
 /// @property {Color} thumb-background [color: ('gray', 300)] - The background color used for the thumb.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-scrollbar
 $fluent-scrollbar: extend(
     $light-scrollbar,
@@ -44,7 +44,7 @@ $fluent-scrollbar: extend(
 
 /// Generates a bootstrap scrollbar schema.
 /// @type {Map}
-/// @requires {function} extend
+///
 /// @requires {Map} $light-scrollbar
 $bootstrap-scrollbar: extend(
     $light-scrollbar,
@@ -57,7 +57,7 @@ $bootstrap-scrollbar: extend(
 /// @type {Map}
 /// @property {Map} thumb-background [color: ('gray', 400)] - The background color used for the thumb.
 /// @property {Color} track-background [color: ('gray', 200)] - The background color used for the track.
-/// @requires {function} extend
+///
 /// @requires {Map} $light-scrollbar
 $indigo-scrollbar: extend(
     $light-scrollbar,

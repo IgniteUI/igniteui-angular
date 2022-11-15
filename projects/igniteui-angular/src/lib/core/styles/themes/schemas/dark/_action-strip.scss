@@ -9,7 +9,6 @@
 
 /// Generates a dark action-strip schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-action-strip
 /// @see $default-palette
 $dark-action-strip: $light-action-strip;
@@ -17,7 +16,6 @@ $dark-action-strip: $light-action-strip;
 /// Generates a dark fluent action strip schema.
 /// @type {Map}
 /// @prop {Map} actions-background [color: ('gray', 600)] - The color used for actions background.
-/// @requires {function} extend
 /// @requires $fluent-action-strip
 $dark-fluent-action-strip: extend(
     $fluent-action-strip,
@@ -33,7 +31,6 @@ $dark-fluent-action-strip: extend(
 /// Generates a dark bootstrap action strip schema.
 /// @type {Map}
 /// @prop {Map} actions-background [color: ('gray', 100)] - The color used for actions background.
-/// @requires {function} extend
 /// @requires $bootstrap-action-strip
 $dark-bootstrap-action-strip: extend(
     $bootstrap-action-strip,
@@ -48,6 +45,5 @@ $dark-bootstrap-action-strip: extend(
 
 /// Generates a dark indigo action strip schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-action-strip
 $dark-indigo-action-strip: extend($indigo-action-strip);

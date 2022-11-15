@@ -53,19 +53,16 @@ $light-data-chart: (
 
 /// Generates a fluent data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $fluent-data-chart: $light-data-chart;
 
 /// Generates a bootstrap data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $bootstrap-data-chart: $light-data-chart;
 
 /// Generates an indigo data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $indigo-data-chart: $light-data-chart;
 

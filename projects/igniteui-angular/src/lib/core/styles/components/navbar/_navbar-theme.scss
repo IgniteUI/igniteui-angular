@@ -21,10 +21,7 @@
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
+///
 ///
 /// @example scss Change the background color
 ///   $my-navbar-theme: navbar-theme($background: green);
@@ -84,9 +81,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin navbar($theme) {
     $variant: map.get($theme, 'variant');
     @include css-vars($theme);
@@ -177,7 +171,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin navbar-typography($categories: (title: 'h6')) {
     $title: map.get($categories, 'title');
 

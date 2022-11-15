@@ -26,7 +26,6 @@ $dark-bootstrap-query-builder: $bootstrap-query-builder;
 ///
 /// @prop {Map} background [color: 'surface'] - The background color of the filtering row.
 ///
-/// @requires {function} extend
 /// @requires $indigo-query-builder
 $dark-indigo-query-builder: extend(
     $indigo-query-builder,

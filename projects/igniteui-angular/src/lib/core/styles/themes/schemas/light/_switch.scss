@@ -33,8 +33,6 @@
 /// @property {Color} border-disabled-color [transparent] - The border color of the disabled switch.
 /// @property {Color} border-on-color [transparent] - The border color of the on-switch.
 /// @property {Color} border-on-hover-color [transparent] - The border color of the  on-switch.
-///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-switch
 /// @see $default-palette
 $light-switch: extend(
@@ -118,7 +116,7 @@ $light-switch: extend(
 ///
 /// @property {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $light-switch
 $fluent-switch: extend(
     $light-switch,
@@ -200,7 +198,7 @@ $fluent-switch: extend(
 /// @property {Number} border-radius-track [32px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-thumb [32px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $fluent-switch
 $bootstrap-switch: extend(
     $fluent-switch,
@@ -270,7 +268,7 @@ $bootstrap-switch: extend(
 /// @property {Color} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @property {Color} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 ///
-/// @requires {function} extend
+///
 /// @requires $light-switch
 $indigo-switch: extend(
     $light-switch,

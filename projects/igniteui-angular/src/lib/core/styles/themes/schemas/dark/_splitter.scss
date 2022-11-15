@@ -12,7 +12,6 @@
 /// @property {Map} bar-color [color: ('gray', 50)] - The background color of the bar.
 /// @property {Map} handle-color [color: ('gray', 800)] - The color for the bar drag handle.
 /// @property {Map} expander-color [color: ('gray', 800)] - The color for the arrow expander's.
-/// @requires {function} extend
 /// @requires $light-splitter
 $dark-splitter: extend(
     $light-splitter,
@@ -45,7 +44,6 @@ $dark-bootstrap-splitter: $bootstrap-splitter;
 /// @type {Map}
 /// @property {Map} handle-color [color: 'surface'] - The color for the bar drag handle.
 /// @property {Map} expander-color [color: 'surface'] - The color for the bar drag handle.
-/// @requires {function} extend
 /// @requires $indigo-splitter
 $dark-indigo-splitter: extend(
     $indigo-splitter,

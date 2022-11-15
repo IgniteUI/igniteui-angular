@@ -78,7 +78,6 @@ $light-gauge: (
 /// @property {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
 /// @property {Color} scale-outline [(color: 'surface', darken: 8%)] - Sets the color to use for the outline of the scale.
 /// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
-/// @requires {function} extend
 /// @requires {Map} $light-gauge
 $light-linear-gauge: extend(
     $light-gauge,
@@ -105,7 +104,6 @@ $light-linear-gauge: extend(
 /// @type {Map}
 /// @property {Color} needle-pivot-brush [color: 'primary'] - Sets the color of the needle pivot point.
 /// @property {Color} needle-pivot-outline [color: 'surface'] - Sets the outline color of the needle pivot point.
-/// @requires {function} extend
 /// @requires {Map} $light-gauge
 $light-radial-gauge: extend(
     $light-gauge,

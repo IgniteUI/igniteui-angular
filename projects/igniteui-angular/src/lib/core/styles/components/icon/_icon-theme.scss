@@ -16,8 +16,7 @@
 /// @param {Color} $disabled-color [null] - The disabled icon color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// @example scss Change the icon color
 ///   $my-icon-theme: icon-theme($color: orange);
@@ -51,8 +50,6 @@
 
 // stylelint-disable font-family-no-missing-generic-family-keyword
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin icon($theme) {
     @include css-vars($theme);
 
