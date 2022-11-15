@@ -10,20 +10,21 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
     configureTestSuite();
-
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitSwitchComponent,
                 SwitchSimpleComponent,
                 SwitchRequiredComponent,
+                SwitchDisabledComponent,
                 SwitchExternalLabelComponent,
                 SwitchInvisibleLabelComponent,
                 SwitchFormGroupComponent,
                 IgxSwitchComponent
             ],
             imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
+            .compileComponents();
     }));
 
     it('Initializes', () => {
@@ -148,10 +149,10 @@ describe('IgxSwitch', () => {
     });
 
     it('Disabled state', () => {
-        const fixture = TestBed.createComponent(IgxSwitchComponent);
-        const switchInstance = fixture.componentInstance;
-        switchInstance.disabled = true;
-        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement as HTMLInputElement;
+        const fixture = TestBed.createComponent(SwitchDisabledComponent);
+        const testInstance = fixture.componentInstance;
+        const switchInstance = testInstance.switch;
+        const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
         const nativeLabel = switchInstance.nativeLabel.nativeElement;
         const placeholderLabel = switchInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
@@ -159,13 +160,14 @@ describe('IgxSwitch', () => {
         expect(switchInstance.disabled).toBe(true);
         expect(nativeCheckbox.disabled).toBe(true);
 
-        nativeCheckbox.click();
+        nativeCheckbox.dispatchEvent(new Event('change'));
         nativeLabel.click();
         placeholderLabel.click();
         fixture.detectChanges();
 
         // Should not update
-        expect(switchInstance.checked).toBe(false);
+        expect(switchInstance.checked).toBe(null);
+        expect(testInstance.subscribed).toBe(false);
     });
 
     it('Event handling', () => {
@@ -242,6 +244,17 @@ class SwitchSimpleComponent {
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+}
+
+@Component({
+    template: `<igx-switch #switch
+                                [(ngModel)]="subscribed"
+                                [checked]="subscribed"
+                                [disabled]="true">Disabled</igx-switch>`})
+class SwitchDisabledComponent {
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+
+    public subscribed = false;
 }
 
 @Component({
