@@ -1774,7 +1774,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.deleteRowById(147);
             fix.detectChanges();
 
-            expect(firstRow.isRoot).toBe(false)
+            expect(firstRow.isRoot).toBe(false);
         });
     });
 });
