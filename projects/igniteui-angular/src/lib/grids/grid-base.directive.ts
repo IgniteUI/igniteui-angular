@@ -7111,6 +7111,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return GridColumnDataType.Boolean;
         } else if (typeof rec === 'object' && rec instanceof Date) {
             return GridColumnDataType.Date;
+        } else if (typeof rec === 'string' && (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(rec)) {
+            return GridColumnDataType.Image;
         }
         return GridColumnDataType.String;
     }

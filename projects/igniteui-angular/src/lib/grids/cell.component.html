@@ -8,7 +8,7 @@
     >
 </ng-template>
 <ng-template #defaultCell>
-    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+    <div *ngIf="column.dataType !== 'boolean' || column.dataType !== 'image' || (column.dataType === 'boolean' && this.formatter)"
         igxTextHighlight
         class="igx-grid__td-text"
         style="pointer-events: none;"
@@ -50,6 +50,7 @@
         [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
         >{{ value ? "check" : "close" }}</igx-icon
     >
+    <img *ngIf="column.dataType === 'image'" [src]="value" [alt]="value | igxCellImageAlt" />
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
     <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
