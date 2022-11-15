@@ -2431,6 +2431,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /* blazorByValueArray */
+    /* blazorAlwaysWriteback */
+    /* @tsTwoWayProperty (true, "RowSelectionChanging", "Detail.NewSelection", false)
     /**
      * Gets/Sets the current selection state.
      *
