@@ -160,7 +160,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     };
 
     private get isHierarchicalGrid() {
-        return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        return /^ig.-hierarchical-grid$/.test(this.row.grid.nativeElement.tagName.toLowerCase());
     }
 }
 
@@ -188,7 +189,7 @@ export class IgxDragIndicatorIconDirective {
 export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
     public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
-        context: unknown): context is IgxGridRowDragGhostContext { 
+        context: unknown): context is IgxGridRowDragGhostContext {
         return true;
     };
 }

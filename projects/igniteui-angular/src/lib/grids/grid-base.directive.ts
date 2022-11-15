@@ -7238,7 +7238,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        if (/^ig.-hierarchical-grid$/.test(this.nativeElement.tagName.toLowerCase())) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7278,7 +7279,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
         let selectionMap;
-        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+        // igx- and igc-, TODO(D.P): internal interface w/ flags for grid types like current `isPivot`
+        if (/^ig.-hierarchical-grid$/.test(this.nativeElement.tagName.toLowerCase()) && selectionCollection.size > 0) {
             selectionMap = isRemote ? Array.from(selectionCollection) :
                 Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
         } else {
