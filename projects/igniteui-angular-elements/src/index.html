@@ -12,7 +12,7 @@
         gap: 16px;
         grid-auto-rows: minmax(400px, max-content);
     }
-    igc-grid {
+    igc-grid, igc-tree-grid {
         max-height: 550px;
     }
   </style>
@@ -91,15 +91,15 @@
         </igc-grid-toolbar>
 
         <igc-column-layout header="Product ID">
-            <igc-column row-start="1" col-start="1" row-end="3" field="ProductID" header="Product ID" width="136px"></igc-column>
+            <igc-column row-start="1" col-start="1" row-end="3" field="ProductID" header="Product ID" width="25%"></igc-column>
         </igc-column-layout>
-        <igc-column-layout header="Product Details">
-            <igc-column row-start="1" col-start="1" col-end="3" field="ProductName" header="Product Name" width="200px"></igc-column>
-            <igc-column row-start="2" col-start="1" col-end="2" field="CategoryName" header="Category Name" groupable="true" width="200px"></igc-column>
-            <igc-column row-start="2" col-start="2" col-end="3" field="ImageUrl" width="200px"></igc-column>
+        <igc-column-layout header="Product Details" width="50%">
+            <igc-column row-start="1" col-start="1" col-end="3" field="ProductName" header="Product Name"></igc-column>
+            <igc-column row-start="2" col-start="1" col-end="2" field="CategoryName" header="Category Name" groupable="true"></igc-column>
+            <igc-column row-start="2" col-start="2" col-end="3" field="ImageUrl"></igc-column>
         </igc-column-layout>
         <igc-column-layout header="Product Stock">
-            <igc-column row-start="1" col-start="1" col-end="3" field="InStock" header="In Stock" width="136px"></igc-column>
+            <igc-column row-start="1" col-start="1" col-end="3" field="InStock" header="In Stock" width="25%"></igc-column>
         </igc-column-layout>
 
         <igc-paginator per-page="10"></igc-paginator>
@@ -137,7 +137,20 @@
   </script>
 
   <!-- IgxTreeGridComponent -->
-  <igc-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+  <igc-tree-grid id="treegrid1" primary-key="id" row-editable="true" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+    <igc-grid-toolbar>
+        <igc-grid-toolbar-title>Tree Grid Toolbar</igc-grid-toolbar-title>
+        <igc-grid-toolbar-actions>
+            <igc-grid-toolbar-advanced-filtering></igc-grid-toolbar-advanced-filtering>
+            <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+            <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+            <igc-grid-toolbar-exporter></igc-grid-toolbar-exporter>
+        </igc-grid-toolbar-actions>
+    </igc-grid-toolbar>
+    <igc-column field='id' header='Project Id' data-type='number' ></igc-column>
+    <igc-column field='tasks' sortable ></igc-column>
+    <igc-column field='start' data-type='date' sortable has-summary></igc-column>
+    <igc-column field='finish' data-type='date' has-summary></igc-column>
     <igc-paginator per-page="10"></igc-paginator>
   </igc-tree-grid>
 
@@ -145,12 +158,12 @@
   <script>
     treegrid1.data = treeGridDS;
     document.addEventListener('DOMContentLoaded', () => {
-        treegrid1.columns = [
-            { field: 'id', header: 'Product Id', dataType: 'number' },
-            { field: 'tasks', sortable: true },
-            { field: 'start', dataType: 'date', sortable: true, groupable: true },
-            { field: 'finish', dataType: 'date' }
-        ];
+        // treegrid1.columns = [
+        //     { field: 'id', header: 'Product Id', dataType: 'number' },
+        //     { field: 'tasks', sortable: true },
+        //     { field: 'start', dataType: 'date', sortable: true, groupable: true, hasSummary: true },
+        //     { field: 'finish', dataType: 'date', hasSummary: true }
+        // ];
     });
   </script>
   <!-- END IgxTreeGridComponent -->

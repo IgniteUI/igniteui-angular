@@ -1047,6 +1047,28 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
         });
 
+        it('Multi Selection - Select/Deselect dates with Shift key from one view should also select/deselect dates in the other', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            const octoberDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            const october27th = octoberDates[26];
+            const october31st = octoberDates[30];
+
+            UIInteractions.simulateClickAndSelectEvent(october27th);
+            UIInteractions.simulateClickAndSelectEvent(october31st, true);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(5);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(5);
+
+            UIInteractions.simulateClickAndSelectEvent(october27th, true);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(1);
+        });
+
         it('Multi/Single Selection - select multiple dates should not create range', () => {
             expect(calendar.hideOutsideDays).toBe(false);
             calendar.selection = 'multi';

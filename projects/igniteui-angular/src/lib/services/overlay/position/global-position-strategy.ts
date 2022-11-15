@@ -7,7 +7,7 @@ import { IPositionStrategy } from './IPositionStrategy';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class GlobalPositionStrategy implements IPositionStrategy {
-    /** @inheritdoc */
+    /** @inheritDoc */
     public settings: PositionSettings;
 
     protected _defaultSettings: PositionSettings = {
@@ -24,14 +24,14 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
         this.setPosition(contentElement);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public clone(): IPositionStrategy {
         return Util.cloneInstance(this);
     }

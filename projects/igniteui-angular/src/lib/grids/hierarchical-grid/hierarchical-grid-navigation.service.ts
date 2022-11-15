@@ -18,7 +18,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             return;
         }
 
-        const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
+        const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid')
+            || this.getClosestElemByTag(event.target, 'igc-hierarchical-grid');
         if (targetGrid !== this.grid.nativeElement) {
             return;
         }
