@@ -225,17 +225,19 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                         numberOfMaskLiterals++;
                     }
                 }
-                this.inputValue = isInputComplete?
+                this.inputValue = isInputComplete ?
                 this.inputValue.substring(0, this.selectionEnd - numberOfMaskLiterals) + this.inputValue.substring(this.selectionEnd)
-                : this._compositionValue.substring(0, this._compositionStartIndex);
+                : this._compositionValue?.substring(0, this._compositionStartIndex) || this.inputValue;
 
-                this._start = this.selectionStart;
-                this._end = this.selectionEnd;
-                this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
-                this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
-                this.nativeElement.selectionEnd = this._end;
-                this._start = this.selectionStart;
-                this._end = this.selectionEnd;
+                if (this._compositionValue) {
+                    this._start = this.selectionStart;
+                    this._end = this.selectionEnd;
+                    this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
+                    this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+                    this.nativeElement.selectionEnd = this._end;
+                    this._start = this.selectionStart;
+                    this._end = this.selectionEnd;
+                }
         }
 
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
@@ -291,7 +293,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('dragenter')
     public onDragEnter(): void {
-        if (!this._focused) {
+        if (!this._focused && !this._dataValue) {
             this.showMask(this._dataValue);
         }
     }
