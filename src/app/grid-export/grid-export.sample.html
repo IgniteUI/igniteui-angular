@@ -8,7 +8,7 @@
         <igx-paginator></igx-paginator>
         <igx-column #col field="ProductID" header="Product ID" [headerClasses]="'prodId'">
         </igx-column>
-        <igx-column #col field="ProductName" header="Product Name" [headerClasses]="'prodId'" [hasSummary]="true">
+        <igx-column #col field="ProductName" header="Product Name" [headerClasses]="'prodId'" [hasSummary]="col.hasSummary">
             <ng-template igxCell let-cell="cell" let-val>
                 {{val}}
             </ng-template>
@@ -17,11 +17,8 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
-        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="number"
+        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="currency"
             [hasSummary]="true">
-            <ng-template igxCell let-cell="cell" let-val let-row>
-                ${{val}}
-            </ng-template>
             <ng-template igxHeader let-col>
                 <div class="header-text">{{col.field}}</div>
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
@@ -72,11 +69,8 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
-        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="number"
+        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="currency"
             [hasSummary]="true">
-            <ng-template igxCell let-cell="cell" let-val let-row>
-                ${{ val }}
-            </ng-template>
             <ng-template igxHeader let-col>
                 <div class="text">Price</div>
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
