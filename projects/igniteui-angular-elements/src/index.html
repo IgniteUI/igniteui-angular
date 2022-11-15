@@ -137,7 +137,11 @@
   </script>
 
   <!-- IgxTreeGridComponent -->
-  <igc-tree-grid id="treegrid1" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+  <igc-tree-grid id="treegrid1" primary-key="id" row-editable="true" moving="true" allow-filtering="true" filter-mode="excelStyleFilter" display-density="compact" child-data-key="products">
+      <igc-column field='id' header='Project Id' data-type='number' ></igc-column>
+      <igc-column field='tasks' sortable ></igc-column>
+      <igc-column field='start' data-type='date' sortable has-summary></igc-column>
+      <igc-column field='finish' data-type='date' has-summary></igc-column>
     <igc-paginator per-page="10"></igc-paginator>
   </igc-tree-grid>
 
@@ -145,12 +149,12 @@
   <script>
     treegrid1.data = treeGridDS;
     document.addEventListener('DOMContentLoaded', () => {
-        treegrid1.columns = [
-            { field: 'id', header: 'Product Id', dataType: 'number' },
-            { field: 'tasks', sortable: true },
-            { field: 'start', dataType: 'date', sortable: true, groupable: true },
-            { field: 'finish', dataType: 'date' }
-        ];
+        // treegrid1.columns = [
+        //     { field: 'id', header: 'Product Id', dataType: 'number' },
+        //     { field: 'tasks', sortable: true },
+        //     { field: 'start', dataType: 'date', sortable: true, groupable: true, hasSummary: true },
+        //     { field: 'finish', dataType: 'date', hasSummary: true }
+        // ];
     });
   </script>
   <!-- END IgxTreeGridComponent -->
