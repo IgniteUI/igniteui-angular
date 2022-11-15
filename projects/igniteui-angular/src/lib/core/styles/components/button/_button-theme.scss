@@ -394,6 +394,12 @@
         compact: rem(36px)
     );
 
+    $filtering-row-button-size: (
+        comfortable: rem(40px),
+        cosy: rem(30px),
+        compact: rem(21px)
+    );
+
     $icon-in-button-margin: (
         comfortable: rem(12px),
         cosy: rem(8px),
@@ -488,6 +494,11 @@
         white-space: nowrap;
         transition: $button-transition;
 
+        @if ($variant == 'bootstrap') {
+            // important is needed to override the typography margins
+            margin: rem(4px) !important;
+        }
+
         igx-icon {
             display: flex;
             justify-content: center;
@@ -517,6 +528,29 @@
 
         * + * {
             margin-inline-start: map.get($icon-in-button-margin, 'compact');
+        }
+    }
+
+    igx-grid-filtering-row {
+        @if ($variant == 'bootstrap') {
+            %igx-button-display {
+                min-height: map.get($filtering-row-button-size, 'comfortable');
+                padding-block: 0;
+
+                > * {
+                    display: flex;
+                    align-items: center;
+                    height: rem(18px);
+                }
+            }
+
+            %igx-button-display--cosy {
+                min-height: map.get($filtering-row-button-size, 'cosy');
+            }
+
+            %igx-button-display--compact {
+                min-height: map.get($filtering-row-button-size, 'compact');
+            }
         }
     }
 
