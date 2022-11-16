@@ -437,7 +437,7 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode).styleXf || 0}"` : ` s="1"`;
+            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {
@@ -527,6 +527,7 @@ export class WorksheetFile implements IExcelFile {
         let func = '';
         let funcType = '';
         let result = '';
+        const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
 
         switch(type.toLowerCase()) {
             case "count":
@@ -535,8 +536,8 @@ export class WorksheetFile implements IExcelFile {
                 func = `_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
                 funcType = `"Min: "&amp;`;
 
-                result = funcType + (col.dataType === 'currency'
-                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
                     : `${func}`);
 
                 return result
@@ -544,8 +545,8 @@ export class WorksheetFile implements IExcelFile {
                 func = `_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
                 funcType = `"Max: "&amp;`;
 
-                result = funcType + (col.dataType === 'currency'
-                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
                     : `${func}`);
 
                 return result
@@ -553,8 +554,8 @@ export class WorksheetFile implements IExcelFile {
                 func =  `_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
                 funcType = `"Sum: "&amp;`;
 
-                result = funcType + (col.dataType === 'currency'
-                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
                     : `${func}`);
 
                 return result
@@ -562,8 +563,8 @@ export class WorksheetFile implements IExcelFile {
                 func = `_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
                 funcType = `"Avg: "&amp;`;
 
-                result = funcType + (col.dataType === 'currency'
-                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
                     : `${func}`);
 
                 return result
