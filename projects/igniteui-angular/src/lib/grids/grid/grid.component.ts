@@ -31,6 +31,7 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { throws } from 'assert';
 
 let NEXT_ID = 0;
 
@@ -330,6 +331,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.cdr.markForCheck();
         if (this.isPercentHeight) {
             this.notifyChanges(true);
+        }
+        // check if any columns have width auto and if so recalculate their auto-size on data changed.
+        if (this._columns.some(x => (x as any)._width === 'auto')) {
+            // reset auto-size and calculate it again.
+            this._columns.forEach( x => x.autoSize = undefined);
+            this.resetCaches();
+            this.cdr.detectChanges();
+            this.autoSizeColumnsInView();
         }
     }
 
