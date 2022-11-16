@@ -1269,6 +1269,38 @@ describe('IgxGrid - Column properties #grid', () => {
             const widths = grid.columns.map(x => x.width);
             expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
         }));
+
+        it('should auto-size on data changed.', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.componentInstance.data = [];
+            fix.componentInstance.columns = [
+                { field: 'ID', width: 'auto' },
+                { field: 'CompanyName', width: 'auto' },
+                { field: 'ContactName', width: 'auto' },
+                { field: 'ContactTitle', width: 'auto' },
+                { field: 'Address', width: 'auto' },
+                { field: 'City', width: 'auto' },
+                { field: 'Region', width: 'auto' },
+                { field: 'PostalCode', width: 'auto' },
+                { field: 'Phone', width: 'auto' },
+                { field: 'Fax', width: 'auto' }
+            ];
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            // resize grid so that all columns are in view
+            grid.width = '1500px';
+            fix.detectChanges();
+            tick();
+            let widths = grid.columns.map(x => x.width);
+            expect(widths).toEqual(['80px', '130px', '121px', '114px', '92px', '80px', '86px', '108px', '82px', '80px']);
+            fix.componentInstance.data = SampleTestData.contactInfoData();
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+            widths = grid.columns.map(x => x.width);
+            expect(widths).toEqual(['95px', '240px', '145px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+        }));
     });
 
 });
