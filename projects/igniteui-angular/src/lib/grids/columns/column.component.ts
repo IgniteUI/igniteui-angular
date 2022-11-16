@@ -1853,9 +1853,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     this.filterable = false;
                     break;
                 case GridColumnDataType.String:
-                    this.filters = IgxStringFilteringOperand.instance();
-                    break;
                 default:
+                    this.filters = IgxStringFilteringOperand.instance();
                     break;
             }
         }

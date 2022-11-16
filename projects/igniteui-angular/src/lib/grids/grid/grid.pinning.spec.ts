@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
@@ -28,13 +28,14 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-/* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 PinningComponent,
@@ -45,8 +46,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        });
-    }));
+        }).compileComponents();
+    }))
 
     describe('To Start', () => {
 
@@ -54,12 +55,11 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
-                fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-            }));
+            });
 
             it('should correctly initialize when there are initially pinned columns.', () => {
 
