@@ -1766,10 +1766,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('should delete pinned row without errors', () => {
             treeGrid.pinRow(147);
             fix.detectChanges();
-            const firstRow = treeGrid.rowList.toArray()[0];
+            const firstRow = treeGrid.pinnedRows[0];
 
             expect(firstRow.isRoot).toBe(true);
             expect(firstRow.pinned).toBeTrue();
+            expect(firstRow.data.ID).toEqual(147);
 
             treeGrid.deleteRowById(147);
             fix.detectChanges();
