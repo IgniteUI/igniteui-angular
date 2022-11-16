@@ -2545,7 +2545,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
-    /** 
+    /**
      * Gets the row selector template.
      */
     @Input()
@@ -4643,20 +4643,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._moveChildColumns(column.parent, column, target, pos);
         }
 
-        let columnPinStateChanged;
+        // let columnPinStateChanged;
         // pinning and unpinning will work correctly even without passing index
         // but is easier to calclulate the index here, and later use it in the pinning event args
-        if (target.pinned && !column.pinned) {
-            const pinnedIndex = this._pinnedColumns.indexOf(target);
-            const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
-            columnPinStateChanged = column.pin(index);
-        }
+        // if (target.pinned && !column.pinned) {
+        //     const pinnedIndex = this._pinnedColumns.indexOf(target);
+        //     const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
+        //     columnPinStateChanged = column.pin(index);
+        // }
 
-        if (!target.pinned && column.pinned) {
-            const unpinnedIndex = this._unpinnedColumns.indexOf(target);
-            const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
-            columnPinStateChanged = column.unpin(index);
-        }
+        // if (!target.pinned && column.pinned) {
+        //     const unpinnedIndex = this._unpinnedColumns.indexOf(target);
+        //     const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
+        //     columnPinStateChanged = column.unpin(index);
+        // }
 
         // if (target.pinned && column.pinned && !columnPinStateChanged) {
         //     this._reorderColumns(column, target, pos, this._pinnedColumns);

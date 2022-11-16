@@ -1196,14 +1196,18 @@ describe('IgxGrid - Column properties #grid', () => {
             // For test fixture destroy
             grid.id = "root1";
             grid.data = dataWithImages;
+            grid.autoGenerate = true;
+            fix.detectChanges();
         }));
 
         it('should initialize correctly with autoGenerate and image data', () => {
-            grid.autoGenerate = true;
-            fix.detectChanges();
-
             let column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
+            expect(column.sortable).toBeFalse();
+            expect(column.filterable).toBeFalse();
+            expect(column.editable).toBeFalse();
+            expect(column.hasSummary).toBeFalse();
+
             let cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
             expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('assets/images/avatar/1.jpg');
