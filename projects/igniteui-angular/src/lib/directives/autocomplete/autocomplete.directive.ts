@@ -240,7 +240,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('compositionstart')
     public onCompositionStart(): void {
         if (!this._composing) {
-            // this._compositionStartIndex = this._start;
             this._composing = true;
             console.log('Composition START!');
         }
@@ -249,12 +248,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /** @hidden @internal */
     @HostListener('compositionend')
     public onCompositionEnd(): void {
-        // this._start = this._compositionStartIndex;
-        // const end = this.selectionEnd;
-        // const valueToParse = this.inputValue.substring(this._start, end);
-        // this.updateInput(valueToParse);
-        // this._end = this.selectionEnd;
-        // this._compositionValue = this.inputValue;
+        this._composing = false;
         console.log('Composition END!');
     }
 
@@ -277,7 +271,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /** @hidden  @internal */
     public handleKeyDown(event) {
-        if (!this.collapsed) {
+        if (!this.collapsed && !this._composing) {
             switch (event.key.toLowerCase()) {
                 case 'space':
                 case 'spacebar':
