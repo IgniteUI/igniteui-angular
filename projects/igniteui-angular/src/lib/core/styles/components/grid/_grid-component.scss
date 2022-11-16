@@ -5,7 +5,7 @@
 @use './header-row-component' as *;
 @use 'sass:string';
 
-/// @access privet
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} excel-filtering-partial
 /// @requires {mixin} advanced-filtering-partial

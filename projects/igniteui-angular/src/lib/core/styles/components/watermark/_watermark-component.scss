@@ -1,7 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-/// @access privet
+/// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 @mixin component {
     @include b(igx-watermark) {

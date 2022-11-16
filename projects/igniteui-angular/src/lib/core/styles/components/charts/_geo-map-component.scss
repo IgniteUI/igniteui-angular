@@ -1,7 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-/// @access privet
+/// @access private
 /// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
 @mixin component {
     @include b(geo-map) {

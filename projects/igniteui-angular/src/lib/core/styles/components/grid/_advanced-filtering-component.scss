@@ -1,6 +1,6 @@
 @use '../../base' as *;
 
-/// @access privet
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin advanced-filtering-partial {
     @include b(igx-advanced-filter) {

@@ -1,6 +1,6 @@
 @use '../../base' as *;
 
-/// @access privet
+/// @access private
 @mixin group-by-area {
     @include b(igx-grid-grouparea) {
         @extend %igx-grid-grouparea !optional;
