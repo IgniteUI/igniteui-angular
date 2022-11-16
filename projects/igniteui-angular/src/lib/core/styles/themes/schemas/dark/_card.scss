@@ -11,7 +11,6 @@
 /// @type {Map}
 /// @prop {Map} outline-color [color: ('gray', 400, .38)] - The outline color of an outlined type card.
 /// @requires $light-card
-/// @see $default-palette
 $dark-card: extend($light-card, (
     outline-color: (
         color: ('gray', 400, .38)

@@ -1,8 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-//// Combo
-/// @group components
+/// @access privet
 @mixin component {
     @include b(igx-combo) {
         $this: bem--selector-to-string(&);

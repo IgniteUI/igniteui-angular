@@ -24,7 +24,6 @@ $dark-base-toast: (
 /// Generates a dark toast schema.
 /// @type {Map}
 /// @requires $light-toast
-/// @see $default-palette
 $dark-toast: extend($light-toast, $dark-base-toast);
 
 /// Generates a dark fluent toast schema.

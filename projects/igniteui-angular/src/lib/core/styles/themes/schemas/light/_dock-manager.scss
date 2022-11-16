@@ -42,7 +42,6 @@
 /// @prop {Color} tab-text [null] - Sets the text color for tabs.
 /// @prop {Color} tab-text-active [null] - Sets the text color for active tabs.
 /// @prop {Color} text-color [color: ('gray', 800)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
-/// @see $default-palette
 $light-dock-manager: (
     accent-color: null,
 

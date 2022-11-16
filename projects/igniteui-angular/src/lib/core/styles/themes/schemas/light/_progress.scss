@@ -8,19 +8,15 @@
 
 /// Generates a light progress-linear schema.
 /// @type {Map}
-///
-/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
-/// @property {Map} fill-color-default [color: ('primary', 500)] - The track default fill color.
-/// @property {Map} fill-color-danger [color: ('error')] - The track danger fill color.
-/// @property {Map} fill-color-warning [color: ('warn')] - The track warning fill color.
-/// @property {Map} fill-color-info [color: ('info')] - The track info fill color.
-/// @property {Map} fill-color-success [color: ('success')] - The track success fill color.
-/// @property {Map} stripes-color [color: ('gray', 50, .7)] - The track stripes color.
-/// @property {Map} text-color [color: ('gray', 700)] - The track value text color.
+/// @prop {Map} track-color [color: ('gray', 300)] - The main track color.
+/// @prop {Map} fill-color-default [color: ('primary', 500)] - The track default fill color.
+/// @prop {Map} fill-color-danger [color: ('error')] - The track danger fill color.
+/// @prop {Map} fill-color-warning [color: ('warn')] - The track warning fill color.
+/// @prop {Map} fill-color-info [color: ('info')] - The track info fill color.
+/// @prop {Map} fill-color-success [color: ('success')] - The track success fill color.
+/// @prop {Map} stripes-color [color: ('gray', 50, .7)] - The track stripes color.
+/// @prop {Map} text-color [color: ('gray', 700)] - The track value text color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
-///
-///
-/// @see $default-palette
 $light-progress-linear: extend(
     (
         variant: 'material',
@@ -64,7 +60,6 @@ $light-progress-linear: extend(
 /// Generates a fluent progress-linear schema.
 /// @type {Map}
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires $light-progress-linear
 $fluent-progress-linear: extend(
     $light-progress-linear,
@@ -75,12 +70,9 @@ $fluent-progress-linear: extend(
 
 /// Generates a bootstrap progress-linear schema.
 /// @type {Map}
-///
-/// @property {Map} track-color [color: ('gray', 200)] - The main track color.
-/// @property {Map} stripes-color [color: ('gray', 50, .15)] - The track stripes color.
+/// @prop {Map} track-color [color: ('gray', 200)] - The main track color.
+/// @prop {Map} stripes-color [color: ('gray', 50, .15)] - The track stripes color.
 /// @prop {Number} track-border-radius [4px] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
-///
-///
 /// @requires $light-progress-linear
 $bootstrap-progress-linear: extend(
     $light-progress-linear,
@@ -101,10 +93,9 @@ $bootstrap-progress-linear: extend(
 
 /// Generates an indigo progress-linear schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
-/// @property {Map} stripes-color [color: ('gray', 50, .45)] - The track stripes color.
+/// @prop {Map} track-color [color: ('gray', 300)] - The main track color.
+/// @prop {Map} stripes-color [color: ('gray', 50, .45)] - The track stripes color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires $light-progress-linear
 $indigo-progress-linear: extend(
     $light-progress-linear,
@@ -123,13 +114,10 @@ $indigo-progress-linear: extend(
 
 /// Generates a light progress-circular schema.
 /// @type {Map}
-///
-/// @property {Map} base-circle-color [color: ('gray', 300)] - The base circle fill color.
-/// @property {Map} progress-circle-color [color: ('primary', 500)] - The progress circle fill color.
-/// @property {Map} text-color [color: ('gray', 700)] - The value text color.
+/// @prop {Map} base-circle-color [color: ('gray', 300)] - The base circle fill color.
+/// @prop {Map} progress-circle-color [color: ('primary', 500)] - The progress circle fill color.
+/// @prop {Map} text-color [color: ('gray', 700)] - The value text color.
 /// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @see $default-palette
 $light-progress-circular: extend(
     (
         variant: 'material',
@@ -152,7 +140,6 @@ $light-progress-circular: extend(
 
 /// Generates a fluent progress-circular schema.
 /// @type {Map}
-///
 /// @requires {Map} $light-progress-circular
 $fluent-progress-circular: extend(
     $light-progress-circular,(
@@ -162,9 +149,7 @@ $fluent-progress-circular: extend(
 
 /// Generates a bootstrap progress-circular schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('gray', 200)] - The main track color.
-///
-///
+/// @prop {Map} track-color [color: ('gray', 200)] - The main track color.
 /// @requires {Map} $light-progress-circular
 $bootstrap-progress-circular: extend(
     $light-progress-circular,
@@ -179,8 +164,7 @@ $bootstrap-progress-circular: extend(
 
 /// Generates an indigo progress-circular schema.
 /// @type {Map}
-/// @property {Map} track-color [color: ('gray', 300)] - The main track color.
-///
+/// @prop {Map} track-color [color: ('gray', 300)] - The main track color.
 /// @requires {Map} $light-progress-circular
 $indigo-progress-circular: extend(
     $light-progress-circular,

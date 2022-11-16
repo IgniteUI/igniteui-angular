@@ -26,10 +26,7 @@
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: badge-theme($icon-color: black, $background-color: white);
-///   // IE Supported theme - Pass the theme to the badge component mixin
-///   @include badge($my-badge-theme);
-///
-///   // Theming using css variables (not supported in IE11):
+///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-badge-theme);
 @function badge-theme(
     $schema: $light-schema,

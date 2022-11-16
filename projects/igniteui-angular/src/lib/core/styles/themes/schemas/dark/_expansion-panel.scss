@@ -20,7 +20,6 @@ $base-dark-expansion-panel: (
 /// @type {Map}
 /// @requires $light-expansion-panel
 /// @requires $base-dark-expansion-panel
-/// @see $default-palette
 $dark-expansion-panel: extend($light-expansion-panel, $base-dark-expansion-panel);
 
 /// Generates a dark fluent expansion panel schema based on a mix of $fluent-expansion-panel and $base-dark-expansion-panel.

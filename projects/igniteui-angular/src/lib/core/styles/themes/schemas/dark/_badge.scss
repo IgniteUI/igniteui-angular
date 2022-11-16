@@ -10,7 +10,6 @@
 /// Generates a dark badge schema.
 /// @type {Map}
 /// @requires $light-badge
-/// @see $default-palette
 $dark-badge: $light-badge;
 
 /// Generates a dark fluent badge schema.

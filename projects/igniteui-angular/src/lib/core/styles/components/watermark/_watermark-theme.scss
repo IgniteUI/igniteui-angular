@@ -21,8 +21,8 @@
 ///
 /// @example scss Change the watermark link background
 ///   $my-watermark-theme: watermark-theme($link-background: magenta);
-///   // Pass the theme to the watermark component mixin
-///   @include watermark($my-watermark-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-watermark-theme);
 @function watermark-theme(
     $schema: $light-schema,
 

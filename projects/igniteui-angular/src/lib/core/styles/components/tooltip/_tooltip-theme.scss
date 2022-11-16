@@ -23,8 +23,8 @@
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
-///   // Pass the theme to the tooltip component mixin
-///   @include tooltip($my-checkbox-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-checkbox-theme);
 @function tooltip-theme(
     $schema: $light-schema,
 

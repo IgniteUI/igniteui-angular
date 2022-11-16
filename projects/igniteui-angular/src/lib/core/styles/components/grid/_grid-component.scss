@@ -5,11 +5,10 @@
 @use './header-row-component' as *;
 @use 'sass:string';
 
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @requires {mixin} excel-filtering-partial
 /// @requires {mixin} advanced-filtering-partial
-
 @mixin component {
     @include b(igx-grid) {
         $this: bem--selector-to-string(&);

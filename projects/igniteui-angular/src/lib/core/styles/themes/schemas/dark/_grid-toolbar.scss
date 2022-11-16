@@ -10,7 +10,6 @@
 /// Generates a dark grid-toolbar schema based on a mix of $light-grid-toolbar and $base-dark-grid-toolbar.
 /// @type {Map}
 /// @requires $light-grid-toolbar
-/// @see $default-palette
 $dark-grid-toolbar: extend($light-grid-toolbar);
 
 /// Generates a dark fluent grid-toolbar schema based on a mix of $fluent-grid-toolbar and $base-dark-grid-toolbar..

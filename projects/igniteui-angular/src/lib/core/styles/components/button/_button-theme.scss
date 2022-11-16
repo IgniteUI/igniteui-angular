@@ -47,8 +47,8 @@
 ///     $foreground: white,
 ///     $background: black
 ///   );
-///   // Pass the theme to the button component mixin
-///   @include button($my-button-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-button-theme);
 @function button-theme(
     $schema: $light-schema,
     $elevations: null,

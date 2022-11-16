@@ -1,7 +1,6 @@
 @use '../../base' as *;
 
-/// @access private
-/// @group components
+/// @access privet
 @mixin header-row {
     @include b(igx-grid-thead) {
         @extend %grid-thead-container !optional;

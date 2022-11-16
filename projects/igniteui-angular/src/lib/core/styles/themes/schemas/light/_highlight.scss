@@ -8,11 +8,10 @@
 
 /// Generates a light highlight schema.
 /// @type {Map}
-/// @property {Map} resting-background [color: ('gray', 300)] - The background color used for the highlight in its resting state.
-/// @property {Map} resting-color [contrast-color: ('gray', 300)] - The icon color used for the highlight in its resting state.
-/// @property {Map} active-background [color: ('secondary', A100)] - The background color used for the highlight in its active state.
-/// @property {Map} active-color [contrast-color: ('secondary', A100) - The text color used for the highlight in its active state.
-/// @see $default-palette
+/// @prop {Map} resting-background [color: ('gray', 300)] - The background color used for the highlight in its resting state.
+/// @prop {Map} resting-color [contrast-color: ('gray', 300)] - The icon color used for the highlight in its resting state.
+/// @prop {Map} active-background [color: ('secondary', A100)] - The background color used for the highlight in its active state.
+/// @prop {Map} active-color [contrast-color: ('secondary', A100) - The text color used for the highlight in its active state.
 $light-highlight: (
     resting-background: (
         color: ('gray', 300)
@@ -43,9 +42,9 @@ $bootstrap-highlight: $light-highlight;
 
 /// Generates an indigo highlight schema.
 /// @type {Map}
-/// @property {Map} active-background [color: ('primary', 500)] - The background color used for the highlight in its active state.
-/// @property {Map} active-color [contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
-/// @property {Map} resting-color [contrast-color: ( color: ('gray', 300))] - The icon color used for the highlight in its resting state.
+/// @prop {Map} active-background [color: ('primary', 500)] - The background color used for the highlight in its active state.
+/// @prop {Map} active-color [contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
+/// @prop {Map} resting-color [contrast-color: ( color: ('gray', 300))] - The icon color used for the highlight in its resting state.
 /// @requires {Map} $light-highlight
 $indigo-highlight: extend(
     $light-highlight,

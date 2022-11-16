@@ -10,7 +10,6 @@
 /// Generates a dark overlay schema.
 /// @type {Map}
 /// @requires $light-overlay
-/// @see $default-palette
 $dark-overlay: $light-overlay;
 
 /// Generates a dark fluent overlay schema.

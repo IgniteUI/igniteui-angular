@@ -1,7 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 
 $_igx-slider-thumbs: 'from' 'to';

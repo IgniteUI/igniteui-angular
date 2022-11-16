@@ -11,7 +11,6 @@
 /// @type {Map}
 /// @prop {Map} background-color [color: ('surface')] - The background color of the paging panel.
 /// @requires $light-pagination
-/// @see $default-palette
 $base-dark-pagination: (
     background-color: (
         color: ('surface')

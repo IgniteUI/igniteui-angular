@@ -25,7 +25,6 @@ $dark-base-highlight: (
 /// @type {Map}
 /// @requires $light-highlight
 /// @requires $dark-base-highlight
-/// @see $default-palette
 $dark-highlight: extend($light-highlight, $dark-base-highlight);
 
 /// Generates a dark fluent highlight schema.

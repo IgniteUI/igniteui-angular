@@ -1,8 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-//// Date Picker
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-date-picker) {

@@ -13,7 +13,6 @@
 /// @prop {Map} actions-background [color: ('gray', 200)] - The color used for actions background.
 /// @prop {Map} delete-action [color: ('error')] - The color used for the delete icon in action strip component.
 /// @prop {Number} actions-border-radius [24px] - The border radius used for action strip actions container. Can be a fraction between 0 and 1, pixels, or percent.
-/// @see $default-palette
 $light-action-strip: extend(
     (
         variant: 'material',

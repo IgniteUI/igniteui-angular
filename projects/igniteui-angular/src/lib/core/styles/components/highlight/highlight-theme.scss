@@ -15,12 +15,10 @@
 /// @param {Color} $active-background [null] - The background color used for the highlight in its active state.
 /// @param {Color} $active-color [null] - The text color used for the highlight in its active state.
 /// @requires $light-schema
-///
-///
 /// @example scss Change the background and icon colors in icon highlight
 ///   $my-highlight-theme: highlight-theme($resting-background: black, $active-color: white);
-///   // Pass the theme to the highlight component mixin
-///   @include highlight($my-highlight-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-highlight-theme);
 @function highlight-theme(
     $schema: $light-schema,
     $resting-background: null,

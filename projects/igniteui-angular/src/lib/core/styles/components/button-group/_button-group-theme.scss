@@ -46,8 +46,8 @@
 ///     $item-background: rgba(0, 0, 0, .8),
 ///     $item-border-color: #dadada
 ///   );
-///   // Pass the theme to the button-group component mixin
-///   @include button-group($my-button-group-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-button-group-theme);
 @function button-group-theme(
     $schema: $light-schema,
     $elevations: null,

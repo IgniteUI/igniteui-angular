@@ -19,14 +19,11 @@
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 /// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
 /// @param {Color} $border-color [null] - The border color used for dialog component.
-///
 /// @requires $light-schema
-///
-///
 /// @example scss Change the background color
 ///   $my-dialog-theme: dialog-theme($background: black);
-///   // Pass the theme to the igx-dialog component mixin
-///   @include dialog($my-dialog-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-dialog-theme);
 @function dialog-theme(
     $schema: $light-schema,
     $elevations: null,

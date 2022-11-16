@@ -27,12 +27,9 @@
 /// @requires $light-schema
 ///
 /// @example scss Change the background and content text colors in card
-///   $my-card-theme: card-theme(
-///     $background: #fff,
-///     $content-text-color: rgba(0, 0, 0, .8)
-///   );
-///   // Pass the theme to the card component mixin
-///   @include card($my-card-theme);
+///   $my-card-theme: card-theme($background: #fff);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-card-theme);
 @function card-theme(
     $schema: $light-schema,
     $elevations: null,

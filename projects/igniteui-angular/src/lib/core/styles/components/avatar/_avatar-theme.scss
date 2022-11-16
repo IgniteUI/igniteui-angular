@@ -20,8 +20,8 @@
 ///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the avatar component mixin
-///   @include avatar($my-avatar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-avatar-theme);
 @function avatar-theme(
     $schema: $light-schema,
     $background: null,

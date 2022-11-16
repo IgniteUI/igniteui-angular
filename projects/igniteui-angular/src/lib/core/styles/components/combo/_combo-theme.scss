@@ -13,9 +13,11 @@
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
-///
 /// @requires $light-schema
-///
+/// @example scss Change the combo empty list background
+///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-combo-theme);
 @function combo-theme(
     $schema: $light-schema,
     $search-separator-border-color: null,

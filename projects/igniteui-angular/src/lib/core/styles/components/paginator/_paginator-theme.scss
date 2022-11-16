@@ -14,16 +14,13 @@
 /// @param {Color} $text-color [currentColor] - The text color.
 /// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
-///
 /// @requires $light-schema
-///
-///
 /// @example scss Change the stripes color
 ///   $my-paginator-theme: paginator-theme(
 ///     $stripes-color: orange
 ///   );
-///   // Pass the theme to the paginator component mixin
-///   @include paginator($my-paginator-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-paginator-theme);
 @function paginator-theme(
     $schema: $light-schema,
 

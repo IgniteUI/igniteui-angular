@@ -27,8 +27,8 @@
 ///
 /// @example scss Set a custom background color
 ///   $my-toast-theme: toast-theme($background: green);
-///   // Pass the theme to the toast component mixin
-///   @include toast($my-toast-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-toast-theme);
 @function toast-theme(
     $schema: $light-schema,
 

@@ -20,7 +20,6 @@ $base-dark-drop-down: (
 /// @type {Map}
 /// @requires $light-drop-down
 /// @requires $base-dark-drop-down
-/// @see $default-palette
 $dark-drop-down: extend($light-drop-down, $base-dark-drop-down);
 
 /// Generates a dark fluent drop-down schema.

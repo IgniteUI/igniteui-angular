@@ -20,8 +20,8 @@
 ///
 /// @example scss Change the background and icon colors in action strip
 ///   $my-action-strip-theme: action-strip-theme($background: black);
-///   // Pass the theme to the action-strip component mixin
-///   @include action-strip($my-action-strip-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-action-strip-theme);
 @function action-strip-theme(
     $schema: $light-schema,
 

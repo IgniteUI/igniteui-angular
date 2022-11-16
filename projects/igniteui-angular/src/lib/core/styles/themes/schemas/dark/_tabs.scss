@@ -9,8 +9,8 @@
 
 /// Generates a base dark tabs schema.
 /// @type {Map}
-/// @property {Map} item-hover-background [color: ('gray', 100, .5)] - The background used for the tabs on hover.
-/// @property {Map} item-active-background [color: ('gray', 100, .5)] - The color used for the active/focused tab background.
+/// @prop {Map} item-hover-background [color: ('gray', 100, .5)] - The background used for the tabs on hover.
+/// @prop {Map} item-active-background [color: ('gray', 100, .5)] - The color used for the active/focused tab background.
 $base-dark-tabs: (
     item-hover-background: (
         color: ('gray', 100, .5)
@@ -25,7 +25,6 @@ $base-dark-tabs: (
 /// @type {Map}
 /// @requires $light-tabs
 /// @requires $base-dark-tabs
-/// @see $default-palette
 $dark-tabs: extend($light-tabs, $base-dark-tabs);
 
 /// Generates a dark fluent tabs schema based on a mix of $fluent-tabs and $base-dark-tabs.

@@ -1,5 +1,6 @@
 @use '../../../base' as *;
 
+////
 /// @group schemas
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
@@ -7,72 +8,65 @@
 
 /// Generates a light stepper schema.
 /// @type {Map}
-///
-/// @property {Color} step-background [transparent] - The background of the step header.
-/// @property {Map} step-hover-background [color: ('gray', 200)] - The background of the step header on hover.
-/// @property {Map} step-focus-background [color: ('gray', 100)] - The background of the step header on focus.
-/// @property {Map} title-color [color: ('gray', 900)] - The text color of the step title.
-/// @property {Map} title-hover-color [color: ('gray', 900)] - The text color of the step title on hover.
-/// @property {Map} title-focus-color [color: ('gray', 900)] - The text color of the step title on focus.
-/// @property {Map} subtitle-color [color: ('gray', 700)] - The text color of the step subtitle.
-/// @property {Map} subtitle-hover-color [color: ('gray', 700)] - The text color of the step subtitle on hover.
-/// @property {Map} subtitle-focus-color [color: ('gray', 700)] - The text color of the step subtitle on focus.
-/// @property {Map} indicator-color [color: (contrast-color: ('gray', 400)] - The text color of the incomplete step indicator.
-/// @property {Map} indicator-background [color: ('gray', 400)] - The background color of the incomplete step indicator.
-/// @property {Map} indicator-outline [color: ('gray', 400)] - The outline color of the incomplete step indicator.
-///
-/// @property {Color} invalid-step-background [transparent] - The background of the invalid step header.
-/// @property {Map} invalid-step-hover-background [color: ('gray', 200)] - The background of the invalid step header on hover.
-/// @property {Map} invalid-step-focus-background [color: 'gray', 100)] - The background of the invalid step header on focus.
-/// @property {Map} invalid-title-color [color: ('error')] - The color of the invalid step title.
-/// @property {Map} invalid-title-hover-color [color: ('error')] - The color of the invalid step title on hover.
-/// @property {Map} invalid-title-focus-color [color: ('error')] - The color of the invalid step title on focus.
-/// @property {Map} invalid-subtitle-color [color: ('error')] - The text of the invalid step subtitle.
-/// @property {Map} invalid-subtitle-hover-color [color: ('error')] - The color of the invalid step subtitle on hover.
-/// @property {Map} invalid-subtitle-focus-color [color: ('error')] - The color of the invalid step subtitle on focus.
-/// @property {Map} invalid-indicator-color [contrast-color: ('gray', 900)] - The color of the invalid step indicator.
-/// @property {Map} invalid-indicator-background [color: ('error')] - The background color of the invalid step indicator.
-/// @property {Map} invalid-indicator-outline [color: ('error')] - The outline color of the invalid step indicator.
-///
-/// @property {Color} current-step-background [transparent] - The background of the current step header.
-/// @property {Map} current-step-hover-background [color: ('gray', 200)] - The background of the current step header on hover.
-/// @property {Map} current-step-focus-background [color: 'gray', 100)] - The background of the current step header on focus.
-/// @property {Map} current-title-color [color: ('gray', 900)] - The color of the current step title.
-/// @property {Map} current-title-hover-color [color: ('gray', 900)] - The color of the current step title on hover.
-/// @property {Map} current-title-focus-color [color: ('gray', 900)] - The color of the current step title on focus.
-/// @property {Map} current-subtitle-color [color: ('gray', 700)] - The color of the current step subtitle.
-/// @property {Map} current-subtitle-hover-color [color: ('gray', 700)] - The color of the current step subtitle on hover.
-/// @property {Map} current-subtitle-focus-color [color: ('gray', 700)] - The color of the current step subtitle on focus.
-/// @property {Map} current-indicator-color [contrast-color: ('gray', 900)] - The color of the current step indicator.
-/// @property {Map} current-indicator-background [color: ('primary', 500)] - The background color of the current step indicator.
-/// @property {Map} current-indicator-outline [color: ('primary', 500)] - The outline color of the current step indicator.
-///
-/// @property {Color} complete-step-background [transparent] - The background of the complete step header.
-/// @property {Map} complete-step-hover-background [color: ('gray', 200)] - The background of the complete step header on hover.
-/// @property {Map} complete-step-focus-background [color: 'gray', 100)] - The background of the complete step header on focus.
-/// @property {Map} complete-title-color [color: ('gray', 900)] - The color of the complete step title.
-/// @property {Map} complete-title-hover-color [color: ('gray', 900)] - The color of the complete step title on hover.
-/// @property {Map} complete-title-focus-color [color: ('gray', 900)] - The color of the complete step title on focus.
-/// @property {Map} complete-subtitle-color [color: ('gray', 700)] - The color of the complete step subtitle.
-/// @property {Map} complete-subtitle-hover-color [color: ('gray', 700)] - The color of the complete step subtitle on hover.
-/// @property {Map} complete-subtitle-focus-color [color: ('gray', 700)] - The color of the complete step subtitle on focus.
-/// @property {Map} complete-indicator-color [contrast-color: ('gray', 900)] - The color of the completed step indicator.
-/// @property {Map} complete-indicator-background [color: ('gray', 900)] - The background color of the completed step indicator.
-/// @property {Map} complete-indicator-outline [color: ('gray', 900)] - The outline color of the completed step indicator.
-///
-/// @property {Map} disabled-title-color [color: ('gray', 500)] - The title color of the disabled step.
-/// @property {Map} disabled-subtitle-color [color: ('gray', 500)] - The subtitle color of the disabled step.
-/// @property {Map} disabled-indicator-color [color: ('gray', 500)] - The color of the disabled step indicator, title, and subtitle.
-/// @property {Map} disabled-indicator-background [color: ('gray', 200)] - The background color of the disabled step indicator.
-/// @property {Map} disabled-indicator-outline [color: ('gray', 200)] - The outline color of the disabled step indicator.
-///
-/// @property {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
-/// @property {Map} complete-step-separator-color [color: ('gray', 900)] - The separator border-color between the completed steps.
-/// @property {String} step-separator-style ['dashed'] - The separator border-style of between the steps.
-/// @property {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
+/// @prop {Color} step-background [transparent] - The background of the step header.
+/// @prop {Map} step-hover-background [color: ('gray', 200)] - The background of the step header on hover.
+/// @prop {Map} step-focus-background [color: ('gray', 100)] - The background of the step header on focus.
+/// @prop {Map} title-color [color: ('gray', 900)] - The text color of the step title.
+/// @prop {Map} title-hover-color [color: ('gray', 900)] - The text color of the step title on hover.
+/// @prop {Map} title-focus-color [color: ('gray', 900)] - The text color of the step title on focus.
+/// @prop {Map} subtitle-color [color: ('gray', 700)] - The text color of the step subtitle.
+/// @prop {Map} subtitle-hover-color [color: ('gray', 700)] - The text color of the step subtitle on hover.
+/// @prop {Map} subtitle-focus-color [color: ('gray', 700)] - The text color of the step subtitle on focus.
+/// @prop {Map} indicator-color [color: (contrast-color: ('gray', 400)] - The text color of the incomplete step indicator.
+/// @prop {Map} indicator-background [color: ('gray', 400)] - The background color of the incomplete step indicator.
+/// @prop {Map} indicator-outline [color: ('gray', 400)] - The outline color of the incomplete step indicator.
+/// @prop {Color} invalid-step-background [transparent] - The background of the invalid step header.
+/// @prop {Map} invalid-step-hover-background [color: ('gray', 200)] - The background of the invalid step header on hover.
+/// @prop {Map} invalid-step-focus-background [color: 'gray', 100)] - The background of the invalid step header on focus.
+/// @prop {Map} invalid-title-color [color: ('error')] - The color of the invalid step title.
+/// @prop {Map} invalid-title-hover-color [color: ('error')] - The color of the invalid step title on hover.
+/// @prop {Map} invalid-title-focus-color [color: ('error')] - The color of the invalid step title on focus.
+/// @prop {Map} invalid-subtitle-color [color: ('error')] - The text of the invalid step subtitle.
+/// @prop {Map} invalid-subtitle-hover-color [color: ('error')] - The color of the invalid step subtitle on hover.
+/// @prop {Map} invalid-subtitle-focus-color [color: ('error')] - The color of the invalid step subtitle on focus.
+/// @prop {Map} invalid-indicator-color [contrast-color: ('gray', 900)] - The color of the invalid step indicator.
+/// @prop {Map} invalid-indicator-background [color: ('error')] - The background color of the invalid step indicator.
+/// @prop {Map} invalid-indicator-outline [color: ('error')] - The outline color of the invalid step indicator.
+/// @prop {Color} current-step-background [transparent] - The background of the current step header.
+/// @prop {Map} current-step-hover-background [color: ('gray', 200)] - The background of the current step header on hover.
+/// @prop {Map} current-step-focus-background [color: 'gray', 100)] - The background of the current step header on focus.
+/// @prop {Map} current-title-color [color: ('gray', 900)] - The color of the current step title.
+/// @prop {Map} current-title-hover-color [color: ('gray', 900)] - The color of the current step title on hover.
+/// @prop {Map} current-title-focus-color [color: ('gray', 900)] - The color of the current step title on focus.
+/// @prop {Map} current-subtitle-color [color: ('gray', 700)] - The color of the current step subtitle.
+/// @prop {Map} current-subtitle-hover-color [color: ('gray', 700)] - The color of the current step subtitle on hover.
+/// @prop {Map} current-subtitle-focus-color [color: ('gray', 700)] - The color of the current step subtitle on focus.
+/// @prop {Map} current-indicator-color [contrast-color: ('gray', 900)] - The color of the current step indicator.
+/// @prop {Map} current-indicator-background [color: ('primary', 500)] - The background color of the current step indicator.
+/// @prop {Map} current-indicator-outline [color: ('primary', 500)] - The outline color of the current step indicator.
+/// @prop {Color} complete-step-background [transparent] - The background of the complete step header.
+/// @prop {Map} complete-step-hover-background [color: ('gray', 200)] - The background of the complete step header on hover.
+/// @prop {Map} complete-step-focus-background [color: 'gray', 100)] - The background of the complete step header on focus.
+/// @prop {Map} complete-title-color [color: ('gray', 900)] - The color of the complete step title.
+/// @prop {Map} complete-title-hover-color [color: ('gray', 900)] - The color of the complete step title on hover.
+/// @prop {Map} complete-title-focus-color [color: ('gray', 900)] - The color of the complete step title on focus.
+/// @prop {Map} complete-subtitle-color [color: ('gray', 700)] - The color of the complete step subtitle.
+/// @prop {Map} complete-subtitle-hover-color [color: ('gray', 700)] - The color of the complete step subtitle on hover.
+/// @prop {Map} complete-subtitle-focus-color [color: ('gray', 700)] - The color of the complete step subtitle on focus.
+/// @prop {Map} complete-indicator-color [contrast-color: ('gray', 900)] - The color of the completed step indicator.
+/// @prop {Map} complete-indicator-background [color: ('gray', 900)] - The background color of the completed step indicator.
+/// @prop {Map} complete-indicator-outline [color: ('gray', 900)] - The outline color of the completed step indicator.
+/// @prop {Map} disabled-title-color [color: ('gray', 500)] - The title color of the disabled step.
+/// @prop {Map} disabled-subtitle-color [color: ('gray', 500)] - The subtitle color of the disabled step.
+/// @prop {Map} disabled-indicator-color [color: ('gray', 500)] - The color of the disabled step indicator, title, and subtitle.
+/// @prop {Map} disabled-indicator-background [color: ('gray', 200)] - The background color of the disabled step indicator.
+/// @prop {Map} disabled-indicator-outline [color: ('gray', 200)] - The outline color of the disabled step indicator.
+/// @prop {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
+/// @prop {Map} complete-step-separator-color [color: ('gray', 900)] - The separator border-color between the completed steps.
+/// @prop {String} step-separator-style ['dashed'] - The separator border-style of between the steps.
+/// @prop {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
 /// @prop {Number} border-radius-indicator [100px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-step-header [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
-/// @see $default-palette
 $light-stepper: extend(
     (
         variant: 'material',
@@ -268,15 +262,15 @@ $light-stepper: extend(
 
 /// Generates a fluent stepper schema.
 /// @type {Map}
-/// @property {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
-/// @property {Color} indicator-outline [transparent] - The outline color of the incomplete step indicator.
-/// @property {Map} indicator-color [color: ('gray', 900)] - The text color of the incomplete step indicator.
-/// @property {Map} complete-indicator-background [color: ('gray', 300)] - The background color of the completed step indicator.
-/// @property {Color} complete-indicator-outline [transparent] - The outline color of the completed step indicator.
-/// @property {Map} complete-indicator-color [contrast-color: ('gray', 200)] - The text color of the completed step indicator.
-/// @property {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
-/// @property {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
-/// @property {Color} disabled-indicator-outline [transparent] - The outline color of the disabled step indicator.
+/// @prop {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
+/// @prop {Color} indicator-outline [transparent] - The outline color of the incomplete step indicator.
+/// @prop {Map} indicator-color [color: ('gray', 900)] - The text color of the incomplete step indicator.
+/// @prop {Map} complete-indicator-background [color: ('gray', 300)] - The background color of the completed step indicator.
+/// @prop {Color} complete-indicator-outline [transparent] - The outline color of the completed step indicator.
+/// @prop {Map} complete-indicator-color [contrast-color: ('gray', 200)] - The text color of the completed step indicator.
+/// @prop {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
+/// @prop {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
+/// @prop {Color} disabled-indicator-outline [transparent] - The outline color of the disabled step indicator.
 /// @prop {Number} border-radius-indicator [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-step-header [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $light-stepper
@@ -313,35 +307,28 @@ $fluent-stepper: extend(
 
 /// Generates a bootstrap stepper schema.
 /// @type {Map}
-/// @property {Color} indicator-color [color: ('primary', 500)] - The text color of the incomplete step indicator.
-/// @property {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
-/// @property {Map} indicator-outline [color: ('gray', 300)] - The outline color of the incomplete step indicator.
-///
-/// @property {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
-/// @property {Map} disabled-indicator-outline [color: ('gray', 300)] - The outline color of the disabled step indicator.
-///
-/// @property {Map} complete-indicator-background [color: ('gray', 300)] - The background color of the completed step indicator.
-/// @property {Map} complete-indicator-outline [color: ('gray', 300)] - The outline color of the completed step indicator.
-/// @property {Map} complete-indicator-color [color: ('gray', 300)] - The text color of the completed step indicator.
-///
-/// @property {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
-/// @property {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
-/// @property {String} step-separator-style ['solid'] - The separator border-style of between the steps.
-/// @property {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
-///
-/// @property {Map} step-hover-background [color: ('gray', 300, .5)] - The background of the step header on hover.
-/// @property {Map} invalid-step-hover-background [color: ('gray', 300, .5)] - The background of the invalid step header on hover.
-/// @property {Map} current-step-hover-background [color: ('gray', 300, .5)] - The background of the current step header on hover.
-/// @property {Map} complete-step-hover-background [color: ('gray', 300, .5)] - The background of the complete step header on hover.
-///
-/// @property {Map} step-focus-background [color: ('gray', 300, .5)] - The background of the step header on hover.
-/// @property {Map} invalid-step-focus-background [color: ('gray', 300, .5)] - The background of the invalid step header on hover.
-/// @property {Map} current-step-focus-background [color: ('gray', 300, .5)] - The background of the current step header on hover.
-/// @property {Map} complete-step-focus-background [color: ('gray', 300, .5)] - The background of the complete step header on hover.
+/// @prop {Color} indicator-color [color: ('primary', 500)] - The text color of the incomplete step indicator.
+/// @prop {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
+/// @prop {Map} indicator-outline [color: ('gray', 300)] - The outline color of the incomplete step indicator.
+/// @prop {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
+/// @prop {Map} disabled-indicator-outline [color: ('gray', 300)] - The outline color of the disabled step indicator.
+/// @prop {Map} complete-indicator-background [color: ('gray', 300)] - The background color of the completed step indicator.
+/// @prop {Map} complete-indicator-outline [color: ('gray', 300)] - The outline color of the completed step indicator.
+/// @prop {Map} complete-indicator-color [color: ('gray', 300)] - The text color of the completed step indicator.
+/// @prop {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
+/// @prop {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
+/// @prop {String} step-separator-style ['solid'] - The separator border-style of between the steps.
+/// @prop {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
+/// @prop {Map} step-hover-background [color: ('gray', 300, .5)] - The background of the step header on hover.
+/// @prop {Map} invalid-step-hover-background [color: ('gray', 300, .5)] - The background of the invalid step header on hover.
+/// @prop {Map} current-step-hover-background [color: ('gray', 300, .5)] - The background of the current step header on hover.
+/// @prop {Map} complete-step-hover-background [color: ('gray', 300, .5)] - The background of the complete step header on hover.
+/// @prop {Map} step-focus-background [color: ('gray', 300, .5)] - The background of the step header on hover.
+/// @prop {Map} invalid-step-focus-background [color: ('gray', 300, .5)] - The background of the invalid step header on hover.
+/// @prop {Map} current-step-focus-background [color: ('gray', 300, .5)] - The background of the current step header on hover.
+/// @prop {Map} complete-step-focus-background [color: ('gray', 300, .5)] - The background of the complete step header on hover.
 /// @prop {Number} border-radius-indicator [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-step-header [2px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
-///
-///
 /// @requires {Map} $light-stepper
 $bootstrap-stepper: extend(
     $light-stepper,
@@ -415,25 +402,20 @@ $bootstrap-stepper: extend(
 
 /// Generates an indigo stepper schema.
 /// @type {Map}
-/// @property {Map} indicator-color [color: ('primary', 500)] - The text color of the incomplete step indicator.
-/// @property {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
-/// @property {Map} indicator-outline [color: ('gray', 300)] - The outline color of the incomplete step indicator.
-///
-/// @property {Map} complete-indicator-color [color: ('primary', 500)] - The color of the completed step indicator.
-/// @property {Map} complete-indicator-background [color: ('primary', 100)] - The background color of the completed step indicator.
-/// @property {Map} complete-indicator-outline [color: ('primary', 100)] - The outline color of the completed step indicator.
-///
-/// @property {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
-/// @property {Map} disabled-indicator-outline [color: ('gray', 200)] - The outline color of the disabled step indicator.
-///
-/// @property {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
-/// @property {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
-/// @property {String} step-separator-style ['solid'] - The separator border-style of between the steps.
-/// @property {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
+/// @prop {Map} indicator-color [color: ('primary', 500)] - The text color of the incomplete step indicator.
+/// @prop {Color} indicator-background [transparent] - The background color of the incomplete step indicator.
+/// @prop {Map} indicator-outline [color: ('gray', 300)] - The outline color of the incomplete step indicator.
+/// @prop {Map} complete-indicator-color [color: ('primary', 500)] - The color of the completed step indicator.
+/// @prop {Map} complete-indicator-background [color: ('primary', 100)] - The background color of the completed step indicator.
+/// @prop {Map} complete-indicator-outline [color: ('primary', 100)] - The outline color of the completed step indicator.
+/// @prop {Color} disabled-indicator-background [transparent] - The background color of the disabled step indicator.
+/// @prop {Map} disabled-indicator-outline [color: ('gray', 200)] - The outline color of the disabled step indicator.
+/// @prop {Map} step-separator-color [color: ('gray', 300)] - The separator border-color of between the steps.
+/// @prop {Map} complete-step-separator-color [color: ('primary', 500)] - The separator border-color between the completed steps.
+/// @prop {String} step-separator-style ['solid'] - The separator border-style of between the steps.
+/// @prop {String} complete-step-separator-style ['solid'] - The separator border-style between the completed steps.
 /// @prop {Number} border-radius-indicator [100px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-step-header [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
-///
-///
 /// @requires $light-stepper
 $indigo-stepper: extend(
     $light-stepper,

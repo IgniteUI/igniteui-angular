@@ -10,7 +10,6 @@
 /// Generates a dark column actions schema based on a mix of $light-column-actions.
 /// @type {Map}
 /// @requires $light-column-actions
-/// @see $default-palette
 $dark-column-actions: extend($light-column-actions);
 
 /// Generates a dark fluent column actions schema based on a mix of $luent-column-actions.

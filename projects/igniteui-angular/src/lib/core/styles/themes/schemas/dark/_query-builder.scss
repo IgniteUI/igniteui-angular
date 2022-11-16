@@ -23,9 +23,7 @@ $dark-bootstrap-query-builder: $bootstrap-query-builder;
 
 /// Generates the dark indigo query builder schema.
 /// @type {Map}
-///
 /// @prop {Map} background [color: 'surface'] - The background color of the filtering row.
-///
 /// @requires $indigo-query-builder
 $dark-indigo-query-builder: extend(
     $indigo-query-builder,

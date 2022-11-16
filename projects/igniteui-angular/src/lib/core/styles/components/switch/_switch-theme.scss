@@ -48,8 +48,8 @@
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the switch component mixin
-///   @include switch($my-switch-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-switch-theme);
 @function switch-theme(
     $schema: $light-schema,
 

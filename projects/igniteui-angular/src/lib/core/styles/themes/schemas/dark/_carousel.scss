@@ -40,7 +40,6 @@ $base-dark-carousel: extend($light-carousel, (
 /// @type {Map}
 /// @requires $light-carousel
 /// @requires $base-dark-carousel
-/// @see $default-palette
 $dark-carousel: $base-dark-carousel;
 
 /// Generates a dark fluent carousel schema based on a mix of $fluent-carousel and $base-dark-carousel

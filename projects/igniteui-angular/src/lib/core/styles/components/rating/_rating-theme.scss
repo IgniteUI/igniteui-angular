@@ -19,13 +19,11 @@
 /// @param {Color} $disabled-label-color [null] - sets the color for the label in disabled state.
 /// @param {Color} $disabled-empty-symbol-color [null] - sets the idle color for the symbol in disabled state when it is a plane text.
 /// @param {Color} $disabled-full-symbol-color [null] - sets the color for the symbol in selected/disabled state when it is a plane text.
-///
 /// @requires $light-schema
-///
-///
-/// @example scss
-///   $my-rating-theme: rating-theme();
-///   @include rating($my-rating-theme);
+/// @example scss Change the rating filled symbol color
+///   $my-rating-theme: rating-theme($symbol-full-color: red);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-rating-theme);
 @function rating-theme(
     $schema: $light-schema,
     $rest...

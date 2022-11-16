@@ -24,8 +24,8 @@
 ///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
-///   // Pass the theme to the bottom-nav component mixin
-///   @include bottom-nav($my-bottom-nav-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-bottom-nav-theme);
 @function bottom-nav-theme(
     $schema: $light-schema,
     $elevations: null,

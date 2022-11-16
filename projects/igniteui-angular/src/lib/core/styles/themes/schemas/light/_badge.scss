@@ -17,7 +17,6 @@
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [11px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $default-elevation-badge
-/// @see $default-palette
 $light-badge: extend(
     $default-elevation-badge,
     (

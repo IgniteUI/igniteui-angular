@@ -1,9 +1,7 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-//// Carousel
-/// @access private
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin _igx-carousel-indicators-partial {
     @include b(igx-carousel-indicators) {

@@ -17,7 +17,11 @@
 /// @param {number} $border-radius [null] - the border radios of the splitter bar drag handle
 /// @param {color} $focus-color [null] - The color used for focused splitter bar.
 /// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
-///
+/// @requires $light-schema
+/// @example scss Set a custom expander color
+///   $my-splitter-theme: splitter-theme($expander-color: red);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-splitter-them);
 @function splitter-theme(
     $schema: $light-schema,
     $elevations: null,

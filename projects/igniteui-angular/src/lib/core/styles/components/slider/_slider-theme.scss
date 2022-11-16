@@ -12,37 +12,29 @@
 ////
 
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
 /// @param {Number} $track-step-size [null] - The size of the track steps.
 /// @param {Color} $track-hover-color [null] - The color of the track on hover.
-///
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
 /// @param {Color} $thumb-border-color [null] - The thumb border color.
 /// @param {Color} $thumb-border-focus-color [null] - The thumb border color when focused.
 /// @param {Color} $thumb-disabled-border-color [null] - The thumb border color when it's disabled.
 /// @param {Color} $disabled-thumb-color [null] - The thumb color when its disabled.
-///
 /// @param {Color} $label-background-color [null] - The background color of the bubble label.
 /// @param {Color} $label-text-color [null] - The text color of the bubble label.
-///
 /// @param {Color} $base-track-color [null] - The base background color of the track.
 /// @param {Color} $base-track-hover-color [null] - The base background color of the track on hover.
 /// @param {Color} $disabled-base-track-color [null] - The base background color of the track when is disabled.
 /// @param {Color} $disabled-fill-track-color [null] - The base background color of the fill track when is disabled.
-///
 /// @param {Color} $tick-label-color [null] - The color of the tick label.
 /// @param {Color} $tick-color [null] - The background-color of the tick.
-///
 /// @requires $light-schema
-///
-///
 /// @example scss Set custom track and thumb on colors
 ///   $my-slider-theme: slider-theme($thumb-color: black, $track-color: yellow);
-///   // Pass the theme to the slider component mixin
-///   @include slider($my-slider-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-slider-theme);
 @function slider-theme(
     $schema: $light-schema,
 

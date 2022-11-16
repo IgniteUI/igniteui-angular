@@ -30,7 +30,6 @@
 /// @prop {Number} border-radius [4px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $default-elevation-drop-down
-/// @see $default-palette
 $light-drop-down: extend(
     $default-elevation-drop-down,
     (

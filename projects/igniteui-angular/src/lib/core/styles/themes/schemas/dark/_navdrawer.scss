@@ -19,7 +19,6 @@ $dark-base-navdrawer: (
 /// Generates a dark navdrawer schema.
 /// @type {Map}
 /// @requires $light-navdrawer
-/// @see $default-palette
 $dark-navdrawer: extend($light-navdrawer, $dark-base-navdrawer);
 
 /// Generates a dark fluent navdrawer schema.

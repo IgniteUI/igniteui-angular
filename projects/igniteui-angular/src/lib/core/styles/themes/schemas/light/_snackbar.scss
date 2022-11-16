@@ -9,13 +9,12 @@
 
 /// Generates a light snackbar schema.
 /// @type {Map}
-/// @property {Map} background [color: ('gray', 900, .9)] - The background color used in the snackbar.
-/// @property {Map} text-color [contrast-color: ('gray', 900)] - The text color used in the snackbar.
-/// @property {Map} button-color [color: ('secondary', 500)] - The button color used in the snackbar.
-/// @property {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
+/// @prop {Map} background [color: ('gray', 900, .9)] - The background color used in the snackbar.
+/// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color used in the snackbar.
+/// @prop {Map} button-color [color: ('secondary', 500)] - The button color used in the snackbar.
+/// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
 /// @prop {Number} border-radius [4px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $default-elevation-snackbar
-/// @see $default-palette
 $light-snackbar: extend(
     $default-elevation-snackbar,
     (
@@ -53,10 +52,10 @@ $fluent-snackbar: extend(
 
 /// Generates a bootstrap snackbar schema.
 /// @type {Map}
-/// @property {Map} background [color: ('surface')] - The background color used in the snackbar.
-/// @property {Map} text-color [contrast-color: ('surface')] - The text color used in the snackbar.
-/// @property {Map} button-color [color: ('primary', 500)] - The button color used in the snackbar.
-/// @property {Number} elevation [10] - The elevation level, between 0-24, to be used in the snackbar.
+/// @prop {Map} background [color: ('surface')] - The background color used in the snackbar.
+/// @prop {Map} text-color [contrast-color: ('surface')] - The text color used in the snackbar.
+/// @prop {Map} button-color [color: ('primary', 500)] - The button color used in the snackbar.
+/// @prop {Number} elevation [10] - The elevation level, between 0-24, to be used in the snackbar.
 ///
 /// @requires $light-snackbar
 /// @requires {Map} $bootstrap-elevation-snackbar
@@ -83,9 +82,9 @@ $bootstrap-snackbar: extend(
 /// Generates an indigo snackbar schema.
 /// @type {Map}
 ///
-/// @property {Map} background [color: ('gray', 700, .9)] - The background color used in the snackbar.
-/// @property {Map} text-color [contrast-color: ('gray', 700)] - The text color used in the snackbar.
-/// @property {Map} button-color [contrast-color: ('gray', 700)] - The button color used in the snackbar.
+/// @prop {Map} background [color: ('gray', 700, .9)] - The background color used in the snackbar.
+/// @prop {Map} text-color [contrast-color: ('gray', 700)] - The text color used in the snackbar.
+/// @prop {Map} button-color [contrast-color: ('gray', 700)] - The button color used in the snackbar.
 /// @prop {Number} border-radius [6px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 ///

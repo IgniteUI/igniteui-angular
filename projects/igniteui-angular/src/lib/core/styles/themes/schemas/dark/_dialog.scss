@@ -19,7 +19,6 @@ $base-dark-dialog: (
 /// Generates a dark dialog schema.
 /// @type {Map}
 /// @requires $light-dialog
-/// @see $default-palette
 /// @requires $base-dark-dialog
 $dark-dialog: extend($light-dialog, $base-dark-dialog);
 

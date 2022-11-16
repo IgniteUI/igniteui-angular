@@ -43,7 +43,6 @@ $dark-base-calendar: (
 /// @prop {Map} date-selected-focus-foreground [contrast-color: ('secondary', 500)] - The focus text color for the selected date.
 /// @requires $light-calendar
 /// @requires $dark-base-calendar
-/// @see $default-palette
 $dark-calendar: extend(
     $light-calendar,
     $dark-base-calendar,

@@ -6,17 +6,16 @@
 
 /// Generates a light base doughnut chart schema.
 /// @type {Map}
-/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
-/// @property {Color} others-category-fill [null] - Sets the fill color for others category.
-/// @property {Number} others-category-opacity [null] - Sets the opacity for others category.
-/// @property {Color} others-category-stroke [null] - Sets the others category stroke color.
-/// @property {Number} others-category-stroke-thickness [null] - Sets the others category stroke thickness.
-/// @property {Color} selected-slice-fill [null] - Sets the fill color of the selected slice.
-/// @property {Number} selected-slice-opacity [null] - Sets the opacity of the selected slice.
-/// @property {Color} selected-slice-stroke [null] - Sets the stroke color of the selected slice.
-/// @property {Number} selected-slice-stroke-thickness [null] - Sets the stroke thickness of the selected slice.
-/// @see $default-palette
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @prop {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @prop {Color} others-category-fill [null] - Sets the fill color for others category.
+/// @prop {Number} others-category-opacity [null] - Sets the opacity for others category.
+/// @prop {Color} others-category-stroke [null] - Sets the others category stroke color.
+/// @prop {Number} others-category-stroke-thickness [null] - Sets the others category stroke thickness.
+/// @prop {Color} selected-slice-fill [null] - Sets the fill color of the selected slice.
+/// @prop {Number} selected-slice-opacity [null] - Sets the opacity of the selected slice.
+/// @prop {Color} selected-slice-stroke [null] - Sets the stroke color of the selected slice.
+/// @prop {Number} selected-slice-stroke-thickness [null] - Sets the stroke thickness of the selected slice.
 $light-doughnut-chart: (
     'brushes': series,
     'outlines': series,

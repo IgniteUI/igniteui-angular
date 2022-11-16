@@ -13,11 +13,8 @@
 /// @prop {Map} title-color [contrast-color: 'surface'] - The dialog title text color.
 /// @prop {Map} message-color [color: 'surface', text-contrast: (), rgba: .6] - The dialog message text color.
 /// @prop {map} border-color [color: ('gray', 300)] - The border color for dialog component.
-///
 /// @prop {Number} elevation [24] - The elevation level, between 0-24, to be used for the dialog.
 /// @prop {Number} border-radius [4px] - The border radius used for dialog. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @see $default-palette
 /// @requires {Map} $default-elevation-dialog
 $light-dialog: extend(
     $default-elevation-dialog,
@@ -45,7 +42,6 @@ $light-dialog: extend(
 /// Generates a fluent dialog schema.
 /// @type {Map}
 /// @prop {Number} border-radius [2px] - The border radius used for dialog. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires {Map} $light-dialog
 $fluent-dialog: extend(
     $light-dialog,

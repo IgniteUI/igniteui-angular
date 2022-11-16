@@ -13,7 +13,6 @@ $dark-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy
 /// Generates a dark watermark schema.
 /// @type {Map}
 /// @requires $light-watermark
-/// @see $default-palette
 $dark-watermark: extend(
     $light-watermark,
     (

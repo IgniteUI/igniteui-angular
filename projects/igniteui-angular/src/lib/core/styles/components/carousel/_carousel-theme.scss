@@ -36,8 +36,8 @@
 ///     $button-background: black,
 ///     $button-hover-background: white
 ///   );
-///   // Pass the carousel theme to the carousel component mixin
-///   @include carousel($my-carousel-theme);
+///   // Pass the carousel theme to the css-vars() mixin
+///   @include css-vars($my-carousel-theme);
 @function carousel-theme(
     $schema: $light-schema,
     $elevations: null,

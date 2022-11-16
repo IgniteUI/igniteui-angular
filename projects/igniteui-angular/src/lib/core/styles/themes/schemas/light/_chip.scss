@@ -32,9 +32,7 @@
 /// @prop {Number} ghost-elevation [8] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {color} remove-icon-color ["'currentColor'"] - The remove icon color for the chip.
 /// @prop {Map} remove-icon-color-focus [color: ('error')] - The remove icon color on focus for the chip.
-///
 /// @requires {Map} $default-elevation-chip
-/// @see $default-palette
 $light-chip: extend(
     $default-elevation-chip,
     (
@@ -133,7 +131,6 @@ $light-chip: extend(
 /// @prop {Map} focus-selected-background [color: ('primary', 500)] - The selected chip focus background color.
 /// @prop {Number} ghost-elevation [2] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires {Map} $light-chip
 /// @requires {Map} $fluent-elevation-chip
 $fluent-chip: extend(
@@ -190,7 +187,6 @@ $fluent-chip: extend(
 
 /// Generates a bootstrap chip schema.
 /// @type {Map}
-///
 /// @prop {Map} background [color: ('gray', 400, .5)] - The chip background color.
 /// @prop {Map} hover-background [color: ('gray', 400, .7)] - The chip hover background color.
 /// @prop {Map} focus-background [color: ('primary', 500)] The focused chip background color.
@@ -201,7 +197,6 @@ $fluent-chip: extend(
 /// @prop {Map} focus-selected-text-color [color: ('gray', 800)] - The selected chip text focus color.
 /// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [4px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires {Map} $light-chip
 /// @requires {Map} $bootstrap-elevation-chip
 $bootstrap-chip: extend(
@@ -249,7 +244,6 @@ $bootstrap-chip: extend(
 
 /// Generates an indigo chip schema.
 /// @type {Map}
-///
 /// @prop {Number} ghost-elevation [1] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} background [color: ('surface')] - The chip background color.

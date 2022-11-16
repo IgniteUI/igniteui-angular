@@ -28,18 +28,15 @@
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
 /// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for the navdrawer item.
-///
 /// @requires $light-schema
-///
-///
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: navdrawer-theme(
 ///     $background: #2d313a,
 ///     $item-active-background: #ecc256,
 ///     $item-icon-color: #ecc256
 ///   );
-///   // Pass the theme to the navdrawer component mixin
-///   @include navdrawer($navdrawer-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($navdrawer-theme);
 @function navdrawer-theme(
     $schema: $light-schema,
     $elevations: null,

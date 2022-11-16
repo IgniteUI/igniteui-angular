@@ -31,8 +31,8 @@
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
 ///   $my-radio-theme: radio-theme($fill-color: magenta);
-///   // Pass the theme to the radio component mixin
-///   @include radio($my-radio-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-radio-theme);
 @function radio-theme(
     $schema: $light-schema,
 

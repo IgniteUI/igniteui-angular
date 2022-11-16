@@ -28,8 +28,8 @@
 ///
 /// @example scss Change the tree background
 ///   $my-tree-theme: tree-theme($background: magenta);
-///   // Pass the theme to the tree component mixin
-///   @include tree($my-tree-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-tree-theme);
 @function tree-theme(
     $schema: $light-schema,
     $background: null,

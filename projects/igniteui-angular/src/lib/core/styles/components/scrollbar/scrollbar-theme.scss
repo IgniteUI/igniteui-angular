@@ -14,12 +14,10 @@
 /// @param {Color} $track-background [null] - The background color used for the track.
 /// @param {Number | String} $size [null] - The size of the track.
 /// @requires $light-schema
-///
-///
 /// @example scss Change the background and track colors
 ///   $my-scrollbar-theme: scrollbar-theme($thumb-background: black, $track-background: gray);
-///   // Pass the theme to the scrollbar component mixin
-///   @include scrollbar($my-scrollbar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-scrollbar-theme);
 @function scrollbar-theme(
     $schema: $light-schema,
     $size: null,

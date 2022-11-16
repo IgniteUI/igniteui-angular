@@ -1,10 +1,9 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/MayaKirova" target="_blank">Maya Kirova</a>
-
 @mixin component {
     @include b(igx-splitter) {
         // Register the component in the component registry

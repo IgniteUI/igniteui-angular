@@ -1,7 +1,6 @@
 @use '../../base' as *;
 
-/// @access private
-/// @group components
+/// @access privet
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin excel-filtering-partial {
     @include b(igx-excel-filter) {

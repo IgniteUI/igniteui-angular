@@ -12,7 +12,6 @@
 /// @prop {Map} color [color: ('gray', 800, .96)] - The text/icon color of the avatar.
 /// @prop {Number} border-radius [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} size - The size of the avatar.
-/// @see $default-palette
 $light-avatar: extend(
     (
         variant: 'material',

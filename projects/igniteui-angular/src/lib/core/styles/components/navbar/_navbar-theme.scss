@@ -19,14 +19,11 @@
 /// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
-///
 /// @requires $light-schema
-///
-///
 /// @example scss Change the background color
 ///   $my-navbar-theme: navbar-theme($background: green);
-///   // Pass the theme to the navbar component mixin
-///   @include navbar($my-navbar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-navbar-theme);
 @function navbar-theme(
     $schema: $light-schema,
     $elevations: null,

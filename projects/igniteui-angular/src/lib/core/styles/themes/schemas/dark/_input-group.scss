@@ -15,7 +15,6 @@ $base-dark-input-group: $light-input-group;
 /// @type {Map}
 /// @requires $light-input-group
 /// @requires $base-dark-input-group
-/// @see $default-palette
 $dark-input-group: $base-dark-input-group;
 
 /// Generates a dark fluent input-group schema based on a mix of $fluent-input-group and $base-dark-input-group.

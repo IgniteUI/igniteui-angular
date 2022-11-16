@@ -18,7 +18,6 @@ $base-dark-divider: (
 
 /// Generates a dark divider schema.
 /// @type {Map}
-/// @see $default-palette
 /// @requires $light-divider
 /// @requires $base-dark-divider
 $dark-divider: extend($light-divider, $base-dark-divider);

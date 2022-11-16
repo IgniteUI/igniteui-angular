@@ -21,8 +21,8 @@
 ///
 /// @example scss Change the background in banner
 ///   $my-banner-theme: banner-theme($banner-background: #000);
-///   // Pass the theme to the banner component mixin
-///   @include banner($my-banner-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-banner-theme);
 @function banner-theme(
     $schema: $light-schema,
     $banner-background: null,

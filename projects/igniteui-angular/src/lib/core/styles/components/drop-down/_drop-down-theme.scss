@@ -15,35 +15,29 @@
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
 /// @param {Color} $header-text-color [null] - The drop-down header text color.
-///
 /// @param {Color} $item-text-color [null] - The drop-down text color.
 /// @param {Color} $hover-item-text-color [null] - The drop-down hover text color.
-///
 /// @param {Color} $hover-item-background [null] - The drop-down hover item background color.
-///
 /// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
 /// @param {Color} $focused-item-text-color [null] - The drop-down focused item text color.
-///
 /// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
 /// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
-///
 /// @param {Color} $selected-hover-item-background [null] - The drop-down selected item hover background color.
 /// @param {Color} $selected-hover-item-text-color [null] - The drop-down selected item hover text color.
-///
 /// @param {Color} $selected-focus-item-background [null] - The drop-down selected item focus background color.
 /// @param {Color} selected-focus-item-text-color [null] - The drop-down selected item focus text color.
-///
 /// @param {Color} $disabled-item-background [null] - The drop-down disabled item background color.
 /// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the drop-down.
-///
 /// @param {Number} $border-width [null] - The border width used for drop-down component.
 /// @param {Color} $border-color [null] - The border color used for drop-down component.
 /// @param {Number} $border-radius [null] - The border radius used for drop-down component.
 /// @param {Number} $item-border-radius [null] - The border radius used for drop-down items.
-///
 /// @requires $light-schema
-///
+/// @example scss Change the background-color of the dropdown
+///   $my-dropdown-theme: drop-down-theme($background-color: #09f);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-dropdown-theme);
 @function drop-down-theme(
     $schema: $light-schema,
     $elevations: null,

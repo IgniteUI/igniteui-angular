@@ -145,7 +145,6 @@ $base-dark-grid: (
 /// @type {Map}
 /// @requires $light-grid
 /// @requires $base-dark-grid
-/// @see $default-palette
 $dark-grid: extend($light-grid, $base-dark-grid);
 
 

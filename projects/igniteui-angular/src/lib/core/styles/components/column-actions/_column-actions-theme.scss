@@ -20,8 +20,8 @@
 ///
 /// @example scss Change the title color
 ///   $column-actions-theme: igx-column-actions-theme($title-color: black);
-///   // Pass the theme to the igx-column-actions component mixin
-///   @include igx-column-actions($column-actions-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($column-actions-theme);
 ////
 @function column-actions-theme(
     $schema: $light-schema,

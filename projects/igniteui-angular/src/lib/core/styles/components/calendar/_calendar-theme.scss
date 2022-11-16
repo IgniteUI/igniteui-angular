@@ -90,8 +90,8 @@
 ///     $header-background: purple,
 ///     $content-background: black
 ///   );
-///   // Pass the theme to the calendar component mixin
-///   @include calendar($my-calendar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-calendar-theme);
 @function calendar-theme(
     $schema: $light-schema,
 

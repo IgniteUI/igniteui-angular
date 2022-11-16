@@ -21,16 +21,12 @@
 /// @param {Color} $body-background [null] - The panel body background color.
 /// @param {Color} $disabled-color [null] - The panel body disabled text color.
 /// @param {Number} $expanded-margin [null] - The expansion panel margin in expanded state when positioned inside accordion.
-///
 /// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
-///
 /// @requires $light-schema
-///
-///
-/// @example scss Change the background color
-///   $my-expansion-panel-theme: expansion-panel($header-background: black);
-///   // Pass the theme to the expansion-panel component mixin
-///   @include expansion-panel($my-expansion-panel-theme);
+/// @example scss Change the header background color
+///   $my-expansion-panel-theme: expansion-panel-theme($header-background: black);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-expansion-panel-theme);
 @function expansion-panel-theme(
     $schema: $light-schema,
 

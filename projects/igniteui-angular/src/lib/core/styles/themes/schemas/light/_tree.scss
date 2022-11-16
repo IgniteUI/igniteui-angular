@@ -20,7 +20,6 @@
 /// @prop {Map} foreground-disabled [color: ('gray', 500)] - The color used for the content of the disabled tree node.
 /// @prop {Map} drop-area-color [color: ('secondary'] - The background color used for the tree node drop aria.
 /// @prop {Map} border-color [color: ('secondary')] - The outline shadow color used for tree node in focus state.
-/// @see $default-palette
 $light-tree: (
     variant: 'material',
 

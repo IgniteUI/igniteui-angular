@@ -70,7 +70,6 @@ $base-dark-chip: (
 /// @type {Map}
 /// @requires $light-chip
 /// @requires $base-dark-chip
-/// @see $default-palette
 $dark-chip: extend($light-chip, $base-dark-chip);
 
 /// Generates a dark fluent chip schema based on a mix of $fluent-chip and $base-dark-chip.

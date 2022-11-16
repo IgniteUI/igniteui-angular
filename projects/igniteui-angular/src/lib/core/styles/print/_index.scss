@@ -1,5 +1,5 @@
+/// @access privet
 /// Defines printing styles for all components in the library.
-/// @group print
 @mixin layout {
     @media print {
         html,

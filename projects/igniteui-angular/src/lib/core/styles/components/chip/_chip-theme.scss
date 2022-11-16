@@ -49,8 +49,8 @@
 ///
 /// @example scss Change the background color
 ///   $my-chip-theme: igx-chip-theme($background: black);
-///   // Pass the theme to the igx-chip component mixin
-///   @include igx-chip($my-chip-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-chip-theme);
 @function chip-theme(
     $schema: $light-schema,
     $elevations: null,

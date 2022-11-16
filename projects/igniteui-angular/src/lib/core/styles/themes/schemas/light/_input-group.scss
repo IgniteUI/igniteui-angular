@@ -9,63 +9,48 @@
 
 /// Generates a light input-group schema.
 /// @type {Map}
-///
 /// @prop {Map} input-prefix-color [color: ('gray', 600)] - The text color of an input prefix of type line, box and border.
 /// @prop {Color} input-prefix-background [transparent] - The background color of an input prefix of type line, box and border.
 /// @prop {Map} input-suffix-color [color: ('gray', 600)] - The text color of an input sufix of type line, box and border.
 /// @prop {Color} input-suffix-background [transparent] - The background color of an input sufix of type line, box and border.
-///
 /// @prop {Map} idle-text-color [color: ('gray', 600)] - The input text color in the idle state.
 /// @prop {Map} filled-text-color [color: ('gray', 900)] - The input text color in the filled state.
 /// @prop {Map} focused-text-color [color: ('gray', 900)] - The input text color in the focused state.
 /// @prop {Map} disabled-text-color [color: ('gray', 500)] - The input text color in the disabled state.
-///
 /// @prop {Map} idle-secondary-color [color: ('gray', 600)] - The label color in the idle state.
 /// @prop {Map} filled-secondary-color [color: ('gray', 600)] - The label color in the filled state.
 /// @prop {Map} focused-secondary-color [ color: ('primary', 500)] - The label color in the focused state.
-///
 /// @prop {Map} idle-bottom-line-color [color: ('gray', 600)] - The bottom line and border colors in the idle state.
 /// @prop {Map} hover-bottom-line-color [color: ('gray', 900)] - The bottom line and border colors in the hover state.
 /// @prop {Map} focused-bottom-line-color [color: ('primary', 500)] - The bottom line and border colors in the focused state.
 /// @prop {Map} interim-bottom-line-color [color: ('primary', 500, .12)] - The bottom line and border colors during the to-focused transition.
 /// @prop {Map} disabled-bottom-line-color [color: ('gray', 500)] - The bottom line and border colors in the disabled state.
-///
 /// @prop {Map} border-color [color: ('gray', 600)] - The border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 900)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} focused-border-color [color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('gray', 500, .12)] - The disabled border color for input groups of type border and fluent.
-///
 /// @prop {Map} box-background [color: ('gray', 200)] - The background color of an input group of type box.
 /// @prop {Map} box-disabled-background [color: ('gray', 100)] - The background color of an input group of type box in the disabled state.
-///
 /// @prop {Color} border-background [transparent] - The background color of an input group of type border.
 /// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
-///
 /// @prop {Color} search-background [color: ('gray', 50)] - The background color of an input group of type search.
 /// @prop {Map} search-disabled-background [color: ('gray', 100)] - The background color of an input group of type search in the disabled state.
-///
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [2] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
-///
 /// @prop {Map} success-secondary-color [color: ('success')] - The success color used in the valid state.
 /// @prop {Map} warning-secondary-color [color: ('warn')] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
-///
 /// @prop {Map} $success-shadow-color [color: ('success', 500, .38)] - The shadow/border color for success state for bootstrap input group.
 /// @prop {Map} $error-shadow-color [color: ('error', 500, .38)] - The shadow/border color for error state for bootstrap input group.
-///
 /// @prop {Map} placeholder-color [color: ('gray', 500)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
-///
 /// @prop {Number} box-border-radius [4px 4px 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Color} label-floated-background [color: surface] - The background color of the label when floated for input of type border.
 /// @prop {Color} label-floated-disabled-background [color: surface] - The background color of the label when floated for input group of type border in its disabled state.
-///
 /// @requires {Map} $default-elevation-input-group
-/// @see $default-palette
 $light-input-group: extend(
     $default-elevation-input-group,
     (
@@ -213,27 +198,20 @@ $light-input-group: extend(
 
 /// Generates a fluent input-group schema.
 /// @type {Map}
-///
 /// @prop {Map} border-color [color: ('gray', 700)] - The border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 800)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('gray', 100)] - The disabled border color for input groups of type border and fluent.
-///
 /// @prop {Map} focused-border-color [color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
-///
 /// @prop {Color} search-disabled-background [color: ('gray', 100)] - The background color of an input group of type search in the disabled state.
-///
 /// @prop {Color} input-prefix-background [color: ('gray', 100)] - The background color of an input prefix of type line, box, border and fluent.
 /// @prop {Color} input-suffix-background [ color: ('gray', 100)] - The background color of an input suffix of type line, box, border and fluent.
-///
 /// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
-///
 /// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
-///
 /// @requires {Map} $light-input-group
 /// @requires {Map} $fluent-elevation-input-group
 $fluent-input-group: extend(

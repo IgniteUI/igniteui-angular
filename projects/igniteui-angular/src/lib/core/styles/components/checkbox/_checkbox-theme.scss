@@ -32,8 +32,8 @@
 ///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
-///   // Pass the theme to the igx-checkbox component mixin
-///   @include igx-checkbox($my-checkbox-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-checkbox-theme);
 @function checkbox-theme(
     $schema: $light-schema,
 
