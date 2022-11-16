@@ -31,7 +31,6 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
-import { throws } from 'assert';
 
 let NEXT_ID = 0;
 
