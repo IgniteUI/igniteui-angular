@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { DatePipe, getLocaleCurrencyCode } from '@angular/common';
+import { DatePipe, FormatWidth, getLocaleCurrencyCode, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { ColumnType, GridType, IPathSegment } from '../../grids/common/grid.interface';
 import { FilterUtil } from '../../data-operations/filtering-strategy';
@@ -69,6 +69,7 @@ export interface IColumnInfo {
     columnGroup?: ColumnType | string;
     currencyCode?: string;
     displayFormat?: string;
+    dateFormat?: string;
     digitsInfo?: string;
 }
 /**
@@ -1147,6 +1148,14 @@ export abstract class IgxBaseExporter {
                 columnInfo.digitsInfo = column.pipeArgs.digitsInfo
                     ? column.pipeArgs.digitsInfo
                     : '1.0-2';
+            }
+
+            if (column.dataType === 'date') {
+                columnInfo.dateFormat = getLocaleDateFormat(this.locale, FormatWidth.Medium);
+            }
+
+            if (column.dataType === 'dateTime') {
+                columnInfo.dateFormat = getLocaleDateTimeFormat(this.locale, FormatWidth.Medium);
             }
 
             if (this.options.ignoreColumnsOrder) {

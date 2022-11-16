@@ -57,6 +57,11 @@ interface Dimensions {
     endCoordinate: string
 }
 
+interface CurrencyInfo {
+    styleXf: number
+    symbol: string
+}
+
 /**
  * @hidden
  */
@@ -82,12 +87,12 @@ export class WorksheetFile implements IExcelFile {
     private isValidGrid: boolean;
     private lastValidRow: string;
 
-    private currencyStyleMap = new Map<string, number>([
-        ['USD', 5],
-        ['GBP', 6],
-        ['CNY', 7],
-        ['EUR', 8],
-        ['JPY', 9],
+    private currencyStyleMap = new Map<string, CurrencyInfo>([
+        ['USD', {styleXf: 5, symbol: '$'}],
+        ['GBP', {styleXf: 6, symbol: '£'}],
+        ['CNY', {styleXf: 7, symbol: '¥'}],
+        ['EUR', {styleXf: 8, symbol: '€'}],
+        ['JPY', {styleXf: 9, symbol: '¥'}],
     ]);
 
     public writeElement() {}
@@ -352,15 +357,15 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>${pivotGridColumns}`;
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
-        const isDataOrHierarchicalRecord = record.type === ExportRecordType.HierarchicalGridRecord
+        const isDataRecord = record.type === ExportRecordType.HierarchicalGridRecord
             || record.type === ExportRecordType.DataRecord
             || record.type === ExportRecordType.GroupedRecord
             || record.type === ExportRecordType.TreeGridRecord;
 
-        const isValidRecordType = isDataOrHierarchicalRecord || record.type === ExportRecordType.SummaryRecord;
+        const isValidRecordType = isDataRecord || record.type === ExportRecordType.SummaryRecord;
 
         if (isValidRecordType && worksheetData.hasSummaries) {
-            this.resolveSummaryDimensions(record, isDataOrHierarchicalRecord, worksheetData.isGroupedGrid)
+            this.resolveSummaryDimensions(record, isDataRecord, worksheetData.isGroupedGrid)
         }
 
         for (let j = 0; j < keys.length; j++) {
@@ -397,7 +402,6 @@ export class WorksheetFile implements IExcelFile {
             columnName = ExcelStrings.getExcelColumn(worksheetData.columnCount + 1) + (this.rowIndex);
         }
 
-
         if (worksheetData.hasSummaries && (isValidRecordType || (worksheetData.isGroupedGrid && isSummaryRecord))) {
             this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isGroupedGrid && isSummaryRecord)
         }
@@ -411,6 +415,10 @@ export class WorksheetFile implements IExcelFile {
             }
         }
 
+        const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
+        const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
+        const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
+
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
         } else if ((worksheetData.hasSummaries && (isValidRecordType || isHeaderRecord)) || !worksheetData.hasSummaries) {
@@ -418,10 +426,6 @@ export class WorksheetFile implements IExcelFile {
             const isSavedAsString = savedValue !== -1;
 
             const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
-
-            const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
-            const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
-            const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
 
             let value = isSavedAsString ? savedValue : cellValue;
 
@@ -433,7 +437,7 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode) || 0}"` : ` s="1"`;
+            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode).styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {
@@ -443,7 +447,7 @@ export class WorksheetFile implements IExcelFile {
                 const dimensionMapKey = this.isValidGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
                 const level = worksheetData.isGroupedGrid ? worksheetData.maxLevel : fullRow.level;
 
-                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level);
+                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
 
                 if (!summaryFunc) {
                     const cellStr = `${cellValue.label}: ${cellValue.value}`;
@@ -458,7 +462,7 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    private resolveSummaryDimensions(record: IExportRecord, isDataOrHierarchicalRecord: boolean, isGroupedGrid: boolean) {
+    private resolveSummaryDimensions(record: IExportRecord, isDataRecord: boolean, isGroupedGrid: boolean) {
         if (this.isValidGrid &&
             this.currentHierarchicalOwner !== '' &&
             this.currentHierarchicalOwner !== record.owner &&
@@ -466,7 +470,7 @@ export class WorksheetFile implements IExcelFile {
             this.hierarchicalDimensionMap.set(this.currentHierarchicalOwner, new Map(this.dimensionMap))
         }
 
-        if (isDataOrHierarchicalRecord) {
+        if (isDataRecord) {
             if (this.currentSummaryOwner !== record.summaryKey || this.currentHierarchicalOwner !== record.hierarchicalOwner) {
                 this.dimensionMap.clear();
             }
@@ -515,28 +519,60 @@ export class WorksheetFile implements IExcelFile {
          }
     }
 
-    private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number): string {
+    private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number, col: IColumnInfo): string {
         const dimensionMap = dimensionMapKey ? this.hierarchicalDimensionMap.get(dimensionMapKey) : this.dimensionMap;
         const dimensions = dimensionMap.get(key);
         const levelDimensions = dimensionMap.get(GRID_LEVEL_COL);
+
+        let func = '';
+        let funcType = '';
+        let result = '';
 
         switch(type.toLowerCase()) {
             case "count":
                 return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
             case "min":
-                return `"Min: "&amp;_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                func = `_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                funcType = `"Min: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency'
+                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
             case "max":
-                return `"Max: "&amp;_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                func = `_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                funcType = `"Max: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency'
+                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
             case "sum":
-                return `"Sum: "&amp;_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                func =  `_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                funcType = `"Sum: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency'
+                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
             case "avg":
-                return `"Avg: "&amp;_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                func = `_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                funcType = `"Avg: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency'
+                    ? `_xlfn.TEXT(${func}, "${this.currencyStyleMap.get(col.currencyCode).symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
             case "earliest":
                 // TODO: get date format from locale
-                return `"Earliest: "&amp;_xlfn.TEXT(_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "MM/dd/yyyy")`
+                return `"Earliest: "&amp;_xlfn.TEXT(_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "m/d/yyyy")`
             case "latest":
                 // TODO: get date format from locale
-                return `"Latest: "&amp;_xlfn.TEXT(_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "MM/dd/yyyy")`
+                return `"Latest: "&amp;_xlfn.TEXT(_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "m/d/yyyy")`
         }
     }
 
