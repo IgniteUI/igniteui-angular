@@ -1,19 +1,17 @@
 <div class="wrapper">
+    <igx-buttongroup [values]="filterModes" (selected)="selectDensity($event)"></igx-buttongroup>
     <div class="sample-content">
-        <div class="sample-buttons">
-            <igx-buttongroup [values]="filterModes" (selected)="selectDensity($event)"></igx-buttongroup>
-        </div>
         <igx-grid #grid1
             [columnSelection]="'single'"
             [data]="data"
             [allowFiltering]="true"
             [moving]="true"
             [filterMode]="filterMode"
-            [rowSelection] ="'multiple'"
+            rowSelection="multiple"
             [rowEditable]="false"
-            [width]="'900px'"
-            [primaryKey]="'ID'"
-            >
+            width="700px"
+            [primaryKey]="'ID'">
+
             <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -35,6 +33,28 @@
                                                 [hasSummary]="c.summary"
                                                 [dataType]="c.type">
             </igx-column>
+        </igx-grid>
+
+        <igx-grid columnSelection="single"
+                [data]="dataWithImages"
+                [autoGenerate]="true"
+                [allowFiltering]="true"
+                [moving]="true"
+                [filterMode]="filterMode"
+                rowSelection="multiple"
+                [rowEditable]="false"
+                [width]="'700px'"
+                [primaryKey]="'ID'">
+
+            <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    <igx-grid-toolbar-advanced-filtering>
+                    </igx-grid-toolbar-advanced-filtering>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
+
         </igx-grid>
     </div>
 </div>
