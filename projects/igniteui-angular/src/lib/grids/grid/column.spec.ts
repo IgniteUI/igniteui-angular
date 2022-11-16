@@ -1204,6 +1204,7 @@ describe('IgxGrid - Column properties #grid', () => {
             let column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
             expect(column.sortable).toBeFalse();
+            expect(column.groupable).toBeFalse();
             expect(column.filterable).toBeFalse();
             expect(column.editable).toBeFalse();
             expect(column.hasSummary).toBeFalse();

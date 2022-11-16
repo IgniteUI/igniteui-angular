@@ -2263,7 +2263,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set filterMode(value: FilterMode) {
-        this._filterMode = value;
+        switch (value) {
+            case FilterMode.excelStyleFilter:
+            case FilterMode.quickFilter:
+                this._filterMode = value;
+                break;
+            default:
+                break;
+        }
 
         if (this.filteringService.isFilterRowVisible) {
             this.filteringRow.close();

@@ -71,7 +71,7 @@
     }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
-    <ng-container *ngIf="column.dataType === 'string'" [formGroup]="formGroup">
+    <ng-container *ngIf="column.dataType === 'string' || column.dataType === 'image'" [formGroup]="formGroup">
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
