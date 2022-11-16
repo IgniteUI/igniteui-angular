@@ -233,7 +233,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('input')
     public onInput() {
         this.open();
-        console.log('input');
     }
 
     /** @hidden @internal */
@@ -241,7 +240,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     public onCompositionStart(): void {
         if (!this._composing) {
             this._composing = true;
-            console.log('Composition START!');
         }
     }
 
@@ -249,7 +247,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('compositionend')
     public onCompositionEnd(): void {
         this._composing = false;
-        console.log('Composition END!');
     }
 
     /** @hidden  @internal */
