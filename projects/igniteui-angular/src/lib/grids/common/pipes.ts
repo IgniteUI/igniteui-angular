@@ -62,6 +62,25 @@ export class IgxGridCellStylesPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
+ @Pipe({
+    name: 'igxCellImageAlt'
+})
+export class IgxGridCellImageAltPipe implements PipeTransform {
+
+    public transform(value: string): string {
+        if (value) {
+            const val = value.split('/');
+            const imagename = val[val.length - 1].split('.');
+            return imagename.length ? imagename[0] : '';
+        }
+        return value;
+    }
+}
+
 
 /**
  * @hidden
