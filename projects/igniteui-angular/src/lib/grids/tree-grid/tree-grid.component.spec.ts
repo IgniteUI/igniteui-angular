@@ -9,7 +9,8 @@ import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridDefaultLoadingComponent,
     IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSummariesTransactionsComponent
+    IgxTreeGridSummariesTransactionsComponent,
+    IgxTreeGridNoDataComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -29,7 +30,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSummariesTransactionsComponent
+                IgxTreeGridSummariesTransactionsComponent,
+                IgxTreeGridNoDataComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -264,27 +266,21 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     describe('Setting null data', () => {
         it('should not throw error when data is null', () => {
-            let errorMessage = '';
-            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
-            fix.componentInstance.data = null;
-            try {
-                fix.detectChanges();
-            } catch (ex) {
-                errorMessage = ex.message;
-            }
-            expect(errorMessage).toBe('');
+            fix = TestBed.createComponent(IgxTreeGridNoDataComponent);
+            fix.componentInstance.treeGrid.batchEditing = true;
+            expect(() => fix.detectChanges()).not.toThrow();
         });
 
-        it('should not throw error when data is null and transactions are enabled', () => {
-            let errorMessage = '';
+        it('should not throw error when data is set to null', () => {
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null and transactions are enabled', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.componentInstance.data = null;
-            try {
-                fix.detectChanges();
-            } catch (ex) {
-                errorMessage = ex.message;
-            }
-            expect(errorMessage).toBe('');
+            expect(() => fix.detectChanges()).not.toThrow();
         });
     });
 

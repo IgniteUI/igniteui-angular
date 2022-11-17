@@ -432,7 +432,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxSimpleComboSampleComponent
+                    IgxSimpleComboSampleComponent,
+                    IgxSimpleComboEmptyComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -630,6 +631,13 @@ describe('IgxSimpleCombo', () => {
             const footerHTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOOTER}`)).nativeElement;
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
+        });
+        it('should initialize the component with empty data and bindings', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
+            expect(() => {
+                fixture.detectChanges();
+            }).not.toThrow();
+            expect(fixture.componentInstance.combo).toBeDefined();
         });
     });
 
@@ -895,6 +903,21 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should not clear selection on tab/blur after filtering and selecting a value', () => {
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+        });
+
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
@@ -1118,7 +1141,7 @@ describe('IgxSimpleCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(null);
+            expect(combo.value).toBe('');
 
             combo.open();
             fixture.detectChanges();
@@ -1145,7 +1168,7 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(undefined);
+            expect(combo.value).toBe('');
         });
 
         it('should select falsy values except "undefined"', () => {
@@ -1835,6 +1858,17 @@ class IgxSimpleComboSampleComponent {
 
     public selectionChanging() {
     }
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`
+})
+export class IgxSimpleComboEmptyComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] = [];
+    public name!: string;
 }
 
 @Component({

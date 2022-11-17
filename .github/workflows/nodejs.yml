@@ -16,26 +16,30 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
       - name: Install packages
         run: npm ci
-      - name: Lint
+      - name: Lint Lib
         run: npm run lint:lib
         env:
             NODE_OPTIONS: --max_old_space_size=4096
       - name: Lint i18n
         run: npm run lint:i18n
-      - name: Build
+      - name: Build Lib
         run: npm run build:lib
+      - name: Build TypeDoc & SassDoc
+        run: |
+            npm run build:typedoc:en:production
+            npm run build:sassdoc:en:production
       - name: Test
         run: |
             npm run test:lib
@@ -49,11 +53,7 @@ jobs:
             npm run build:i18n
             npm run test:i18n:dist
       - name: Publish to coveralls.io
-        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '16.x'
         uses: coverallsapp/github-action@v1.1.2
         with:
             github-token: ${{ github.token }}
-      - name: Build TypeDoc & SassDoc
-        run: |
-            npm run build:typedoc:en:production
-            npm run build:sassdoc:en:production

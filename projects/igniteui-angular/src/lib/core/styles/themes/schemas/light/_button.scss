@@ -515,23 +515,23 @@ $fluent-raised-button: extend(
     $fluent-base-button,
     (
         border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 500)
         ),
 
         hover-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 600)
         ),
 
         focus-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 600)
         ),
 
         focus-visible-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 600)
         ),
 
         active-border-color: (
-            contrast-color: ('gray', 900)
+            color: ('primary', 800)
         ),
 
         background: (
