@@ -1307,34 +1307,6 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
         });
-
-        it('should export grid with currency col based on fr locale', async () => {
-            fix = TestBed.createComponent(GridCurrencySummariesComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            grid = fix.componentInstance.grid;
-            grid.locale = 'fr'
-
-            fix.detectChanges();
-            await wait(300);
-
-            await exportAndVerify(grid, options, actualData.exportGridWithSummariesFrLocale);
-        });
-
-        it('should export grid with currency col based on ja locale', async () => {
-            fix = TestBed.createComponent(GridCurrencySummariesComponent);
-            fix.detectChanges();
-            await wait(300);
-
-            grid = fix.componentInstance.grid;
-            grid.locale = 'ja'
-
-            fix.detectChanges();
-            await wait(300);
-
-            await exportAndVerify(grid, options, actualData.exportGridWithSummariesJaLocale);
-        });
     });
 
     describe('', () => {
