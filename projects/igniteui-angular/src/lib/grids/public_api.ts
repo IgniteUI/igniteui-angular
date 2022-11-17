@@ -17,7 +17,7 @@ export {
     CellType, RowType, IGX_GRID_BASE, ValidationStatus, IGridFormGroupCreatedEventArgs, IGridValidationState, IGridValidationStatusEventArgs, IRecordValidationState, IFieldValidationState, ColumnType,
     IgxGridMasterDetailContext, IgxGroupByRowTemplateContext, IgxGridTemplateContext, IgxGridRowTemplateContext, IgxGridRowDragGhostContext, IgxGridEmptyTemplateContext, IgxGridRowEditTemplateContext,
     IgxGridRowEditTextTemplateContext, IgxGridRowEditActionsTemplateContext, IgxGridHeaderTemplateContext, IgxColumnTemplateContext, IgxCellTemplateContext, IgxGroupByRowSelectorTemplateContext,
-    IgxHeadSelectorTemplateContext, IgxSummaryTemplateContext, GridType, HierarchicalGridType, TreeGridType, PivotGridType
+    IgxHeadSelectorTemplateContext, IgxSummaryTemplateContext
 } from './common/grid.interface';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';

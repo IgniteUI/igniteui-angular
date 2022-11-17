@@ -650,9 +650,6 @@ export interface GridType extends IGridDataBindable {
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
     preventHeaderScroll?(args: any): void;
-    endEdit(commit: boolean, event?: Event): void;
-    filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean): void;
-    clearFilter(name?: string): void;
 }
 
 /**
