@@ -1123,9 +1123,11 @@
         bottom: 0;
     }
 
-    %igx-grid__td--bool {
+    %igx-grid__td--centered {
         justify-content: center;
+    }
 
+    %igx-grid__td--bool {
         igx-icon {
             width: var(--igx-icon-size, #{rem(18px)});
             height: var(--igx-icon-size, #{rem(18px)});
