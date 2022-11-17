@@ -16,16 +16,12 @@
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
 /// @param {number} $size [null] - The size of the avatar.
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the avatar component mixin
-///   @include avatar($my-avatar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-avatar-theme);
 @function avatar-theme(
     $schema: $light-schema,
     $background: null,
@@ -62,9 +58,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin avatar($theme) {
     @include css-vars($theme);
 

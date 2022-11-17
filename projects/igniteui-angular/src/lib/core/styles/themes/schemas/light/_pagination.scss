@@ -11,7 +11,6 @@
 /// @prop {Map} text-color [color: ('gray', 800)] - The text color.
 /// @prop {Map} background-color [color: ('gray', 100)] - The background color of the paging panel.
 /// @prop {Map} border-color [color: ('gray', 200)] - The border color of the paging panel.
-/// @see $default-palette
 $light-pagination: (
     variant: 'material',
 
@@ -32,7 +31,6 @@ $light-pagination: (
 /// @type {Map}
 /// @prop {Map} background-color [color: 'surface'] - The background color of the paging panel.
 /// @prop {Map} border-color [color: ('gray', 100)] - The border color of the paging panel.
-/// @requires {function} extend
 /// @requires {Map} $light-pagination
 $fluent-pagination: extend(
     $light-pagination,
@@ -66,7 +64,6 @@ $bootstrap-pagination: extend(
 /// @type {Map}
 /// @prop {Map} text-color [color: ('gray', 700)] - The text color.
 /// @prop {Map} border-color [color: ('gray', 100)] - The border color of the paging panel.
-/// @requires {function} extend
 /// @requires {Map} $light-pagination
 $indigo-pagination: extend(
     $light-pagination,

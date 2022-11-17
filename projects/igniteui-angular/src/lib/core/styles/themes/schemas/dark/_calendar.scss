@@ -41,10 +41,8 @@ $dark-base-calendar: (
 /// @prop {Map} date-disabled-text-color [color: ('gray', 500)] - The text color for disabled dates.
 /// @prop {Map} date-selected-hover-foreground [contrast-color: ('secondary', 500)] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-foreground [contrast-color: ('secondary', 500)] - The focus text color for the selected date.
-/// @requires {function} extend
 /// @requires $light-calendar
 /// @requires $dark-base-calendar
-/// @see $default-palette
 $dark-calendar: extend(
     $light-calendar,
     $dark-base-calendar,
@@ -65,7 +63,6 @@ $dark-calendar: extend(
 
 /// Generates a dark fluent calendar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-calendar
 $dark-fluent-calendar: extend($fluent-calendar, $dark-base-calendar);
 
@@ -82,7 +79,6 @@ $dark-fluent-calendar: extend($fluent-calendar, $dark-base-calendar);
 /// @prop {Map} week-number-background [('gray', 300, .2)] - The background color of the week number column.
 /// @prop {Map} date-selected-hover-text-color [contrast-color: ('surface')] - The hover text color for the selected date.
 /// @prop {Map} date-selected-focus-text-color [contrast-color: ('surface')] - The focus text color for the selected date.
-/// @requires {function} extend
 /// @requires $bootstrap-calendar
 /// @requires $dark-base-calendar
 $dark-bootstrap-calendar: extend(
@@ -156,7 +152,6 @@ $dark-bootstrap-calendar: extend(
 /// @prop {Map} date-current-focus-text-color [color: ('gray', 100)] - The focus text color for the current date.
 /// @prop {Map} date-current-hover-bg-color [color: ('gray', 100)] - The hover background color for the current date.
 /// @prop {Map} date-current-focus-bg-color [color: ('gray', 100)] - The focus background color for the current date.
-/// @requires {function} extend
 /// @requires $indigo-calendar
 /// @requires $dark-base-calendar
 $dark-indigo-calendar: extend(
