@@ -10,13 +10,11 @@
 /// Generates a dark overlay schema.
 /// @type {Map}
 /// @requires $light-overlay
-/// @see $default-palette
 $dark-overlay: $light-overlay;
 
 /// Generates a dark fluent overlay schema.
 /// @type {Map}
 /// @property {Color} background-color [rgba(0, 0, 0, .4)] - The background color used for modal overlays.
-/// @requires {function} extend
 /// @requires $fluent-overlay
 $dark-fluent-overlay: extend(
     $fluent-overlay,

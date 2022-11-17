@@ -7,8 +7,7 @@
 /// Generates a light column actions schema.
 /// @type {Map}
 /// @prop {Map} title-color [color: ('primary', 500)]- The text color used for the title of the list.
-/// @prop {Color} background-color [#fff] - The background color of the panel.
-/// @see $default-palette
+/// @prop {Map} background-color [color: ('surface')] - The background color of the panel.
 $light-column-actions: (
     background-color: (
         color: ('surface')

@@ -19,21 +19,18 @@ $default-elevation-button-group: (
 );
 
 /// @type Map
-/// @requires {function} extend
 /// @requires {Map} $_flat-button-group
 $fluent-elevation-button-group: extend(
     $_flat-button-group
 );
 
 /// @type Map
-/// @requires {function} extend
 /// @requires {Map} $_flat-button-group
 $bootstrap-elevation-button-group: extend(
     $_flat-button-group
 );
 
 /// @type Map
-/// @requires {function} extend
 /// @requires {Map} $_flat-button-group
 $indigo-elevation-button-group: extend(
     $_flat-button-group
