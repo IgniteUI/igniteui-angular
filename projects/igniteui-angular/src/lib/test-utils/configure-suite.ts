@@ -38,10 +38,10 @@ export const configureTestSuite = (configureAction?: () => void) => {
         clearStyles();
         clearSVGContainer();
         testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
-            const element = fixture.debugElement.nativeElement;
-            // If the fixture element ID changes, then it's not properly disposed
-            document.body.removeChild(element);
+            const element = fixture.debugElement.nativeElement as HTMLElement;
             fixture.destroy();
+            // If the fixture element ID changes, then it's not properly disposed
+            element?.remove();
         });
         // reset ViewEngine TestBed
         testBed._instantiated = false;
