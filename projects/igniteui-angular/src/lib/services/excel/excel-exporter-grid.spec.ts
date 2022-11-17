@@ -2,7 +2,6 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
-import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
@@ -19,7 +18,8 @@ import {
     GridWithEmptyColumnsComponent,
     ColumnsAddedOnInitComponent,
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
-    GroupedGridWithSummariesComponent
+    GroupedGridWithSummariesComponent,
+    GridSummariesComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -73,7 +73,8 @@ describe('Excel Exporter', () => {
                 IgxPivotGridTestComplexHierarchyComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
-                GroupedGridWithSummariesComponent
+                GroupedGridWithSummariesComponent,
+                GridSummariesComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -1304,6 +1305,34 @@ describe('Excel Exporter', () => {
             expect(thirdChildRow.expanded).toBe(true);
 
             await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
+        });
+
+        it('should export grid with currency col based on fr locale', async () => {
+            fix = TestBed.createComponent(GridSummariesComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+            grid.locale = 'fr'
+
+            fix.detectChanges();
+            await wait(300);
+
+            await exportAndVerify(grid, options, actualData.exportGridWithSummariesFrLocale);
+        });
+
+        it('should export grid with currency col based on ja locale', async () => {
+            fix = TestBed.createComponent(GridSummariesComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+            grid.locale = 'ja'
+
+            fix.detectChanges();
+            await wait(300);
+
+            await exportAndVerify(grid, options, actualData.exportGridWithSummariesJaLocale);
         });
     });
 
