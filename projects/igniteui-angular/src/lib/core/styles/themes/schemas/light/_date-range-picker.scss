@@ -9,7 +9,6 @@
 /// Generates a light date-range-picker schema.
 /// @type {Map}
 /// @prop {Map} label-color [color: 'surface'] - The Color for date range separator label.
-/// @see $default-palette
 $light-date-range-picker: (
     label-color: (
         color: ('gray', 500),
@@ -18,7 +17,6 @@ $light-date-range-picker: (
 
 /// Generates a fluent date-range-picker schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-date-range-picker
 $fluent-date-range-picker: $light-date-range-picker;
 
