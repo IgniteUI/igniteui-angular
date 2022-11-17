@@ -26,7 +26,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column Pinning #grid', () => {
@@ -643,6 +643,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
                 expect(cellFax.active).toBe(false);
                 expect(cellCompanyName.active).toBe(true);
+                clearGridSubs();
             }));
 
             it('should allow navigating to/from pinned area using Ctrl+Left/Right', (async () => {
