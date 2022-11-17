@@ -12,7 +12,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
@@ -472,6 +472,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             setupGridScrollDetection(fix, grid);
             gridContent = GridFunctions.getGridContent(fix);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it(`Should jump from first editable columns to overlay buttons`, () => {
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
@@ -2065,6 +2069,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.cell.column.header).toBe('1');
+            clearGridSubs();
         }));
     });
 

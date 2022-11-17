@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -17,11 +17,12 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { UIInteractions, wait, waitForGridScroll } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { GridColumnDataType } from '../../data-operations/data-util';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -1149,6 +1150,73 @@ describe('IgxGrid - Column properties #grid', () => {
 
     });
 
+    describe('Data type image column tests', () => {
+        let fix: ComponentFixture<IgxGridComponent>;
+        let grid: IgxGridComponent;
+        let dataWithImages = [{
+            avatar: 'assets/images/avatar/1.jpg',
+            phone: '770-504-2217',
+            text: 'Terrance Orta',
+            available: false
+        }, {
+            avatar: 'assets/images/avatar/2.jpg',
+            phone: '423-676-2869',
+            text: 'Richard Mahoney',
+            available: true
+        }, {
+            avatar: 'assets/images/avatar/3.jpg',
+            phone: '859-496-2817',
+            text: 'Donna Price',
+            available: true
+        }, {
+            avatar: 'assets/images/avatar/4.jpg',
+            phone: '901-747-3428',
+            text: 'Lisa Landers',
+            available: true
+        }, {
+            avatar: 'assets/images/avatar/12.jpg',
+            phone: '573-394-9254',
+            text: 'Dorothy H. Spencer',
+            available: true
+        }, {
+            avatar: 'assets/images/avatar/13.jpg',
+            phone: '323-668-1482',
+            text: 'Stephanie May',
+            available: false
+        }, {
+            avatar: 'assets/images/avatar/14.jpg',
+            phone: '401-661-3742',
+            text: 'Marianne Taylor',
+            available: true
+        }];
+
+        beforeEach(waitForAsync(() => {
+            fix = TestBed.createComponent(IgxGridComponent);
+            grid = fix.componentInstance;
+            // For test fixture destroy
+            grid.id = "root1";
+            grid.data = dataWithImages;
+            grid.autoGenerate = true;
+            fix.detectChanges();
+        }));
+
+        it('should initialize correctly with autoGenerate and image data', () => {
+            let column = grid.getColumnByName('avatar');
+            expect(column.dataType).toBe(GridColumnDataType.Image);
+            expect(column.sortable).toBeFalse();
+            expect(column.groupable).toBeFalse();
+            expect(column.filterable).toBeFalse();
+            expect(column.editable).toBeFalse();
+            expect(column.hasSummary).toBeFalse();
+
+            let cell = column._cells[0];
+            expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
+            expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('assets/images/avatar/1.jpg');
+            expect(cell.nativeElement.firstElementChild.getAttribute('alt')).toBe('1');
+        });
+
+    });
+
     describe('Auto-sizing with width auto: ', () => {
         it('should auto-size column in view on init.', fakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
@@ -1324,7 +1392,7 @@ export class ResizableColumnsComponent {
         <ng-template #newCell>
             <span class="new-cell">New cell text</span>
         </ng-template>
-        
+
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
         </ng-template>`

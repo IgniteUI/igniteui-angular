@@ -8,10 +8,7 @@
 
 /// Generates a light ripple schema.
 /// @type {Map}
-///
-/// @property {Map} color [color: ('gray', 800, 7)] - The color of the ripple.
-///
-/// @see $default-palette
+/// @prop {Map} color [color: ('gray', 800, 7)] - The color of the ripple.
 $light-ripple: (
     variant: 'material',
 
@@ -22,7 +19,6 @@ $light-ripple: (
 
 /// Generates a fluent ripple schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-ripple
 $fluent-ripple: extend($light-ripple, (
     variant: 'fluent'
@@ -30,7 +26,6 @@ $fluent-ripple: extend($light-ripple, (
 
 /// Generates a bootstrap ripple schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-ripple
 $bootstrap-ripple: extend($light-ripple, (
     variant: 'bootstrap'
@@ -38,7 +33,6 @@ $bootstrap-ripple: extend($light-ripple, (
 
 /// Generates an indigo ripple schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-ripple
 $indigo-ripple: extend($light-ripple, (
     variant: 'indigo-design'

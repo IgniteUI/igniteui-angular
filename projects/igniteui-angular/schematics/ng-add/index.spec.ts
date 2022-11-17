@@ -15,6 +15,7 @@ describe('ng-add schematics', () => {
     version: 1,
     projects: {
       testProj: {
+        root: '/',
         sourceRoot,
         projectType: ProjectType.Application,
         architect: {

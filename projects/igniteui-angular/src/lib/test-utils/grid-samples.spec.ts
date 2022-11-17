@@ -2575,3 +2575,15 @@ export class ObjectCloneStrategy implements IDataCloneStrategy {
         return clonedData;
     }
 }
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [batchEditing]="true" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true" >
+        <igx-column field="ProductID" header="Product ID" width="150px" [hidden]="true"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
+        <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingDefinedColumnsComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+}

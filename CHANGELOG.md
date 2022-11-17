@@ -26,8 +26,18 @@ All notable changes for each version of this project will be documented in this 
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
 
+    - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
+
+- `IgxCalendar`
+
+    Added support for shift key + mouse click interactions.
+    - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
+    - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
 
 ## 14.2.0
 

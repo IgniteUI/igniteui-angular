@@ -37,7 +37,12 @@ export const configureTestSuite = (configureAction?: () => void) => {
     afterEach(() => {
         clearStyles();
         clearSVGContainer();
-        testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+        testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
+            const element = fixture.debugElement.nativeElement as HTMLElement;
+            fixture.destroy();
+            // If the fixture element ID changes, then it's not properly disposed
+            element?.remove();
+        });
         // reset ViewEngine TestBed
         testBed._instantiated = false;
         // reset Ivy TestBed

@@ -12,9 +12,7 @@ $dark-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy
 
 /// Generates a dark watermark schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-watermark
-/// @see $default-palette
 $dark-watermark: extend(
     $light-watermark,
     (
@@ -24,7 +22,6 @@ $dark-watermark: extend(
 
 /// Generates a dark fluent watermark schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-watermark
 $dark-fluent-watermark: extend(
     $fluent-watermark,
@@ -35,7 +32,6 @@ $dark-fluent-watermark: extend(
 
 /// Generates a dark bootstrap watermark schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-watermark
 $dark-bootstrap-watermark: extend(
     $bootstrap-watermark,
@@ -46,7 +42,6 @@ $dark-bootstrap-watermark: extend(
 
 /// Generates a dark indigo watermark schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-watermark
 $dark-indigo-watermark: extend(
     $indigo-watermark,

@@ -5,17 +5,10 @@
 @use './header-row-component' as *;
 @use 'sass:string';
 
-////
-/// @group components
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
 /// @requires {mixin} excel-filtering-partial
 /// @requires {mixin} advanced-filtering-partial
-/// @requires {mixin} group-by-area
-////
-
 @mixin component {
     @include b(igx-grid) {
         $this: bem--selector-to-string(&);
@@ -248,11 +241,16 @@
         }
 
         @include e(td, $m: bool) {
+            @extend %igx-grid__td--centered !optional;
             @extend %igx-grid__td--bool !optional;
         }
 
         @include e(td, $m: bool-true) {
             @extend %igx-grid__td--bool-true !optional;
+        }
+
+        @include e(td, $m: image) {
+            @extend %igx-grid__td--centered !optional;
         }
 
         @include e(tr, $mods: (selected, filtered)) {

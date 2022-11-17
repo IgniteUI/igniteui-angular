@@ -19,20 +19,13 @@
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
 /// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
 /// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
-///
 /// @requires $light-schema
-/// @requires digest-schema(
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
-///
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: grid-toolbar-theme(
 ///     $background-color: black
 ///   );
-///   // Pass the theme to the grid-toolbar component mixin
-///   @include grid-toolbar($my-toolbar-theme);
-
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-toolbar-theme);
 @function grid-toolbar-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -100,12 +93,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires color
-/// @requires {mixin} ellipsis
-/// @requires rem
-/// @requires em
-/// @requires var-get
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
 
