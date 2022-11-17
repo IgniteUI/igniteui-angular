@@ -9,7 +9,6 @@
 
 /// Generates a light navdrawer schema.
 /// @type {Map}
-///
 /// @prop {Map} background [color: 'surface'] - The navigation drawer background color.
 /// @prop {Map} border-color [color: ('gray', 900, .14)] - The navigation drawer right border color.
 /// @prop {Map} item-header-text-color [color: ('gray', 800),] - The header's idle text color.
@@ -24,10 +23,7 @@
 /// @prop {Map} elevation [16] - The elevation level, between 0-24, to be used for the drawer.
 /// @prop {Number} border-radius [0] - The border radius used for the navdrawer component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [4px] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-navdrawer
-/// @see $default-palette
 $light-navdrawer: extend(
     $default-elevation-navdrawer,
     (
@@ -85,7 +81,6 @@ $light-navdrawer: extend(
 
 /// Generates a fluent navdrawer schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-navdrawer
 $fluent-navdrawer: extend(
     $light-navdrawer,
@@ -96,7 +91,6 @@ $fluent-navdrawer: extend(
 
 /// Generates a bootstrap navdrawer schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-navdrawer
 $bootstrap-navdrawer: extend(
     $light-navdrawer,
@@ -120,7 +114,6 @@ $bootstrap-navdrawer: extend(
 /// @prop {Map} elevation [0] - The elevation level, between 0-24, to be used for the drawer.
 /// @prop {Number} border-radius [0] - The border radius used for the navdrawer component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [24px] - The border radius used for the navdrawer items. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-navdrawer
 /// @requires {Map} $indigo-elevation-navdrawer
 $indigo-navdrawer: extend(

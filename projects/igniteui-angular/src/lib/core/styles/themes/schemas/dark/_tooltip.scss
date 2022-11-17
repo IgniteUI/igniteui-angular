@@ -10,7 +10,6 @@
 /// Generates a dark tooltip schema.
 /// @type {Map}
 /// @requires $light-tooltip
-/// @see $default-palette
 $dark-tooltip: $light-tooltip;
 
 /// Generates a dark fluent tooltip schema.
@@ -26,10 +25,8 @@ $dark-bootstrap-tooltip: $bootstrap-tooltip;
 /// Generates a dark indigo tooltip schema.
 /// @type {Map}
 ///
-/// @property {Map} background [contrast-color: ('surface')] - The background color of the tooltip.
-/// @property {Map} text-color [text-color: (color: 'surface')] - The text color of the tooltip.
-///
-/// @requires {function} extend
+/// @prop {Map} background [contrast-color: ('surface')] - The background color of the tooltip.
+/// @prop {Map} text-color [text-color: (color: 'surface')] - The text color of the tooltip.
 /// @requires $indigo-tooltip
 $dark-indigo-tooltip: extend(
     $indigo-tooltip,
