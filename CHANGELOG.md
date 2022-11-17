@@ -30,6 +30,9 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grid summaries.
     - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
 
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
+
 - `IgxCalendar`
 
     Added support for shift key + mouse click interactions.
