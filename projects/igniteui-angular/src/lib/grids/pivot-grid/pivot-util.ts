@@ -233,10 +233,28 @@ export class PivotUtil {
     public static aggregate(records, values: IPivotValue[]) {
         const result = {};
         for (const pivotValue of values) {
-            result[pivotValue.member] = pivotValue.aggregate.aggregator(records.map(r => r[pivotValue.member]), records);
+            const aggregator = PivotUtil.getAggregatorForType(pivotValue.aggregate, pivotValue.dataType);
+            if (!aggregator) {
+                throw "No valid aggregator found for: " + pivotValue.member + ". Please set either a valid aggregatorName or aggregator.";
+            }
+            result[pivotValue.member] = aggregator(records.map(r => r[pivotValue.member]), records);
         }
 
         return result;
+    }
+
+    public static getAggregatorForType(aggregate: IPivotAggregator, dataType: GridColumnDataType) {
+        let aggregator = aggregate.aggregator;
+        if (aggregate.aggregatorName) {
+            let aggregators = IgxPivotNumericAggregate.aggregators();
+            if (dataType === 'date' || dataType === 'dateTime') {
+                aggregators = aggregators.concat(IgxPivotDateAggregate.aggregators())
+            } else if (dataType === 'time') {
+                aggregators = aggregators.concat(IgxPivotTimeAggregate.aggregators());
+            }
+            aggregator = aggregators.find(x => x.key === aggregate.aggregatorName)?.aggregator;
+        }
+        return aggregator;
     }
 
     public static processHierarchy(hierarchies, pivotKeys, level = 0, rootData = false): IPivotGridRecord[] {
