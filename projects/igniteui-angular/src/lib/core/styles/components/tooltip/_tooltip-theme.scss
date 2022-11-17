@@ -18,14 +18,13 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for the tooltip component.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
+///
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
-///   // Pass the theme to the tooltip component mixin
-///   @include tooltip($my-checkbox-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-checkbox-theme);
 @function tooltip-theme(
     $schema: $light-schema,
 
@@ -64,8 +63,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin tooltip($theme) {
     @include css-vars($theme);
 
@@ -98,8 +95,6 @@
 /// Uses the 'body-2' category from the typographic scale for mobile tooltips and custom typography for desktop tooltips.
 /// @group typography
 /// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires rem
-/// @requires {mixin} type-style
 @mixin tooltip-typography(
     $categories: (text-desktop: null, text-mobile: 'body-2')
 ) {

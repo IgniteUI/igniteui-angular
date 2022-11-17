@@ -9,34 +9,28 @@
 
 /// Generates a light switch schema.
 /// @type {Map}
-///
-/// @property {Color} thumb-on-color [color: ('secondary', 500)] - The color of the thumb when the switch is on.
-/// @property {Color} track-on-color [color: ('secondary', 200)] - The color of the track when the switch is on.
-/// @property {Color} thumb-off-color [color: ('gray', 50)] - The color of the thumb when the switch is off.
-/// @property {Color} track-off-color [color: ('gray', 500)] - The color of the track when the switch is off.
-/// @property {Color} thumb-disabled-color [color: ('gray', 200)] - The color of the thumb when the switch is disabled.
-/// @property {Color} thumb-on-disabled-color [color: ('secondary', 100)] - The color of the thumb when the switch is on and disabled.
-/// @property {Color} track-disabled-color [color: ('gray', 300)] - The color of the track when the switch is disabled.
-/// @property {Color} track-on-disabled-color [color: ('secondary', 50)] - The color of the track when the switch is on and disabled.
-/// @property {Color} label-color [color: ('gray', 900)] - The color of the switch label
-/// @property {Color} label-disabled-color [color: ('gray', 400)] - The color of the switch label when the switch is disabled
-/// @property {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
-/// @property {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
-/// @property {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
-///
-/// @property {Number} border-radius-track [7px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Number} border-radius-ripple [24px] - The border radius used for switch ripple. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @property {Color} border-color [transparent] - The border color of the switch.
-/// @property {Color} border-hover-color [transparent] - The border color of the switch on hover.
-/// @property {Color} border-disabled-color [transparent] - The border color of the disabled switch.
-/// @property {Color} border-on-color [transparent] - The border color of the on-switch.
-/// @property {Color} border-on-hover-color [transparent] - The border color of the  on-switch.
-///
-/// @requires {function} extend
+/// @prop {Color} thumb-on-color [color: ('secondary', 500)] - The color of the thumb when the switch is on.
+/// @prop {Color} track-on-color [color: ('secondary', 200)] - The color of the track when the switch is on.
+/// @prop {Color} thumb-off-color [color: ('gray', 50)] - The color of the thumb when the switch is off.
+/// @prop {Color} track-off-color [color: ('gray', 500)] - The color of the track when the switch is off.
+/// @prop {Color} thumb-disabled-color [color: ('gray', 200)] - The color of the thumb when the switch is disabled.
+/// @prop {Color} thumb-on-disabled-color [color: ('secondary', 100)] - The color of the thumb when the switch is on and disabled.
+/// @prop {Color} track-disabled-color [color: ('gray', 300)] - The color of the track when the switch is disabled.
+/// @prop {Color} track-on-disabled-color [color: ('secondary', 50)] - The color of the track when the switch is on and disabled.
+/// @prop {Color} label-color [color: ('gray', 900)] - The color of the switch label
+/// @prop {Color} label-disabled-color [color: ('gray', 400)] - The color of the switch label when the switch is disabled
+/// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
+/// @prop {Number} border-radius-track [7px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [24px] - The border radius used for switch ripple. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Color} border-color [transparent] - The border color of the switch.
+/// @prop {Color} border-hover-color [transparent] - The border color of the switch on hover.
+/// @prop {Color} border-disabled-color [transparent] - The border color of the disabled switch.
+/// @prop {Color} border-on-color [transparent] - The border color of the on-switch.
+/// @prop {Color} border-on-hover-color [transparent] - The border color of the  on-switch.
 /// @requires {Map} $default-elevation-switch
-/// @see $default-palette
 $light-switch: extend(
     $default-elevation-switch,
     (
@@ -99,26 +93,26 @@ $light-switch: extend(
 /// Generates a fluent switch schema.
 /// @type {Map}
 ///
-/// @property {Color} border-color [color('gray', 700)] - The border color of the switch.
-/// @property {Color} border-hover-color [color('gray', 800)] - The border color of the switch on hover.
-/// @property {Color} border-disabled-color [color('gray', 400)] - The border color of the disabled switch.
-/// @property {Color} border-on-color [color('primary', 500)] - The border color of the on-switch.
-/// @property {Color} border-on-hover-color [color('primary', 900)] - The border color of the on-switch.
+/// @prop {Color} border-color [color('gray', 700)] - The border color of the switch.
+/// @prop {Color} border-hover-color [color('gray', 800)] - The border color of the switch on hover.
+/// @prop {Color} border-disabled-color [color('gray', 400)] - The border color of the disabled switch.
+/// @prop {Color} border-on-color [color('primary', 500)] - The border color of the on-switch.
+/// @prop {Color} border-on-hover-color [color('primary', 900)] - The border color of the on-switch.
 ///
-/// @property {Color} thumb-on-color [color: ('gray', 50)] - The color of the thumb when the switch is on.
-/// @property {Color} thumb-off-color [color: ('gray', 700)] - The color of the thumb when the switch is off.
-/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
-/// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
-/// @property {Color} track-on-hover-color [color: ('primary', 900)] - The color of the track when the switch is on and hovered.
-/// @property {Color} track-on-disabled-color [color: ('gray', 400)] - The color of the track when the switch is on and disabled.
-/// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
-/// @property {Color} thumb-disabled-color [color: ('gray', 400)] - The color of the thumb when the switch is disabled.
-/// @property {Color} thumb-on-disabled-color [color: ('gray', 100)] - The color of the thumb when the switch is on and disabled.
-/// @property {Color} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
+/// @prop {Color} thumb-on-color [color: ('gray', 50)] - The color of the thumb when the switch is on.
+/// @prop {Color} thumb-off-color [color: ('gray', 700)] - The color of the thumb when the switch is off.
+/// @prop {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @prop {Color} track-off-color [transparent] - The color of the track when the switch is off.
+/// @prop {Color} track-on-hover-color [color: ('primary', 900)] - The color of the track when the switch is on and hovered.
+/// @prop {Color} track-on-disabled-color [color: ('gray', 400)] - The color of the track when the switch is on and disabled.
+/// @prop {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
+/// @prop {Color} thumb-disabled-color [color: ('gray', 400)] - The color of the thumb when the switch is disabled.
+/// @prop {Color} thumb-on-disabled-color [color: ('gray', 100)] - The color of the thumb when the switch is on and disabled.
+/// @prop {Color} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
 ///
-/// @property {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $light-switch
 $fluent-switch: extend(
     $light-switch,
@@ -187,20 +181,20 @@ $fluent-switch: extend(
 
 /// Generates a bootstrap switch schema.
 /// @type {Map}
-/// @property {Color} focus-outline-color [color: ('primary', 100)] - The focus outlined color.
-/// @property {Color} focus-fill-color [color: ('primary', 200)] - The focus fill color.
-/// @property {Color} border-color [color('gray', 400)] - The border color of the switch.
-/// @property {Color} border-disabled-color [color: ('gray', 300)] - The border color of the disabled switch.
-/// @property {Color} thumb-off-color [color: ('gray', 400)] - The color of the thumb when the switch is off.
-/// @property {Color} thumb-disabled-color [color: ('gray', 300)] - The color of the thumb when the switch is disabled.
-/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
-/// @property {Color} track-on-disabled-color [color: ('primary', 200)] - The color of the track when the switch is on and disabled.
-/// @property {Color} thumb-on-disabled-color [color: ('gray', 50)] - The color of the thumb when the switch is on and disabled.
-/// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
-/// @property {Number} border-radius-track [32px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Number} border-radius-thumb [32px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Color} focus-outline-color [color: ('primary', 100)] - The focus outlined color.
+/// @prop {Color} focus-fill-color [color: ('primary', 200)] - The focus fill color.
+/// @prop {Color} border-color [color('gray', 400)] - The border color of the switch.
+/// @prop {Color} border-disabled-color [color: ('gray', 300)] - The border color of the disabled switch.
+/// @prop {Color} thumb-off-color [color: ('gray', 400)] - The color of the thumb when the switch is off.
+/// @prop {Color} thumb-disabled-color [color: ('gray', 300)] - The color of the thumb when the switch is disabled.
+/// @prop {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @prop {Color} track-on-disabled-color [color: ('primary', 200)] - The color of the track when the switch is on and disabled.
+/// @prop {Color} thumb-on-disabled-color [color: ('gray', 50)] - The color of the thumb when the switch is on and disabled.
+/// @prop {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
+/// @prop {Number} border-radius-track [32px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-thumb [32px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @requires {function} extend
+///
 /// @requires {Map} $fluent-switch
 $bootstrap-switch: extend(
     $fluent-switch,
@@ -252,25 +246,25 @@ $bootstrap-switch: extend(
 /// Generates an indigo switch schema.
 /// @type {Map}
 ///
-/// @property {Color} thumb-on-color [color: ('gray', 50)] - The color of the thumb when the switch is on.
-/// @property {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
-/// @property {Color} thumb-off-color [color: ('gray', 600)] - The color of the thumb when the switch is off.
-/// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
-/// @property {Color} thumb-disabled-color [color: ('gray', 300)] - The color of the thumb when the switch is disabled.
-/// @property {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
+/// @prop {Color} thumb-on-color [color: ('gray', 50)] - The color of the thumb when the switch is on.
+/// @prop {Color} track-on-color [color: ('primary', 500)] - The color of the track when the switch is on.
+/// @prop {Color} thumb-off-color [color: ('gray', 600)] - The color of the thumb when the switch is off.
+/// @prop {Color} track-off-color [transparent] - The color of the track when the switch is off.
+/// @prop {Color} thumb-disabled-color [color: ('gray', 300)] - The color of the thumb when the switch is disabled.
+/// @prop {Color} track-disabled-color [transparent] - The color of the track when the switch is disabled.
 ///
-/// @property {Color} border-color [color: ('gray', 600)] - The border color of the switch.
-/// @property {Color} border-hover-color [color: ('gray', 600)] - The border color of the switch on hover.
-/// @property {Color} border-disabled-color [color: ('gray', 300)] - The border color of the disabled switch.
-/// @property {Color} border-on-color [color: ('primary', 500)] - The border color of the on-switch.
-/// @property {Color} border-on-hover-color [color: ('primary', 500)] - The border color of the  on-switch.
-/// @property {Color} label-disabled-color [color: ('gray', 300)] - The color of the switch label when the switch is disabled
-/// @property {Number} border-radius-track [8px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
-/// @property {Color} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
-/// @property {Color} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
+/// @prop {Color} border-color [color: ('gray', 600)] - The border color of the switch.
+/// @prop {Color} border-hover-color [color: ('gray', 600)] - The border color of the switch on hover.
+/// @prop {Color} border-disabled-color [color: ('gray', 300)] - The border color of the disabled switch.
+/// @prop {Color} border-on-color [color: ('primary', 500)] - The border color of the on-switch.
+/// @prop {Color} border-on-hover-color [color: ('primary', 500)] - The border color of the  on-switch.
+/// @prop {Color} label-disabled-color [color: ('gray', 300)] - The color of the switch label when the switch is disabled
+/// @prop {Number} border-radius-track [8px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-thumb [10px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Color} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
+/// @prop {Color} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 ///
-/// @requires {function} extend
+///
 /// @requires $light-switch
 $indigo-switch: extend(
     $light-switch,

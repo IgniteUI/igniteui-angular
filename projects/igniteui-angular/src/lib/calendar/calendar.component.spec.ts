@@ -1635,6 +1635,176 @@ describe('IgxCalendar - ', () => {
 
                 expect(calendar.value).toEqual([]);
             });
+
+            it('Should extend the range when selecting a date outside of it with shift click.', () => {
+                calendar.selection = 'range';
+                fixture.detectChanges();
+
+                const days = calendar.daysView.dates.filter((day) => day.isCurrentMonth);
+                const june11th = days[10];
+                const june13th = days[12];
+                const june15th = days[14];
+                const june17th = days[16];
+
+                let calendarValue;
+
+                // range selection from June 13th to June 15th
+                UIInteractions.simulateClickAndSelectEvent(june13th);
+                UIInteractions.simulateClickAndSelectEvent(june15th);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(3);
+                expect(calendarValue[0].toDateString()).toMatch(new Date(2017, 5, 13).toDateString());
+                expect(calendarValue[calendarValue.length - 1].toDateString()).toMatch(new Date(2017, 5, 15).toDateString());
+
+                // extend the range to June 17th (June 13th - June 17th)
+                UIInteractions.simulateClickAndSelectEvent(june17th, true);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(5);
+                expect(calendarValue[calendarValue.length - 1].toDateString()).toMatch(new Date(2017, 5, 17).toDateString());
+
+                // extend the range to June 11th (June 11th - June 17th)
+                UIInteractions.simulateClickAndSelectEvent(june11th, true);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(7);
+                expect(calendarValue[0].toDateString()).toMatch(new Date(2017, 5, 11).toDateString());
+            });
+
+            it('Should shorten the range when selecting a date inside of it with shift click.', () => {
+                calendar.selection = 'range';
+                fixture.detectChanges();
+
+                const days = calendar.daysView.dates.filter((day) => day.isCurrentMonth);
+                const june11th = days[10];
+                const june13th = days[12];
+                const june15th = days[14];
+                const june17th = days[16];
+
+                let calendarValue;
+
+                // range selection from June 13th to June 17th
+                UIInteractions.simulateClickAndSelectEvent(june13th);
+                UIInteractions.simulateClickAndSelectEvent(june17th);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(5);
+                expect(calendarValue[0].toDateString()).toMatch(new Date(2017, 5, 13).toDateString());
+                expect(calendarValue[calendarValue.length - 1].toDateString()).toMatch(new Date(2017, 5, 17).toDateString());
+
+                // shorten the range to June 15th (June 13th - June 15th)
+                UIInteractions.simulateClickAndSelectEvent(june15th, true);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(3);
+                expect(calendarValue[calendarValue.length - 1].toDateString()).toMatch(new Date(2017, 5, 15).toDateString());
+
+                // extend the range to June 11th (June 11th - June 15th)
+                UIInteractions.simulateClickAndSelectEvent(june11th, true);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(5);
+                expect(calendarValue[0].toDateString()).toMatch(new Date(2017, 5, 11).toDateString());
+                expect(calendarValue[calendarValue.length - 1].toDateString()).toMatch(new Date(2017, 5, 15).toDateString());
+
+                // shorten the range to June 13th (June 13th - June 15th)
+                UIInteractions.simulateClickAndSelectEvent(june13th, true);
+                fixture.detectChanges();
+
+                calendarValue = (calendar.value as Date[]);
+                expect(calendarValue.length).toEqual(3);
+                expect(calendarValue[0].toDateString()).toMatch(new Date(2017, 5, 13).toDateString());
+            });
+
+            it('Should select all dates from last selected to shift clicked date in "multi" mode.', () => {
+                calendar.selection = 'multi';
+                fixture.detectChanges();
+
+                const days = calendar.daysView.dates.filter((day) => day.isCurrentMonth);
+                const june11th = days[10];
+                const june13th = days[12];
+                const june15th = days[14];
+                const june17th = days[16];
+
+                // select June 13th and June 15th
+                UIInteractions.simulateClickAndSelectEvent(june13th);
+                UIInteractions.simulateClickAndSelectEvent(june15th);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(2);
+
+                // select all dates from June 15th to June 17th
+                UIInteractions.simulateClickAndSelectEvent(june17th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(4);
+
+                let expected = [
+                    new Date(2017, 5, 13),
+                    new Date(2017, 5, 15),
+                    new Date(2017, 5, 16),
+                    new Date(2017, 5, 17),
+                ];
+
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(expected));
+
+                // select all dates from June 17th (last selected) to June 11th
+                UIInteractions.simulateClickAndSelectEvent(june11th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(7);
+
+                const year = calendar.viewDate.getFullYear();
+                const month = calendar.viewDate.getMonth();
+                expected = [];
+
+                for (let i = 11; i <= 17; i++) {
+                    expected.push(new Date(year, month, i));
+                }
+
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(expected));
+            });
+
+            it('Should deselect all dates from last clicked to shift clicked date in "multi" mode.', () => {
+                calendar.selection = 'multi';
+                fixture.detectChanges();
+
+                const days = calendar.daysView.dates.filter((day) => day.isCurrentMonth);
+                const june11th = days[10];
+                const june13th = days[12];
+                const june15th = days[14];
+                const june17th = days[16];
+
+                const year = calendar.viewDate.getFullYear();
+                const month = calendar.viewDate.getMonth();
+                const dates = [];
+
+                for (let i = 11; i <= 17; i++) {
+                    dates.push(new Date(year, month, i));
+                }
+
+                calendar.selectDate(dates);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(7);
+
+                // deselect all dates from June 11th (last clicked) to June 13th
+                UIInteractions.simulateClickAndSelectEvent(june11th);
+                UIInteractions.simulateClickAndSelectEvent(june13th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(5);
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(2)));
+
+                // deselect all dates from June 17th (last clicked) to June 15th
+                UIInteractions.simulateClickAndSelectEvent(june17th);
+                UIInteractions.simulateClickAndSelectEvent(june15th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toEqual(3);
+                expect(JSON.stringify(calendar.value as Date[])).toEqual(JSON.stringify(dates.slice(2, 5)));
+            });
         });
 
         describe('Advanced KB Navigation - ', () => {

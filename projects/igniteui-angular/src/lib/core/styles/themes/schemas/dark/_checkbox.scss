@@ -10,13 +10,11 @@
 /// Generates a dark checkbox schema.
 /// @type {Map}
 /// @requires $light-checkbox
-/// @see $default-palette
 $dark-checkbox: $light-checkbox;
 
 /// Generates a dark fluent checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
-/// @requires {function} extend
 /// @requires $fluent-checkbox
 $dark-fluent-checkbox: extend($fluent-checkbox, (
     tick-color: (
@@ -27,7 +25,6 @@ $dark-fluent-checkbox: extend($fluent-checkbox, (
 /// Generates a dark bootstrap checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [color: ('gray', 900)] - The checked mark color.
-/// @requires {function} extend
 /// @requires $bootstrap-checkbox
 $dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
     tick-color: (
@@ -41,7 +38,6 @@ $dark-bootstrap-checkbox: extend($bootstrap-checkbox, (
 /// @prop {Color} empty-color [color: ('gray', 700)] - The unchecked border color.
 /// @prop {Color} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
 /// @prop {Color} disabled-color-label [color: ('gray', 400)] - The disabled label color.
-/// @requires {function} extend
 /// @requires $indigo-checkbox
 $dark-indigo-checkbox: extend($indigo-checkbox, (
     fill-color: (

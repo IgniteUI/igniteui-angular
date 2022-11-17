@@ -11,15 +11,11 @@
 
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The color of the divider. (Gradients are not supported for dashed dividers).
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-///
 /// @example scss Change the color of the divider
 ///   $my-divider-theme: divider-theme($color: orange);
-///   // Pass the theme to the igx-divider component mixin
-///   @include divider($my-divider-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-divider-theme);
 @function divider-theme(
     $schema: $light-schema,
     $color: null
@@ -41,11 +37,7 @@
     ));
 }
 
-///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
-///
 @mixin divider($theme) {
     @include css-vars($theme);
 
