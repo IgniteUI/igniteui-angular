@@ -784,6 +784,8 @@ describe('IgxAutocomplete', () => {
         fit('Should accept Japanese input', fakeAsync(() => {
             UIInteractions.setInputElementValue(input, '東京', fixture);
             fixture.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            fixture.detectChanges();
             expect(input.value).toBe('東京');
         }
         ))
