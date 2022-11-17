@@ -8,7 +8,7 @@
     >
 </ng-template>
 <ng-template #defaultCell>
-    <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
+    <div *ngIf="column.dataType !== 'boolean' && column.dataType !== 'image' || (column.dataType === 'boolean' && this.formatter)"
         igxTextHighlight
         class="igx-grid__td-text"
         style="pointer-events: none;"
@@ -48,8 +48,8 @@
     <igx-icon
         *ngIf="column.dataType === 'boolean' && !this.formatter"
         [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
-        >{{ value ? "check" : "close" }}</igx-icon
-    >
+        >{{ value ? "check" : "close" }}</igx-icon>
+    <img *ngIf="column.dataType === 'image'" [src]="value" [alt]="value | igxCellImageAlt" />
 </ng-template>
 <ng-template #addRowCell let-cell="cell">
     <div *ngIf="column.dataType !== 'boolean' || (column.dataType === 'boolean' && this.formatter)"
@@ -71,7 +71,7 @@
     }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
-    <ng-container *ngIf="column.dataType === 'string'" [formGroup]="formGroup">
+    <ng-container *ngIf="column.dataType === 'string' || column.dataType === 'image'" [formGroup]="formGroup">
         <igx-input-group displayDensity="compact" >
             <input
                 igxInput
@@ -93,7 +93,7 @@
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
-                [formControl]="formControl" 
+                [formControl]="formControl"
             />
         </igx-input-group>
     </ng-container>
@@ -138,7 +138,7 @@
                 [attr.aria-invalid]="isInvalid"
                 [formControl]="formControl"
                 igxInput
-                [igxDateTimeEditor]="column.defaultDateTimeFormat" 
+                [igxDateTimeEditor]="column.defaultDateTimeFormat"
                 [igxFocus]="true"
             />
         </igx-input-group>
