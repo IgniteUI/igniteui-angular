@@ -10,7 +10,6 @@
 /// Generates a base dark divider schema.
 /// @type {Map}
 /// @property {Map} color [color: ('gray', 100)] - The color used for the divider.
-///
 $base-dark-divider: (
     color: (
         color: ('gray', 100)
@@ -19,29 +18,23 @@ $base-dark-divider: (
 
 /// Generates a dark divider schema.
 /// @type {Map}
-/// @see $default-palette
 /// @requires $light-divider
 /// @requires $base-dark-divider
-/// @requires {function} extend
 $dark-divider: extend($light-divider, $base-dark-divider);
 
 /// Generates a dark fluent divider schema.
 /// @type {Map}
 /// @requires $fluent-divider
-/// @requires $base-dark-divider
-/// @requires {function} extend
 $dark-fluent-divider: extend($fluent-divider, $base-dark-divider);
 
 /// Generates a dark bootstrap divider schema.
 /// @type {Map}
 /// @requires $bootstrap-divider
 /// @requires $base-dark-divider
-/// @requires {function} extend
 $dark-bootstrap-divider: extend($bootstrap-divider, $base-dark-divider);
 
 /// Generates a dark indigo divider schema.
 /// @type {Map}
 /// @requires $indigo-divider
 /// @requires $base-dark-divider
-/// @requires {function} extend
 $dark-indigo-divider: extend($indigo-divider, $base-dark-divider);

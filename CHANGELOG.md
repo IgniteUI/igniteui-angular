@@ -27,6 +27,9 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
     - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
 
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
+
 - `IgxCalendar`
 
     Added support for shift key + mouse click interactions.

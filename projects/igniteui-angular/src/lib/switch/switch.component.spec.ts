@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -148,8 +148,13 @@ describe('IgxSwitch', () => {
         expect(nativeCheckbox.required).toBe(false);
     });
 
-    it('Disabled state', () => {
+    it('Disabled state', fakeAsync(() => {
         const fixture = TestBed.createComponent(SwitchDisabledComponent);
+        // Requires two async change detection cycles to setup disabled on the component and then native element
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        tick();
         const testInstance = fixture.componentInstance;
         const switchInstance = testInstance.switch;
         const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
@@ -160,15 +165,14 @@ describe('IgxSwitch', () => {
         expect(switchInstance.disabled).toBe(true);
         expect(nativeCheckbox.disabled).toBe(true);
 
-        nativeCheckbox.dispatchEvent(new Event('change'));
+        nativeCheckbox.click();
         nativeLabel.click();
         placeholderLabel.click();
         fixture.detectChanges();
 
         // Should not update
-        expect(switchInstance.checked).toBe(null);
-        expect(testInstance.subscribed).toBe(false);
-    });
+        expect(switchInstance.checked).toBe(false);
+    }));
 
     it('Event handling', () => {
         const fixture = TestBed.createComponent(SwitchSimpleComponent);

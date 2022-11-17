@@ -22,15 +22,13 @@
 ///
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
-/// @requires elevation
+///
+///
 ///
 /// @example scss Set a custom background color
 ///   $my-toast-theme: toast-theme($background: green);
-///   // Pass the theme to the toast component mixin
-///   @include toast($my-toast-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-toast-theme);
 @function toast-theme(
     $schema: $light-schema,
 
@@ -74,9 +72,6 @@
 
 /// Toast Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin toast($theme) {
     $variant: map.get($theme, variant);
 
@@ -120,7 +115,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin toast-typography($categories: (text: 'body-2')) {
     $text: map.get($categories, 'text');
 

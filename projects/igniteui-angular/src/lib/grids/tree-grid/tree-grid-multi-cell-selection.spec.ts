@@ -9,7 +9,7 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxTreeGridModule } from './tree-grid.module';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -41,6 +41,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('Should select a region', () => {
             verifySelectingRegion(fix, treeGrid);
@@ -563,6 +567,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             detect = () => treeGrid.cdr.detectChanges();
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('Should select a region', () => {
             verifySelectingRegion(fix, treeGrid);
         });
@@ -671,6 +679,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             setupGridScrollDetection(fix, treeGrid);
             tick(16);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('CRUD: selected range should not change when delete row', () => {
             const range = { rowStart: 0, rowEnd: 3, columnStart: 'ID', columnEnd: 'Age' };
@@ -799,6 +811,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             setupGridScrollDetection(fix, treeGrid);
             tick(16);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('CRUD: selected range should not change when delete row', () => {
             const range = { rowStart: 0, rowEnd: 3, columnStart: 'ID', columnEnd: 'Age' };

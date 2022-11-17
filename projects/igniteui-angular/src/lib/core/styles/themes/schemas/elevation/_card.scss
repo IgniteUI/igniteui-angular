@@ -23,13 +23,11 @@ $flat-card: (
 );
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-card
+/// @requires {Map} $flat-card
 $fluent-elevation-card: extend($flat-card);
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-card
+/// @requires {Map} $flat-card
 $bootstrap-elevation-card: extend($flat-card);
 
 /// @type Map
