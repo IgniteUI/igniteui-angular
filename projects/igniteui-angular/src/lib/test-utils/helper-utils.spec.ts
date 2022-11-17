@@ -2,6 +2,7 @@ import { EventEmitter, NgZone, Injectable } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_api';
 import { GridType } from '../grids/common/grid.interface';
+import { Subscription } from 'rxjs';
 
 export const resizeObserverIgnoreError = () => {
     jasmine.getEnv().allowRespy(true);
@@ -14,9 +15,11 @@ export const resizeObserverIgnoreError = () => {
     return spy;
 };
 
+export let gridsubscriptions: Subscription [] = [];
+
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
-    grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges());
-    grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges());
+    gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
+    gridsubscriptions.push(grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges()));
 };
 
 export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
@@ -27,11 +30,16 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
 
     const layouts = hierarchicalGrid.allLayoutList.toArray();
     layouts.forEach((layout) => {
-        layout.gridCreated.subscribe(evt => {
+        gridsubscriptions.push(layout.gridCreated.subscribe(evt => {
             setupGridScrollDetection(fixture, evt.grid);
-        });
+        }));
     });
 };
+
+export const clearGridSubs = () => {
+    gridsubscriptions.forEach(sub => sub.unsubscribe());
+    gridsubscriptions = [];
+}
 
 @Injectable()
 export class TestNgZone extends NgZone {

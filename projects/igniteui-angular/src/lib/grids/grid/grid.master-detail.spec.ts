@@ -14,7 +14,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
@@ -599,6 +599,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
             expect((lastRow.cells as QueryList<CellType>).last.active).toBeTruthy();
+            clearGridSubs();
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
@@ -619,6 +620,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
             expect((fRow.cells as QueryList<CellType>).first.active).toBeTruthy();
+            clearGridSubs();
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
@@ -637,6 +639,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
             expect((lastRow.cells as QueryList<CellType>).first.active).toBeTruthy();
+            clearGridSubs();
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
@@ -657,6 +660,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
             expect((fRow.cells as QueryList<CellType>).last.active).toBeTruthy();
+            clearGridSubs();
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown

@@ -8,7 +8,7 @@ import { wait, UIInteractions, waitForSelectionChange, waitForGridScroll } from 
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs } from '../grid/public_api';
 import { IgxGridCellComponent } from '../cell.component';
@@ -43,6 +43,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         // simple tests
         it('should allow navigating down from parent row into child grid.', async () => {
@@ -646,6 +650,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         // complex tests
         it('in case prev cell is not in view port should scroll the closest scrollable parent so that cell comes in view.', async () => {
             // scroll parent so that child top is not in view
@@ -764,6 +772,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should allow navigating up between sibling child grids.', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
@@ -891,6 +903,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', async () => {
             const parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'Col2');

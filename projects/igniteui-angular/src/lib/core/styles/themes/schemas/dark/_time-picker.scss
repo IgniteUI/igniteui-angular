@@ -10,7 +10,6 @@
 /// Generates a dark time-picker schema.
 /// @type {Map}
 /// @requires $light-time-picker
-/// @see $default-palette
 $dark-time-picker: $light-time-picker;
 
 /// Generates a dark fluent time-picker schema.
@@ -28,7 +27,6 @@ $dark-bootstrap-time-picker: $bootstrap-time-picker;
 /// @prop {Map} text-color [contrast-color: ('surface')] - The text color of an open time picker.
 /// @prop {Map} selected-text-color [color: ('primary', 300)] -  The text color of a selected item in time picker.
 /// @prop {Map} hover-text-color [color: ('primary', 300)] - The hover text color of an open time picker.
-/// @requires {function} extend
 /// @requires $indigo-time-picker
 $dark-indigo-time-picker: extend(
     $indigo-time-picker,

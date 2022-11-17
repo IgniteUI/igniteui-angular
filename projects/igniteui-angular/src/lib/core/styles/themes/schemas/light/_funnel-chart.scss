@@ -6,16 +6,15 @@
 
 /// Generates a light funnel chart schema.
 /// @type {Map}
-/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
-/// @property {String} outer-label-alignment [null] - Sets which side of the chart the outer labels should appear.
-/// @property {Color} outer-label-text-color [null] - Sets the Color used for the outer labels.
-/// @property {String} outer-label-text-style [null] - Sets the text style for outer labels.
-/// @property {Color} outer-label-visibility [null] - Sets whether the outer labels are visible.
-/// @property {Number} outline-thickness [null] - Sets the thickness of outline around slices.
-/// @property {Color} text-color [null] - Sets the Color used for the inner labels.
-/// @property {String} text-style [null] - Sets the text style for inner labels.
-/// @see $default-palette
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @prop {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @prop {String} outer-label-alignment [null] - Sets which side of the chart the outer labels should appear.
+/// @prop {Color} outer-label-text-color [null] - Sets the Color used for the outer labels.
+/// @prop {String} outer-label-text-style [null] - Sets the text style for outer labels.
+/// @prop {Color} outer-label-visibility [null] - Sets whether the outer labels are visible.
+/// @prop {Number} outline-thickness [null] - Sets the thickness of outline around slices.
+/// @prop {Color} text-color [null] - Sets the Color used for the inner labels.
+/// @prop {String} text-style [null] - Sets the text style for inner labels.
 $light-funnel-chart: (
     'brushes': series,
     'outlines': series,
@@ -30,19 +29,16 @@ $light-funnel-chart: (
 
 /// Generates a fluent funnel-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-funnel-chart
 $fluent-funnel-chart: $light-funnel-chart;
 
 /// Generates a bootstrap funnel-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-funnel-chart
 $bootstrap-funnel-chart: $light-funnel-chart;
 
 /// Generates an indigo funnel-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-funnel-chart
 $indigo-funnel-chart: $light-funnel-chart;
 

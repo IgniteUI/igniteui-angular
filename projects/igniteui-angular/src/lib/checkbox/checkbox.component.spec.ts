@@ -196,27 +196,31 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.checked).toBe(true);
     }));
 
-    it('Disabled state', () => {
+    it('Disabled state', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxDisabledComponent);
+        // Requires two async change detection cycles to setup disabled on the component and then native element
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        tick();
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
-        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
-        const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement as HTMLInputElement;
+        const nativeLabel = checkboxInstance.nativeLabel.nativeElement as HTMLLabelElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
 
         expect(checkboxInstance.disabled).toBe(true);
         expect(nativeCheckbox.disabled).toBe(true);
 
-        nativeCheckbox.dispatchEvent(new Event('change'));
+        nativeCheckbox.click();
         nativeLabel.click();
         placeholderLabel.click();
         fixture.detectChanges();
 
         // Should not update
-        expect(checkboxInstance.checked).toBe(null);
-        expect(testInstance.subscribed).toBe(false);
-    });
+        expect(checkboxInstance.checked).toBe(false);
+    }));
 
     it('Readonly state', () => {
         const fixture = TestBed.createComponent(CheckboxReadonlyComponent);

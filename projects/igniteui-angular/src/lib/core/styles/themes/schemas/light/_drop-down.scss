@@ -29,9 +29,7 @@
 /// @prop {Map} border-color [color: ('gray', 300)] - The border color used for drop-down component.
 /// @prop {Number} border-radius [4px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-drop-down
-/// @see $default-palette
 $light-drop-down: extend(
     $default-elevation-drop-down,
     (
@@ -120,7 +118,6 @@ $light-drop-down: extend(
 /// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the drop-down shadow.
 /// @prop {Number} border-radius [2px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-drop-down
 /// @requires {Map} $fluent-elevation-drop-down
 $fluent-drop-down: extend(
@@ -173,7 +170,6 @@ $fluent-drop-down: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-width [1px] - The border width used for drop-down component.
-/// @requires {function} extend
 /// @requires {Map} $light-drop-down
 /// @requires {Map} $bootstrap-elevation-drop-down
 $bootstrap-drop-down: extend(
@@ -245,7 +241,6 @@ $bootstrap-drop-down: extend(
 /// @prop {Number} elevation [3] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [2px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [2px] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-drop-down
 /// @requires {Map} $indigo-elevation-drop-down
 $indigo-drop-down: extend(
