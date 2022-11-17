@@ -779,11 +779,25 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             this.nextMonth();
         }
 
+        // selectDateFromClient is called both here and in days-view.component
+        // when multiple months are in view, 'shiftKey' and 'lastSelectedDate'
+        // should be set before and after selectDateFromClient
+        // in order all views to have the same values for these properties
+        this.monthViews.forEach(m => {
+            m.shiftKey = this.shiftKey;
+            m.lastSelectedDate = this.lastSelectedDate;
+        });
+
         this.selectDateFromClient(instance.date);
-        if (this.selection === 'multi') {
+        if (this.selection === 'multi' && this._deselectDate) {
             this.deselectDateInMonthViews(instance.date);
         }
         this.selected.emit(this.selectedDates);
+
+        this.monthViews.forEach(m => {
+            m.shiftKey = this.shiftKey;
+            m.lastSelectedDate = this.lastSelectedDate;
+        });
     }
 
     /**

@@ -10,12 +10,10 @@
 /// Generates a dark avatar schema.
 /// @type {Map}
 /// @requires $light-avatar
-/// @see $default-palette
 $dark-avatar: $light-avatar;
 
 /// Generates a dark fluent avatar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-avatar
 $dark-fluent-avatar: $fluent-avatar;
 
@@ -23,7 +21,6 @@ $dark-fluent-avatar: $fluent-avatar;
 /// @type {Map}
 /// @prop {Map} background [color: ('gray', 200)]- The background color of the avatar.
 /// @prop {Map} color [contrast-color: ('gray', 200)] - The text/icon color of the avatar.
-/// @requires {function} extend
 /// @requires $bootstrap-avatar
 $dark-bootstrap-avatar: extend(
     $bootstrap-avatar,
@@ -40,6 +37,5 @@ $dark-bootstrap-avatar: extend(
 
 /// Generates a dark indigo avatar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-avatar
 $dark-indigo-avatar: $indigo-avatar;

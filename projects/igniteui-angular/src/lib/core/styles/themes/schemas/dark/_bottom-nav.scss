@@ -13,22 +13,18 @@ $base-dark-bottom-nav: $light-bottom-nav;
 
 /// Generates a dark bottom-nav schema based on a mix of $light-bottom-nav and $base-dark-bottom-nav
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-bottom-nav
 /// @requires $base-dark-bottom-nav
-/// @see $default-palette
 $dark-bottom-nav: extend($light-bottom-nav, $base-dark-bottom-nav);
 
 /// Generates a dark fluent bottom-nav schema based on a mix of $fluent-bottom-nav and $base-dark-bottom-nav
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-bottom-nav
 /// @requires $base-dark-bottom-nav
 $dark-fluent-bottom-nav: extend($fluent-bottom-nav, $base-dark-bottom-nav);
 
 /// Generates a dark bootstrap bottom-nav schema based on a mix of $bootstrap-bottom-nav and $base-dark-bottom-nav
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-bottom-nav
 /// @requires $base-dark-bottom-nav
 $dark-bootstrap-bottom-nav: extend($bootstrap-bottom-nav, $base-dark-bottom-nav);
@@ -38,7 +34,6 @@ $dark-bootstrap-bottom-nav: extend($bootstrap-bottom-nav, $base-dark-bottom-nav)
 /// @prop {Map} background [color: 'surface'] - The background color used for the bottom-nav.
 /// @prop {Color} active-item-color [color: ('gray', 700)] - The text-color used for the active color.
 /// @prop {Map} idle-item-color [color: ('gray', 400)] - The text-color used for the idle color.
-/// @requires {function} extend
 /// @requires $indigo-bottom-nav
 /// @requires $base-dark-bottom-nav
 $dark-indigo-bottom-nav: extend(
