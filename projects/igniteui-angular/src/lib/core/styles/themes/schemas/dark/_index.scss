@@ -118,7 +118,7 @@
 /// @property {Map} igx-radio [$dark-radio]
 /// @property {Map} igx-ripple [$dark-ripple]
 /// @property {Map} igx-query-builder [$dark-query-builder]
-/// @property {Map} igx-scrollbar [$dark-scrollbar]
+/// @property {Map} ig-scrollbar [$dark-scrollbar]
 /// @property {Map} shape-chart [$dark-shape-chart]
 /// @property {Map} igx-slider [$dark-slider]
 /// @property {Map} igx-snackbar [$dark-snackbar]
@@ -181,7 +181,7 @@ $dark-schema: (
     igx-radio: $dark-radio,
     igx-ripple: $dark-ripple,
     igx-query-builder: $dark-query-builder,
-    igx-scrollbar: $dark-scrollbar,
+    ig-scrollbar: $dark-scrollbar,
     shape-chart: $dark-shape-chart,
     igx-slider: $dark-slider,
     igx-snackbar: $dark-snackbar,
@@ -254,7 +254,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-radio [$dark-fluent-radio],
 /// @property {Map} igx-ripple [$dark-fluent-ripple],
 /// @property {Map} igx-query-builder [$dark-fluent-query-builder],
-/// @property {Map} igx-scrollbar [$dark-fluent-scrollbar],
+/// @property {Map} ig-scrollbar [$dark-fluent-scrollbar],
 /// @property {Map} shape-chart [$dark-fluent-shape-chart],
 /// @property {Map} igx-slider [$dark-fluent-slider],
 /// @property {Map} igx-snackbar [$dark-fluent-snackbar],
@@ -317,7 +317,7 @@ $dark-fluent-schema: (
     igx-radio: $dark-fluent-radio,
     igx-ripple: $dark-fluent-ripple,
     igx-query-builder: $dark-fluent-query-builder,
-    igx-scrollbar: $dark-fluent-scrollbar,
+    ig-scrollbar: $dark-fluent-scrollbar,
     shape-chart: $dark-fluent-shape-chart,
     igx-slider: $dark-fluent-slider,
     igx-snackbar: $dark-fluent-snackbar,
@@ -385,7 +385,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-radio [$dark-bootstrap-radio],
 /// @property {Map} igx-ripple [$dark-bootstrap-ripple],
 /// @property {Map} igx-query-builder [$dark-bootstrap-query-builder],
-/// @property {Map} igx-scrollbar [$dark-bootstrap-scrollbar],
+/// @property {Map} ig-scrollbar [$dark-bootstrap-scrollbar],
 /// @property {Map} shape-chart [$dark-bootstrap-shape-chart],
 /// @property {Map} igx-slider [$dark-bootstrap-slider],
 /// @property {Map} igx-snackbar [$dark-bootstrap-snackbar],
@@ -448,7 +448,7 @@ $dark-bootstrap-schema: (
     igx-radio: $dark-bootstrap-radio,
     igx-ripple: $dark-bootstrap-ripple,
     igx-query-builder: $dark-bootstrap-query-builder,
-    igx-scrollbar: $dark-bootstrap-scrollbar,
+    ig-scrollbar: $dark-bootstrap-scrollbar,
     shape-chart: $dark-bootstrap-shape-chart,
     igx-slider: $dark-bootstrap-slider,
     igx-snackbar: $dark-bootstrap-snackbar,
@@ -516,7 +516,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-radio [$dark-indigo-radio]
 /// @property {Map} igx-ripple [$dark-indigo-ripple]
 /// @property {Map} igx-query-builder [$dark-indigo-query-builder]
-/// @property {Map} igx-scrollbar [$dark-indigo-scrollbar]
+/// @property {Map} ig-scrollbar [$dark-indigo-scrollbar]
 /// @property {Map} shape-chart [$dark-indigo-shape-chart]
 /// @property {Map} igx-slider [$dark-indigo-slider]
 /// @property {Map} igx-snackbar [$dark-indigo-snackbar]
@@ -579,7 +579,7 @@ $dark-indigo-schema: (
     igx-radio: $dark-indigo-radio,
     igx-ripple: $dark-indigo-ripple,
     igx-query-builder: $dark-indigo-query-builder,
-    igx-scrollbar: $dark-indigo-scrollbar,
+    ig-scrollbar: $dark-indigo-scrollbar,
     shape-chart: $dark-indigo-shape-chart,
     igx-slider: $dark-indigo-slider,
     igx-snackbar: $dark-indigo-snackbar,

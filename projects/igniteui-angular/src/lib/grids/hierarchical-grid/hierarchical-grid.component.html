@@ -193,7 +193,7 @@
     </div>
 </div>
 <ng-template #defaultRowEditText>
-    You have {{ rowChangesCount }} changes in this row
+    You have {{ rowChangesCount }} changes in this row and {{ hiddenColumnsCount }} hidden columns
 </ng-template>
 <ng-template #defaultRowEditActions>
     <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>

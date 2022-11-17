@@ -439,7 +439,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
             if (this._updateInput) {
-                this.comboInput.value = this._internalFilter = this._value = displayText !== args.displayText
+                this.comboInput.value = this._internalFilter = this._value = this.searchValue = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText(argsSelection, [args.oldSelection]);
             }
@@ -455,9 +455,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.getRemoteSelection(newSelection, oldSelection);
         }
 
-        if (this.displayKey !== null && this.displayKey !== undefined
+        if (this.displayKey !== null
+            && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
+            return this.convertKeysToItems(newSelection).filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
         }
 
         return newSelection[0]?.toString() || '';
