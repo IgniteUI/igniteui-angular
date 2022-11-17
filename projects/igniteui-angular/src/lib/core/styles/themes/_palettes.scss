@@ -6,57 +6,13 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Default theme palette.
-/// @type Map
-/// @prop {Map} primary - The primary sub-palette created from the primary color.
-/// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
-/// @prop {Map} gray - The gray sub-palette. Included by default in every palette.
-/// @prop {Color} primary.100 [#a7d9fa] - The 100 variant of the `primary` color.
-/// @prop {Color} primary.200 [#6dbcf1] - The 200 variant of the `primary` color.
-/// @prop {Color} primary.300 [#3ca9f2] - The 300 variant of the `primary` color.
-/// @prop {Color} primary.400 [#1da0f7] - The 400 variant of the `primary` color.
-/// @prop {Color} primary.500 [#09f] - The 500 variant of the `primary` color (default).
-/// @prop {Color} primary.600 [#0089e5] - The 600 variant of the `primary` color.
-/// @prop {Color} primary.700 [#007ed2] - The 700 variant of the `primary` color.
-/// @prop {Color} primary.800 [#0072be] - The 800 variant of the `primary` color.
-/// @prop {Color} primary.900 [#0065a8] - The 900 variant of the `primary` color.
-/// @prop {Color} primary.A100 [#55bbff] - The A100 variant of the `primary` color.
-/// @prop {Color} primary.A200 [#27a9ff] - The A200 variant of the `primary` color.
-/// @prop {Color} primary.A400 [#008deb] - The A400 variant of the `primary` color.
-/// @prop {Color} primary.A700 [#0066aa] - The A700 variant of the `primary` color.
-/// @prop {Color} secondary.100 [#f0b2ce] - The 100 variant of the `secondary` color.
-/// @prop {Color} secondary.200 [#e17fab] - The 200 variant of the `secondary` color.
-/// @prop {Color} secondary.300 [#dc5391] - The 300 variant of the `secondary` color.
-/// @prop {Color} secondary.400 [#df3683] - The 400 variant of the `secondary` color.
-/// @prop {Color} secondary.500 [#e41c77] - The 500 variant of the `secondary` color (default).
-/// @prop {Color} secondary.600 [#dc0a6a] - The 600 variant of the `secondary` color.
-/// @prop {Color} secondary.700 [#d30060] - The 700 variant of the `secondary` color.
-/// @prop {Color} secondary.800 [#bf0057] - The 800 variant of the `secondary` color.
-/// @prop {Color} secondary.900 [#a5044d] - The 900 variant of the `secondary` color.
-/// @prop {Color} secondary.A100 [#f65fa4] - The A100 variant of the `secondary` color.
-/// @prop {Color} secondary.A200 [#f3348b] - The A200 variant of the `secondary` color.
-/// @prop {Color} secondary.A400 [#df0d6d] - The A400 variant of the `secondary` color.
-/// @prop {Color} secondary.A700 [#a2094f] - The A700 variant of the `primary` color.
-/// @prop {Color} gray.100 [rgba(0, 0, 0, .04)] - The 100 variant of the `gray` color.
-/// @prop {Color} gray.200 [rgba(0, 0, 0, .08)] - The 200 variant of the `gray` color.
-/// @prop {Color} gray.300 [rgba(0, 0, 0, .12)] - The 300 variant of the `gray` color.
-/// @prop {Color} gray.400 [rgba(0, 0, 0, .26)] - The 400 variant of the `gray` color.
-/// @prop {Color} gray.500 [rgba(0, 0, 0, .38)] - The 500 variant of the `gray` color.
-/// @prop {Color} gray.600 [rgba(0, 0, 0, .54)] - The 600 variant of the `gray` color.
-/// @prop {Color} gray.700 [rgba(0, 0, 0, .62)] - The 700 variant of the `gray` color.
-/// @prop {Color} gray.800 [rgba(0, 0, 0, .74)] - The 800 variant of the `gray` color.
-/// @prop {Color} gray.900 [rgba(0, 0, 0, .87)] - The 900 variant of the `gray` color.
-/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
-/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
-/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
-/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
-/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @access private
 $default-palette: palettes.$light-material-palette;
 
 /// @access private
 $default-dark-palette: palettes.$dark-material-palette;
 
-/// Same as $default-palette.
+/// Same as $light-material-palette.
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
@@ -68,11 +24,9 @@ $default-dark-palette: palettes.$dark-material-palette;
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
-/// @alias default-palette
-/// @see $default-palette
 $light-palette: palettes.$light-material-palette;
 
-/// Same as $light-palette but with modified gray and surface colors.
+/// Same as $dark-material-palette but with modified gray and surface colors.
 /// @type Map
 /// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
@@ -123,7 +77,7 @@ $bootstrap-palette: palettes.$light-bootstrap-palette;
 $bootstrap-dark-palette: palettes.$dark-bootstrap-palette;
 
 /// Global Overlay Color.
-/// Assigned to the 500 variant of the gray color form the current $default-palette.
+/// Assigned to the 500 variant of the gray color form the current palette.
 /// @group palettes
 /// @type Color
-$overlay-color: color($default-palette, 'gray') !default;
+$overlay-color: color($light-palette, 'gray') !default;
