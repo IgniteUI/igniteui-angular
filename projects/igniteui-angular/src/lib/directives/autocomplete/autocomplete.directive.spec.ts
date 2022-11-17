@@ -781,6 +781,12 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
         }));
+        fit('Should accept Japanese input', fakeAsync(() => {
+            UIInteractions.setInputElementValue(input, '東京', fixture);
+            fixture.detectChanges();
+            expect(input.value).toBe('東京');
+        }
+        ))
     });
     describe('Positioning settings tests', () => {
         it('Panel settings - direction and startPoint: top', fakeAsync(() => {
