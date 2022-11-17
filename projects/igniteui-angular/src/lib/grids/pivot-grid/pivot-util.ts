@@ -1,3 +1,4 @@
+import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { cloneValue } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -235,7 +236,7 @@ export class PivotUtil {
         for (const pivotValue of values) {
             const aggregator = PivotUtil.getAggregatorForType(pivotValue.aggregate, pivotValue.dataType);
             if (!aggregator) {
-                throw "No valid aggregator found for: " + pivotValue.member + ". Please set either a valid aggregatorName or aggregator.";
+                throw CurrentResourceStrings.GridResStrings.igx_grid_pivot_no_aggregator.replace("{0}", pivotValue.member);
             }
             result[pivotValue.member] = aggregator(records.map(r => r[pivotValue.member]), records);
         }
@@ -247,7 +248,7 @@ export class PivotUtil {
         let aggregator = aggregate.aggregator;
         if (aggregate.aggregatorName) {
             let aggregators = IgxPivotNumericAggregate.aggregators();
-            if (dataType === 'date' || dataType === 'dateTime') {
+            if (!dataType || dataType === 'date' || dataType === 'dateTime') {
                 aggregators = aggregators.concat(IgxPivotDateAggregate.aggregators())
             } else if (dataType === 'time') {
                 aggregators = aggregators.concat(IgxPivotTimeAggregate.aggregators());

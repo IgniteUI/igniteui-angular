@@ -164,7 +164,8 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_min_length_validation_error: 'Входните данни трябва да са дълги поне {0} знака.',
     igx_grid_max_length_validation_error: 'Входните данни не трябва да са дълги повече от {0} знака.',
     igx_grid_email_validation_error: 'Трябва да бъде въведен валиден имейл адрес.',
-    igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.'
+    igx_grid_pattern_validation_error: 'Въведените данни не спазват зададения образец.',
+    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
 };
 
 /**
