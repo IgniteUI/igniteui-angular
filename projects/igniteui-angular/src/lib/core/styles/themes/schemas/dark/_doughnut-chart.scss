@@ -8,8 +8,6 @@
 
 /// Generates a dark doughnut chart schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @see $default-palette
 $dark-doughnut-chart: $light-doughnut-chart;
 
 /// Generates a dark fluent doughnut-chart schema.

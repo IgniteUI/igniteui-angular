@@ -3,19 +3,21 @@
 @use 'sass:map';
 @use '../../base' as *;
 
+/// @group themes
+/// @access public
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
-///
-/// @prop {Color} background [null] - The background color of the filtering row.
-/// @prop {Color} header-background [null] - The background color of the query builder header.
-/// @prop {Color} header-foreground [null] - The foreground color of the query builder header.
-/// @prop {Map} background-and [null] - The background color of advanced filtering "AND" condition.
-/// @prop {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
-/// @prop {Map} background-or [null] - The background color of advanced filtering "OR" condition.
-/// @prop {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
+/// @param {Color} background [null] - The background color of the filtering row.
+/// @param {Color} header-background [null] - The background color of the query builder header.
+/// @param {Color} header-foreground [null] - The foreground color of the query builder header.
+/// @param {Map} background-and [null] - The background color of advanced filtering "AND" condition.
+/// @param {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @param {Map} background-or [null] - The background color of advanced filtering "OR" condition.
+/// @param {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+/// @example scss Set custom query-builder colors
+///   $my-query-builder-theme: query-builder-theme($$background: red);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-query-builder-theme);
 @function query-builder-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -66,9 +68,6 @@
 ////
 
 /// @param {Map} $theme - The grid theme used to style the component.
-/// @requires color
-/// @requires rem
-/// @requires var-get
 @mixin query-builder($theme) {
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
