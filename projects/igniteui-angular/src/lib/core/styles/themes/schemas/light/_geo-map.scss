@@ -7,7 +7,6 @@
 /// Generates a light geo map schema.
 /// @type {Map}
 /// @prop {String} plot-area-background [null]- Gets or sets the brush used as the background for the current Map object's plot area.
-/// @see $default-palette
 $light-geo-map: (
     'plot-area-background': (
         color: 'surface'
@@ -16,19 +15,16 @@ $light-geo-map: (
 
 /// Generates a fluent geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $fluent-geo-map: $light-geo-map;
 
 /// Generates a bootstrap geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $bootstrap-geo-map: $light-geo-map;
 
 /// Generates an indigo geo map schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-geo-map
 $indigo-geo-map: $light-geo-map;
 

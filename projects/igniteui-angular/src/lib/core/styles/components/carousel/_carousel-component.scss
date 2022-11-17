@@ -1,15 +1,8 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-//// Carousel
 /// @access private
-/// @group components
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
-
 @mixin _igx-carousel-indicators-partial {
     @include b(igx-carousel-indicators) {
         @extend %igx-carousel-indicators !optional;

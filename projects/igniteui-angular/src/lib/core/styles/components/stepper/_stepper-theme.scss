@@ -79,17 +79,10 @@
 /// @param {Color} $border-radius-step-header [null] - The border-radius of the step header.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-///
-/// @example scss Set custom track and thumb on colors
-/// $my-stepper-theme: igx-stepper-theme();
-/// @include igx-stepper($my-stepper-theme);
-///
-/// @example scss Set custom steppet colors
+/// @example scss Set custom stepper colors
 ///   $my-stepper-theme: stepper-theme($step-hover-background: red);
-///   // Pass the theme to the stepper component mixin
-///   @include stepper($my-stepper-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-stepper-theme);
 @function stepper-theme(
     $schema: $light-schema,
 
@@ -323,9 +316,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin stepper($theme) {
     @include css-vars($theme);
 
@@ -960,7 +950,6 @@
 /// Uses the 'body-2' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin stepper-typography(
     $categories: (
         title: 'body-2',
