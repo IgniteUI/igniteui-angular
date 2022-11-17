@@ -10,7 +10,6 @@
 /// Generates a dark grid-summary schema.
 /// @type {Map}
 /// @requires $light-grid-summary
-/// @see $default-palette
 $dark-grid-summary: $light-grid-summary;
 
 /// Generates a dark fluent grid-summary schema.
@@ -38,7 +37,6 @@ $dark-bootstrap-grid-summary: extend(
 /// @property {map} label-hover-color [color: ('primary', 100)] - The summaries hover label color.
 /// @property {Map} result-color [color: 'surface'] - The summaries value/result color.
 /// @property {Map} pinned-border-color [color: ('primary', 200)] - The border color of the summary panel.
-/// @requires {function} extend
 /// @requires $indigo-grid-summary
 $dark-indigo-grid-summary: extend(
     $indigo-grid-summary,

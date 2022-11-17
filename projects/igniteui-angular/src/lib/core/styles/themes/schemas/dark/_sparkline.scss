@@ -9,7 +9,6 @@
 /// Generates a dark sparkline schema.
 /// @type {Map}
 /// @requires $light-sparkline
-/// @see $default-palette
 $dark-sparkline: $light-sparkline;
 
 /// Generates a dark fluent sparkline schema.
