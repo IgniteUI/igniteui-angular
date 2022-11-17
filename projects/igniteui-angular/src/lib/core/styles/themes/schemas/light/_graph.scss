@@ -28,7 +28,6 @@
 /// @prop {Color} value-brush [(color: ('gray', 800))] - Sets the brush to use for the actual value element.
 /// @prop {Color} value-outline [null] - Sets the brush to use for the outline of actual value element.
 /// @prop {Number} value-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
-/// @see $default-palette
 $light-graph: (
     'backing-brush': (
         color: 'surface',

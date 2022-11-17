@@ -96,7 +96,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public clicked(event): void {
         this.comboAPI.disableTransitions = false;

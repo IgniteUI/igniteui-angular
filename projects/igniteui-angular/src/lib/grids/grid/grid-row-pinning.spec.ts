@@ -13,7 +13,7 @@ import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 
@@ -1070,6 +1070,10 @@ describe('Row Pinning #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
@@ -1301,7 +1305,6 @@ describe('Row Pinning #grid', () => {
             fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid1;
-            setupGridScrollDetection(fix, grid);
         }));
 
         it('should pin rows on OnInit.', () => {

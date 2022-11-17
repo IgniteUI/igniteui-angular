@@ -19,18 +19,11 @@
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 /// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
 /// @param {Color} $border-color [null] - The border color used for dialog component.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
-///
 /// @example scss Change the background color
 ///   $my-dialog-theme: dialog-theme($background: black);
-///   // Pass the theme to the igx-dialog component mixin
-///   @include dialog($my-dialog-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-dialog-theme);
 @function dialog-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -88,9 +81,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin dialog($theme) {
     @include css-vars($theme);
 
@@ -203,7 +193,6 @@
 /// Uses the 'h6' and 'body-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'h6', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin dialog-typography($categories: (
     title: 'h6',
     content: 'body-1')
