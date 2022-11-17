@@ -7,6 +7,7 @@
 ////
 
 /// @access private
+/// @deprecated
 $default-palette: palettes.$light-material-palette;
 
 /// @access private
@@ -24,6 +25,7 @@ $default-dark-palette: palettes.$dark-material-palette;
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
+/// @deprecated
 $light-palette: palettes.$light-material-palette;
 
 /// Same as $dark-material-palette but with modified gray and surface colors.
@@ -38,6 +40,7 @@ $light-palette: palettes.$light-material-palette;
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
+/// @deprecated
 $dark-palette: palettes.$dark-material-palette;
 
 /// @access private
@@ -80,4 +83,6 @@ $bootstrap-dark-palette: palettes.$dark-bootstrap-palette;
 /// Assigned to the 500 variant of the gray color form the current palette.
 /// @group palettes
 /// @type Color
+/// @access private
+/// @deprecated
 $overlay-color: color($light-palette, 'gray') !default;
