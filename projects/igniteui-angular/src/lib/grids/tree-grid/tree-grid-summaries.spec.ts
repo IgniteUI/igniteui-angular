@@ -10,7 +10,7 @@ import {
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
@@ -47,6 +47,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should render summaries for all the rows when have parentKey', () => {
             verifyTreeBaseSummaries(fix);
@@ -878,6 +882,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             tick(16);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('Delete root node', fakeAsync(() => {
             treeGrid.toggleRow(847);
             fix.detectChanges();
@@ -1440,6 +1448,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             tick(16);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('should be able to select root summaries with arrow keys', async () => {
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
@@ -1767,6 +1779,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
 
         expect(treeGrid.dataRowList.length).toEqual(10);
+        clearGridSubs();
     });
 
     const verifySummaryForRow147 = (fixture, visibleIndex) => {

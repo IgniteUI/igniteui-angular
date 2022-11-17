@@ -11,7 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
@@ -738,6 +738,10 @@ describe('IgxGrid - search API #grid - ', () => {
             fixNativeElement = fix.debugElement.nativeElement;
             fix.detectChanges();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('findNext scrolls to cells out of view', async () => {
             grid.findNext('30');

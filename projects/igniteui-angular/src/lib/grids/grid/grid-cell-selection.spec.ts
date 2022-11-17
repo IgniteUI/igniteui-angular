@@ -11,7 +11,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -904,7 +904,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
             tick();
             fix.detectChanges();
-            
+
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             UIInteractions.simulatePointerOverElementEvent('pointerup', cell.nativeElement);
             tick();
@@ -930,6 +930,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('Should be able to select a range with arrow keys and holding Shift', () => {
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
@@ -1686,6 +1690,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
 
         it('Sorting: selection should not change when sorting is performed', () => {
