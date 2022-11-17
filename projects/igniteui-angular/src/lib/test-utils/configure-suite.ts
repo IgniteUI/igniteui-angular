@@ -39,9 +39,9 @@ export const configureTestSuite = (configureAction?: () => void) => {
         clearSVGContainer();
         testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
             const element = fixture.debugElement.nativeElement;
-            fixture.destroy();
             // If the fixture element ID changes, then it's not properly disposed
             document.body.removeChild(element);
+            fixture.destroy();
         });
         // reset ViewEngine TestBed
         testBed._instantiated = false;
