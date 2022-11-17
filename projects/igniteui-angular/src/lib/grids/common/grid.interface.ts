@@ -26,7 +26,7 @@ import { Observable, Subject } from 'rxjs';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { DataType, GridColumnDataType } from '../../data-operations/data-util';
-import { IFilteringOperation, IgxFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxFilteringOperand } from '../../data-operations/filtering-condition';
 import { IColumnPipeArgs, IFieldPipeArgs, ISortingOptions, MRLResizeColumnInfo } from '../columns/interfaces';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -650,6 +650,7 @@ export interface GridType extends IGridDataBindable {
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
     preventHeaderScroll?(args: any): void;
+
 }
 
 /**
