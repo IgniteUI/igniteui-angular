@@ -317,10 +317,14 @@ export class ColumnDefinitions {
         </igx-column>
     `;
 
-    public static generatedGroupableWithSummariesAndDataType = `
+    public static generatedGroupableWithEnabledSummariesAndDataType = `
         <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
         </igx-column>
     `;
+
+    public static generatedWithColumnBasedSummariesAndDataType = `
+    <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
+`;
 
     public static generatedEditable = `
     <igx-column *ngFor="let col of columns"

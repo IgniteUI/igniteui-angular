@@ -20,7 +20,7 @@ import {
     ColumnsAddedOnInitComponent,
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
-    GridSummariesComponent
+    GridCurrencySummariesComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -75,7 +75,7 @@ describe('Excel Exporter', () => {
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
-                GridSummariesComponent
+                GridCurrencySummariesComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -1309,7 +1309,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with currency col based on fr locale', async () => {
-            fix = TestBed.createComponent(GridSummariesComponent);
+            fix = TestBed.createComponent(GridCurrencySummariesComponent);
             fix.detectChanges();
             await wait(300);
 
@@ -1323,7 +1323,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with currency col based on ja locale', async () => {
-            fix = TestBed.createComponent(GridSummariesComponent);
+            fix = TestBed.createComponent(GridCurrencySummariesComponent);
             fix.detectChanges();
             await wait(300);
 
