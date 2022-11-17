@@ -9,10 +9,6 @@
 ////
 
 /// @param {Map} $theme - The calendar theme used to style the component.
-/// @requires elevation
-/// @requires text-contrast
-/// @requires var-get
-/// @requires rem
 @mixin date-picker($theme) {
     @include css-vars($theme, '.igx-date-picker');
 

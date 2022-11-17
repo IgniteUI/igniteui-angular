@@ -20,8 +20,6 @@
 /// @prop {Map} foreground-disabled [color: ('gray', 500)] - The color used for the content of the disabled tree node.
 /// @prop {Map} drop-area-color [color: ('secondary'] - The background color used for the tree node drop aria.
 /// @prop {Map} border-color [color: ('secondary')] - The outline shadow color used for tree node in focus state.
-/// @requires {function} extend
-/// @see $default-palette
 $light-tree: (
     variant: 'material',
 
@@ -91,7 +89,6 @@ $light-tree: (
 /// @prop {Map} background-active-selected [color: ('gray', 300)] - The background color used for the active selected tree node.
 /// @prop {Map} foreground-active-selected [contrast-color: ('gray', 300)] - The color used for the content of the active selected tree node.
 /// @prop {Map} border-color [color: ('gray', 800)] - The outline shadow color used for tree node in focus state.
-/// @requires {function} extend
 /// @requires {Map} $light-tree
 $fluent-tree: extend(
     $light-tree,
@@ -144,7 +141,6 @@ $fluent-tree: extend(
 /// @prop {Map} background-active-selected [color: ('primary', 600)] - The background color used for the active selected tree node.
 /// @prop {Map} foreground-active-selected [contrast-color: ('primary', 600)] - The color used for the content of the active selected tree node.
 /// @prop {Map} border-color [color: ('primary', 200)] - The outline shadow color used for tree node in focus state.
-/// @requires {function} extend
 /// @requires $light-tree
 $bootstrap-tree: extend(
     $light-tree,
@@ -190,7 +186,6 @@ $bootstrap-tree: extend(
 /// @prop {Map} background-active-selected [color: ('primary', 400)] - The background color used for the active selected tree node.
 /// @prop {Map} foreground-active-selected [contrast-color: ('primary', 400)] - The color used for the content of the active selected tree node.
 /// @prop {Map} border-color [color: ('primary', 300)] - The outline shadow color used for tree node in focus state.
-/// @requires {function} extend
 /// @requires {Map} $light-tree
 $indigo-tree: extend(
     $light-tree,
