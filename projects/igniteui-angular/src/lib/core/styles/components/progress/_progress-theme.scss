@@ -125,7 +125,7 @@
     ), $variant);
 
     $stripe-color: var-get($theme, 'stripes-color');
-    $value-fs: em(14px, 16px);
+    $value-fs: rem(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
 
