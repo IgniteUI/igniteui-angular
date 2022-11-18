@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule, IRowSelectionEventArgs } from './public_api';
@@ -27,7 +27,9 @@ const SCROLL_DEBOUNCETIME = 100;
 
 
 describe('IgxGrid - Row Selection #grid', () => {
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,
@@ -43,14 +45,14 @@ describe('IgxGrid - Row Selection #grid', () => {
                 IgxGridModule,
                 IgxGridSelectionModule
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base tests', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -777,7 +779,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -809,7 +811,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SingleRowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1214,7 +1216,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1348,7 +1350,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let grid: IgxGridComponent;
         const gridData = SampleTestData.personIDNameRegionData();
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionWithoutPrimaryKeyComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1454,7 +1456,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1521,7 +1523,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1938,7 +1940,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2153,7 +2155,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(GridCustomSelectorsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
