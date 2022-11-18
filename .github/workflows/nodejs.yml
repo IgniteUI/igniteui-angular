@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x]
 
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
       - name: Install packages
-        run: npm install --force
+        run: npm install
       - name: Lint Lib
         run: npm run lint:lib
         env:
