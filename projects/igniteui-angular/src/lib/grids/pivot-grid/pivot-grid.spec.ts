@@ -2621,7 +2621,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it('should allow setting aggregatorName instead of aggregator.', () => {
-            const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.pivotConfiguration.values = [
                 {
                     member: 'UnitsSold',
@@ -2643,7 +2642,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
         });
 
         it('should use aggregatorName if both aggregatorName and aggregator are set at the same time.', () => {
-            const pivotGrid = fixture.componentInstance.pivotGrid;
             pivotGrid.pivotConfiguration.values = [
                 {
                     member: 'UnitsSold',
