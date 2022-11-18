@@ -1,0 +1,139 @@
+<div class="grid__wrapper">
+    <h3>Grid Export</h3>
+
+    <igx-grid #grid igxPreventDocumentScroll [data]="gridData" [autoGenerate]="false" height="700px" width="100%" (toolbarExporting)="configureExport($event)">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+        </igx-grid-toolbar>
+        <igx-paginator></igx-paginator>
+        <igx-column #col field="ProductID" header="Product ID" [headerClasses]="'prodId'">
+        </igx-column>
+        <igx-column #col field="ProductName" header="Product Name" [headerClasses]="'prodId'" [hasSummary]="col.hasSummary">
+            <ng-template igxCell let-cell="cell" let-val>
+                {{val}}
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="header-text">{{col.field}}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="currency"
+            [hasSummary]="true">
+            <ng-template igxHeader let-col>
+                <div class="header-text">{{col.field}}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="UnitsInStock" header="Units In Stock" dataType="number" [editable]="true"
+            [hasSummary]="false" [summaries]="gridSummary">
+            <ng-template igxCell let-cell="cell" let-val let-row>
+                {{val}}
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="header-text">{{col.field}}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'" [groupable]='true'>
+            <ng-template igxCell let-cell="cell" let-val>
+                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
+                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="OrderDate" [dataType]="'date'" [hasSummary]="true">
+            <ng-template igxCell let-cell="cell" let-val let-row>
+                {{ val | date: 'MMM d, yyyy' }}
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="header-text">{{col.field}}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+    </igx-grid>
+
+    <h3>Tree Grid Export</h3>
+
+    <igx-tree-grid igxPreventDocumentScroll #tGrid [data]="tGridData" [autoGenerate]="false" height="700px" width="100%"
+    primaryKey="ID" foreignKey="ParentID" (toolbarExporting)="configureExport($event)">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+        </igx-grid-toolbar>
+        <igx-column #col field="ID" header="Product ID">
+        </igx-column>
+        <igx-column #col field="Name" header="Product Name" [hasSummary]="true">
+            <ng-template igxCell let-cell="cell" let-val>
+                {{ val }}
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="text">{{col.field}}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="UnitPrice" header="Price" [filterable]="false" [editable]="true" dataType="currency"
+            [hasSummary]="true">
+            <ng-template igxHeader let-col>
+                <div class="text">Price</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'">
+            <ng-template igxCell let-cell="cell" let-val>
+                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
+                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="text">{{ col.field }}</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="AddedDate" header="Added Date" [dataType]="'date'" [hasSummary]="true">
+            <ng-template igxCell let-cell="cell" let-val let-row>
+                {{ val | date: 'MMM d, yyyy' }}
+            </ng-template>
+            <ng-template igxHeader let-col>
+                <div class="text">Added Date</div>
+                <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+    </igx-tree-grid>
+
+    <h3>Hierarchical Grid Export</h3>
+
+    <igx-hierarchical-grid #hGrid igxPreventDocumentScroll class="hgrid" [data]="hGridData" [autoGenerate]="false"
+    [height]="'700px'" [width]="'100%'" [rowHeight]="'65px'" (toolbarExporting)="configureExport($event)">
+    <igx-grid-toolbar>
+        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+    </igx-grid-toolbar>
+    <igx-column field="Artist" [hasSummary]='true'></igx-column>
+    <igx-column field="Photo">
+        <ng-template igxCell let-cell="cell">
+            <div class="cell__inner_2">
+                <img [src]="cell.value" class="photo" />
+            </div>
+        </ng-template>
+    </igx-column>
+    <igx-column field="Debut" [hasSummary]='true'></igx-column>
+    <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]='true' dataType="number" [summaries]="hGridSummary"></igx-column>
+    <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]='true' [summaries]="hGridSummary" dataType="number"></igx-column>
+
+    <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false">
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="hGridSummary"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="hGridSummary"></igx-column>
+        <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title" [hasSummary]='true' [summaries]="hGridChildSummary"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
+        </igx-row-island>
+    </igx-row-island>
+
+    <igx-row-island [height]="null" [key]="'Tours'" [autoGenerate]="false">
+        <igx-column field="Tour"></igx-column>
+        <igx-column field="StartedOn" header="Started on"></igx-column>
+        <igx-column field="Location"></igx-column>
+        <igx-column field="Headliner"></igx-column>
+    </igx-row-island>
+    </igx-hierarchical-grid>
+</div>

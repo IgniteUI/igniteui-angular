@@ -10,11 +10,13 @@ import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
 import localeJa from '@angular/common/locales/ja';
 import localeBb from '@angular/common/locales/bg';
+import localeZh from '@angular/common/locales/zh';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeDe);
 registerLocaleData(localeJa);
 registerLocaleData(localeBb);
+registerLocaleData(localeZh);
 
 if (environment.production) {
     enableProdMode();
