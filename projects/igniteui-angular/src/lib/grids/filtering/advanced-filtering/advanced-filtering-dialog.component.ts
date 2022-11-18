@@ -11,6 +11,7 @@ import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { CurrentResourceStrings } from '../../../core/i18n/resources';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
+import { IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 
 /**
  * A component used for presenting advanced filtering UI for a Grid.
@@ -27,7 +28,7 @@ import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html'
 })
-export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
+export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
@@ -56,6 +57,12 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     private _grid: GridType;
 
     constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit(): void {
+        this.queryBuilder.setPickerOutlet(this.grid.outlet);
+    }
 
     /**
      * @hidden @internal
@@ -170,7 +177,8 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      */
     public applyChanges(event?: Event) {
         this.grid.crudService.endEdit(false, event);
-        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.createExpressionTreeFromGroupItem(this.queryBuilder.rootGroup);
+        this.queryBuilder.exitOperandEdit();
+        this.grid.advancedFilteringExpressionsTree = this.queryBuilder.expressionTree as IFilteringExpressionsTree;
     }
 
     /**

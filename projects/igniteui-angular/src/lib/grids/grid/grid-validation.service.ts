@@ -32,6 +32,7 @@ export class IgxGridValidationService {
                 const value = resolveNestedPath(data || {}, col.field);
                 const field = this.getFieldKey(col.field);
                 const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
+                control.setValue(value);
                 control.addValidators(col.validators);
                 formGroup.addControl(field, control);
             }
