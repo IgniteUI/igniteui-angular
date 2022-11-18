@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent } from '../grids/public_api';
+import { IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
@@ -500,3 +500,73 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
     public data = HIERARCHICAL_SAMPLE_DATA_SHORT;
 }
 
+@Component({
+    template: `
+    <igx-hierarchical-grid igxPreventDocumentScroll  class="hgrid" [data]="data" [autoGenerate]="false"
+        [height]="'1500px'" [width]="'100%'" #hierarchicalGrid>
+
+        <igx-column field="Artist" [hasSummary]='true'></igx-column>
+        <igx-column field="Debut" [hasSummary]='true' [formatter]="formatter"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]='true' [summaries]="mySummary" dataType="number"></igx-column>
+
+        <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false">
+                <igx-column field="Album"></igx-column>
+                <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+                <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+                <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
+                    <igx-column field="Number" header="No."></igx-column>
+                    <igx-column field="Title" [hasSummary]='true' [summaries]="myChildSummary"></igx-column>
+                    <igx-column field="Released" dataType="date"></igx-column>
+                    <igx-column field="Genre"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `
+})
+export class IgxHierarchicalGridSummariesExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = SampleTestData.hierarchicalGridExportData();
+
+    public mySummary = MySummary;
+    public myChildSummary = MyChildSummary;
+}
+
+
+class MySummary  {
+
+    public operate(data?: any[]): IgxSummaryResult[] {
+        const result = [];
+        result.push(
+        {
+            key: 'min',
+            label: 'Min',
+            summaryResult: IgxNumberSummaryOperand.min(data)
+        },
+        {
+            key: 'max',
+            label: 'Max',
+            summaryResult: IgxNumberSummaryOperand.max(data)
+        },
+        {
+          key: 'avg',
+          label: 'Avg',
+          summaryResult: IgxNumberSummaryOperand.average(data)
+        });
+        return result;
+    }
+}
+class MyChildSummary {
+
+    public operate(data?: any[]): IgxSummaryResult[] {
+        const result = [];
+        result.push(
+        {
+            key: 'count',
+            label: 'Count',
+            summaryResult: IgxNumberSummaryOperand.count(data)
+        });
+        return result;
+    }
+}

@@ -18,14 +18,16 @@ import {
     MultiColumnHeadersExportComponent,
     GridWithEmptyColumnsComponent,
     ColumnsAddedOnInitComponent,
-    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
+    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
+    GroupedGridWithSummariesComponent,
+    GridCurrencySummariesComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -34,7 +36,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
-         IgxHierarchicalGridMultiColumnHeadersExportComponent
+         IgxHierarchicalGridMultiColumnHeadersExportComponent,
+         IgxHierarchicalGridSummariesExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridModule,
          IgxHierarchicalGridComponent,
@@ -68,7 +71,11 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
                 GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
                 IgxPivotGridMultipleRowComponent,
-                IgxPivotGridTestComplexHierarchyComponent
+                IgxPivotGridTestComplexHierarchyComponent,
+                IgxTreeGridSummariesKeyComponent,
+                IgxHierarchicalGridSummariesExportComponent,
+                GroupedGridWithSummariesComponent,
+                GridCurrencySummariesComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -1208,6 +1215,97 @@ describe('Excel Exporter', () => {
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
+        });
+    });
+
+
+    describe('', () => {
+        let fix;
+        let grid: any;
+
+        beforeEach(waitForAsync(() => {
+            options = createExportOptions('GirdSummariesExcelExport', 50);
+        }));
+
+        it('should export grid with summaries based on summaryCalculationMode', async () => {
+            fix = TestBed.createComponent(GroupedGridWithSummariesComponent);
+            fix.detectChanges();
+            await wait(300);
+
+            grid = fix.componentInstance.grid;
+            grid.summaryCalculationMode = 'rootLevelOnly';
+
+            await exportAndVerify(grid, options, actualData.exportGridWithSummaries);
+
+            (grid as IgxGridComponent).groupBy({ fieldName: 'Shipped', dir: SortingDirection.Asc, ignoreCase: false });
+            (grid as IgxGridComponent).groupBy({ fieldName: 'City', dir: SortingDirection.Asc, ignoreCase: false });
+            (grid as IgxGridComponent).groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedGridWithSummariesRootLevelOnly);
+
+            grid.summaryCalculationMode = 'childLevelsOnly';
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedGridWithSummariesChildLevelsOnly);
+
+            grid.summaryCalculationMode = 'rootAndChildLevels';
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedGridWithSummariesRootAndChildLevels);
+        });
+
+        it('should export tree grid with summaries', async () => {
+            fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
+            fix.detectChanges();
+            await wait(300);
+            grid = fix.componentInstance.treeGrid;
+
+            grid.toggleRow(grid.getRowByIndex(2).key);
+            grid.toggleRow(grid.getRowByIndex(0).key);
+            grid.toggleRow(grid.getRowByIndex(3).key);
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportTreeGridWithSummaries);
+        });
+
+        it('should export hierarchical grid with summaries', async () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridSummariesExportComponent);
+            fix.detectChanges();
+            await wait(300);
+            grid = fix.componentInstance.hGrid;
+
+            const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const secondRow = grid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+            expect(firstRow.expanded).toBe(true);
+
+            let childGrids = grid.gridAPI.getChildGrids(false);
+
+            const firstChildGrid = childGrids[0];
+            const firstChildRow = firstChildGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstChildRow.expander);
+            fix.detectChanges();
+            expect(firstChildRow.expanded).toBe(true);
+
+            UIInteractions.simulateClickAndSelectEvent(secondRow.expander);
+            fix.detectChanges();
+            expect(secondRow.expanded).toBe(true);
+
+            childGrids = grid.gridAPI.getChildGrids(false);
+
+            const thirdChildGrid = childGrids[1];
+            const thirdChildRow = thirdChildGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(thirdChildRow.expander);
+            fix.detectChanges();
+            expect(thirdChildRow.expanded).toBe(true);
+
+            await exportAndVerify(grid, options, actualData.exportHierarchicalGridWithSummaries);
         });
     });
 

@@ -11,7 +11,10 @@ export class WorksheetData {
     private _hasMultiColumnHeader: boolean;
     private _hasMultiRowHeader: boolean;
     private _isHierarchical: boolean;
+    private _hasSummaries: boolean;
     private _isPivotGrid: boolean;
+    private _isTreeGrid: boolean;
+    private _isGroupedGrid: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -52,6 +55,10 @@ export class WorksheetData {
         return this._hasMultiColumnHeader;
     }
 
+    public get hasSummaries(): boolean {
+        return this._hasSummaries;
+    }
+
     public get hasMultiRowHeader(): boolean {
         return this._hasMultiRowHeader;
     }
@@ -60,8 +67,20 @@ export class WorksheetData {
         return this._isHierarchical;
     }
 
+    public get isTreeGrid(): boolean {
+        return this._isTreeGrid;
+    }
+
     public get isPivotGrid(): boolean {
         return this._isPivotGrid;
+    }
+
+    public get isGroupedGrid(): boolean {
+        return this._data.some(d => d.type === ExportRecordType.GroupedRecord);
+    }
+
+    public get maxLevel(): number {
+        return [...new Set(this._data.map(item => item.level))].sort((a,b) => (a > b ? -1 : 1))[0];
     }
 
     public get multiColumnHeaderRows(): number {
@@ -80,9 +99,15 @@ export class WorksheetData {
         this._isHierarchical = this.data[0]?.type === ExportRecordType.HierarchicalGridRecord
             || !(typeof(Array.from(this.owners.keys())[0]) === 'string');
 
+        this._hasSummaries = this._data.filter(d => d.type === ExportRecordType.SummaryRecord).length > 0;
+
+        this._isTreeGrid = this._data.filter(d => d.type === ExportRecordType.TreeGridRecord).length > 0;
+
         this._isPivotGrid = this.data[0]?.type === ExportRecordType.PivotGridRecord;
 
-        if (this._isHierarchical || this._isPivotGrid || (this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
+        const exportMultiColumnHeaders = this._hasMultiColumnHeader && !this.options.ignoreMultiColumnHeaders;
+
+        if (this._isHierarchical || exportMultiColumnHeaders || this._isPivotGrid) {
             this.options.exportAsTable = false;
         }
 
