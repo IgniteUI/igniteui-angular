@@ -44,15 +44,12 @@ $base-dark-button-group: (
 
 /// Generates a dark button-group schema based on a mix of $light-button-group and $base-dark-button-group
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-button-group
 /// @requires $base-dark-button-group
-/// @see $default-palette
 $dark-button-group: extend($light-button-group, $base-dark-button-group);
 
 /// Generates a dark fluent button-group schema based on a mix of $fluent-button-group and $base-dark-button-group
 /// @type {Map}
-///
 /// @prop {Map} item-border-color [color: ('gray', 100)] - The border color for button group items.
 /// @prop {Map} item-selected-border-color [color: ('gray', 100)] - The border color for button group selected items.
 /// @prop {Map} item-disabled-border: [color: ('gray', 100)] - The border color for button group disabled items.
@@ -63,8 +60,6 @@ $dark-button-group: extend($light-button-group, $base-dark-button-group);
 /// @prop {Map} item-selected-hover-background [color: ('gray', 100, .5)] - The background color for button group selected items on hover.
 /// @prop {Map} item-selected-text-color [color: ('primary', 200)] - The text color for button group selected items.
 /// @prop {Color} disabled-background-color [color: ('gray', 50)] - The background color for button group disabled items.
-///
-/// @requires {function} extend
 /// @requires $fluent-button-group
 /// @requires $base-dark-button-group
 $dark-fluent-button-group: extend(
@@ -115,8 +110,6 @@ $dark-fluent-button-group: extend(
 
 /// Generates a dark bootstrap button-group schema based on a mix of $bootstrap-button-group
 /// @type {Map}
-///
-/// @requires {function} extend
 /// @requires $bootstrap-button-group
 $dark-bootstrap-button-group: extend($bootstrap-button-group);
 
@@ -125,8 +118,6 @@ $dark-bootstrap-button-group: extend($bootstrap-button-group);
 /// @prop {Map} item-background [color: ('surface')] - The background color for button group items.
 /// @prop {Color} item-text-color [contrast-color: 'surface']- The text color for button group items.
 /// @prop {Color} item-hover-text-color [contrast-color: 'surface'] - The hover text color for button group items.
-///
-/// @requires {function} extend
 /// @requires $indigo-button-group
 $dark-indigo-button-group: extend(
     $indigo-button-group,

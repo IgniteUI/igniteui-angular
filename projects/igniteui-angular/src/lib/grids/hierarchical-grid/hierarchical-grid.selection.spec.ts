@@ -26,7 +26,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland1;
     let rowIsland2;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -40,8 +42,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridModule,
                 IgxIconModule,
                 IgxGridSelectionModule]
-        });
-    }));
+        }).compileComponents();
+    }))
 
     describe('Cell selection', () => {
         beforeEach(waitForAsync(() => {

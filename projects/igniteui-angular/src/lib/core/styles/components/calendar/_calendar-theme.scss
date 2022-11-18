@@ -84,17 +84,14 @@
 /// @param {Color} $week-number-background [null] - The background color of the week number column.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
 ///
 /// @example scss Change the header and content background colors
 ///   $my-calendar-theme: calendar-theme(
 ///     $header-background: purple,
 ///     $content-background: black
 ///   );
-///   // Pass the theme to the calendar component mixin
-///   @include calendar($my-calendar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-calendar-theme);
 @function calendar-theme(
     $schema: $light-schema,
 
@@ -404,35 +401,29 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {function} text-contrast
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires rem
-/// @requires {mixin} ellipsis
-/// @requires var-get
 @mixin calendar($theme) {
     @include css-vars($theme);
 
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
-    $cal-header-padding: em(16px);
+    $cal-header-padding: rem(16px);
 
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cal-picker-padding: map.get((
-        material: em(16px),
-        fluent: em(16px),
-        bootstrap: em(8px),
-        indigo-design: em(16px),
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(8px),
+        indigo-design: rem(16px),
     ), $variant);
 
     $cal-value-w: map.get((
-        material: em(40px),
-        fluent: em(40px),
-        bootstrap: em(32px),
-        indigo-design: em(40px),
+        material: rem(40px),
+        fluent: rem(40px),
+        bootstrap: rem(32px),
+        indigo-design: rem(40px),
     ), $variant);
 
     $border-width: map.get((
@@ -453,8 +444,8 @@
     $cal-value-br: math.div($cal-value-w, 2);
     $cal-value-fw: 600;
 
-    $cal-value-month-margin: 0 em(12px);
-    $cal-value-month-height: em(91px);
+    $cal-value-month-margin: 0 rem(12px);
+    $cal-value-month-height: rem(91px);
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
@@ -525,7 +516,7 @@
         flex-flow: row nowrap;
 
         %cal-header-display {
-            min-width: em(168px);
+            min-width: rem(168px);
         }
     }
 
@@ -564,7 +555,7 @@
 
     %cal-picker-display {
         display: flex;
-        height: em(56px);
+        height: rem(56px);
         align-items: center;
         padding-bottom: $cal-picker-padding;
         background: var-get($theme, 'picker-background-color');
@@ -1210,7 +1201,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin calendar-typography($categories: (
     header-year: 'overline',
     header-date: 'h4',

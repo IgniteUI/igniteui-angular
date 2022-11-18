@@ -27,7 +27,6 @@ $base-dark-tree: (
 
 /// Generates a dark tree schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-tree
 /// @requires $base-dark-tree
 $dark-tree: extend($light-tree, $base-dark-tree);
@@ -39,7 +38,6 @@ $dark-tree: extend($light-tree, $base-dark-tree);
 /// @prop {Map} foreground-selected [color: ('gray', 900)] - The color used for the content of the selected tree node.
 /// @prop {Map} background-active-selected [color: ('gray', 200)] - The background color used for the active selected tree node.
 /// @prop {Map} foreground-active-selected [color: ('gray', 900)] - The color used for the content of the active selected tree node.
-/// @requires {function} extend
 /// @requires $fluent-tree
 /// @requires $base-dark-tree
 $dark-fluent-tree: extend(
@@ -74,7 +72,6 @@ $dark-fluent-tree: extend(
 
 /// Generates a dark bootstrap tree schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-tree
 /// @requires $base-dark-tree
 $dark-bootstrap-tree: extend(
@@ -89,7 +86,6 @@ $dark-bootstrap-tree: extend(
 
 /// Generates a dark indigo tree schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-tree
 /// @requires $base-dark-tree
 $dark-indigo-tree: extend(

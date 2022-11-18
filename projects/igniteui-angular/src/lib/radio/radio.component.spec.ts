@@ -136,7 +136,11 @@ describe('IgxRadio', () => {
 
     it('Disabled state', fakeAsync(() => {
         const fixture = TestBed.createComponent(DisabledRadioComponent);
+        // Requires two async change detection cycles to setup disabled on the component and then native element
         fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        tick();
         const testInstance = fixture.componentInstance;
 
         // get the disabled radio button
@@ -146,11 +150,7 @@ describe('IgxRadio', () => {
         expect(componentInstance.disabled).toBe(true);
         expect(radio.disabled).toBe(true);
 
-        fixture.detectChanges();
-
-        const btn = fixture.debugElement.queryAll(By.css('igx-radio'))[1];
-        btn.nativeElement.click();
-        tick();
+        radio.click();
         fixture.detectChanges();
 
         // Should not update

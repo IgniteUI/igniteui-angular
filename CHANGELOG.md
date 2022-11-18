@@ -7,6 +7,10 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `igxGrid` - exposing new Input properties:
 
+    - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
+        * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
+        * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
+
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
@@ -25,6 +29,13 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+
+- `IgxExcelExporterService`
+    - Added support for exporting grid summaries.
+    - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
 
 - `IgxCalendar`
 
