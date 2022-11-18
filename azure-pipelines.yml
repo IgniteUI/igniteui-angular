@@ -2,7 +2,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: npm ci
+- script: npm install
   displayName: 'Install dependencies'
   env:
     AZURE_PIPELINES: "true"
