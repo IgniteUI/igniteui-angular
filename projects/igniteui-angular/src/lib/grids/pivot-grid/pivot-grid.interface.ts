@@ -36,6 +36,7 @@ export interface IValuesChange {
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
 export interface IPivotDimensionStrategy {
+    /* csSuppress */
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],
@@ -57,6 +58,9 @@ export interface IPivotAggregator {
     key: string;
     /** Aggregation label to show in the UI. */
     label: string;
+
+    /* csTreatAsEvent: AggregatorEventHandler */
+    /* blazorOnlyScript */
     /**
      * Aggregator function can be a custom implementation of `PivotAggregation`, or 
      * use predefined ones from `IgxPivotAggregate` and its variants.
@@ -72,12 +76,20 @@ export interface IPivotConfiguration {
     rowStrategy?: IPivotDimensionStrategy | null;
     /** A strategy to transform the columns. */
     columnStrategy?: IPivotDimensionStrategy | null;
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PivotDimensionCollection */
     /** A list of the rows. */
     rows: IPivotDimension[] | null;
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PivotDimensionCollection */
     /** A list of the columns. */
     columns: IPivotDimension[] | null;
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PivotValueCollection */
     /** A list of the values. */
     values: IPivotValue[] | null;
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PivotDimensionCollection */
     /** Dimensions to be displayed in the filter area. */
     filters?: IPivotDimension[] | null;
     /** Pivot data keys used for data generation. Can be used for custom remote scenarios where the data is pre-populated. */
@@ -125,6 +137,8 @@ export interface IPivotValue {
      * Active aggregator definition with key, label and aggregator.
      */
     aggregate: IPivotAggregator;
+    /* blazorTreatAsCollection */
+    /* blazorCollectionName: PivotAggregatorCollection */
     /**
      * List of aggregates to show in aggregate drop-down.
      */
@@ -135,6 +149,9 @@ export interface IPivotValue {
     styles?: any;
     /** Enables a data type specific template of the cells */
     dataType?: GridColumnDataType;
+
+    /* csTreatAsEvent: PivotValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /** Applies display format to cell values. */
     formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
 }
@@ -144,6 +161,7 @@ export interface IPivotValue {
 */
 export interface IPivotGridColumn {
         field: string,
+        /* blazorSuppress */
         /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
         dimensionValues: Map<string, string>;
         /** List of dimensions associated with the column.**/
@@ -199,10 +217,13 @@ export interface PivotRowHeaderGroupType {
 }
 
 export interface IPivotGridRecord {
+    /* blazorSuppress */
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/
     dimensionValues: Map<string, string>;
+    /* blazorSuppress */
     /** Gets/Sets the aggregation value associated with the value path. Value path depends on configured column dimension hierarchy and values.**/
     aggregationValues: Map<string, any>;
+    /* blazorSuppress */
     /** List of children records in case any row dimension member contain a hierarchy. Each dimension member contains its own hierarchy, which you can get by its memberName. **/
     children?: Map<string, IPivotGridRecord[]>;
     /** List of original data records associated with the current pivoted data. **/

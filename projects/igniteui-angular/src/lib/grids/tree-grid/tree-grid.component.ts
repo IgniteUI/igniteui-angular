@@ -329,6 +329,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.cdr.markForCheck();
     }
 
+    
     /**
      * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
      * ```typescript
