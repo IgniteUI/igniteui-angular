@@ -406,24 +406,24 @@
 
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
-    $cal-header-padding: em(16px);
+    $cal-header-padding: rem(16px);
 
     $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cal-picker-padding: map.get((
-        material: em(16px),
-        fluent: em(16px),
-        bootstrap: em(8px),
-        indigo-design: em(16px),
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(8px),
+        indigo-design: rem(16px),
     ), $variant);
 
     $cal-value-w: map.get((
-        material: em(40px),
-        fluent: em(40px),
-        bootstrap: em(32px),
-        indigo-design: em(40px),
+        material: rem(40px),
+        fluent: rem(40px),
+        bootstrap: rem(32px),
+        indigo-design: rem(40px),
     ), $variant);
 
     $border-width: map.get((
@@ -444,8 +444,8 @@
     $cal-value-br: math.div($cal-value-w, 2);
     $cal-value-fw: 600;
 
-    $cal-value-month-margin: 0 em(12px);
-    $cal-value-month-height: em(91px);
+    $cal-value-month-margin: 0 rem(12px);
+    $cal-value-month-height: rem(91px);
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
@@ -516,7 +516,7 @@
         flex-flow: row nowrap;
 
         %cal-header-display {
-            min-width: em(168px);
+            min-width: rem(168px);
         }
     }
 
@@ -555,7 +555,7 @@
 
     %cal-picker-display {
         display: flex;
-        height: em(56px);
+        height: rem(56px);
         align-items: center;
         padding-bottom: $cal-picker-padding;
         background: var-get($theme, 'picker-background-color');
