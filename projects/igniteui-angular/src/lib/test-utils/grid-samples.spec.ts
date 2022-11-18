@@ -2560,6 +2560,46 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
     }
 }
 
+@Component({
+    template: GridTemplateStrings.declareGrid(' [hideGroupedColumns]="true"', '', ColumnDefinitions.generatedGroupableWithEnabledSummariesAndDataType)
+})
+export class GroupedGridWithSummariesComponent extends BasicGridComponent implements OnInit {
+    public columns = [];
+    public data = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { dataType: 'string', field: 'City', groupable: true },
+            { dataType: 'boolean', field: 'Shipped', groupable: true },
+            { dataType: 'string', field: 'ContactTitle', groupable: true },
+            { dataType: 'number', field: 'PTODays', groupable: false },
+        ];
+
+        this.data = SampleTestData.contactInfoWithPTODaysData();
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithColumnBasedSummariesAndDataType)
+})
+export class GridCurrencySummariesComponent extends BasicGridComponent implements OnInit {
+    public columns = [];
+    public data = [];
+
+    public ngOnInit(): void {
+        this.columns = [
+            { dataType: 'string', field: 'ProductID', header: "Product ID", hasSummary: false },
+            { dataType: 'string', field: 'ProductName', header: "Product Name", hasSummary: true },
+            { dataType: 'currency', field: 'UnitPrice', header: "Price", hasSummary: true },
+            { dataType: 'number', field: 'UnitsInStock', header: "Units In Stock", hasSummary: false },
+            { dataType: 'boolean', field: 'Discontinued', hasSummary: true },
+            { dataType: 'date', field: 'OrderDate', hasSummary: true },
+        ];
+
+        this.data = SampleTestData.gridProductData();
+    }
+}
+
 export class ObjectCloneStrategy implements IDataCloneStrategy {
     public clone(data: any): any {
         let clonedData = {};
