@@ -22,6 +22,7 @@ export {
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
 export * from './grid.rowEdit.directive';
+export * from './row.directive';
 export * from './row-drag.directive';
 export * from './column-actions/column-actions.module';
 export * from './state.directive';
