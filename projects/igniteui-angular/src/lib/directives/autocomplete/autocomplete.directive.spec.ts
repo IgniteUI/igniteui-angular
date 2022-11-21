@@ -781,7 +781,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
         }));
-        fit('Should accept Japanese input', fakeAsync(() => {
+        it('Should accept Japanese input', fakeAsync(() => {
             UIInteractions.setInputElementValue(input, '東京', fixture);
             fixture.detectChanges();
             tick();
