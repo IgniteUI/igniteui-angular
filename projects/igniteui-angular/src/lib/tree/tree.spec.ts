@@ -616,9 +616,7 @@ describe('IgxTree #treeView', () => {
 
             it('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', fakeAsync(() => {
                 pending('Causes jasmine to hang');
-                tree.rootNodes.forEach(n => n.expanded = true);
-                fix.detectChanges();
-                tree.rootNodes[0].expanded = false;
+                tree.rootNodes.forEach((n, index) => index > 0 ? n.expanded = true : n.expanded = false);
                 fix.detectChanges();
                 expect(tree.nodes.filter(n => n.expanded).length).toBe(4);
                 tree.singleBranchExpand = true;
