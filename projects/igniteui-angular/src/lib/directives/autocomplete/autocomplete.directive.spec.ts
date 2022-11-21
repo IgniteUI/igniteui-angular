@@ -789,7 +789,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(input.value).toBe('東京');
         }
-        ))
+        ));
     });
     describe('Positioning settings tests', () => {
         it('Panel settings - direction and startPoint: top', fakeAsync(() => {
