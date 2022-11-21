@@ -17,6 +17,7 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     public paging = true;
     public data: Observable<any[]>;
     public selectOptions = [5, 10, 15, 25, 50];
+    public areAllRowsSelected: boolean = false;
 
     private _perPage = 15;
     private _dataLengthSubscriber;
@@ -39,6 +40,19 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
         this._dataLengthSubscriber = this.remoteService.getPagingDataLength().subscribe((data) => {
             this.totalCount = data;
             this.grid1.isLoading = false;
+        });
+
+        this.grid1.dataChanged.subscribe(() => {
+            if (this.areAllRowsSelected) {
+                this.grid1.selectAllRows();
+            }
+        });
+
+        this.grid1.rowSelectionChanging.subscribe((args) => {
+            this.areAllRowsSelected = args.allRowsSelected;
+            if (args.allRowsSelected) {
+                this.grid1.selectAllRows();
+            }
         });
     }
 
