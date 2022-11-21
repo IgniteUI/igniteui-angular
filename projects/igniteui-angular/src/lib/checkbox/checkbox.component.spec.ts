@@ -26,8 +26,7 @@ describe('IgxCheckbox', () => {
                 IgxCheckboxComponent
             ],
             imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it('Initializes a checkbox', () => {
@@ -198,11 +197,9 @@ describe('IgxCheckbox', () => {
 
     it('Disabled state', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxDisabledComponent);
-        // Requires two async change detection cycles to setup disabled on the component and then native element
         fixture.detectChanges();
         tick();
-        fixture.detectChanges();
-        tick();
+
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
         const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement as HTMLInputElement;
