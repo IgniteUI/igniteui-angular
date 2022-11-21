@@ -7,6 +7,10 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `igxGrid` - exposing new Input properties:
 
+    - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
+        * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
+        * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
+
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
@@ -21,10 +25,17 @@ All notable changes for each version of this project will be documented in this 
     - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
+- `IgxGridToolbar`
+    - **Breaking Change** - The `IgxGridToolbarTitleDirective` and `IgxGridToolbarActionsDirective` have been converted to components, keeping only the element selector. For apps using the preferred element markup of `<igx-grid-toolbar-title>` and `<igx-grid-toolbar-actions>` there should be no functional change. Apps using the `igxGridToolbarTitle` and `igxGridToolbarActions` directives on other elements will need to convert those to the mentioned elements instead.
 
     - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+    - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
+
+- `IgxExcelExporterService`
+    - Added support for exporting grid summaries.
+    - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - Adding `Image` column data type
