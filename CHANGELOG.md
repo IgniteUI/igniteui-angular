@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
     - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
+- `IgxGridToolbar`
+    - **Breaking Change** - The `IgxGridToolbarTitleDirective` and `IgxGridToolbarActionsDirective` have been converted to components, keeping only the element selector. For apps using the preferred element markup of `<igx-grid-toolbar-title>` and `<igx-grid-toolbar-actions>` there should be no functional change. Apps using the `igxGridToolbarTitle` and `igxGridToolbarActions` directives on other elements will need to convert those to the mentioned elements instead.
 
     - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
