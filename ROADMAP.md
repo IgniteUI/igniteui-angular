@@ -2,9 +2,9 @@
 
 # Current Milestone
 
-## Milestone 24, version 15.0 (Due by October, 2022)
+## Milestone 24, version 15.0 (Due by Nov, 2022)
 
-1. Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
+1. **[DONE]** Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
 2. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
 3. Support for Angular 15
 
@@ -20,12 +20,12 @@
 
 # Previous Milestone
 
-## Milestone 24, version 14.2 (Released October 06th, 2022)
+## Milestone 24, version 14.2 (Released October 06th, 2022) [Release Blog 22.2](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-22-2)
 
 1. **[DONE]** Angular query builder component (Angular Tree Grid Advanced Filtering without the tree grid) [#11750](https://github.com/IgniteUI/igniteui-angular/issues/11750)
 2. **[DONE]** [PivotGrid] Export to Excel [#11742](https://github.com/IgniteUI/igniteui-angular/issues/11742)
 
-## Milestone 23, version 14.1 (Released September 13th, 2022)
+## Milestone 23, version 14.1 (Released September 13th, 2022) [Release Blog 14.1.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-14-1-0-release)
 
 1. **[DONE]** Grid autosize feature with performance improvements [#10205](https://github.com/IgniteUI/igniteui-angular/issues/10205)
 2. **[DONE]** Validator service for igxGrid editing [#6501](https://github.com/IgniteUI/igniteui-angular/issues/6501)
@@ -43,7 +43,7 @@
 2. **[DONE]** IgxCalendar: set weekStart globally [#10543](https://github.com/IgniteUI/igniteui-angular/issues/10543)
 3. **[DONE]** Hide delete and edit buttons in grid action strip [#11578](https://github.com/IgniteUI/igniteui-angular/issues/11578)
 
-## Milestone 21, version 13.2 (Released May 25th, 2022)
+## Milestone 21, version 13.2 (Released May 25th, 2022) [Release Blog 22.1](https://www.infragistics.com/community/blogs/b/infragistics/posts/-ignite-ui-for-angular-22-1-release-and-updates)
 
 1. **[DONE]** Improve sorting experience for users [#9674](https://github.com/IgniteUI/igniteui-angular/issues/9674)
 2. **[DONE]** Template grid excel filter footer [#10183](https://github.com/IgniteUI/igniteui-angular/issues/10183) 
@@ -52,7 +52,7 @@
 5. **[DONE]** Checkbox size and disabled state in Bootstrap [#11096](https://github.com/IgniteUI/igniteui-angular/issues/11096)
 6. **[DONE]** [Pivot] Integrate ESF in tree view [#11049](https://github.com/IgniteUI/igniteui-angular/issues/11049) 
 
-## Milestone 20, version 13.1 (Released March 2nd, 2022)
+## Milestone 20, version 13.1 (Released March 2nd, 2022) [Release Blog 13.1.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-13-1-0-release)
 
 1. **[DONE]** Angular Pivot Grid [#5700](https://github.com/IgniteUI/igniteui-angular/issues/5700)
 2. **[DONE]** igx-tree-grid:excel-style filtering should show children of parent elements returned from the filter [#10342](https://github.com/IgniteUI/igniteui-angular/issues/10342)
@@ -60,7 +60,7 @@
 6. **[DONE]** Tabs component does not support RTL [#5904](https://github.com/IgniteUI/igniteui-angular/issues/5904)
 7. **[DONE]** Column moving feature on grid level [#10176](https://github.com/IgniteUI/igniteui-angular/issues/10176)
 
-## Milestone 19, version 13.0 (Released November 23rd, 2021)
+## Milestone 19, version 13.0 (Released November 23rd, 2021) [Release Blog 13.0.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-13-0-0-release)
 
 1. **[DONE]** Stepper component [#8667](https://github.com/IgniteUI/igniteui-angular/issues/8667)
 2. **[DONE]** Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
@@ -71,7 +71,7 @@
 9. **[DONE]** IgxCombo: being able to set groups sorting order [#10125](https://github.com/IgniteUI/igniteui-angular/issues/10125)
 10. **[DONE]** IgxGridState directive to save disableHiding property [#9304](https://github.com/IgniteUI/igniteui-angular/issues/9304)
 
-## Milestone 18 (Released October 4th, 2021)
+## Milestone 18, version 12.2.0 (Released October 4th, 2021) [Release Blog 12.2.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-12-2-0-release)
 
 1. **[DONE]** Add row at top of grid [#9675](https://github.com/IgniteUI/igniteui-angular/issues/9675)
 2. **[DONE]** Grid row styles and classes [#9969](https://github.com/IgniteUI/igniteui-angular/issues/9969)
@@ -80,7 +80,7 @@
 5. **[DONE]** IgxTreeGrid: display only filtered records [#9923](https://github.com/IgniteUI/igniteui-angular/issues/9923)
 6. **[DONE]** Snackbar support for animation customization [#10126](https://github.com/IgniteUI/igniteui-angular/issues/10126)
 
-## Milestone 17 (Released August 2nd, 2021)
+## Milestone 17 , version 21.1.0 (Released August 2nd, 2021) [Releae Blog 12.1.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-12-1-0-release)
 
 1. **[DONE]** Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
 2. **[DONE]** Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
@@ -94,7 +94,7 @@
 10. **[DONE]** Editable cell styling support [#9630](https://github.com/IgniteUI/igniteui-angular/issues/9630)
 11. **[DONE]** Excel Export Service - onColumnExport Allow to modify columnIndex Property [#8874](https://github.com/IgniteUI/igniteui-angular/issues/8874)
 
-## Milestone 16 (Released May 14th, 2021)
+## Milestone 16, version 12.0.0 (Released May 14th, 2021) [Release Blog 12.0.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-12-0-0-release)
 
 1. **[DONE]** Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
 2. **[DONE]** Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
@@ -111,7 +111,7 @@
 13. **[DONE]** Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
 
 
-## Milestone 15 (Released February 17th, 2021)
+## Milestone 15, version 11.1.0 (Released February 17th, 2021) [Release Blog 11.1.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-11-1-0-release)
 
 1. **[DONE]** Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
 2. **[DONE]** Support changing theme dynamically on Input Group [#8619](https://github.com/IgniteUI/igniteui-angular/issues/8619)
@@ -124,7 +124,7 @@
 9. **[DONE]** Carousel accessibility improvements [#8202](https://github.com/IgniteUI/igniteui-angular/issues/8202)
 10. **[DONE]** Datetime or Time in avaliable type of column [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
 
-## Milestone 14 (Released November 11th, 2020)
+## Milestone 14, version 11.0.0 (Released November 11th, 2020) [Release Blog 11.0.0](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-11-0-0-release)
 
 1. **[DONE]** Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
 2. **[DONE]** Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)

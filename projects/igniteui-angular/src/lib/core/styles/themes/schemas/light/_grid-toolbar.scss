@@ -8,15 +8,14 @@
 
 /// Generates a light grid-toolbar schema.
 /// @type {Map}
-/// @property {Map} background-color [color: ('gray', 50)] - The toolbar background color.
-/// @property {Map} title-text-color [color: ('gray', 600)] - The toolbar title text color.
-/// @property {Map} dropdown-background [color: ('surface')] - The toolbar drop-down background color.
-/// @property {Map} item-text-color [color: ('gray', 600)] - The toolbar drop-down item text color.
-/// @property {Map} item-hover-background [color: ('gray', 100)] - The toolbar drop-down item hover background color.
-/// @property {Map} item-hover-text-color [color: ('gray', 600)] - The toolbar drop-down item hover text color.
-/// @property {Map} item-focus-background [color: ('gray', 100)] - The toolbar drop-down item focus background color.
-/// @property {Map} item-focus-text-color [color: ('gray', 600)] - The toolbar drop-down item focus text color.
-/// @see $default-palette
+/// @prop {Map} background-color [color: ('gray', 50)] - The toolbar background color.
+/// @prop {Map} title-text-color [color: ('gray', 600)] - The toolbar title text color.
+/// @prop {Map} dropdown-background [color: ('surface')] - The toolbar drop-down background color.
+/// @prop {Map} item-text-color [color: ('gray', 600)] - The toolbar drop-down item text color.
+/// @prop {Map} item-hover-background [color: ('gray', 100)] - The toolbar drop-down item hover background color.
+/// @prop {Map} item-hover-text-color [color: ('gray', 600)] - The toolbar drop-down item hover text color.
+/// @prop {Map} item-focus-background [color: ('gray', 100)] - The toolbar drop-down item focus background color.
+/// @prop {Map} item-focus-text-color [color: ('gray', 600)] - The toolbar drop-down item focus text color.
 $light-grid-toolbar: (
     variant: 'material',
 
@@ -55,9 +54,7 @@ $light-grid-toolbar: (
 
 /// Generates a fluent grid-toolbar schema.
 /// @type {Map}
-///
-/// @property {Map} background-color [color: 'surface'] - The toolbar background color.
-/// @requires {function} extend
+/// @prop {Map} background-color [color: 'surface'] - The toolbar background color.
 /// @requires {Map} $light-grid-toolbar
 $fluent-grid-toolbar: extend(
     $light-grid-toolbar,
@@ -72,7 +69,6 @@ $fluent-grid-toolbar: extend(
 
 /// Generates a bootstrap grid-toolbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-toolbar
 $bootstrap-grid-toolbar: extend(
     $light-grid-toolbar,
@@ -83,9 +79,8 @@ $bootstrap-grid-toolbar: extend(
 
 /// Generates an indigo grid-toolbar schema.
 /// @type {Map}
-/// @property {Map} background-color [color: ('gray', 100)] - The toolbar background color.
-/// @property {Map} title-text-color [color: ('primary', 500)] - The toolbar title text color.
-/// @requires {function} extend
+/// @prop {Map} background-color [color: ('gray', 100)] - The toolbar background color.
+/// @prop {Map} title-text-color [color: ('primary', 500)] - The toolbar title text color.
 /// @requires {Map} $light-grid-toolbar
 $indigo-grid-toolbar: extend(
     $light-grid-toolbar,

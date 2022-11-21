@@ -23,7 +23,6 @@ import { IgxRowDirective } from '../grids/row.directive';
 import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
-import { IgxGridCell } from 'igniteui-angular';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';

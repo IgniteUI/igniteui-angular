@@ -893,7 +893,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
     }
 
-    
+
 
     /**
      * @hidden @internal

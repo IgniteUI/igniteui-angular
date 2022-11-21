@@ -135,6 +135,24 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     /**
+     * Hide or not the Action Strip based on if it is a menu.
+     * 
+     * @hidden
+     * @internal
+     */
+     public get hideOnRowLeave(): boolean{
+        if(this.menu.items.length === 0){
+            return true;
+        }else if(this.menu.items.length > 0){
+            if(this.menu.collapsed){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    /**
      * Reference to the menu
      *
      * @hidden
