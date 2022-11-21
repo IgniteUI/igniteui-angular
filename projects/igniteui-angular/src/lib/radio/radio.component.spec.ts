@@ -23,8 +23,7 @@ describe('IgxRadio', () => {
                 RadioInvisibleLabelComponent
             ],
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it('Init a radio', () => {
@@ -59,7 +58,6 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
         expect(radio.id).toBe('customRadio');
         expect(domRadio.id).toBe('customRadio');
-
     });
 
     it('Binding to ngModel', fakeAsync(() => {
@@ -144,8 +142,8 @@ describe('IgxRadio', () => {
         const testInstance = fixture.componentInstance;
 
         // get the disabled radio button
-        const componentInstance = testInstance.radios.last;
-        const radio = componentInstance.nativeRadio.nativeElement;
+        const componentInstance = testInstance.radios.last as IgxRadioComponent;
+        const radio = componentInstance.nativeRadio.nativeElement as HTMLInputElement;
 
         expect(componentInstance.disabled).toBe(true);
         expect(radio.disabled).toBe(true);

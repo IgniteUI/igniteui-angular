@@ -111,7 +111,6 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.1",
-    "gulp-util": "^3.0.8",
     "hammer-simulator": "0.0.1",
     "ig-typedoc-theme": "^4.2.0",
     "igniteui-sassdoc-theme": "^1.1.4",
