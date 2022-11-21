@@ -25,10 +25,16 @@ All notable changes for each version of this project will be documented in this 
     - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
+- `IgxGridToolbar`
+    - **Breaking Change** - The `IgxGridToolbarTitleDirective` and `IgxGridToolbarActionsDirective` have been converted to components, keeping only the element selector. For apps using the preferred element markup of `<igx-grid-toolbar-title>` and `<igx-grid-toolbar-actions>` there should be no functional change. Apps using the `igxGridToolbarTitle` and `igxGridToolbarActions` directives on other elements will need to convert those to the mentioned elements instead.
 
     - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+
+- `IgxExcelExporterService`
+    - Added support for exporting grid summaries.
+    - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
     - Adding `Image` column data type
