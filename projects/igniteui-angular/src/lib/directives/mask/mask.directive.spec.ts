@@ -391,7 +391,7 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(new DragEvent('dragleave'));
         expect(input.nativeElement.value).toEqual('');
 
-        // should preserve state on dragenter        
+        // should preserve state on dragenter
         input.nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePaste('76', fixture.debugElement.query(By.css('.igx-input-group__input')), 3, 3);
         fixture.detectChanges();
@@ -505,7 +505,7 @@ describe('igxMask', () => {
         UIInteractions.simulatePaste('1234567890', inputElement, 1, 1);
         fixture.detectChanges();
         expect(inputElement.nativeElement.value).toEqual('(123) 4567-890');
-        
+
         const inputHTMLElement = inputElement.nativeElement as HTMLInputElement;
         inputHTMLElement.setSelectionRange(6, 8);
         fixture.detectChanges();
@@ -517,7 +517,7 @@ describe('igxMask', () => {
         fixture.detectChanges();
         expect(inputElement.nativeElement.selectionStart).toEqual(8);
         expect(inputElement.nativeElement.selectionEnd).toEqual(8);
-        expect(inputHTMLElement.value).toEqual('(123) __67-890'); 
+        expect(inputHTMLElement.value).toEqual('(123) __67-890');
     });
 });
 
