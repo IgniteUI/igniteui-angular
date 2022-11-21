@@ -75,7 +75,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
         if (isPinnedArea) {
             treeRec = this.grid.unpinnedRecords.find(x => x.data === this.rowData);
         }
-        return treeRec.level === 0;
+        return treeRec?.level === 0;
     }
 
     /**
