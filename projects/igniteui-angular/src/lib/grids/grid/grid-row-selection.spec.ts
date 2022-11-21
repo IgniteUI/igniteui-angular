@@ -140,7 +140,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: allRowsArray,
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: true
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -157,7 +158,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 added: [],
                 removed: allRowsArray,
                 event: jasmine.anything() as any,
-                cancel: false
+                cancel: false,
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -207,7 +209,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -230,7 +233,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1, 2],
                 oldSelection: [1],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -248,7 +252,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1, 2],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -265,7 +270,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -289,7 +295,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [2],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             // Click again on same row
@@ -314,7 +321,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [3],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
         });
         it('Should select the row only on checkbox click when selectRowOnClick has value false', () => {
@@ -510,7 +518,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [2, 3, 4, 5],
                 oldSelection: [2],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             for (let index = 1; index < 5; index++) {
@@ -852,7 +861,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -874,7 +884,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -1026,7 +1037,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [5],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -1361,7 +1373,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1]],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -1376,7 +1389,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
