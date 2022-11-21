@@ -13,49 +13,36 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-///
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $item-text-color [null] - The color used for the tab text color.
 /// @param {Color} $item-background [null] - The background color used for the tabs header.
 /// @param {Color} $item-hover-background [null] - The background used for the tabs on hover.
 /// @param {Color} $item-hover-color [null] - The text color used for the tabs on hover.
-///
 /// @param {Color} $item-icon-color [null] - The color used for the tab icon.
 /// @param {Color} $item-active-icon-color [null] - The color used for the active tab icon.
 /// @param {Color} $item-hover-icon-color [null] - The color used for the tab icon on hover.
 /// @param {Color} $item-disabled-icon-color [null] - The color used for the disabled tab icon.
-///
 /// @param {Color} $item-active-color [null] - The color used for the active tabs text.
 /// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
 /// @param {Color} $item-disabled-color [null] - The color used for the disabled tabs text.
-///
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $button-color [null] - The color used for the button icon/text color.
 /// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
 /// @param {Color} $button-disabled-color [null] - The color used for the disabled button icon/text.
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
-///
 /// @param {border-radius} $border-radius [null] - The border radius for the tabs.
 /// @param {Color} $border-color [null] - The border color of the tabs.
 /// @param {Color} $border-color--hover [null] - The border color of the tabs on hover.
-///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
-///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
-///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: tabs-theme(
 ///      $item-background: orange
 ///    );
-///   // Pass the theme to the tabs component mixin
-///   @include tabs($my-tabs-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-tabs-theme);
 @function tabs-theme(
     $schema: $light-schema,
     $item-text-color: null,
@@ -210,13 +197,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
 /// @requires ripple-theme
 /// @requires {mixin} ripple
-/// @requires elevation
-/// @requires rem
-/// @requires var-get
 @mixin tabs($theme) {
     @include css-vars($theme);
 
@@ -594,7 +576,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin tabs-typography($categories: (label: 'button')) {
     $label: map.get($categories, 'label');
 

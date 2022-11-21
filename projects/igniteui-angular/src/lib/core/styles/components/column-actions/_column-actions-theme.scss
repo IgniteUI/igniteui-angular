@@ -15,17 +15,13 @@
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
 /// @param {Color} $background-color [null] - The background color of the panel.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
+///
 ///
 /// @example scss Change the title color
 ///   $column-actions-theme: igx-column-actions-theme($title-color: black);
-///   // Pass the theme to the igx-column-actions component mixin
-///   @include igx-column-actions($column-actions-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($column-actions-theme);
 ////
 @function column-actions-theme(
     $schema: $light-schema,
@@ -58,9 +54,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin column-actions($theme) {
     @include css-vars($theme);
 
@@ -110,7 +103,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin column-actions-typography($categories: (title: 'subtitle-1')) {
     $title: map.get($categories, 'title');
 

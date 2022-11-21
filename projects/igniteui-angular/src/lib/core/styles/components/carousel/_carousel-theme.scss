@@ -28,20 +28,16 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
+///
 ///
 /// @example scss Change the previous/next button colors
 ///   $my-carousel-theme: carousel-theme(
 ///     $button-background: black,
 ///     $button-hover-background: white
 ///   );
-///   // Pass the carousel theme to the carousel component mixin
-///   @include carousel($my-carousel-theme);
+///   // Pass the carousel theme to the css-vars() mixin
+///   @include css-vars($my-carousel-theme);
 @function carousel-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -120,13 +116,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires color
-/// @requires elevation
-/// @requires {mixin} animation
-/// @requires {mixin} scale-in-center
-/// @requires {mixin} scale-out-center
-/// @requires var-get
 @mixin carousel($theme) {
     @include css-vars($theme);
     @include scale-in-center();
