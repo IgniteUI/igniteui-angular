@@ -17,6 +17,7 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
     public prevRequest: any;
     public columns: any;
     public loading = true;
+    public areAllRowsSelected: boolean = false;
 
     public clipboardOptions = {
         enabled: true,
@@ -44,6 +45,19 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
 
         this.grid.dataPreLoad.pipe(debounceTime(500)).subscribe(() => {
             this.processData(false);
+        });
+
+        this.grid.dataChanged.subscribe(() => {
+            if (this.areAllRowsSelected) {
+                this.grid.selectAllRows();
+            }
+        });
+
+        this.grid.rowSelectionChanging.subscribe((args) => {
+            this.areAllRowsSelected = args.allRowsSelected;
+            if (args.allRowsSelected) {
+                this.grid.selectAllRows();
+            }
         });
     }
 
