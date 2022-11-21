@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxPivotGridComponent, IgxPivotRowDimensionHeaderGroupComponent, IgxStringFilteringOperand } from 'igniteui-angular';
@@ -24,19 +24,24 @@ const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 describe('IgxPivotGrid #pivotGrid', () => {
 
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxPivotGridTestBaseComponent,
+                IgxPivotGridTestComplexHierarchyComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxPivotGridModule
+            ]
+        }).compileComponents();
+    }));
+
     describe('Basic IgxPivotGrid #pivotGrid', () => {
         let fixture;
-        configureTestSuite((() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxPivotGridTestBaseComponent
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxPivotGridModule]
-            });
-        }));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
         }));
@@ -1826,17 +1831,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
         let fixture;
-        configureTestSuite((() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxPivotGridTestComplexHierarchyComponent
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxPivotGridModule]
-            });
-        }));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
         }));
@@ -1936,19 +1932,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
     describe('IgxPivotGrid Resizing #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
 
-        configureTestSuite((() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxPivotGridTestComplexHierarchyComponent
-                ],
-                imports: [
-                    NoopAnimationsModule,
-                    IgxPivotGridModule
-                ]
-            });
-        }));
-
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
         }));
@@ -2169,19 +2153,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         let fixture: ComponentFixture<any>;
         let pivotGrid: IgxPivotGridComponent;
 
-        configureTestSuite((() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxPivotGridTestComplexHierarchyComponent
-                ],
-                imports: [
-                    NoopAnimationsModule,
-                    IgxPivotGridModule
-                ]
-            });
-        }));
-
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fixture.detectChanges();
 

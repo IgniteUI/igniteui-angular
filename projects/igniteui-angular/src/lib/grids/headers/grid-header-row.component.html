@@ -129,10 +129,10 @@
         <igx-checkbox
             [tabindex]="-1"
             [readonly]="true"
-            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+            [checked]="context.selectedCount > 0 && grid.selectionService.areAllRowSelected()"
             [disableRipple]="true"
             [ngStyle]="{'visibility': grid.isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+            [indeterminate]="context.selectedCount > 0 && grid.selectionService.hasSomeRowSelected()"
             [aria-label]="grid.headSelectorBaseAriaLabel"
             #headerCheckbox>
         </igx-checkbox>

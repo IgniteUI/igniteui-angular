@@ -3798,6 +3798,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public dataRebound(event) {
+        this.selectionService.clearHeaderCBState();
         this.dataChanged.emit(event);
     }
 
