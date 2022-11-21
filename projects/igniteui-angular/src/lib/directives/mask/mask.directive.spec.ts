@@ -501,7 +501,7 @@ describe('igxMask', () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
         const inputElement = fixture.debugElement.query(By.css('input'));
-        inputElement.triggerEventHandler('focus');
+        inputElement.triggerEventHandler('focus', {});
         UIInteractions.simulatePaste('1234567890', inputElement, 1, 1);
         fixture.detectChanges();
         expect(inputElement.nativeElement.value).toEqual('(123) 4567-890');
