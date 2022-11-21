@@ -46,6 +46,7 @@ const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
+const SIMPLE_ICON_ELEMENT = 'igx-icon';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
@@ -813,7 +814,8 @@ describe('IgxSimpleCombo', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxSimpleComboSampleComponent,
-                    IgxComboInContainerTestComponent
+                    IgxComboInContainerTestComponent,
+                    IgxSimpleComboIconTemplatesComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1283,6 +1285,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toEqual([]);
             expect(combo.value).toBe('');
         });
+
+        it('should toggle dropdown list on clicking a templated toggle icon', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboIconTemplatesComponent);
+            fixture.detectChanges();
+
+            combo = fixture.componentInstance.combo;
+            dropdown = combo.dropdown;
+            const comboWrapper = fixture.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
+
+            expect(comboWrapper).not.toBeNull();
+
+            let templatedIcon = comboWrapper.querySelector(SIMPLE_ICON_ELEMENT);
+            expect(templatedIcon).not.toBeNull();
+            expect(templatedIcon.textContent).toBe('search');
+            expect(combo.collapsed).toBeTruthy();
+
+            templatedIcon.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeFalsy();
+        }));
     });
 
     describe('Display density', () => {
@@ -1868,6 +1892,22 @@ export class IgxSimpleComboEmptyComponent {
     public combo: IgxSimpleComboComponent;
 
     public data: any[] = [];
+    public name!: string;
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
+                    <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
+                </igx-simple-combo>`
+})
+export class IgxSimpleComboIconTemplatesComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] =  [
+        { name: 'Sofia', id: '1' }, 
+        { name: 'London', id: '2' }, 
+    ];;
     public name!: string;
 }
 
