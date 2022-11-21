@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/class.schema.json",
+    "changes": [
+        {
+            "name": "IgxGridToolbarTitleDirective",
+            "replaceWith": "IgxGridToolbarTitleComponent"
+        },
+        {
+            "name": "IgxGridToolbarActionsDirective",
+            "replaceWith": "IgxGridToolbarActionsComponent"
+        }
+    ]
+}
