@@ -788,8 +788,7 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
             expect(input.value).toBe('東京');
-        }
-        ))
+        }));
     });
     describe('Positioning settings tests', () => {
         it('Panel settings - direction and startPoint: top', fakeAsync(() => {
