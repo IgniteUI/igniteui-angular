@@ -220,7 +220,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
         }));
 
-        it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
+        it('should not render rows and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             tick();
@@ -256,7 +256,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             expect(tHeadItems).toBeNull();
             expect(gridRows).toBeNull();
-            expect(paging).toBeNull();
+            expect(paging).not.toBeNull();
             expect(rowSelectors).toBeNull();
             expect(dragIndicators).toBeNull();
             expect(verticalScrollBar).not.toBeNull();

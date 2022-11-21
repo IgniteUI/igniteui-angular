@@ -674,14 +674,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             headers = GridFunctions.getColumnHeaders(fixture);
             gridRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
-            paging = GridFunctions.getGridPaginator(fixture);
             rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             dragIndicators = GridFunctions.getDragIndicators(fixture);
             expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');
 
             expect(headers.length).toBe(0);
             expect(gridRows.length).toBe(0);
-            expect(paging).toBeNull();
             expect(rowSelectors.length).toBe(0);
             expect(dragIndicators.length).toBe(0);
             // this check executes correctly on Ivy only
