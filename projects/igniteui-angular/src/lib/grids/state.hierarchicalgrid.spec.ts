@@ -19,20 +19,22 @@ import { GridSelectionRange } from './common/types';
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestExpandedBaseComponent
             ],
             imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
-        });
-    }));
+        }).compileComponents();
+    }))
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
         fix.detectChanges();
         grid = fix.componentInstance.hgrid;
-    }));
+    });
 
     it('should initialize an igxGridState with default options object', () => {
         fix.componentInstance.data = [

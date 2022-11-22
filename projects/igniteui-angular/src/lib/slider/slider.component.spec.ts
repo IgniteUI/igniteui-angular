@@ -34,7 +34,7 @@ describe('IgxSlider', () => {
     beforeAll(waitForAsync(() => {
         fakeDoc = { body: {}, documentElement: {} };
 
-        return TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
