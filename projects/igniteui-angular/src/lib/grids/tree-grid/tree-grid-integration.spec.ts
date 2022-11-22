@@ -1762,5 +1762,20 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             firstRow.pinned = true;
             expect(firstRow.pinned).toBeTrue();
         });
+
+        it('should delete pinned row without errors', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+            const firstRow = treeGrid.pinnedRows[0];
+
+            expect(firstRow.isRoot).toBe(true);
+            expect(firstRow.pinned).toBeTrue();
+            expect(firstRow.data.ID).toEqual(147);
+
+            treeGrid.deleteRowById(147);
+            fix.detectChanges();
+
+            expect(firstRow.isRoot).toBe(false);
+        });
     });
 });

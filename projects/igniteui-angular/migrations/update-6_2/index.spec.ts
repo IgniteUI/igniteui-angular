@@ -10,6 +10,7 @@ describe('Update 6.2.0', () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
+                root: '/',
                 sourceRoot: '/testSrc'
             }
         },

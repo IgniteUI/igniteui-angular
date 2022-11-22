@@ -5,7 +5,7 @@ import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     VirtualGridComponent,
@@ -227,6 +227,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
             gridContent = GridFunctions.getGridContent(fix);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should focus the first cell when focus the grid body', async () => {
             GridFunctions.getGridHeader(grid).nativeElement.focus();
@@ -699,6 +703,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent;
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridGroupByComponent);
             fix.detectChanges();
@@ -707,6 +712,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should focus the first cell when focus the grid body and there is a grouped column', async () => {
             GridFunctions.getGridHeader(grid).nativeElement.focus();

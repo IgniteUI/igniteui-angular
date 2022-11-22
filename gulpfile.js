@@ -275,7 +275,10 @@ function typedocBuildDocsEN(cb) {
 }
 
 const SASSDOC = {
-    PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'lib', 'core', 'styles'),
+    PROJECT_PATHS: [
+        `${path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'lib', 'core', 'styles')}/**/*.scss`,
+        `${path.join(__dirname, 'node_modules', 'igniteui-theming', 'sass')}/**/*.scss`
+    ],
     DEST: path.join(DOCS_OUTPUT_PATH, 'sass'),
     OPTIONS: path.join(__dirname, '.sassdocrc'),
 };
@@ -293,7 +296,7 @@ function sassdocBuildJson(cb) {
     options.convert = convert;
     options.exportDir = exportDir;
 
-    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(SASSDOC.PROJECT_PATHS)
         .pipe(sassdoc(options));
 
     cb();
@@ -309,7 +312,7 @@ function sassdocImportJson(cb) {
     options.json_dir = importDir;
     options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
 
-    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(SASSDOC.PROJECT_PATHS)
         .pipe(sassdoc(options));
 
     cb();
@@ -324,7 +327,7 @@ function sassdocBuildJA(cb) {
     options.json_dir = pathTranslations;
     options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
 
-    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(SASSDOC.PROJECT_PATHS)
         .pipe(sassdoc(options));
 
     cb();
@@ -336,7 +339,7 @@ function sassdocBuildEN(cb) {
     options.lang = 'en';
     options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
 
-    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(SASSDOC.PROJECT_PATHS)
         .pipe(sassdoc(options));
 
     cb();

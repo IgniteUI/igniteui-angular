@@ -1813,10 +1813,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         if (!this.summaries) {
             switch (this.dataType) {
-                case GridColumnDataType.String:
-                case GridColumnDataType.Boolean:
-                    this.summaries = IgxSummaryOperand;
-                    break;
                 case GridColumnDataType.Number:
                 case GridColumnDataType.Currency:
                 case GridColumnDataType.Percent:
@@ -1829,6 +1825,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 case GridColumnDataType.Time:
                     this.summaries = IgxTimeSummaryOperand;
                     break;
+
+                case GridColumnDataType.String:
+                case GridColumnDataType.Boolean:
                 default:
                     this.summaries = IgxSummaryOperand;
                     break;
@@ -1852,6 +1851,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     break;
                 case GridColumnDataType.DateTime:
                     this.filters = IgxDateTimeFilteringOperand.instance();
+                    break;
+                case GridColumnDataType.Image:
+                    this.filterable = false;
                     break;
                 case GridColumnDataType.String:
                 default:

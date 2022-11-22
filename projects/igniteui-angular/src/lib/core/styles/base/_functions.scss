@@ -3,11 +3,8 @@
 @use 'sass:list';
 @use 'sass:string';
 
-////
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-////
-
 /// @access private
 @function is-used($name, $checklist) {
     $used: true;
