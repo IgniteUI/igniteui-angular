@@ -74,6 +74,36 @@ describe('Filter', () => {
         expect(list.items.length).toBe(4);
     });
 
+    fit('should filter a list by multiple keys', () => {
+        const fixture = TestBed.createComponent(DynamicListTestComponent);
+        const list = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+        expect(list.items.length).toBe(4);
+        const items = list.items;
+
+        for (const item of items) {
+                expect(item instanceof IgxListItemComponent).toBeTruthy();
+            }
+
+        fixture.componentInstance.fo.key = ['key', 'text'];
+        fixture.componentInstance.filterValue = '1';
+        fixture.detectChanges();
+
+        expect(list.items.length).toBe(1);
+        expect(list.items[0] instanceof IgxListItemComponent).toBeTruthy();
+
+        fixture.componentInstance.filterValue = '';
+        fixture.detectChanges();
+
+        expect(list.items.length).toBe(4);
+
+        fixture.componentInstance.filterValue = 'Nav3';
+        fixture.detectChanges();
+
+        expect(list.items.length).toBe(1);
+    });
+
     it('should emit filter events on declaratively created list', () => {
         let visibleItems;
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
