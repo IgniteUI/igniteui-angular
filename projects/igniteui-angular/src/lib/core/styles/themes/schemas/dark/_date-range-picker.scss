@@ -8,7 +8,6 @@
 /// Generates a dark date-range-picker schema.
 /// @type {Map}
 /// @requires $light-date-range-picker
-/// @see $default-palette
 $dark-date-range-picker: $light-date-range-picker;
 
 /// Generates a dark fluent date-range-picker schema.
@@ -23,5 +22,5 @@ $dark-bootstrap-date-range-picker: $bootstrap-date-range-picker;
 
 /// Generates a dark indigo date-range-picker schema.
 /// @type {Map}
-/// @requires $ndigo-date-range-picker
+/// @requires $indigo-date-range-picker
 $dark-indigo-date-range-picker: $indigo-date-range-picker;

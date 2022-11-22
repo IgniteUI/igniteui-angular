@@ -78,8 +78,6 @@
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
-/// @requires {mixin} igx-vhelper
-/// @requires {mixin} igx-print-layout
 @mixin core(
     $print-layout: true,
     $enhanced-accessibility: false

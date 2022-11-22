@@ -73,7 +73,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
         if (isPinnedArea) {
             treeRec = this.grid.unpinnedRecords.find(x => x.data === this.data);
         }
-        return treeRec.level === 0;
+        return treeRec?.level === 0;
     }
 
     /**

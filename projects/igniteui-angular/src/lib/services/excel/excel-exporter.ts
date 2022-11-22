@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -114,7 +114,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader);
+                const columns = defaultOwner.columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === HeaderType.ColumnHeader);
 
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
@@ -126,7 +126,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
             defaultOwner = this._ownersMap.get(ownersKeys[0]);
             columnWidths = defaultOwner.columnWidths;
-            columnCount = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader).length;
+            columnCount = defaultOwner.columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === HeaderType.ColumnHeader).length;
         }
 
         const worksheetData =

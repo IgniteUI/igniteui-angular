@@ -15,7 +15,6 @@ $base-dark-input-group: $light-input-group;
 /// @type {Map}
 /// @requires $light-input-group
 /// @requires $base-dark-input-group
-/// @see $default-palette
 $dark-input-group: $base-dark-input-group;
 
 /// Generates a dark fluent input-group schema based on a mix of $fluent-input-group and $base-dark-input-group.
@@ -27,7 +26,6 @@ $dark-input-group: $base-dark-input-group;
 /// @prop {Map} hover-border-color [color: ('gray', 800)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} focused-border-color [color: ('gray', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('gray', 500)] - The disabled border color for input groups of type border and fluent.
-/// @requires {function} extend
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
 $dark-fluent-input-group: extend(
@@ -86,7 +84,6 @@ $dark-fluent-input-group: extend(
 
 /// Generates a dark bootstrap input-group schema based on a mix of $bootstrap-input-group and $base-dark-input-group.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-input-group
 /// @requires $base-dark-input-group
 $dark-bootstrap-input-group: extend(
@@ -103,7 +100,6 @@ $dark-bootstrap-input-group: extend(
 /// @prop {Map} $filled-secondary-color [contrast-color: ('surface')] - The label color in the filled state.
 /// @prop {Map} $focused-secondary-color [contrast-color: ('surface')] - The label color in the focused state.
 /// @prop {Map} focused-bottom-line-color [contrast-color: ('surface')] - The bottom line and border colors in the focused state.
-/// @requires {function} extend
 /// @requires $indigo-input-group
 /// @see $default-palette
 $dark-indigo-input-group: extend(

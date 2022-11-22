@@ -2,6 +2,8 @@
 @use '../schemas' as *;
 @use 'igniteui-theming/sass/color' as *;
 
+/// @group themes
+/// @access public
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
@@ -29,6 +31,8 @@
     );
 }
 
+/// @group themes
+/// @access public
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.

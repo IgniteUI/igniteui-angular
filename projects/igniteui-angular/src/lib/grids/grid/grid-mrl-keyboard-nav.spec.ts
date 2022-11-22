@@ -7,7 +7,7 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
@@ -1483,6 +1483,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+                clearGridSubs();
             });
 
             it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', async () => {
@@ -1608,6 +1609,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+                clearGridSubs();
             });
 
             it(`should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key
@@ -1737,6 +1740,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+                clearGridSubs();
             });
 
             it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
@@ -1797,6 +1801,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+                clearGridSubs();
             });
 
             it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
@@ -1859,6 +1865,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+                clearGridSubs();
             });
 
             it('should scroll active cell fully in view when navigating with arrow keys and row is partially visible.', async () => {
@@ -2197,6 +2205,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
                     grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
+
+                clearGridSubs();
             });
 
             it('should navigate to unpinned area when the column layout is bigger than the display container', async () => {

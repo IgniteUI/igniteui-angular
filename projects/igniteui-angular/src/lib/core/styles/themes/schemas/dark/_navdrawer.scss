@@ -19,7 +19,6 @@ $dark-base-navdrawer: (
 /// Generates a dark navdrawer schema.
 /// @type {Map}
 /// @requires $light-navdrawer
-/// @see $default-palette
 $dark-navdrawer: extend($light-navdrawer, $dark-base-navdrawer);
 
 /// Generates a dark fluent navdrawer schema.
@@ -27,7 +26,6 @@ $dark-navdrawer: extend($light-navdrawer, $dark-base-navdrawer);
 /// @prop {Map} item-active-text-color [color: ('primary', 200)] - The item's active text color.
 /// @prop {Map} item-active-icon-color [color: ('primary', 100)] - The item's icon active color.
 /// @prop {Map} item-active-background [color: ('primary', 400, .12)] - The item's active background color.
-/// @requires {function} extend
 /// @requires $fluent-navdrawer
 $dark-fluent-navdrawer: extend(
     $fluent-navdrawer,
@@ -71,7 +69,6 @@ $dark-bootstrap-navdrawer: extend(
 /// @prop {Map} item-active-background [contrast-color: ('gray', 400, .5)] - The item's active background color.
 /// @prop {Map} item-hover-text-color [contrast-color: ('gray', 50)] - The item's hover text color.
 /// @prop {Map} item-hover-icon-color [contrast-color: ('gray', 50)] - The item's hover icon color.
-/// @requires {function} extend
 /// @requires $indigo-navdrawer
 $dark-indigo-navdrawer: extend(
     $indigo-navdrawer,

@@ -8,7 +8,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError, clearGridSubs } from '../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -132,6 +132,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
+        clearGridSubs();
     });
 
     it('should render correct data for child grid after scrolling and start index changes.', async () => {
