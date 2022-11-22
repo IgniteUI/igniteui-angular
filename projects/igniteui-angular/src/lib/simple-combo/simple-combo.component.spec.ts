@@ -46,7 +46,6 @@ const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_INPUT_COSY = 'igx-input-group--cosy';
 const CSS_CLASS_INPUT_COMPACT = 'igx-input-group--compact';
 const CSS_CLASS_INPUT_COMFORTABLE = 'igx-input-group--comfortable';
-const SIMPLE_ICON_ELEMENT = 'igx-icon';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
@@ -999,9 +998,10 @@ describe('IgxSimpleCombo', () => {
             const toggleButton = fixture.debugElement.query(By.directive(IgxIconComponent));
             expect(toggleButton).toBeDefined();
 
-            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            toggleButton.nativeElement.click();
             fixture.detectChanges();
 
+            expect(combo.collapsed).toBeFalsy();
             expect(combo.onClick).toHaveBeenCalledTimes(1);
             expect((combo as any).virtDir.scrollTo).toHaveBeenCalledWith(0);
         });
@@ -1289,23 +1289,25 @@ describe('IgxSimpleCombo', () => {
         it('should toggle dropdown list on clicking a templated toggle icon', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSimpleComboIconTemplatesComponent);
             fixture.detectChanges();
-
             combo = fixture.componentInstance.combo;
-            dropdown = combo.dropdown;
-            const comboWrapper = fixture.nativeElement.querySelector(SIMPLE_COMBO_ELEMENT);
 
-            expect(comboWrapper).not.toBeNull();
+            const toggleIcon = fixture.debugElement.query(By.directive(IgxIconComponent));
+            expect(toggleIcon).toBeDefined();
 
-            let templatedIcon = comboWrapper.querySelector(SIMPLE_ICON_ELEMENT);
-            expect(templatedIcon).not.toBeNull();
-            expect(templatedIcon.textContent).toBe('search');
+            expect(toggleIcon.nativeElement.textContent).toBe('search');
             expect(combo.collapsed).toBeTruthy();
-
-            templatedIcon.click();
+            
+            toggleIcon.nativeElement.click();
             tick();
             fixture.detectChanges();
 
             expect(combo.collapsed).toBeFalsy();
+
+            toggleIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeTruthy();
         }));
     });
 
