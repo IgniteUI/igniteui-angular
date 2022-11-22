@@ -4445,10 +4445,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public recalculateAutoSizes() {
         // reset auto-size and calculate it again.
-        this._columns.forEach( x => x.autoSize = undefined);
-        this.resetCaches();
-        this.cdr.detectChanges();
-        this.autoSizeColumnsInView();
+            this._columns.forEach( x => x.autoSize = undefined);
+            this.resetCaches();
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.cdr.detectChanges();
+                this.autoSizeColumnsInView();
+            });
     }
 
     /**
