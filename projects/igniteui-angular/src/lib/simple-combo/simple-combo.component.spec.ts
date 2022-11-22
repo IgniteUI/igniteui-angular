@@ -53,6 +53,8 @@ describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
+    
+    configureTestSuite();
 
     describe('Unit tests: ', () => {
         const data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7'];
@@ -428,7 +430,6 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Initialization and rendering tests: ', () => {
-        configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -444,14 +445,12 @@ describe('IgxSimpleCombo', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick();
-            fixture.detectChanges();
-        }));
+        });
         it('should initialize the combo component properly', () => {
             const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
             expect(fixture.componentInstance).toBeDefined();
@@ -642,7 +641,6 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Binding tests: ', () => {
-        configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -808,7 +806,6 @@ describe('IgxSimpleCombo', () => {
 
     describe('Keyboard navigation and interactions', () => {
         let dropdown: IgxComboDropDownComponent;
-        configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -826,15 +823,13 @@ describe('IgxSimpleCombo', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             dropdown = combo.dropdown;
-            tick();
-            fixture.detectChanges();
-        }));
+        });
 
         it('should toggle dropdown list with arrow down/up keys', fakeAsync(() => {
             spyOn(combo, 'open').and.callThrough();
@@ -1312,7 +1307,6 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Display density', () => {
-        configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1376,7 +1370,6 @@ describe('IgxSimpleCombo', () => {
     describe('Form control tests: ', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
-            configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
@@ -1391,7 +1384,7 @@ describe('IgxSimpleCombo', () => {
                     ]
                 }).compileComponents();
             }));
-            beforeEach(fakeAsync(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInTemplatedFormComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.testCombo;
@@ -1590,7 +1583,6 @@ describe('IgxSimpleCombo', () => {
             });
         });
         describe('Reactive form tests: ', () => {
-            configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
@@ -1605,11 +1597,11 @@ describe('IgxSimpleCombo', () => {
                     ]
                 }).compileComponents();
             }));
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.reactiveCombo;
-            }));
+            });
             it('should not select null, undefined and empty string in a reactive form with required', () => {
                 // array of objects
                 combo.data = [
@@ -1772,7 +1764,6 @@ describe('IgxSimpleCombo', () => {
     });
 
     describe('Selection tests: ', () => {
-        configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
