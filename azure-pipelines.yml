@@ -7,7 +7,7 @@ steps:
     versionSpec: '16.x'
   displayName: 'Install Node.js'
 
-- script: npm install
+- script: npm ci
   displayName: 'Install dependencies'
   env:
     AZURE_PIPELINES: "true"

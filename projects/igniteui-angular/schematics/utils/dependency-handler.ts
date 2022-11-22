@@ -152,6 +152,17 @@ const addHammerToConfig =
             context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
                 `It could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
         }
+
+        // if there are no elements in the architect[config]options.stylePreprocessorOptions.includePaths that contain node_modules
+        const stylePrepropPath = 'node_modules';
+        if (!projectOptions?.stylePreprocessorOptions?.includePaths?.some(el => el.includes(stylePrepropPath))) {
+            if (projectOptions?.stylePreprocessorOptions?.includePaths) {
+                projectOptions?.stylePreprocessorOptions?.includePaths.push(stylePrepropPath);
+                return;
+            }
+            context.logger.warn(`Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
+                `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`);
+        }
     };
 
 const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
