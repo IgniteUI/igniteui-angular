@@ -291,7 +291,8 @@ export class PlatformUtil {
         }
 
         range.selectNodeContents(node);
-        const width = range.getBoundingClientRect().width;
+        const scale = node.getBoundingClientRect().width / node.offsetWidth;
+        const width = range.getBoundingClientRect().width / scale;
 
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
