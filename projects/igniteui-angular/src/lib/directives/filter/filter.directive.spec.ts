@@ -74,7 +74,7 @@ describe('Filter', () => {
         expect(list.items.length).toBe(4);
     });
 
-    fit('should filter a list by multiple keys', () => {
+    it('should filter a list by multiple keys', () => {
         const fixture = TestBed.createComponent(DynamicListTestComponent);
         const list = fixture.componentInstance.list;
 
