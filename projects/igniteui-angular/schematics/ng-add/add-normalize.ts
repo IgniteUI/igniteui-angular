@@ -10,7 +10,7 @@ const resetPackage = { 'minireset.css': '~0.0.4' };
 export const cssImport = 'node_modules/minireset.css/minireset.css';
 export const scssImport =
     `// CSS Reset, comment out if not required or using a different module\n`
-    + `@import '~minireset.css/minireset';\n`;
+    + `@import 'minireset.css/minireset';\n`;
 
 
 export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tree): boolean => {
@@ -28,7 +28,7 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
             case 'sass':
             case 'scss':
                 let content = host.read(stylesFile).toString();
-                if (content.indexOf(`~minireset.css/minireset`) === -1) {
+                if (content.indexOf(`minireset.css/minireset`) === -1) {
                     content = scssImport + content;
                     host.overwrite(stylesFile, content);
                     addPackage = resetPackage;
