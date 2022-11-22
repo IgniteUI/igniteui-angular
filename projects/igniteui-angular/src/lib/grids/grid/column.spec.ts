@@ -1270,7 +1270,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
         }));
 
-        it('should auto-size on data changed.', fakeAsync(() => {
+        it('should auto-size on initial data loaded.', fakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.componentInstance.data = [];
             fix.componentInstance.columns = [
@@ -1300,6 +1300,34 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             widths = grid.columns.map(x => x.width);
             expect(widths).toEqual(['95px', '240px', '145px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+        }));
+
+        it('should recalculate sizes via the recalculateAutoSizes API ', fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            fix.detectChanges();
+            tick();
+            const grid = fix.componentInstance.instance;
+            expect(grid.columns[0].width).toBe('95px');
+            expect(grid.columns[1].width).toBe('207px');
+
+            grid.data = [
+                {
+                    ID: 'VeryVeryVeryLongID',
+                    Address: 'Avda. de la Constitución 2222 Obere Str. 57'
+                }
+            ];
+            fix.detectChanges();
+            // no width change on new data.
+            expect(grid.columns[0].width).toBe('95px');
+            expect(grid.columns[1].width).toBe('207px');
+
+
+            // use api to force recalculation
+            grid.recalculateAutoSizes();
+            fix.detectChanges();
+            tick();
+            expect(grid.columns[0].width).toBe('164px');
+            expect(grid.columns[1].width).toBe('279px');
         }));
     });
 

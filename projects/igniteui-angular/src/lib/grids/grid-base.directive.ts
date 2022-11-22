@@ -4428,6 +4428,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Recalculates all widths of columns that have size set to `auto`.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.recalculateAutoSizes();
+     * ```
+     */
+    public recalculateAutoSizes() {
+        // reset auto-size and calculate it again.
+        this._columns.forEach( x => x.autoSize = undefined);
+        this.resetCaches();
+        this.cdr.detectChanges();
+        this.autoSizeColumnsInView();
+    }
+
+    /**
      * Returns an array of visible `IgxColumnComponent`s.
      *
      * @example
