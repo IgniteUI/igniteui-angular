@@ -20,7 +20,7 @@ export interface Replaced {
     providedIn: 'root'
 })
 export class MaskParsingService {
-    public applyMask(inputVal: string, maskOptions: MaskOptions): string {
+    public applyMask(inputVal: string, maskOptions: MaskOptions, pos: number = 0): string {
         let outputVal = '';
         let value = '';
         const mask: string = maskOptions.format;
@@ -60,7 +60,6 @@ export class MaskParsingService {
             nonLiteralValues.splice(nonLiteralIndices.length);
         }
 
-        let pos = 0;
         for (const nonLiteralValue of nonLiteralValues) {
             const char = nonLiteralValue;
             outputVal = this.replaceCharAt(outputVal, nonLiteralIndices[pos++], char);
@@ -115,7 +114,13 @@ export class MaskParsingService {
             maskedValue = this.replaceCharAt(maskedValue, i, char);
         }
 
-        return { value: maskedValue, end: cursor };
+        if (Math.abs(end - start) >= 1) {
+            // set cursor to be max between last cursor pos and the calculated `end`
+            // since on `delete` the cursor should move forward
+            cursor = Math.max(cursor, end);
+        }
+
+        return { value: maskedValue, end: cursor};
     }
 
     public replaceCharAt(strValue: string, index: number, char: string): string {

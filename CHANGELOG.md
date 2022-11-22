@@ -31,6 +31,7 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+    - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
 
 - `IgxExcelExporterService`
     - Added support for exporting grid summaries.

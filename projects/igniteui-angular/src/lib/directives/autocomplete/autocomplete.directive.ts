@@ -211,6 +211,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
+    protected _composing: boolean;
     protected id: string;
     protected get model() {
         return this.ngModel || this.formControl;
@@ -234,6 +235,20 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.open();
     }
 
+    /** @hidden @internal */
+    @HostListener('compositionstart')
+    public onCompositionStart(): void {
+        if (!this._composing) {
+            this._composing = true;
+        }
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionend')
+    public onCompositionEnd(): void {
+        this._composing = false;
+    }
+
     /** @hidden  @internal */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
@@ -253,7 +268,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /** @hidden  @internal */
     public handleKeyDown(event) {
-        if (!this.collapsed) {
+        if (!this.collapsed && !this._composing) {
             switch (event.key.toLowerCase()) {
                 case 'space':
                 case 'spacebar':

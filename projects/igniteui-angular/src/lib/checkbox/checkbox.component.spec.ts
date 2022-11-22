@@ -15,7 +15,6 @@ describe('IgxCheckbox', () => {
             declarations: [
                 InitCheckboxComponent,
                 CheckboxSimpleComponent,
-                CheckboxDisabledComponent,
                 CheckboxReadonlyComponent,
                 CheckboxIndeterminateComponent,
                 CheckboxRequiredComponent,
@@ -26,8 +25,7 @@ describe('IgxCheckbox', () => {
                 IgxCheckboxComponent
             ],
             imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it('Initializes a checkbox', () => {
@@ -196,15 +194,11 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.checked).toBe(true);
     }));
 
-    it('Disabled state', fakeAsync(() => {
-        const fixture = TestBed.createComponent(CheckboxDisabledComponent);
-        // Requires two async change detection cycles to setup disabled on the component and then native element
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
-        tick();
-        const testInstance = fixture.componentInstance;
-        const checkboxInstance = testInstance.cb;
+    it('Disabled state', () => {
+        const fixture = TestBed.createComponent(IgxCheckboxComponent);
+
+        const checkboxInstance = fixture.componentInstance;
+        checkboxInstance.disabled = true;
         const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement as HTMLInputElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement as HTMLLabelElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
@@ -220,7 +214,7 @@ describe('IgxCheckbox', () => {
 
         // Should not update
         expect(checkboxInstance.checked).toBe(false);
-    }));
+    });
 
     it('Readonly state', () => {
         const fixture = TestBed.createComponent(CheckboxReadonlyComponent);
@@ -372,16 +366,6 @@ class CheckboxIndeterminateComponent {
 })
 class CheckboxRequiredComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-}
-
-@Component({
-    template: `<igx-checkbox #cb
-                                [(ngModel)]="subscribed"
-                                [disabled]="true">Disabled</igx-checkbox>`})
-class CheckboxDisabledComponent {
-    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-
-    public subscribed = false;
 }
 
 @Component({

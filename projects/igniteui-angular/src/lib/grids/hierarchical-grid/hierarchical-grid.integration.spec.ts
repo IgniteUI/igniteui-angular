@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
@@ -32,7 +32,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     const FILTERING_ROW_CLASS = 'igx-grid-filtering-row';
     const FILTERING_CELL_CLASS = 'igx-grid-filtering-cell';
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -40,13 +42,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 IgxHierarchicalGridWithTransactionProviderComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
-        });
-    }));
+                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule
+            ]
+        }).compileComponents();
+    }))
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
-        tick();
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
@@ -674,14 +676,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             headers = GridFunctions.getColumnHeaders(fixture);
             gridRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
-            paging = GridFunctions.getGridPaginator(fixture);
             rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             dragIndicators = GridFunctions.getDragIndicators(fixture);
             expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');
 
             expect(headers.length).toBe(0);
             expect(gridRows.length).toBe(0);
-            expect(paging).toBeNull();
             expect(rowSelectors.length).toBe(0);
             expect(dragIndicators.length).toBe(0);
             // this check executes correctly on Ivy only
@@ -896,6 +896,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned';
         const FIXED_ROW_CONTAINER_TOP = 'igx-grid__tr--pinned-top';
         const FIXED_ROW_CONTAINER_BOTTOM = 'igx-grid__tr--pinned-bottom';
+
         beforeEach(() => {
             hierarchicalGrid.width = '800px';
             hierarchicalGrid.height = '500px';
