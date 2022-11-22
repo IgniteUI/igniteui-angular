@@ -121,8 +121,8 @@ export class IgxGridSummaryService {
         }
         this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
-                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field), groupRecord),
-                    data, column.field, this.grid.locale, column.pipeArgs);
+                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field),),
+                    data, column.field, groupRecord, this.grid.locale, column.pipeArgs);
                 rowSummaries.set(column.field, summaryResult);
             }
         });
