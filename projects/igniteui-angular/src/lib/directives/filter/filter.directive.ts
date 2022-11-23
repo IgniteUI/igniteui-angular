@@ -125,7 +125,6 @@ export class IgxFilterDirective implements OnChanges {
 })
 
 export class IgxFilterPipe implements PipeTransform {
-
     private findMatchByKey(item: any, options: IgxFilterOptions, key: string) {
         const match = options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue);
 
@@ -141,6 +140,7 @@ export class IgxFilterPipe implements PipeTransform {
 
         return match;        
     }
+
     public transform(items: any[],
                      // options - initial settings of filter functionality
                      options: IgxFilterOptions) {
