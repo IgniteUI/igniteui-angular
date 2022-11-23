@@ -185,6 +185,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
             // TODO: reject value if not? Or fallback value?
         }
+
+        // TODO(D.P.): Check API use and expose needed props to avoid unwrap OR handle component ref props w/ config
+        if (componentConfig.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
+            value = value.ngElementStrategy?.componentRef?.instance || value;
+        }
         super.setInputValue(property, value);
     }
 
