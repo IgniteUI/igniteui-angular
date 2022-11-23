@@ -823,6 +823,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted when a row is added.
      *
@@ -836,6 +837,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public rowAdded = new EventEmitter<IRowDataEventArgs>();
 
+    /* blazorCSSuppress */
     /**
      * Emitted when a row is deleted.
      *
@@ -4794,7 +4796,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
     }
 
-    /* csSuppress */
+    /* blazorCSSuppress */
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
      *
@@ -4814,6 +4816,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /* blazorCSSuppress */
     /**
      * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
      *
@@ -4853,6 +4856,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return record;
     }
 
+    /* blazorCSSuppress */
     /**
      * Updates the `IgxGridRowComponent` and the corresponding data record by primary key.
      *
@@ -4893,6 +4897,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorCSSuppress */
     /**
      * Updates the `IgxGridRowComponent`
      *
@@ -4939,7 +4944,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowSelector correspond to rowID
      */
-    public getRowData(rowSelector: any) {
+    public getRowData(rowSelector: any): any {
         if (!this.primaryKey) {
             return rowSelector;
         }
