@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule, IRowSelectionEventArgs } from './public_api';
@@ -27,7 +27,9 @@ const SCROLL_DEBOUNCETIME = 100;
 
 
 describe('IgxGrid - Row Selection #grid', () => {
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,
@@ -43,14 +45,14 @@ describe('IgxGrid - Row Selection #grid', () => {
                 IgxGridModule,
                 IgxGridSelectionModule
             ]
-        });
+        }).compileComponents();
     }));
 
     describe('Base tests', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -138,7 +140,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: allRowsArray,
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: true
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -155,7 +158,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 added: [],
                 removed: allRowsArray,
                 event: jasmine.anything() as any,
-                cancel: false
+                cancel: false,
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -205,7 +209,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -228,7 +233,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1, 2],
                 oldSelection: [1],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -246,7 +252,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1, 2],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -263,7 +270,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -287,7 +295,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [2],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             // Click again on same row
@@ -312,7 +321,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [3],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
         });
         it('Should select the row only on checkbox click when selectRowOnClick has value false', () => {
@@ -508,7 +518,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [2, 3, 4, 5],
                 oldSelection: [2],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             for (let index = 1; index < 5; index++) {
@@ -768,7 +779,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -800,7 +811,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SingleRowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -850,7 +861,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -872,7 +884,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1],
-                removed: [1]
+                removed: [1],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -1024,7 +1037,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: mockEvent,
                 newSelection: [5],
                 oldSelection: [2],
-                removed: [2]
+                removed: [2],
+                allRowsSelected: false
             });
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -1202,7 +1216,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1336,7 +1350,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let grid: IgxGridComponent;
         const gridData = SampleTestData.personIDNameRegionData();
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionWithoutPrimaryKeyComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1359,7 +1373,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1]],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -1374,7 +1389,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 event: jasmine.anything() as any,
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -1440,7 +1456,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1507,7 +1523,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1924,7 +1940,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2139,7 +2155,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         let fix;
         let grid;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(GridCustomSelectorsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

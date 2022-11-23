@@ -12,6 +12,7 @@ describe(`Update to ${version}`, () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
+				root: '/',
                 sourceRoot: '/testSrc'
             }
         },

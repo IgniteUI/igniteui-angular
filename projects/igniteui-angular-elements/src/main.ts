@@ -37,3 +37,6 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 //             <output .value="${context.$implicit}"></output>
 //         `;
 // });
+
+/** Export Public API */
+export * from './public_api';

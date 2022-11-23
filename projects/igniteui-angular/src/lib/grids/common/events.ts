@@ -88,6 +88,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     readonly removed: any[];
     /* blazorSuppress */
     readonly event?: Event;
+    readonly allRowsSelected?: boolean;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {

@@ -2,13 +2,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
 - script: npm ci
   displayName: 'Install dependencies'
-  env:
-    AZURE_PIPELINES: "true"
-
-- script: sudo npm install -g istanbul-combine
-  displayName: 'Install coverage combiner'
   env:
     AZURE_PIPELINES: "true"
 
@@ -19,6 +19,12 @@ steps:
 
 - script: npm run build:lib
   displayName: 'Build source code and styles'
+
+- script: npm run build:typedoc:en:production
+  displayName: 'Build typedoc EN'
+
+- script: npm run build:sassdoc:en:production
+  displayName: 'Build sassdoc EN'
 
 - script: npm run test:lib:azure
   displayName: 'Run all tests'
@@ -42,6 +48,9 @@ steps:
 
 - script: npm run test:schematics
   displayName: 'Run migrations & schematics'
+
+- script: npm run test:i18n
+  displayName: 'Test i18n'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
