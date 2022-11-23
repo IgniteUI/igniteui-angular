@@ -44,7 +44,7 @@ $fluent-watermark: extend(
     (
         variant: 'fluent',
 
-        background-image: #{url($light-watermark-image)},
+        background-image: url(#{$light-watermark-image}),
 
         border-radius: rem(2px)
     )
@@ -59,7 +59,7 @@ $bootstrap-watermark: extend(
     (
         variant: 'bootstrap',
 
-        background-image: #{url($light-watermark-image)},
+        background-image: url(#{$light-watermark-image}),
 
         border-radius: rem(4px)
     )
@@ -75,7 +75,7 @@ $indigo-watermark: extend(
     (
         variant: 'indigo-design',
 
-        background-image: #{url($light-watermark-image)},
+        background-image: url(#{$light-watermark-image}),
 
         border-color: (
             color: ('primary', 300),

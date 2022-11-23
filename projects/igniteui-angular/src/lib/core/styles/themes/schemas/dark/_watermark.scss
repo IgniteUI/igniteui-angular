@@ -26,7 +26,7 @@ $dark-watermark: extend(
 $dark-fluent-watermark: extend(
     $fluent-watermark,
     (
-        background-image: #{url($dark-watermark-image)},
+        background-image: url(#{$dark-watermark-image}),
     )
 );
 
@@ -36,7 +36,7 @@ $dark-fluent-watermark: extend(
 $dark-bootstrap-watermark: extend(
     $bootstrap-watermark,
     (
-        background-image: #{url($dark-watermark-image)},
+        background-image: url(#{$dark-watermark-image}),
     )
 );
 
@@ -46,7 +46,7 @@ $dark-bootstrap-watermark: extend(
 $dark-indigo-watermark: extend(
     $indigo-watermark,
     (
-        background-image: #{url($dark-watermark-image)},
+        background-image: url(#{$dark-watermark-image}),
     )
 );
 
