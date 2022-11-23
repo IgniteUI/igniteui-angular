@@ -96,6 +96,8 @@ export interface IPivotConfiguration {
     pivotKeys?: IPivotKeys;
 }
 
+/* blazorElement */
+/* marshalByValue */
 /**
 * Configuration of a pivot dimension.
 */
@@ -125,6 +127,7 @@ export interface IPivotDimension {
     /** Level of the dimension. */
     level?: number;
 }
+
 /**
 * Configuration of a pivot value aggregation.
 */
