@@ -9,7 +9,6 @@
 /// Generates a dark rating schema.
 /// @type {Map}
 /// @requires $light-rating
-/// @see $default-palette
 $dark-rating: $light-rating;
 
 /// Generates a dark fluent rating schema.

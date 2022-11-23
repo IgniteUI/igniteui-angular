@@ -1,32 +1,33 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
-        "downlevelIteration": true,
-        "importHelpers": true,
-        "module": "es2020",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "target": "es2020",
-        "typeRoots": [
-            "node_modules/@types"
+      "baseUrl": "./",
+      "downlevelIteration": true,
+      "importHelpers": true,
+      "module": "es2020",
+      "outDir": "./dist/out-tsc",
+      "sourceMap": true,
+      "declaration": false,
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
+      "target": "ES2022",
+      "typeRoots": [
+        "node_modules/@types"
+      ],
+      "lib": [
+        "es2019",
+        "dom"
+      ],
+      "paths": {
+        "igniteui-angular": [
+          "projects/igniteui-angular/src/public_api.ts"
         ],
-        "lib": [
-            "es2019",
-            "dom"
-        ],
-        "paths": {
-            "igniteui-angular": [
-                "projects/igniteui-angular/src/public_api.ts"
-            ],
-            "igniteui-angular-i18n": [
-                "projects/igniteui-angular-i18n/src/index.ts"
-            ]
-        },
-        "rootDir": "."
+        "igniteui-angular-i18n": [
+          "projects/igniteui-angular-i18n/src/index.ts"
+        ]
+      },
+      "rootDir": ".",
+      "useDefineForClassFields": false
     },
     "exclude": [
         "dist",

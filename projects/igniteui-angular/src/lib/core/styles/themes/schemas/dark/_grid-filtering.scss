@@ -9,7 +9,6 @@
 /// Generates a dark grid-filtering schema.
 /// @type {Map}
 /// @requires $light-grid-filtering
-/// @see $default-palette
 $dark-grid-filtering: $light-grid-filtering;
 
 /// Generates a dark fluent grid-filtering schema.
