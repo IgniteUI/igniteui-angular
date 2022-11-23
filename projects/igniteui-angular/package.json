@@ -86,7 +86,7 @@
         "igniteui-theming": "^1.1.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~15.0.1100-rc.0"
+        "@igniteui/angular-schematics": "~15.0.1100"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
