@@ -13,7 +13,7 @@
         <igx-list-item
             *ngFor="
                 let item of dims
-                    | filterPivotItems: input.value:grid.pipeTrigger
+                    | filterPivotItems: input.value:grid?.pipeTrigger
             "
             [id]="item.memberName"
         >
@@ -28,7 +28,7 @@
         <igx-list-item
             *ngFor="
                 let item of values
-                    | filterPivotItems: input.value:grid.pipeTrigger
+                    | filterPivotItems: input.value:grid?.pipeTrigger
             "
             [id]="item.member"
         >
@@ -59,11 +59,11 @@
         >
             <igx-expansion-panel-title class="igx-pivot-data-selector__header">
                 <h6 class="igx-pivot-data-selector__header-title">
-                    {{ grid.resourceStrings[panel.i18n] }}
+                    {{ grid?.resourceStrings[panel.i18n] }}
                 </h6>
                 <div class="igx-pivot-data-selector__header-extra">
                     <igx-icon>{{ panel.icon }}</igx-icon>
-                    <igx-chip>{{ this.grid[panel.dataKey].length }}</igx-chip>
+                    <igx-chip>{{ this.grid ? this.grid[panel.dataKey].length : '' }}</igx-chip>
                 </div>
             </igx-expansion-panel-title>
         </igx-expansion-panel-header>
@@ -73,7 +73,7 @@
             (dropped)="onItemDropped($event, panel.type)"
         >
             <igx-list
-                *ngIf="this.grid[panel.dataKey].length > 0"
+                *ngIf="this.grid && this.grid[panel.dataKey].length > 0"
                 [displayDensity]="displayDensity"
             >
                 <igx-list-item
@@ -149,9 +149,9 @@
             </igx-list>
             <div
                 class="igx-pivot-data-selector__empty"
-                *ngIf="this.grid[panel.dataKey].length === 0"
+                *ngIf="this.grid && this.grid[panel.dataKey].length === 0"
             >
-                {{ grid.resourceStrings.igx_grid_pivot_selector_panel_empty }}
+                {{ grid?.resourceStrings.igx_grid_pivot_selector_panel_empty }}
             </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
