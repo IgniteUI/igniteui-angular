@@ -41,7 +41,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
 
         const componentDeclarations = source.statements
             .filter((m): m is ts.ClassDeclaration => m.kind === ts.SyntaxKind.ClassDeclaration)
-            .filter(x => x.decorators?.some(x => getDecoratorName(x) === 'Component'));
+            .filter(x => ts.getDecorators(x)?.some(x => getDecoratorName(x) === 'Component'));
 
         for (const component of componentDeclarations) {
             const type = typeChecker.getTypeAtLocation(component);
@@ -68,12 +68,12 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
             }
 
             // content queries:
-            const queryProps = type.getProperties().filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('ContentChild')));
+            const queryProps = type.getProperties().filter(x => ts.canHaveDecorators(x.declarations[0]) && ts.getDecorators(x.declarations[0])?.some(x => getDecoratorName(x).includes('ContentChild')));
             if (queryProps.length) {
                 console.log(type.symbol.escapedName, ':');
             }
             for (const prop of queryProps) {
-                const decorator = prop.valueDeclaration?.decorators.find(x => getDecoratorName(x).includes('ContentChild')) // TODO: valueDeclaration vs declarations
+                const decorator = ts.canHaveDecorators(prop.valueDeclaration) && ts.getDecorators(prop.valueDeclaration).find(x => getDecoratorName(x).includes('ContentChild')) // TODO: valueDeclaration vs declarations
                 const expression = decorator.expression as ts.CallExpression;
                 const firstArg = expression.arguments && expression.arguments[0];
                 let queryType: ts.Identifier | null;
@@ -111,7 +111,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 .filter(x => isProperty(x))
                 .filter(x => isPublic(x));
             const inputProps = publicProps
-                .filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
+                .filter(x => ts.canHaveDecorators(x.declarations[0]) && ts.getDecorators(x.declarations[0])?.some(x => getDecoratorName(x).includes('Input')));
 
             // template props:
             const templateProps = inputProps
@@ -195,8 +195,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
 
     // TODO: possibly filter by owning class if replicating inheritance structure in declarations
     const gridProps = typeChecker.getTypeAtLocation(sourceFile.statements[sourceFile.statements.length-1]).getProperties();
-    const gridInputs = gridProps.filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Input')));
-    const gridOutputs = gridProps.filter(x => x.declarations[0].decorators?.some(x => getDecoratorName(x).includes('Output')))
+    const gridInputs = gridProps.filter(x => ts.canHaveDecorators(x.declarations[0]) && ts.getDecorators(x.declarations[0])?.some(x => getDecoratorName(x).includes('Input')));
+    const gridOutputs = gridProps.filter(x => ts.canHaveDecorators(x.declarations[0]) && ts.getDecorators(x.declarations[0])?.some(x => getDecoratorName(x).includes('Output')))
 
     function filterProperties(sourceFile: ts.SourceFile | ts.Bundle) {
         if (ts.isSourceFile(sourceFile)) {
@@ -211,7 +211,7 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
             // const members = classDecl.members.filter(x => gridInputs.includes(typeChecker.getSymbolAtLocation(x)));
             const members = classDecl.members.filter(x => gridInputs.some(input => input.escapedName === x.name.getText()));
 
-            classDecl = ts.factory.updateClassDeclaration(classDecl, classDecl.decorators, classDecl.modifiers, classDecl.name, classDecl.typeParameters, classDecl.heritageClauses, members /*members*/);
+            classDecl = ts.factory.updateClassDeclaration(classDecl, classDecl.modifiers, classDecl.name, classDecl.typeParameters, classDecl.heritageClauses, members /*members*/);
             return ts.factory.updateSourceFile(sourceFile, [...sourceFile.statements.slice(0,sourceFile.statements.length-2), classDecl]);
         }
         return sourceFile;
@@ -274,7 +274,7 @@ function filterRelevantQueries(contentQueries: ContentQuery[], name: string): Co
  * @returns Alternative type/token the component is provided as OR null
  */
 function getProvideAs(component: ts.ClassDeclaration, type: ts.InterfaceType): ts.Identifier | null {
-    const expression = component.decorators.find(x => getDecoratorName(x) === 'Component').expression;
+    const expression = ts.getDecorators(component).find(x => getDecoratorName(x) === 'Component').expression;
     if (ts.isCallExpression(expression) && ts.isObjectLiteralExpression(expression.arguments[0])) {
         const objectLiteral = expression.arguments[0];
         const providers: any = objectLiteral.properties.find(x => x.name.getText() === 'providers');

@@ -2298,7 +2298,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set filterMode(value: FilterMode) {
-        this._filterMode = value;
+        switch (value) {
+            case FilterMode.excelStyleFilter:
+            case FilterMode.quickFilter:
+                this._filterMode = value;
+                break;
+            default:
+                break;
+        }
 
         if (this.filteringService.isFilterRowVisible) {
             this.filteringRow.close();
@@ -3849,6 +3856,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public dataRebound(event) {
+        this.selectionService.clearHeaderCBState();
         this.dataChanged.emit(event);
     }
 
@@ -4722,19 +4730,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._moveChildColumns(column.parent, column, target, pos);
         }
 
-        let columnPinStateChanged;
+        // let columnPinStateChanged;
         // pinning and unpinning will work correctly even without passing index
         // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
             const pinnedIndex = this._pinnedColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
-            columnPinStateChanged = column.pin(index);
+            column.pin(index);
         }
 
         if (!target.pinned && column.pinned) {
             const unpinnedIndex = this._unpinnedColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
-            columnPinStateChanged = column.unpin(index);
+            column.unpin(index);
         }
 
         // if (target.pinned && column.pinned && !columnPinStateChanged) {
@@ -7205,6 +7213,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return GridColumnDataType.Boolean;
         } else if (typeof rec === 'object' && rec instanceof Date) {
             return GridColumnDataType.Date;
+        } else if (typeof rec === 'string' && (/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(rec)) {
+            return GridColumnDataType.Image;
         }
         return GridColumnDataType.String;
     }

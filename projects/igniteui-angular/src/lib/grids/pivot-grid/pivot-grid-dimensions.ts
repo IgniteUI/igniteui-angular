@@ -17,6 +17,7 @@ export interface IPivotDateDimensionOptions {
     fullDate?: boolean;
 }
 
+/* blazorAlternateBaseType: PivotDimension */
 // Equals to pretty much this configuration:
 // {
 //     member: () => 'All Periods',
@@ -53,6 +54,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
      */
     public dataType?: GridColumnDataType;
 
+    /* blazorSuppress */
     /** Default options used for initialization. */
     public defaultOptions = {
         total: true,
@@ -81,6 +83,29 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public memberName = 'AllPeriods';
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
 
+
+    private _inBaseDimension: IPivotDimension;
+    public get inBaseDimension(): IPivotDimension {
+        return this._inBaseDimension;
+    }
+    public set inBaseDimension(value: IPivotDimension) {
+        this._inBaseDimension = value;
+        if (this.inBaseDimension && this.inOptions) {
+            this.initialize(this.inBaseDimension, this.inOptions);
+        }
+    }
+
+    private _inOptions: IPivotDateDimensionOptions;
+    public get inOptions(): IPivotDateDimensionOptions {
+        return this._inOptions;
+    }
+    public set inOptions(value: IPivotDateDimensionOptions) {
+        this._inOptions = value;
+        if (this.inBaseDimension && this.inOptions) {
+            this.initialize(this.inBaseDimension, this.inOptions);
+        }
+    }
+
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
      *
@@ -92,7 +117,15 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
      * ```
      */
-    constructor(public inBaseDimension: IPivotDimension, public inOptions: IPivotDateDimensionOptions = {}) {
+    constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
+        this._inOptions = inOptions;
+        this._inBaseDimension = inBaseDimension;
+        if (this.inBaseDimension && this.inOptions) {
+            this.initialize(this.inBaseDimension, this.inOptions);
+        }
+    }
+
+    protected initialize(inBaseDimension, inOptions) {
         const options = { ...this.defaultOptions, ...inOptions };
 
         if (!inBaseDimension) {

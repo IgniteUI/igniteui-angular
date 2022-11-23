@@ -440,30 +440,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             expect(grid.page).toBe(desiredPageIndex);
         });
-
-        it('should hide paginator when there is no data or all records are filtered out.', () => {
-            fix.detectChanges();
-
-            verifyGridPager(fix, 3, '1', '1\xA0of\xA04', [true, true, false, false]);
-
-            // Filter out all records
-            grid.filter('ID', 1000, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-            fix.detectChanges();
-
-            expect(GridFunctions.getGridPaginator(grid)).toBeNull();
-
-            grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-            fix.detectChanges();
-            expect(GridFunctions.getGridPaginator(grid)).not.toBeNull();
-
-            grid.data = null;
-            fix.detectChanges();
-            expect(GridFunctions.getGridPaginator(grid)).toBeNull();
-
-            grid.data = fix.componentInstance.data;
-            fix.detectChanges();
-            expect(GridFunctions.getGridPaginator(grid)).not.toBeNull();
-        });
     });
 
     it('should not throw error when data is undefined', fakeAsync(() => {
@@ -476,14 +452,10 @@ describe('IgxGrid - Grid Paging #grid', () => {
         }
         expect(errorMessage).toBe('');
         grid = fix.componentInstance.grid;
-        let paginator = GridFunctions.getGridPaginator(grid);
-        expect(paginator).toBeNull();
         expect(grid.rowList.length).toBe(0);
         tick(305);
         fix.detectChanges();
 
-        paginator = GridFunctions.getGridPaginator(grid);
-        expect(paginator).toBeDefined();
         expect(grid.rowList.length).toBe(5);
     }));
 

@@ -464,6 +464,7 @@ export class StegosaurusGridComponent implements OnInit {
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
             <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
                 <igx-column headerClasses="firstGroupColumn" field="ID" *ngFor="let item of hunderdItems;"></igx-column>
+                <igx-column *ngIf="extraMissingColumn" headerClasses="firstGroupColumn" [field]='"Missing"'></igx-column>
             </igx-column-group>
             <igx-column-group headerGroupClasses="secondGroup" [header]="secondGroupTitle">
                 <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
@@ -504,9 +505,16 @@ export class BlueWhaleGridComponent {
     public gridHeight = '500px';
     public columnWidth = '100px';
     public data = SampleTestData.contactInfoDataFull();
+    public extraMissingColumn = false;
+    public firstGroupRepeats = 100;
+    public secondGroupRepeats = 50;
 
-    public hunderdItems = new Array(100);
-    public fiftyItems = new Array(50);
+    public get hunderdItems() {
+        return new Array(this.firstGroupRepeats);
+    }
+    public get fiftyItems() {
+        return new Array(this.secondGroupRepeats);
+    }
 
     public firstGroupTitle = '100 IDs';
     public secondGroupTitle = '2 col groups with 50 IDs each';

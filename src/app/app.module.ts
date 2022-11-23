@@ -167,6 +167,7 @@ import { RangeSliderComponent } from './slider/range-slider/range-slider.compone
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
+import { GridExportComponent } from './grid-export/grid-export.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -312,7 +313,8 @@ const components = [
     PivotGridNoopSampleComponent,
     IgxStepperSampleComponent,
     QueryBuilderComponent,
-    RatingSampleComponent
+    RatingSampleComponent,
+    GridExportComponent
 ];
 
 @NgModule({

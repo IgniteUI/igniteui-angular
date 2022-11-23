@@ -12,6 +12,7 @@ describe(`Update to ${version}`, () => {
         defaultProject: 'testProj',
         projects: {
             testProj: {
+                root: '/',
                 sourceRoot: '/testSrc'
             }
         },
@@ -146,6 +147,53 @@ describe(`Update to ${version}`, () => {
         ).toEqual(
 `@include igniteui.elevations($material-elevations);`
         );
+    });
+
+    it('should rename IgxGridToolbarTitleDirective and IgxGridToolbarActionsDirective', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { IgxGridToolbarTitleDirective, IgxGridToolbarComponent, IgxGridToolbarActionsDirective } from 'igniteui-angular';
+
+        @Component({
+            selector: 'test-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            toolbar: IgxGridToolbarComponent;
+            @ViewChild(IgxGridToolbarTitleDirective)
+            public title: IgxGridToolbarTitleDirective;
+            @ViewChild(IgxGridToolbarActionsDirective)
+            public actions: IgxGridToolbarActionsDirective;
+        }
+        `);
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { IgxGridToolbarTitleComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent } from 'igniteui-angular';
+
+        @Component({
+            selector: 'test-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            toolbar: IgxGridToolbarComponent;
+            @ViewChild(IgxGridToolbarTitleComponent)
+            public title: IgxGridToolbarTitleComponent;
+            @ViewChild(IgxGridToolbarActionsComponent)
+            public actions: IgxGridToolbarActionsComponent;
+        }
+        `;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/test.component.ts'
+            )
+        ).toEqual(expectedContent);
     });
 
     it('should remove the disabled property from the igx-radio-group', async () => {

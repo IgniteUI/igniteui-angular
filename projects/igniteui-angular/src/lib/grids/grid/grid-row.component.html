@@ -98,6 +98,7 @@
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
         [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+        [class.igx-grid__td--image]="col.dataType === 'image'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"

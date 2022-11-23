@@ -76,6 +76,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxPivotDateDimension } from './public_api';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -95,6 +96,7 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
 /* blazorAdditionalDependency: GridActionsBaseDirective */
 /* blazorAdditionalDependency: GridEditingActions */
 /* blazorAdditionalDependency: GridPinningActions */
+/* blazorAdditionalDependency: PivotDateDimension */
 /* blazorIndirectRender */
 /**
  * Pivot Grid provides a way to present and manipulate data in a pivot table view.
@@ -239,7 +241,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      @Input()
      public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
 
-    @Input()
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
      *
@@ -248,6 +250,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [pivotConfiguration]="config"></igx-pivot-grid>
      * ```
      */
+    @Input()
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
         this.emitInitEvents(this._pivotConfiguration);
@@ -258,6 +261,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.notifyChanges(true);
     }
 
+    /* mustSetInCodePlatforms: WebComponents;Blazor */
     public get pivotConfiguration() {
         return this._pivotConfiguration || { rows: null, columns: null, values: null, filters: null };
     }
@@ -280,6 +284,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @HostBinding('attr.role')
     public role = 'grid';
 
+    public getDateDimensionType() {
+        return IgxPivotDateDimension;
+    }
 
     /**
      * Enables a super compact theme for the component.

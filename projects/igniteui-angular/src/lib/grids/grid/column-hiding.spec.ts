@@ -551,14 +551,12 @@ describe('Column Hiding UI #grid', () => {
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');
             gridRows = fixEl.querySelector('igx-grid-row');
-            paging = fixEl.querySelector('.igx-paginator');
             rowSelectors = gridEl.querySelector('.igx-grid__cbx-padding > igx-checkbox');
             dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
 
             expect(tHeadItems).toBeNull();
             expect(gridRows).toBeNull();
-            expect(paging).toBeNull();
             expect(rowSelectors).toBeNull();
             expect(dragIndicators).toBeNull();
             expect(verticalScrollBar).not.toBeNull();

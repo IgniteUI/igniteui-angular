@@ -5,6 +5,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-grid-column-types-sample',
+    styleUrls: ['grid-column-types.sample.scss'],
     templateUrl: 'grid-column-types.sample.html'
 })
 
@@ -17,6 +18,42 @@ export class GridColumnTypesSampleComponent implements OnInit {
     public gridMCHNewIndex = 0;
     public filterMode: FilterMode = FilterMode.quickFilter;
     public filterModes;
+    public dataWithImages = [{
+        avatar: 'assets/images/avatar/1.jpg',
+        phone: '770-504-2217',
+        text: 'Terrance Orta',
+        available: false
+    }, {
+        avatar: 'assets/images/avatar/2.jpg',
+        phone: '423-676-2869',
+        text: 'Richard Mahoney',
+        available: true
+    }, {
+        avatar: 'assets/images/avatar/3.jpg',
+        phone: '859-496-2817',
+        text: 'Donna Price',
+        available: true
+    }, {
+        avatar: 'assets/images/avatar/4.jpg',
+        phone: '901-747-3428',
+        text: 'Lisa Landers',
+        available: true
+    }, {
+        avatar: 'assets/images/avatar/12.jpg',
+        phone: '573-394-9254',
+        text: 'Dorothy H. Spencer',
+        available: true
+    }, {
+        avatar: 'assets/images/avatar/13.jpg',
+        phone: '323-668-1482',
+        text: 'Stephanie May',
+        available: false
+    }, {
+        avatar: 'assets/images/avatar/14.jpg',
+        phone: '401-661-3742',
+        text: 'Marianne Taylor',
+        available: true
+    }];
 
     public log(event) {
         console.log(event);

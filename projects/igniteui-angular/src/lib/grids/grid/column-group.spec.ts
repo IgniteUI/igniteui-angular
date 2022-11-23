@@ -28,7 +28,7 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
 /* eslint-disable max-len */
 describe('IgxGrid - multi-column headers #grid', () => {
-    let fixture; let grid: IgxGridComponent; let componentInstance;
+    let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
 
     configureTestSuite();
 
@@ -134,6 +134,45 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 'personDetailsColumn', 2);
 
         }));
+
+        it('Should render dynamic column group header correctly (#12165).', () => {
+            fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 1;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.secondGroupRepeats = 1;
+            fixture.detectChanges();
+
+            componentInstance = fixture.componentInstance;
+            grid = componentInstance.grid;
+            const columnWidthPx = parseInt(componentInstance.columnWidth, 10);
+            // 2 levels of column group and 1 level of columns
+            const gridHeadersDepth = 3;
+
+            let firstGroupChildrenCount = 1;
+
+            let firstGroup = GridFunctions.getColumnGroupHeaders(fixture)[0];
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            let allHeaders = GridFunctions.getColumnHeaders(fixture).map<IgxGridHeaderComponent>(x => x.componentInstance);
+            let firstSixHeaders = allHeaders.slice(0, 6).map(x => x.column.field);
+            expect(allHeaders.length).toEqual(14);
+            expect(firstSixHeaders).toEqual(['ID', 'ID', 'ID', 'ID', 'CompanyName', 'ContactName']);
+
+            (componentInstance as BlueWhaleGridComponent).extraMissingColumn = true;
+            fixture.detectChanges();
+
+            firstGroupChildrenCount = 2;
+            firstGroup = GridFunctions.getColumnGroupHeaders(fixture)[0];
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            allHeaders = GridFunctions.getColumnHeaders(fixture).map<IgxGridHeaderComponent>(x => x.componentInstance);
+            firstSixHeaders = allHeaders.slice(0, 6).map(x => x.column.field);
+            expect(allHeaders.length).toEqual(15);
+            expect(firstSixHeaders).toEqual(['ID', 'Missing', 'ID', 'ID', 'ID', 'CompanyName']);
+        });
 
         it('Should not render empty column group.', () => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);

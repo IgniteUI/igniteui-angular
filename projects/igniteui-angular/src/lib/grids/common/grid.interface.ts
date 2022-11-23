@@ -250,6 +250,8 @@ export interface ColumnType extends FieldType {
     getGridTemplate(isRow: boolean): string;
     toggleVisibility(value?: boolean): void;
     populateVisibleIndexes?(): void;
+    pin(index?: number): boolean;
+    unpin(index?: number): boolean;
 }
 
 export interface IGridFormGroupCreatedEventArgs {

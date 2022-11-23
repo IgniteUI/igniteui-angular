@@ -4,7 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import { strToU8 } from 'fflate';
 import { yieldingLoop } from '../../core/utils';
-import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IExportRecord, IColumnList, IColumnInfo, GRID_ROOT_SUMMARY, GRID_PARENT, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -52,6 +52,16 @@ export class ThemeFile implements IExcelFile {
     }
 }
 
+interface Dimensions {
+    startCoordinate: string
+    endCoordinate: string
+}
+
+interface CurrencyInfo {
+    styleXf: number
+    symbol: string
+}
+
 /**
  * @hidden
  */
@@ -67,6 +77,23 @@ export class WorksheetFile implements IExcelFile {
     private mergeCellsCounter = 0;
     private rowIndex = 0;
     private pivotGridRowHeadersMap = new Map<number, string>();
+
+    private dimensionMap: Map<string, Dimensions> = new Map<string, Dimensions>();
+    private hierarchicalDimensionMap: Map<any,  Map<string, Dimensions>> = new Map<any,  Map<string, Dimensions>>();
+    private currentSummaryOwner = '';
+    private currentHierarchicalOwner = '';
+    private firstColumn = Number.MAX_VALUE;
+    private firstDataRow = Number.MAX_VALUE;
+    private isValidGrid: boolean;
+    private lastValidRow: string;
+
+    private currencyStyleMap = new Map<string, CurrencyInfo>([
+        ['USD', {styleXf: 5, symbol: '$'}],
+        ['GBP', {styleXf: 6, symbol: '£'}],
+        ['CNY', {styleXf: 7, symbol: '¥'}],
+        ['EUR', {styleXf: 8, symbol: '€'}],
+        ['JPY', {styleXf: 9, symbol: '¥'}],
+    ]);
 
     public writeElement() {}
 
@@ -102,6 +129,8 @@ export class WorksheetFile implements IExcelFile {
             const hasUserSetIndex = owner.columns.some(col => col.exportIndex !== undefined);
 
             const height =  worksheetData.options.rowHeight;
+
+            this.isValidGrid = worksheetData.isHierarchical || worksheetData.isTreeGrid || worksheetData.isGroupedGrid;
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
             this.sheetData += `<sheetData>`;
 
@@ -145,8 +174,8 @@ export class WorksheetFile implements IExcelFile {
             const freezeHeaders = worksheetData.options.freezeHeaders ? 2 + multiColumnHeaderLevel : 1;
 
             if (!isHierarchicalGrid) {
-                this.dimension =
-                    'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount);
+                const col = worksheetData.hasSummaries ? worksheetData.columnCount + 1 : worksheetData.columnCount - 1
+                this.dimension = 'A1:' + ExcelStrings.getExcelColumn(col) + (worksheetData.rowCount);
 
                 cols += '<cols>';
 
@@ -167,8 +196,6 @@ export class WorksheetFile implements IExcelFile {
                     cols += `<col min="1" max="${worksheetData.columnCount}" width="15" customWidth="1"/>`;
                 }
 
-                cols += '</cols>';
-
                 const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
                 const frozenColumnCount = indexOfLastPinnedColumn + 1;
                 let firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + freezeHeaders;
@@ -186,7 +213,8 @@ export class WorksheetFile implements IExcelFile {
                 }
             } else {
                 const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
-                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
+                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/>`;
+
                 if (worksheetData.options.freezeHeaders) {
                     const firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
                     this.freezePane =
@@ -194,6 +222,12 @@ export class WorksheetFile implements IExcelFile {
                          topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
             }
+
+            if (worksheetData.hasSummaries) {
+                cols += `<col min="${worksheetData.columnCount + 2}" max="${worksheetData.columnCount + 2}" hidden="1"/>`;
+            }
+
+            cols += '</cols>';
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
                 this.sheetData += rows;
@@ -321,10 +355,18 @@ export class WorksheetFile implements IExcelFile {
         this.rowIndex++;
         const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
 
-        rowData[0] =
-            `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>${pivotGridColumns}`;
-
+        rowData[0] = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>${pivotGridColumns}`;
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
+        const isDataRecord = record.type === ExportRecordType.HierarchicalGridRecord
+            || record.type === ExportRecordType.DataRecord
+            || record.type === ExportRecordType.GroupedRecord
+            || record.type === ExportRecordType.TreeGridRecord;
+
+        const isValidRecordType = isDataRecord || record.type === ExportRecordType.SummaryRecord;
+
+        if (isValidRecordType && worksheetData.hasSummaries) {
+            this.resolveSummaryDimensions(record, isDataRecord, worksheetData.isGroupedGrid)
+        }
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : worksheetData.isPivotGrid ? worksheetData.owner.maxRowLevel : 0);
@@ -341,17 +383,45 @@ export class WorksheetFile implements IExcelFile {
 
     private getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
-        const columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
+        let columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
         const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
+        const isSummaryRecord = fullRow.type === ExportRecordType.SummaryRecord;
+        const isValidRecordType = fullRow.type === ExportRecordType.GroupedRecord
+            || fullRow.type === ExportRecordType.DataRecord
+            || fullRow.type === ExportRecordType.HierarchicalGridRecord
+            || fullRow.type === ExportRecordType.TreeGridRecord;
 
-        const cellValue = worksheetData.isSpecialData ?
+        this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
+
+        let cellValue = worksheetData.isSpecialData ?
             fullRow.data :
             fullRow.data[key];
 
-        if (cellValue === undefined || cellValue === null) {
+        if (cellValue === GRID_LEVEL_COL || key === GRID_LEVEL_COL) {
+            columnName = ExcelStrings.getExcelColumn(worksheetData.columnCount + 1) + (this.rowIndex);
+        }
+
+        if (worksheetData.hasSummaries && (isValidRecordType || (worksheetData.isGroupedGrid && isSummaryRecord))) {
+            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isGroupedGrid && isSummaryRecord)
+        }
+
+        if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && !this.isValidGrid) {
+            this.setRootSummaryStartCoordinate(column, key);
+
+            if (this.firstColumn > column) {
+                this.setRootSummaryStartCoordinate(worksheetData.columnCount + 1, GRID_LEVEL_COL);
+                this.firstColumn = column;
+            }
+        }
+
+        const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
+        const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
+        const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
+
+        if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
-        } else {
+        } else if ((worksheetData.hasSummaries && (isValidRecordType || isHeaderRecord)) || !worksheetData.hasSummaries) {
             const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
@@ -367,9 +437,151 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+        } else {
+            let summaryFunc = `"${cellValue ?? ""}"`;
+
+            if (isSummaryRecord && cellValue) {
+                const dimensionMapKey = this.isValidGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
+                const level = worksheetData.isGroupedGrid ? worksheetData.maxLevel : fullRow.level;
+
+                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
+
+                if (!summaryFunc) {
+                    const cellStr = `${cellValue.label}: ${cellValue.value}`;
+                    const savedValue = dictionary.saveValue(cellStr, false);
+                    return `<c r="${columnName}" t="s" s="1"><v>${savedValue}</v></c>`;
+                }
+
+                return `<c r="${columnName}" t="str"><f t="array" ref="${columnName}">${summaryFunc}</f></c>`;
+            }
+
+            return `<c r="${columnName}" t="s" s="1"><f>${summaryFunc}</f></c>`;
+        }
+    }
+
+    private resolveSummaryDimensions(record: IExportRecord, isDataRecord: boolean, isGroupedGrid: boolean) {
+        if (this.isValidGrid &&
+            this.currentHierarchicalOwner !== '' &&
+            this.currentHierarchicalOwner !== record.owner &&
+            !this.hierarchicalDimensionMap.get(this.currentHierarchicalOwner)) {
+            this.hierarchicalDimensionMap.set(this.currentHierarchicalOwner, new Map(this.dimensionMap))
+        }
+
+        if (isDataRecord) {
+            if (this.currentSummaryOwner !== record.summaryKey || this.currentHierarchicalOwner !== record.hierarchicalOwner) {
+                this.dimensionMap.clear();
+            }
+
+            this.currentSummaryOwner = record.summaryKey;
+
+            // For grouped grid we need to reset the parent map
+            // so we can change the startCoordinate for each record
+            if (isGroupedGrid && this.currentHierarchicalOwner !== '' && record.hierarchicalOwner === GRID_PARENT) {
+                this.hierarchicalDimensionMap.delete(GRID_PARENT)
+            }
+
+            this.currentHierarchicalOwner = record.hierarchicalOwner;
+        }
+    }
+
+    private setSummaryCoordinates(columnName: string, key: string, hierarchicalOwner: string, useLastValidEndCoordinate: boolean) {
+        const targetDimensionMap = this.hierarchicalDimensionMap.get(hierarchicalOwner) ?? this.dimensionMap;
+
+        if (!targetDimensionMap.get(key)) {
+            const initialDimensions: Dimensions = {
+                startCoordinate: columnName,
+                endCoordinate: columnName
+            };
+
+            targetDimensionMap.set(key, initialDimensions)
+        } else {
+            if (useLastValidEndCoordinate) {
+                this.setEndCoordinates(targetDimensionMap, true);
+            } else {
+                targetDimensionMap.get(key).endCoordinate = columnName;
+                this.lastValidRow = targetDimensionMap.get(key).endCoordinate.match(/[a-z]+|[^a-z]+/gi)[1]
+            }
+        }
+
+        if (this.isValidGrid && !useLastValidEndCoordinate && hierarchicalOwner !== GRID_PARENT) {
+            const parentMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
+            this.setEndCoordinates(parentMap);
+        }
+    }
+
+    private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate: boolean = false) {
+        for (const a of map.values()) {
+            const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
+            a.endCoordinate = `${colName}${useLastValidEndCoordinate ? this.lastValidRow : this.rowIndex}`;
+         }
+    }
+
+    private getSummaryFunction(type: string, key: string, dimensionMapKey: any, recordLevel: number, col: IColumnInfo): string {
+        const dimensionMap = dimensionMapKey ? this.hierarchicalDimensionMap.get(dimensionMapKey) : this.dimensionMap;
+        const dimensions = dimensionMap.get(key);
+        const levelDimensions = dimensionMap.get(GRID_LEVEL_COL);
+
+        let func = '';
+        let funcType = '';
+        let result = '';
+        const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
+
+        switch(type.toLowerCase()) {
+            case "count":
+                return `"Count: "&amp;_xlfn.COUNTIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel})`
+            case "min":
+                func = `_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                funcType = `"Min: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
+            case "max":
+                func = `_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate}))`
+                funcType = `"Max: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
+            case "sum":
+                func =  `_xlfn.SUMIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                funcType = `"Sum: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
+            case "avg":
+                func = `_xlfn.AVERAGEIF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}, ${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})`
+                funcType = `"Avg: "&amp;`;
+
+                result = funcType + (col.dataType === 'currency' && currencyInfo
+                    ? `_xlfn.TEXT(${func}, "${currencyInfo.symbol}#,##0.00")`
+                    : `${func}`);
+
+                return result
+            case "earliest":
+                // TODO: get date format from locale
+                return `"Earliest: "&amp;_xlfn.TEXT(_xlfn.MIN(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "m/d/yyyy")`
+            case "latest":
+                // TODO: get date format from locale
+                return `"Latest: "&amp;_xlfn.TEXT(_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "m/d/yyyy")`
+        }
+    }
+
+    private setRootSummaryStartCoordinate(column: number, key: string) {
+        const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this.firstDataRow);
+
+        if (this.dimensionMap.get(key).startCoordinate !== firstDataRecordColName) {
+            this.dimensionMap.get(key).startCoordinate = firstDataRecordColName;
         }
     }
 
@@ -400,7 +612,10 @@ export class WorksheetFile implements IExcelFile {
 
                 const columnValue = dictionary.saveValue(currentCol.header, true);
 
-                columnCoordinate = ExcelStrings.getExcelColumn(column) + rowCoordinate;
+                columnCoordinate = (currentCol.field === GRID_LEVEL_COL
+                    ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
+                    : ExcelStrings.getExcelColumn(column)) + rowCoordinate;
+
                 rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
                 str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
 

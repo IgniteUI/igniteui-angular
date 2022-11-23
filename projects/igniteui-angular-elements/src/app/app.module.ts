@@ -22,7 +22,8 @@ import {
     IgxPaginatorComponent,
     IgxPivotGridComponent,
     IgxRowIslandComponent,
-    IgxTreeGridComponent
+    IgxTreeGridComponent,
+    IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
@@ -64,6 +65,9 @@ export class AppModule {
 
     const pivot = createIgxCustomElement(IgxPivotGridComponent, { injector: this.injector, registerConfig });
     customElements.define("igc-pivot-grid", pivot);
+
+    const pivotDataSelector = createIgxCustomElement(IgxPivotDataSelectorComponent, { injector: this.injector, registerConfig });
+    customElements.define("igc-pivot-data-selector", pivotDataSelector);
 
     const ri = createIgxCustomElement(IgxRowIslandComponent, { injector: this.injector, registerConfig } );
     customElements.define("igc-row-island", ri);
