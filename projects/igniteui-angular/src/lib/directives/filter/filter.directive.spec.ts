@@ -83,8 +83,8 @@ describe('Filter', () => {
         const items = list.items;
 
         for (const item of items) {
-                expect(item instanceof IgxListItemComponent).toBeTruthy();
-            }
+            expect(item instanceof IgxListItemComponent).toBeTruthy();
+        }
 
         fixture.componentInstance.fo.key = ['key', 'text'];
         fixture.componentInstance.filterValue = '1';
