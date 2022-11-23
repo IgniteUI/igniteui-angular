@@ -1,3 +1,5 @@
+import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
@@ -74,7 +76,7 @@ export class IgxSummaryOperand {
      *
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
@@ -169,8 +171,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName, groupRecord);
         result.push({
             key: 'min',
             label: 'Min',
