@@ -34,7 +34,8 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations
     DateTime: 'dateTime',
     Time: 'time',
     Currency: 'currency',
-    Percent: 'percent'
+    Percent: 'percent',
+    Image: 'image'
 });
 export type DataType = (typeof DataType)[keyof typeof DataType];
 

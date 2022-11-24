@@ -4,7 +4,7 @@
 
 ////
 /// @group themes
-/// @access privet
+/// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -16,14 +16,13 @@
 /// @param {Color} $color [null] - The color used for the link text.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
+///
+///
 ///
 /// @example scss Change the watermark link background
 ///   $my-watermark-theme: watermark-theme($link-background: magenta);
-///   // Pass the theme to the watermark component mixin
-///   @include watermark($my-watermark-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-watermark-theme);
 @function watermark-theme(
     $schema: $light-schema,
 
@@ -63,8 +62,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin watermark($theme) {
     @include css-vars($theme);
 

@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -95,6 +95,10 @@ describe('IgxTreeGrid', () => {
             groupingExpressions = fix.componentInstance.groupingExpressions;
             setupGridScrollDetection(fix, treeGrid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it ('GroupByArea has the expected properties\' values set', fakeAsync(() => {
             expect(groupByArea).toBeDefined();

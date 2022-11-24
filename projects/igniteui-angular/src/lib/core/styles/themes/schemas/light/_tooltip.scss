@@ -8,13 +8,9 @@
 
 /// Generates a light tooltip schema.
 /// @type {Map}
-///
-/// @property {Map} background [color: ('gray', 700, .8),] - The background color of the tooltip.
-/// @property {Map} text-color [contrast-color: ('gray', 700)] - The text color of the tooltip.
-/// @property {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
-/// @see $default-palette
+/// @prop {Map} background [color: ('gray', 700, .8),] - The background color of the tooltip.
+/// @prop {Map} text-color [contrast-color: ('gray', 700)] - The text color of the tooltip.
+/// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 $light-tooltip: extend(
     (
         variant: 'material',
@@ -36,7 +32,6 @@ $light-tooltip: extend(
 /// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [2px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires {Map} $light-tooltip
 $fluent-tooltip: extend(
     $light-tooltip,
@@ -60,7 +55,6 @@ $fluent-tooltip: extend(
 /// @prop {Map} background [color: ('gray', 900, .8)] - The background color of the tooltip.
 /// @prop {Map} text-color [contrast-color: ('gray', 900)] - The text color of the tooltip.
 /// @prop {Number} border-radius [4px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
 /// @requires $light-tooltip
 $bootstrap-tooltip: extend(
     $light-tooltip,
@@ -78,10 +72,7 @@ $bootstrap-tooltip: extend(
 
 /// Generates an indigo tooltip schema.
 /// @type {Map}
-///
 /// @prop {Number} border-radius [3px] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
 /// @requires {Map} $light-tooltip
 $indigo-tooltip: extend(
     $light-tooltip,

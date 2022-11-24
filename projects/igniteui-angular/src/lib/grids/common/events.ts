@@ -85,6 +85,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     readonly added: any[];
     readonly removed: any[];
     readonly event?: Event;
+    readonly allRowsSelected?: boolean;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {

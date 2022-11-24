@@ -21,16 +21,11 @@
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the bar.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
-/// @requires $elevations
 ///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: bottom-nav-theme($background: black);
-///   // Pass the theme to the bottom-nav component mixin
-///   @include bottom-nav($my-bottom-nav-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-bottom-nav-theme);
 @function bottom-nav-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -72,14 +67,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
-/// @requires igx-bottom-nav-theme
-/// @requires color
-/// @requires extend
-/// @requires rem
-/// @requires $in-out-quad
-/// @requires var-get
 @mixin bottom-nav($theme) {
     @include css-vars($theme);
 
@@ -190,7 +177,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin bottom-nav-typography($categories: (label: 'caption')) {
     $label: map.get($categories, 'label');
 

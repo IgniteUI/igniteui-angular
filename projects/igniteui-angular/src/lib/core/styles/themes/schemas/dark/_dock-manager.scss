@@ -114,7 +114,6 @@ $dark-base-dock-manager: (
 
 /// Generates a dark dock-manager schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-dock-manager: extend($light-dock-manager, $dark-base-dock-manager);
@@ -125,7 +124,6 @@ $dark-dock-manager: extend($light-dock-manager, $dark-base-dock-manager);
 /// @prop {Color} floating-pane-border-color [transparent] - Sets the border color for floating panes.
 /// @prop {Color} joystick-border-color [transparent] - Sets the border color of the joystick.
 /// @prop {Color} splitter-handle [color: ('gray', 50)] - Sets the background color for the splitter handles.
-/// @requires {function} extend
 /// @requires $fluent-dock-manager
 $dark-fluent-dock-manager: extend(
     $fluent-dock-manager,
@@ -155,7 +153,6 @@ $dark-fluent-dock-manager: extend(
 /// @prop {Color} context-menu-color-active [contrast-color: ('primary', 600),] - Sets the text color for active context menus.
 /// @prop {Color} context-menu-background [color: ('gray', 500)] - Sets the background color for context menus.
 /// @prop {Color} context-menu-color [contrast-color: ('gray', 500)] - Sets the text color for context menus.
-/// @requires {function} extend
 /// @requires $bootstrap-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-bootstrap-dock-manager: extend(
@@ -203,7 +200,6 @@ $dark-bootstrap-dock-manager: extend(
 /// @prop {Color} context-menu-color-active [contrast-color: ('primary', 600)] - Sets the text color for active context menus.
 /// @prop {Color} context-menu-background [contrast-color: ('primary', 600)] - Sets the background color for context menus.
 /// @prop {Color} context-menu-color [contrast-color: ('primary', 600)] - Sets the text color for context menus.
-/// @requires {function} extend
 /// @requires $indigo-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-indigo-dock-manager: extend(

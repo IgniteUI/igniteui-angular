@@ -135,6 +135,7 @@ import { RangeSliderComponent } from './slider/range-slider/range-slider.compone
 import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
+import { GridExportComponent } from './grid-export/grid-export.sample';
 
 const appRoutes: Routes = [
     {
@@ -484,6 +485,10 @@ const appRoutes: Routes = [
         component: GridVirtualizationSampleComponent
     },
     {
+        path: 'gridExport',
+        component: GridExportComponent
+    },
+    {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
     },
@@ -652,4 +657,4 @@ const appRoutes: Routes = [
     }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' });
+export const routing = RouterModule.forRoot(appRoutes, {});
