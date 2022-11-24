@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.0.1
+
+- `IgxGrid`
+    - Added new auto-sizing API `recalculateAutoSizes` that recalculates widths of columns that have size set to `auto`. Can be used in scenarios where you want to auto-size the columns again post initialization.
+
 ## 15.0.0
 
 ### New Features
@@ -32,7 +37,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
     - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
-    - Added new auto-sizing API `recalculateAutoSizes` that recalculates widths of columns that have size set to `auto`. Can be used in scenarios where you want to auto-size the columns again post initialization.
 
 - `IgxExcelExporterService`
     - Added support for exporting grid summaries.
