@@ -34,11 +34,11 @@
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon (click)="onClick($event)" *ngIf="!toggleIconTemplate">
+        <igx-icon *ngIf="!toggleIconTemplate">
             {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}
         </igx-icon>
     </igx-suffix>
