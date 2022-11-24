@@ -831,7 +831,8 @@ describe('IgxSimpleCombo', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxSimpleComboSampleComponent,
-                    IgxComboInContainerTestComponent
+                    IgxComboInContainerTestComponent,
+                    IgxSimpleComboIconTemplatesComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -1015,9 +1016,10 @@ describe('IgxSimpleCombo', () => {
             const toggleButton = fixture.debugElement.query(By.directive(IgxIconComponent));
             expect(toggleButton).toBeDefined();
 
-            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            toggleButton.nativeElement.click();
             fixture.detectChanges();
 
+            expect(combo.collapsed).toBeFalsy();
             expect(combo.onClick).toHaveBeenCalledTimes(1);
             expect((combo as any).virtDir.scrollTo).toHaveBeenCalledWith(0);
         });
@@ -1301,6 +1303,30 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toEqual([]);
             expect(combo.value).toBe('');
         });
+
+        it('should toggle dropdown list on clicking a templated toggle icon', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboIconTemplatesComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            const toggleIcon = fixture.debugElement.query(By.directive(IgxIconComponent));
+            expect(toggleIcon).toBeDefined();
+
+            expect(toggleIcon.nativeElement.textContent).toBe('search');
+            expect(combo.collapsed).toBeTruthy();
+            
+            toggleIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeFalsy();
+
+            toggleIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeTruthy();
+        }));
     });
 
     describe('Display density', () => {
@@ -1884,6 +1910,22 @@ export class IgxSimpleComboEmptyComponent {
     public combo: IgxSimpleComboComponent;
 
     public data: any[] = [];
+    public name!: string;
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
+                    <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
+                </igx-simple-combo>`
+})
+export class IgxSimpleComboIconTemplatesComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] =  [
+        { name: 'Sofia', id: '1' }, 
+        { name: 'London', id: '2' }, 
+    ];;
     public name!: string;
 }
 

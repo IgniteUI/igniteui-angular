@@ -27,7 +27,7 @@ describe('igxMask', () => {
                 OneWayBindComponent,
                 PipesMaskComponent,
                 PlaceholderMaskComponent,
-                EmptyMaskTestComponent,
+                MaskTestComponent,
                 ReadonlyMaskTestComponent
             ],
             imports: [
@@ -378,7 +378,7 @@ describe('igxMask', () => {
     }));
 
     it('Should display mask on dragenter and remove it on dragleave', fakeAsync(() => {
-        const fixture = TestBed.createComponent(EmptyMaskTestComponent);
+        const fixture = TestBed.createComponent(MaskTestComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
 
@@ -390,6 +390,17 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new DragEvent('dragleave'));
         expect(input.nativeElement.value).toEqual('');
+
+        // should preserve state on dragenter
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePaste('76', fixture.debugElement.query(By.css('.igx-input-group__input')), 3, 3);
+        fixture.detectChanges();
+
+        input.nativeElement.dispatchEvent(new Event('blur'));
+        expect(input.nativeElement.value).toEqual('___76_____');
+
+        input.nativeElement.dispatchEvent(new DragEvent('dragenter'));
+        expect(input.nativeElement.value).toEqual('___76_____');
     }));
 
     it('Apply display and input pipes on blur and focus.', fakeAsync(() => {
@@ -485,6 +496,29 @@ describe('igxMask', () => {
         expect(fixture.componentInstance.maskDirective.mask).toEqual('##.##');
         expect(input.nativeElement.placeholder).toEqual('##.##');
     }));
+
+    it('should update input properly on selection with DELETE', () => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.detectChanges();
+        const inputElement = fixture.debugElement.query(By.css('input'));
+        inputElement.triggerEventHandler('focus', {});
+        UIInteractions.simulatePaste('1234567890', inputElement, 1, 1);
+        fixture.detectChanges();
+        expect(inputElement.nativeElement.value).toEqual('(123) 4567-890');
+
+        const inputHTMLElement = inputElement.nativeElement as HTMLInputElement;
+        inputHTMLElement.setSelectionRange(6, 8);
+        fixture.detectChanges();
+        expect(inputElement.nativeElement.selectionStart).toEqual(6);
+        expect(inputElement.nativeElement.selectionEnd).toEqual(8);
+
+        UIInteractions.triggerEventHandlerKeyDown('Delete', inputElement);
+        inputElement.triggerEventHandler('input', { inputType: 'test' });
+        fixture.detectChanges();
+        expect(inputElement.nativeElement.selectionStart).toEqual(8);
+        expect(inputElement.nativeElement.selectionEnd).toEqual(8);
+        expect(inputHTMLElement.value).toEqual('(123) __67-890');
+    });
 });
 
 describe('igxMaskDirective ControlValueAccessor Unit', () => {
@@ -728,7 +762,7 @@ class PipesMaskComponent {
         </igx-input-group>
     `
 })
-class EmptyMaskTestComponent {
+class MaskTestComponent {
     @ViewChild('input', { static: true })
     public input: ElementRef;
 }
