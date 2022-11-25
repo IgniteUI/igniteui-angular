@@ -261,6 +261,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.clearSelection();
             this._onChangeCallback(null);
         }
+        if (this.selection.length) {
+            this.selectionService.clear(this.id);
+        }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
             this.dropdown.navigateFirst();
@@ -464,6 +467,29 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return newSelection[0]?.toString() || '';
     }
 
+    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+        if (!newSelection.length) {
+            this.registerRemoteEntries(oldSelection, false);
+            return '';
+        }
+
+        this.registerRemoteEntries(oldSelection, false);
+        this.registerRemoteEntries(newSelection);
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+    }
+
+    /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
+    protected registerRemoteEntries(ids: any[], add = true) {
+        const selection = this.getValueDisplayPairs(ids)[0];
+
+        if (add) {
+            this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey];
+
+        } else if (selection) {
+            delete this._remoteSelection[selection[this.valueKey]];
+        }
+    }
+
     private clearSelection(ignoreFilter?: boolean): void {
         let newSelection = this.selectionService.get_empty();
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
@@ -473,11 +499,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
+        if (this.isRemote) {
+            const searchValue = this.searchValue || this.comboInput.value;
+            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+            if (searchValue !== remoteValue) {
+                this.clear();
+            }
+            return;
+        }
+
         const filtered = this.filteredData.find(this.findMatch);
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
             this.clear();
-            return;
         }
     }
 
@@ -488,8 +522,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this._internalFilter = '';
-        this.searchValue = '';
+        this.comboInput.value = this._internalFilter = this._value = this.searchValue = '';
     }
 
     private isValid(value: any): boolean {
