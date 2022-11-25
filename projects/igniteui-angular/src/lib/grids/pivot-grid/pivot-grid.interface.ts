@@ -58,10 +58,15 @@ export interface IPivotAggregator {
     /** Aggregation label to show in the UI. */
     label: string;
     /**
+     * Aggregation name that will be used from a list of predefined aggregations.
+     * If not set will use the specified aggregator function.
+     */
+    aggregatorName?: PivotAggregationType;
+    /**
      * Aggregator function can be a custom implementation of `PivotAggregation`, or 
      * use predefined ones from `IgxPivotAggregate` and its variants.
      */
-    aggregator: (members: any[], data?: any[]) => any;
+    aggregator?: (members: any[], data?: any[]) => any;
 }
 
 /**
@@ -175,6 +180,8 @@ export enum PivotDimensionType {
     Column,
     Filter
 }
+
+export type PivotAggregationType = 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'EARLIEST' ;
 
 /** Interface describing the pivot dimension data.
 * Contains additional information needed to render dimension headers.
