@@ -28,7 +28,7 @@ export class IgxPivotAggregate {
      *
      * @memberof IgxPivotAggregate
      */
-    public static aggregators() {
+    public static aggregators(): Array<IPivotAggregator> {
         return [{
             key: 'COUNT',
             label: this.resourceStrings.igx_grid_pivot_aggregate_count,
