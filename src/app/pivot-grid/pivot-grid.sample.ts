@@ -125,7 +125,7 @@ export class PivotGridSampleComponent {
                 member: 'UnitsSold',
                 aggregate: {
                     key: 'SUM',
-                    aggregator: IgxPivotNumericAggregate.sum,
+                    aggregatorName: 'SUM',
                     label: 'Sum'
                 },
                 enabled: true,
@@ -372,7 +372,7 @@ export class PivotGridSampleComponent {
                     member: 'UnitsSold',
                     aggregate: {
                         key: 'SUM',
-                        aggregator: IgxPivotNumericAggregate.sum,
+                        aggregatorName: 'SUM',
                         label: 'Sum'
                     },
                     enabled: true,
