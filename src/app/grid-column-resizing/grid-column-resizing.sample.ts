@@ -23,7 +23,7 @@ export class GridColumnResizingSampleComponent implements OnInit {
             // % width, no min/max width.
             { field: 'ContactName', width: '20%', resizable: true },
             // % width, % min/max width.
-            { field: 'ContactTitle', width: '30%', resizable: true, maxWidth: '5%'},
+            { field: 'ContactTitle', width: '30%', resizable: true, maxWidth: '30%'},
             // px width, % min/max width.
             { field: 'Address', width: 300, resizable: true, maxWidth: '20%', minWidth: '15%' },
             { field: 'City', width: 100, resizable: true },
@@ -72,5 +72,9 @@ export class GridColumnResizingSampleComponent implements OnInit {
 
     public scrScrollTo(index) {
         this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
+    }
+
+    public autoSizeAll() {
+        this.grid1.columns.forEach(x => x.autosize());
     }
 }
