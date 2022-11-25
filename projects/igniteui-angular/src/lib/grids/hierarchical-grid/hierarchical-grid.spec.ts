@@ -1607,6 +1607,35 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
 });
 
+    describe('Columns and row islands runtime change', () => {
+        configureTestSuite((() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxHierarchicalGridToggleRIAndColsComponent
+                ],
+                imports: [NoopAnimationsModule, IgxHierarchicalGridModule]
+            });
+        }));
+        let fixture: ComponentFixture<IgxHierarchicalGridToggleRIAndColsComponent>;
+        let hierarchicalGrid: IgxHierarchicalGridComponent;
+        it('should allow changing columns runtime in root grid when there are no row islands.', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIAndColsComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(hierarchicalGrid.childLayoutList.length).toBe(0);
+            expect(hierarchicalGrid.columns.length).toBe(0);
+            fixture.componentInstance.toggleColumns = true;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            expect(hierarchicalGrid.columns.length).toBe(2);
+
+            fixture.componentInstance.toggleRI = true;
+            fixture.detectChanges();
+            expect(hierarchicalGrid.childLayoutList.length).toBe(1);
+        }));
+    });
+
 describe('IgxHierarchicalGrid custom template #hGrid', () => {
     configureTestSuite((() => {
         TestBed.configureTestingModule({
@@ -1907,7 +1936,21 @@ export class IgxHierarchicalGridSizingComponent {
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
 public toggleChildRI = true;
+}
 
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data"
+     [autoGenerate]="false" [height]="'400px'" [width]="'500px'">
+     <igx-column field="ID" *ngIf='toggleColumns'></igx-column>
+     <igx-column field="ProductName" *ngIf='toggleColumns'></igx-column>
+     <igx-row-island *ngIf='toggleRI' [key]="'childData'" [autoGenerate]="true">
+     </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchicalGridToggleRIComponent {
+    public toggleRI = false;
+    public toggleColumns = false;
 }
 
 @Component({
