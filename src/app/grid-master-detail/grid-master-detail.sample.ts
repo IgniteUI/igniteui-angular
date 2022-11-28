@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Component, ViewChild, OnInit, Inject } from '@angular/core';
+import { Component, ViewChild, OnInit, Inject, TemplateRef } from '@angular/core';
 
 import { IgxGridComponent, IgxGridStateDirective } from 'igniteui-angular';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
@@ -15,12 +15,14 @@ export class GridMasterDetailSampleComponent implements OnInit {
     public data: Array<any>;
     public expState = [];
     public columns: Array<any>;
+    @ViewChild('detailTemplate', {read: TemplateRef, static: true })
+    public detailTemplate: TemplateRef<any>;
+
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
             { dataType: 'string', field: 'ContactName', width: 200 },
             { dataType: 'string', field: 'CompanyName', width: 300 },
-            { dataType: 'string', field: 'Salary', width: 300 }
         ];
 
         this.data = [
@@ -52,6 +54,8 @@ export class GridMasterDetailSampleComponent implements OnInit {
             { Salary: '6600',ID: 'FRANR', CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
             { Salary: '4900',ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
+
+        this.grid1.detailTemplate = this.detailTemplate;
     }
 
     public expandFirstRow() {

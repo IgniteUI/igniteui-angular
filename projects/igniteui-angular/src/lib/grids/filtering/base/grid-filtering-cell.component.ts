@@ -134,7 +134,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
      * @memberof IgxGridFilteringCellComponent
      */
     public get context() {
-        return { column: this.column };
+        return { $implicit: this.column, column: this.column};
     }
 
     /**

@@ -6,14 +6,15 @@ import {
     PivotAggregation,
     IgxPivotDateDimension,
     IPivotDimension,
-    IDimensionsChange,
     DisplayDensity,
     FilteringExpressionsTree,
     FilteringLogic,
     IgxStringFilteringOperand,
     PivotDimensionType,
     IPivotGridRecord,
-    IPivotGridColumn
+    IPivotGridColumn,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -55,7 +56,7 @@ export class PivotGridSampleComponent {
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
-    constructor() {
+    constructor(private excelExportService: IgxExcelExporterService) {
         this.filterExpTree.filteringOperands = [
             {
                 condition: IgxStringFilteringOperand.instance().condition('equals'),
@@ -84,7 +85,6 @@ export class PivotGridSampleComponent {
             memberFunction: () => 'All',
             memberName: 'AllProducts',
             enabled: true,
-            width: '25%',
             childLevel: {
                 memberFunction: (data) => data.ProductCategory,
                 memberName: 'ProductCategory',
@@ -106,14 +106,14 @@ export class PivotGridSampleComponent {
 
     public pivotConfigHierarchy: IPivotConfiguration = {
         columns: [
-            this.dimensions[1]
-        ],
-        rows: [
             {
                 memberName: 'City',
                 enabled: true,
+                width: '100px'
             },
-            this.dimensions[2],
+        ],
+        rows: [
+
             {
                 memberName: 'SellerName',
                 enabled: true,
@@ -134,7 +134,7 @@ export class PivotGridSampleComponent {
                     downFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) <= 300
                 },
                 // dataType: 'currency',
-                formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => {
+                formatter: (value) => {
                     return value ? value + '$' : undefined;
                 }
             },
@@ -343,5 +343,45 @@ export class PivotGridSampleComponent {
                 label: 'Sum'
             }
         }, 0);
+    }
+
+    public filterDim() {
+        const set = new Set();
+        set.add('New York');
+        // for excel-style filters, condition is 'in' and value is a Set of values.
+        this.grid1.filterDimension(this.pivotConfigHierarchy.columns[0], set, IgxStringFilteringOperand.instance().condition('in'));
+    }
+
+    public newConfig() {
+        this.pivotConfigHierarchy = {
+            columns: [
+                {
+                    memberName: 'City',
+                    enabled: true,
+                },
+            ],
+            rows: [
+                {
+                    memberName: 'SellerName',
+                    enabled: true,
+                    filter: this.filterExpTree
+                }
+            ],
+            values: [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: IgxPivotNumericAggregate.sum,
+                        label: 'Sum'
+                    },
+                    enabled: true,
+                }
+            ]
+        };
+    }
+
+    public exportButtonHandler() {
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions('ExportedFile'));
     }
 }

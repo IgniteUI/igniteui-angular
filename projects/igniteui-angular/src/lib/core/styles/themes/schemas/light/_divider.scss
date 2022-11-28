@@ -6,11 +6,10 @@
 
 /// Generates a light divider schema.
 /// @type {Map}
-/// @property {Map} color [color: ('grays', 300)] - The color used for the divider.
-/// @see $default-palette
+/// @prop {Map} color [color: ('gray', 300)] - The color used for the divider.
 $light-divider: (
     color: (
-        color: ('grays', 300)
+        color: ('gray', 300)
     )
 );
 
@@ -21,11 +20,9 @@ $fluent-divider: $light-divider;
 
 /// Generates a bootstrap divider schema.
 /// @type {Map}
-/// @requires {function} extend
 $bootstrap-divider: $light-divider;
 
 /// Generates an indigo divider schema.
 /// @type {Map}
-/// @requires {function} extend
 $indigo-divider: $light-divider;
 

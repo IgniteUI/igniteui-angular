@@ -9,22 +9,20 @@
 
 /// Generates a light bottom navigation scheme.
 /// @type {Map}
-/// @prop {Color} background [color: ('grays', 50))] - The background color used for the toast.
-/// @prop {Map} idle-item-color [color: ('grays', 700)] - The text-color used for the idle color.
+/// @prop {Color} background [color: ('gray', 50))] - The background color used for the toast.
+/// @prop {Map} idle-item-color [color: ('gray', 700)] - The text-color used for the idle color.
 /// @prop {Map} active-item-color [color: ('primary', 500)] - The text-color used for the active color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the bottom nav.
-/// @requires {function} extend
 /// @requires {Map} $default-elevation-bottom-nav
-/// @see $default-palette
 $light-bottom-nav: extend(
     $default-elevation-bottom-nav,
     (
         background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         idle-item-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         active-item-color: (
@@ -36,21 +34,18 @@ $light-bottom-nav: extend(
 /// Generates a fluent bottom navigation schema.
 /// @type {Map}
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the bottom nav.
-/// @requires {function} extend
 /// @requires {Map} $light-bottom-nav
 /// @requires {Map} $fluent-elevation-bottom-nav
 $fluent-bottom-nav: extend($light-bottom-nav, $fluent-elevation-bottom-nav);
 
 /// Generates a bootstrap bottom navigation schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-bottom-nav
 $bootstrap-bottom-nav: $light-bottom-nav;
 
 /// Generates an indigo bottom navigation schema.
 /// @type {Map}
 /// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the bottom nav.
-/// @requires {function} extend
 /// @requires {Map} $light-bottom-nav
 /// @requires {Map} $indigo-elevation-bottom-nav
 $indigo-bottom-nav: extend($light-bottom-nav, $indigo-elevation-bottom-nav);

@@ -8,16 +8,14 @@
 
 /// Generates a light radio schema.
 /// @type {Map}
-///
-/// @property {Color} hover-color [transparent] - The text color used for the label text.
-/// @property {Map} fill-hover-border-color [color: ('secondary', 500)] - The text color used for the label text.
-/// @property {Map} label-color [color: ('grays', 900)] - The text color used for the label text.
-/// @property {Map} empty-color [color: ('grays', 600)] - The unchecked border color.
-/// @property {Map} fill-color [color: ('secondary', 500)] - The checked border and dot colors.
-/// @property {Map} fill-color-hover [color: ('secondary', 500)] - The checked border and dot colors on hover.
-/// @property {Map} disabled-color [color: ('grays', 400)] - The disabled border and dot colors.
-/// @property {Map} disabled-label-color [color: ('grays', 400)] - The disabled border and dot colors.
-/// @see $default-palette
+/// @prop {Color} hover-color [transparent] - The text color used for the label text.
+/// @prop {Map} fill-hover-border-color [color: ('secondary', 500)] - The text color used for the label text.
+/// @prop {Map} label-color [color: ('gray', 900)] - The text color used for the label text.
+/// @prop {Map} empty-color [color: ('gray', 600)] - The unchecked border color.
+/// @prop {Map} fill-color [color: ('secondary', 500)] - The checked border and dot colors.
+/// @prop {Map} fill-color-hover [color: ('secondary', 500)] - The checked border and dot colors on hover.
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and dot colors.
+/// @prop {Map} disabled-label-color [color: ('gray', 400)] - The disabled border and dot colors.
 $light-radio: (
     variant: 'material',
     name: 'igx-radio',
@@ -29,11 +27,11 @@ $light-radio: (
     ),
 
     label-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     empty-color: (
-        color: ('grays', 600)
+        color: ('gray', 600)
     ),
 
     fill-color: (
@@ -45,25 +43,22 @@ $light-radio: (
     ),
 
     disabled-color: (
-        color: ('grays', 400)
+        color: ('gray', 400)
     ),
 
     disabled-label-color: (
-        color: ('grays', 400)
+        color: ('gray', 400)
     )
 );
 
 /// Generates a fluent radio schema.
 /// @type {Map}
-///
-/// @property {Color} hover-color [color: ('grays', 700)] - The border and dot colors on hover.
-/// @property {Color} fill-hover-border-color [color: ('primary', 900)] - The checked dot border color on hover.
-/// @property {Color} empty-color [color: ('grays', 900)] - The unchecked border color.
-/// @property {Color} fill-color [color: ('primary', 500)] - The checked border and dot colors.
-/// @property {Color} fill-color-hover [color: ('primary',900)] - The checked border and dot colors on hover.
-/// @property {Color} focus-outline-color [color: ('grays', 700)] - The focus outlined color.
-///
-/// @requires {function} extend
+/// @prop {Color} hover-color [color: ('gray', 700)] - The border and dot colors on hover.
+/// @prop {Color} fill-hover-border-color [color: ('primary', 900)] - The checked dot border color on hover.
+/// @prop {Color} empty-color [color: ('gray', 900)] - The unchecked border color.
+/// @prop {Color} fill-color [color: ('primary', 500)] - The checked border and dot colors.
+/// @prop {Color} fill-color-hover [color: ('primary',900)] - The checked border and dot colors on hover.
+/// @prop {Color} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
 /// @requires {Map} $light-radio
 $fluent-radio: extend(
     $light-radio,
@@ -71,11 +66,11 @@ $fluent-radio: extend(
         variant: 'fluent',
 
         focus-outline-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         hover-color: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         fill-hover-border-color: (
@@ -83,7 +78,7 @@ $fluent-radio: extend(
         ),
 
         empty-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         fill-color: (
@@ -98,13 +93,12 @@ $fluent-radio: extend(
 
 /// Generates a bootstrap radio schema.
 /// @type {Map}
-/// @property {Map} fill-hover-border-color [color: ('grays', 50)] - The checked dot border color on hover.
-/// @property {Map} empty-color [color: ('grays', 500)] - The unchecked border color.
-/// @property {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
-/// @property {Map} disabled-color [color: ('primary', 200)] - The disabled border and dot colors.
-/// @property {Color} fill-color-hover [color: ('grays', 50)] - The checked border and dot colors on hover.
-/// @property {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
-/// @requires {function} extend
+/// @prop {Map} fill-hover-border-color [color: ('gray', 50)] - The checked dot border color on hover.
+/// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
+/// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
+/// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and dot colors.
+/// @prop {Color} fill-color-hover [color: ('gray', 50)] - The checked border and dot colors on hover.
+/// @prop {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
 /// @requires {Map} $light-radio
 $bootstrap-radio: extend(
     $light-radio,
@@ -116,7 +110,7 @@ $bootstrap-radio: extend(
         ),
 
         fill-hover-border-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         disabled-color : (
@@ -124,7 +118,7 @@ $bootstrap-radio: extend(
         ),
 
         empty-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         fill-color: (
@@ -132,23 +126,21 @@ $bootstrap-radio: extend(
         ),
 
         fill-color-hover: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
     )
 );
 
 /// Generates an indigo radio schema.
 /// @type {Map}
-///
-/// @property {Map} fill-hover-border-color [color: ('primary', 500)] - The text color used for the label text.
-/// @property {Map} label-color [color: ('grays', 900)] - The text color used for the label text.
-/// @property {Map} empty-color [color: ('grays', 500)] - The unchecked border color.
-/// @property {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
-/// @property {Map} fill-color-hover [color: ('primary', 500)] - The checked border and dot colors on hover.
-/// @property {Map} disabled-color [color: ('grays', 300)] - The disabled border and dot colors.
-/// @property {Map} focus-outline-color [color: ('grays', 300)] - The focus outlined color.
-/// @property {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
-/// @requires {function} extend
+/// @prop {Map} fill-hover-border-color [color: ('primary', 500)] - The text color used for the label text.
+/// @prop {Map} label-color [color: ('gray', 900)] - The text color used for the label text.
+/// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
+/// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
+/// @prop {Map} fill-color-hover [color: ('primary', 500)] - The checked border and dot colors on hover.
+/// @prop {Map} disabled-color [color: ('gray', 300)] - The disabled border and dot colors.
+/// @prop {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
+/// @prop {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
 /// @requires {Map} $light-radio
 $indigo-radio: extend(
     $light-radio,
@@ -156,7 +148,7 @@ $indigo-radio: extend(
         variant: 'indigo-design',
 
         focus-outline-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         focus-outline-color-focused: (
@@ -168,11 +160,11 @@ $indigo-radio: extend(
         ),
 
         label-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
 
         empty-color: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         fill-color: (
@@ -184,12 +176,11 @@ $indigo-radio: extend(
         ),
 
         disabled-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         disabled-label-color: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         )
     )
 );
-

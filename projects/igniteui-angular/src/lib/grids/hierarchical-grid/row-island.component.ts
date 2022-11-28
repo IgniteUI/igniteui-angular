@@ -47,6 +47,7 @@ import { IgxActionStripComponent } from '../../action-strip/action-strip.compone
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IGridCreatedEventArgs } from './events';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -217,6 +218,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     constructor(
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
@@ -240,6 +242,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil) {
         super(
+            validationService,
             selectionService,
             colResizingService,
             gridAPI,
@@ -291,7 +294,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-        this.childColumns.reset(topCols);
+        this._childColumns = topCols;
+        this.updateColumns(this._childColumns);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             Promise.resolve().then(() => {
                 this.updateColumnList();
@@ -300,7 +304,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
         // handle column changes so that they are passed to child grid instances when columnChange is emitted.
         this.ri_columnListDiffer.diff(this.childColumns);
-        this.childColumns.toArray().forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this._childColumns.forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
@@ -380,6 +384,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public calculateGridHeight() { }
 
+    protected _childColumns = [];
+
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
@@ -392,16 +398,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             }
             return false;
         });
-        this.childColumns.reset(topCols);
-
-        if (this.parentIsland) {
-            this.parentIsland.columnList.notifyOnChanges();
-        } else {
-            this.rootGrid.columnList.notifyOnChanges();
-        }
-
+        this._childColumns = topCols;
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
-            grid.createColumnsList(this.childColumns.toArray());
+            grid.createColumnsList(this._childColumns);
             if (!document.body.contains(grid.nativeElement)) {
                 grid.updateOnRender = true;
             }

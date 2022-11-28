@@ -1,14 +1,8 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-//// Button Group
-/// @group components
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
-
 @mixin component {
     @include b(igx-button-group) {
         $this: bem--selector-to-string(&);

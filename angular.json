@@ -37,7 +37,12 @@
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "aot": false
+            "aot": false,
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -107,7 +112,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles/styles.scss"
             ],
             "scripts": [],
             "assets": [
@@ -280,5 +285,13 @@
   },
   "cli": {
     "analytics": false
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
   }
 }

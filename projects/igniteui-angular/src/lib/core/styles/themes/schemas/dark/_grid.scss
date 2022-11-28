@@ -10,46 +10,46 @@
 /// Generates the base dark grid schema.
 /// @type {Map}
 /// @prop {Color} content-background [color: 'surface'] - The table body background color.
-/// @prop {Map} drop-area-background [color: ('grays', 100, .4)] - The drop area background color.
-/// @prop {Map} header-border-color [color: ('grays', 200, .24)] - The color used for header borders.
-/// @prop {Map} header-background [color: ('grays', 100)] - The table header background color.
+/// @prop {Map} drop-area-background [color: ('gray', 100, .4)] - The drop area background color.
+/// @prop {Map} header-border-color [color: ('gray', 200, .24)] - The color used for header borders.
+/// @prop {Map} header-background [color: ('gray', 100)] - The table header background color.
 /// @prop {Map} header-selected-background [color: ('secondary', 600)] - The table header background color when selected (ex. column selection).
 /// @prop {Map} header-selected-text-color [contrast-color: ('secondary', 600)] - The table header text color when selected (ex. column selection).
-/// @prop {Map} row-border-color [color: ('grays', 200, .24)] - The row bottom border color.
-/// @prop {Map} row-hover-background [color: ('grays', 100)] - The hover row background color.
-/// @prop {Map} row-hover-text-color [contrast-color: ('grays', 100)] - The hover row text color.
+/// @prop {Map} row-border-color [color: ('gray', 200, .24)] - The row bottom border color.
+/// @prop {Map} row-hover-background [color: ('gray', 100)] - The hover row background color.
+/// @prop {Map} row-hover-text-color [contrast-color: ('gray', 100)] - The hover row text color.
 /// @prop {Map} row-selected-background [color: ('secondary', 'A700')] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [color: ('secondary', 'A400')] - The selected row background color on hover.
 /// @prop {Map} row-selected-text-color [contrast-color: ('secondary', 'A700')] - The selected row text color.
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('secondary', 'A400')] - The selected row hover text color.
 /// @prop {Map} row-highlight [color: ('secondary', 500)] - The highlight color of a row.
 /// @prop {Map} row-ghost-background [color: ('primary', 900)] - The dragged row background color.
-/// @prop {Map} cell-selected-background [color: ('grays', 100)] - The selected cell background color.
-/// @prop {Map} cell-selected-text-color [contrast-color: ('grays', 100)] - The selected cell text color.
+/// @prop {Map} cell-selected-background [color: ('gray', 100)] - The selected cell background color.
+/// @prop {Map} cell-selected-text-color [contrast-color: ('gray', 100)] - The selected cell text color.
 /// @prop {Map} cell-selected-within-background [color: ('secondary', 'A400')] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [contrast-color: ('secondary', 'A400')] - The color of the selected cell inside a selected row/column.
-/// @prop {Map} grouparea-background [color: ('grays', 50)] - The grid group area background color.
-/// @prop {Map} group-row-background [color: ('grays', 50)] - The grid group row background color.
-/// @prop {Map} group-row-selected-background [color: ('grays', 100)] - The drop area background on drop color.
-/// @prop {Map} body-summaries-background [color: ('grays', 100)] - The background color of the summary groups located the body.
-/// @prop {Map} body-summaries-text-color [contrast-color: ('grays', 100)] - The text color of the summary groups located the body.
-/// @prop {Map} root-summaries-background [color: ('grays', 50)] - The background color of the summary groups located the footer.
-/// @prop {Map} root-summaries-text-color [contrast-color: ('grays', 200)] - The text color of the summary groups located the footer.
+/// @prop {Map} grouparea-background [color: ('gray', 50)] - The grid group area background color.
+/// @prop {Map} group-row-background [color: ('gray', 50)] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [color: ('gray', 100)] - The drop area background on drop color.
+/// @prop {Map} body-summaries-background [color: ('gray', 100)] - The background color of the summary groups located the body.
+/// @prop {Map} body-summaries-text-color [contrast-color: ('gray', 100)] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [color: ('gray', 50)] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [contrast-color: ('gray', 200)] - The text color of the summary groups located the footer.
 $base-dark-grid: (
     content-background: (
         color: 'surface',
     ),
 
     drop-area-background: (
-        color: ('grays', 100, .4)
+        color: ('gray', 100, .4)
     ),
 
     header-border-color: (
-        color: ('grays', 200, .24)
+        color: ('gray', 200, .24)
     ),
 
     header-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     header-selected-background: (
@@ -61,15 +61,15 @@ $base-dark-grid: (
     ),
 
     row-border-color: (
-        color: ('grays', 200, .24),
+        color: ('gray', 200, .24),
     ),
 
     row-hover-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     row-hover-text-color: (
-        contrast-color: ('grays', 100)
+        contrast-color: ('gray', 100)
     ),
 
     row-selected-background: (
@@ -105,65 +105,61 @@ $base-dark-grid: (
     ),
 
     cell-selected-background: (
-        color: ('grays', 100),
+        color: ('gray', 100),
     ),
 
     cell-selected-text-color: (
-        contrast-color: ('grays', 100)
+        contrast-color: ('gray', 100)
     ),
 
     grouparea-background: (
-        color: ('grays', 50),
+        color: ('gray', 50),
     ),
 
     group-row-background: (
-        color: ('grays', 50),
+        color: ('gray', 50),
     ),
 
     group-row-selected-background: (
-        color: ('grays', 100),
+        color: ('gray', 100),
     ),
 
     body-summaries-background: (
-        color: ('grays', 50),
+        color: ('gray', 50),
     ),
 
     body-summaries-text-color: (
-        contrast-color: ('grays', 50),
+        contrast-color: ('gray', 50),
     ),
 
     root-summaries-background: (
-        color: ('grays', 50),
+        color: ('gray', 50),
     ),
 
     root-summaries-text-color: (
-        contrast-color: ('grays', 50),
+        contrast-color: ('gray', 50),
     ),
 );
 
 /// Generates a dark grid schema based on a mix of $light-grid and $base-dark-grid.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-grid
 /// @requires $base-dark-grid
-/// @see $default-palette
 $dark-grid: extend($light-grid, $base-dark-grid);
 
 
 /// Generates a dark fluent grid schema based on a mix of $fluent-grid and $base-dark-grid.
-/// @prop {Map} header-selected-background [color: ('grays', 200)] - The table header background color when selected (ex. column selection).
-/// @prop {Map} header-selected-text-color [contrast-color: ('grays', 200)] - The table header text color when selected (ex. column selection).
-/// @prop {Map} row-hover-background [color: ('grays', 100)] - The hover row background color.
-/// @prop {Map} row-selected-background [color: ('grays', 100)] - The selected row background color.
-/// @prop {Map} row-selected-hover-background [color: ('grays', 200)] - The selected row background color on hover.
-/// @prop {Map} row-selected-hover-text-color [contrast-color: ('grays', 200)] - The selected row hover text color.
-/// @prop {Map} cell-selected-within-background [color: ('grays', 200)] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [contrast-color: ('grays', 200)] - The color of the selected cell inside a selected row/column.
-/// @prop {Map} group-row-background [color: ('grays', 100, .5)] - The grid group row background color.
-/// @prop {Map} group-row-selected-background [color: ('grays', 100)] - The drop area background on drop color.
-
+/// @prop {Map} header-selected-background [color: ('gray', 200)] - The table header background color when selected (ex. column selection).
+/// @prop {Map} header-selected-text-color [contrast-color: ('gray', 200)] - The table header text color when selected (ex. column selection).
+/// @prop {Map} row-hover-background [color: ('gray', 100)] - The hover row background color.
+/// @prop {Map} row-selected-background [color: ('gray', 100)] - The selected row background color.
+/// @prop {Map} row-selected-hover-background [color: ('gray', 200)] - The selected row background color on hover.
+/// @prop {Map} row-selected-hover-text-color [contrast-color: ('gray', 200)] - The selected row hover text color.
+/// @prop {Map} cell-selected-within-background [color: ('gray', 200)] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [contrast-color: ('gray', 200)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} group-row-background [color: ('gray', 100, .5)] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [color: ('gray', 100)] - The drop area background on drop color.
 ///
-/// @requires {function} extend
 /// @requires $fluent-grid
 /// @requires $base-dark-grid
 $dark-fluent-grid: extend(
@@ -171,47 +167,47 @@ $dark-fluent-grid: extend(
     $base-dark-grid,
     (
         header-selected-background: (
-            color: ('grays', 200),
+            color: ('gray', 200),
         ),
 
         header-selected-text-color: (
-            contrast-color: ('grays', 200),
+            contrast-color: ('gray', 200),
         ),
 
         row-hover-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         pinned-border-color: (
-            color: ('grays', 300, .24),
+            color: ('gray', 300, .24),
         ),
 
         row-selected-background: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
 
         row-selected-hover-text-color: (
-            contrast-color: ('grays', 200),
+            contrast-color: ('gray', 200),
         ),
 
         cell-selected-within-background: (
-            color: ('grays', 200),
+            color: ('gray', 200),
         ),
 
         cell-selected-within-text-color: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
 
         row-selected-hover-background: (
-            color: ('grays', 200)
+            color: ('gray', 200)
         ),
 
         group-row-background: (
-            color: ('grays', 100, .5)
+            color: ('gray', 100, .5)
         ),
 
         group-row-selected-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
     )
 );
@@ -221,13 +217,12 @@ $dark-fluent-grid: extend(
 /// @type {Map}
 /// @prop {Map} group-row-background [color: 'surface'] - The grid group row background color.
 /// @prop {Map} group-row-selected-background [color: 'surface'] - The drop area background on drop color.
-/// @prop {Map} header-background [color: ('grays', 50)] - The table header background color.
-/// @prop {Map} content-background [color: ('grays', 50)] - The table body background color.
-/// @prop {Map} drop-area-background [color: ('grays', 100, .5)] - The drop area background color.
+/// @prop {Map} header-background [color: ('gray', 50)] - The table header background color.
+/// @prop {Map} content-background [color: ('gray', 50)] - The table body background color.
+/// @prop {Map} drop-area-background [color: ('gray', 100, .5)] - The drop area background color.
 /// @prop {Map} grouparea-background [color: 'surface'] - The grid group area background color.
 /// @prop {Map} grouparea-color [contrast-color: 'surface'] - The grid group area color.
-/// @prop {Map} root-summaries-background [color: ('grays', 100)] - The background color of the summary groups located the footer.
-/// @requires {function} extend
+/// @prop {Map} root-summaries-background [color: ('gray', 100)] - The background color of the summary groups located the footer.
 /// @requires $bootstrap-grid
 /// @requires $base-dark-grid
 $dark-bootstrap-grid: extend(
@@ -235,7 +230,7 @@ $dark-bootstrap-grid: extend(
     $base-dark-grid,
     (
         root-summaries-background: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
 
         group-row-background: (
@@ -247,15 +242,15 @@ $dark-bootstrap-grid: extend(
         ),
 
         header-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         content-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         drop-area-background: (
-            color: ('grays', 100, .5)
+            color: ('gray', 100, .5)
         )
     )
 );
@@ -265,34 +260,34 @@ $dark-bootstrap-grid: extend(
 ///
 /// @prop {Map} content-background [color: 'surface'] - The table body background color.
 /// @prop {Map} header-background [color: 'surface'] - The table header background color.
-/// @prop {Map} header-border-color [color: ('grays', 100, .24)] - The color used for header borders.
+/// @prop {Map} header-border-color [color: ('gray', 100, .24)] - The color used for header borders.
 /// @prop {MAp} header-text-color [contrast-color: 'surface'] - The table header text color.
 /// @prop {Map} header-selected-background [color: 'primary'] - The table header background color when selected (ex. column selection).
 /// @prop {Map} header-selected-text-color [contrast-color: 'primary'] - The table header text color when selected (ex. column selection).
 /// @prop {Map} sorted-header-icon-color [contrast-color: 'surface'] - The sorted table header icon color.
 /// @prop {Map} sortable-header-icon-hover-color [contrast-color: 'surface'] - The icon color on hover in grid header when the column is sortable.
-/// @prop {Map} filtering-header-background [color: ('grays', 100)] - The background color of the filtered column header.
-/// @prop {Map} filtering-header-text-color [contrast-color: ('grays', 100)] - The text color color of the filtered column header.
+/// @prop {Map} filtering-header-background [color: ('gray', 100)] - The background color of the filtered column header.
+/// @prop {Map} filtering-header-text-color [contrast-color: ('gray', 100)] - The text color color of the filtered column header.
 /// @prop {Map} filtering-row-background [color: 'surface'] - The background color of the filtering row.
 /// @prop {Map} pinned-border-color [color: ('primary', 200)] - The color of the pinned border.
-/// @prop {Map} drop-area-background [color: ('grays', 200)] - The drop area background color.
-/// @prop {Map} drop-area-text-color [contrast-color: ('grays', 200)] - The drop area text color.
-/// @prop {Map} drop-area-icon-color [contrast-color: ('grays', 200)] - The drop area icon color.
-/// @prop {Map} row-odd-background [color: ('grays', 100)] - The background color of odd rows.
-/// @prop {Map} row-even-background [color: ('grays', 100)] - The background color of even rows.
-/// @prop {Map} row-border-color [color: ('grays', 50, .24)] - The row bottom border color.
+/// @prop {Map} drop-area-background [color: ('gray', 200)] - The drop area background color.
+/// @prop {Map} drop-area-text-color [contrast-color: ('gray', 200)] - The drop area text color.
+/// @prop {Map} drop-area-icon-color [contrast-color: ('gray', 200)] - The drop area icon color.
+/// @prop {Map} row-odd-background [color: ('gray', 100)] - The background color of odd rows.
+/// @prop {Map} row-even-background [color: ('gray', 100)] - The background color of even rows.
+/// @prop {Map} row-border-color [color: ('gray', 50, .24)] - The row bottom border color.
 /// @prop {Map} row-hover-background [color: ('primary', 200)] - The hover row background color.
-/// @prop {Map} row-hover-text-color [contrast-color: ('grays', 200)] - The hover row text color.
+/// @prop {Map} row-hover-text-color [contrast-color: ('gray', 200)] - The hover row text color.
 /// @prop {Map} row-selected-background [color: 'primary'] - The selected row background color.
 /// @prop {Map} row-selected-text-color [contrast-color: 'primary'] - The selected row text color.
 /// @prop {Map} row-selected-hover-background [color: ('primary', 400)] - The selected row hover background.
 /// @prop {Map} row-selected-hover-text-color [contrast-color: ('primary', 400)] - The selected row text color.
 /// @prop {Map} group-row-background [color: 'surface'] - The grid group row background color.
-/// @prop {Map} group-row-selected-background [color: ('grays', 200)] - The drop area background on drop color.
+/// @prop {Map} group-row-selected-background [color: ('gray', 200)] - The drop area background on drop color.
 /// @prop {Map} group-count-text-color [contrast-color: ('primary', 300)] - The grid group row cont badge text color.
 /// @prop {Map} group-label-column-name-text [contrast-color: 'surface'] - The grid group row column name text color.
 /// @prop {Map} group-label-icon [contrast-color: 'surface'] - The grid group row icon color.
-/// @prop {Map} group-label-text [color: ('grays', 700)] - The grid group row text color.
+/// @prop {Map} group-label-text [color: ('gray', 700)] - The grid group row text color.
 /// @prop {Map} cell-selected-within-background [color: ('primary', 400)] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [contrast-color: ('primary', 400)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-background [color: ('primary', 400)] - The selected cell background color.
@@ -305,10 +300,9 @@ $dark-bootstrap-grid: extend(
 /// @prop {Map} root-summaries-text-color [contrast-color: 'surface'] - The text color of the summary groups located the footer.
 /// @prop {Map} body-summaries-background [color: 'surface'] - The background color of the summary groups located the body.
 /// @prop {Map} body-summaries-text-color [contrast-color: 'surface'] - The text color of the summary groups located the body.
-/// @prop {Map} expand-icon-color [color: ('grays', 600)] - The grid row expand icon color.
-/// @prop {Map} expand-icon-hover-color [color: ('grays', 900)] - The grid row expand icon hover color.
+/// @prop {Map} expand-icon-color [color: ('gray', 600)] - The grid row expand icon color.
+/// @prop {Map} expand-icon-hover-color [color: ('gray', 900)] - The grid row expand icon hover color.
 ///
-/// @requires {function} extend
 /// @requires $indigo-grid
 $dark-indigo-grid: extend(
     $indigo-grid,
@@ -322,7 +316,7 @@ $dark-indigo-grid: extend(
         ),
 
         header-border-color: (
-            color: ('grays', 100, .24)
+            color: ('gray', 100, .24)
         ),
 
         header-text-color: (
@@ -346,11 +340,11 @@ $dark-indigo-grid: extend(
         ),
 
         filtering-header-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         filtering-header-text-color: (
-            contrast-color: ('grays', 100),
+            contrast-color: ('gray', 100),
         ),
 
         filtering-row-background: (
@@ -362,35 +356,35 @@ $dark-indigo-grid: extend(
         ),
 
         drop-area-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         drop-area-text-color: (
-            contrast-color: ('grays', 200),
+            contrast-color: ('gray', 200),
         ),
 
         drop-area-icon-color: (
-            contrast-color: ('grays', 200),
+            contrast-color: ('gray', 200),
         ),
 
         row-odd-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         row-even-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         row-border-color: (
-            color: ('grays', 100, .24),
+            color: ('gray', 100, .24),
         ),
 
         row-hover-background: (
-            color: ('grays', 200),
+            color: ('gray', 200),
         ),
 
         row-hover-text-color: (
-            contrast-color: ('grays',100),
+            contrast-color: ('gray',100),
         ),
 
         row-selected-background: (
@@ -410,11 +404,11 @@ $dark-indigo-grid: extend(
         ),
 
         group-row-background: (
-            color: ('grays', 50),
+            color: ('gray', 50),
         ),
 
         group-row-selected-background: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
 
         group-count-text-color: (
@@ -430,7 +424,7 @@ $dark-indigo-grid: extend(
         ),
 
         group-label-text: (
-            color: ('grays', 700)
+            color: ('gray', 700)
         ),
 
         cell-selected-within-background: (
@@ -482,11 +476,11 @@ $dark-indigo-grid: extend(
         ),
 
         expand-icon-color: (
-            color: ('grays', 600)
+            color: ('gray', 600)
         ),
 
         expand-icon-hover-color: (
-            color: ('grays', 900)
+            color: ('gray', 900)
         ),
     )
 );

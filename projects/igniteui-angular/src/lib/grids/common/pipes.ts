@@ -62,6 +62,25 @@ export class IgxGridCellStylesPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
+ @Pipe({
+    name: 'igxCellImageAlt'
+})
+export class IgxGridCellImageAltPipe implements PipeTransform {
+
+    public transform(value: string): string {
+        if (value) {
+            const val = value.split('/');
+            const imagename = val[val.length - 1].split('.');
+            return imagename.length ? imagename[0] : '';
+        }
+        return value;
+    }
+}
+
 
 /**
  * @hidden
@@ -136,7 +155,8 @@ export class IgxGridRowStylesPipe implements PipeTransform {
         }
         for (const prop of Object.keys(styles)) {
             const cb = styles[prop];
-            const row = new IgxGridRow((this.grid as any), index, rowData);
+            const data = this.grid.isTreeRow && this.grid.isTreeRow(rowData) ? rowData.data : rowData;
+            const row = new IgxGridRow((this.grid as any), index, data);
             css[prop] = typeof cb === 'function' ? cb(row) : cb;
         }
         return css;

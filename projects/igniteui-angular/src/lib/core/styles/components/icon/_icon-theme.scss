@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,24 +9,16 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $color [null] - The icon color.
 /// @param {String} $size [null] - The icon size.
 /// @param {Color} $disabled-color [null] - The disabled icon color.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-///
 /// @example scss Change the icon color
 ///   $my-icon-theme: icon-theme($color: orange);
-///   // Pass the theme to the icon component mixin
-///   @include icon($my-icon-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-icon-theme);
 @function icon-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $color: null,
@@ -42,11 +34,10 @@
         $icon-schema: $schema;
     }
 
-    $theme: apply-palette($icon-schema, $palette);
+    $theme: digest-schema($icon-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         color: $color,
         size: $size,
         disabled-color: $disabled-color
@@ -55,8 +46,6 @@
 
 // stylelint-disable font-family-no-missing-generic-family-keyword
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin icon($theme) {
     @include css-vars($theme);
 
@@ -85,11 +74,11 @@
     }
 
     %igx-icon--success {
-        color: color(map.get($theme, 'palette'), 'success');
+        color: color($color: 'success');
     }
 
     %igx-icon--error {
-        color: color(map.get($theme, 'palette'), 'error');
+        color: color($color: 'error');
     }
 
     %igx-icon--inactive {

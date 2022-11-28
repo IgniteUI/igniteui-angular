@@ -6,25 +6,24 @@
 
 /// Generates a light pie chart schema.
 /// @type {Map}
-/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
-/// @property {Number} label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
-/// @property {Color} label-inner-color [null] - Sets the color for labels rendered inside of the pie chart.
-/// @property {Color} label-outer-color [color: ('grays', 900)] - Sets the color for labels rendered outside of the pie chart.
-/// @property {String} labels-position [null] - Sets the position of chart labels. Valid values are: 'none', 'center', 'insideEnd', 'outsideEnd', and 'bestFit'.
-/// @property {Number} leader-line-margin [null] - Sets the margin between a label and the end of its leader line.
-/// @property {String} leader-line-type [null] - Sets what type of leader lines will be used for the outside end labels. Valid values are: 'straight', 'spline', and 'arc'.
-/// @property {String} leader-line-visibility [null] - Sets whether the leader lines are visible. Valid values are: 'visible' and 'collapsed'.
-/// @property {Number} radius-factor [null] - Sets the scaling factor of the chart's radius. Value between 0 and 1.
-/// @see $default-palette
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @prop {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @prop {Number} label-extent [30] - Sets the pixel amount by which the labels are offset from the edge of the slices.
+/// @prop {Color} label-inner-color [null] - Sets the color for labels rendered inside of the pie chart.
+/// @prop {Color} label-outer-color [color: ('gray', 700)] - Sets the color for labels rendered outside of the pie chart.
+/// @prop {String} labels-position [null] - Sets the position of chart labels. Valid values are: 'none', 'center', 'insideEnd', 'outsideEnd', and 'bestFit'.
+/// @prop {Number} leader-line-margin [null] - Sets the margin between a label and the end of its leader line.
+/// @prop {String} leader-line-type [null] - Sets what type of leader lines will be used for the outside end labels. Valid values are: 'straight', 'spline', and 'arc'.
+/// @prop {String} leader-line-visibility [null] - Sets whether the leader lines are visible. Valid values are: 'visible' and 'collapsed'.
+/// @prop {Number} radius-factor [null] - Sets the scaling factor of the chart's radius. Value between 0 and 1.
 $light-pie-chart: (
     'brushes': series,
     'outlines': series,
-    'label-extent': null,
+    'label-extent': 30,
     'label-inner-color': null,
 
     'label-outer-color': (
-        color: ('grays', 900)
+        color: ('gray', 700)
     ),
 
     'labels-position': null,
@@ -37,17 +36,14 @@ $light-pie-chart: (
 /// Generates a fluent pie chart schema.
 /// @type {Map}
 /// @requires {Map} $light-pie-chart
-/// @see $light-pie-chart
 $fluent-pie-chart: $light-pie-chart;
 
 /// Generates a bootstrap pie chart schema.
 /// @type {Map}
 /// @requires {Map} $light-pie-chart
-/// @see $light-pie-chart
 $bootstrap-pie-chart: $light-pie-chart;
 
 /// Generates an indigo pie chart schema.
 /// @type {Map}
 /// @requires {Map} $light-pie-chart
-/// @see $light-pie-chart
 $indigo-pie-chart: $light-pie-chart;

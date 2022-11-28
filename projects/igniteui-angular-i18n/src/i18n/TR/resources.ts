@@ -9,6 +9,8 @@ import { CalendarResourceStringsTR } from './calendar-resources';
 import { TreeResourceStringsTR } from './tree-resources';
 import { InputResourceStringsTR } from './input-resources';
 import { ChipResourceStringsTR } from './chip-resources';
+import { ComboResourceStringsTR } from './combo-resources';
+import { QueryBuilderResourceStringsTR } from './query-builder-resources';
 
 /**
  * Turkish resource strings for all components
@@ -24,5 +26,7 @@ export const IgxResourceStringsTR = {
     ...CalendarResourceStringsTR,
     ...TreeResourceStringsTR,
     ...InputResourceStringsTR,
-    ...ChipResourceStringsTR
+    ...ChipResourceStringsTR,
+    ...ComboResourceStringsTR,
+    ...QueryBuilderResourceStringsTR
 };

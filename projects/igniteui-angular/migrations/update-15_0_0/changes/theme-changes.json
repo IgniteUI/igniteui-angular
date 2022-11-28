@@ -1,0 +1,471 @@
+{
+    "$schema": "../../common/schema/theme-changes.schema.json",
+    "changes": [
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "action-strip-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "avatar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "badge-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "banner-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "bottom-nav-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "button-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "button-group-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "calendar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "card-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "carousel-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "carousel-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "checkbox-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "chip-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "column-actions-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "combo-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "dialog-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "divider-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "dock-manager-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "drop-down-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "expansion-panel-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "grid-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "advanced-filtering",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "excel-filtering",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "pivot-data-selector-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "grid-summary-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "grid-toolbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "highlight-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "icon-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "input-group-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "list-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "navbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "navdrawer-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "navdrawer-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "overlay-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "paginator-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "progress-linear-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "progress-circular-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "radio-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "rating-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "ripple-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "scrollbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "slider-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "snackbar-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "splitter-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "stepper-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "switch-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "tabs-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "time-picker-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "toast-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "tooltip-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "tree-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "watermark-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "category-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "data-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "doughnut-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "financial-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "funnel-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "linear-gauge-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "radial-gauge-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "geo-map-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "graph-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "pie-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "shape-chart-theme",
+            "type": "property"
+        },
+        {
+            "name": "$palette",
+            "remove": true,
+            "owner": "sparkline-theme",
+            "type": "property"
+        },
+        {
+            "name": "$type-scale",
+            "remove": true,
+            "owner": "type-style",
+            "type": "property"
+        },
+        {
+            "name": "$wc",
+            "remove": true,
+            "owner": "typography",
+            "type": "property"
+        },
+        {
+            "name": "$wc",
+            "remove": true,
+            "owner": "theme",
+            "type": "property"
+        },
+        {
+            "name": "$browser-context",
+            "remove": true,
+            "type": "variable"
+        },
+        {
+            "name": "$browser-line-height",
+            "remove": true,
+            "type": "variable"
+        },
+        {
+            "name": "$default-type-scale",
+            "replaceWith": "$material-type-scale",
+            "type": "variable"
+        },
+        {
+            "name": "$elevations",
+            "replaceWith": "$material-elevations",
+            "type": "variable"
+        },
+        {
+            "name": "$elevations",
+            "remove": true,
+            "owner": "elevation",
+            "type": "property"
+        },
+        {
+            "name": "$elevation",
+            "replaceWith": "$name",
+            "owner": "elevation",
+            "type": "property"
+        },
+        {
+            "name": "$contrast",
+            "remove": true,
+            "owner": "palette-vars",
+            "type": "property"
+        },
+        {
+            "name": "$prefix",
+            "remove": true,
+            "owner": "palette-vars",
+            "type": "property"
+        },
+        {
+            "name": "palette-vars",
+            "replaceWith": "palette",
+            "type": "mixin"
+        },
+        {
+            "name": "elevation-vars",
+            "replaceWith": "elevations",
+            "type": "mixin"
+        },
+        {
+            "name": "palette-to-wc",
+            "remove": true,
+            "type": "mixin"
+        },
+        {
+            "name": "elevations-to-wc",
+            "remove": true,
+            "type": "mixin"
+        }
+    ]
+}

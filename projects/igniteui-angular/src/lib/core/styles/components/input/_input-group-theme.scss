@@ -1,82 +1,61 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a> //
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [null] - The elevations (shadows) map to be used.  /
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
 /// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
-///
 /// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
 /// @param {Color} $input-prefix-background [null] - The background color of an input prefix in the idle state.
 /// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
 /// @param {Color} $input-suffix-background [null] - The background color of an input sufix in the idle state.
-///
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
 /// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
 /// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
-///
 /// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
 /// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
 /// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
-///
 /// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
 /// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
 /// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
 /// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
-///
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
-///
 /// @param {Color} $border-background [null] - The background color of an input group of type border.
 /// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
-///
 /// @param {Color} $search-background [null] - The background color of an input group of type search.
 /// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
-///
 /// @param {box-shadow} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
 /// @param {box-shadow} $search-hover-shadow [null] - The shadow color of an input group of type search in its hover state.
 /// @param {box-shadow} $search-disabled-shadow [null] - The shadow color of an input group of type search in its disabled state.
-///
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
-///
 /// @param {Color} $success-border-color [null] - The border color for success state for bootstrap input group.
 /// @param {Color} $error-border-color [null] - The border color for error state for bootstrap input group.
-///
 /// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
 /// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
 /// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
-///
 /// @param {Color} placeholder-color [null] - The placeholder color of an input group.
 /// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
-///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
-///   // Pass the theme to the input-group component mixin
-///   @include input-group($my-input-group-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-input-group-theme);
 @function input-group-theme(
-    $palette: null,
     $schema: $light-schema,
     $elevations: null,
 
@@ -144,7 +123,7 @@
         $input-group-schema: $schema;
     }
 
-    $theme: apply-palette($input-group-schema, $palette);
+    $theme: digest-schema($input-group-schema);
 
     $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
@@ -159,15 +138,15 @@
     }
 
     @if not($search-resting-shadow) {
-        $search-resting-shadow: elevation($elevations, $search-resting-elevation);
+        $search-resting-shadow: elevation($search-resting-elevation);
     }
 
     @if not($search-hover-shadow) {
-        $search-hover-shadow: elevation($elevations, $search-hover-elevation);
+        $search-hover-shadow: elevation($search-hover-elevation);
     }
 
     @if not($search-disabled-shadow) {
-        $search-disabled-shadow: elevation($elevations, $search-disabled-elevation);
+        $search-disabled-shadow: elevation($search-disabled-elevation);
     }
 
     @if not($box-border-radius) {
@@ -177,13 +156,12 @@
     @if not($border-border-radius) {
         $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
     }
-    
+
     @if not($search-border-radius) {
         $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
     }
 
     @return extend($theme, (
-        palette: $palette,
         name: $name,
         selector: $selector,
 
@@ -247,22 +225,16 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires {mixin} ellipsis
-/// @requires var-get
 @mixin input-group($theme) {
     @include css-vars($theme);
 
-    $palette: map.get($theme, 'palette');
-
-    $transition-timing: .25s $ease-out-cubic;
+    $transition-timing: .25s $out-cubic;
 
     $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
     $required-symbol: '*';
-    $required-symbol-margin: 2px;
+    $required-symbol-margin: rem(2px);
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -324,6 +296,10 @@
 
         textarea {
             overflow: auto;
+        }
+
+        input[type='number'] {
+            -moz-appearance: textfield;
         }
 
         // Don't show the number spinner
@@ -390,15 +366,12 @@
         }
     }
 
-    %form-group-display--error {
+    %form-group-display--filled {
         igx-prefix,
-        [igxPrefix] {
-            @extend %form-group-prefix--error;
-        }
-
+        [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            @extend %form-group-suffix--error;
+            @extend %form-group-prefix--filled;
         }
     }
 
@@ -437,7 +410,7 @@
         flex-flow: row nowrap;
         max-width: 100%;
         padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
     }
 
@@ -453,7 +426,7 @@
         padding: 0;
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'box-background');
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'idle-bottom-line-color');
 
         igx-suffix,
         [igxSuffix] {
@@ -466,7 +439,7 @@
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: transparent;
         transition: background $transition-timing, box-shadow $transition-timing;
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
 
         &:hover,
         &:focus {
@@ -484,16 +457,16 @@
     }
 
     %form-group-bundle-success--indigo {
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'success-secondary-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'success-secondary-color');
     }
 
     %form-group-bundle-error--indigo {
-        box-shadow: inset 0 -2px 0 0 var-get($theme, 'error-secondary-color');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle-error--indigo--hover {
         border-color: var-get($theme, 'error-secondary-color');
-        box-shadow: 0 0 0 1px var-get($theme, 'error-secondary-color');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'error-secondary-color');
     }
 
     %form-group-helper--indigo--disabled {
@@ -523,40 +496,40 @@
     %form-group-bundle--hover {
         cursor: pointer;
         @if not $indigo-theme {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'hover-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'hover-bottom-line-color');
         } @else {
-            box-shadow: inset 0 -1px 0 0 var-get($theme, 'hover-bottom-line-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'hover-bottom-line-color');
         }
     }
 
     %form-group-bundle--focus {
         caret-color: var-get($theme, 'focused-secondary-color');
         @if not $indigo-theme {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'interim-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'interim-bottom-line-color');
         } @else {
-            box-shadow: inset 0 -2px 0 0 var-get($theme, 'focused-bottom-line-color');
+            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'focused-bottom-line-color');
         }
     }
 
     %form-group-bundle--success {
         caret-color: var-get($theme, 'success-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'success-secondary-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'success-secondary-color');
     }
 
     %form-group-bundle--error {
         caret-color: var-get($theme, 'error-secondary-color');
-        box-shadow: inset 0 -1px 0 0 var-get($theme, 'error-secondary-color');
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle--disabled {
         @if not $indigo-theme {
             box-shadow: none;
         } @else {
-            box-shadow: inset 0 -1px 0 0 var-get($theme, 'disabled-bottom-line-color');
+            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
         }
         background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
-        background-size: 4px 1px;
+        background-size: rem(4px) rem(1px);
         background-repeat: repeat-x;
 
         [dir='rtl'] & {
@@ -575,7 +548,7 @@
     %form-group-bundle--border {
         padding: 0;
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
 
@@ -607,39 +580,39 @@
 
     %form-group-bundle-border--hover {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'hover-border-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'hover-border-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'hover-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'hover-border-color');
         }
     }
 
     %form-group-bundle-border--focus {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'focused-border-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'focused-border-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'focused-border-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'focused-border-color');
         }
     }
 
     %form-group-bundle-border--error {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'error-secondary-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'error-secondary-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'error-secondary-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'error-secondary-color');
         }
     }
 
     %form-group-bundle-border--success {
         @if not $indigo-theme {
-            box-shadow: inset 0 0 0 2px var-get($theme, 'success-secondary-color');
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'success-secondary-color');
         } @else {
-            box-shadow: inset 0 0 0 1px var-get($theme, 'success-secondary-color');
+            box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'success-secondary-color');
         }
     }
 
     %form-group-bundle-border--disabled {
         background: var-get($theme, 'border-disabled-background');
-        box-shadow: inset 0 0 0 1px var-get($theme, 'disabled-border-color');
+        box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'disabled-border-color');
     }
 
     // FLUENT START
@@ -774,8 +747,8 @@
     // Bundle
     %form-group-bundle--fluent {
         padding: 0;
-        min-height: 32px;
-        border: 1px solid var-get($theme, 'border-color');
+        min-height: rem(32px);
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
         position: relative;
@@ -869,7 +842,7 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(null, 'gray', 800);
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -885,7 +858,7 @@
     }
 
     %fluent-label-disabled {
-        color: color(map.get($theme, 'palette'), 'grays', 500);
+        color: color(null, 'gray', 500);
     }
 
     %fluent-label-filled {
@@ -893,7 +866,7 @@
     }
 
     %fluent-label-focused {
-        color: color(map.get($theme, 'palette'), 'grays', 800);
+        color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -1055,7 +1028,7 @@
             content: '#{$required-symbol}';
             font-size: inherit;
             vertical-align: top;
-            margin-inline-start: $required-symbol-margin; /* 2px base is 16px */
+            margin-inline-start: $required-symbol-margin; /* rem(2px) base is 16px */
             display: inline-block;
         }
     }
@@ -1127,19 +1100,19 @@
         height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
-    %form-group-upload-button {
+    %form-group-upload-button[igxButton] {
         margin-bottom: rem(10px);
     }
 
     %form-group-clear-icon {
         &:focus {
             border-radius: border-radius(rem(4px));
-            background-color: color($palette, 'primary', 500);
-            color: contrast-color($palette, 'primary', 500);
+            background-color: color($color: 'primary', $variant: 500);
+            color: contrast-color($color: 'primary', $variant: 500);
 
             @if $variant == 'material' {
                 background-color: transparent;
-                color: color($palette, 'secondary', 500);
+                color: color($color: 'secondary', $variant: 500);
             }
 
             @if $variant == 'fluent' {
@@ -1148,7 +1121,7 @@
 
             @if $variant == 'bootstrap' {
                 border-radius: 0;
-                color: contrast-color($palette, 'primary', 600);
+                color: contrast-color($color: 'primary', $variant: 600);
             }
         }
     }
@@ -1357,9 +1330,9 @@
 
     %form-group-prefix-fluent,
     %form-group-suffix-fluent {
-        .igx-typography [igx-button],
-        .igx-typography igx-button,
-        .igx-typography button,
+        .ig-typography [igx-button],
+        .ig-typography igx-button,
+        .ig-typography button,
         button {
             border-radius: rem(1px) 0 0 rem(1px);
         }
@@ -1422,9 +1395,8 @@
         padding: 0;
     }
 
-    %form-group-prefix--error,
-    %form-group-suffix--error {
-        color: var-get($theme, 'error-secondary-color');
+    %form-group-prefix--filled {
+        color: var-get($theme, 'filled-text-color');
     }
 
     %form-group-border {
@@ -1607,7 +1579,7 @@
 
     %form-group-prefix--bootstrap,
     %form-group-suffix--bootstrap {
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         padding: map.get($bootstrap-padding, 'comfortable');
         z-index: -1;
         width: auto;
@@ -1638,7 +1610,7 @@
 
     %form-group-prefix--disabled-bootstrap,
     %form-group-suffix--disabled-bootstrap {
-        border: 1px solid var-get($theme, 'disabled-border-color');
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
         color: var-get($theme, 'disabled-text-color');
     }
 
@@ -1701,7 +1673,7 @@
         line-height: 1.5 !important;
         margin: 0;
         border-radius: var-get($theme, 'box-border-radius');
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
         transition: box-shadow .15s ease-out, border .15s ease-out;
@@ -1755,33 +1727,33 @@
 /// Uses the 'body-1', 'caption'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
-@mixin input-group-typography($type-scale, $categories: (
-    helper-text: 'caption',
-    input-text: 'subtitle-1')
+@mixin input-group-typography(
+    $categories: (
+        helper-text: 'caption',
+        input-text: 'subtitle-1'
+    )
 ) {
     $helper-text: map.get($categories, 'helper-text');
     $input-text: map.get($categories, 'input-text');
-    $input-text-props: type-scale-category($type-scale, $input-text);
 
     %form-group-input {
-        @include type-style($type-scale, $input-text) {
+        @include type-style($input-text) {
             margin: 0;
         }
     }
 
     %form-group-helper {
-        @include type-style($type-scale, $helper-text) {
+        @include type-style($helper-text) {
             margin: 0;
         }
     }
 
     %form-group-prefix,
     %form-group-suffix {
-        @include type-style($type-scale, $input-text) {
+        @include type-style($input-text) {
             margin: 0;
         }
     }
 }
+

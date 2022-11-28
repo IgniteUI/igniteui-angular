@@ -22,7 +22,7 @@ import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridType, IGX_GRID_BASE } from './common/grid.interface';
-import mergeWith from 'lodash.mergewith';
+import { mergeWith } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -410,6 +410,17 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public showActionStrip() {
         if (this.grid.actionStrip) {
             this.grid.actionStrip.show(this);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave')
+    public hideActionStrip() {
+        if (this.grid.actionStrip && this.grid.actionStrip.hideOnRowLeave) {
+            this.grid.actionStrip.hide();
         }
     }
 

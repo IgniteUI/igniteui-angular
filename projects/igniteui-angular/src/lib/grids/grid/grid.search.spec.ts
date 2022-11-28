@@ -11,7 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
@@ -739,6 +739,10 @@ describe('IgxGrid - search API #grid - ', () => {
             fix.detectChanges();
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('findNext scrolls to cells out of view', async () => {
             grid.findNext('30');
             await wait(100);
@@ -1111,7 +1115,7 @@ describe('IgxGrid - search API #grid - ', () => {
             });
             fix.detectChanges();
             grid.findNext('Casey');
-            await wait(30);
+            await wait(100);
             fix.detectChanges();
             let row = grid.gridAPI.get_row_by_index(17);
             let spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
@@ -1120,7 +1124,7 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.toggleAllGroupRows();
             fix.detectChanges();
             (grid as any).scrollTo(0, 0);
-            await wait();
+            await wait(100);
             fix.detectChanges();
             grid.toggleGroup(grid.groupsRecords[0]);
             fix.detectChanges();
@@ -1128,7 +1132,7 @@ describe('IgxGrid - search API #grid - ', () => {
             fix.detectChanges();
 
             grid.findNext('Casey');
-            await wait();
+            await wait(100);
             fix.detectChanges();
             row = grid.gridAPI.get_row_by_index(11);
             spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);

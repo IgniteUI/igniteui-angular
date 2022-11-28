@@ -1,6 +1,7 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
+@use 'igniteui-theming/sass/animations/easings' as *;
 
 ////
 /// @group themes
@@ -10,24 +11,18 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
 /// @param {number} $size [null] - The size of the avatar.
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires text-contrast
-/// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon avatars
 ///   $my-avatar-theme: avatar-theme($icon-background: black, $icon-color: white);
-///   // Pass the theme to the avatar component mixin
-///   @include avatar($my-avatar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-avatar-theme);
 @function avatar-theme(
-    $palette: null,
     $schema: $light-schema,
     $background: null,
     $color: null,
@@ -43,7 +38,7 @@
         $avatar-schema: $schema;
     }
 
-    $theme: apply-palette($avatar-schema, $palette);
+    $theme: digest-schema($avatar-schema);
 
     @if not($color) and $background {
         $color: text-contrast($background);
@@ -55,7 +50,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         background: $background,
         color: $color,
         border-radius: $border-radius,
@@ -64,9 +58,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin avatar($theme) {
     @include css-vars($theme);
 
@@ -112,7 +103,7 @@
             @if $bootstrap-theme {
                 @extend %igx-avatar-outline;
             }
-            transition: box-shadow .15s $ease-in-out-quad;
+            transition: box-shadow .15s $in-out-quad;
         }
 
         &:focus::after {
@@ -124,7 +115,6 @@
         width: 100%;
         height: 100%;
         border-radius: inherit;
-        background-color: var-get($theme, 'background');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

@@ -11,14 +11,12 @@
 /// @type {Map}
 /// @prop {Map} icon-color [contrast-color: ('primary', 500)] - The icon color used.
 /// @prop {Map} text-color [contrast-color: ('primary', 500)] - The text color used.
-/// @prop {Map} border-color [color: ('grays', 50)] - The border color used.
+/// @prop {Map} border-color [color: ('gray', 50)] - The border color used.
 /// @prop {Number} border-width [0] - The border width of the badge component.
 /// @prop {Map} background-color [color: ('primary', 500)] - The background color used.
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [11px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
-/// @requires {Map} $_default-elevation-badge
-/// @see $default-palette
+/// @requires {Map} $default-elevation-badge
 $light-badge: extend(
     $default-elevation-badge,
     (
@@ -33,7 +31,7 @@ $light-badge: extend(
         ),
 
         border-color: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         background-color: (
@@ -48,8 +46,7 @@ $light-badge: extend(
 
 /// Generates a fluent badge schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires {Map} $_light-badge
+/// @requires {Map} $light-badge
 $fluent-badge: extend(
     $light-badge,
     (
@@ -61,9 +58,8 @@ $fluent-badge: extend(
 /// @type {Map}
 /// @prop {Number} border-width [1px] - The border width of the badge component.
 /// @prop {Number} border-radius [4px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
-/// @requires {Map} $_light-badge
-/// @requires {Map} $_bootstrap-elevation-badge
+/// @requires {Map} $light-badge
+/// @requires {Map} $bootstrap-elevation-badge
 $bootstrap-badge: extend(
     $light-badge,
     $bootstrap-elevation-badge,
@@ -78,8 +74,7 @@ $bootstrap-badge: extend(
 
 /// Generates an indigo badge schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires {Map} $_light-badge
+/// @requires {Map} $light-badge
 $indigo-badge: extend(
     $light-badge,
     (

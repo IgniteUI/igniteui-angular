@@ -10,31 +10,27 @@
 /// Generates a dark icon schema.
 /// @type {Map}
 /// @requires $light-icon
-/// @see $default-palette
 $dark-icon: $light-icon;
 
 /// Generates a dark fluent icon schema.
 /// @type {Map}
-/// @property {Map} disabled-color [color: ('grays' 500)] - The icon color.
-/// @requires {function} extend
+/// @property {Map} disabled-color [color: ('gray' 500)] - The icon color.
 /// @requires $light-icon
 $dark-fluent-icon: extend(
     $fluent-icon,
     (
         disabled-color: (
-            color: ('grays' 500)
+            color: ('gray' 500)
         )
     )
 );
 
 /// Generates a dark bootstrap icon schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-icon
 $dark-bootstrap-icon: $bootstrap-icon;
 
 /// Generates a dark indigo icon schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-icon
 $dark-indigo-icon: $indigo-icon;

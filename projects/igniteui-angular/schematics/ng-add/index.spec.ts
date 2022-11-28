@@ -15,6 +15,7 @@ describe('ng-add schematics', () => {
     version: 1,
     projects: {
       testProj: {
+        root: '/',
         sourceRoot,
         projectType: ProjectType.Application,
         architect: {
@@ -89,7 +90,7 @@ describe('ng-add schematics', () => {
   it('should add the correct igniteui-angular packages to package.json dependencies', async () => {
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies['jszip']).toBeTruthy();
+    expect(pkgJsonData.dependencies['fflate']).toBeTruthy();
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 

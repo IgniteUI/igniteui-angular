@@ -53,6 +53,10 @@
     <button (click)="toggleVal()">Toggle</button>
     <button (click)="moveVal()">Move</button>
     <button (click)="insertVal()">Insert</button>
+    <button (click)="filterDim()">filterDim</button>
+    <button (click)="newConfig()">newConfig</button>
+
+    <button (click)="exportButtonHandler()">Export To Excel</button><br />
 </div>
 <div class="pivot-container">
     <div>
@@ -67,7 +71,11 @@
             [rowSelection]='"single"'
             [pivotConfiguration]="pivotConfigHierarchy"
             (dimensionsChange)="dimensionChange()"
-        ></igx-pivot-grid>
+        >
+        <ng-template igxPivotValueChip let-value>
+            {{ value.member }}
+       </ng-template>
+    </igx-pivot-grid>
     </div>
     <igx-pivot-data-selector [grid]="grid1"></igx-pivot-data-selector>
 </div>

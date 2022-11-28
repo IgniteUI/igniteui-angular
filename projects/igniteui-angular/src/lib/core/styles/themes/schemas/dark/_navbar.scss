@@ -8,26 +8,20 @@
 
 /// Generates a dark navbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-navbar
-/// @see $default-palette
 $dark-navbar: $light-navbar;
 
 /// Generates a dark fluent navbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-navbar
 $dark-fluent-navbar: $fluent-navbar;
 
 /// Generates a dark bootstrap navbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-navbar
 $dark-bootstrap-navbar: $bootstrap-navbar;
 
 /// Generates a dark indigo navbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-navbar
 $dark-indigo-navbar: $indigo-navbar;
-

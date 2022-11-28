@@ -52,6 +52,7 @@
         [displayFormat]="column.pipeArgs.format"
         [formatter]="column.formatter"
         [placeholder]="placeholder"
+        [weekStart]="column.pipeArgs.weekStart"
         [displayDensity]="displayDensity"
         (keydown)="onInputKeyDown($event)"
         (focusout)="onInputGroupFocusout()"
@@ -161,7 +162,7 @@
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
-                    <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="column.grid.displayDensity">
+                    <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="displayDensity">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
@@ -180,11 +181,11 @@
 </button>
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
-    <button [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+    <button [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
         <igx-icon>refresh</igx-icon>
         <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</span>
     </button>
-    <button #closeButton [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
+    <button #closeButton [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
         <igx-icon>close</igx-icon>
         <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</span>
     </button>

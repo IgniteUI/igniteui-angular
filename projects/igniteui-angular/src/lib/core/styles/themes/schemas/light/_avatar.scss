@@ -8,22 +8,20 @@
 
 /// Generates a light avatar schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 400, .54)]- The background color of the avatar.
-/// @prop {Map} color [color: ('grays', 800, .96)] - The text/icon color of the avatar.
+/// @prop {Map} background [color: ('gray', 400, .54)]- The background color of the avatar.
+/// @prop {Map} color [color: ('gray', 800, .96)] - The text/icon color of the avatar.
 /// @prop {Number} border-radius [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} size - The size of the avatar.
-/// @requires {function} extend
-/// @see $default-palette
 $light-avatar: extend(
     (
         variant: 'material',
 
         background: (
-            color: ('grays', 400, .54)
+            color: ('gray', 400, .54)
         ),
 
         color: (
-            color: ('grays', 800, .96)
+            color: ('gray', 800, .96)
         ),
 
         border-radius: rem(0)
@@ -32,8 +30,7 @@ $light-avatar: extend(
 
 /// Generates a fluent avatar schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires {Map} $_light-avatar
+/// @requires {Map} $light-avatar
 $fluent-avatar: extend(
     $light-avatar,
     (
@@ -43,22 +40,21 @@ $fluent-avatar: extend(
 
 /// Generates a bootstrap avatar schema.
 /// @type {Map}
-/// @prop {Map} background [color: ('grays', 400)]- The background color of the avatar.
-/// @prop {Map} color [contrast-color: ('grays', 400)] - The text/icon color of the avatar.
+/// @prop {Map} background [color: ('gray', 400)]- The background color of the avatar.
+/// @prop {Map} color [contrast-color: ('gray', 400)] - The text/icon color of the avatar.
 /// @prop {Number} border-radius [4px] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
-/// @requires {function} extend
-/// @requires {Map} $_light-avatar
+/// @requires {Map} $light-avatar
 $bootstrap-avatar: extend(
     $light-avatar,
     (
         variant: 'bootstrap',
 
         background: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         ),
 
         color: (
-            contrast-color: ('grays', 400)
+            contrast-color: ('gray', 400)
         ),
 
         border-radius: rem(4px)
@@ -67,8 +63,7 @@ $bootstrap-avatar: extend(
 
 /// Generates an indigo avatar schema.
 /// @type {Map}
-/// @requires {function} extend
-/// @requires {Map} $_light-avatar
+/// @requires {Map} $light-avatar
 $indigo-avatar: extend(
     $light-avatar,
     (

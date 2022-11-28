@@ -1162,7 +1162,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const sundayLabel = calendar.querySelectorAll('.igx-calendar__label')[0].innerHTML;
 
-            expect(sundayLabel.trim()).toEqual('So');
+            expect(sundayLabel.trim()).toEqual('Mo');
         }));
 
         it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
@@ -3099,23 +3099,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(2).field).toBe('ProductName');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[2].field).toBe('ProductName');
+            expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(1).field).toBe('ID');
-            expect(grid.columnList.get(0).field).toBe('Downloads');
+            expect(grid.columns[1].field).toBe('ID');
+            expect(grid.columns[0].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(0).field).toBe('ID');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[0].field).toBe('ID');
+            expect(grid.columns[1].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
@@ -4709,6 +4709,41 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('Should take pipeArgs weekStart property as calendar\'s default.', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseDate');
+
+            column.pipeArgs = {
+                digitsInfo: '3.4-4',
+                currencyCode: 'USD',
+                display: 'symbol-narrow',
+                weekStart: 5,
+            };
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const input = datePicker.querySelector('input');
+            UIInteractions.simulateClickEvent(input);
+            fix.detectChanges();
+
+            // Get Calendar component.
+            const calendar = document.querySelector('igx-calendar');
+
+            const daysOfWeek = calendar.querySelector('.igx-calendar__body-row');
+            const weekStart = daysOfWeek.firstElementChild as HTMLSpanElement;
+
+            expect(weekStart.innerText).toMatch('Fri');
+        }));
+
         it('Should filter grid with ISO 8601 dates through custom date filter dialog', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
@@ -5713,23 +5748,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(2).field).toBe('ProductName');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[2].field).toBe('ProductName');
+            expect(grid.columns[1].field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(1).field).toBe('ID');
-            expect(grid.columnList.get(0).field).toBe('Downloads');
+            expect(grid.columns[1].field).toBe('ID');
+            expect(grid.columns[0].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft);
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columnList.get(0).field).toBe('ID');
-            expect(grid.columnList.get(1).field).toBe('Downloads');
+            expect(grid.columns[0].field).toBe('ID');
+            expect(grid.columns[1].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
@@ -5817,6 +5852,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('filter_alt');
         }));
+
+        it('should allow setting excel style filter icon via Input.', () => {
+            grid.excelStyleHeaderIconTemplate = fix.componentInstance.customExcelHeaderIcon;
+            fix.detectChanges();
+            const header = GridFunctions.getColumnHeader('AnotherField', fix);
+            fix.detectChanges();
+            const icon = GridFunctions.getHeaderFilterIcon(header);
+            fix.detectChanges();
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('search');
+        });
     });
 
     describe('Load values on demand', () => {

@@ -31,6 +31,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     column?: ColumnType;
     owner?: GridType;
     isAddRow?: boolean;
+    valid?: boolean;
 }
 
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
@@ -66,6 +67,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 }
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
+    owner: GridType;
 }
 
 export interface IColumnResizeEventArgs extends IBaseEventArgs {
@@ -83,6 +85,7 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     readonly added: any[];
     readonly removed: any[];
     readonly event?: Event;
+    readonly allRowsSelected?: boolean;
 }
 
 export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {

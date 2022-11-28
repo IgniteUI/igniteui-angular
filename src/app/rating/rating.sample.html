@@ -1,0 +1,24 @@
+<section class="sample-content">
+    <igx-card *ngFor="let model of models">
+        <igx-card-header>
+            <span igxCardHeaderTitle>{{model.Name}}</span>
+        </igx-card-header>
+        <igx-card-content>
+            <form #form1="ngForm">
+                <igx-input-group>
+                    <input igxInput name="modelName" type="text" [(ngModel)]="model.Name" required />
+                    <label igxLabel for="modelName">Model Name</label>
+                </igx-input-group>
+
+                <igx-input-group>
+                    <input igxInput name="modelRating" type="text" [(ngModel)]="model.Rating" required />
+                    <label igxLabel for="modelRating">Model Rating</label>
+                </igx-input-group>
+
+                <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
+
+                <p>{{ model.Name }}'s rating is: {{ model.Rating }}</p>
+            </form>
+        </igx-card-content>
+    </igx-card>
+</section>

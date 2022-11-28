@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
@@ -28,9 +28,11 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
 /* eslint-disable max-len */
 describe('IgxGrid - multi-column headers #grid', () => {
-    let fixture; let grid: IgxGridComponent; let componentInstance;
+    let fixture: ComponentFixture<any>; let grid: IgxGridComponent; let componentInstance;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
@@ -51,7 +53,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        });
+        })
+        .compileComponents();
     }));
 
     describe('Initialization and rendering tests: ', () => {
@@ -131,6 +134,45 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 'personDetailsColumn', 2);
 
         }));
+
+        it('Should render dynamic column group header correctly (#12165).', () => {
+            fixture = TestBed.createComponent(BlueWhaleGridComponent) as ComponentFixture<BlueWhaleGridComponent>;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.firstGroupRepeats = 1;
+            (fixture as ComponentFixture<BlueWhaleGridComponent>).componentInstance.secondGroupRepeats = 1;
+            fixture.detectChanges();
+
+            componentInstance = fixture.componentInstance;
+            grid = componentInstance.grid;
+            const columnWidthPx = parseInt(componentInstance.columnWidth, 10);
+            // 2 levels of column group and 1 level of columns
+            const gridHeadersDepth = 3;
+
+            let firstGroupChildrenCount = 1;
+
+            let firstGroup = GridFunctions.getColumnGroupHeaders(fixture)[0];
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            let allHeaders = GridFunctions.getColumnHeaders(fixture).map<IgxGridHeaderComponent>(x => x.componentInstance);
+            let firstSixHeaders = allHeaders.slice(0, 6).map(x => x.column.field);
+            expect(allHeaders.length).toEqual(14);
+            expect(firstSixHeaders).toEqual(['ID', 'ID', 'ID', 'ID', 'CompanyName', 'ContactName']);
+
+            (componentInstance as BlueWhaleGridComponent).extraMissingColumn = true;
+            fixture.detectChanges();
+
+            firstGroupChildrenCount = 2;
+            firstGroup = GridFunctions.getColumnGroupHeaders(fixture)[0];
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            allHeaders = GridFunctions.getColumnHeaders(fixture).map<IgxGridHeaderComponent>(x => x.componentInstance);
+            firstSixHeaders = allHeaders.slice(0, 6).map(x => x.column.field);
+            expect(allHeaders.length).toEqual(15);
+            expect(firstSixHeaders).toEqual(['ID', 'Missing', 'ID', 'ID', 'ID', 'CompanyName']);
+        });
 
         it('Should not render empty column group.', () => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
@@ -667,6 +709,33 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
+
+        it('column hiding - verify grid after hiding the last column group', async () => {
+            grid.navigateTo(0, 10);
+            await wait(100);
+            fixture.detectChanges();
+            await wait(250);
+            fixture.detectChanges();
+
+            let headerDisplayContainer = fixture.debugElement.query(By.css('.igx-grid-thead__wrapper >* .igx-display-container'));
+            let leftOffset = parseInt(headerDisplayContainer.styles.left, 10);
+            expect(leftOffset).toBeLessThan(-600);
+
+            const initialBodyHeight = parseInt(fixture.debugElement.query(By.css('.igx-grid__tbody-content')).styles.height, 10);
+            const contactInfoGroup = grid.columns.find(c => c.header === 'Contact Information');
+            const groupWidth = contactInfoGroup.width;
+            contactInfoGroup.hidden = true;
+            fixture.detectChanges();
+            await wait(200);
+            fixture.detectChanges();
+
+            headerDisplayContainer = fixture.debugElement.query(By.css('.igx-grid-thead__wrapper >* .igx-display-container'));
+            const expectedOffset = leftOffset - parseInt(groupWidth, 10);
+            leftOffset = parseInt(headerDisplayContainer.styles.left, 10);
+
+            expect(parseInt(fixture.debugElement.query(By.css('.igx-grid__tbody-content')).styles.height, 10)).toEqual(initialBodyHeight);
+            expect(leftOffset).toBeGreaterThanOrEqual(expectedOffset);
+        });
 
         it('column hiding - parent level', () => {
             const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];

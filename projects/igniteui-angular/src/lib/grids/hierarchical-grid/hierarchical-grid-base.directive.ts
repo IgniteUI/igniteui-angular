@@ -40,6 +40,7 @@ import { IgxTransactionService } from '../../services/transaction/igx-transactio
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { State, Transaction, TransactionService } from '../../services/transaction/transaction';
 import { IgxGridTransaction } from '../common/types';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -100,7 +101,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -148,6 +149,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     public abstract expandChildren: boolean;
 
     constructor(
+        validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
@@ -171,6 +173,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         protected platform: PlatformUtil,
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
         super(
+            validationService,
             selectionService,
             colResizingService,
             gridAPI,
@@ -206,14 +209,13 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             columns.push(ref.instance);
         });
         const result = flatten(columns);
-        this.columnList.reset(result);
-        this.columnList.notifyOnChanges();
+        this.updateColumns(result);
         this.initPinning();
 
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
-            this.columnList.forEach(column => {
+            this.columns.forEach(column => {
                 if (column[output.propName]) {
                     column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
                         const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
@@ -266,6 +268,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
                 ref.instance[propName] = col[propName].constructor;
             }
         });
+        ref.instance.validators = col.validators;
         return ref;
     }
 

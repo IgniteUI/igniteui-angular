@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupModule, IgxInputState } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, UntypedFormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -20,7 +20,7 @@ import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api'
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { IgxPickersCommonModule } from '../date-common/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
-import { IgxCalendarComponent } from '../calendar/public_api';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AnimationService } from '../services/animation/animation';
@@ -142,7 +142,8 @@ describe('IgxDateRangePicker', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
-            mockCalendar = new IgxCalendarComponent(platform);
+            mockCalendar = new IgxCalendarComponent(platform, 'en');
+
             mockDaysView = {
                 focusActiveDate: jasmine.createSpy()
             } as any;
@@ -150,7 +151,7 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
             // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -168,7 +169,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit valueChange on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, null, null, null, null);
             // dateRange.calendar = calendar;
             spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -229,7 +230,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, null, null);
             dateRange.ngOnInit();
 
             // dateRange.calendar = calendar;
@@ -280,7 +281,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en', platform, mockInjector, null, null, null);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -338,7 +339,8 @@ describe('IgxDateRangePicker', () => {
                     declarations: [
                         DateRangeTestComponent,
                         DateRangeDefaultComponent,
-                        DateRangeDisabledComponent
+                        DateRangeDisabledComponent,
+                        DateRangeReactiveFormComponent
                     ],
                     imports: [
                         CommonModule,
@@ -349,7 +351,8 @@ describe('IgxDateRangePicker', () => {
                         FormsModule,
                         NoopAnimationsModule,
                         IgxPickersCommonModule,
-                        IgxCalendarContainerModule
+                        IgxCalendarContainerModule,
+                        ReactiveFormsModule
                     ]
                 })
                     .compileComponents();
@@ -776,6 +779,20 @@ describe('IgxDateRangePicker', () => {
                 // clean up test
                 tick(350);
             }));
+
+            it('should set initial validity state when the form group is disabled', () => {
+                const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+                fix.detectChanges();
+                const dateRangePicker = fix.componentInstance.dateRange;
+
+                fix.componentInstance.markAsTouched();
+                fix.detectChanges();
+                expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INVALID);
+
+                fix.componentInstance.disableForm();
+                fix.detectChanges();
+                expect(dateRangePicker.inputDirective.valid).toBe(IgxInputState.INITIAL);
+            });
         });
 
         describe('Two Inputs', () => {
@@ -789,7 +806,8 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent,
                         DateRangeDisabledComponent,
-                        DateRangeTwoInputsDisabledComponent
+                        DateRangeTwoInputsDisabledComponent,
+                        DateRangeReactiveFormComponent
                     ],
                     imports: [
                         CommonModule,
@@ -800,7 +818,8 @@ describe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         FormsModule,
                         NoopAnimationsModule,
-                        IgxIconModule
+                        IgxIconModule,
+                        ReactiveFormsModule
                     ]
                 })
                     .compileComponents();
@@ -1015,6 +1034,22 @@ describe('IgxDateRangePicker', () => {
                     expect((rangePicker as any).calendar.selectedDates.length).toBe(7);
                     flush();
                 }));
+
+                it('should set initial validity state when the form group is disabled', () => {
+                    const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+                    fix.detectChanges();
+                    const dateRangePicker = fix.componentInstance.dateRangeWithTwoInputs;
+    
+                    fix.componentInstance.markAsTouched();
+                    fix.detectChanges();
+                    expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
+                    expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
+    
+                    fix.componentInstance.disableForm();
+                    fix.detectChanges();
+                    expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
+                    expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INITIAL);
+                });
             });
 
             describe('Keyboard navigation', () => {
@@ -1362,6 +1397,46 @@ describe('IgxDateRangePicker', () => {
                     .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
                         jasmine.anything(), dateRange.element.nativeElement);
             }));
+            it('Should the weekStart property takes precedence over locale.', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.locale = 'en';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(0);
+
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                expect(dateRange.weekStart).toEqual(5);
+
+                dateRange.locale = 'fr';
+                fixture.detectChanges();
+
+                expect(dateRange.weekStart).toEqual(5);
+
+                flush();
+            }));
+
+            it('Should passing invalid value for locale, then setting weekStart must be respected.', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                const locale = 'en-US';
+                dateRange.locale = locale;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual(locale);
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.SUNDAY)
+
+                dateRange.locale = 'frrr';
+                dateRange.weekStart = WEEKDAYS.FRIDAY;
+                fixture.detectChanges();
+
+                expect(dateRange.locale).toEqual('en-US');
+                expect(dateRange.weekStart).toEqual(WEEKDAYS.FRIDAY);
+            }));
         });
     });
 });
@@ -1531,3 +1606,46 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
+
+@Component({
+    template: `
+        <form class="wrapper" [formGroup]="form">
+        	<igx-date-range-picker #range formControlName="range">
+        		<label igxLabel>Range</label>
+        	</igx-date-range-picker>
+            <igx-date-range-picker #twoInputs formControlName="twoInputs">
+                <igx-date-range-start>
+                    <input igxInput igxDateTimeEditor>
+                </igx-date-range-start>
+                <igx-date-range-end>
+                    <input igxInput igxDateTimeEditor>
+                </igx-date-range-end>
+            </igx-date-range-picker>
+        </form>`
+})
+export class DateRangeReactiveFormComponent {
+    @ViewChild('range', {read: IgxDateRangePickerComponent}) public dateRange: IgxDateRangePickerComponent;
+    @ViewChild('twoInputs', {read: IgxDateRangePickerComponent}) public dateRangeWithTwoInputs: IgxDateRangePickerComponent;
+
+    public form = this.fb.group({
+        range: ['', Validators.required],
+        twoInputs: ['', Validators.required]
+    });
+
+    constructor(private fb: UntypedFormBuilder) { }
+
+    public markAsTouched() {
+        if (!this.form.valid) {
+            for (const key in this.form.controls) {
+                if (this.form.controls[key]) {
+                    this.form.controls[key].markAsTouched();
+                    this.form.controls[key].updateValueAndValidity();
+                }
+            }
+        }
+    }
+
+    public disableForm() {
+        this.form.disable();
+    }
+}

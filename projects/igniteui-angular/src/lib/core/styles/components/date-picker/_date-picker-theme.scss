@@ -1,5 +1,5 @@
-@use '../../base' as *;
 @use 'sass:map';
+@use '../../base' as *;
 
 ////
 /// @group themes
@@ -9,21 +9,14 @@
 ////
 
 /// @param {Map} $theme - The calendar theme used to style the component.
-/// @requires elevation
-/// @requires text-contrast
-/// @requires var-get
-/// @requires rem
 @mixin date-picker($theme) {
-    $palette: map.get($theme, 'palette');
-    $selected-hover-color: text-contrast(map.get($theme, 'date-selected-background'), $palette: $palette);
-
     @include css-vars($theme, '.igx-date-picker');
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
-        box-shadow: elevation($elevation: 24);
+        box-shadow: elevation(24);
         border-radius: border-radius(var-get($theme, 'border-radius'));
         background: var-get($theme, 'content-background');
         overflow: hidden;
@@ -121,33 +114,22 @@
 
         %cal-value--selected {
             color: var-get($theme, 'date-selected-text-color');
-            // background: var-get($theme, 'date-selected-background') !important;
         }
 
         %cal-value--current {
             color: var-get($theme, 'date-current-text-color');
         }
-
-        %cal-value--hover {
-            %cal-value-content::after {
-                background: var-get($theme, 'date-hover-background');
-            }
-
-            &%cal-value--selected %cal-value-content::after {
-                background: $selected-hover-color;
-            }
-        }
     }
 
     %date-picker--vertical {
-        min-width: 368px; /* 168px for header + 200px for the content */
+        min-width: rem(368px); /* 168px for header + 200px for the content */
     }
 
     %date-picker--dropdown {
         display: flex;
         flex: 1 0 0;
         flex-direction: column;
-        box-shadow: elevation($elevation: 3);
+        box-shadow: elevation(3);
     }
 
     %date-picker__buttons {

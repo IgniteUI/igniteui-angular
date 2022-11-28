@@ -4,13 +4,17 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '.
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { copyDescriptors, isEqual } from '../../core/utils';
+import { FormGroup } from '@angular/forms';
 
 export class IgxEditRow {
     public transactionState: any;
     public state: any;
     public newData: any;
+    public rowFormGroup = new FormGroup({});
 
-    constructor(public id: any, public index: number, public data: any, public grid: GridType) { }
+    constructor(public id: any, public index: number, public data: any, public grid: GridType) {
+        this.rowFormGroup = this.grid.validation.create(id, data);
+    }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
@@ -20,6 +24,7 @@ export class IgxEditRow {
             cancel: false,
             owner: this.grid,
             isAddRow: false,
+            valid: this.rowFormGroup.valid,
             event
         };
         if (includeNewValue) {
@@ -39,6 +44,7 @@ export class IgxEditRow {
             newValue: updatedData,
             owner: this.grid,
             isAddRow: false,
+            valid: true,
             event
         };
 
@@ -85,15 +91,37 @@ export interface IgxAddRowParent {
 export class IgxCell {
     public primaryKey: any;
     public state: any;
+    public pendingValue: any;
 
     constructor(
         public id,
         public rowIndex: number,
         public column,
         public value: any,
-        public editValue: any,
+        public _editValue: any,
         public rowData: any,
-        public grid: GridType) { }
+        public grid: GridType) {
+        this.grid.validation.create(id.rowID, rowData);
+    }
+
+    public get editValue() {
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+        if (formControl) {
+            return formControl.value;
+        }
+    }
+
+    public set editValue(value) {
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
+
+        if (this.grid.validationTrigger === 'change') {
+            // in case trigger is change, mark as touched.
+            formControl.setValue(value);
+            formControl.markAsTouched();
+        } else {
+            this.pendingValue = value;
+        }
+    }
 
     public castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -104,6 +132,7 @@ export class IgxCell {
     }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -112,6 +141,7 @@ export class IgxCell {
             cancel: false,
             column: this.column,
             owner: this.grid,
+            valid: formControl ? formControl.valid : true,
             event
         };
         if (includeNewValue) {
@@ -124,6 +154,7 @@ export class IgxCell {
         const updatedData = this.grid.transactions.enabled ?
             this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
+        const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -131,6 +162,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData,
             oldValue: this.value,
+            valid: formControl ? formControl.valid : true,
             newValue: value,
             column: this.column,
             owner: this.grid,
@@ -189,6 +221,17 @@ export class IgxCellCrudState {
             return;
         }
 
+        const formControl = this.grid.validation.getFormControl(this.cell.id.rowID, this.cell.column.field);
+        if (this.grid.validationTrigger === 'blur' && this.cell.pendingValue !== undefined) {
+            // in case trigger is blur, update value if there's a pending one and mark as touched.
+            formControl.setValue(this.cell.pendingValue);
+            formControl.markAsTouched();
+        }
+
+        if (this.grid.validationTrigger === 'blur') {
+            this.grid.tbody.nativeElement.focus({ preventScroll: true });
+        }
+
         let doneArgs;
         if (isEqual(this.cell.value, this.cell.editValue)) {
             doneArgs = this.exitCellEdit(event);
@@ -225,16 +268,15 @@ export class IgxCellCrudState {
         if (!this.cell) {
             return;
         }
-
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
         this.cell.value = newValue;
-
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
     }
+
 
     /** Clears cell editing state */
     public endCellEdit() {
@@ -341,6 +383,13 @@ export class IgxRowCrudState extends IgxCellCrudState {
         let nonCancelableArgs;
         if (!commit) {
             this.grid.transactions.endPending(false);
+            const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
+            const id = this.row ? this.row.id : this.cell.id.rowID;
+            if (isAddRow) {
+                this.grid.validation.clear(id);
+            } else {
+                this.grid.validation.update(id, rowEditArgs.oldValue);
+            }
         } else if (this.row.getClassName() === IgxEditRow.name) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
@@ -477,8 +526,8 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         if (isAddRow) {
             this.endAddRow();
             if (commit) {
-                this.grid.rowAddedNotifier.next({ data: args.newValue });
-                this.grid.rowAdded.emit({ data: args.newValue });
+                this.grid.rowAddedNotifier.next({ data: args.newValue, owner: this.grid });
+                this.grid.rowAdded.emit({ data: args.newValue, owner: this.grid });
             }
         }
 
@@ -626,6 +675,10 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             }
         } else {
             this.exitCellEdit(event);
+            if (!this.grid.rowEditable && this.cell) {
+                const value = this.grid.transactions.getAggregatedValue(this.cell.id.rowID, true) || this.cell.rowData;
+                this.grid.validation.update(this.cell.id.rowID, value);
+            }
         }
 
         args = this.updateRow(commit, event);

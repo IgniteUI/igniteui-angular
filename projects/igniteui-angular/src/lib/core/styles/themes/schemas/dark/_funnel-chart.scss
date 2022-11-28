@@ -9,7 +9,6 @@
 /// Generates a dark funnel chart schema.
 /// @type {Map}
 /// @requires $light-funnel-chart
-/// @see $default-palette
 $dark-funnel-chart: $light-funnel-chart;
 
 /// Generates a dark fluent funnel-chart schema.
@@ -24,6 +23,6 @@ $dark-bootstrap-funnel-chart: $bootstrap-funnel-chart;
 
 /// Generates a dark indigo funnel-chart schema.
 /// @type {Map}
-/// @requires $ndigo-funnel-chart
+/// @requires $indigo-funnel-chart
 $dark-indigo-funnel-chart: $indigo-funnel-chart;
 

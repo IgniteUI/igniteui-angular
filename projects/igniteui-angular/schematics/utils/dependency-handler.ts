@@ -21,11 +21,11 @@ const schematicsPackage = '@igniteui/angular-schematics';
 export const DEPENDENCIES_MAP: PackageEntry[] = [
     // dependencies
     { name: 'hammerjs', target: PackageTarget.REGULAR },
-    { name: 'jszip', target: PackageTarget.REGULAR },
+    { name: 'fflate', target: PackageTarget.REGULAR },
     { name: 'tslib', target: PackageTarget.NONE },
     { name: '@types/hammerjs', target: PackageTarget.DEV },
     { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-    { name: 'lodash.mergewith', target: PackageTarget.NONE },
+    { name: 'lodash-es', target: PackageTarget.NONE },
     { name: 'uuid', target: PackageTarget.NONE },
     { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
     // peerDependencies
@@ -33,6 +33,7 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@angular/common', target: PackageTarget.NONE },
     { name: '@angular/core', target: PackageTarget.NONE },
     { name: '@angular/animations', target: PackageTarget.NONE },
+    { name: 'igniteui-theming', target: PackageTarget.NONE },
     // igxDevDependencies
     { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
@@ -93,9 +94,12 @@ export const logSuccess = (options: Options): Rule => (tree: Tree, context: Sche
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const addDependencies = (options: Options) => async (tree: Tree, context: SchematicContext): Promise<void> => {
     const pkgJson = require('../../package.json');
+    const workspaceHost = createHost(tree);
+    const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
 
-    await includeDependencies(pkgJson, context, tree);
+    await includeDependencies(workspaceHost, workspace, pkgJson, context, tree);
 
+    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree)
 
     addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
 };
@@ -153,27 +157,47 @@ const addHammerToConfig =
         }
     };
 
-const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
-    const workspaceHost = createHost(tree);
-    const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
-    const defaultProject = workspace.projects.get(workspace.extensions['defaultProject'] as string);
+const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
+    await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
+        await addStylePreprocessorOptions(project, tree, "build", context);
+        await addStylePreprocessorOptions(project, tree, "test", context);
+    }));
+
+    await workspaces.writeWorkspace(workspace, workspaceHost);
+};
+
+const addStylePreprocessorOptions =
+    async (project: workspaces.ProjectDefinition, tree: Tree, config: string, context: SchematicContext): Promise<void> => {
+        const projectOptions = getTargetedProjectOptions(project, config, context);
+
+        // if there are no elements in the architect[config]options.stylePreprocessorOptions.includePaths that contain node_modules
+        const stylePrepropPath = 'node_modules';
+        if (!projectOptions?.stylePreprocessorOptions?.includePaths?.some(el => el.includes(stylePrepropPath))) {
+            if (projectOptions?.stylePreprocessorOptions?.includePaths) {
+                projectOptions?.stylePreprocessorOptions?.includePaths.push(stylePrepropPath);
+            } else if (!projectOptions?.stylePreprocessorOptions) {
+                projectOptions["stylePreprocessorOptions"] = { includePaths: [stylePrepropPath]};
+            } else {
+                context.logger.warn(`Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
+                    `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`);
+            }
+        }
+    };
+
+const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
         if (!entry || entry.target === PackageTarget.NONE) {
             continue;
         }
-        switch (pkg) {
-            case 'hammerjs':
-                logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, entry.target);
-                await addHammerToConfig(defaultProject, tree, 'build', context);
-                await addHammerToConfig(defaultProject, tree, 'test', context);
-                break;
-            default:
-                logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, entry.target);
-                break;
+        logIncludingDependency(context, pkg, version);
+        addPackageToPkgJson(tree, pkg, version, entry.target);
+        if (pkg === 'hammerjs') {
+            await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
+                await addHammerToConfig(project, tree, 'build', context);
+                await addHammerToConfig(project, tree, 'test', context);
+            }));
         }
     }
     await workspaces.writeWorkspace(workspace, workspaceHost);

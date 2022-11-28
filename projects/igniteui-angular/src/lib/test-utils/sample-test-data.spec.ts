@@ -440,6 +440,48 @@ export class SampleTestData {
     ]);
     /* eslint-enable max-len */
 
+
+    /* Data fields: ID: number, PTODays: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
+        City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
+        27 items, sorted by ID. */
+    /* eslint-disable max-len */
+
+    public static contactInfoWithPTODaysData = () => ([
+        { ID: 'ALFKI', PTODays: 20, CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
+        { ID: 'ANATR', PTODays: 12, CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
+        { ID: 'ANTON', PTODays: 32, CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner', Address: 'Mataderos 2312', City: 'México D.F.', Region: null, PostalCode: '05023', Country: 'Mexico', Phone: '(5) 555-3932', Fax: null },
+        { ID: 'AROUT', PTODays: 23, CompanyName: 'Around the Horn', ContactName: 'Thomas Hardy', ContactTitle: 'Sales Representative', Address: '120 Hanover Sq.', City: 'London', Region: null, PostalCode: 'WA1 1DP', Country: 'UK', Phone: '(171) 555-7788', Fax: '(171) 555-6750' },
+        { ID: 'BERGS', PTODays: 15, CompanyName: 'Berglunds snabbköp', ContactName: 'Christina Berglund', ContactTitle: 'Order Administrator', Address: 'Berguvsvägen 8', City: 'Luleå', Region: null, PostalCode: 'S-958 22', Country: 'Sweden', Phone: '0921-12 34 65', Fax: '0921-12 34 67' },
+        { ID: 'BLAUS', PTODays: 17, CompanyName: 'Blauer See Delikatessen', ContactName: 'Hanna Moos', ContactTitle: 'Sales Representative', Address: 'Forsterstr. 57', City: 'Mannheim', Region: null, PostalCode: '68306', Country: 'Germany', Phone: '0621-08460', Fax: '0621-08924' },
+        { ID: 'BLONP', PTODays: 33, CompanyName: 'Blondesddsl père et fils', ContactName: 'Frédérique Citeaux', ContactTitle: 'Marketing Manager', Address: '24, place Kléber', City: 'Strasbourg', Region: null, PostalCode: '67000', Country: 'France', Phone: '88.60.15.31', Fax: '88.60.15.32' },
+        { ID: 'BOLID', PTODays: 27, CompanyName: 'Bólido Comidas preparadas', ContactName: 'Martín Sommer', ContactTitle: 'Owner', Address: 'C/ Araquil, 67', City: 'Madrid', Region: null, PostalCode: '28023', Country: 'Spain', Phone: '(91) 555 22 82', Fax: '(91) 555 91 99' },
+        { ID: 'BONAP', PTODays: 11, CompanyName: 'Bon app\'', ContactName: 'Laurence Lebihan', ContactTitle: 'Owner', Address: '12, rue des Bouchers', City: 'Marseille', Region: null, PostalCode: '13008', Country: 'France', Phone: '91.24.45.40', Fax: '91.24.45.41' },
+        { ID: 'BOTTM', PTODays: 6, CompanyName: 'Bottom-Dollar Markets', ContactName: 'Elizabeth Lincoln', ContactTitle: 'Accounting Manager', Address: '23 Tsawassen Blvd.', City: 'Tsawassen', Region: 'BC', PostalCode: 'T2F 8M4', Country: 'Canada', Phone: '(604) 555-4729', Fax: '(604) 555-3745' },
+        { ID: 'BSBEV', PTODays: 0, CompanyName: 'B\'s Beverages', ContactName: 'Victoria Ashworth', ContactTitle: 'Sales Representative', Address: 'Fauntleroy Circus', City: 'London', Region: null, PostalCode: 'EC2 5NT', Country: 'UK', Phone: '(171) 555-1212', Fax: null },
+        { ID: 'CACTU', PTODays: 0, CompanyName: 'Cactus Comidas para llevar', ContactName: 'Patricio Simpson', ContactTitle: 'Sales Agent', Address: 'Cerrito 333', City: 'Buenos Aires', Region: null, PostalCode: '1010', Country: 'Argentina', Phone: '(1) 135-5555', Fax: '(1) 135-4892' },
+        { ID: 'CENTC', PTODays: 25, CompanyName: 'Centro comercial Moctezuma', ContactName: 'Francisco Chang', ContactTitle: 'Marketing Manager', Address: 'Sierras de Granada 9993', City: 'México D.F.', Region: null, PostalCode: '05022', Country: 'Mexico', Phone: '(5) 555-3392', Fax: '(5) 555-7293' },
+        { ID: 'CHOPS', PTODays: 27, CompanyName: 'Chop-suey Chinese', ContactName: 'Yang Wang', ContactTitle: 'Owner', Address: 'Hauptstr. 29', City: 'Bern', Region: null, PostalCode: '3012', Country: 'Switzerland', Phone: '0452-076545', Fax: null },
+        { ID: 'COMMI', PTODays: 17, CompanyName: 'Comércio Mineiro', ContactName: 'Pedro Afonso', ContactTitle: 'Sales Associate', Address: 'Av. dos Lusíadas, 23', City: 'Sao Paulo', Region: 'SP', PostalCode: '05432-043', Country: 'Brazil', Phone: '(11) 555-7647', Fax: null },
+        { ID: 'CONSH', PTODays: 2, CompanyName: 'Consolidated Holdings', ContactName: 'Elizabeth Brown', ContactTitle: 'Sales Representative', Address: 'Berkeley Gardens 12 Brewery', City: 'London', Region: null, PostalCode: 'WX1 6LT', Country: 'UK', Phone: '(171) 555-2282', Fax: '(171) 555-9199' },
+        { ID: 'DRACD', PTODays: 6, CompanyName: 'Drachenblut Delikatessen', ContactName: 'Sven Ottlieb', ContactTitle: 'Order Administrator', Address: 'Walserweg 21', City: 'Aachen', Region: null, PostalCode: '52066', Country: 'Germany', Phone: '0241-039123', Fax: '0241-059428' },
+        { ID: 'DUMON', PTODays: 16, CompanyName: 'Du monde entier', ContactName: 'Janine Labrune', ContactTitle: 'Owner', Address: '67, rue des Cinquante Otages', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.67.88.88', Fax: '40.67.89.89' },
+        { ID: 'EASTC', PTODays: 9, CompanyName: 'Eastern Connection', ContactName: 'Ann Devon', ContactTitle: 'Sales Agent', Address: '35 King George', City: 'London', Region: null, PostalCode: 'WX3 6FW', Country: 'UK', Phone: '(171) 555-0297', Fax: '(171) 555-3373' },
+        { ID: 'ERNSH', PTODays: 29, CompanyName: 'Ernst Handel', ContactName: 'Roland Mendel', ContactTitle: 'Sales Manager', Address: 'Kirchgasse 6', City: 'Graz', Region: null, PostalCode: '8010', Country: 'Austria', Phone: '7675-3425', Fax: '7675-3426' },
+        { ID: 'FAMIA', PTODays: 0, CompanyName: 'Familia Arquibaldo', ContactName: 'Aria Cruz', ContactTitle: 'Marketing Assistant', Address: 'Rua Orós, 92', City: 'Sao Paulo', Region: 'SP', PostalCode: '05442-030', Country: 'Brazil', Phone: '(11) 555-9857', Fax: null },
+        { ID: 'FISSA', PTODays: 2, CompanyName: 'FISSA Fabrica Inter. Salchichas S.A.', ContactName: 'Diego Roel', ContactTitle: 'Accounting Manager', Address: 'C/ Moralzarzal, 86', City: 'Madrid', Region: null, PostalCode: '28034', Country: 'Spain', Phone: '(91) 555 94 44', Fax: '(91) 555 55 93' },
+        { ID: 'FOLIG', PTODays: 1, CompanyName: 'Folies gourmandes', ContactName: 'Martine Rancé', ContactTitle: 'Assistant Sales Agent', Address: '184, chaussée de Tournai', City: 'Lille', Region: null, PostalCode: '59000', Country: 'France', Phone: '20.16.10.16', Fax: '20.16.10.17' },
+        { ID: 'FOLKO', PTODays: 12, CompanyName: 'Folk och fä HB', ContactName: 'Maria Larsson', ContactTitle: 'Owner', Address: 'Åkergatan 24', City: 'Bräcke', Region: null, PostalCode: 'S-844 67', Country: 'Sweden', Phone: '0695-34 67 21', Fax: null },
+        { ID: 'FRANK', PTODays: 24, CompanyName: 'Frankenversand', ContactName: 'Peter Franken', ContactTitle: 'Marketing Manager', Address: 'Berliner Platz 43', City: 'München', Region: null, PostalCode: '80805', Country: 'Germany', Phone: '089-0877310', Fax: '089-0877451' },
+        { ID: 'FRANR', PTODays: 26, CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
+        { ID: 'FRANS', PTODays: 18, CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
+    ]);
+    /* eslint-enable max-len */
+
+    public static contactInfoDataTwoRecords = () => ([
+        { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
+        { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
+    ]);
+
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = () => ([{
@@ -1767,7 +1809,7 @@ export class SampleTestData {
             JobTitle: 'Director'
         }
     ]);
-    
+
     public static employeeGroupByData = () => ([
         {
             ID: 475,
@@ -2176,6 +2218,249 @@ export class SampleTestData {
             HasGrammyAward: true,
         }
     ]);
+
+    public static gridProductData = () => [{
+        ProductID: 1,
+        ProductName: "Chai",
+        SupplierID: 1,
+        CategoryID: 1,
+        QuantityPerUnit: "10 boxes x 20 bags",
+        UnitPrice: 18.0000,
+        UnitsInStock: 39,
+        UnitsOnOrder: 30,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date("2012-02-12")
+      }, {
+        ProductID: 2,
+        ProductName: "Chang",
+        SupplierID: 1,
+        CategoryID: 1,
+        QuantityPerUnit: "24 - 12 oz bottles",
+        UnitPrice: 19.0000,
+        UnitsInStock: 17,
+        UnitsOnOrder: 40,
+        ReorderLevel: 25,
+        Discontinued: true,
+        OrderDate: new Date("2003-03-17")
+      }, {
+        ProductID: 3,
+        ProductName: "Aniseed Syrup",
+        SupplierID: 1,
+        CategoryID: 2,
+        QuantityPerUnit: "12 - 550 ml bottles",
+        UnitPrice: 10.0000,
+        UnitsInStock: 13,
+        UnitsOnOrder: 70,
+        ReorderLevel: 25,
+        Discontinued: false,
+        OrderDate: new Date("2006-03-17")
+      }, {
+        ProductID: 4,
+        ProductName: "Chef Antons Cajun Seasoning",
+        SupplierID: 2,
+        CategoryID: 2,
+        QuantityPerUnit: "48 - 6 oz jars",
+        UnitPrice: 22.0000,
+        UnitsInStock: 53,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2016-03-17")
+      }, {
+        ProductID: 5,
+        ProductName: "Chef Antons Gumbo Mix",
+        SupplierID: 2,
+        CategoryID: 2,
+        QuantityPerUnit: "36 boxes",
+        UnitPrice: 21.3500,
+        UnitsInStock: 0,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date("2011-11-11")
+      }, {
+        ProductID: 6,
+        ProductName: "Grandmas Boysenberry Spread",
+        SupplierID: 3,
+        CategoryID: 2,
+        QuantityPerUnit: "12 - 8 oz jars",
+        UnitPrice: 25.0000,
+        UnitsInStock: 0,
+        UnitsOnOrder: 30,
+        ReorderLevel: 25,
+        Discontinued: false,
+        OrderDate: new Date("2017-12-17")
+      }, {
+        ProductID: 7,
+        ProductName: "Uncle Bobs Organic Dried Pears",
+        SupplierID: 3,
+        CategoryID: 7,
+        QuantityPerUnit: "12 - 1 lb pkgs.",
+        UnitPrice: 30.0000,
+        UnitsInStock: 150,
+        UnitsOnOrder: 30,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date("2016-07-17")
+      }, {
+        ProductID: 8,
+        ProductName: "Northwoods Cranberry Sauce",
+        SupplierID: 3,
+        CategoryID: 2,
+        QuantityPerUnit: "12 - 12 oz jars",
+        UnitPrice: 40.0000,
+        UnitsInStock: 6,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2018-01-17")
+      }, {
+        ProductID: 9,
+        ProductName: "Mishi Kobe Niku",
+        SupplierID: 4,
+        CategoryID: 6,
+        QuantityPerUnit: "18 - 500 g pkgs.",
+        UnitPrice: 97.0000,
+        UnitsInStock: 29,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date("2010-02-17")
+      }, {
+        ProductID: 10,
+        ProductName: "Ikura",
+        SupplierID: 4,
+        CategoryID: 8,
+        QuantityPerUnit: "12 - 200 ml jars",
+        UnitPrice: 31.0000,
+        UnitsInStock: 31,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2008-05-17")
+      }, {
+        ProductID: 11,
+        ProductName: "Queso Cabrales",
+        SupplierID: 5,
+        CategoryID: 4,
+        QuantityPerUnit: "1 kg pkg.",
+        UnitPrice: 21.0000,
+        UnitsInStock: 22,
+        UnitsOnOrder: 30,
+        ReorderLevel: 30,
+        Discontinued: false,
+        OrderDate: new Date("2009-01-17")
+      }, {
+        ProductID: 12,
+        ProductName: "Queso Manchego La Pastora",
+        SupplierID: 5,
+        CategoryID: 4,
+        QuantityPerUnit: "10 - 500 g pkgs.",
+        UnitPrice: 38.0000,
+        UnitsInStock: 86,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2015-11-17")
+      }, {
+        ProductID: 13,
+        ProductName: "Konbu",
+        SupplierID: 6,
+        CategoryID: 8,
+        QuantityPerUnit: "2 kg box",
+        UnitPrice: 6.0000,
+        UnitsInStock: 24,
+        UnitsOnOrder: 30,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date("2015-03-17")
+      }, {
+        ProductID: 14,
+        ProductName: "Tofu",
+        SupplierID: 6,
+        CategoryID: 7,
+        QuantityPerUnit: "40 - 100 g pkgs.",
+        UnitPrice: 23.2500,
+        UnitsInStock: 35,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2017-06-17")
+      }, {
+        ProductID: 15,
+        ProductName: "Genen Shouyu",
+        SupplierID: 6,
+        CategoryID: 2,
+        QuantityPerUnit: "24 - 250 ml bottles",
+        UnitPrice: 15.5000,
+        UnitsInStock: 39,
+        UnitsOnOrder: 30,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date("2014-03-17")
+      }, {
+        ProductID: 16,
+        ProductName: "Pavlova",
+        SupplierID: 7,
+        CategoryID: 3,
+        QuantityPerUnit: "32 - 500 g boxes",
+        UnitPrice: 17.4500,
+        UnitsInStock: 29,
+        UnitsOnOrder: 30,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date("2018-03-28")
+      }, {
+        ProductID: 17,
+        ProductName: "Alice Mutton",
+        SupplierID: 7,
+        CategoryID: 6,
+        QuantityPerUnit: "20 - 1 kg tins",
+        UnitPrice: 39.0000,
+        UnitsInStock: 0,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date("2015-08-17")
+      }, {
+        ProductID: 18,
+        ProductName: "Carnarvon Tigers",
+        SupplierID: 7,
+        CategoryID: 8,
+        QuantityPerUnit: "16 kg pkg.",
+        UnitPrice: 62.5000,
+        UnitsInStock: 42,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2005-09-27")
+      }, {
+        ProductID: 19,
+        ProductName: "Teatime Chocolate Biscuits",
+        SupplierID: 8,
+        CategoryID: 3,
+        QuantityPerUnit: "",
+        UnitPrice: 9.2000,
+        UnitsInStock: 25,
+        UnitsOnOrder: 30,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date("2001-03-17")
+      }, {
+        ProductID: 20,
+        ProductName: "Sir Rodneys Marmalade",
+        SupplierID: 8,
+        CategoryID: 3,
+        QuantityPerUnit: undefined,
+        UnitPrice: 4.5,
+        UnitsInStock: 40,
+        UnitsOnOrder: 30,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date("2005-03-17")
+      }
+    ];
 
     /**
      * Generates simple array of primitve values

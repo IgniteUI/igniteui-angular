@@ -2,7 +2,191 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.0.0
+
+### New Features
+- `igxGrid` - exposing new Input properties:
+
+    - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
+        * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
+        * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
+
+    - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
+    - `groupRowTemplate` - Gets/Sets the template reference for the group row.
+    - `headSelectorTemplate` - Gets/Sets the header row selector template.
+    - `rowSelectorTemplate` - Gets/Sets the custom template used for row selectors.
+    - `groupByRowSelectorTemplate` - Gets/Sets the custom template used for the group row selectors.
+    - `sortHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are not sorted.
+    - `sortAscendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in asc order.
+    - `sortDescendingHeaderIconTemplate` - Gets/Sets a custom template that should be used when rendering a header sorting indicator when columns are sorted in desc order.
+    - `rowEditActionsTemplate` - Gets/Sets the row edit actions template.
+    - `rowAddTextTemplate` - Gets/Sets the row add text template.
+    - `rowEditTextTemplate` - Gets/Sets the row edit text template.
+    - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
+    - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
+    - `detailTemplate` - Gets/Sets the master-detail template.
+- `IgxGridToolbar`
+    - **Breaking Change** - The `IgxGridToolbarTitleDirective` and `IgxGridToolbarActionsDirective` have been converted to components, keeping only the element selector. For apps using the preferred element markup of `<igx-grid-toolbar-title>` and `<igx-grid-toolbar-actions>` there should be no functional change. Apps using the `igxGridToolbarTitle` and `igxGridToolbarActions` directives on other elements will need to convert those to the mentioned elements instead.
+
+    - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+    - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
+
+- `IgxExcelExporterService`
+    - Added support for exporting grid summaries.
+    - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
+
+- `IgxCalendar`
+
+    Added support for shift key + mouse click interactions.
+    - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
+    - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
+## 14.2.0
+
+### New Features
+- The filtering logic inside the grid's Advanced Filtering  is now extracted as a separate  `IgxQueryBuilder` component. The Query Builder allows you to build complex queries by specifying AND/OR operators, conditions and values using the UI. It outputs an object describing the structure of the query. Use the `locale` property to modify the locale settings. The default value is resolved to the global Angular application locale. The `resourceStrings` allows changing the displayed strings.
+    
+    - Code example below:
+
+    ```html
+    <igx-query-builder [fields]="fields">
+        <!-- Custom header -->
+        <igx-query-builder-header [title]="'Custom title'"
+            [showLegend]="false">
+        </igx-query-builder-header>
+    </igx-query-builder>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/query-builder/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Query-Builder) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/query-builder).
+
+- `IgxExcelExporterService`
+    - Added support for exporting `igxPivotGrid`.
+
+### General
+
+- **Breaking Changes** - The Excel exporter service `exportEnded` event has its `xlsx` argument type changed as `igniteui-angular` no longer depends on `JSZip`. Instead of providing a `JSZip` instance it is now an object describing the structure of the Excel file with property names corresponding to folders or files, folders being objects themselves that can be traversed down, while files have their contents as `Uint8Array`. The same structure is used to package as a zip file by `fflate`'s API.
+- `IgxDropDown`
+    - The `aria-label` attribute of the `IgxDropDownItemBase` can now be se to a custom value for its descendants (of which `IgxDropDownItem`) by the `ariaLabel` property.
+
+## 14.1.0
+
+### New Features
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
+    - `filteringOptions` are extended and now contains `filterable` and `filteringKey` properties. Setting `filterable` determines whether combo will be filterable. By default filtering is done over the data value when they are primitive, or over the field of the values equal to `displayKey`. `filteringKey` allows to filter data by any data related key.
+
+- `igxPivotGrid`
+    - Add option to template the pivot value chip content:
+    ```
+    <ng-template igxPivotValueChip let-value>
+            {{ value.member }}
+    </ng-template>
+    ``` 
+    - Add support for usage with igxGridState to persist state of the pivotConfiguration with an additional `pivotConfiguration` option:
+
+    ```html
+     <igx-pivot-grid
+            #grid1
+            [igxGridState]="options" ...
+    ```
+
+    ```
+        public options : IGridStateOptions = {
+        pivotConfiguration: true
+    };
+    ```
+
+    One known issue of the igxGridState directive is that it cannot store functions as the state is stored as string.
+    As a result any custom functions set to `memberFunction`, `aggregator`, `formatter`, `styles` etc. will not be stored. Restoring any of these can be achieved with code on application level. 
+    Hence we have also exposed 2 new events:
+        - `dimensionInit` - emits when a dimension from the configuration is being initialized.
+        - `valueInit` - emits when a value from the configuration is being initialized.
+    Which can be used to set back any custom functions you have in the configuration.
+    The default aggregator function, like the ones from `IgxPivotNumericAggregate`, `IgxPivotDateAggregate` etc.,  will be restored out of the box. However if you have any custom aggregators (or other custom functions) they need to be set back in the `valueInit`event, for example:
+    ```
+        public onValueInit(value: IPivotValue) {
+        if (value.member === 'AmountOfSale') {
+            value.aggregate.aggregator = IgxTotalSaleAggregate.totalSale;
+        }
+    }
+    ```
+    Same applies to any custom functions on the dimension, like `memberFunction`. If it is a custom function you can set it back on the `dimensionInit` event:
+
+    ```
+     public onDimensionInit(dim: IPivotDimension) {
+        if (dim.memberName === 'AllCities') {
+            dim.memberFunction = () => 'All';
+        }
+    }
+    ```
+    - `igxGridState`:
+    Exposed a `stateParsed` event to the state directive that can be used to additionally modify the grid state before it gets applied.
+
+    ```
+    this.state.stateParsed.subscribe(parsedState => {
+            parsedState.sorting.forEach(x => x.strategy = NoopSortingStrategy.instance());
+        });
+    ```
+
+- `igxGrid`
+    - Added built-in validation mechanism for Grid Editing. Extends the [Angular Form validation](https://angular.io/guide/form-validation) functionality
+        You can configure it in 2 ways:
+        1. Via template-driven configuration on the `igx-column` of the grid:
+            ```html
+            <igx-column required minlength="4" ...>
+            ```
+        2. Via reactive forms using the FormGroup exposed via the `formGroupCreated` event of the grid:
+
+            ```html
+            <igx-grid (formGroupCreated)='formCreateHandler($event)' ...>
+            ```
+
+            ```ts
+            public formCreateHandler(formGr: FormGroup) {
+                // add a validator
+                const prodName = formGr.get('UserName');
+                prodName.addValidators(forbiddenNameValidator(/bob/i))
+            }
+            ```
+
+        Edited cells will enter an invalid state when validation fails and will show an error icon and message. Cell will remain invalid until the value is edited to a valid value or the related state in the validation service is cleared.
+
+        You can refer to the documentation for more details: https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/validation
+    - Added ability to auto-size columns to the size of their cells and header content on initialization by setting width `auto`:
+    ```
+    <column width='auto' ...>
+    ```
+    - Added support for restoring filtering expressions with custom filtering operands for the `IgxGridStateDirective`.
+    
+
+- Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
+
+
+
+### General
+
+- **Breaking Changes** - `filterable` property of `IgxComboComponent` is now deprecated and will be removed in future version. Use `filteringOptions.filterable` instead.
+
+### Theme Changes
+- **Breaking Changes** - `$disable-shadow` property of `IgxTabsComponent` theme has been removed.
+
 ## 14.0.0
+
+- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
+- `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
+- `IgxDropDown`
+    - The `label` attribute has been changed to `aria-labelledby` and can be set by a latterly added input property `labelledBy`.
+
+### New Features
+- `IgxCombo` and  `IgxSimpleComboComponent`
+    - `filterFunction` input is added. The new property allows changing of the way filtering is done in the combos. By default filtering is made over the values in combo's data when it is a collection of primitive values, or over the values as defined in `displayKey` of the combo. If custom filtering function is provided filtering will be done as specified in the provided function.
 
 ### General
 - Updating dependency to Angular 14
@@ -14,6 +198,15 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridEditingActions`
     - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
+
+- `IgxTabs`
+    - **Behavioral Change** - Both scroll buttons are displayed when the tabs are not fully visible. When there is no tabs to be scrolled in one of the directions the corresponding scroll button is disabled.
+
+- Locale settings
+    - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
+    - `IColumnPipeArgs` interface now expose a `weekStart` property to control the first week of day in calendar used in the grid for editing and filtering
+    - `locale` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will now default to globall Angular application locale, if not set.
+    - `weekStart` property of `IgxCalendar`, `IgxDatePicker`, `IgxDateRangePicker` and `IgxGrid` will default to the default first day for the current component `locale`, if not set.
 
 ## 13.2.0
 

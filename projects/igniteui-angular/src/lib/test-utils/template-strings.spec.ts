@@ -179,7 +179,9 @@ export class ColumnDefinitions {
                                               [resizable]="c.resizable"
                                               [width]="c.width"
                                               [minWidth]="c.minWidth"
-                                              [maxWidth]="c.maxWidth">
+                                              [maxWidth]="c.maxWidth"
+                                              [hidden]="c.hidden"
+                                              [pinned]="c.pinned">
         </igx-column>
     `;
 
@@ -314,6 +316,15 @@ export class ColumnDefinitions {
         <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [dataType]="c.dataType">
         </igx-column>
     `;
+
+    public static generatedGroupableWithEnabledSummariesAndDataType = `
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true" [dataType]="c.dataType" [groupable]='c.groupable'>
+        </igx-column>
+    `;
+
+    public static generatedWithColumnBasedSummariesAndDataType = `
+    <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="c.hasSummary" [dataType]="c.dataType"></igx-column>
+`;
 
     public static generatedEditable = `
     <igx-column *ngFor="let col of columns"
@@ -508,6 +519,20 @@ export class TemplateDefinitions {
         </ng-template>
         <ng-template igxSortDescendingHeaderIcon>
             <igx-icon>expand_more</igx-icon>
+        </ng-template>
+    `;
+}
+
+export class ExternalTemplateDefinitions {
+    public static sortIconTemplates = `
+        <ng-template #sortIcon igxSortHeaderIcon>
+            <igx-icon>arrow_right</igx-icon>
+        </ng-template>
+        <ng-template #sortAscIcon igxSortAscendingHeaderIcon>
+            <igx-icon>arrow_drop_up</igx-icon>
+        </ng-template>
+        <ng-template #sortDescIcon igxSortDescendingHeaderIcon>
+            <igx-icon>arrow_drop_down</igx-icon>
         </ng-template>
     `;
 }

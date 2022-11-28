@@ -2,13 +2,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
 - script: npm ci
   displayName: 'Install dependencies'
-  env:
-    AZURE_PIPELINES: "true"
-
-- script: sudo npm install -g istanbul-combine
-  displayName: 'Install coverage combiner'
   env:
     AZURE_PIPELINES: "true"
 
@@ -20,13 +20,19 @@ steps:
 - script: npm run build:lib
   displayName: 'Build source code and styles'
 
+- script: npm run build:typedoc:en:production
+  displayName: 'Build typedoc EN'
+
+- script: npm run build:sassdoc:en:production
+  displayName: 'Build sassdoc EN'
+
 - script: npm run test:lib:azure
   displayName: 'Run all tests'
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
 
-# - script: npm run test:styles
-  # displayName: 'Run styling library tests'
+- script: npm run test:styles
+  displayName: 'Run styling library tests'
 
 ## Use only Github actions for publishing coveralls.io status
 # - script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
@@ -42,6 +48,9 @@ steps:
 
 - script: npm run test:schematics
   displayName: 'Run migrations & schematics'
+
+- script: npm run test:i18n
+  displayName: 'Test i18n'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()

@@ -92,6 +92,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     // stores the last filtered value - move to common?
     private _internalFilter = '';
 
+    private _collapsing = false;
+
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this._filteredData;
@@ -137,11 +139,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.stopPropagation();
             this.open();
         } else {
-            if (this.virtDir.igxForOf.length > 0) {
+            if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
                 this.dropdown.navigateFirst();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
-                this.addItem.element.nativeElement.focus();
+                this.addItem?.element.nativeElement.focus();
             }
         }
     }
@@ -155,7 +157,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public select(item: any): void {
-        if (item !== null && item !== undefined) {
+        if (item !== undefined) {
             const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
             this.setSelection(newSelection);
         }
@@ -176,9 +178,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public writeValue(value: any): void {
         const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, value ? [value] : [], true);
+        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
         this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selection, oldSelection);
+        this.filterValue = this._internalFilter = this._value?.toString();
     }
 
     /** @hidden @internal */
@@ -186,16 +189,25 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
-                    let current = e[this.valueKey];
+                    let current = e? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
                     return current === this.selection[0];
                 });
-                this.dropdown.navigateItem(index);
+                if (!this.isRemote) {
+                    // navigate to item only if we have local data
+                    // as with remote data this will fiddle with igxFor's scroll handler
+                    // and will trigger another chunk load which will break the visualization
+                    this.dropdown.navigateItem(index);
+                }
             }
         });
-        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (args.cancel) {
+                return;
+            }
+            this._collapsing = false;
             const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === undefined || filtered === null) {
                 this.filterValue = this.searchValue = this.comboInput.value;
@@ -210,16 +222,27 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._internalFilter = this.comboInput.value;
         });
         this.dropdown.closing.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (args.cancel) {
+                return;
+            }
             if (this.getEditElement() && !args.event) {
-                this.comboInput.focus();
+                this._collapsing = true;
             } else {
                 this.clearOnBlur();
                 this._onTouchedCallback();
             }
+            this.comboInput.focus();
         });
         this.dropdown.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.filterValue = this._internalFilter = this.comboInput.value;
         });
+
+        // in reactive form the control is not present initially
+        // and sets the selection to an invalid value in writeValue method
+        if (!this.isValid(this.selectedItem)) {
+            this.selectionService.clear(this.id);
+            this._value = '';
+        }
 
         super.ngAfterViewInit();
     }
@@ -233,7 +256,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.collapsed && this.comboInput.focused) {
             this.open();
         }
-        if (!this.comboInput.value.trim()) {
+        if (!this.comboInput.value.trim() && this.selection.length) {
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
@@ -269,6 +292,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         if (!this.collapsed && event.key === this.platformUtil.KEYMAP.TAB) {
             this.clearOnBlur();
+            this.close();
         }
         this.composing = false;
         super.handleKeyDown(event);
@@ -305,7 +329,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public onBlur(): void {
-        if (this.collapsed) {
+        // when clicking the toggle button to close the combo and immediately clicking outside of it
+        // the collapsed state is not modified as the dropdown is still not closed
+        if (this.collapsed || this._collapsing) {
             this.clearOnBlur();
         }
         super.onBlur();
@@ -388,7 +414,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return true;
         }
         const searchValue = this.searchValue || this.comboInput.value;
-        return !!searchValue && value.toString().toLowerCase().includes(searchValue.trim().toLowerCase());
+        return !!searchValue && value.toString().toLowerCase().includes(searchValue.toLowerCase());
     };
 
     protected setSelection(newSelection: any): void {
@@ -402,16 +428,18 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             owner: this,
             cancel: false
         };
-        this.selectionChanging.emit(args);
+        if (args.newSelection !== args.oldSelection) {
+            this.selectionChanging.emit(args);
+        }
+        // TODO: refactor below code as it sets the selection and the display text
         if (!args.cancel) {
-            let argsSelection = args.newSelection !== undefined
-                && args.newSelection !== null
+            let argsSelection = this.isValid(args.newSelection)
                 ? args.newSelection
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
             if (this._updateInput) {
-                this.comboInput.value = this._internalFilter = this._value = displayText !== args.displayText
+                this.comboInput.value = this._internalFilter = this._value = this.searchValue = displayText !== args.displayText
                     ? args.displayText
                     : this.createDisplayText(argsSelection, [args.oldSelection]);
             }
@@ -427,12 +455,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return this.getRemoteSelection(newSelection, oldSelection);
         }
 
-        if (this.displayKey !== null && this.displayKey !== undefined
+        if (this.displayKey !== null
+            && this.displayKey !== undefined
             && newSelection.length > 0) {
-            return this.convertKeysToItems(newSelection).map(e => e[this.displayKey])[0];
+            return this.convertKeysToItems(newSelection).filter(e => e).map(e => e[this.displayKey])[0]?.toString() || '';
         }
 
-        return newSelection[0] || '';
+        return newSelection[0]?.toString() || '';
     }
 
     private clearSelection(ignoreFilter?: boolean): void {
@@ -444,36 +473,29 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
-        const filtered = this.filteredData.find(this.findAllMatches);
-        if (filtered === undefined || filtered === null || !this.selectedItem) {
-            this.clearAndClose();
+        const filtered = this.filteredData.find(this.findMatch);
+        // selecting null in primitive data returns undefined as the search text is '', but the item is null
+        if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
+            this.clear();
             return;
         }
-        if (this.isPartialMatch(filtered) || this.getElementVal(filtered) !== this._internalFilter) {
-            this.clearAndClose();
-        }
     }
 
-    private isPartialMatch(filtered: any): boolean {
-        return !!this._internalFilter && this._internalFilter.length !== this.getElementVal(filtered).length;
-    }
-
-    private getElementVal(element: any): any | null {
-        if (!element) {
-            return null;
-        }
-
+    private getElementVal(element: any): string {
         const elementVal = this.displayKey ? element[this.displayKey] : element;
-        return (elementVal === 0 ? '0' : elementVal) || '';
+        return String(elementVal);
     }
 
-    private clearAndClose(): void {
+    private clear(): void {
         this.clearSelection(true);
         this._internalFilter = '';
         this.searchValue = '';
-        if (!this.collapsed) {
-            this.close();
-        }
+    }
+
+    private isValid(value: any): boolean {
+        return this.required
+        ? value !== null && value !== '' && value !== undefined
+        : value !== undefined;
     }
 }
 

@@ -5,7 +5,7 @@ import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operati
 
 export class IgxBaseTransactionService<T extends Transaction, S extends State> implements TransactionService<T, S> {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get cloneStrategy(): IDataCloneStrategy {
         return this._cloneStrategy;
@@ -18,28 +18,28 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get canRedo(): boolean {
         return false;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get canUndo(): boolean {
         return false;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public get enabled(): boolean {
         return this._isPending;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
@@ -49,7 +49,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     private _cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public add(transaction: T, recordRef?: any): void {
         if (this._isPending) {
@@ -59,24 +59,24 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getTransactionLog(_id?: any): T[] {
         return [];
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public undo(): void { }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public redo(): void { }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
@@ -88,14 +88,14 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getState(id: any): S {
         return this._pendingStates.get(id);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._pendingStates.get(id);
@@ -109,12 +109,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public commit(_data: any[], _id?: any): void { }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public clear(_id?: any): void {
         this._pendingStates.clear();
@@ -122,14 +122,14 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public startPending(): void {
         this._isPending = true;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public endPending(_commit: boolean): void {
         this._isPending = false;

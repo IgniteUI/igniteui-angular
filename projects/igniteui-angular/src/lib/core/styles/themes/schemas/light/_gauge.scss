@@ -8,21 +8,20 @@
 
 /// Generates a light gauge schema.
 /// @type {Map}
-/// @property {Color} backing-brush [(color: 'surface', darken: 8%)] - Sets the color to use to fill the backing of the linear gauge.
-/// @property {Color} backing-outline [(color: 'surface', darken: 8%)] - Sets the color to use for the outline of the backing.
-/// @property {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
-/// @property {Color} font-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the label font.
-/// @property {Color} minor-tick-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
-/// @property {Number} minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
-/// @property {Color} needle-brush [(color: 'primary')] - Sets the color to use for the needle element.
-/// @property {Color} needle-outline [(color: 'surface')] - Sets the color to use for the outline of needle element.
-/// @property {Number} needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
-/// @property {List} range-brushes [series] - Sets a collection of colors to be used as the palette for linear gauge ranges.
-/// @property {List} range-outlines [series] - Sets a collection of colors to be used as the palette for linear gauge outlines.
-/// @property {Color} scale-brush [(color: 'surface', darken: 8%)] - Sets the color to use to fill the scale of the linear gauge.
-/// @property {Color} tick-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
-/// @property {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
-/// @see $default-palette
+/// @prop {Color} backing-brush [(color: 'surface', darken: 8%)] - Sets the color to use to fill the backing of the linear gauge.
+/// @prop {Color} backing-outline [(color: 'surface', darken: 8%)] - Sets the color to use for the outline of the backing.
+/// @prop {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
+/// @prop {Color} font-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the label font.
+/// @prop {Color} minor-tick-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
+/// @prop {Number} minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
+/// @prop {Color} needle-brush [(color: 'primary')] - Sets the color to use for the needle element.
+/// @prop {Color} needle-outline [(color: 'surface')] - Sets the color to use for the outline of needle element.
+/// @prop {Number} needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
+/// @prop {List} range-brushes [series] - Sets a collection of colors to be used as the palette for linear gauge ranges.
+/// @prop {List} range-outlines [series] - Sets a collection of colors to be used as the palette for linear gauge outlines.
+/// @prop {Color} scale-brush [(color: 'surface', darken: 8%)] - Sets the color to use to fill the scale of the linear gauge.
+/// @prop {Color} tick-brush [(color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
+/// @prop {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
 $light-gauge: (
     'backing-brush': (
         color: 'surface',
@@ -35,11 +34,11 @@ $light-gauge: (
     'backing-stroke-thickness': null,
 
     'font-brush': (
-        contrast-color: ('surface', 500, .62),
+        contrast-color: ('surface', 500),
     ),
 
     'minor-tick-brush': (
-        contrast-color: ('surface', 500, .62),
+        contrast-color: ('surface', 500),
     ),
 
     'minor-tick-stroke-thickness': null,
@@ -63,7 +62,7 @@ $light-gauge: (
     ),
 
     'tick-brush': (
-        contrast-color: ('surface', 500, .62)
+        contrast-color: ('surface', 500)
     ),
 
     'tick-stroke-thickness': null
@@ -71,14 +70,13 @@ $light-gauge: (
 
 /// Generates a light linear gauge schema.
 /// @type {Map}
-/// @property {Number} needle-breadth [null] - Sets the needle breadth.
-/// @property {Number} needle-inner-base-width [null] - Sets the width of the needle's inner base.
-/// @property {Number} needle-inner-point-width [null] - Sets the width of the needle's inner point.
-/// @property {Number} needle-outer-base-width [null] - Sets the width of the needle's outer base.
-/// @property {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
-/// @property {Color} scale-outline [(color: 'surface', darken: 8%)] - Sets the color to use for the outline of the scale.
-/// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
-/// @requires {function} extend
+/// @prop {Number} needle-breadth [null] - Sets the needle breadth.
+/// @prop {Number} needle-inner-base-width [null] - Sets the width of the needle's inner base.
+/// @prop {Number} needle-inner-point-width [null] - Sets the width of the needle's inner point.
+/// @prop {Number} needle-outer-base-width [null] - Sets the width of the needle's outer base.
+/// @prop {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
+/// @prop {Color} scale-outline [(color: 'surface', darken: 8%)] - Sets the color to use for the outline of the scale.
+/// @prop {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
 /// @requires {Map} $light-gauge
 $light-linear-gauge: extend(
     $light-gauge,
@@ -103,9 +101,8 @@ $light-linear-gauge: extend(
 
 /// Generates a light radial gauge schema.
 /// @type {Map}
-/// @property {Color} needle-pivot-brush [color: 'primary'] - Sets the color of the needle pivot point.
-/// @property {Color} needle-pivot-outline [color: 'surface'] - Sets the outline color of the needle pivot point.
-/// @requires {function} extend
+/// @prop {Color} needle-pivot-brush [color: 'primary'] - Sets the color of the needle pivot point.
+/// @prop {Color} needle-pivot-outline [color: 'surface'] - Sets the outline color of the needle pivot point.
 /// @requires {Map} $light-gauge
 $light-radial-gauge: extend(
     $light-gauge,

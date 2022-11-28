@@ -1,15 +1,13 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-////
-/// @group components
+/// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
-
 @mixin component {
+    @include b(igx-banner-host) {
+        @extend %igx-banner-host !optional;
+    }
+
     @include b(igx-banner) {
         $this: bem--selector-to-string(&);
         @include register-component(
@@ -45,14 +43,6 @@
 
         @include e(actions) {
             @extend %igx-banner__actions !optional;
-        }
-
-        @include m(vertical) {
-            @extend %igx-banner--vertical !optional;
-        }
-
-        @include e(banner__row) {
-            @extend %igx-banner__row !optional;
         }
 
         @include m(cosy) {

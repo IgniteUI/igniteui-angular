@@ -7,83 +7,23 @@
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
-/// Generates the base dark category-chart schema.
+/// Generates a dark category-chart schema based on a mix of $light-category-chart
 /// @type {Map}
-/// @prop {Color} title-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of the chart title.
-/// @prop {Color} subtitle-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of the chart subtitle.
-/// @prop {Color} x-axis-label-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of labels on the X-axis.
-/// @prop {Color} x-axis-tick-stroke [color: ('grays', 400), to-opaque: #fff] - Sets the color to apply to tickmarks along the X-axis.
-/// @prop {Color} x-axis-title-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of the title on the X-axis.
-/// @prop {Color} y-axis-label-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of labels on the Y-axis.
-/// @prop {Color} y-axis-tick-stroke [color: ('grays', 400), to-opaque: #fff] - Sets the color to apply to tickmarks along the Y-axis.
-/// @prop {Color} y-axis-title-text-color [color: ('grays', 400), to-opaque: #fff] - Sets the color of the title on the Y-axis.
-$base-dark-category-chart: (
-    title-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    subtitle-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    x-axis-label-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    x-axis-title-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    x-axis-tick-stroke: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    y-axis-label-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    y-axis-title-text-color: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    ),
-
-    y-axis-tick-stroke: (
-        color: ('grays', 400),
-        to-opaque: #fff
-    )
-);
-
-/// Generates a dark category-chart schema based on a mix of $light-category-chart and $base-dark-category-chart
-/// @type {Map}
-/// @requires {function} extend
 /// @requires $light-category-chart
-/// @requires $base-dark-category-chart
 /// @see $default-palette
-$dark-category-chart: extend($light-category-chart, $base-dark-category-chart);
+$dark-category-chart: $light-category-chart;
 
-/// Generates a dark fluent category-chart schema based on a mix of $fluent-category-chart and $base-dark-category-chart
+/// Generates a dark fluent category-chart schema based on a mix of $fluent-category-chart
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-category-chart
-/// @requires $base-dark-category-chart
-$dark-fluent-category-chart: extend($fluent-category-chart, $base-dark-category-chart);
+$dark-fluent-category-chart: $fluent-category-chart;
 
-/// Generates a bootstrap category-chart schema based on a mix of $bootstrap-category-chart and $base-dark-category-chart
+/// Generates a bootstrap category-chart schema based on a mix of $bootstrap-category-chart
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $bootstrap-category-chart
-/// @requires $base-dark-category-chart
-$dark-bootstrap-category-chart: extend($bootstrap-category-chart, $base-dark-category-chart);
+$dark-bootstrap-category-chart: $bootstrap-category-chart;
 
-/// Generates an indigo category-chart schema based on a mix of $indigo-category-chart and $base-dark-category-chart
+/// Generates an indigo category-chart schema based on a mix of $indigo-category-chart
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-category-chart
-/// @requires $base-dark-category-chart
-$dark-indigo-category-chart: extend($indigo-category-chart, $base-dark-category-chart);
+$dark-indigo-category-chart: $indigo-category-chart;

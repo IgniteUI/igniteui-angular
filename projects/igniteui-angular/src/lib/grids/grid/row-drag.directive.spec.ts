@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, QueryList } from '@angular/core';
+import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -420,10 +420,12 @@ describe('Row Drag Tests #grid', () => {
                     ]
                 });
             }));
-            it('should correctly create custom ghost element', () => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
                 grid = fixture.componentInstance.instance;
                 fixture.detectChanges();
+            }));
+            it('should correctly create custom ghost element', () => {
                 dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
                 rows = grid.rowList.toArray();
                 dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
@@ -449,6 +451,42 @@ describe('Row Drag Tests #grid', () => {
 
                 const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
                 expect(ghostText).toEqual(' Moving a row! ');
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+            });
+
+            it('should allow setting custom drag icon and ghost element via Input.', () => {
+                dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
+                grid.dragIndicatorIconTemplate = fixture.componentInstance.rowDragTemplate;
+                grid.dragGhostCustomTemplate = fixture.componentInstance.rowDragGhostTemplate;
+                fixture.detectChanges();
+                rows = grid.rowList.toArray();
+                dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+                dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+                dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+                rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+
+                expect(dragIndicatorElement.textContent.trim()).toBe('expand_less');
+
+                startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
+                dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+
+                rowDragDirective.onPointerDown(pointerDownEvent);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+                rowDragDirective.onPointerMove(pointerMoveEvent);
+                const ghostElements: HTMLCollection = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+                expect(ghostElements.length).toEqual(1);
+
+                const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
+                expect(ghostText.trim()).toEqual('CUSTOM');
+
+                pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+                rowDragDirective.onPointerUp(pointerUpEvent);
+
             });
         });
     });
@@ -509,7 +547,7 @@ describe('Row Drag Tests #grid', () => {
             verifyDragAndDropRowCellValues(1, 0);
         });
         it('should be able to drag grid row when column moving is enabled', fakeAsync(() => {
-            const dragGridColumns = dragGrid.columnList.toArray();
+            const dragGridColumns = dragGrid.columns;
             dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
             tick();
             fixture.detectChanges();
@@ -751,7 +789,7 @@ describe('Row Drag Tests #grid', () => {
 
             const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
             const ghostElement = ghostElements[0];
-            expect(ghostElements.length).toEqual(2);
+            expect(ghostElements.length).toEqual(1);
             expect(ghostElement.classList.contains(CSS_CLASS_SELECTED_ROW)).toBeFalsy();
 
             pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
@@ -1228,11 +1266,26 @@ export class IgxGridRowDraggableComponent extends DataParent {
         <div #nonDroppableArea class="non-droppable-area"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
         </div>
+
+        <ng-template #rowDragGhostTemplate let-data igxRowDragGhost>
+                <div class="dragGhost">
+                        CUSTOM
+                </div>
+        </ng-template>
+        <ng-template #rowDragTemplate let-data igxDragIndicatorIcon>
+            <igx-icon>expand_less</igx-icon>
+        </ng-template>
     `
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    @ViewChild('rowDragGhostTemplate', {read: TemplateRef, static: true })
+    public rowDragGhostTemplate: TemplateRef<any>;
+
+    @ViewChild('rowDragTemplate', {read: TemplateRef, static: true })
+    public rowDragTemplate: TemplateRef<any>;
 
     @ViewChild('dropArea', { read: IgxDropDirective, static: true })
     public dropArea: IgxDropDirective;

@@ -1,10 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
-@use 'sass:map';
-@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
@@ -43,18 +42,15 @@
 /// @param {Color} $focus-outline-color-focused [null] - The focus outlined color for focused state.
 /// @param {Color} $focus-fill-color [null] - The focus fill color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires elevation
+///
+///
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: switch-theme($thumb-on-color: black, $track-on-color: yellow);
-///   // Pass the theme to the switch component mixin
-///   @include switch($my-switch-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-switch-theme);
 @function switch-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $thumb-on-color: null,
@@ -97,38 +93,37 @@
         $switch-schema: $schema;
     }
 
-    $theme: apply-palette($switch-schema, $palette);
+    $theme: digest-schema($switch-schema);
 
     @if not($resting-shadow) {
         $resting-elevation: map.get($switch-schema, 'resting-elevation');
-        $resting-shadow: elevation($elevation: $resting-elevation);
+        $resting-shadow: elevation($resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map.get($switch-schema, 'hover-elevation');
-        $hover-shadow: elevation($elevation: $hover-elevation);
+        $hover-shadow: elevation($hover-elevation);
     }
 
     @if not($disabled-shadow) {
         $disabled-elevation: map.get($switch-schema, 'disabled-elevation');
-        $disabled-shadow: elevation($elevation: $disabled-elevation);
+        $disabled-shadow: elevation($disabled-elevation);
     }
 
     @if not($border-radius-track) {
         $border-radius-track: border-radius(map.get($theme, 'border-radius-track'));
     }
-    
+
     @if not($border-radius-thumb) {
         $border-radius-thumb: border-radius(map.get($theme, 'border-radius-thumb'));
     }
-    
+
     @if not($border-radius-ripple) {
         $border-radius-ripple: border-radius(map.get($theme, 'border-radius-ripple'));
     }
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
 
         thumb-on-color: $thumb-on-color,
         track-on-color: $track-on-color,
@@ -164,16 +159,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
 /// @requires {mixin} ripple
-/// @requires {mixin} hide-default
 /// @requires ripple-theme
-/// @requires em
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
-/// @requires var-get
 @mixin switch($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -245,10 +232,10 @@
 
     $switch-thumb-height: $switch-thumb-width;
 
-    $ripple-size: em(48px);
+    $ripple-size: rem(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
-    $label-margin: em(8px);
+    $label-margin: rem(8px);
 
     $input-transition: all .2s $ease-in-out-quad;
 
@@ -279,7 +266,7 @@
         align-items: center;
         width: rem($switch-width);
         height: rem($switch-height);
-        border: 1px solid var-get($theme, 'border-color');
+        border: rem(1px) solid var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-radius-track');
         background: var-get($theme, 'track-off-color');
         cursor: pointer;
@@ -287,7 +274,7 @@
         transition: $input-transition;
 
         @if $variant == 'indigo-design' {
-            border: 2px solid var-get($theme, 'border-color');
+            border: rem(2px) solid var-get($theme, 'border-color');
         }
 
         @if $variant != 'bootstrap' {
@@ -395,7 +382,7 @@
                     position: absolute;
                     top: -$focus-outline-offset-top;
                     inset-inline-start: -$focus-outline-offset-left;
-                    box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                     width: calc(100% + (#{$focus-outline-offset-left} * 2));
                     height: calc(100% + (#{$focus-outline-offset-top} * 2));
                 }
@@ -405,7 +392,7 @@
         @if $variant == 'bootstrap' {
             %switch-composite {
                 border-color: var-get($theme, 'focus-fill-color');
-                box-shadow: 0 0 0 4px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(4px) var-get($theme, 'focus-outline-color');
             }
 
             %switch-composite-thumb {
@@ -416,7 +403,7 @@
         @if $variant == 'indigo-design' {
             %switch-composite {
                 border-radius: var-get($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -434,7 +421,7 @@
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }
@@ -530,17 +517,14 @@
 /// Adds typography styles for the igx-checkbox component.
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin switch-typography(
-    $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %switch-label {
-        @include type-style($type-scale, $label) {
+        @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
         }

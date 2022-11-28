@@ -1,10 +1,10 @@
+@use 'sass:map';
+@use 'sass:math';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
-@use 'sass:map';
-@use 'sass:math';
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -13,7 +13,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
@@ -26,18 +25,15 @@
 /// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
+///
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
 ///   $my-radio-theme: radio-theme($fill-color: magenta);
-///   // Pass the theme to the radio component mixin
-///   @include radio($my-radio-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-radio-theme);
 @function radio-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $label-color: null,
@@ -59,11 +55,10 @@
         $radio-schema: $schema;
     }
 
-    $theme: apply-palette($radio-schema, $palette);
+    $theme: digest-schema($radio-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
@@ -77,29 +72,22 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
-/// @requires {mixin} ripple
-/// @requires {mixin} hide-default
 /// @requires ripple-theme
-/// @requires em
-/// @requires var-get
 @mixin radio($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $label-margin: em(8px);
+    $label-margin: rem(8px);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $size: map.get((
-        material: em(20px),
-        fluent: em(20px),
-        bootstrap: em(16px),
-        indigo-design: em(20px),
+        material: rem(20px),
+        fluent: rem(20px),
+        bootstrap: rem(16px),
+        indigo-design: rem(20px),
     ), $variant);
 
     $scale: map.get((
@@ -132,7 +120,7 @@
 
     $transition: all .2s ease-in;
 
-    $ripple-size: em(48px);
+    $ripple-size: rem(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: ripple-theme(
@@ -330,7 +318,7 @@
                 position: absolute;
                 top: -$focus-outline-offset-top;
                 inset-inline-start: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
@@ -339,14 +327,14 @@
         @if $variant == 'bootstrap' {
             %radio-composite {
                 border-radius: $border-radius;
-                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-outline-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %radio-composite {
                 border-radius: $border-radius;
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -354,7 +342,7 @@
     %igx-radio--focused-checked {
         @if $variant == 'indigo-design' {
             %radio-composite {
-                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'focus-outline-color-focused');
             }
         }
     }
@@ -400,17 +388,14 @@
 /// Adds typography styles for the igx-radio component.
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin radio-typography(
-    $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
     $label: map.get($categories, 'label');
 
     %radio-label {
-        @include type-style($type-scale, $label) {
+        @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
         }

@@ -10,10 +10,11 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
-import { CellType } from '../common/grid.interface';
+import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 
 
 @Component({
@@ -171,7 +172,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<any>;
+    public collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * Returns a reference to the inline editor template.
@@ -298,6 +299,15 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.collapsible) {
             this.setExpandCollapseState();
         }
+
+        this.children.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                change.forEach(x => x.parent = this);
+                if (this.collapsible) {
+                    this.setExpandCollapseState();
+                }
+            });
     }
 
     /**

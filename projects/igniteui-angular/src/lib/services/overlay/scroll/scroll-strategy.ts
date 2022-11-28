@@ -3,12 +3,12 @@ import { IgxOverlayService } from '../overlay';
 
 export abstract class ScrollStrategy implements IScrollStrategy {
     constructor() { }
-    /** @inheritdoc */
+    /** @inheritDoc */
     public abstract initialize(document: Document, overlayService: IgxOverlayService, id: string);
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public abstract attach(): void;
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public abstract detach(): void;
 }

@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,22 +9,14 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $color [null] - The color of the ripple.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-///
 /// @example scss Change the color
 ///   $my-ripple-theme: igx-ripple-theme($color: yellow);
-///   // Pass the theme to the igx-ripple component mixin
-///   igx-ripple($my-ripple-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-ripple-theme);
 @function ripple-theme(
-    $palette: null,
     $schema: $light-schema,
     $color: null
 ) {
@@ -39,19 +31,16 @@
         $ripple-schema: $schema;
     }
 
-    $theme: apply-palette($ripple-schema, $palette);
+    $theme: digest-schema($ripple-schema);
 
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         color: $color
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin ripple($theme) {
     @include css-vars($theme);
 

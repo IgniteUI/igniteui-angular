@@ -9,6 +9,8 @@ import { CalendarResourceStringsES } from './calendar-resources';
 import { TreeResourceStringsES } from './tree-resources';
 import { InputResourceStringsES } from './input-resources';
 import { ChipResourceStringsES } from './chip-resources';
+import { ComboResourceStringsES } from './combo-resources';
+import { QueryBuilderResourceStringsES } from './query-builder-resources';
 
 /**
  * Spanish resource strings for all components
@@ -24,5 +26,7 @@ export const IgxResourceStringsES = {
     ...CalendarResourceStringsES,
     ...TreeResourceStringsES,
     ...InputResourceStringsES,
-    ...ChipResourceStringsES
+    ...ChipResourceStringsES,
+    ...ComboResourceStringsES,
+    ...QueryBuilderResourceStringsES
 };

@@ -1317,8 +1317,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected _recalcOnContainerChange() {
-        this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
-        this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
@@ -1517,7 +1515,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     public recalcUpdateSizes() {
-        if (this.igxGridForOfVariableSizes) {
+        if (this.igxGridForOfVariableSizes && this.igxForScrollOrientation === 'vertical') {
             super.recalcUpdateSizes();
         }
     }
@@ -1611,7 +1609,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.igxForContainerSize = args.containerSize;
                 const sizeDiff = this._updateSizeCache(changes);
                 this._applyChanges();
-                if (sizeDiff) {
+                if (sizeDiff && this.igxForScrollOrientation === 'vertical') {
                     this._adjustScrollPositionAfterSizeChange(sizeDiff);
                 }
                 this._updateScrollOffset();

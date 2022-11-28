@@ -59,6 +59,7 @@ import { HierarchicalTransactionService } from '../../services/transaction/hiera
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { IgxGridValidationService } from '../grid/grid-validation.service';
 
 let NEXT_ID = 0;
 
@@ -84,12 +85,14 @@ let NEXT_ID = 0;
     templateUrl: 'tree-grid.component.html',
     providers: [
         IgxGridCRUDService,
+        IgxGridValidationService,
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxTreeGridComponent },
         IgxFilteringService,
+        IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
@@ -390,6 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     // }
 
     constructor(
+        protected validationService: IgxGridValidationService,
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
@@ -415,7 +419,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
-        super(selectionService, colResizingService, gridAPI, transactionFactory,
+        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory,
             _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
@@ -434,7 +438,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
+        const column = this.columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxTreeGridRow && column) {
             return new IgxGridCell(this as any, rowIndex, column.field);
         }
@@ -605,7 +609,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data });
+        this.rowAddedNotifier.next({ data: data, owner: this });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -669,7 +673,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getSelectedData(formatters = false, headers = false): any[] {
         let source = [];
@@ -720,8 +724,23 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        return this.gridAPI.deleteRowById(rowId);
+        const args = {
+            rowID: rowId,
+            cancel: false,
+            rowData: this.getRowData(rowId),
+            oldValue: null,
+            owner: this
+        };
+        this.rowDelete.emit(args);
+        if (args.cancel) {
+            return;
+        }
 
+        const record = this.gridAPI.deleteRowById(rowId);
+        if (record !== null && record !== undefined) {
+            this.rowDeleted.emit({ data: record, owner: this });
+        }
+        return record;
     }
 
     /**
@@ -802,7 +821,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxTreeGridRow && column) {
             return new IgxGridCell(this as any, rowIndex, columnField);
         }
@@ -822,7 +841,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getCellByKey(rowSelector: any, columnField: string): CellType {
         const row = this.getRowByKey(rowSelector);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this.columns.find((col) => col.field === columnField);
         if (row && column) {
             return new IgxGridCell(this as any, row.index, columnField);
         }
@@ -892,7 +911,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```
      */
     public get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+        return this.columns.some((col) => col.groupable && !col.columnGroup);
     }
 
     protected generateDataFields(data: any[]): string[] {
@@ -981,12 +1000,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
+    protected initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
+            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            this.updateColumns(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
     }
@@ -1053,7 +1072,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             parentData[this.childDataKey] = children;
         }
         this.selectionService.clearHeaderCBState();
-        this.pipeTrigger++;
+        this.pipeTrigger++; 
         if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();

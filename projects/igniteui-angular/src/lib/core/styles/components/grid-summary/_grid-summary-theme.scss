@@ -1,7 +1,7 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
 
 ////
 /// @group themes
@@ -10,9 +10,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
 /// @param {Color} $focus-background-color [null] - The background color when a summary item is on focus.
 /// @param {Color} $label-color [null] - The summaries label color.
@@ -22,22 +20,15 @@
 /// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
 /// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
 /// @param {Color} $label-hover-color [null] - The summaries hover label color.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires text-contrast
-///
-/// @example scss Change the summaries background nad labels color
+/// @example scss Change the summaries background and labels color
 ///   $my-summary-theme: grid-summary-theme(
 ///     $background-color: black,
 ///     $label-color: white
 ///   );
-///   // Pass the theme to the grid-summary component mixin
-///   @include grid-summary($my-summary-theme);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-summary-theme);
 @function grid-summary-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $background-color: null,
@@ -60,7 +51,7 @@
         $grid-summary-schema: $schema;
     }
 
-    $theme: apply-palette($grid-summary-schema, $palette);
+    $theme: digest-schema($grid-summary-schema);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
@@ -81,7 +72,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         background-color: $background-color,
         focus-background-color: $focus-background-color,
         label-color: $label-color,
@@ -95,10 +85,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
-/// @requires rem
-/// @requires var-get
 @mixin grid-summary($theme) {
     @include css-vars($theme);
 

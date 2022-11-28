@@ -9,53 +9,47 @@
 
 /// Generates a dark scrollbar schema.
 /// @type {Map}
-/// @property {String | Number} size [16px] - The size of the track.
-/// @requires {function} extend
+/// @prop {String | Number} size [16px] - The size of the track.
 /// @requires $light-scrollbar
-/// @see $default-palette
 $dark-scrollbar: $light-scrollbar;
 
 /// Generates a dark fluent scrollbar schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-scrollbar
 $dark-fluent-scrollbar: $fluent-scrollbar;
 
 /// Generates a dark bootstrap scrollbar schema.
 /// @type {Map}
-/// @property {Map} thumb-background [color: ('grays', 50)] - The background color used for the thumb.
-/// @property {Color} track-background [color: ('grays', 50, .3)] - The background color used for the track.
-/// @requires {function} extend
+/// @prop {Map} thumb-background [color: ('gray', 200, .5)] - The background color used for the thumb.
+/// @prop {Color} track-background [color: ('gray', 100, .5)] - The background color used for the track.
 /// @requires $light-scrollbar
 $dark-bootstrap-scrollbar: extend(
     $bootstrap-scrollbar,
     (
         thumb-background: (
-            color: ('grays', 50)
+            color: ('gray', 200, .5)
         ),
 
         track-background: (
-            color: ('grays', 50, .3)
+            color: ('gray', 100, .5)
         ),
     )
 );
 
 /// Generates a dark indigo scrollbar schema.
 /// @type {Map}
-/// @property {Map} thumb-background [color: ('grays', 100)] - The background color used for the thumb.
-/// @property {Color} track-background [color: ('grays', 50)] - The background color used for the track.
-/// @requires {function} extend
+/// @prop {Map} thumb-background [color: ('gray', 100)] - The background color used for the thumb.
+/// @prop {Color} track-background [color: ('gray', 50)] - The background color used for the track.
 /// @requires $indigo-scrollbar
 $dark-indigo-scrollbar: extend(
     $indigo-scrollbar,
     (
         thumb-background: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         track-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
     )
 );
-

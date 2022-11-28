@@ -176,7 +176,7 @@ export const getLanguageService = (filePaths: string[], host: Tree, options: ts.
         getCurrentDirectory: () => process.cwd(),
         getDefaultLibFileName: opts => ts.getDefaultLibFilePath(opts),
         fileExists: fileName => filePaths.indexOf(fileName) !== -1,
-        readFile: (path: string, encoding?: string): string => host.read(path).toString(encoding)
+        readFile: (path: string, encoding?: BufferEncoding): string => host.read(path).toString(encoding)
     };
 
     return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());

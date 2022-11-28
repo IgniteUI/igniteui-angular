@@ -1,10 +1,9 @@
+@use 'sass:map';
+@use 'sass:meta';
 @use '../../base' as *;
-@use '../../typography/base' as *;
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
-@use 'sass:map';
-@use 'sass:meta';
 
 ////
 /// @group themes
@@ -14,53 +13,37 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-///
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $item-text-color [null] - The color used for the tab text color.
 /// @param {Color} $item-background [null] - The background color used for the tabs header.
 /// @param {Color} $item-hover-background [null] - The background used for the tabs on hover.
 /// @param {Color} $item-hover-color [null] - The text color used for the tabs on hover.
-///
 /// @param {Color} $item-icon-color [null] - The color used for the tab icon.
 /// @param {Color} $item-active-icon-color [null] - The color used for the active tab icon.
 /// @param {Color} $item-hover-icon-color [null] - The color used for the tab icon on hover.
 /// @param {Color} $item-disabled-icon-color [null] - The color used for the disabled tab icon.
-///
 /// @param {Color} $item-active-color [null] - The color used for the active tabs text.
 /// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
 /// @param {Color} $item-disabled-color [null] - The color used for the disabled tabs text.
-///
 /// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
 /// @param {Color} $button-color [null] - The color used for the button icon/text color.
 /// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
+/// @param {Color} $button-disabled-color [null] - The color used for the disabled button icon/text.
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
-///
 /// @param {border-radius} $border-radius [null] - The border radius for the tabs.
 /// @param {Color} $border-color [null] - The border color of the tabs.
 /// @param {Color} $border-color--hover [null] - The border color of the tabs on hover.
-///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
-/// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires elevation
-/// @requires text-contrast
-///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: tabs-theme(
 ///      $item-background: orange
 ///    );
-///   // Pass the theme to the tabs component mixin
-///   @include tabs($my-tabs-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-tabs-theme);
 @function tabs-theme(
-    $palette: null,
     $schema: $light-schema,
     $item-text-color: null,
     $item-background: null,
@@ -78,12 +61,12 @@
     $button-background: null,
     $button-hover-background: null,
     $button-hover-color: null,
+    $button-disabled-color: null,
     $tab-ripple-color: null,
     $button-ripple-color: null,
     $border-radius: null,
     $border-color: null,
     $border-color--hover: null,
-    $disable-shadow: true
 ) {
     $name: 'igx-tabs';
     $tabs-schema: ();
@@ -94,13 +77,10 @@
         $tabs-schema: $schema;
     }
 
-    $theme: apply-palette($tabs-schema, $palette);
+    $theme: digest-schema($tabs-schema);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
-
-    $tab-area-shadow: if($disable-shadow == true, none, elevation($elevation: 1));
-    $buttons-shadow: if($disable-shadow == true, none, elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if meta.type-of($item-background) == 'color' {
@@ -192,7 +172,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
         item-hover-color: $item-hover-color,
@@ -209,23 +188,17 @@
         button-background: $button-background,
         button-hover-background:$button-hover-background,
         button-hover-color:$button-hover-color,
+        button-disabled-color:$button-disabled-color,
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
-        tab-area-shadow: $tab-area-shadow,
-        buttons-shadow: $buttons-shadow,
         border-color: $border-color,
         border-radius: $border-radius,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} ellipsis
 /// @requires ripple-theme
 /// @requires {mixin} ripple
-/// @requires elevation
-/// @requires rem
-/// @requires var-get
 @mixin tabs($theme) {
     @include css-vars($theme);
 
@@ -234,8 +207,8 @@
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 
-    $item-min-width: 90px;
-    $item-max-width: 360px;
+    $item-min-width: rem(90px);
+    $item-max-width: rem(360px);
 
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
 
@@ -273,13 +246,8 @@
         overflow: hidden;
         flex: 0 0 auto;
         background: var-get($theme, 'item-background');
-        box-shadow: var-get($theme, 'tab-area-shadow');
         min-height: rem(42px);
         z-index: 1;
-
-        @if $bootstrap-theme or $indigo-theme {
-            box-shadow: none;
-        }
     }
 
     %tabs-header-content {
@@ -299,7 +267,7 @@
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
-                height: 1px;
+                height: rem(1px);
                 background: var-get($theme, 'border-color');
                 z-index: 0;
             }
@@ -325,10 +293,6 @@
         color: var-get($theme, 'button-color');
         outline: 0;
 
-        @if not $indigo-theme {
-            box-shadow: var-get($theme, 'buttons-shadow');
-        }
-
         &:hover {
             background: var-get($theme, 'button-hover-background');
             color: var-get($theme, 'button-hover-color');
@@ -344,8 +308,8 @@
             border: 0;
         }
 
-        &--hidden {
-            visibility: hidden;
+        &:disabled {
+            color: var-get($theme, 'button-disabled-color');
         }
 
         &--none {
@@ -364,7 +328,7 @@
     %tabs-header-item {
         > * {
             margin-inline-start: map.get($icon-space, 'comfortable');
-    
+
             &:first-child {
                 margin-inline-start: 0;
             }
@@ -387,18 +351,18 @@
         color: var-get($theme, 'item-text-color');
         outline: 0;
 
-        igx-icon { 
+        igx-icon {
             color: var-get($theme, 'item-icon-color');
         }
 
         @if $bootstrap-theme {
-            border: 1px solid transparent;
+            border: rem(1px) solid transparent;
             border-start-start-radius: var-get($theme, 'border-radius');
             border-start-end-radius: var-get($theme, 'border-radius');
         }
 
         @if $indigo-theme {
-            border-bottom: 1px solid var-get($theme, 'border-color');
+            border-bottom: rem(1px) solid var-get($theme, 'border-color');
         }
 
         &::-moz-focus-inner {
@@ -434,11 +398,11 @@
 
         @if $not-bootstrap-theme {
             transition: all .3s $tabs-animation-function;
-            border: 1px solid var-get($theme, 'border-color');
+            border: rem(1px) solid var-get($theme, 'border-color');
 
             &:hover,
             &:focus {
-                border: 1px solid var-get($theme, 'border-color--hover');
+                border: rem(1px) solid var-get($theme, 'border-color--hover');
             }
         }
 
@@ -486,7 +450,7 @@
                 bottom: 0;
                 inset-inline-start: 0;
                 width: 100%;
-                height: 1px;
+                height: rem(1px);
                 background: var-get($theme, 'item-active-background');
                 z-index: 1;
             }
@@ -529,7 +493,7 @@
         flex-direction: column;
         text-align: center;
 
-        > * {
+        > [igxtabheaderlabel] {
             @include line-clamp(2, true, true);
         }
 
@@ -548,7 +512,7 @@
         // We need to explicitly set the default for IE 11
         left: 0;
         transform: translateX(0);
-        height: 2px;
+        height: rem(2px);
         min-width: $item-min-width;
         background: var-get($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
@@ -611,14 +575,12 @@
 /// Uses the 'subtitle-2'
 /// category from the typographic scale.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
-@mixin tabs-typography($type-scale, $categories: (label: 'button')) {
+@mixin tabs-typography($categories: (label: 'button')) {
     $label: map.get($categories, 'label');
 
     %tabs-header-item-inner > [igxtabheaderlabel]{
-        @include type-style($type-scale, $label) {
+        @include type-style($label) {
             margin-top: 0;
             margin-bottom: 0;
         }

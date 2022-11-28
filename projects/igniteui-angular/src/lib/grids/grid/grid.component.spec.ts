@@ -34,8 +34,10 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';
 
+    configureTestSuite();
+
     describe('IgxGrid - input properties', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -47,7 +49,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 imports: [
                     NoopAnimationsModule, IgxGridModule
                 ]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should initialize a grid with columns from markup', () => {
@@ -86,14 +89,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
 
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
-            expect(grid.columnList.length).toEqual(4, 'Invalid number of columns initialized');
+            expect(grid.columns.length).toEqual(4, 'Invalid number of columns initialized');
             expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columnList.first.dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 1).dataType)
+            expect(grid.columns[0].dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
+            expect(grid.columns.find((col) => col.index === 1).dataType)
                 .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
-            expect(grid.columnList.find((col) => col.index === 2).dataType)
+            expect(grid.columns.find((col) => col.index === 2).dataType)
                 .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columnList.last.dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
+            expect(grid.columns[grid.columns.length - 1].dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         });
 
@@ -111,6 +114,18 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(column.filterable).toEqual(true);
                 expect(column.sortable).toEqual(true);
             });
+        });
+
+        it('should initialize a grid and allow changing columns runtime with ngFor', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.detectChanges();
+            // reverse order of ngFor bound collection
+            fix.componentInstance.columns.reverse();
+            fix.detectChanges();
+            // check order
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[0].field).toBe('value');
+            expect(grid.columns[1].field).toBe('index');
         });
 
         it('should initialize grid with remote virtualization', async () => {
@@ -630,14 +645,16 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - virtualization tests', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it('should change chunk size for every record after enlarging the grid and the horizontal dirs are scrambled', async () => {
@@ -763,7 +780,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -774,7 +791,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should init columns with width >= 136px when 5 rows and 5 columns are rendered', () => {
@@ -1169,9 +1187,10 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
             await wait(100);
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
@@ -1181,8 +1200,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();
             expect(defaultHeightNum).toBe(330);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
+            expect(fix.componentInstance.grid.rowList.length).toEqual(10);
         });
 
         it(`should render grid with correct height when parent container's height is set
@@ -1809,15 +1828,17 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - API methods', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
                     IgxGridWrappedInContComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
@@ -2223,14 +2244,16 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - Integration with other Igx Controls', () => {
         let fix;
 
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
-            });
+                    NoopAnimationsModule, IgxGridModule, IgxTabsModule
+                ]
+            })
+            .compileComponents();
         }));
 
         beforeEach(waitForAsync(() => {
@@ -2380,14 +2403,15 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - footer section', () => {
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            });
+            })
+            .compileComponents();
         }));
 
         it('should be able to display custom content', () => {
@@ -2406,14 +2430,17 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - with custom pagination template', () => {
-        configureTestSuite((() => {
+
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule]
-            });
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
         }));
 
         it('should have access to grid context', fakeAsync(() => {
@@ -2431,7 +2458,8 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
     });
 
-    describe('IgxGrid - Performance tests #perf', () => {
+    // TODO: Enable performance tests again
+    xdescribe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;
@@ -2441,7 +2469,7 @@ describe('IgxGrid Component Tests #grid', () => {
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
-        configureTestSuite((() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent
@@ -2451,12 +2479,12 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridModule,
                     IgxTabsModule
                 ]
-            });
+            })
+            .compileComponents();
         }));
+
         afterEach(() => {
-            if (observer) {
-                observer.disconnect();
-            }
+            observer?.disconnect();
         });
 
         it('should render the grid in a certain amount of time', async () => {
@@ -2631,6 +2659,40 @@ describe('IgxGrid Component Tests #grid', () => {
             // UIInteractions.simulateClickAndSelectEvent(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
             await wait(16);
             fix.detectChanges();
+        });
+    });
+
+    describe('Setting null data', () => {
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridNoDataComponent,
+                    IgxGridTestComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule
+                ]
+            })
+            .compileComponents();
+        }));
+
+        it('should not throw error when data is null', () => {
+            const fix = TestBed.createComponent(IgxGridNoDataComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null and transactions are enabled', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.grid.batchEditing = true;
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
         });
     });
 });
@@ -3229,4 +3291,17 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     public ngAfterViewInit() {
         this.delta = new Date().getTime() - this.startTime;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name" [hasSummary]="true"></igx-column>
+            <igx-paginator></igx-paginator>
+        </igx-grid>
+    `
+})
+export class IgxGridNoDataComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }

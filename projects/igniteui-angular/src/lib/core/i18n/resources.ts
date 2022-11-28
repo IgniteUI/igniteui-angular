@@ -11,10 +11,13 @@ import { CalendarResourceStringsEN, ICalendarResourceStrings } from './calendar-
 import { IInputResourceStrings, InputResourceStringsEN } from './input-resources';
 import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 import { IActionStripResourceStrings, ActionStripResourceStringsEN } from './action-strip-resources';
+import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from './query-builder-resources';
+import { ComboResourceStringsEN, IComboResourceStrings } from './combo-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
-    ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDatePickerResourceStrings, IDateRangePickerResourceStrings,
-    IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings, IActionStripResourceStrings { }
+    ICarouselResourceStrings, IChipResourceStrings, IComboResourceStrings, IInputResourceStrings, IDatePickerResourceStrings,
+    IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings,
+    IActionStripResourceStrings, IQueryBuilderResourceStrings { }
 
 /**
  * @hidden
@@ -34,13 +37,15 @@ export const CurrentResourceStrings = {
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
     CalendarResStrings: cloneValue(CalendarResourceStringsEN),
     ChipResStrings: cloneValue(ChipResourceStringsEN),
+    ComboResStrings: cloneValue(ComboResourceStringsEN),
     DatePickerResourceStrings: cloneValue(DatePickerResourceStringsEN),
     DateRangePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
     InputResStrings: cloneValue(InputResourceStringsEN),
     TreeResStrings: cloneValue(TreeResourceStringsEN),
-    ActionStripResourceStrings: cloneValue(ActionStripResourceStringsEN)
+    ActionStripResourceStrings: cloneValue(ActionStripResourceStringsEN),
+    QueryBuilderResStrings: cloneValue(QueryBuilderResourceStringsEN)
 };
 
 const updateResourceStrings = (currentStrings: IResourceStrings, newStrings: IResourceStrings) => {
@@ -69,6 +74,7 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.CalendarResStrings,
     ...CurrentResourceStrings.CarouselResStrings,
     ...CurrentResourceStrings.ChipResStrings,
+    ...CurrentResourceStrings.ComboResStrings,
     ...CurrentResourceStrings.DatePickerResourceStrings,
     ...CurrentResourceStrings.DateRangePickerResStrings,
     ...CurrentResourceStrings.GridResStrings,
@@ -77,5 +83,6 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.PaginatorResStrings,
     ...CurrentResourceStrings.TimePickerResStrings,
     ...CurrentResourceStrings.TreeResStrings,
-    ...CurrentResourceStrings.ActionStripResourceStrings
+    ...CurrentResourceStrings.ActionStripResourceStrings,
+    ...CurrentResourceStrings.QueryBuilderResStrings
 });

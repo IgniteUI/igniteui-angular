@@ -2,8 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from '../shared/data';
 
 import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
-} from 'igniteui-angular';
+    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity} from 'igniteui-angular';
+
+
+
+
+
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
@@ -45,6 +49,20 @@ export class GridCellEditingComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
+    }
+
+
+
+    public cellEdit(evt) {
+        if (!evt.valid) {
+            evt.cancel = true;
+        }
+    }
+
+    public rowEdit(evt) {
+        if (!evt.valid) {
+            evt.cancel = true;
+        }
     }
 
     public addRow() {
@@ -148,6 +166,10 @@ export class GridCellEditingComponent {
         const column = this.gridWithoutPK.getColumnByName('ProductName');
         const secColumn = this.gridWithoutPK.getColumnByName('OrderDate');
         this.gridWithoutPK.moveColumn(column, secColumn);
+    }
+    public checkValid(cell) {
+        debugger;
+        return cell.formGroup?.get(cell.column?.field).errors?.['appForbiddenName'];
     }
     public updateSelectedCell() {
         let newValue;

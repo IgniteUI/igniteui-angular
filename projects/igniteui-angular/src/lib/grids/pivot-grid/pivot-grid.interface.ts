@@ -1,5 +1,5 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType } from '../common/grid.interface';
 
@@ -99,7 +99,7 @@ export interface IPivotDimension {
     /**
      * A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
      * */
-    filter?: FilteringExpressionsTree | null;
+    filter?: IFilteringExpressionsTree | null;
     /**
      * The sorting direction of the current dimension. Determines the order in which the values will appear in the related dimension.
      */
@@ -216,4 +216,8 @@ export interface IPivotGridRecord {
 export interface IPivotGridGroupRecord extends IPivotGridRecord {
     height?: number;
     rowSpan?: number;
+}
+
+export interface IgxPivotGridValueTemplateContext {
+    $implicit: IPivotValue;
 }

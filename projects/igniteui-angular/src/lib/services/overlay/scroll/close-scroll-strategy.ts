@@ -23,7 +23,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._threshold = 10;
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -35,7 +35,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._overlayInfo = overlayService.getOverlayById(id);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public attach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.addEventListener('scroll', this.onScroll);
@@ -45,7 +45,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         }
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public detach(): void {
         // TODO: check why event listener removes only on first call and remains on each next!!!
         if (this._scrollContainer) {

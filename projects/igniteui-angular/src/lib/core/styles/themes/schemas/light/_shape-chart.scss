@@ -6,60 +6,58 @@
 
 /// Generates a light base shape chart schema.
 /// @type {Map}
-/// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
-/// @property {Color} title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
-/// @property {Color} title-text-color [null] - Sets the color of the chart title.
-/// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
-/// @property {String} subtitle-alignment [null] - Sets horizontal alignment which determines the subtitle position, relative to the left and right edges of the control.
-/// @property {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
-/// @property {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
-/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} marker-brushes [series] - Sets the palette of brushes used for rendering fill area of data point markers.
-/// @property {List} outlines [series] - Sets the palette of brushes to use for outlines on the chart series.
-/// @property {List} marker-outlines [series] - Sets the palette of brushes used for rendering outlines of data point markers.
-///
-/// @property {Number} thickness [null] - Sets the thickness for all series in this chart.
-/// @property {List} trend-line-brushes [series] - Sets the palette of brushes to used for coloring trend lines in this chart.
-/// @property {Number} trend-line-thickness [null] - Sets the thickness of the trend lines in this chart. This property applies only to these chart types: point, line, spline, and bubble.
-/// @property {List} x-axis-label-margin [null] - Sets the margin of labels on the X-axis.
-/// @property {Color} x-axis-label-text-color [null] - Sets color of labels on the X-axis.
-/// @property {String} x-axis-label-vertical-alignment [null] - Sets Vertical alignment of X-axis labels.
-/// @property {Color} x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
-/// @property {Number} x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
-/// @property {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
-/// @property {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
-/// @property {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
-/// @property {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
-/// @property {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
-/// @property {String} x-axis-title-alignment [null] - Sets Horizontal alignment of the X-axis title.
-/// @property {Color} x-axis-title-color [null] - Sets color of title on the X-axis.
-/// @property {List} x-axis-title-margin [null] - Sets the margin around the title on the X-axis.
-/// @property {List} y-axis-label-margin [null] - Sets the margin of labels on the Y-axis.
-/// @property {Color} y-axis-label-text-color [null] - Sets color of labels on the Y-axis.
-/// @property {String} y-axis-label-vertical-alignment [null] - Sets Vertical alignment of Y-axis labels.
-/// @property {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the Y-axis.
-/// @property {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
-/// @property {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
-/// @property {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
-/// @property {Color} y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
-/// @property {Color} y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
-/// @property {Number} y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
-/// @property {String} y-axis-title-alignment [null] - Sets Horizontal alignment of the Y-axis title.
-/// @property {Color} y-axis-title-color [null] - Sets color of title on the Y-axis.
-/// @property {List} y-axis-title-margin [null] - Sets the margin around the title on the Y-axis.
-/// @see $default-palette
+/// @prop {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @prop {Color} title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
+/// @prop {Color} title-text-color [null] - Sets the color of the chart title.
+/// @prop {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @prop {String} subtitle-alignment [null] - Sets horizontal alignment which determines the subtitle position, relative to the left and right edges of the control.
+/// @prop {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @prop {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @prop {List} marker-brushes [series] - Sets the palette of brushes used for rendering fill area of data point markers.
+/// @prop {List} outlines [series] - Sets the palette of brushes to use for outlines on the chart series.
+/// @prop {List} marker-outlines [series] - Sets the palette of brushes used for rendering outlines of data point markers.
+/// @prop {Number} thickness [null] - Sets the thickness for all series in this chart.
+/// @prop {List} trend-line-brushes [series] - Sets the palette of brushes to used for coloring trend lines in this chart.
+/// @prop {Number} trend-line-thickness [null] - Sets the thickness of the trend lines in this chart. This property applies only to these chart types: point, line, spline, and bubble.
+/// @prop {List} x-axis-label-margin [null] - Sets the margin of labels on the X-axis.
+/// @prop {Color} x-axis-label-text-color [null] - Sets color of labels on the X-axis.
+/// @prop {String} x-axis-label-vertical-alignment [null] - Sets Vertical alignment of X-axis labels.
+/// @prop {Color} x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
+/// @prop {Number} x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
+/// @prop {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
+/// @prop {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
+/// @prop {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
+/// @prop {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @prop {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
+/// @prop {String} x-axis-title-alignment [null] - Sets Horizontal alignment of the X-axis title.
+/// @prop {Color} x-axis-title-color [null] - Sets color of title on the X-axis.
+/// @prop {List} x-axis-title-margin [null] - Sets the margin around the title on the X-axis.
+/// @prop {List} y-axis-label-margin [null] - Sets the margin of labels on the Y-axis.
+/// @prop {Color} y-axis-label-text-color [null] - Sets color of labels on the Y-axis.
+/// @prop {String} y-axis-label-vertical-alignment [null] - Sets Vertical alignment of Y-axis labels.
+/// @prop {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the Y-axis.
+/// @prop {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
+/// @prop {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
+/// @prop {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
+/// @prop {Color} y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
+/// @prop {Color} y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
+/// @prop {Number} y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
+/// @prop {String} y-axis-title-alignment [null] - Sets Horizontal alignment of the Y-axis title.
+/// @prop {Color} y-axis-title-color [null] - Sets color of title on the Y-axis.
+/// @prop {List} y-axis-title-margin [null] - Sets the margin around the title on the Y-axis.
 $light-shape-chart: (
     'margin': null,
     'title-alignment': null,
 
     'title-text-color': (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
     'title-margin': null,
     'subtitle-alignment': null,
 
     'subtitle-text-color': (
-        color: ('grays', 600)
+        color: ('gray', 600)
     ),
 
     'subtitle-margin': null,
@@ -100,19 +98,16 @@ $light-shape-chart: (
 
 /// Generates a fluent shaep-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $fluent-shape-chart: $light-shape-chart;
 
 /// Generates a bootstrap shape-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $bootstrap-shape-chart: $light-shape-chart;
 
 /// Generates an indigo shape-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-shape-chart
 $indigo-shape-chart: $light-shape-chart;
 

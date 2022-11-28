@@ -1,16 +1,10 @@
 @use '../../base' as *;
 @use 'sass:string';
 
-////
-/// @group components
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
-/// @requires {mixin} bem-block
-/// @requires {mixin} bem-elem
-/// @requires {mixin} bem-mod
-////
-
 @mixin component {
-    @include b(igc-dock-manager) {
+    @include b(igc-dockmanager) {
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
         @include register-component(

@@ -8,30 +8,27 @@
 ////
 
 /// Generates a base dark grid-toolbar schema.
-/// @property {Map} resting-background [color: ('grays', 200)] - The background color used for the highlight in its resting state.
-/// @property {Map} resting-color [contrast-color: ('grays', 200)] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-background [color: ('gray', 200)] - The background color used for the highlight in its resting state.
+/// @property {Map} resting-color [contrast-color: ('gray', 200)] - The icon color used for the highlight in its resting state.
 /// @type {Map}
 $dark-base-highlight: (
     resting-background: (
-        color: ('grays', 200)
+        color: ('gray', 200)
     ),
 
     resting-color: (
-        contrast-color: ('grays', 200)
+        contrast-color: ('gray', 200)
     ),
 );
 
 /// Generates a dark highlight schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-highlight
 /// @requires $dark-base-highlight
-/// @see $default-palette
 $dark-highlight: extend($light-highlight, $dark-base-highlight);
 
 /// Generates a dark fluent highlight schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-highlight
 /// @requires $dark-base-highlight
 $dark-fluent-highlight: extend($fluent-highlight, $dark-base-highlight);
@@ -40,7 +37,6 @@ $dark-fluent-highlight: extend($fluent-highlight, $dark-base-highlight);
 /// @type {Map}
 /// @property {Map} active-background [color: ('primary', A100)] - The background color used for the highlight in its active state.
 /// @property {Map} active-color [contrast-color: ('primary', A100) - The text color used for the highlight in its active state.
-/// @requires {function} extend
 /// @requires $bootstrap-highlight
 /// @requires $dark-base-highlight
 $dark-bootstrap-highlight: extend(
@@ -59,8 +55,6 @@ $dark-bootstrap-highlight: extend(
 
 /// Generates a dark indigo highlight schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-highlight
 /// @requires $dark-base-highlight
 $dark-indigo-highlight: extend($indigo-highlight, $dark-base-highlight);
-

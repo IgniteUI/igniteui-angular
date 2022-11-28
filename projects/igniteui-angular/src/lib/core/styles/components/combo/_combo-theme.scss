@@ -1,6 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -9,18 +9,16 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
+/// @example scss Change the combo empty list background
+///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-combo-theme);
 @function combo-theme(
-    $palette: null,
     $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
@@ -35,11 +33,10 @@
         $combo-schema: $schema;
     }
 
-    $theme: apply-palette($combo-schema, $palette);
+    $theme: digest-schema($combo-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
         empty-list-background: $empty-list-background
@@ -47,9 +44,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin combo($theme) {
     @include css-vars($theme);
 
@@ -75,7 +69,7 @@
         padding: rem(8px) rem(16px);
         margin: 0 !important;
         z-index: 26;
-        border-bottom: 1px dashed var-get($theme, 'search-separator-border-color');
+        border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
     }
 
     %igx-combo__content {

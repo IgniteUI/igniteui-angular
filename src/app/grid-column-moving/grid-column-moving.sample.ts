@@ -20,6 +20,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public density: DisplayDensity = 'comfortable';
     public displayDensities;
     public pagingEnabled = true;
+    public show = true;
 
     public mchData = [
         /* eslint-disable max-len */
@@ -67,7 +68,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, sortable: false, filterable: true, groupable: true,
-                summary: true, type: 'string', pinned: false },
+                summary: true, type: 'string', pinned: false, hidden: true },
             { field: 'CompanyName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
@@ -89,10 +90,15 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'Employees', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: false, type: 'number' },
             { field: 'DateCreated', width: 150, resizable: true, pinned: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'time' },
+                summary: true, type: 'time', hidden: true },
             { field: 'Contract', width: 150, resizable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'boolean' }
         ];
+    }
+
+    public reverseColumn() {
+        this.columns.reverse();
+        this.grid1.cdr.detectChanges();
     }
 
     public selectDensity(event) {

@@ -1,7 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import mergeWith from 'lodash.mergewith';
+import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
@@ -206,6 +206,15 @@ export const isEqual = (obj1, obj2): boolean => {
     }
     return obj1 === obj2;
 };
+
+/**
+ * Checks if provided variable is the value NaN
+ *
+ * @param value Value to check
+ * @returns true if provided variable is NaN
+ * @hidden
+ */
+ export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
 
 /**
  * Utility service taking care of various utility functions such as
@@ -767,11 +776,11 @@ const verticalAnimations: AnimationReferenceMetadata[] = [
 
 
 /**
- * Similar to Angular's formatDate. However it will not throw on `undefined | null` instead
+ * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
  * coalescing to an empty string.
  */
 export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value === '') {
         return '';
     }
     return _formatDate(value, format, locale, timezone);

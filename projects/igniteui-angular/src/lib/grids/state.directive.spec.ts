@@ -15,6 +15,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
+import { CustomFilter } from '../test-utils/grid-samples.spec';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
@@ -243,6 +244,36 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(false, 'filtering');
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState as IGridState);
         gridState = state.getState(true, 'filtering');
+        expect(gridState).toBe(filteringState);
+    });
+
+    it("setState should correctly restore grid filtering state for a condition with custom filtering operand", () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName("ProductID").filters = CustomFilter.instance();
+        fix.detectChanges();
+
+        const state = fix.componentInstance.state;
+
+        const initialState =
+            '{"filtering":{"filteringOperands":[],"operator":0}}';
+        const filteringState =
+            '{"filtering":{"filteringOperands":[{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"searchVal":"custom","ignoreCase":true}],"operator":1,"fieldName":"FirstName"}],"operator":0,"type":0}}';
+        const filteringStateObject = JSON.parse(filteringState) as IGridState;
+
+        let gridState = state.getState(true, "filtering");
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringStateObject);
+        fix.detectChanges();
+
+        gridState = state.getState(false, "filtering");
+        HelperFunctions.verifyFilteringExpressions(
+            grid.filteringExpressionsTree,
+            gridState as IGridState
+        );
+        gridState = state.getState(true, "filtering");
         expect(gridState).toBe(filteringState);
     });
 
@@ -598,6 +629,28 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(advFilteringState);
     });
 
+    it('setState should correctly restore grid advanced filtering state when there is a custom filtering operand', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName("ProductID").filters = CustomFilter.instance();
+        fix.detectChanges();
+
+        const state = fix.componentInstance.state;
+        // eslint-disable-next-line max-len
+        const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"ignoreCase":true,"searchVal":"custom"}],"operator":0,"type":1}}';
+        const initialState = '{"advancedFiltering":{}}';
+
+        let gridState = state.getState(true, 'advancedFiltering');
+        expect(gridState).toBe(initialState);
+
+        state.setState(advFilteringState);
+        gridState = state.getState(false, 'advancedFiltering') as IGridState;
+        HelperFunctions.verifyAdvancedFilteringExpressions(grid.advancedFilteringExpressionsTree, gridState);
+        gridState = state.getState(true, 'advancedFiltering');
+        expect(gridState).toBe(advFilteringState);
+    });
+
     it('should correctly restore expansion state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateWithDetailsComponent);
         fix.detectChanges();
@@ -617,31 +670,6 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'expansion');
         expect(gridState).toBe(expansionState);
     });
-
-    // fit('createExpressionsTreeFromObject should return null when columns are still not resolved', () => {
-    //     const fix = TestBed.createComponent(IgxGridStateComponent);
-    //     fix.detectChanges();
-    //     fix.componentInstance.ngOnInit();
-    //     fix.detectChanges();
-    //     const grid  = fix.componentInstance.grid;
-    //     // grid.columnList = new QueryList<IgxColumnComponent>();
-    //     const state = fix.componentInstance.state;
-    //     // eslint-disable-next-line max-len
-    //
-    //     const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"is-true"},"searchVal":null,"ignoreCase":true},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"greater-than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
-    //     const initialState = '{"advancedFiltering":{}}';
-    //     const advFilteringStateObject = JSON.parse(advFilteringState);
-    //
-    //     let gridState = state.getState(true, 'advancedFiltering');
-    //     expect(gridState).toBe(initialState);
-    //
-    //     state.setState(advFilteringStateObject);
-    //     gridState = state.getState(false, 'advancedFiltering') as IGridState;
-    //
-    //     let areColumnsResolved = grid.columnList.length > 0 || !!gridState.columns
-    //
-    //     expect(areColumnsResolved).toBe(false);
-    // });
 });
 
 class HelperFunctions {

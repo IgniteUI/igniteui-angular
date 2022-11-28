@@ -536,7 +536,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get ghostLeft() {
-        return parseInt(this.ghostElement.style.left, 10) + this._ghostHostX;
+        if (this.ghostElement) {
+            return parseInt(this.ghostElement.style.left, 10) + this._ghostHostX;
+        }
     }
 
     protected set ghostTop(pageY: number) {
@@ -549,7 +551,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get ghostTop() {
-        return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
+        if (this.ghostElement) {
+            return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
+        }
     }
 
     protected get windowScrollTop() {
@@ -750,7 +754,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement && this._removeOnDestroy) {
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
-            
+
             if (this._dynamicGhostRef) {
                 this._dynamicGhostRef.destroy();
                 this._dynamicGhostRef = null;
@@ -1229,7 +1233,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
         const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
         this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
-        this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostX) + 'px';
+        this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostY) + 'px';
 
         if (this.pointerEventsEnabled) {
             // The ghostElement takes control for moving and dragging after it has been rendered.
@@ -1275,7 +1279,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
             if (!!elFromPoint?.shadowRoot) {
-                targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+                targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             } else if (targetElements.indexOf(elFromPoint) === -1) {
                 targetElements.push(elFromPoint);
             }
@@ -1312,13 +1316,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      * Traverse shadow dom in depth.
      */
-    protected getFromShadowRoot(elem, pageX, pageY) {
+    protected getFromShadowRoot(elem, pageX, pageY, parentDomElems) {
         const elementsFromPoint = elem.shadowRoot.elementsFromPoint(pageX, pageY);
-        let res = elementsFromPoint;
-        for (const elFromPoint of elementsFromPoint) {
+        const shadowElements = elementsFromPoint.filter(cur => parentDomElems.indexOf(cur) === -1);
+        let res = [];
+        for (const elFromPoint of shadowElements) {
             if (!!elFromPoint?.shadowRoot && elFromPoint.shadowRoot !== elem.shadowRoot) {
-                res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY));
+                res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             }
+            res.push(elFromPoint);
         }
         return res;
     }
@@ -1431,13 +1437,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const elementHeight = this.ghost && this.ghostElement ? this.ghostElement.offsetHeight : this.element.nativeElement.offsetHeight;
         const bottomBorder = (!this.scrollContainer ? window.innerHeight : containerBounds.bottom ) +
             this.windowScrollTop - this._scrollContainerThreshold  - elementHeight;
-        // Same for window scroll left 
+        // Same for window scroll left
         const leftBorder = (!this.scrollContainer ? 0 : containerBounds.left) + this.windowScrollLeft + this._scrollContainerThreshold;
         // Subtract the element width again because we position it from top left corner.
         const elementWidth = this.ghost && this.ghostElement ? this.ghostElement.offsetWidth :  this.element.nativeElement.offsetWidth;
         const rightBorder = (!this.scrollContainer ? window.innerWidth : containerBounds.right) +
             this.windowScrollLeft - this._scrollContainerThreshold - elementWidth
-        
+
         if (this.pageY <= topBorder && scrolledY) {
             return DragScrollDirection.UP;
         } else if (this.pageY > bottomBorder) {

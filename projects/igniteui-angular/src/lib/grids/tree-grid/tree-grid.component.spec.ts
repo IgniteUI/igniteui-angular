@@ -9,7 +9,8 @@ import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridDefaultLoadingComponent,
     IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSummariesTransactionsComponent
+    IgxTreeGridSummariesTransactionsComponent,
+    IgxTreeGridNoDataComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -29,7 +30,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSummariesTransactionsComponent
+                IgxTreeGridSummariesTransactionsComponent,
+                IgxTreeGridNoDataComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -171,7 +173,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             const expectedColumns = [...Object.keys(grid.data[0])];
 
-            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         });
@@ -184,7 +186,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
 
             // Employees shouldn't be in the columns
-            expect(grid.columnList.map(c => c.field)).toEqual(expectedColumns);
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         });
@@ -218,7 +220,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
         }));
 
-        it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
+        it('should not render rows and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             tick();
@@ -254,7 +256,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             expect(tHeadItems).toBeNull();
             expect(gridRows).toBeNull();
-            expect(paging).toBeNull();
+            expect(paging).not.toBeNull();
             expect(rowSelectors).toBeNull();
             expect(dragIndicators).toBeNull();
             expect(verticalScrollBar).not.toBeNull();
@@ -264,27 +266,21 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     describe('Setting null data', () => {
         it('should not throw error when data is null', () => {
-            let errorMessage = '';
-            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
-            fix.componentInstance.data = null;
-            try {
-                fix.detectChanges();
-            } catch (ex) {
-                errorMessage = ex.message;
-            }
-            expect(errorMessage).toBe('');
+            fix = TestBed.createComponent(IgxTreeGridNoDataComponent);
+            fix.componentInstance.treeGrid.batchEditing = true;
+            expect(() => fix.detectChanges()).not.toThrow();
         });
 
-        it('should not throw error when data is null and transactions are enabled', () => {
-            let errorMessage = '';
+        it('should not throw error when data is set to null', () => {
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            fix.componentInstance.data = null;
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
+
+        it('should not throw error when data is set to null and transactions are enabled', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.componentInstance.data = null;
-            try {
-                fix.detectChanges();
-            } catch (ex) {
-                errorMessage = ex.message;
-            }
-            expect(errorMessage).toBe('');
+            expect(() => fix.detectChanges()).not.toThrow();
         });
     });
 

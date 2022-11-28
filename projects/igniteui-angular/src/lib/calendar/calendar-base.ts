@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive } from '@angular/core';
+import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -8,7 +8,7 @@ import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-
+import { getLocaleFirstDayOfWeek, getLocaleId } from "@angular/common";
 
 /**
  * Sets the selection type - single, multi or range.
@@ -118,6 +118,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
+    public shiftKey: boolean = false;
+
+     /**
+     * @hidden
+     */
+    public lastSelectedDate: Date;
+
+    /**
+     * @hidden
+     */
     protected formatterWeekday;
 
     /**
@@ -155,6 +165,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     protected _onChangeCallback: (_: Date) => void = noop;
 
     /**
+      * @hidden
+      */
+    protected _deselectDate: boolean;
+
+    /**
      * @hidden
      */
     private selectedDatesWithoutFocus;
@@ -162,12 +177,27 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _locale = 'en';
+    private _locale: string;
+
+    /**
+     * @hidden
+     */
+    private _weekStart: WEEKDAYS | number;
 
     /**
      * @hidden
      */
     private _viewDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _startDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _endDate: Date;
 
     /**
      * @hidden
@@ -227,7 +257,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.
-     * Defaults to `Sunday` / `0`.
+     * If not set, defaults to the first day of the week for the application locale.
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
@@ -239,12 +269,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      */
     public set weekStart(value: WEEKDAYS | number) {
+        this._weekStart = value;
         this.calendarModel.firstWeekDay = value;
     }
 
     /**
      * Gets the `locale` of the calendar.
-     * Default value is `"en"`.
+     * If not set, defaults to application's locale.
      */
     @Input()
     public get locale(): string {
@@ -254,10 +285,22 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Sets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
-     * Default value is `"en"`.
      */
     public set locale(value: string) {
         this._locale = value;
+
+        // if value is not a valid BCP 47 tag, set it back to _localeId
+        try {
+            getLocaleFirstDayOfWeek(this._locale);
+        } catch (e) {
+            this._locale = this._localeId;
+        }
+
+        // changing locale runtime needs to update the `weekStart` too, if `weekStart` is not explicitly set
+        if (this._weekStart === undefined) {
+            this.calendarModel.firstWeekDay = getLocaleFirstDayOfWeek(this._locale);
+        }
+
         this.initFormatters();
     }
 
@@ -436,26 +479,53 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(protected platform: PlatformUtil) {
+    constructor(protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: string) {
         this.calendarModel = new Calendar();
-
+        this.locale = _localeId;
         this.viewDate = this.viewDate ? this.viewDate : new Date();
-
-        this.calendarModel.firstWeekDay = this.weekStart;
         this.initFormatters();
     }
 
     /**
-     * Performs deselection of a single value, when selection is multi
+     * Multi/Range selection with shift key
+     *
+     * @hidden
+     * @internal
+     */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerdown(event: MouseEvent) {
+        this.shiftKey = event.button === 0 && event.shiftKey;
+    }
+
+    /**
+     * Performs deselection of date/dates, when selection is multi
      * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
      *
      * @hidden
      */
     public deselectMultipleInMonth(value: Date) {
-        const valueDateOnly = this.getDateOnly(value);
-        this.selectedDates = this.selectedDates.filter(
-            (date: Date) => date.getTime() !== valueDateOnly.getTime()
-        );
+        // deselect multiple dates from last clicked to shift clicked date (excluding)
+        if (this.shiftKey) {
+            let start: Date;
+            let end: Date;
+
+            [start, end] = this.lastSelectedDate.getTime() < value.getTime()
+                ? [this.lastSelectedDate, value]
+                : [value, this.lastSelectedDate];
+
+            this.selectedDates = this.selectedDates.filter(
+                (date: Date) => date.getTime() < start.getTime() || date.getTime() > end.getTime()
+            );
+
+            this.selectedDates.push(value);
+
+        } else {
+            // deselect a single date
+            const valueDateOnly = this.getDateOnly(value);
+            this.selectedDates = this.selectedDates.filter(
+                (date: Date) => date.getTime() !== valueDateOnly.getTime()
+            );
+        }
     }
 
     /**
@@ -625,20 +695,55 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
             this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
         } else {
-            const valueDateOnly = this.getDateOnly(value);
-            const newSelection = [];
-            if (this.selectedDates.every((date: Date) => date.getTime() !== valueDateOnly.getTime())) {
-                newSelection.push(valueDateOnly);
+            let newSelection = [];
+
+            if (this.shiftKey && this.lastSelectedDate) {
+
+                [this._startDate, this._endDate] = this.lastSelectedDate.getTime() < value.getTime()
+                    ? [this.lastSelectedDate, value]
+                    : [value, this.lastSelectedDate];
+
+                const unselectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)]
+                    .filter(date => !this.isDateDisabled(date)
+                        && this.selectedDates.every((d: Date) => d.getTime() !== date.getTime())
+                    );
+
+                // select all dates from last selected to shift clicked date
+                if (this.selectedDates.some((date: Date) => date.getTime() === this.lastSelectedDate.getTime())
+                    && unselectedDates.length) {
+
+                    newSelection = unselectedDates;
+                } else {
+                    // delesect all dates from last clicked to shift clicked date (excluding)
+                    this.selectedDates = this.selectedDates.filter((date: Date) =>
+                        date.getTime() < this._startDate.getTime() || date.getTime() > this._endDate.getTime()
+                    );
+
+                    this.selectedDates.push(value);
+                    this._deselectDate = true;
+                }
+
+                this._startDate = this._endDate = undefined;
+
+            } else if (this.selectedDates.every((date: Date) => date.getTime() !== value.getTime())) {
+                newSelection.push(value);
+
             } else {
                 this.selectedDates = this.selectedDates.filter(
-                    (date: Date) => date.getTime() !== valueDateOnly.getTime()
+                    (date: Date) => date.getTime() !== value.getTime()
                 );
+
+                this._deselectDate = true;
             }
 
             if (newSelection.length > 0) {
                 this.selectedDates = this.selectedDates.concat(newSelection);
+                this._deselectDate = false;
             }
+
+            this.lastSelectedDate = value;
         }
+
         this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
@@ -648,19 +753,46 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private selectRange(value: Date | Date[], excludeDisabledDates: boolean = false) {
-        let start: Date;
-        let end: Date;
-
         if (Array.isArray(value)) {
-            // this.rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-            start = this.getDateOnly(value[0]);
-            end = this.getDateOnly(value[value.length - 1]);
-            this.selectedDates = [start, ...this.generateDateRange(start, end)];
+            this._startDate = this.getDateOnly(value[0]);
+            this._endDate = this.getDateOnly(value[value.length - 1]);
         } else {
-            if (!this.rangeStarted) {
+
+            if (this.shiftKey && this.lastSelectedDate) {
+
+                if (this.lastSelectedDate.getTime() === value.getTime()) {
+                    this.selectedDates = this.selectedDates.length === 1 ? [] : [value];
+                    this.rangeStarted = !!this.selectedDates.length;
+                    this._onChangeCallback(this.selectedDates);
+                    return;
+                }
+
+                // shortens the range when selecting a date inside of it
+                if (this.selectedDates.some((date: Date) => date.getTime() === value.getTime())) {
+
+                    this.lastSelectedDate.getTime() < value.getTime()
+                        ? this._startDate = value
+                        : this._endDate = value;
+
+                } else {
+                    // extends the range when selecting a date outside of it
+                    // allows selection from last deselected to current selected date
+                    if (this.lastSelectedDate.getTime() < value.getTime()) {
+                        this._startDate = this._startDate ?? this.lastSelectedDate;
+                        this._endDate = value;
+                    } else {
+                        this._startDate = value;
+                        this._endDate = this._endDate ?? this.lastSelectedDate;
+                    }
+                }
+
+                this.rangeStarted = false;
+
+            } else if (!this.rangeStarted) {
                 this.rangeStarted = true;
                 this.selectedDates = [value];
+                this._startDate = this._endDate = undefined;
             } else {
                 this.rangeStarted = false;
 
@@ -670,13 +802,16 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     return;
                 }
 
-                this.selectedDates.push(value);
-                this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-
-                start = this.selectedDates.shift();
-                end = this.selectedDates.pop();
-                this.selectedDates = [start, ...this.generateDateRange(start, end)];
+                [this._startDate, this._endDate] = this.lastSelectedDate.getTime() < value.getTime()
+                    ? [this.lastSelectedDate, value]
+                    : [value, this.lastSelectedDate];
             }
+
+            this.lastSelectedDate = value;
+        }
+
+        if (this._startDate && this._endDate) {
+            this.selectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)];
         }
 
         if (excludeDisabledDates) {

@@ -314,6 +314,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Editing'
         },
         {
+            link: '/gridValidation',
+            icon: 'view_column',
+            name: 'Grid Validation'
+        },
+        {
             link: '/gridLocalization',
             icon: 'view_column',
             name: 'Grid Localization'
@@ -329,6 +334,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Drag'
         },
         {
+            link: '/gridRowReorder',
+            icon: 'view_column',
+            name: 'Grid Row Reorder'
+        },
+        {
             link: '/gridSummary',
             icon: 'view_column',
             name: 'Grid Summary'
@@ -342,6 +352,11 @@ export class AppComponent implements OnInit {
             link: '/gridToolbarCustom',
             icon: 'view_column',
             name: 'Grid Toolbar Custom Content'
+        },
+        {
+            link: '/gridExport',
+            icon: 'view_column',
+            name: 'Grid Export'
         },
         {
             link: '/gridSearch',
@@ -423,6 +438,11 @@ export class AppComponent implements OnInit {
             link: '/radio',
             icon: 'radio_button_checked',
             name: 'Radio Group'
+        },
+        {
+            link: '/rating',
+            icon: 'star',
+            name: 'Rating'
         },
         {
             link: '/reactive',
@@ -554,6 +574,17 @@ export class AppComponent implements OnInit {
             link: '/pivot-noop',
             icon: 'view_column',
             name: 'Noop Pivot Grid'
+        },
+        {
+            link: '/query-builder',
+            icon: 'view_column',
+            name: 'Query Builder'
+        },
+        {
+            link: '/pivot-state',
+            icon: 'view_column',
+            name: 'Pivot Grid State Persistance'
+
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

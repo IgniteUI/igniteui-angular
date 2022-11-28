@@ -11,7 +11,6 @@
 /// Generates a dark snackbar schema.
 /// @type {Map}
 /// @requires $light-snackbar
-/// @see $default-palette
 $dark-snackbar: $light-snackbar;
 
 /// Generates a dark fluent snackbar schema.
@@ -26,24 +25,23 @@ $dark-bootstrap-snackbar: $bootstrap-snackbar;
 
 /// Generates a dark indigo snackbar schema.
 /// @type {Map}
-/// @property {Map} background [color: ('grays', 300)] - The background color used in the snackbar.
-/// @property {Map} text-color [contrast-color: ('grays', 200)] - The text color used in the snackbar.
-/// @property {Map} button-color [contrast-color: ('grays', 200)] - The button color used in the snackbar.
-/// @requires {function} extend
+/// @prop {Map} background [color: ('gray', 300)] - The background color used in the snackbar.
+/// @prop {Map} text-color [contrast-color: ('gray', 200)] - The text color used in the snackbar.
+/// @prop {Map} button-color [contrast-color: ('gray', 200)] - The button color used in the snackbar.
 /// @requires $indigo-snackbar
 $dark-indigo-snackbar: extend(
     $indigo-snackbar,
     (
         background: (
-            color: ('grays', 300)
+            color: ('gray', 300)
         ),
 
         text-color: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
 
         button-color: (
-            contrast-color: ('grays', 200)
+            contrast-color: ('gray', 200)
         ),
     )
 );

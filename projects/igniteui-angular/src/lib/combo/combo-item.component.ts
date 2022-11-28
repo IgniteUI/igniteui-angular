@@ -26,6 +26,13 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     @HostBinding('style.height.px')
     public itemHeight: string | number = '';
 
+    @HostBinding('attr.aria-label')
+    @Input()
+    public get ariaLabel(): string {
+        const valueKey = this.comboAPI.valueKey;
+        return (valueKey !== null && this.value != null) ? this.value[valueKey] : this.value;
+    }
+
     /** @hidden @internal */
     @Input()
     public singleMode: boolean;
@@ -89,7 +96,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public clicked(event): void {
         this.comboAPI.disableTransitions = false;

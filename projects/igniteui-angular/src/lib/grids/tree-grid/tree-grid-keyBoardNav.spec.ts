@@ -5,7 +5,7 @@ import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } fr
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 
@@ -406,6 +406,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             tick(16);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('should navigate with arrow Up and Down keys', async () => {
             spyOn(treeGrid.selected, 'emit').and.callThrough();
             const firstCell: CellType = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
@@ -575,6 +579,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed', async () => {
+            treeGrid.width = '400px';
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
             treeGrid.headerContainer.scrollTo(4);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

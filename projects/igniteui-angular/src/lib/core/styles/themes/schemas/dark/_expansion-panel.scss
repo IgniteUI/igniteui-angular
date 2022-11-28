@@ -9,33 +9,29 @@
 
 /// Generates a dark expansion panel schema.
 /// @type {Map}
-/// @prop {Map} header-focus-background [color: ('grays', 100, .3)] - The panel header focus background color.
+/// @prop {Map} header-focus-background [color: ('gray', 100, .3)] - The panel header focus background color.
 $base-dark-expansion-panel: (
     header-focus-background: (
-        color: ('grays', 100, .3)
+        color: ('gray', 100, .3)
     ),
 );
 
 /// Generates a dark expansion panel schema based on a mix of $light-expansion-panel and $base-dark-expansion-panel.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-expansion-panel
 /// @requires $base-dark-expansion-panel
-/// @see $default-palette
 $dark-expansion-panel: extend($light-expansion-panel, $base-dark-expansion-panel);
 
 /// Generates a dark fluent expansion panel schema based on a mix of $fluent-expansion-panel and $base-dark-expansion-panel.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-expansion-panel
 /// @requires $base-dark-expansion-panel
 $dark-fluent-expansion-panel: extend($fluent-expansion-panel, $base-dark-expansion-panel);
 
 /// Generates a dark bootstrap expansion panel schema based on a mix of $bootstrap-expansion-panel and $base-dark-expansion-panel.
 /// @type {Map}
-/// @prop {Map} header-background [color: ('grays', 50)] - The panel header background color.
-/// @prop {Map} body-background [color: ('grays', 50)] - The panel body background color.
-/// @requires {function} extend
+/// @prop {Map} header-background [color: ('gray', 50)] - The panel header background color.
+/// @prop {Map} body-background [color: ('gray', 50)] - The panel body background color.
 /// @requires $bootstrap-expansion-panel
 /// @requires $base-dark-expansion-panel
 $dark-bootstrap-expansion-panel: extend(
@@ -43,11 +39,11 @@ $dark-bootstrap-expansion-panel: extend(
     $base-dark-expansion-panel,
     (
         header-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
 
         body-background: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
     )
 );
@@ -56,16 +52,15 @@ $dark-bootstrap-expansion-panel: extend(
 /// @type {Map}
 ///
 /// @prop {Map} header-focus-background [color: ('primary', 500, .5)] - The panel header focus background color.
-/// @prop {Map} header-title-color [color: ('grays', 800)] - The panel header title text color.
+/// @prop {Map} header-title-color [color: ('gray', 800)] - The panel header title text color.
 /// @prop {Number} border-radius [3px] - The border radius used for expansion-panel.
 ///
-/// @requires {function} extend
 /// @requires $indigo-expansion-panel
 $dark-indigo-expansion-panel: extend(
     $indigo-expansion-panel,
     (
         header-title-color: (
-            color: ('grays', 800)
+            color: ('gray', 800)
         ),
 
         header-focus-background: (

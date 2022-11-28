@@ -1,4 +1,4 @@
-import { Directive, HostBinding, TemplateRef } from '@angular/core';
+import { Component, Directive, HostBinding, TemplateRef } from '@angular/core';
 import { GridType } from '../common/grid.interface';
 
 
@@ -22,8 +22,8 @@ export class IgxCSVTextDirective { }
  * <igx-grid-toolbar-title>My custom title</igx-grid-toolbar-title>
  * ```
  */
-@Directive({ selector: '[igxGridToolbarTitle],igx-grid-toolbar-title' })
-export class IgxGridToolbarTitleDirective {
+@Component({ selector: 'igx-grid-toolbar-title', template: '<ng-content></ng-content>' })
+export class IgxGridToolbarTitleComponent {
     /**
      * Host `class.igx-grid-toolbar__title` binding.
      *
@@ -47,8 +47,8 @@ export class IgxGridToolbarTitleDirective {
  * </igx-grid-toolbar-actions>
  * ```
  */
-@Directive({ selector: '[igxGridToolbarActions],igx-grid-toolbar-actions' })
-export class IgxGridToolbarActionsDirective {
+@Component({ selector: 'igx-grid-toolbar-actions', template: '<ng-content></ng-content>' })
+export class IgxGridToolbarActionsComponent {
     /**
      * Host `class.igx-grid-toolbar__actions` binding.
      *
@@ -66,4 +66,9 @@ export interface IgxGridToolbarTemplateContext {
 @Directive({ selector: '[igxGridToolbar]'})
 export class IgxGridToolbarDirective {
     constructor(public template: TemplateRef<IgxGridToolbarTemplateContext>) {}
+
+    public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective,
+        ctx: unknown): ctx is IgxGridToolbarTemplateContext {
+        return true
+    };
 }

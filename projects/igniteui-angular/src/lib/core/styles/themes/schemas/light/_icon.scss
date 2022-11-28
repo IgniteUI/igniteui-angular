@@ -8,12 +8,9 @@
 
 /// Generates a light icon schema.
 /// @type {Map}
-///
-/// @property {Color} color ["'currentColor'"] - The icon color.
-/// @property {String} size [rem(24px)] - The icon size.
-/// @property {Color} disabled-color ["'currentColor'"] - The disabled icon color.
-///
-/// @see $default-palette
+/// @prop {Color} color ["'currentColor'"] - The icon color.
+/// @prop {String} size [rem(24px)] - The icon size.
+/// @prop {Color} disabled-color ["'currentColor'"] - The disabled icon color.
 $light-icon: (
     color: "'currentColor'",
     size: rem(24px),
@@ -32,14 +29,13 @@ $bootstrap-icon: $light-icon;
 
 /// Generates an indigo icon schema.
 /// @type {Map}
-/// @property {Map} disabled-color [color: ('grays', 400)] - The disabled icon color.
-/// @requires {function} extend
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled icon color.
 /// @requires {Map} $light-icon
 $indigo-icon: extend(
     $light-icon,
     (
         disabled-color: (
-            color: ('grays', 400)
+            color: ('gray', 400)
         )
     )
 );

@@ -1,7 +1,6 @@
+@use 'sass:map';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
-@use '../../typography/base' as *;
-@use 'sass:map';
 
 ////
 /// @group themes
@@ -11,7 +10,6 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the tooltip directive.
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The background color of the tooltip.
@@ -19,18 +17,15 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the tooltip component.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires text-contrast
+///
+///
 ///
 /// @example scss Change the tooltip background
 ///   $my-tooltip-theme: tooltip-theme($background: magenta);
-///   // Pass the theme to the tooltip component mixin
-///   @include tooltip($my-checkbox-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-checkbox-theme);
 @function tooltip-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -48,7 +43,7 @@
         $tooltip-schema: $schema;
     }
 
-    $theme: apply-palette($tooltip-schema, $palette);
+    $theme: digest-schema($tooltip-schema);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -61,7 +56,6 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $palette,
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
@@ -69,8 +63,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires var-get
 @mixin tooltip($theme) {
     @include css-vars($theme);
 
@@ -102,24 +94,20 @@
 /// Adds typography styles for the igx-tooltip component.
 /// Uses the 'body-2' category from the typographic scale for mobile tooltips and custom typography for desktop tooltips.
 /// @group typography
-/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires rem
-/// @requires {mixin} type-style
 @mixin tooltip-typography(
-    $type-scale,
     $categories: (text-desktop: null, text-mobile: 'body-2')
 ) {
     $text-desktop: map.get($categories, 'text-desktop');
     $text-mobile: map.get($categories, 'text-mobile');
 
     %tooltip--mobile {
-        @include type-style($type-scale, $text-mobile);
+        @include type-style($text-mobile);
     }
 
     @if $text-desktop != null {
         %tooltip--desktop {
-            @include type-style($type-scale, $text-desktop);
+            @include type-style($text-desktop);
         }
     } @else {
         %tooltip--desktop {

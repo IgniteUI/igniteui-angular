@@ -11,7 +11,9 @@ import {
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
     IgxListModule,
     IgxTextSelectionModule,
-    IgxPivotGridModule
+    IgxPivotGridModule,
+    IgxQueryBuilderModule,
+    IgcFormsModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -77,6 +79,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -159,7 +162,12 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { QueryBuilderComponent } from './query-builder/query-builder.sample';
+import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
+import { ForbiddenValidatorDirective, GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
+import { GridExportComponent } from './grid-export/grid-export.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -223,6 +231,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridCellEditingComponent,
+    ForbiddenValidatorDirective,
     GridSampleComponent,
     GridAddRowSampleComponent,
     HierarchicalGridAddRowSampleComponent,
@@ -242,6 +251,7 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridRowDraggableComponent,
+    GridRowReorderComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
@@ -251,6 +261,7 @@ const components = [
     GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
+    GridValidationSampleComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridLoadOnDemandSampleComponent,
@@ -298,8 +309,12 @@ const components = [
     GridLocalizationSampleComponent,
     PivotGridSampleComponent,
     PivotGridHierarchySampleComponent,
+    PivotGridStateSampleComponent,
     PivotGridNoopSampleComponent,
-    IgxStepperSampleComponent
+    IgxStepperSampleComponent,
+    QueryBuilderComponent,
+    RatingSampleComponent,
+    GridExportComponent
 ];
 
 @NgModule({
@@ -331,7 +346,9 @@ const components = [
         HammerModule,
         IgxDateTimeEditorModule,
         IgxButtonModule,
-        IgxPivotGridModule
+        IgxPivotGridModule,
+        IgxQueryBuilderModule,
+        IgcFormsModule
     ],
     providers: [
         LocalService,

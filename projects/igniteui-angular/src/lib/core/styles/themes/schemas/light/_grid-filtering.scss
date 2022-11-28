@@ -12,15 +12,14 @@
 /// @prop {Color} toggle-background [transparent] - The idle toggle background color.
 /// @prop {Color} toggle-filtered-background [transparent] - The filtered toggle background color.
 /// @prop {Color} toggle-icon-color [inherit] - The idle toggle icon color.
-/// @prop {Color} toggle-icon-hover-color [contrast-color: ('grays', 900)] - The hover toggle icon color.
+/// @prop {Color} toggle-icon-hover-color [contrast-color: ('gray', 900)] - The hover toggle icon color.
 /// @prop {Color} menu-button-disabled-text-color [initial] - The menu disabled button text color.
 /// @prop {Map} toggle-icon-active-color [contrast-color: ('secondary', 500)] - The active toggle icon color.
 /// @prop {Map} toggle-icon-filtered-color [color: ('secondary', 500)] - The filtered toggle icon color.
-/// @prop {Map} toggle-hover-background [color: ('grays', 300)] - The hover toggle background color.
+/// @prop {Map} toggle-hover-background [color: ('gray', 300)] - The hover toggle background color.
 /// @prop {Map} toggle-active-background [color: ('secondary', 500)] - The active toggle background color.
-/// @prop {Map} menu-text-color [color: ('grays', 900)] - The idle menu text color.
+/// @prop {Map} menu-text-color [color: ('gray', 900)] - The idle menu text color.
 /// @prop {Map} menu-button-text-color [color: ('secondary', 500)] - The menu button text color.
-/// @see $default-palette
 $light-grid-filtering: (
     menu-background: (
         color: ('surface')
@@ -29,7 +28,7 @@ $light-grid-filtering: (
     toggle-filtered-background: transparent,
     toggle-icon-color: inherit,
     toggle-icon-hover-color: (
-        contrast-color: ('grays', 900)
+        contrast-color: ('gray', 900)
     ),
     menu-button-disabled-text-color: initial,
 
@@ -42,7 +41,7 @@ $light-grid-filtering: (
     ),
 
     toggle-hover-background: (
-        color: ('grays', 300)
+        color: ('gray', 300)
     ),
 
     toggle-active-background: (
@@ -50,7 +49,7 @@ $light-grid-filtering: (
     ),
 
     menu-text-color: (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     menu-button-text-color: (
@@ -61,7 +60,6 @@ $light-grid-filtering: (
 /// Generates a fluent grid-filtering schema.
 /// @type {Map}
 /// @prop {Map} menu-background [color: 'surface'] - The idle menu background color.
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $fluent-grid-filtering: extend(
     $light-grid-filtering,
@@ -74,13 +72,11 @@ $fluent-grid-filtering: extend(
 
 /// Generates a bootstrap grid-filtering schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $bootstrap-grid-filtering: extend($light-grid-filtering);
 
 /// Generates an indigo grid-filtering schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-grid-filtering
 $indigo-grid-filtering: extend($light-grid-filtering);
 

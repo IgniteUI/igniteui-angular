@@ -14,6 +14,8 @@ import {
     IgxHierarchicalGridModule
 } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -26,14 +28,18 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
                 IgxActionStripEditMenuComponent,
-                IgxHierarchicalGridActionStripComponent
+                IgxHierarchicalGridActionStripComponent,
+                IgxTreeGridEditActionsComponent,
+                IgxActionStripOneRowComponent,
+                IgxActionStripMenuOneRowComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripModule,
                 IgxGridModule,
                 IgxHierarchicalGridModule,
-                IgxIconModule
+                IgxIconModule,
+                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -149,6 +155,28 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowList.first.data['ID']).toBe('ANATR');
         });
+        it('should not auto-hide on mouse leave of row if action strip is menu', () => {
+            fixture = TestBed.createComponent(IgxActionStripMenuOneRowComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+
+            const row = grid.getRowByIndex(0);
+            row.pin();
+            const rowElem = grid.pinnedRows[0];
+            row.unpin();
+
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+                
+            UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+            fixture.detectChanges();
+                
+            expect(actionStrip.hidden).toBeFalse();
+        });
     });
 
     describe('integration with pinning actions ', () => {
@@ -186,6 +214,25 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(actionStrip.context).toBe(row);
             expect(actionStrip.hidden).toBeFalse();
+        });
+        it('should auto-hide on mouse leave of row.', async () => {
+            fixture = TestBed.createComponent(IgxActionStripOneRowComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+            
+            const row = grid.getRowByIndex(0);
+            row.pin();
+            const rowElem = grid.pinnedRows[0];
+            
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeFalse();
+            UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeTrue();
         });
         it('should auto-hide on mouse leave of grid.', () => {
             const row = grid.getRowByIndex(0);
@@ -258,6 +305,49 @@ describe('igxGridEditingActions #grid ', () => {
             expect(actionStripChild.hidden).toBeTrue();
         });
     });
+
+    describe('TreeGrid - action strip', () => {
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxTreeGridEditActionsComponent);
+            fixture.detectChanges();
+            treeGrid = fixture.componentInstance.treeGrid;
+            actionStrip = fixture.componentInstance.actionStrip;
+        });
+
+        it('should allow deleting row', () => {
+            spyOn(treeGrid.rowDelete, 'emit').and.callThrough();
+            spyOn(treeGrid.rowDeleted, 'emit').and.callThrough();
+            const row = treeGrid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            const editActions = fixture.debugElement.queryAll(By.css(`igx-grid-action-button`));
+            expect(editActions[3].componentInstance.iconName).toBe('delete');
+            const deleteChildBtn = editActions[3].componentInstance;
+
+            const rowDeleteArgs = {
+                rowID: row.key,
+                cancel: false,
+                rowData: treeGrid.getRowData(row.key),
+                oldValue: null,
+                owner: treeGrid
+            };
+
+            const rowDeletedArgs = {
+                data: treeGrid.getRowData(row.key),
+                owner: treeGrid
+            };
+
+            // select delete
+            deleteChildBtn.actionClick.emit();
+            fixture.detectChanges();
+
+            expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
+            expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
+            expect(treeGrid.rowList.first.data['ID']).toBe(6);
+        });
+    });
 });
 
 @Component({
@@ -282,6 +372,7 @@ class IgxActionStripTestingComponent implements OnInit {
     public grid: IgxGridComponent;
 
     private data: any[];
+    private dataOneRow: any[];
     private columns: any[];
 
     public ngOnInit() {
@@ -330,6 +421,10 @@ class IgxActionStripTestingComponent implements OnInit {
             { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
         /* eslint-enable max-len */
+
+        this.dataOneRow = [
+            { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
+        ];
     }
 }
 
@@ -366,4 +461,39 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 `
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
 }

@@ -14,7 +14,7 @@ export class BlockScrollStrategy extends ScrollStrategy {
         super();
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public initialize(document: Document) {
         if (this._initialized) {
             return;
@@ -24,12 +24,12 @@ export class BlockScrollStrategy extends ScrollStrategy {
         this._initialized = true;
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
     }
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
         this._sourceElement = null;

@@ -10,8 +10,8 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 export const configureTestSuite = (configureAction?: () => void) => {
 
-    const testBedApi: any = getTestBed();
-    const originReset = TestBed.resetTestingModule;
+    const testBed: any = getTestBed();
+    const originReset = testBed.resetTestingModule;
 
     const clearStyles = () => {
         document.querySelectorAll('style').forEach(tag => tag.remove());
@@ -22,30 +22,35 @@ export const configureTestSuite = (configureAction?: () => void) => {
     };
 
     beforeAll(() => {
-        TestBed.resetTestingModule();
-        TestBed.resetTestingModule = () => TestBed;
+        testBed.resetTestingModule();
+        testBed.resetTestingModule = () => TestBed;
         resizeObserverIgnoreError();
     });
 
     if (configureAction) {
-        beforeAll((done: DoneFn) => (async () => {
+        beforeAll(async () => {
             configureAction();
             await TestBed.compileComponents();
-        })().then(done).catch(done.fail));
+        });
     }
 
     afterEach(() => {
         clearStyles();
         clearSVGContainer();
-        testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+        testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
+            const element = fixture.debugElement.nativeElement as HTMLElement;
+            fixture.destroy();
+            // If the fixture element ID changes, then it's not properly disposed
+            element?.remove();
+        });
         // reset ViewEngine TestBed
-        testBedApi._instantiated = false;
+        testBed._instantiated = false;
         // reset Ivy TestBed
-        testBedApi._testModuleRef = null;
+        testBed._testModuleRef = null;
     });
 
     afterAll(() => {
-        TestBed.resetTestingModule = originReset;
-        TestBed.resetTestingModule();
+        testBed.resetTestingModule = originReset;
+        testBed.resetTestingModule();
     });
 };

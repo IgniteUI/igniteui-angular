@@ -10,7 +10,6 @@
 /// Generates a dark grid-summary schema.
 /// @type {Map}
 /// @requires $light-grid-summary
-/// @see $default-palette
 $dark-grid-summary: $light-grid-summary;
 
 /// Generates a dark fluent grid-summary schema.
@@ -25,7 +24,7 @@ $dark-bootstrap-grid-summary: extend(
     $bootstrap-grid-summary,
     (
         background-color: (
-            color: ('grays', 100),
+            color: ('gray', 100),
         ),
     )
 );
@@ -33,12 +32,11 @@ $dark-bootstrap-grid-summary: extend(
 /// Generates a dark indigo grid-summary schema.
 /// @type {Map}
 /// @property {Map} background-color [color: 'surface'] - The summaries background color is inherited form igx-grid footer.
-/// @property {Map} focus-background-color [color: ('grays', 100)] - The background color when a summary item is on focus.
+/// @property {Map} focus-background-color [color: ('gray', 100)] - The background color when a summary item is on focus.
 /// @property {Map} label-color [color: ('primary', 200)] - The summaries label color.
 /// @property {map} label-hover-color [color: ('primary', 100)] - The summaries hover label color.
 /// @property {Map} result-color [color: 'surface'] - The summaries value/result color.
 /// @property {Map} pinned-border-color [color: ('primary', 200)] - The border color of the summary panel.
-/// @requires {function} extend
 /// @requires $indigo-grid-summary
 $dark-indigo-grid-summary: extend(
     $indigo-grid-summary,
@@ -48,7 +46,7 @@ $dark-indigo-grid-summary: extend(
         ),
 
         focus-background-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         label-color: (

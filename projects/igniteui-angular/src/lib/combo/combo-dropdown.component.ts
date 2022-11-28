@@ -91,6 +91,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     public onFocus() {
         this.focusedItem = this._focusedItem || this.items[0];
+        this.combo.setActiveDescendant();
     }
 
     /**
@@ -98,6 +99,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     public onBlur(_evt?) {
         this.focusedItem = null;
+        this.combo.setActiveDescendant();
     }
 
     /**
@@ -111,7 +113,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigateFirst() {
-        this.navigateItem(this.virtDir.igxForOf.findIndex(e => !e.isHeader));
+        this.navigateItem(this.virtDir.igxForOf.findIndex(e => !e?.isHeader));
+        this.combo.setActiveDescendant();
     }
 
     /**
@@ -123,6 +126,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         } else {
             super.navigatePrev();
         }
+        this.combo.setActiveDescendant();
     }
 
 
@@ -136,6 +140,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         } else {
             super.navigateNext();
         }
+        this.combo.setActiveDescendant();
     }
 
     /**
@@ -147,6 +152,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
         this.comboAPI.set_selected_item(item.itemID);
         this._focusedItem = item;
+        this.combo.setActiveDescendant();
     }
 
     /**

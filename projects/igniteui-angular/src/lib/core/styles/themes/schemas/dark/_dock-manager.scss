@@ -9,54 +9,54 @@
 
 /// Generates a dark base dock-manager schema.
 /// @type {Map}
-/// @prop {Color} dock-background [color: ('grays', 50)] - Sets the background color of the dock manager.
-/// @prop {Color} background-color [color: ('grays', 50)] - Sets the base dock manager color as well as the pane headers and tabs background colors.
-/// @prop {Color} pane-header-background [color: ('grays', 50)] - Sets the background color for pane headers.
-/// @prop {Color} border-color [color: ('grays', 100)] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
-/// @prop {Color} floating-pane-border-color [color: ('grays', 50)] - Sets the border color for floating panes.
-/// @prop {Color} joystick-background [color: ('grays', 100)] - Sets the background color of the joystick.
-/// @prop {Color} joystick-background-active [color: ('grays', 50)] - Sets the background color of the joysticks.
-/// @prop {Color} joystick-border-color [color: ('grays', 200, .5)] - Sets the border color of the joystick.
+/// @prop {Color} dock-background [color: ('gray', 50)] - Sets the background color of the dock manager.
+/// @prop {Color} background-color [color: ('gray', 50)] - Sets the base dock manager color as well as the pane headers and tabs background colors.
+/// @prop {Color} pane-header-background [color: ('gray', 50)] - Sets the background color for pane headers.
+/// @prop {Color} border-color [color: ('gray', 100)] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
+/// @prop {Color} floating-pane-border-color [color: ('gray', 50)] - Sets the border color for floating panes.
+/// @prop {Color} joystick-background [color: ('gray', 100)] - Sets the background color of the joystick.
+/// @prop {Color} joystick-background-active [color: ('gray', 50)] - Sets the background color of the joysticks.
+/// @prop {Color} joystick-border-color [color: ('gray', 200, .5)] - Sets the border color of the joystick.
 /// @prop {Color} joystick-icon-color [contrast-color: 'surface'] - Sets the color for the joystick icons.
 /// @prop {Color} joystick-icon-color-active [contrast-color: 'surface'] - Sets the color of the active joystick icons.
-/// @prop {Color} context-menu-background-active [color: ('grays', 50)] - Sets the background color for active context menus.
-/// @prop {Color} context-menu-color-active [contrast-color: ('grays', 50)] - Sets the text color for active context menus.
-/// @prop {Color} context-menu-background [ color: ('grays', 100)] - Sets the background color for context menus.
+/// @prop {Color} context-menu-background-active [color: ('gray', 50)] - Sets the background color for active context menus.
+/// @prop {Color} context-menu-color-active [contrast-color: ('gray', 50)] - Sets the text color for active context menus.
+/// @prop {Color} context-menu-background [ color: ('gray', 100)] - Sets the background color for context menus.
 /// @prop {Color} context-menu-color [contrast-color: 'surface'] - Sets the text color for context menus.
-/// @prop {Color} tab-background [color: ('grays', 100, .3)] - Sets the background color for tabs.
-/// @prop {Color} tab-background-active [color: ('grays', 100, .3)] - Sets the background color for active tabs.
-/// @prop {Color} tab-border-color-active [color: ('grays', 100)] - Sets the border color for active tabs.
+/// @prop {Color} tab-background [color: ('gray', 100, .3)] - Sets the background color for tabs.
+/// @prop {Color} tab-background-active [color: ('gray', 100, .3)] - Sets the background color for active tabs.
+/// @prop {Color} tab-border-color-active [color: ('gray', 100)] - Sets the border color for active tabs.
 /// @prop {Color} button-text [contrast-color: 'surface'] - Sets the button text color.
-/// @prop {Color} flyout-shadow-color [color: ('grays', 50, .3)] - Sets the flyout shadow color.
+/// @prop {Color} flyout-shadow-color [color: ('gray', 50, .3)] - Sets the flyout shadow color.
 /// @prop {Color} drop-shadow-background [color: ('primary', 900, .3)] - Sets the drop-shadow background color.
-/// @prop {Color} splitter-background [color: ('grays', 100)] - Sets the background color for the splitters.
+/// @prop {Color} splitter-background [color: ('gray', 100)] - Sets the background color for the splitters.
 $dark-base-dock-manager: (
     dock-background: (
-        color: ('grays', 50)
+        color: ('gray', 50)
     ),
 
     background-color: (
-        color: ('grays', 50)
+        color: ('gray', 50)
     ),
 
     pane-header-background: (
-        color: ('grays', 50)
+        color: ('gray', 50)
     ),
 
     border-color: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     floating-pane-border-color: (
-        color: ('grays', 50),
+        color: ('gray', 50),
     ),
 
     joystick-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     joystick-border-color: (
-        color: ('grays', 200, .5)
+        color: ('gray', 200, .5)
     ),
 
     joystick-icon-color: (
@@ -64,19 +64,19 @@ $dark-base-dock-manager: (
     ),
 
     joystick-background-active: (
-        color: ('grays', 50)
+        color: ('gray', 50)
     ),
 
     context-menu-background-active: (
-        color: ('grays', 50)
+        color: ('gray', 50)
     ),
 
     context-menu-color-active: (
-        contrast-color: ('grays', 50)
+        contrast-color: ('gray', 50)
     ),
 
     context-menu-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     context-menu-color: (
@@ -84,15 +84,15 @@ $dark-base-dock-manager: (
     ),
 
     tab-background: (
-        color: ('grays', 100, .3),
+        color: ('gray', 100, .3),
     ),
 
     tab-background-active: (
-        color: ('grays', 100, .3),
+        color: ('gray', 100, .3),
     ),
 
     tab-border-color-active: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 
     button-text: (
@@ -100,7 +100,7 @@ $dark-base-dock-manager: (
     ),
 
     flyout-shadow-color: (
-        color: ('grays', 50, .3)
+        color: ('gray', 50, .3)
     ),
 
     drop-shadow-background: (
@@ -108,13 +108,12 @@ $dark-base-dock-manager: (
     ),
 
     splitter-background: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     ),
 );
 
 /// Generates a dark dock-manager schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-dock-manager: extend($light-dock-manager, $dark-base-dock-manager);
@@ -124,8 +123,7 @@ $dark-dock-manager: extend($light-dock-manager, $dark-base-dock-manager);
 /// @prop {Color} tab-text-active [color: ('primary', 200)] - Sets the text color for active tabs.
 /// @prop {Color} floating-pane-border-color [transparent] - Sets the border color for floating panes.
 /// @prop {Color} joystick-border-color [transparent] - Sets the border color of the joystick.
-/// @prop {Color} splitter-handle [color: ('grays', 50)] - Sets the background color for the splitter handles.
-/// @requires {function} extend
+/// @prop {Color} splitter-handle [color: ('gray', 50)] - Sets the background color for the splitter handles.
 /// @requires $fluent-dock-manager
 $dark-fluent-dock-manager: extend(
     $fluent-dock-manager,
@@ -140,7 +138,7 @@ $dark-fluent-dock-manager: extend(
         joystick-border-color: transparent,
 
         splitter-handle: (
-            color: ('grays', 50)
+            color: ('gray', 50)
         ),
     )
 );
@@ -148,14 +146,13 @@ $dark-fluent-dock-manager: extend(
 /// Generates a dark bootstrap dock-manager schema.
 /// @type {Map}
 /// @prop {Color} joystick-background [color: ('surface')] - Sets the background color of the joystick.
-/// @prop {Color} joystick-background-active [color: ('grays', 50)] - Sets the background color of the joysticks.
+/// @prop {Color} joystick-background-active [color: ('gray', 50)] - Sets the background color of the joysticks.
 /// @prop {Color} joystick-icon-color [contrast-color: 'surface'] - Sets the color for the joystick icons.
 /// @prop {Color} joystick-icon-color-active [contrast-color: ('primary', 600)] - Sets the color of the active joystick icons.
-/// @prop {Color} context-menu-background-active [color: ('grays', 50)] - Sets the background color for active context menus.
+/// @prop {Color} context-menu-background-active [color: ('gray', 50)] - Sets the background color for active context menus.
 /// @prop {Color} context-menu-color-active [contrast-color: ('primary', 600),] - Sets the text color for active context menus.
-/// @prop {Color} context-menu-background [color: ('grays', 500)] - Sets the background color for context menus.
-/// @prop {Color} context-menu-color [contrast-color: ('grays', 500)] - Sets the text color for context menus.
-/// @requires {function} extend
+/// @prop {Color} context-menu-background [color: ('gray', 500)] - Sets the background color for context menus.
+/// @prop {Color} context-menu-color [contrast-color: ('gray', 500)] - Sets the text color for context menus.
 /// @requires $bootstrap-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-bootstrap-dock-manager: extend(
@@ -183,11 +180,11 @@ $dark-bootstrap-dock-manager: extend(
         ),
 
         context-menu-background: (
-            color: ('grays', 500)
+            color: ('gray', 500)
         ),
 
         context-menu-color: (
-            contrast-color: ('grays', 500)
+            contrast-color: ('gray', 500)
         ),
     )
 );
@@ -197,13 +194,12 @@ $dark-bootstrap-dock-manager: extend(
 /// @prop {Color} button-text [color: ('primary', 200)] - Sets the button text color.
 /// @prop {Color} joystick-background [color: ('surface')] - Sets the background color of the joystick.
 /// @prop {Color} joystick-background-active [color: ('primary')] - Sets the background color of the joysticks.
-/// @prop {Color} joystick-border-color [color: ('grays', 100)] - Sets the border color of the joystick.
+/// @prop {Color} joystick-border-color [color: ('gray', 100)] - Sets the border color of the joystick.
 /// @prop {Color} joystick-icon-color-active [contrast-color: ('primary', 600)] - Sets the color of the active joystick icons.
 /// @prop {Color} context-menu-background-active [color: ('primary')] - Sets the background color for active context menus.
 /// @prop {Color} context-menu-color-active [contrast-color: ('primary', 600)] - Sets the text color for active context menus.
 /// @prop {Color} context-menu-background [contrast-color: ('primary', 600)] - Sets the background color for context menus.
 /// @prop {Color} context-menu-color [contrast-color: ('primary', 600)] - Sets the text color for context menus.
-/// @requires {function} extend
 /// @requires $indigo-dock-manager
 /// @requires $dark-base-dock-manager
 $dark-indigo-dock-manager: extend(
@@ -227,7 +223,7 @@ $dark-indigo-dock-manager: extend(
         ),
 
         joystick-border-color: (
-            color: ('grays', 100)
+            color: ('gray', 100)
         ),
 
         context-menu-background-active: (
@@ -239,11 +235,11 @@ $dark-indigo-dock-manager: extend(
         ),
 
         context-menu-background: (
-            color: ('grays', 200),
+            color: ('gray', 200),
         ),
 
         context-menu-color: (
-            contrast-color: ('grays', 500),
+            contrast-color: ('gray', 500),
         ),
     )
 );

@@ -3,7 +3,7 @@ import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
+import { IgxDropDownModule, IgxDropDownItemComponent, IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxHintDirective } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +15,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { IgxSelectModule } from './select.module';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -54,6 +55,15 @@ describe('igxSelect', () => {
     let inputElement: DebugElement;
     let selectList: DebugElement;
     let selectListWrapper: DebugElement;
+
+    beforeEach(waitForAsync(() => {
+        UIInteractions.clearOverlay();
+    }));
+
+    afterAll(() => {
+        UIInteractions.clearOverlay();
+    });
+
     const verifyFocusedItem = focusedItemIndex => {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);
@@ -1195,7 +1205,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1229,7 +1239,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1259,7 +1269,7 @@ describe('igxSelect', () => {
                 spyOn(select.selectionChanging, 'emit');
                 spyOn(select, 'selectItem').and.callThrough();
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };
@@ -1331,7 +1341,7 @@ describe('igxSelect', () => {
                 let selectedItem = select.items[4];
                 spyOn(select.selectionChanging, 'emit');
                 const args: ISelectionEventArgs = {
-                    oldSelection: undefined,
+                    oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
                     cancel: false
                 };

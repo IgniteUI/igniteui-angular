@@ -9,6 +9,8 @@ import { CalendarResourceStringsJA } from './calendar-resources';
 import { TreeResourceStringsJA } from './tree-resources';
 import { InputResourceStringsJA } from './input-resources';
 import { ChipResourceStringsJA } from './chip-resources';
+import { ComboResourceStringsJA } from './combo-resources';
+import { QueryBuilderResourceStringsJA } from './query-builder-resources';
 
 /**
  * Japanese resource strings for all components
@@ -24,5 +26,7 @@ export const IgxResourceStringsJA = {
     ...CalendarResourceStringsJA,
     ...TreeResourceStringsJA,
     ...InputResourceStringsJA,
-    ...ChipResourceStringsJA
+    ...ChipResourceStringsJA,
+    ...ComboResourceStringsJA,
+    ...QueryBuilderResourceStringsJA
 };

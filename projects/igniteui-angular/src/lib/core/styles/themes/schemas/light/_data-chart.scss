@@ -6,30 +6,29 @@
 
 /// Generates a light base data chart schema.
 /// @type {Map}
-/// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
-/// @property {Color} title-text-color [color: ('grays', 900)] - Sets the color of the chart title.
-/// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
-/// @property {Color} subtitle-text-color [color: ('grays', 600)] - Sets the color of the chart subtitle.
-/// @property {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
-/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} marker-brushes [series] - Defines the palette from which automatically assigned marker brushes are selected.
-/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
-/// @property {List} marker-outlines [series] - Defines the palette from which automatically assigned marker outlines are selected.
-/// @property {Color} plot-area-background [color: ('surface', 500)] - Sets the brush used as the background for the current Chart object's plot area.
-/// @property {String} title-horizontal-alignment [null] - The horizontal alignment to use for the title.
-/// @property {String} subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle.
-/// @see $default-palette
+/// @prop {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @prop {Color} title-text-color [color: ('gray', 900)] - Sets the color of the chart title.
+/// @prop {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @prop {Color} subtitle-text-color [color: ('gray', 600)] - Sets the color of the chart subtitle.
+/// @prop {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @prop {List} marker-brushes [series] - Defines the palette from which automatically assigned marker brushes are selected.
+/// @prop {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @prop {List} marker-outlines [series] - Defines the palette from which automatically assigned marker outlines are selected.
+/// @prop {Color} plot-area-background [color: ('surface', 500)] - Sets the brush used as the background for the current Chart object's plot area.
+/// @prop {String} title-horizontal-alignment [null] - The horizontal alignment to use for the title.
+/// @prop {String} subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle.
 $light-data-chart: (
     'margin': null,
 
     'title-text-color': (
-        color: ('grays', 900)
+        color: ('gray', 900)
     ),
 
     'title-margin': null,
 
     'subtitle-text-color': (
-        color: ('grays', 600)
+        color: ('gray', 600)
     ),
 
     'subtitle-margin': null,
@@ -53,19 +52,16 @@ $light-data-chart: (
 
 /// Generates a fluent data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $fluent-data-chart: $light-data-chart;
 
 /// Generates a bootstrap data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $bootstrap-data-chart: $light-data-chart;
 
 /// Generates an indigo data-chart schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-data-chart
 $indigo-data-chart: $light-data-chart;
 

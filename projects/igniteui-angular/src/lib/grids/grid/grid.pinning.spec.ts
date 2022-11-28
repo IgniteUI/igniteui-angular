@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
@@ -26,15 +26,16 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-/* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
     const DEBOUNCETIME = 30;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 PinningComponent,
@@ -45,8 +46,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        });
-    }));
+        }).compileComponents();
+    }))
 
     describe('To Start', () => {
 
@@ -54,12 +55,11 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
-                fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-            }));
+            });
 
             it('should correctly initialize when there are initially pinned columns.', () => {
 
@@ -445,7 +445,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should not reject pinning a column if unpinned area width is less than 20% of the grid width', () => {
 
-                grid.columnList.forEach((column) => {
+                grid.columns.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -457,7 +457,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 fix.detectChanges();
 
-                grid.columnList.forEach((column) => {
+                grid.columns.forEach((column) => {
                     switch (column.index) {
                         case 0:
                         case 1:
@@ -602,7 +602,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should correctly pin columns with their summaries to end.', () => {
 
-                grid.columnList.forEach(col => {
+                grid.columns.forEach(col => {
                     if (col.field === 'CompanyName' || col.field === 'ContactName') {
                         col.hasSummary = true;
                     }
@@ -643,6 +643,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
                 expect(cellFax.active).toBe(false);
                 expect(cellCompanyName.active).toBe(true);
+                clearGridSubs();
             }));
 
             it('should allow navigating to/from pinned area using Ctrl+Left/Right', (async () => {

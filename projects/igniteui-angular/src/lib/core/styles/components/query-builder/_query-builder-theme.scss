@@ -1,0 +1,521 @@
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'sass:map';
+@use '../../base' as *;
+
+/// @group themes
+/// @access public
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
+/// @param {Color} background [null] - The background color of the filtering row.
+/// @param {Color} header-background [null] - The background color of the query builder header.
+/// @param {Color} header-foreground [null] - The foreground color of the query builder header.
+/// @param {Map} background-and [null] - The background color of advanced filtering "AND" condition.
+/// @param {Map} background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @param {Map} background-or [null] - The background color of advanced filtering "OR" condition.
+/// @param {Map} background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+/// @example scss Set custom query-builder colors
+///   $my-query-builder-theme: query-builder-theme($$background: red);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-query-builder-theme);
+@function query-builder-theme(
+    $schema: $light-schema,
+    $elevations: null,
+
+    $background: null,
+    $header-background: null,
+    $header-foreground: null,
+    $background-and: null,
+    $background-and--focus: null,
+    $background-or: null,
+    $background-or--focus: null,
+) {
+    $name: 'igx-query-builder';
+    $selector: 'igx-query-builder';
+    $query-builder-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $query-builder-schema: map.get($schema, $name);
+    } @else {
+        $query-builder-schema: $schema;
+    }
+
+    $theme: digest-schema($query-builder-schema);
+
+    @if not($header-foreground) and $header-background {
+        $header-foreground: text-contrast($header-background);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        selector: $selector,
+
+        background: $background,
+        header-background: $header-background,
+        header-foreground: $header-foreground,
+        background-and: $background-and,
+        background-and--focus: $background-and--focus,
+        background-or: $background-or,
+        background-or--focus: $background-or--focus,
+    ));
+}
+
+////
+/// @group themes
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $theme - The grid theme used to style the component.
+@mixin query-builder($theme) {
+    $variant: map.get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+    $not-bootstrap-theme: not($bootstrap-theme);
+
+    $vertical-space-comfortable: rem(16px);
+    $vertical-space-cosy: rem(12px);
+    $vertical-space-compact: rem(8px);
+    $horizontal-space-comfortable: rem(16px);
+    $horizontal-space-cosy: rem(12px);
+    $horizontal-space-compact: rem(8px);
+    $icon-size: rem(18px);
+
+    @include css-vars($theme);
+
+    %advanced-filter {
+        width: auto;
+        min-width: rem(660px);
+        background-color: var-get($theme, 'background');
+        border-radius: border-radius(rem(4px));
+        box-shadow: elevation(12);
+    }
+
+    %advanced-filter__header {
+        display: flex;
+        align-items: center;
+        padding: $vertical-space-comfortable;
+        background-color: var-get($theme, 'header-background');
+        color: var-get($theme, 'header-foreground');
+        user-select: none;
+
+        h4,
+        .ig-typography__h6 {
+            margin-bottom: 0;
+        }
+    }
+
+    %advanced-filter__main {
+        display: block;
+        padding: rem(16px);
+        overflow: auto;
+        min-height: rem(214px);
+        max-height: rem(468px);
+
+        [igxButton] + [igxButton] {
+            margin-inline-start: rem(8px);
+        }
+    }
+
+    %advanced-filter__outlet {
+        igx-select-item > igx-icon {
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
+            margin-inline-end: rem(8px);
+        }
+    }
+
+    %filter-tree {
+        display: flex;
+
+        + %filter-tree,
+        + %filter-tree__expression-item,
+        + %filter-tree__inputs {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__line {
+        width: rem(8px);
+        min-width: rem(8px);
+        background-color: white;
+        margin-inline-end: $horizontal-space-comfortable;
+        outline-style: none;
+        border-radius: border-radius(rem(4px));
+        cursor: pointer;
+    }
+
+    %filter-tree__line--and {
+        background: var-get($theme, 'background-and');
+
+        &-selected {
+            background: var-get($theme, 'background-and--focus');
+        }
+
+        &:focus {
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-and--focus');
+        }
+    }
+
+    %filter-tree__line--or {
+        background: var-get($theme, 'background-or');
+
+        &-selected {
+            background-color: var-get($theme, 'background-or--focus');
+        }
+
+        &:focus {
+            box-shadow: inset 0 0 0 rem(2px) var-get($theme, 'background-or--focus');
+        }
+    }
+
+    %filter-tree__expression {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    %filter-tree__expression-item {
+        display: flex;
+        align-items: center;
+
+        + %filter-tree,
+        + %filter-tree__inputs,
+        + %filter-tree__expression-item {
+            margin-top: $vertical-space-comfortable;
+        }
+
+        > igx-chip igx-prefix {
+            display: flex;
+        }
+    }
+
+    %filter-tree__expression-column {
+        padding: 0 rem(8px);
+    }
+
+    %filter-tree__expression-actions {
+        display: inline-flex;
+        margin: 0 rem(8px);
+
+        igx-icon {
+            cursor: pointer;
+            color: color(null, 'gray', 500);
+            outline-style: none;
+
+            &:hover,
+            &:focus {
+                color: color(null, 'gray', 800);
+            }
+        }
+
+        igx-icon + igx-icon {
+            margin-inline-start: rem(8px);
+        }
+    }
+
+    %filter-tree__expression-condition {
+        opacity: .7;
+    }
+
+    %filter-tree__buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: $vertical-space-comfortable;
+
+        + %filter-tree,
+        + %filter-tree__expression-item,
+        + %filter-tree__inputs {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__inputs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        igx-select + igx-select,
+        igx-select + igx-input-group,
+        igx-select + igx-date-picker,
+        igx-select + igx-time-picker,
+        igx-input-group + igx-select {
+            margin-inline-start: rem(8px);
+        }
+
+        + %filter-tree,
+        + %filter-tree__expression-item {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__inputs-actions {
+        display: flex;
+        margin: 0 rem(8px);
+        align-items: center;
+
+        [igxButton] {
+            transition: none;
+        }
+
+        [igxButton] + [igxButton] {
+            margin-inline-start: rem(8px);
+        }
+    }
+
+    %filter-legend {
+        display: flex;
+        margin-inline-start: auto;
+        pointer-events: none;
+    }
+
+    %filter-legend__item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-size: rem(12px);
+
+        &::before {
+            content: '';
+            width: rem(24px);
+            height: rem(24px);
+            background: white;
+            border-radius: border-radius(rem(4px));
+            margin-inline-end: rem(8px);
+        }
+
+        + %filter-legend__item {
+            margin-inline-start: rem(24px);
+        }
+    }
+
+    %filter-legend__item--and::before {
+        background: var-get($theme, 'background-and');
+    }
+
+    %filter-legend__item--or::before {
+        background: var-get($theme, 'background-or');
+    }
+
+    %filter-con-menu {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        width: rem(196px);
+        background-color: var-get($theme, 'background');
+        padding: rem(16px);
+        margin-inline-start: rem(16px);
+        border-radius: border-radius(rem(4px));
+        border: rem(1px) solid color(null, 'gray', 200);
+
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-comfortable;
+        }
+
+        > [igxButton]%filter-con-menu__close-btn + [igxButton],
+        [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
+            margin-top: 0;
+        }
+
+        [igxButton] > igx-icon + * {
+            margin-inline-start: rem(8px);
+        }
+
+        igx-buttongroup > * {
+            box-shadow: none;
+        }
+    }
+
+    %filter-con-menu__delete-btn {
+        color: color(null, 'error');
+        @if $bootstrap-theme {
+            border-color: color(null, 'error');
+        }
+
+        &:hover,
+        &:focus {
+            @if $bootstrap-theme {
+                background: color(null, 'error');
+                border-color: color(null, 'error');
+                color: color(null, 'gray', 100);
+            } @else {
+                color: color(null, 'error');
+            }
+        }
+    }
+
+    %filter-con-menu__close-btn {
+        position: absolute;
+        top: rem(-18px);
+        inset-inline-end: rem(-18px);
+        background-color: var-get($theme, 'background');
+        border: rem(1px) solid color(null, 'gray', 200);
+
+        &:hover,
+        &:focus {
+            @if $not-bootstrap-theme {
+                background-color: var-get($theme, 'background');
+            }
+        }
+    }
+
+    %filter-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: rem(144px);
+    }
+
+    %filter-empty__title {
+        color: color(null, 'gray', 500);
+    }
+
+    %advanced-filter--cosy {
+        %advanced-filter__main {
+            min-height: rem(164px);
+            max-height: rem(394px);
+        }
+
+        %filter-empty {
+            height: rem(107px);
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-cosy rem(16px);
+        }
+
+        %filter-tree__line {
+            margin-inline-end: $horizontal-space-cosy;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-cosy;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+    }
+
+    %advanced-filter--compact {
+        %advanced-filter__main {
+            min-height: rem(138px);
+            max-height: rem(305px);
+        }
+
+        %filter-empty {
+            height: rem(92px);
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-compact rem(16px);
+        }
+
+        %filter-tree__expression-actions igx-icon {
+            width: var(--igx-icon-size, #{$icon-size});
+            height: var(--igx-icon-size, #{$icon-size});
+            font-size: var(--igx-icon-size, #{$icon-size});
+        }
+
+        %filter-tree__line {
+            margin-inline-end: $horizontal-space-compact;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-compact;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+    }
+
+    %advanced-filter--inline {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        height: inherit;
+        max-height: inherit;
+        min-width: rem(480px);
+        box-shadow: none;
+
+        %advanced-filter__main {
+            min-height: initial;
+            max-height: initial;
+            flex-grow: 1;
+        }
+    }
+
+    %filter-con-menu--cosy {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-cosy;
+        }
+    }
+
+    %filter-con-menu--compact {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-compact;
+        }
+    }
+}

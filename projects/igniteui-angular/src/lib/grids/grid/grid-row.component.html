@@ -95,10 +95,10 @@
         <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-        [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
         [class.igx-grid__td--bool]="col.dataType === 'boolean'"
+        [class.igx-grid__td--image]="col.dataType === 'image'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
@@ -117,6 +117,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate"
+        [cellValidationErrorTemplate]="col.errorTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
         [cellSelectionMode]="grid.cellSelection"
@@ -128,7 +129,6 @@
 <ng-template #expandableCellTemplate let-col>
     <igx-expandable-grid-cell
         [class.igx-grid__td--pinned]="col.pinned"
-        [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
         [class.igx-grid__td--number]="(col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency') && col.visibleIndex !== 0"
@@ -149,6 +149,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate"
+        [cellValidationErrorTemplate]="col.errorTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
         [cellSelectionMode]="grid.cellSelection"
@@ -161,7 +162,7 @@
     <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-        [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
@@ -181,6 +182,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate"
+        [cellValidationErrorTemplate]="col.errorTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
         [cellSelectionMode]="grid.cellSelection"
@@ -193,7 +195,7 @@
     <igx-expandable-grid-cell
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
-        [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
+
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="(col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency') && col.visibleIndex !== 0"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
@@ -213,6 +215,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="data | dataMapper:col.field:grid.pipeTrigger:data[col.field]:col.hasNestedPath"
         [cellTemplate]="col.bodyTemplate"
+        [cellValidationErrorTemplate]="col.errorTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
         [cellSelectionMode]="grid.cellSelection"

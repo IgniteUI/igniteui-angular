@@ -1,0 +1,35 @@
+@use '../../../base' as *;
+@use '../light/query-builder' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates the dark query builder schema.
+/// @type {Map}
+/// @see $light-query-builder
+/// @requires $light-query-builder
+$dark-query-builder: $light-query-builder;
+
+/// Generates the dark fluent query builder schema.
+/// @see $fluent-query-builder
+/// @requires $fluent-query-builder
+$dark-fluent-query-builder: $fluent-query-builder;
+
+/// Generates the dark bootstrap query builder schema.
+$dark-bootstrap-query-builder: $bootstrap-query-builder;
+
+/// Generates the dark indigo query builder schema.
+/// @type {Map}
+/// @prop {Map} background [color: 'surface'] - The background color of the filtering row.
+/// @requires $indigo-query-builder
+$dark-indigo-query-builder: extend(
+    $indigo-query-builder,
+    (
+        background: (
+            color: 'surface',
+        ),
+    )
+);

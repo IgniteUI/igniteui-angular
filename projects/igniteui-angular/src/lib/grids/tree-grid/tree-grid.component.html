@@ -136,9 +136,7 @@
 
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
-    <ng-container *ngIf="totalRecords || pagingMode === 1">
-        <ng-content select="igx-paginator"></ng-content>
-    </ng-container>
+    <ng-content select="igx-paginator"></ng-content>
 </div>
 
 <ng-template #emptyFilteredGrid>
@@ -181,7 +179,7 @@
 </div>
 
 <ng-template #defaultRowEditText>
-    You have {{ rowChangesCount }} changes in this row
+    You have {{ rowChangesCount }} changes in this row and {{ hiddenColumnsCount }} hidden columns
 </ng-template>
 
 <ng-template #defaultRowEditActions>
@@ -193,7 +191,7 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddTextTemplate : rowEditTextTemplate ? rowEditTextTemplate : defaultRowEditText;
                 context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
             </ng-container>
         </span>
@@ -201,7 +199,7 @@
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
+                *ngTemplateOutlet="rowEditActionsTemplate ? rowEditActionsTemplate : defaultRowEditActions; context: { $implicit: this.endEdit.bind(this) }">
             </ng-container>
         </div>
     </div>

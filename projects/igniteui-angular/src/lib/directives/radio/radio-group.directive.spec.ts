@@ -43,9 +43,6 @@ describe('IgxRadioGroupDirective', () => {
         const allButtonsWithGroupName = radioInstance.radioButtons.filter((btn) => btn.name === radioInstance.name);
         expect(allButtonsWithGroupName.length).toEqual(radioInstance.radioButtons.length);
 
-        const allButtonsWithGroupLabelPos = radioInstance.radioButtons.filter((btn) => btn.labelPosition === radioInstance.labelPosition);
-        expect(allButtonsWithGroupLabelPos.length).toEqual(radioInstance.radioButtons.length);
-
         const buttonWithGroupValue = radioInstance.radioButtons.find((btn) => btn.value === radioInstance.value);
         expect(buttonWithGroupValue).toBeDefined();
         expect(buttonWithGroupValue).toEqual(radioInstance.selected);
@@ -73,20 +70,6 @@ describe('IgxRadioGroupDirective', () => {
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
-
-        // labelPosition
-        radioInstance.labelPosition = 'after';
-        fixture.detectChanges();
-
-        const allAfterButtons = radioInstance.radioButtons.filter((btn) => btn.labelPosition === 'after');
-        expect(allAfterButtons.length).toEqual(radioInstance.radioButtons.length);
-
-        // disabled
-        radioInstance.disabled = true;
-        fixture.detectChanges();
-
-        const allDisabledButtons = radioInstance.radioButtons.filter((btn) => btn.disabled);
-        expect(allDisabledButtons.length).toEqual(radioInstance.radioButtons.length);
     }));
 
     it('Set value should change selected property and emit change event.', fakeAsync(() => {
@@ -195,6 +178,24 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
     }));
 
+    it('Properly rebind dynamically added components', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
+        const radioInstance = fixture.componentInstance.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        fixture.componentInstance.choices = [ 0, 1, 4, 7 ];
+        fixture.detectChanges();
+        tick();
+
+        radioInstance.radioButtons.last.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
+
+        expect(radioInstance.value).toEqual(7);
+        expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
+    }));
+
     it('Updates checked radio button correctly', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
         fixture.detectChanges();
@@ -226,7 +227,7 @@ class RadioGroupSimpleComponent {
 }
 
 @Component({
-    template: `<igx-radio-group #radioGroup name="radioGroup" value="Baz" required="true" labelPosition="before">
+    template: `<igx-radio-group #radioGroup name="radioGroup" value="Baz" required="true">
     <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
         {{item}}
     </igx-radio>

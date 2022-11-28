@@ -1,8 +1,9 @@
-@use '../../base' as *;
-@use '../../themes/schemas' as *;
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:list';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+@use 'igniteui-theming/sass/animations' as *;
 
 ////
 /// @group themes
@@ -11,9 +12,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $track-color [null] - The main track color.
 /// @param {Color} $fill-color-default [null] - The track default fill color.
 /// @param {Color} $fill-color-danger [null] - The track danger fill color.
@@ -23,20 +22,14 @@
 /// @param {Color} $stripes-color [null] - The track stripes color.
 /// @param {Color} $text-color [null] - The track value text color.
 /// @param {Number} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-///
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: progress-linear-theme(
 ///     $stripes-color: orange
 ///   );
-///   // Pass the theme to the progress-linear component mixin
-///   @include progress-linear($my-progress-linear-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-progress-linear-theme);
 @function progress-linear-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $track-color: null,
@@ -58,11 +51,10 @@
         $linear-bar-schema: $schema;
     }
 
-    $theme: apply-palette($linear-bar-schema, $palette);
+    $theme: digest-schema($linear-bar-schema);
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         track-color: $track-color,
         fill-color-default: $fill-color-default,
         fill-color-danger: $fill-color-danger,
@@ -99,9 +91,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires em
-/// @requires var-get
 @mixin progress-linear($theme) {
     @include css-vars($theme);
 
@@ -136,7 +125,7 @@
     ), $variant);
 
     $stripe-color: var-get($theme, 'stripes-color');
-    $value-fs: em(14px, 16px);
+    $value-fs: rem(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
 
@@ -146,6 +135,13 @@
         width: 100%;
         flex: 1 1 100%;
         flex-direction: column;
+
+        &[dir='rtl'],
+        [dir='rtl'] & {
+            %linear-bar {
+                transform: rotateY(180deg);
+            }
+        }
     }
 
     %linear-bar {
@@ -160,8 +156,8 @@
 
     %linear-indicator {
         width: 100%;
-        position: relative;
-        height: inherit;
+        position: absolute;
+        height: 100%;
     }
 
     %linear-indicator--striped {
@@ -182,29 +178,45 @@
         }
     }
 
-    %linear-indicator--indeterminate {
-        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) normal infinite);
-
+    %linear-indicator--indeterminate-secondary,
+    %linear-indicator--indeterminate-primary
+    {
+        transform-origin: top left;
         width: 100% !important;
+        height: inherit;
+        position: absolute;
+        background: transparent;
 
-        &::before {
-            position: absolute;
+        &::after {
             content: '';
+            position: absolute;
             top: 0;
-            // This needs to stay "left" in the [dir='rtl'] otherwise the animation is incorrect.
-            left: -200%;
+            inset-inline-start: 0;
+            width: inherit;
+            height: inherit;
+            background: var-get($theme, 'fill-color-default');
+            backface-visibility: hidden;
+        }
+    }
+
+    %linear-indicator--indeterminate-primary {
+        transform: scale3d(0, 1, 1);
+        animation: indeterminate-primary 2000ms infinite linear;
+        left: -145.166611%;
+
+        &::after {
+            animation: indeterminate-primary-scale 2000ms infinite linear;
+        }
+    }
+
+    %linear-indicator--indeterminate-secondary {
+        animation: indeterminate-secondary 2000ms infinite linear;
+        left: -54.888891%;
+
+        &::after {
+            animation: indeterminate-secondary-scale 2000ms infinite linear;
             width: 100%;
             height: inherit;
-            background-color: inherit;
-            transform-origin: top right;
-        }
-
-        [dir='rtl'] & {
-            animation-direction: reverse;
-
-            &::before {
-                transform-origin: top left;
-            }
         }
     }
 
@@ -255,35 +267,112 @@
         display: none;
     }
 
-    @include keyframes('indeterminate-bar') {
+    $indeterminate-primary-translate-step-2: cubic-bezier(.5, 0, .701732, .495819);
+    $indeterminate-primary-translate-step-3: cubic-bezier(.302435, .381352, .55, .956352);
+
+    $indeterminate-primary-scale-step-2: cubic-bezier(.334731, .12482, .785844, 1);
+    $indeterminate-primary-scale-step-3: cubic-bezier(.06, .11, .6, 1);
+
+    $indeterminate-secondary-translate-step-1: cubic-bezier(.15, 0, .515058, .409685);
+    $indeterminate-secondary-translate-step-2: cubic-bezier(.31033, .284058, .8, .733712);
+    $indeterminate-secondary-translate-step-3: cubic-bezier(.4, .627035, .6, .902026);
+
+    $indeterminate-secondary-scale-step-1: cubic-bezier(.15, 0, .515058, .409685);
+    $indeterminate-secondary-scale-step-2: cubic-bezier(.31033, .284058, .8, .733712);
+    $indeterminate-secondary-scale-step-3: cubic-bezier(.4, .627035, .6, .902026);
+
+    @keyframes indeterminate-primary {
         0% {
-            transform: scaleX(0) translateX(-100%);
-            transform-origin: left;
+            transform: translateX(0);
         }
 
-        50% {
-            transform: scaleX(1) translateX(50%);
-            transform-origin: right;
+        20% {
+            animation-timing-function: $indeterminate-primary-translate-step-2;
+            transform: translateX(0);
+        }
+
+        59.15% {
+            animation-timing-function: $indeterminate-primary-translate-step-3;
+            transform: translateX(83.67142%);
         }
 
         100% {
-            transform: scaleX(0) translateX(200%);
-            transform-origin: right;
+            transform: translateX(200.611057%);
+        }
+    }
+
+    @keyframes indeterminate-primary-scale {
+        0% {
+            transform: scaleX(.08);
+        }
+
+        36.65% {
+            animation-timing-function: $indeterminate-primary-scale-step-2;
+            transform: scaleX(.08);
+        }
+
+        69.15% {
+            animation-timing-function: $indeterminate-primary-scale-step-2;
+            transform: scaleX(.661479);
+        }
+
+        100% {
+            transform: scaleX(.08);
+        }
+    }
+
+    @keyframes indeterminate-secondary {
+        0% {
+            animation-timing-function: $indeterminate-secondary-translate-step-1;
+            transform: translateX(0);
+        }
+
+        25% {
+            animation-timing-function: $indeterminate-secondary-translate-step-2;
+
+            transform: translateX(37.651913%);
+        }
+
+        48.35% {
+            animation-timing-function: $indeterminate-secondary-translate-step-3;
+            transform: translateX(84.386165%);
+        }
+
+        100% {
+            transform: translateX(160.277782%);
+        }
+    }
+
+    @keyframes indeterminate-secondary-scale {
+        0% {
+            animation-timing-function: $indeterminate-secondary-scale-step-1;
+            transform: scaleX(.08);
+        }
+
+        19.15% {
+            animation-timing-function: $indeterminate-secondary-scale-step-2;
+            transform: scaleX(.457104);
+        }
+
+        44.15% {
+            animation-timing-function: $indeterminate-secondary-scale-step-3;
+            transform: scaleX(.72796);
+        }
+
+        100% {
+            transform: scaleX(.08);
         }
     }
 }
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
 /// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
 /// @param {Color} $text-color [null] - The value text color.
 ///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
+///
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: igx-progress-circular-theme(
@@ -292,7 +381,6 @@
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function progress-circular-theme(
-    $palette: null,
     $schema: $light-schema,
 
     $base-circle-color: null,
@@ -310,7 +398,7 @@
         $circular-bar-schema: $schema;
     }
 
-    $theme: apply-palette($circular-bar-schema, $palette);
+    $theme: digest-schema($circular-bar-schema);
 
     $progress-circle-color-start: map.get($theme, 'progress-circle-color');
     $progress-circle-color-end: map.get($theme, 'progress-circle-color');
@@ -327,7 +415,6 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $palette,
         base-circle-color: $base-circle-color,
         progress-circle-color-start: $progress-circle-color-start,
         progress-circle-color-end: $progress-circle-color-end,
@@ -336,10 +423,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires {mixin} rotate-center
-/// @requires var-get
 @mixin progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
@@ -355,27 +438,25 @@
         indigo-design: rem(6px),
     ), $variant);
 
-    $palette: map.get($theme, 'palette');
-    $circular-value-fs: rem(32px, 16px);
-    $circular-value-fw: 600;
-
     %circular-display {
         display: inline-flex;
         flex: 1 1 auto;
         width: rem(32px);
         height: rem(32px);
+        position: relative;
 
         svg {
             width: 100%;
             height: 100%;
             min-width: inherit;
             min-height: inherit;
+            //transform-origin: 50% 50%;
+            transform: rotate(-90deg);
         }
     }
 
     %circular-display--indeterminate {
         @include animation(rotate-center 3s linear normal infinite);
-        transform-origin: 50% 50%;
 
         [dir='rtl'] & {
             animation-direction: reverse;
@@ -393,8 +474,6 @@
         stroke-width: $stroke-width;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
-        transform-origin: 50% 50%;
-        transform: rotate(-90deg);
 
         @if $variant == 'indigo-design' {
             stroke-linecap: round;
@@ -411,8 +490,14 @@
     }
 
     %circular-text {
-        font-size: $circular-value-fs;
-        font-weight: $circular-value-fw;
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%);
+        font-size: rem(16px);
+        line-height: 1;
+        text-align: center;
+        font-weight: 600;
         fill: var-get($theme, 'text-color');
     }
 

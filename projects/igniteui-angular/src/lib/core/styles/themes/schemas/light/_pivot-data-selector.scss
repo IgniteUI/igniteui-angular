@@ -8,14 +8,13 @@
 
 /// Generates a light pivot data selector schema.
 /// @type {Map}
-/// @see $default-palette
 $light-pivot-data-selector: (
     background: (
         color: 'surface',
     ),
 
     header-color: (
-        color: ('grays', 100)
+        color: ('gray', 100)
     )
 );
 

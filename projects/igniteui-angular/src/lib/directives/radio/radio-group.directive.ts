@@ -4,9 +4,9 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
-import { IChangeRadioEventArgs, IgxRadioComponent, RadioLabelPosition } from '../../radio/radio.component';
+import { IChangeRadioEventArgs, IgxRadioComponent } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
 
 /**
@@ -50,7 +50,6 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
-    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Returns reference to the child radio buttons.
      *
@@ -117,49 +116,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     public set required(value: boolean) {
         this._required = (value as any) === '' || value;
         this._setRadioButtonsRequired();
-    }
-
-    /**
-     * @deprecated in version 12.2.0
-     *
-     * An input property that allows you to disable the radio group. By default it's false.
-     *
-     * @example
-     *  ```html
-     * <igx-radio-group disabled></igx-radio-group>
-     * ```
-     */
-    @Input()
-    public get disabled(): boolean {
-        return this._disabled;
-    }
-    public set disabled(value: boolean) {
-        this._disabled = (value as any) === '' || value;
-        this.setDisabledState(value);
-    }
-
-    /**
-     * @deprecated in version 12.2.0
-     *
-     * Sets/gets the position of the `label` in the child radio buttons.
-     *
-     * @remarks
-     * If not set, `labelPosition` will have value `"after"`.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group labelPosition = "before"></igx-radio-group>
-     * ```
-     */
-    @Input()
-    public get labelPosition(): RadioLabelPosition | string {
-        return this._labelPosition;
-    }
-    public set labelPosition(newValue: RadioLabelPosition | string) {
-        if (this._labelPosition !== newValue) {
-            this._labelPosition = newValue === RadioLabelPosition.BEFORE ? RadioLabelPosition.BEFORE : RadioLabelPosition.AFTER;
-            this._setRadioButtonLabelPosition();
-        }
     }
 
     /**
@@ -275,22 +231,17 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @hidden
      * @internal
      */
-    private _labelPosition: RadioLabelPosition | string = 'after';
-    /**
-     * @hidden
-     * @internal
-     */
-    private _disabled = false;
-    /**
-     * @hidden
-     * @internal
-     */
     private _required = false;
     /**
      * @hidden
      * @internal
      */
     private destroy$ = new Subject<boolean>();
+    /**
+     * @hidden
+     * @internal
+     */
+    private queryChange$ = new Subject();
 
     /**
      * @hidden
@@ -301,8 +252,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized = true;
 
-        setTimeout(() => {
-            this._initRadioButtons();
+        this.radioButtons.changes.pipe(startWith(0), takeUntil(this.destroy$)).subscribe(() => {
+            this.queryChange$.next();
+            setTimeout(() => this._initRadioButtons());
         });
     }
 
@@ -330,18 +282,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     public registerOnChange(fn: (_: any) => void) {
         this._onChangeCallback = fn;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public setDisabledState(isDisabled: boolean) {
-        if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
-                button.setDisabledState(isDisabled);
-            });
-        }
     }
 
     /**
@@ -377,20 +317,16 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
             this.radioButtons.forEach((button) => {
                 Object.assign(button, props);
 
-                if(button.disabled === undefined) {
-                    button.disabled = this._disabled;
-                }
-
-                if(button.labelPosition === undefined) {
-                    button.labelPosition = this._labelPosition;
-                }
-
                 if (button.value === this._value) {
                     button.checked = true;
                     this._selected = button;
                 }
 
-                button.change.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._selectedRadioButtonChanged(ev));
+                button.change.pipe(
+                    takeUntil(button.destroy$),
+                    takeUntil(this.destroy$),
+                    takeUntil(this.queryChange$)
+                ).subscribe((ev) => this._selectedRadioButtonChanged(ev));
             });
         }
     }
@@ -454,18 +390,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
                         }
                     }
                 }
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _setRadioButtonLabelPosition() {
-        if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
-                button.labelPosition = this._labelPosition;
             });
         }
     }

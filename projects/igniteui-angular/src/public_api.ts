@@ -32,6 +32,7 @@ export * from './lib/directives/template-outlet/template_outlet.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip';
 export * from './lib/directives/date-time-editor/public_api';
+export * from './lib/directives/form-control/form-control.directive';
 
 /**
  * Data operations
@@ -78,6 +79,7 @@ export * from './lib/grids/grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
 export * from './lib/grids/columns/templates.directive';
+export * from './lib/grids/columns/validators.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
@@ -114,6 +116,8 @@ export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
 export * from './lib/grids/pivot-grid/public_api';
+export * from './lib/query-builder/query-builder.component'
+export * from './lib/query-builder/query-builder-header.component'
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -125,6 +129,7 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { IComboResourceStrings } from './lib/core/i18n/combo-resources';
 export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
@@ -135,6 +140,7 @@ export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
+export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';

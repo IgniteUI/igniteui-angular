@@ -3096,7 +3096,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
             expect(styles.findIndex(
-                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));')))
+                (e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));')))
                 .toBeGreaterThan(-1);
             expect(styles.findIndex(
                 (e) => e.includes('background: var(--background-color);')))
@@ -3122,7 +3122,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--igx-grays-500), 0.54));'))).toBeGreaterThan(-1);
+            expect(styles.findIndex((e) => e.includes('--background-color: var(--igx-overlay-background-color, hsla(var(--ig-gray-500), 0.54));'))).toBeGreaterThan(-1);
             expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();

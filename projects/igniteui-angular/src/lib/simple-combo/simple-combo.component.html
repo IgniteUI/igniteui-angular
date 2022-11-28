@@ -9,10 +9,13 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
 
-    <input #comboInput igxInput [value]="value" (focus)="onFocus()" (input)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-        (keydown)="handleKeyDown($event)" (blur)="onBlur()" [attr.placeholder]="placeholder" aria-autocomplete="both"
-        [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" [disabled]="disabled"
-        [igxTextSelection]="!composing" />
+    <input #comboInput igxInput [value]="value" role="combobox"
+        aria-haspopup="listbox" aria-autocomplete="list" aria-readonly="false"
+        [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
+        [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
+        [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
+        (focus)="onFocus()" (input)="handleInputChange($event)"
+        (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
@@ -42,27 +45,30 @@
 </igx-input-group>
 
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
+    [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()" [singleMode]="true">
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
-        [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
-        [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id"
-        (keydown)="handleItemKeyDown($event)">
-        <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
-            | comboClean
-            | comboFiltering:filterValue:displayKey:filteringOptions:true
-            | comboGrouping:groupKey:valueKey:groupSortingDirection;
-            index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-            [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
-            <ng-container *ngIf="item.isHeader">
+        [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown"
+        [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
+        [attr.aria-activedescendant]="this.activeDescendant"
+        (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
+        <igx-combo-item  [role]="item?.isHeader? 'group' : 'option'" [singleMode]="true"
+            [itemHeight]="itemHeight" (click)="handleItemClick()" *igxFor="let item of data
+                | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction
+                | comboGrouping:groupKey:valueKey:groupSortingDirection;
+                index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
+                [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
+            <ng-container *ngIf="item?.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                     context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
                 </ng-container>
             </ng-container>
-            <ng-container *ngIf="!item.isHeader">
+            <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
+            <ng-container *ngIf="!item?.isHeader">
                 <ng-container #listItem
                     *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                 </ng-container>
@@ -93,7 +99,7 @@
     {{display}}
 </ng-template>
 <ng-template #empty>
-    <span>The list is empty</span>
+    <span>{{resourceStrings.igx_combo_empty_message}}</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
     <button igxButton="flat" igxRipple>Add item</button>

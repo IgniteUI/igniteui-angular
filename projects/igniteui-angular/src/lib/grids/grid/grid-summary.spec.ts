@@ -24,7 +24,7 @@ import {
     SummariesGroupByComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -88,7 +88,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
                 expect(grid.getColumnByName('ProductName').hasSummary).toBe(true);
                 expect(grid.getColumnByName('OrderDate').hasSummary).toBe(false);
-                
+
                 grid.summaryRowHeight = 0;
                 fixture.detectChanges();
 
@@ -557,6 +557,42 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 expect(summaryRow.nativeElement.offsetHeight).not.toBeFalsy();
             });
+
+            it('should display the formatted summary value in the summary cells\' tooltip', () => {
+                const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+                const pipe = new DatePipe('fr-FR');
+
+                const summary = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 4);
+                const summaryItems = summary.queryAll(By.css('.igx-grid-summary__item'));
+
+                let summaryResultsValues = ['10', 'May 17, 1990', 'Dec 25, 2025'];
+
+                for (let i = 0; i < summaryItems.length; i++) {
+                    const summaryItem = summaryItems[i];
+                    const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
+                    const summaryResultTooltip = summaryResult.nativeElement.getAttribute('title');
+                    expect(summaryResultsValues[i]).toEqual(summaryResultTooltip);
+                }
+                grid.getColumnByName('OrderDate').summaryFormatter
+                    = ((summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => {
+                        const result = summaryResult.summaryResult;
+                        if (summaryOperand instanceof IgxDateSummaryOperand
+                            && summaryResult.key !== 'count' && result !== null && result !== undefined) {
+                            return pipe.transform(result, 'mediumDate');
+                        }
+                        return result;
+                    });
+                fix.detectChanges();
+
+                summaryResultsValues = ['10', '17 mai 1990', '25 déc. 2025'];
+
+                for (let i = 0; i < summaryItems.length; i++) {
+                    const summaryItem = summaryItems[i];
+                    const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
+                    const summaryResultTooltip = summaryResult.nativeElement.getAttribute('title');
+                    expect(summaryResultsValues[i]).toEqual(summaryResultTooltip);
+                }
+            });
         });
     });
 
@@ -831,6 +867,10 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
             tick(100);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should be able to select summaries with arrow keys', async () => {
             const gridFooter = GridFunctions.getGridFooter(fix);

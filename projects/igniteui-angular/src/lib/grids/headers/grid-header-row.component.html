@@ -56,7 +56,7 @@
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
                 (click)="grid.toggleAllGroupRows()"
                 (pointerdown)="$event.preventDefault()">
-                <ng-container *ngTemplateOutlet="grid.iconTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>
             </div>
         </ng-container>
 
@@ -67,8 +67,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                    [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
                 </igx-grid-header-group>
             </ng-container>
         </ng-container>
@@ -86,8 +86,8 @@
                 [ngClass]="column.headerGroupClasses"
                 [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                 [column]="column"
-                [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
             </igx-grid-header-group>
         </ng-template>
 
@@ -98,8 +98,8 @@
                     [ngClass]="column.headerGroupClasses"
                     [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger"
                     [column]="column"
-                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
-                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.min-width]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.width | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
                     [style.left]="column.rightPinnedOffset">
                 </igx-grid-header-group>
             </ng-container>
@@ -129,10 +129,10 @@
         <igx-checkbox
             [tabindex]="-1"
             [readonly]="true"
-            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+            [checked]="context.selectedCount > 0 && grid.selectionService.areAllRowSelected()"
             [disableRipple]="true"
             [ngStyle]="{'visibility': grid.isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+            [indeterminate]="context.selectedCount > 0 && grid.selectionService.hasSomeRowSelected()"
             [aria-label]="grid.headSelectorBaseAriaLabel"
             #headerCheckbox>
         </igx-checkbox>

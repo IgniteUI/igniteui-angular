@@ -28,7 +28,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     ) { }
 
     public get_column_by_name(name: string): ColumnType {
-        return this.grid.columnList.find((col: ColumnType) => col.field === name);
+        return this.grid.columns.find((col: ColumnType) => col.field === name);
     }
 
     public get_summary_data() {
@@ -145,7 +145,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const newRowData = reverseMapper(cell.column.field, args.newValue);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
+        if (!this.grid.crudService.row) {
+            this.grid.validation.update(cell.id.rowID, newRowData);
+        }
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -198,6 +202,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
+        this.grid.validation.update(row.id, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
@@ -292,14 +297,15 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
-
+        const rowId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
         if (grid.transactions.enabled) {
-            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            const transaction: Transaction = { id: rowId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
             grid.data.push(rowData);
         }
+        grid.validation.markAsTouched(rowId);
+        grid.validation.update(rowId, rowData);
     }
 
     public deleteRowFromData(rowID: any, index: number) {
@@ -317,6 +323,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             const state: State = grid.transactions.getState(rowID);
             grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
+        grid.validation.clear(rowID);
     }
 
     public deleteRowById(rowId: any): any {
@@ -343,8 +350,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         const record = data[index];
-        // //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        grid.rowDeletedNotifier.next({ data: data[index] });
+        grid.rowDeletedNotifier.next({ data: data[index], owner: grid });
 
         this.deleteRowFromData(rowId, index);
 
