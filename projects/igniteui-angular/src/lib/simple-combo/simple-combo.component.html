@@ -31,11 +31,11 @@
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon (click)="onClick($event)" *ngIf="!toggleIconTemplate">
+        <igx-icon *ngIf="!toggleIconTemplate">
             {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}
         </igx-icon>
     </igx-suffix>
@@ -51,18 +51,18 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id"
         (keydown)="handleItemKeyDown($event)">
         <igx-combo-item role="option" [singleMode]="true" [itemHeight]='itemHeight' (click)="handleItemClick()" *igxFor="let item of data
-            | comboClean
             | comboFiltering:filterValue:displayKey:filteringOptions:true
             | comboGrouping:groupKey:valueKey:groupSortingDirection;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-            [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
-            <ng-container *ngIf="item.isHeader">
+            [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex">
+            <ng-container *ngIf="item?.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                     context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
                 </ng-container>
             </ng-container>
-            <ng-container *ngIf="!item.isHeader">
+            <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
+            <ng-container *ngIf="!item?.isHeader">
                 <ng-container #listItem
                     *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                 </ng-container>
@@ -93,7 +93,7 @@
     {{display}}
 </ng-template>
 <ng-template #empty>
-    <span>The list is empty</span>
+    <span>{{resourceStrings.igx_combo_empty_message}}</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
     <button igxButton="flat" igxRipple>Add item</button>

@@ -77,6 +77,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -159,6 +160,7 @@ import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
 import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
 
 const components = [
     AccordionSampleComponent,
@@ -204,6 +206,7 @@ const components = [
     RippleSampleComponent,
     SelectSampleComponent,
     SliderSampleComponent,
+    RangeSliderComponent,
     SplitterSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
@@ -240,6 +243,7 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridRowDraggableComponent,
+    GridRowReorderComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,

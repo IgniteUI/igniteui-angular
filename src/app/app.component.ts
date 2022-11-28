@@ -329,6 +329,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Drag'
         },
         {
+            link: '/gridRowReorder',
+            icon: 'view_column',
+            name: 'Grid Row Reorder'
+        },
+        {
             link: '/gridSummary',
             icon: 'view_column',
             name: 'Grid Summary'
@@ -438,6 +443,11 @@ export class AppComponent implements OnInit {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
+        },
+        {
+            link: '/range-slider',
+            icon: 'open_in_full',
+            name: 'Range Slider'
         },
         {
             link: '/splitter',

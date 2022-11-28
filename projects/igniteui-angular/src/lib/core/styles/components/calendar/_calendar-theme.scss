@@ -264,6 +264,18 @@
         $week-number-color: text-contrast($week-number-background);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
+    @if not($month-border-radius) {
+        $month-border-radius: border-radius(map.get($theme, 'month-border-radius'));
+    }
+
+    @if not($date-border-radius) {
+        $date-border-radius: border-radius(map.get($theme, 'date-border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         selector: $selector,
@@ -396,7 +408,7 @@
         min-width: 290px;
         background: var-get($theme, 'content-background');
         outline: none;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
         border: $border-width solid var-get($theme, 'border-color');
 
@@ -709,7 +721,7 @@
         width: $cal-value-w;
         min-width: $cal-value-w;
         height: $cal-value-h;
-        border-radius: border-radius(var-get($theme, 'date-border-radius'));
+        border-radius: var-get($theme, 'date-border-radius');
         z-index: 0;
         // transition: background .15s ease-out;
 
@@ -885,7 +897,7 @@
             transform: translateY(-50%);
             height: 48px;
             background: transparent;
-            border-radius: border-radius(var-get($theme, 'month-border-radius'));
+            border-radius: var-get($theme, 'month-border-radius');
             transition: background-color .15s ease-out;
             z-index: -1;
         }

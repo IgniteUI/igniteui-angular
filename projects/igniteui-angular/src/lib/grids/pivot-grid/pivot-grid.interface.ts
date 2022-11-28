@@ -1,5 +1,5 @@
 import { GridColumnDataType } from '../../data-operations/data-util';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { ColumnType } from '../common/grid.interface';
 
@@ -99,7 +99,7 @@ export interface IPivotDimension {
     /**
      * A predefined or defined via the `igxPivotSelector` filter expression tree for the current dimension to be applied in the filter pipe.
      * */
-    filter?: FilteringExpressionsTree | null;
+    filter?: IFilteringExpressionsTree | null;
     /**
      * The sorting direction of the current dimension. Determines the order in which the values will appear in the related dimension.
      */
@@ -136,7 +136,19 @@ export interface IPivotValue {
     /** Enables a data type specific template of the cells */
     dataType?: GridColumnDataType;
     /** Applies display format to cell values. */
-    formatter?: (value: any, rowData?: any) => any;
+    formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
+}
+
+/** Interface describing the Pivot column data.
+*  Contains information on the related column dimensions and their values.
+*/
+export interface IPivotGridColumn {
+        field: string,
+        /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
+        dimensionValues: Map<string, string>;
+        /** List of dimensions associated with the column.**/
+        dimensions: IPivotDimension[];
+        value: IPivotValue
 }
 
 /** Interface describing the Pivot data keys used for data generation.

@@ -73,7 +73,10 @@
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" />
+            <input igxInput [(ngModel)]="editValue" [igxFocus]="true"
+            (compositionstart)="grid.crudService.isInCompositionMode = true"
+            (compositionend)="grid.crudService.isInCompositionMode = false"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
@@ -149,7 +152,8 @@
     <ng-container *ngIf="level > 0">
         <div
             #indentationDiv
-            class="igx-grid__tree-cell--padding-level-{{ level }}"
+            class="igx-grid__tree-cell--padding-level-{{level}}"
+            [ngStyle]="{'padding-inline-start': 'calc(var(--igx-tree-indent-size) *' + level + ')'}"
         ></div>
     </ng-container>
     <div

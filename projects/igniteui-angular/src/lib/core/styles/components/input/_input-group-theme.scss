@@ -170,6 +170,18 @@
         $search-disabled-shadow: elevation($elevations, $search-disabled-elevation);
     }
 
+    @if not($box-border-radius) {
+        $box-border-radius: border-radius(map.get($theme, 'box-border-radius'));
+    }
+
+    @if not($border-border-radius) {
+        $border-border-radius: border-radius(map.get($theme, 'border-border-radius'));
+    }
+
+    @if not($search-border-radius) {
+        $search-border-radius: border-radius(map.get($theme, 'search-border-radius'));
+    }
+
     @return extend($theme, (
         palette: $palette,
         name: $name,
@@ -314,6 +326,10 @@
             overflow: auto;
         }
 
+        input[type='number'] {
+            -moz-appearance: textfield;
+        }
+
         // Don't show the number spinner
         input[type='number']::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -391,7 +407,7 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: border-radius(var-get($theme, 'box-border-radius'));
+        border-radius: var-get($theme, 'box-border-radius');
         @if $variant == 'material' {
             border-end-start-radius: border-radius(rem(0));
             border-end-end-radius: border-radius(rem(0));
@@ -450,7 +466,8 @@
     }
 
     %form-group-bundle--indigo {
-        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
+        padding: 0;
+        padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         background: transparent;
         transition: background $transition-timing, box-shadow $transition-timing;
         box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
@@ -458,6 +475,11 @@
         &:hover,
         &:focus {
             background: var-get($theme, 'box-background');
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            padding-inline-end: rem(16px, map.get($base-scale-size, 'comfortable'));
         }
     }
 
@@ -558,7 +580,7 @@
         padding: 0;
         padding-inline-start: rem(16px, map.get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
-        border-radius: border-radius(var-get($theme, 'border-border-radius'));
+        border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
 
         igx-suffix,
@@ -758,7 +780,7 @@
         padding: 0;
         min-height: 32px;
         border: 1px solid var-get($theme, 'border-color');
-        border-radius: border-radius(var-get($theme, 'border-border-radius'));
+        border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
         position: relative;
         align-items: stretch;
@@ -885,7 +907,7 @@
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
-        border-radius: border-radius(var-get($theme, 'search-border-radius'));
+        border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
     }
@@ -1286,13 +1308,7 @@
         height: auto;
         line-height: normal;
         font-weight: 400;
-        border-radius: border-radius(var-get($theme, 'border-border-radius')) 0 0 border-radius(var-get($theme, 'border-border-radius'));
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
+        border-radius: var-get($theme, 'border-border-radius') 0 0 var-get($theme, 'border-border-radius');
 
         &:last-of-type {
             margin-inline-end: rem(8px);
@@ -1301,12 +1317,6 @@
 
     %form-group-prefix-fluent-search {
         padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
 
         &:last-of-type {
             margin-inline-end: 0;
@@ -1320,13 +1330,7 @@
         width: auto;
         height: auto;
         line-height: normal;
-        border-radius: 0 border-radius(var-get($theme, 'border-border-radius')) border-radius(var-get($theme, 'border-border-radius')) 0;
-
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
+        border-radius: 0 var-get($theme, 'border-border-radius') var-get($theme, 'border-border-radius') 0;
 
         &:first-of-type {
             margin-inline-start: rem(8px);
@@ -1339,14 +1343,19 @@
         padding: 0 rem(8px, map.get($base-scale-size, 'comfortable'));
         line-height: normal;
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
-        }
-
         &:first-of-type {
             margin-inline-start: 0;
+        }
+    }
+
+    %form-group-prefix-fluent,
+    %form-group-suffix-fluent,
+    %form-group-suffix-fluent-search,
+    %form-group-prefix-fluent-search {
+        igx-icon {
+            width: var(--igx-icon-size, #{rem(18px)});
+            height: var(--igx-icon-size, #{rem(18px)});
+            font-size: var(--igx-icon-size, #{rem(18px)});
         }
     }
 
@@ -1528,13 +1537,13 @@
         }
 
         %form-group-prefix--bootstrap:first-child {
-            border-start-start-radius: border-radius(var-get($theme, 'box-border-radius'));
-            border-end-start-radius: border-radius(var-get($theme, 'box-border-radius'));
+            border-start-start-radius: var-get($theme, 'box-border-radius');
+            border-end-start-radius: var-get($theme, 'box-border-radius');
         }
 
         %form-group-suffix--bootstrap:last-child {
-            border-start-end-radius: border-radius(var-get($theme, 'box-border-radius'));
-            border-end-end-radius: border-radius(var-get($theme, 'box-border-radius'));
+            border-start-end-radius: var-get($theme, 'box-border-radius');
+            border-end-end-radius: var-get($theme, 'box-border-radius');
         }
 
         %bootstrap-input:not(:first-child),
@@ -1612,9 +1621,9 @@
         white-space: nowrap;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'comfortable');
-            height: map.get($bootstrap-font-size, 'comfortable');
-            font-size: map.get($bootstrap-font-size, 'comfortable');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'comfortable')});
             font-weight: 400;
         }
     }
@@ -1644,9 +1653,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'cosy');
-            height: map.get($bootstrap-font-size, 'cosy');
-            font-size: map.get($bootstrap-font-size, 'cosy');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'cosy')});
         }
     }
 
@@ -1657,9 +1666,9 @@
         height: auto;
 
         igx-icon {
-            width: map.get($bootstrap-font-size, 'compact');
-            height: map.get($bootstrap-font-size, 'compact');
-            font-size: map.get($bootstrap-font-size, 'compact');
+            width: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            height: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
+            font-size: var(--igx-icon-size, #{map.get($bootstrap-font-size, 'compact')});
         }
     }
 
@@ -1695,7 +1704,7 @@
         height: auto;
         line-height: 1.5 !important;
         margin: 0;
-        border-radius: border-radius(var-get($theme, 'box-border-radius'));
+        border-radius: var-get($theme, 'box-border-radius');
         border: 1px solid var-get($theme, 'border-color');
         font-size: map.get($bootstrap-font-size, 'comfortable');
         padding: map.get($bootstrap-padding, 'comfortable');
@@ -1705,7 +1714,7 @@
     %bootstrap-file-input {
         width: calc(100% - #{2 * nth(map.get($bootstrap-padding, 'comfortable'), 2)});
         height: inherit;
-        border-radius: border-radius(var-get($theme, 'box-border-radius'));
+        border-radius: var-get($theme, 'box-border-radius');
         border: rem(1px) solid var-get($theme, 'border-color');
         padding: map.get($bootstrap-padding, 'comfortable');
     }

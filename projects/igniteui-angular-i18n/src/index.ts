@@ -10,6 +10,7 @@ export * from './i18n/JA/list-resources';
 export * from './i18n/JA/tree-resources';
 export * from './i18n/JA/input-resources';
 export * from './i18n/JA/chip-resources';
+export * from './i18n/JA/combo-resources';
 export * from './i18n/JA/resources';
 // Korean (KO)
 export * from './i18n/KO/calendar-resources';
@@ -23,6 +24,7 @@ export * from './i18n/KO/list-resources';
 export * from './i18n/KO/tree-resources';
 export * from './i18n/KO/input-resources';
 export * from './i18n/KO/chip-resources';
+export * from './i18n/KO/combo-resources';
 export * from './i18n/KO/resources';
 // Spanish (ES)
 export * from './i18n/ES/calendar-resources';
@@ -36,6 +38,7 @@ export * from './i18n/ES/list-resources';
 export * from './i18n/ES/tree-resources';
 export * from './i18n/ES/input-resources';
 export * from './i18n/ES/chip-resources';
+export * from './i18n/ES/combo-resources';
 export * from './i18n/ES/resources';
 // Italian (IT)
 export * from './i18n/IT/calendar-resources';
@@ -49,6 +52,7 @@ export * from './i18n/IT/list-resources';
 export * from './i18n/IT/tree-resources';
 export * from './i18n/IT/input-resources';
 export * from './i18n/IT/chip-resources';
+export * from './i18n/IT/combo-resources';
 export * from './i18n/IT/resources';
 
 // Traditional Chinese (zh-Hant)
@@ -63,6 +67,7 @@ export * from './i18n/ZH-HANT/list-resources';
 export * from './i18n/ZH-HANT/tree-resources';
 export * from './i18n/ZH-HANT/input-resources';
 export * from './i18n/ZH-HANT/chip-resources';
+export * from './i18n/ZH-HANT/combo-resources';
 export * from './i18n/ZH-HANT/resources';
 
 // Simplified Chinese (zh-Hans)
@@ -77,6 +82,7 @@ export * from './i18n/ZH-HANS/list-resources';
 export * from './i18n/ZH-HANS/tree-resources';
 export * from './i18n/ZH-HANS/input-resources';
 export * from './i18n/ZH-HANS/chip-resources';
+export * from './i18n/ZH-HANS/combo-resources';
 export * from './i18n/ZH-HANS/resources';
 // German (DE)
 export * from './i18n/DE/calendar-resources';
@@ -90,6 +96,7 @@ export * from './i18n/DE/list-resources';
 export * from './i18n/DE/tree-resources';
 export * from './i18n/DE/input-resources';
 export * from './i18n/DE/chip-resources';
+export * from './i18n/DE/combo-resources';
 export * from './i18n/DE/resources';
 // French (FR)
 export * from './i18n/FR/calendar-resources';
@@ -103,6 +110,7 @@ export * from './i18n/FR/list-resources';
 export * from './i18n/FR/tree-resources';
 export * from './i18n/FR/input-resources';
 export * from './i18n/FR/chip-resources';
+export * from './i18n/FR/combo-resources';
 export * from './i18n/FR/resources';
 // Bulgarian (BG)
 export * from './i18n/BG/calendar-resources';
@@ -116,6 +124,7 @@ export * from './i18n/BG/list-resources';
 export * from './i18n/BG/tree-resources';
 export * from './i18n/BG/input-resources';
 export * from './i18n/BG/chip-resources';
+export * from './i18n/BG/combo-resources';
 export * from './i18n/BG/resources';
 // Czech (CS)
 export * from './i18n/CS/calendar-resources';
@@ -129,6 +138,7 @@ export * from './i18n/CS/list-resources';
 export * from './i18n/CS/tree-resources';
 export * from './i18n/CS/input-resources';
 export * from './i18n/CS/chip-resources';
+export * from './i18n/CS/combo-resources';
 export * from './i18n/CS/resources';
 // Danish (DA)
 export * from './i18n/DA/calendar-resources';
@@ -142,6 +152,7 @@ export * from './i18n/DA/list-resources';
 export * from './i18n/DA/tree-resources';
 export * from './i18n/DA/input-resources';
 export * from './i18n/DA/chip-resources';
+export * from './i18n/DA/combo-resources';
 export * from './i18n/DA/resources';
 // Dutch (NL)
 export * from './i18n/NL/calendar-resources';
@@ -155,6 +166,7 @@ export * from './i18n/NL/list-resources';
 export * from './i18n/NL/tree-resources';
 export * from './i18n/NL/input-resources';
 export * from './i18n/NL/chip-resources';
+export * from './i18n/NL/combo-resources';
 export * from './i18n/NL/resources';
 // Hungarian (HU)
 export * from './i18n/HU/calendar-resources';
@@ -168,6 +180,7 @@ export * from './i18n/HU/list-resources';
 export * from './i18n/HU/tree-resources';
 export * from './i18n/HU/input-resources';
 export * from './i18n/HU/chip-resources';
+export * from './i18n/HU/combo-resources';
 export * from './i18n/HU/resources';
 // Polish (PL)
 export * from './i18n/PL/calendar-resources';
@@ -181,6 +194,7 @@ export * from './i18n/PL/list-resources';
 export * from './i18n/PL/tree-resources';
 export * from './i18n/PL/input-resources';
 export * from './i18n/PL/chip-resources';
+export * from './i18n/PL/combo-resources';
 export * from './i18n/PL/resources';
 // Portuguese (PT)
 export * from './i18n/PT/calendar-resources';
@@ -194,6 +208,7 @@ export * from './i18n/PT/list-resources';
 export * from './i18n/PT/tree-resources';
 export * from './i18n/PT/input-resources';
 export * from './i18n/PT/chip-resources';
+export * from './i18n/PT/combo-resources';
 export * from './i18n/PT/resources';
 // Romanian (RO)
 export * from './i18n/RO/calendar-resources';
@@ -207,6 +222,7 @@ export * from './i18n/RO/list-resources';
 export * from './i18n/RO/tree-resources';
 export * from './i18n/RO/input-resources';
 export * from './i18n/RO/chip-resources';
+export * from './i18n/RO/combo-resources';
 export * from './i18n/RO/resources';
 // Swedish (SV)
 export * from './i18n/SV/calendar-resources';
@@ -220,6 +236,7 @@ export * from './i18n/SV/list-resources';
 export * from './i18n/SV/tree-resources';
 export * from './i18n/SV/input-resources';
 export * from './i18n/SV/chip-resources';
+export * from './i18n/SV/combo-resources';
 export * from './i18n/SV/resources';
 // Turkish (TR)
 export * from './i18n/TR/calendar-resources';
@@ -233,6 +250,7 @@ export * from './i18n/TR/list-resources';
 export * from './i18n/TR/tree-resources';
 export * from './i18n/TR/input-resources';
 export * from './i18n/TR/chip-resources';
+export * from './i18n/TR/combo-resources';
 export * from './i18n/TR/resources';
 // Norwegian (NB)
 export * from './i18n/NB/calendar-resources';
@@ -246,4 +264,5 @@ export * from './i18n/NB/list-resources';
 export * from './i18n/NB/tree-resources';
 export * from './i18n/NB/input-resources';
 export * from './i18n/NB/chip-resources';
+export * from './i18n/NB/combo-resources';
 export * from './i18n/NB/resources';

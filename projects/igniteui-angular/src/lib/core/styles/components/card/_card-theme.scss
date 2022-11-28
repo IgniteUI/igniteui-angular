@@ -98,6 +98,10 @@
         $hover-shadow: elevation($elevations, $hover-elevation);
     }
 
+    @if not($border-radius) {
+        $border-radius: border-radius(map.get($theme, 'border-radius'));
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -138,7 +142,7 @@
         flex-direction: column;
         box-shadow: var-get($theme, 'resting-shadow');
         overflow: hidden;
-        border-radius: border-radius(var-get($theme, 'border-radius'));
+        border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;

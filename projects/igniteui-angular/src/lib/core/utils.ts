@@ -208,6 +208,15 @@ export const isEqual = (obj1, obj2): boolean => {
 };
 
 /**
+ * Checks if provided variable is the value NaN
+ *
+ * @param value Value to check
+ * @returns true if provided variable is NaN
+ * @hidden
+ */
+ export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
+
+/**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
  *
@@ -282,7 +291,8 @@ export class PlatformUtil {
         }
 
         range.selectNodeContents(node);
-        const width = range.getBoundingClientRect().width;
+        const scale = node.getBoundingClientRect().width / node.offsetWidth;
+        const width = range.getBoundingClientRect().width / scale;
 
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
@@ -767,11 +777,11 @@ const verticalAnimations: AnimationReferenceMetadata[] = [
 
 
 /**
- * Similar to Angular's formatDate. However it will not throw on `undefined | null` instead
+ * Similar to Angular's formatDate. However it will not throw on `undefined | null | ''` instead
  * coalescing to an empty string.
  */
 export const formatDate = (value: string | number | Date, format: string, locale: string, timezone?: string): string => {
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value === '') {
         return '';
     }
     return _formatDate(value, format, locale, timezone);

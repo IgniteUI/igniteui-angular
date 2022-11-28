@@ -287,6 +287,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.setupColumns();
         }
         this.cdr.markForCheck();
+        if (this.isPercentHeight) {
+            this.notifyChanges(true);
+        }
     }
 
     /**
@@ -369,7 +372,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._applyGrouping();
             this.notifyChanges();
         }
-        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
+        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this._columns) {
             const groupedCols: IgxColumnComponent[] = [];
             const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
@@ -438,7 +441,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else {
             this.groupingDiffer = null;
         }
-        if (this.columnList && this.groupingExpressions) {
+        if (this._columns && this.groupingExpressions) {
             this._setGroupColsVisibility(value);
         }
 
@@ -500,7 +503,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
      public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
+        const column = this._columns.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
             return new IgxGridCell(this, rowIndex, column.field);
         }
@@ -758,7 +761,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
-        return record && record?.records && record.records?.length;
+        return record && record?.records && record.records?.length &&
+         record.expression && record.expression?.fieldName;
     }
 
     /**
@@ -784,7 +788,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     public get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+        return this._columns.some((col) => col.groupable && !col.columnGroup);
     }
 
     /**
@@ -915,10 +919,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._groupRowTemplate = this.groupTemplate.template;
         }
 
-        this.detailTemplate.changes.subscribe(() =>
-            this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec));
 
-        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+        if (this.hideGroupedColumns && this._columns && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         this._setupNavigationService();
@@ -960,6 +962,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngOnInit() {
         super.ngOnInit();
+        this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
@@ -971,9 +974,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public ngDoCheck(): void {
-        if (this.groupingDiffer && this.columnList && !this.hasColumnLayouts) {
+        if (this.groupingDiffer && this._columns && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
-            if (changes && this.columnList.length > 0) {
+            if (changes && this._columns.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
                     if (col) {
@@ -1114,7 +1117,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this._columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
             if (this.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
                 row.index = rowIndex + this.paginator.perPage * this.paginator.page;
@@ -1137,7 +1140,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public getCellByKey(rowSelector: any, columnField: string): CellType {
         const row = this.getRowByKey(rowSelector);
-        const column = this.columnList.find((col) => col.field === columnField);
+        const column = this._columns.find((col) => col.field === columnField);
         if (row && column) {
             return new IgxGridCell(this, row.index, columnField);
         }
@@ -1257,7 +1260,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     private _setGroupColsVisibility(value) {
-        if (this.columnList.length > 0 && !this.hasColumnLayouts) {
+        if (this._columns.length > 0 && !this.hasColumnLayouts) {
             this.groupingExpressions.forEach((expr) => {
                 const col = this.getColumnByName(expr.fieldName);
                 col.hidden = value;

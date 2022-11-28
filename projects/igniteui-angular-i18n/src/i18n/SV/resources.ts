@@ -9,6 +9,7 @@ import { CalendarResourceStringsSV } from './calendar-resources';
 import { TreeResourceStringsSV } from './tree-resources';
 import { InputResourceStringsSV } from './input-resources';
 import { ChipResourceStringsSV } from './chip-resources';
+import { ComboResourceStringsSV } from './combo-resources';
 
 /**
  * Swedish resource strings for all components
@@ -24,5 +25,6 @@ export const IgxResourceStringsSV = {
     ...CalendarResourceStringsSV,
     ...TreeResourceStringsSV,
     ...InputResourceStringsSV,
-    ...ChipResourceStringsSV
+    ...ChipResourceStringsSV,
+    ...ComboResourceStringsSV
 };

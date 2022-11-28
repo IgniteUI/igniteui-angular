@@ -26,24 +26,20 @@
 $light-gauge: (
     'backing-brush': (
         color: 'surface',
-        darken: 5%
     ),
 
     'backing-outline': (
         color: 'surface',
-        darken: 8%
     ),
 
     'backing-stroke-thickness': null,
 
     'font-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62),
     ),
 
     'minor-tick-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62),
     ),
 
     'minor-tick-stroke-thickness': null,
@@ -64,12 +60,10 @@ $light-gauge: (
 
     'scale-brush': (
         color: 'surface',
-        darken: 8%
     ),
 
     'tick-brush': (
-        contrast-color: 'surface',
-        rgba: .62
+        contrast-color: ('surface', 500, .62)
     ),
 
     'tick-stroke-thickness': null
@@ -101,7 +95,6 @@ $light-linear-gauge: extend(
 
         scale-outline: (
             color: 'surface',
-            darken: 8%
         ),
 
         scale-stroke-thickness: null,

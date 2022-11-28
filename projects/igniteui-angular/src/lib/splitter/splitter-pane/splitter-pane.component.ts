@@ -19,6 +19,9 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
     templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
+    private _minSize: string;
+    private _maxSize: string;
+
     /**
      * @hidden @internal
      * Gets/Sets the 'display' property of the current pane.
@@ -37,7 +40,15 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public minSize!: string;
+    public get minSize(): string {
+        return this._minSize;
+    };
+    public set minSize(value: string) {
+        this._minSize = value;
+        if (this.owner) {
+            this.owner.panes.notifyOnChanges();
+        }
+    }
 
     /**
      * Gets/Set the maximum allowed size of the current pane.
@@ -50,7 +61,15 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public maxSize!: string;
+    public get maxSize(): string {
+        return this._maxSize;
+    };
+    public set maxSize(value: string) {
+        this._maxSize = value;
+        if (this.owner) {
+            this.owner.panes.notifyOnChanges();
+        }
+    }
 
     /**
      * Gets/Sets whether pane is resizable.
@@ -93,18 +112,30 @@ export class IgxSplitterPaneComponent {
 
     /**
      * @hidden @internal
-     * Gets/Sets the `minHeight` and `minWidth` properties of the current pane.
+     * Get/Sets the `minWidth` properties of the current pane.
      */
-    @HostBinding('style.min-height')
     @HostBinding('style.min-width')
-    public minHeight = 0;
+    public minWidth = '0';
 
     /**
      * @hidden @internal
-     * Gets/Sets the `maxHeight` and `maxWidth` properties of the current `IgxSplitterPaneComponent`.
+     * Get/Sets the `maxWidth` properties of the current pane.
+     */
+    @HostBinding('style.max-width')
+    public maxWidth = '100%';
+
+    /**
+     * @hidden @internal
+     * Gets/Sets the `minHeight` properties of the current pane.
+     */
+    @HostBinding('style.min-height')
+    public minHeight = '0';
+
+    /**
+     * @hidden @internal
+     * Gets/Sets the `maxHeight` properties of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.max-height')
-    @HostBinding('style.max-width')
     public maxHeight = '100%';
 
     /** @hidden @internal */
@@ -176,10 +207,13 @@ export class IgxSplitterPaneComponent {
     public set collapsed(value) {
         if (this.owner) {
             // reset sibling sizes when pane collapse state changes.
-            this._getSiblings().forEach(sibling => sibling.size = 'auto');
+            this._getSiblings().forEach(sibling => {
+                sibling.size = 'auto'
+                sibling.dragSize = null;
+            });
         }
         this._collapsed = value;
-        this.display = this._collapsed ? 'none' : 'flex' ;
+        this.display = this._collapsed ? 'none' : 'flex';
         this.collapsedChange.emit(this._collapsed);
     }
 

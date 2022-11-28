@@ -1,18 +1,16 @@
 import {
-    Component,
-    EventEmitter,
+    ChangeDetectorRef, Component, ElementRef, EventEmitter,
     HostBinding,
     HostListener,
     Input,
+    OnDestroy,
     Output,
-    ViewChild,
-    ElementRef,
-    ChangeDetectorRef
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { noop, Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { noop } from 'rxjs';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -50,9 +48,16 @@ let nextId = 0;
     selector: 'igx-radio',
     templateUrl: 'radio.component.html'
 })
-export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
+export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
     private static ngAcceptInputType_disabled: boolean | '';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject<boolean>();
+
     /**
      * Returns reference to native radio element.
      * ```typescript
@@ -130,7 +135,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     @Input()
-    public labelPosition: RadioLabelPosition | string = 'after';
+    public labelPosition: RadioLabelPosition | string;
 
     /**
      * Sets/gets the `value` attribute.
@@ -289,7 +294,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     @HostBinding('class.igx-radio--disabled')
     @Input()
     public get disabled(): boolean {
-        return this._disabled;
+        return this._disabled || false;
     }
     public set disabled(value: boolean) {
         this._disabled = (value as any === '') || value;
@@ -323,7 +328,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      * @internal
      */
-    private _disabled = false;
+    private _disabled: boolean;
     /**
      * @hidden
      */
@@ -335,6 +340,26 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     private _onChangeCallback: (_: any) => void = noop;
 
     constructor(private cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+     public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+     /**
+     * @hidden
+     * @internal
+     */
+      @HostListener('change', ['$event'])
+      public _changed(){
+          if(event instanceof Event){
+            event.preventDefault();
+          }
+      }
 
     /**
      * @hidden

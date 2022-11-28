@@ -101,6 +101,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public rowData: any;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public columnData: any;
+
+    /**
      * Sets/gets the template of the cell.
      * ```html
      * <ng-template #cellTemplate igxCell let-value>
@@ -151,7 +158,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public formatter: (value: any, rowData?: any) => any;
+    public formatter: (value: any, rowData?: any, columnData?: any) => any;
 
     /**
      * Gets the cell template context object.
@@ -295,7 +302,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
 
         if (this.formatter) {
-            return this.formatter(this.value, this.rowData);
+            return this.formatter(this.value, this.rowData, this.columnData);
         }
 
         const args = this.column.pipeArgs;
@@ -856,8 +863,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
+            const currentActive = this.selectionService.activeElement;
+            this.selectionService.activeElement = node;
             const cancel = this._updateCRUDStatus(event);
             if (cancel) {
+                this.selectionService.activeElement = currentActive;
                 return;
             }
 
@@ -867,7 +877,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 return;
             }
 
-            this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
             if (this.grid.crudService.cellInEditMode && !this.editMode) {

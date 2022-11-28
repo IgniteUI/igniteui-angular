@@ -25,7 +25,7 @@ import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
@@ -41,6 +41,8 @@ import {
 import {
     IComboFilteringOptions, IComboItemAdditionEvent, IComboSearchInputEventArgs
 } from './public_api';
+import { IComboResourceStrings } from '../core/i18n/combo-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -295,7 +297,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         return this._data;
     }
     public set data(val: any[] | null) {
-        this._data = (val) ? val : [];
+        // igxFor directive ignores undefined values
+        // if the combo uses simple data and filtering is applied
+        // an error will occur due to the mismatch of the length of the data
+        // this can occur during filtering for the igx-combo and
+        // during filtering & selection for the igx-simple-combo
+        // since the simple combo's input is both a container for the selection and a filter
+        this._data = (val) ? val.filter(x => x !== undefined) : [];
     }
 
     /**
@@ -446,6 +454,23 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+    @Input()
+    public get resourceStrings(): IComboResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.ComboResStrings;
+        }
+        return this._resourceStrings;
+    }
+    public set resourceStrings(value: IComboResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
      * Emitted before the dropdown is opened
      *
      * ```html
@@ -527,8 +552,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * <!-- Set in markup -->
      *  <igx-combo #combo>
      *      ...
-     *      <ng-template igxComboItem>
-     *          <div class="custom-item" let-item let-key="valueKey">
+     *      <ng-template igxComboItem let-item let-key="valueKey">
+     *          <div class="custom-item">
      *              <div class="custom-item__name">{{ item[key] }}</div>
      *              <div class="custom-item__cost">{{ item.cost }}</div>
      *          </div>
@@ -870,6 +895,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected _filteredData = [];
     protected _displayKey: string;
     protected _remoteSelection = {};
+    protected _resourceStrings;
     protected _valid = IgxComboState.INITIAL;
     protected ngControl: NgControl = null;
     protected destroy$ = new Subject<any>();
@@ -937,6 +963,13 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.dataPreLoad.emit(eventArgs);
         });
+    }
+
+    /** @hidden @internal */
+    public ngDoCheck() {
+        if (this.data?.length && this.selection.length) {
+            this._value = this.createDisplayText(this.selection, []);
+        }
     }
 
     /** @hidden @internal */
@@ -1020,11 +1053,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (!this.searchValue) {
             return;
         }
-        const newValue = this.searchValue.trim();
         const addedItem = this.displayKey ? {
-            [this.valueKey]: newValue,
-            [this.displayKey]: newValue
-        } : newValue;
+            [this.valueKey]: this.searchValue,
+            [this.displayKey]: this.searchValue
+        } : this.searchValue;
         if (this.groupKey) {
             Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
@@ -1172,8 +1204,12 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         if (this.comboAPI.valueKey === null) {
             return keys;
         }
+
         // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
+        return keys.map(key => isNaNvalue(key)
+            ? this.data.find(entry => isNaNvalue(entry[this.valueKey]))
+            : this.data.find(entry => entry[this.valueKey] === key))
+        .filter(e => e !== undefined);
     }
 
     protected checkMatch(): void {
@@ -1183,14 +1219,20 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
-        return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        const searchValue = this.searchValue || this.comboInput?.value;
+        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
+        if (this.ngControl) {
+            if (this.ngControl.control.validator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.inputGroup.isRequired = error && error.required;
+            } else {
+                // P.M. 18 May 2022: IgxCombo's asterisk not removed when removing required validator dynamically in reactive form #11543
+                this.inputGroup.isRequired = false;
+            }
         }
     }
 
@@ -1229,6 +1271,16 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.registerRemoteEntries(addedItems);
         this.registerRemoteEntries(removedItems, false);
         return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+    }
+
+    protected get required(): boolean {
+        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
     }
 
     public abstract get filteredData(): any[] | null;

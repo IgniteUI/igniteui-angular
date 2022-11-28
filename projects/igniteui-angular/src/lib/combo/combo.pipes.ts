@@ -6,19 +6,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sor
 import { IComboFilteringOptions } from './combo.component';
 
 /** @hidden */
-@Pipe({
-    name: 'comboClean'
-})
-export class IgxComboCleanPipe implements PipeTransform {
-    public transform(collection: any[]) {
-        return collection.filter(e => !!e);
-    }
-}
-
-/** @hidden */
-@Pipe({
-    name: 'comboFiltering'
-})
+@Pipe({ name: 'comboFiltering' })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
         filteringOptions: IComboFilteringOptions, shouldFilter = false) {
@@ -28,13 +16,13 @@ export class IgxComboFilteringPipe implements PipeTransform {
         if (!searchValue || !shouldFilter) {
             return collection;
         } else {
-            const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
+            const searchTerm = filteringOptions.caseSensitive ? searchValue : searchValue.toLowerCase();
             if (displayKey != null) {
                 return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey]?.includes(searchTerm) :
                     e[displayKey]?.toString().toLowerCase().includes(searchTerm));
             } else {
-                return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
-                    e.toString().toLowerCase().includes(searchTerm));
+                return collection.filter(e => filteringOptions.caseSensitive ? e?.includes(searchTerm) :
+                    e?.toString().toLowerCase().includes(searchTerm));
             }
         }
     }
@@ -47,6 +35,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection) {
+        // TODO: should filteredData be changed here?
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
