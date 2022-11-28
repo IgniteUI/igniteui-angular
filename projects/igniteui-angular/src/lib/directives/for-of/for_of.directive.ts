@@ -893,6 +893,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
