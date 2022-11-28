@@ -58,6 +58,88 @@ export class TabsSampleComponent implements OnInit {
         { ID: 'FRANR', CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
         { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
     ];
+    public localData;
+    public lastYear = new Date().getFullYear() - 1;
+    public employeesHData = [
+            {
+              EmployeeID: '56250fa57ab1535722e564a6',
+              FirstName: 'Downs',
+              LastName: 'Holcomb',
+              Country: 'Italy',
+              Age: 35,
+              RegisteredDate2: new Date(this.lastYear, 7, 25),
+              IsActive2: false,
+              EmployeeID2: '56250fa57ab1535722e564a6',
+              FirstName2: 'Downs',
+              LastName2: 'Holcomb',
+              Country2: 'Italy',
+              Age2: 35
+            },
+            {
+              EmployeeID: '56250fa5c0fd04f12555d44d',
+              FirstName: 'Mckenzie',
+              LastName: 'Calderon',
+              Country: 'USA',
+              Age: 26,
+              RegisteredDate: new Date(this.lastYear - 1, 9, 22),
+              IsActive: false,
+              RegisteredDate2: new Date(this.lastYear, 7, 25),
+              IsActive2: false,
+              EmployeeID2: '56250fa57ab1535722e564a6',
+              FirstName2: 'Downs',
+              LastName2: 'Holcomb',
+              Country2: 'Italy',
+              Age2: 35
+              
+            },
+            {
+              EmployeeID: '56250fa565a7bcc21f6bd15e',
+              FirstName: 'Howell',
+              LastName: 'Hawkins',
+              Country: 'Canada',
+              Age: 25,
+              RegisteredDate: new Date(this.lastYear, 8, 8),
+              IsActive: false,
+              RegisteredDate2: new Date(this.lastYear, 7, 25),
+              IsActive2: false,
+              EmployeeID2: '56250fa57ab1535722e564a6',
+              FirstName2: 'Downs',
+              LastName2: 'Holcomb',
+              Country2: 'Italy',
+              Age2: 35
+            },
+            {
+              EmployeeID: '56250fa5d71a83c33f3f6479',
+              FirstName: 'Sheppard',
+              LastName: 'Nicholson',
+              Country: 'Italy',
+              Age: 49,
+              RegisteredDate: new Date(this.lastYear - 1, 6, 28),
+              IsActive: false,
+              RegisteredDate2: new Date(this.lastYear, 7, 25),
+              IsActive2: false,
+              EmployeeID2: '56250fa57ab1535722e564a6',
+              FirstName2: 'Downs',
+              LastName2: 'Holcomb',
+              Country2: 'Italy',
+              Age2: 35
+            },
+            {
+              EmployeeID: '56250fa546abbe8c616d37eb',
+              FirstName: 'Bettye',
+              LastName: 'Trujillo',
+              Country: 'Canada',
+              Age: 37,
+              RegisteredDate: new Date(new Date().setDate(-20)),
+              IsActive: false,
+              RegisteredDate2: new Date(this.lastYear, 7, 25),
+              IsActive2: false,
+              EmployeeID2: '56250fa57ab1535722e564a6',
+              FirstName2: 'Downs',
+              LastName2: 'Holcomb',
+              Country2: 'Italy',
+              Age2: 35
+            }];
 
     public contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
@@ -99,6 +181,7 @@ export class TabsSampleComponent implements OnInit {
             const tab = 'Tab ' + i;
             this.scrollableTabs.push(tab);
         }
+        this.localData = this.employeesHData;
     }
 
     public addTab() {
