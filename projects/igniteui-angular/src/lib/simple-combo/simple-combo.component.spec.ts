@@ -432,7 +432,8 @@ describe('IgxSimpleCombo', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxSimpleComboSampleComponent
+                    IgxSimpleComboSampleComponent,
+                    IgxSimpleComboEmptyComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -631,6 +632,13 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownList);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
+        it('should initialize the component with empty data and bindings', () => {
+            fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
+            expect(() => {
+                fixture.detectChanges();
+            }).not.toThrow();
+            expect(fixture.componentInstance.combo).toBeDefined();
+        });
     });
 
     describe('Binding tests: ', () => {
@@ -805,7 +813,8 @@ describe('IgxSimpleCombo', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxSimpleComboSampleComponent,
-                    IgxComboInContainerTestComponent
+                    IgxComboInContainerTestComponent,
+                    IgxSimpleComboIconTemplatesComponent
                 ],
                 imports: [
                     IgxSimpleComboModule,
@@ -895,6 +904,21 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should not clear selection on tab/blur after filtering and selecting a value', () => {
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('Wisconsin');
+        });
+
         it('should display the AddItem button when allowCustomValues is true and there is a partial match', fakeAsync(() => {
             fixture.componentInstance.allowCustomValues = true;
             fixture.detectChanges();
@@ -974,9 +998,10 @@ describe('IgxSimpleCombo', () => {
             const toggleButton = fixture.debugElement.query(By.directive(IgxIconComponent));
             expect(toggleButton).toBeDefined();
 
-            toggleButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            toggleButton.nativeElement.click();
             fixture.detectChanges();
 
+            expect(combo.collapsed).toBeFalsy();
             expect(combo.onClick).toHaveBeenCalledTimes(1);
             expect((combo as any).virtDir.scrollTo).toHaveBeenCalledWith(0);
         });
@@ -1118,7 +1143,7 @@ describe('IgxSimpleCombo', () => {
 
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(null);
+            expect(combo.value).toBe('');
 
             combo.open();
             fixture.detectChanges();
@@ -1145,7 +1170,7 @@ describe('IgxSimpleCombo', () => {
 
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toBe(undefined);
+            expect(combo.value).toBe('');
         });
 
         it('should select falsy values except "undefined"', () => {
@@ -1260,6 +1285,30 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toEqual([]);
             expect(combo.value).toBe('');
         });
+
+        it('should toggle dropdown list on clicking a templated toggle icon', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboIconTemplatesComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            const toggleIcon = fixture.debugElement.query(By.directive(IgxIconComponent));
+            expect(toggleIcon).toBeDefined();
+
+            expect(toggleIcon.nativeElement.textContent).toBe('search');
+            expect(combo.collapsed).toBeTruthy();
+            
+            toggleIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeFalsy();
+
+            toggleIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+
+            expect(combo.collapsed).toBeTruthy();
+        }));
     });
 
     describe('Display density', () => {
@@ -1835,6 +1884,33 @@ class IgxSimpleComboSampleComponent {
 
     public selectionChanging() {
     }
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`
+})
+export class IgxSimpleComboEmptyComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] = [];
+    public name!: string;
+}
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
+                    <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
+                </igx-simple-combo>`
+})
+export class IgxSimpleComboIconTemplatesComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data: any[] =  [
+        { name: 'Sofia', id: '1' }, 
+        { name: 'London', id: '2' }, 
+    ];;
+    public name!: string;
 }
 
 @Component({
