@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from '../shared/data';
 
-import { IgxGridComponent, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
+import { IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -96,6 +96,10 @@ export class GridRowEditSampleComponent {
         event.stopPropagation();
         this.getGridById(gridID).deleteRow(rowID);
         this.refreshAll();
+    }
+
+    public rowDeleted(event: IRowDataEventArgs) {
+        console.log("Row ID is: " + event.key)
     }
 
     public undo(gridID) {

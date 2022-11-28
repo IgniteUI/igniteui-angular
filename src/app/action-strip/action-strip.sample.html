@@ -43,8 +43,13 @@
 <div class="sample-column">
     <h5>Grid Pinning and Editing Actions</h5>
     <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
-        [rowEditable]="true" [primaryKey]="'ID'" [displayDensity]="displayDensity"
-        (mouseleave)="onMouseLeave(actionstrip2)">
+        [rowEditable]="true" [displayDensity]="displayDensity"
+        (mouseleave)="onMouseLeave(actionstrip2)"
+        (rowDelete)="rowDelete($event)"
+        (rowDeleted)="rowDeleted($event)"
+        (rowAdd)="rowAdd($event)"
+        (rowAdded)="rowAdded($event)"
+        >
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
             [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
             <ng-template igxCell let-cell="cell" let-val>
@@ -56,7 +61,7 @@
 
         <igx-action-strip #actionstrip2 [displayDensity]="displayDensity">
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            <igx-grid-editing-actions></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true" [editRow]="true" [deleteRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
 </div>
