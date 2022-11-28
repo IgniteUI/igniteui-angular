@@ -284,10 +284,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @HostBinding('attr.role')
     public role = 'grid';
 
-    public getDateDimensionType() {
-        return IgxPivotDateDimension;
-    }
-
     /**
      * Enables a super compact theme for the component.
      * @remarks
