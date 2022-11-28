@@ -4804,7 +4804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
     }
 
-    /* blazorCSSuppress */
+    /* csSuppress */
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
      *
