@@ -350,7 +350,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         const record = data[index];
-        grid.rowDeletedNotifier.next({ data: data[index], owner: grid });
+        grid.rowDeletedNotifier.next({ data: data[index], owner: grid, key: data[index][grid.primaryKey] });
 
         this.deleteRowFromData(rowId, index);
 
