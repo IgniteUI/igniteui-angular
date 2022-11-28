@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+
+## 15.0.1
+
+- `igxPivotGrid`
+    - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
+
 ## 15.0.0
 
 ### New Features
