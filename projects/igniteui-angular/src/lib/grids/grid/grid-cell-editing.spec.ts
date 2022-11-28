@@ -574,6 +574,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.key,
+                key: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
@@ -597,6 +598,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell2.id,
                 rowID: cell2.row.key,
+                key: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
                 valid: true,
@@ -624,6 +626,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
@@ -648,6 +651,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             cellArgs = {
                 cellID: cell.cellID,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
@@ -677,6 +681,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cellArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
+                key: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 newValue: 'John Brown',
@@ -699,6 +704,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             initialRowData = {...cell.row.data};
             cellArgs = {
                 cellID: cell.cellID,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 newValue: 20,
@@ -732,6 +738,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 'John Brown',
@@ -758,6 +765,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 20,
@@ -797,6 +805,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.key,
+                key: cell.row.key,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: cellValue,
@@ -940,6 +949,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
+                key: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 oldValue: initialValue,
                 newValue,
@@ -971,6 +981,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.key,
+                key: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
@@ -1007,6 +1018,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             cellArgs = {
+                key: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
@@ -1033,6 +1045,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             updatedRowData = Object.assign({}, cell.row.data, { age: secondNewValue });
             cellArgs = {
                 cellID: cell.id,
+                key: cell.row.key,
                 rowID: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
                 oldValue: 20,

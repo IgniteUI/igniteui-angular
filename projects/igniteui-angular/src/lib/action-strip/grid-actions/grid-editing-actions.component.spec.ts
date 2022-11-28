@@ -328,6 +328,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeleteArgs = {
                 rowID: row.key,
+                key: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
                 oldValue: null,
@@ -336,6 +337,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const rowDeletedArgs = {
                 data: treeGrid.getRowData(row.key),
+                key: row.key,
                 owner: treeGrid
             };
 

@@ -958,6 +958,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 const rowDeleteArgs = {
                     rowID: someRow.key,
+                    key: someRow.key,
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
                     oldValue: null,
@@ -999,6 +1000,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 const rowDeleteArgs = {
                     rowID: someRow.key,
+                    key: someRow.key,
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
                     oldValue: null,
