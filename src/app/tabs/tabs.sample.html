@@ -282,5 +282,33 @@
                 </igx-tab-item>
             </igx-tabs>
         </div>
+
+        
+        <div >
+            <h3 class="sample-title">Tab with grid</h3>
+            <igx-tabs>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>library_music</igx-icon>
+                        <span igxTabHeaderLabel>Albums</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        <igx-grid #grid1 [data]="localData" [autoGenerate]="true" width="100%" height="100%" >
+                        </igx-grid>
+                    </igx-tab-content>
+                </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>favorite</igx-icon>
+                        <span igxTabHeaderLabel>Favorite</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                       <div style="height: 80vh;">
+                        Test
+                       </div>
+                    </igx-tab-content>
+                </igx-tab-item>
+                </igx-tabs>
+        </div>
     </div>
 </div>
