@@ -480,13 +480,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     protected registerRemoteEntries(ids: any[], add = true) {
-        const selection = this.getValueDisplayPairs(ids)[0];
-
         if (add) {
-            this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey];
-
-        } else if (selection) {
-            delete this._remoteSelection[selection[this.valueKey]];
+            const selection = this.getValueDisplayPairs(ids)[0];
+            this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey].toString();
+        } else {
+            delete this._remoteSelection[ids[0]];
         }
     }
 
@@ -502,7 +500,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
             const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
-            if (searchValue !== remoteValue) {
+            if (remoteValue && searchValue !== remoteValue) {
                 this.clear();
             }
             return;
