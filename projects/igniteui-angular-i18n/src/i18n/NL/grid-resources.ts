@@ -165,6 +165,7 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Invoer mag niet meer dan {0} teken(s) lang zijn',
     igx_grid_email_validation_error: 'Er moet een geldig e-mailadres worden ingevoerd',
     igx_grid_pattern_validation_error: 'Invoer komt niet overeen met het vereiste patroon',
+    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
 };
 
 /**
