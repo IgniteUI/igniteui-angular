@@ -563,12 +563,25 @@ export class IgxGridSelectionService {
             oldSelection: currSelection, newSelection,
             added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection)
         };
+
+        if (this.grid.primaryKey) {
+            args.added = args.added.map(id => this.getRowDataById(id));
+            args.removed = args.removed.map(id => this.getRowDataById(id));
+            args.newSelection = args.newSelection.map(id => this.getRowDataById(id));
+            args.oldSelection = args.oldSelection.map(id => this.getRowDataById(id));
+        }
+
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             this.clearHeaderCBState();
             return;
         }
-        this.selectRowsWithNoEvent(args.newSelection, true);
+
+        if (this.grid.primaryKey) {
+            newSelection = newSelection.filter(row => args.newSelection.map(x => x[this.grid.primaryKey]).includes(row));
+        }
+
+        this.selectRowsWithNoEvent(newSelection, true);
     }
 
     public getRowDataById(rowID): any {
@@ -576,7 +589,7 @@ export class IgxGridSelectionService {
             return rowID;
         }
         const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data(true)).indexOf(rowID);
-        return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data(true)[rowIndex];
+        return rowIndex < 0 ? rowID : this.grid.gridAPI.get_all_data(true)[rowIndex];
     }
 
     public clearHeaderCBState(): void {

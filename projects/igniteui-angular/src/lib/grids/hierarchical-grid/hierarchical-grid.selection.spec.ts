@@ -19,12 +19,14 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 import { QueryList } from '@angular/core';
 import { CellType } from '../public_api';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
     let rowIsland2;
+    const gridData = SampleTestData.generateHGridData(5, 3);
 
     configureTestSuite();
 
@@ -634,10 +636,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(1);
             expect(childSpy).toHaveBeenCalledWith({
-                added: ['00'],
+                added: [gridData[0].childData[0]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['00'],
+                newSelection: [gridData[0].childData[0]],
                 oldSelection: [],
                 removed: [],
                 owner: childGrid,
@@ -652,12 +654,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(parentSpy).toHaveBeenCalledTimes(0);
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(childSpy).toHaveBeenCalledWith({
-                added: ['01'],
+                added: [gridData[0].childData[1]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['01'],
-                oldSelection: ['00'],
-                removed: ['00'],
+                newSelection: [gridData[0].childData[1]],
+                oldSelection: [gridData[0].childData[0]],
+                removed: [gridData[0].childData[0]],
                 owner: childGrid,
                 allRowsSelected: false
             });
@@ -671,10 +673,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(1);
             expect(parentSpy).toHaveBeenCalledWith({
-                added: ['1'],
+                added: [gridData[1]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['1'],
+                newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: [],
                 allRowsSelected: false
@@ -688,11 +690,11 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledTimes(2);
             expect(parentSpy).toHaveBeenCalledWith({
-                added: ['0', '2', '3', '4'],
+                added: [gridData[0], gridData[2], gridData[3], gridData[4]],
                 cancel: false,
                 event: mockEvent,
-                newSelection: ['1', '0', '2', '3', '4'],
-                oldSelection: ['1'],
+                newSelection: [gridData[1], gridData[0], gridData[2], gridData[3], gridData[4]],
+                oldSelection: [gridData[1]],
                 removed: [],
                 allRowsSelected: true
             });
