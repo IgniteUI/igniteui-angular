@@ -385,6 +385,17 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(column.width).toEqual('67px');
         }));
 
+        it('should autosize column correctly if there is scaling via css.', fakeAsync(/** height/width setter rAF */() => {
+            grid.nativeElement.style.transform = 'scale(0.6)';
+            const column = grid.getColumnByName('Items');
+
+            column.autosize();
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('92px');
+            grid.nativeElement.style.transform = '';
+        }));
+
         it('should autosize column programmatically based only on header.', fakeAsync(() => {
             const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ReleaseDate')[0];
             expect(column.width).toEqual('100px');
