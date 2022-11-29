@@ -2591,5 +2591,48 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotGrid.rowList.length).toBe(1);
             expect(pivotGrid.rowList.toArray()[0].data.dimensionValues.get('ProductCategory')).toBe('Bikes');
         });
+
+        it('should allow setting aggregatorName instead of aggregator.', () => {
+            pivotGrid.pivotConfiguration.values = [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        aggregatorName: 'SUM',
+                        key: 'SUM',
+                        label: 'Sum',
+                    },
+                    enabled: true
+                }
+            ];
+            pivotGrid.notifyDimensionChange(true);
+            fixture.detectChanges();
+            let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            expect(pivotRecord.aggregationValues.get('US')).toBe(296);
+            expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
+            expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
+            expect(pivotRecord.aggregationValues.get('Japan')).toBe(240);
+        });
+
+        it('should use aggregatorName if both aggregatorName and aggregator are set at the same time.', () => {
+            pivotGrid.pivotConfiguration.values = [
+                {
+                    member: 'UnitsSold',
+                    aggregate: {
+                        aggregatorName: 'SUM',
+                        aggregator: IgxPivotNumericAggregate.average,
+                        key: 'SUM',
+                        label: 'Sum',
+                    },
+                    enabled: true
+                }
+            ];
+            pivotGrid.notifyDimensionChange(true);
+            fixture.detectChanges();
+            let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            expect(pivotRecord.aggregationValues.get('US')).toBe(296);
+            expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
+            expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
+            expect(pivotRecord.aggregationValues.get('Japan')).toBe(240);
+        });
     });
 });
