@@ -894,6 +894,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
@@ -1282,7 +1283,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         const scrollable = this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
-            const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
+            const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this.initSizesCache(this.igxForOf) : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
             this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {

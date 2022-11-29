@@ -342,6 +342,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set data(value: any[] | null) {
+        const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -350,6 +351,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.cdr.markForCheck();
         if (this.isPercentHeight) {
             this.notifyChanges(true);
+        }
+        // check if any columns have width auto and if so recalculate their auto-size on data loaded.
+        if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
+            this.recalculateAutoSizes();
         }
     }
 
