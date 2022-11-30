@@ -31,14 +31,14 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cellElem = GridFunctions.getRowCells(fix, 0)[0];
             firstCell = grid.getCellByColumn(0, 'ID');
             firstCellElem = grid.gridAPI.get_cell_by_index(0, 'ID');
-        }));
+        });
 
         it('@Input properties and getters', () => {
             expect(firstCell.column.index).toEqual(grid.columnList.first.index);
@@ -283,7 +283,7 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         }));
 
-        it('Should not attach doubletap handler for non-iOS', fakeAsync(/** height/width setter rAF */() => {
+        it('Should not attach doubletap handler for non-iOS', () => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
@@ -294,9 +294,9 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(addListenerSpy).not.toHaveBeenCalled();
 
             platformUtil.isIOS = oldIsIOS;
-        }));
+        });
 
-        it('Should handle doubletap on iOS, trigger doubleClick event', fakeAsync(/** height/width setter rAF */() => {
+        it('Should handle doubletap on iOS, trigger doubleClick event', () => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
@@ -329,7 +329,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.doubleClick.emit).toHaveBeenCalledWith(args);
 
             platformUtil.isIOS = oldIsIOS;
-        }));
+        });
     });
 
     describe('No column widths', () => {
@@ -342,7 +342,7 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         }));
 
-        it('should not make last column width 0 when no column width is set', fakeAsync(/** height/width setter rAF */() => {
+        it('should not make last column width 0 when no column width is set', () => {
             const fix = TestBed.createComponent(NoColumnWidthGridComponent);
             fix.detectChanges();
             const columns = fix.componentInstance.grid.columns;
@@ -350,7 +350,7 @@ describe('IgxGrid - Cell component #grid', () => {
             lastCol._cells.forEach((cell) => {
                 expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
             });
-        }));
+        });
     });
 
     describe('Cells styles', () => {

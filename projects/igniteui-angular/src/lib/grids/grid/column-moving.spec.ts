@@ -43,13 +43,12 @@ describe('IgxGrid - Column Moving #grid', () => {
     }));
 
     describe('', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             grid.moving = true;
-        }));
+        });
 
         it('Should be able to reorder columns.', fakeAsync(() => {
             let columnsList = grid.columns;
@@ -717,13 +716,12 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             grid.moving = true;
-        }));
+        });
 
         it('Should reorder movable columns with templated headers.', (async () => {
             fixture.componentInstance.isResizable = true;
@@ -754,13 +752,12 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             grid.moving = true;
-        }));
+        });
 
         it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
 
@@ -1388,13 +1385,12 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             grid.moving = true;
-        }));
+        });
 
         it('MCH - should reorder only columns on the same level (top level simple column).', (async () => {
 
