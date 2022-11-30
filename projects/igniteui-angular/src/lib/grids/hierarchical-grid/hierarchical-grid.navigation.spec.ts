@@ -859,7 +859,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
 
             childLastCell = childGrid.selectedCells;
             expect(childLastCell.length).toBe(1);
