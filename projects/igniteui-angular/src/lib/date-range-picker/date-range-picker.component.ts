@@ -258,6 +258,20 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public outlet: IgxOverlayOutletDirective | ElementRef<any>;
 
     /**
+     * Show/hide week numbers
+     * 
+     * @remarks
+     * Default is `false`.
+     * 
+     * @example
+     * ```html
+     * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-picker>
+     * ``
+     */
+     @Input()
+     public showWeekNumbers = false;
+
+    /**
      * Emitted when the picker's value changes. Used for two-way binding.
      *
      * @example
@@ -1020,6 +1034,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.calendar.weekStart = this.weekStart;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.displayMonthsCount;
+        this.calendar.showWeekNumbers = this.showWeekNumbers;
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
