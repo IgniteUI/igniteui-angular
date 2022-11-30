@@ -287,6 +287,7 @@ export class IgxPivotDataSelectorComponent {
         return this.grid?.displayDensity;
     }
 
+    /* treatAsRef */
     /**
      * An @Input property that sets the grid.
      */
@@ -295,6 +296,7 @@ export class IgxPivotDataSelectorComponent {
         this._grid = value;
     }
 
+    /* treatAsRef */
     /**
      * Returns the grid.
      */
