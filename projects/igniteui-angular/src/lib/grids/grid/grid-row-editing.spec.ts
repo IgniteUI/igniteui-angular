@@ -63,7 +63,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let cellDebug: DebugElement;
         let gridContent: DebugElement;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -72,7 +72,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cellElem = grid.gridAPI.get_cell_by_index(2, 'ProductName');
             cellDebug = GridFunctions.getRowCells(fix, 2)[2];
             // row = grid.gridAPI.get_row_by_index(2);
-        }));
+        });
 
         it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', () => {
             grid.primaryKey = null;
@@ -464,14 +464,14 @@ describe('IgxGrid - Row Editing #grid', () => {
         let targetCell: any;
         let editedCell: CellType;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
 
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             gridContent = GridFunctions.getGridContent(fix);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -864,13 +864,14 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let cell: CellType;
         let cellElem: CellType;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
             cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
-        }));
+        });
+
         it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, () => {
             const mockEvent = new MouseEvent('click');
             spyOn(grid.gridAPI.crudService, 'endEdit');
@@ -1550,7 +1551,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let initialData: any;
         const $destroyer = new Subject<boolean>();
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1560,7 +1561,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             initialData = { ...initialRow.data };
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
-        }));
+        });
 
         afterEach(fakeAsync(() => {
             $destroyer.next(true);
@@ -2075,7 +2076,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
     describe('Custom overlay', () => {
 
-        it('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
+        it('Custom overlay', () => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -2097,9 +2098,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('Empty template', fakeAsync(/** height/width setter rAF */() => {
+        it('Empty template', () => {
             const fix = TestBed.createComponent(IgxGridEmptyRowEditTemplateComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -2134,7 +2135,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             cell = grid.getCellByColumn(0, 'ProductName');
             expect(cell.editMode).toBe(true);
-        }));
+        });
 
         it('should allow setting custom templates via Input.', () => {
             const fix = TestBed.createComponent(IgxGridCustomRowEditTemplateComponent);

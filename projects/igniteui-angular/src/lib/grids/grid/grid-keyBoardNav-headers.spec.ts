@@ -35,15 +35,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-            tick();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -742,7 +741,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(MRLTestComponent);
             fix.detectChanges();
 
@@ -750,7 +749,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -947,7 +946,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnGroupsNavigationTestComponent);
             fix.detectChanges();
 
@@ -955,7 +954,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

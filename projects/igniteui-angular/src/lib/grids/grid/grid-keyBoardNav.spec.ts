@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
@@ -35,12 +35,12 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
-        }));
+        });
 
         it('should move selected cell with arrow keys', () => {
             let selectedCell: CellType;
@@ -219,14 +219,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridContent = GridFunctions.getGridContent(fix);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -704,14 +704,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridContent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridGroupByComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

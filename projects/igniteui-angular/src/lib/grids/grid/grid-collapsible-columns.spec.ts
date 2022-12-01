@@ -12,12 +12,13 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
 
 describe('IgxGrid - multi-column headers #grid', () => {
 
     let contactInf;
     let countryInf;
-    let addressInf;
+    let addressInf: IgxColumnGroupComponent;
     let regionInf;
     let cityInf;
     let phoneCol;
@@ -42,7 +43,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -54,7 +55,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             phoneCol = grid.getColumnByName('Phone');
             countryCol = grid.getColumnByName('Country');
             emptyCol = grid.getColumnByName('Empty');
-        }));
+        });
 
         it('verify setting collapsible to a column group ', () => {
             GridFunctions.verifyColumnIsHidden(contactInf, false, 10);
@@ -271,12 +272,12 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CollapsibleGroupsTemplatesTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             addressInf = GridFunctions.getColGroup(grid, 'Address Information');
-        }));
+        });
 
         it('verify that templates can be defined in the markup', () => {
             const generalInf = GridFunctions.getColGroup(grid, 'General Information');
@@ -288,7 +289,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, generalInf, true, false, ['remove', 'add']);
         });
 
-        it('verify setting templates by property', () => {
+        it('verify setting templates by property', fakeAsync(() => {
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf);
 
             // Set template
@@ -304,22 +305,24 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             // remove template
             addressInf.collapsibleIndicatorTemplate = null;
+            // Changing the template back takes an async cycle, so tick is needed
+            tick();
             fixture.detectChanges();
 
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, false);
-        });
+        }));
     });
 
     describe('Dynamic Columns Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             pending('The test will work when use Angular 9');
             fixture = TestBed.createComponent(CollapsibleGroupsDynamicColComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('verify adding columns', () => {
             pending('The test will work when use Angular 9');
