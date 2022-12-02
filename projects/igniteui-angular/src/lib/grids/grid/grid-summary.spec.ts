@@ -225,7 +225,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['3', '0', '0', '0', '0', '1']);
             });
 
-            it('Last column summary cell should be aligned according to its data cells', fakeAsync(/** height/width setter rAF */() => {
+            it('Last column summary cell should be aligned according to its data cells', () => {
                 grid.columnList.forEach(c => {
                     c.width = '150px';
                 });
@@ -233,7 +233,6 @@ describe('IgxGrid - Summaries #grid', () => {
                 grid.width = '900px';
                 grid.height = '500px';
                 fixture.detectChanges();
-                tick(DEBOUNCETIME);
 
                 // Get last cell of first data row
                 const lastColumnNormalCell = GridFunctions.getRowCells(fixture, 0)[4];
@@ -248,17 +247,17 @@ describe('IgxGrid - Summaries #grid', () => {
                     'summary cell and data cell are not left aligned');
                 expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
                     'summary cell and data cell are not right aligned');
-            }));
+            });
         });
 
         describe('specific data: ', () => {
             let fixture: ComponentFixture<FilteringComponent>;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(FilteringComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
-            }));
+            });
 
             it('should have correct summaries when there are null and undefined values', () => {
                 grid.getColumnByName('ProductName').hasSummary = true;
@@ -283,11 +282,11 @@ describe('IgxGrid - Summaries #grid', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            }));
+            });
 
             it('should disableSummaries through grid API ', () => {
                 const summariedColumns = [];
@@ -1125,11 +1124,11 @@ describe('IgxGrid - Summaries #grid', () => {
     describe('CRUD with transactions: ', () => {
         let fix;
         let grid;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         it('Add row', () => {
             let newRow = {
@@ -1753,7 +1752,7 @@ describe('IgxGrid - Summaries #grid', () => {
     describe('Grouping tests: ', () => {
         let fix;
         let grid;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1761,7 +1760,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
-        }));
+        });
 
         it('should render correct summaries when there is grouped column', () => {
             verifyBaseSummaries(fix);
@@ -2427,11 +2426,10 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'May 4, 2014', 'Apr 3, 2019']);
         });
 
-        it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', fakeAsync(/** height/width setter rAF */() => {
+        it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', () => {
             grid.width = '400px';
             grid.height = '800px';
             fix.detectChanges();
-            tick(100);
 
             grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
             fix.detectChanges();
@@ -2459,7 +2457,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
             GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '19', '19', '38', '19']);
-        }));
+        });
     });
 
     const verifySummaryRowIndentationByDataRowIndex = (fixture, visibleIndex) => {

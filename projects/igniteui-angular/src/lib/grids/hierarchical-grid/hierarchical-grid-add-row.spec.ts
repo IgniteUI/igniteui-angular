@@ -27,12 +27,12 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     }));
 
     describe(' Basic', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             _actionStrip = fixture.componentInstance.actionStrip;
-        }));
+        });
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
             const row = hierarchicalGrid.rowList.first;
