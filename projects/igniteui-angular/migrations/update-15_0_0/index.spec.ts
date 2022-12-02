@@ -109,6 +109,31 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should NOT replace CSS custom properties prefix for internal variables', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`::ng-deep {
+	.custom-body {
+		width: var(--igx-icon-size);
+	}
+}`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`::ng-deep {
+	.custom-body {
+		width: var(--igx-icon-size);
+	}
+}`
+        );
+    });
+
     it('should remove the $palette prop from component themes', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,
