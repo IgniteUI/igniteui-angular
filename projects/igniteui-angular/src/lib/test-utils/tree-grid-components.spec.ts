@@ -652,9 +652,7 @@ export class IgxTreeGridLoadOnDemandComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
-            done(this.allData.filter(r => r.ParentID === parentID));
-        }, 1000);
+        requestAnimationFrame(() => done(this.allData.filter(r => r.ParentID === parentID)));
     };
 }
 @Component({
@@ -696,9 +694,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
-            done(this.allData.filter(r => r.ParentID === parentID));
-        }, 1000);
+        requestAnimationFrame(() => done(this.allData.filter(r => r.ParentID === parentID)));
     };
 }
 
@@ -741,10 +737,10 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const children = this.getChildren(parentID);
             done(children);
-        }, 1000);
+        });
     };
 
     private getChildren(parentID) {
