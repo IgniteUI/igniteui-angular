@@ -265,7 +265,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * 
      * @example
      * ```html
-     * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-picker>
+     * <igx-date-range-picker [showWeekNumbers]="true"></igx-date-range-picker>
      * ``
      */
      @Input()
