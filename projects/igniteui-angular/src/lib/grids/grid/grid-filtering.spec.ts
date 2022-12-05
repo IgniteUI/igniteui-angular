@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
+import { IColumnPipeArgs, IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips/public_api';
 import {
@@ -20,6 +20,8 @@ import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-funct
 import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ExpressionUI } from '../filtering/excel-style/common';
+import { Calendar } from '../../calendar/calendar';
+import { formatDate } from '@angular/common';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
@@ -806,6 +808,35 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
+        tick(30);
+        fix.detectChanges();
+
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columnList.length);
+        expect(grid.rowList.length).toEqual(1);
+
+        const filteringExpressions = grid.filteringExpressionsTree;
+        const args = { owner: grid, cancel: false, filteringExpressions };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+    }));
+
+    it('should respect pipeArgs when applying global filtering', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.filteringDone, 'emit');
+        debugger;
+
+        const pipeArgs: IColumnPipeArgs = {
+            format: 'short'
+        };
+        grid.getColumnByName('ReleaseDate').pipeArgs = pipeArgs;
+        fix.detectChanges();
+
+        const calendar = new Calendar();
+        const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+        const searchDate = calendar.timedelta(today, 'day', 15);
+
+        grid.filteringLogic = FilteringLogic.Or;
+        grid.filterGlobal(formatDate(searchDate, 'short', grid.locale), IgxStringFilteringOperand.instance().condition('contains'));
         tick(30);
         fix.detectChanges();
 
