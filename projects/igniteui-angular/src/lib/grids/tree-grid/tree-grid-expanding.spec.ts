@@ -1,5 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridAPIService, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridExpandingComponent,
@@ -20,7 +20,7 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
 
-describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
+fdescribe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;;
@@ -35,19 +35,18 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 IgxTreeGridLoadOnDemandChildDataComponent
             ],
             imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
-        })
-            .compileComponents();
+                NoopAnimationsModule,
+                IgxTreeGridModule
+            ]
+        }).compileComponents();
     }));
 
     describe('Child Collection', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -264,8 +263,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', async () => {
-            treeGrid.perPage = 50;
-            await wait();
+            treeGrid.paginator.perPage = 50;
             fix.detectChanges();
 
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -344,7 +342,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         it('should update current page when \'collapseAll\' ', fakeAsync(() => {
             // Test prerequisites
             fix.detectChanges();
-            treeGrid.perPage = 4;
+            treeGrid.paginator.perPage = 4;
             fix.detectChanges();
             tick(16);
 
@@ -353,29 +351,28 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // Verify current page
             verifyGridPager(fix, 4, '147', '1\xA0of\xA05', [true, true, false, false]);
-            expect(treeGrid.totalPages).toBe(5);
+            expect(treeGrid.paginator.totalPages).toBe(5);
 
             // Go to fourth page
-            treeGrid.page = 3;
+            treeGrid.paginator.page = 3;
             fix.detectChanges();
             tick(16);
 
             // Verify current page
             verifyGridPager(fix, 4, '17', '4\xA0of\xA05', [false, false, false, false]);
-            expect(treeGrid.totalPages).toBe(5);
+            expect(treeGrid.paginator.totalPages).toBe(5);
 
             treeGrid.collapseAll();
             fix.detectChanges();
 
             // Verify current page is the first one and only root rows are visible.
             verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
-            expect(treeGrid.totalPages).toBe(1);
+            expect(treeGrid.paginator.totalPages).toBe(1);
         }));
 
         it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
-            treeGrid.perPage = 5;
+            treeGrid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -385,7 +382,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // Verify current page
             verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
-            expect(treeGrid.totalPages).toBe(1);
+            expect(treeGrid.paginator.totalPages).toBe(1);
 
             // Expand a row
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
@@ -395,7 +392,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // Verify current page
             verifyGridPager(fix, 5, '147', '1\xA0of\xA02', [true, true, false, false]);
-            expect(treeGrid.totalPages).toBe(2);
+            expect(treeGrid.paginator.totalPages).toBe(2);
 
             // Expand another row
             indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[1]);
@@ -412,13 +409,12 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // Verify current page
             verifyGridPager(fix, 5, '17', '2\xA0of\xA03', [false, false, false, false]);
-            expect(treeGrid.totalPages).toBe(3);
+            expect(treeGrid.paginator.totalPages).toBe(3);
         }));
 
         it('Should update the paginator when a row of any level is collapsed', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
-            treeGrid.perPage = 5;
+            treeGrid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -428,10 +424,10 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // Verify current page
             verifyGridPager(fix, 5, '147', '1\xA0of\xA04', [true, true, false, false]);
-            expect(treeGrid.totalPages).toBe(4);
+            expect(treeGrid.paginator.totalPages).toBe(4);
 
             // Go to third page
-            treeGrid.page = 2;
+            treeGrid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
             verifyGridPager(fix, 5, '19', '3\xA0of\xA04', [false, false, false, false]);
@@ -447,9 +443,9 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // // Verify current page
             verifyGridPager(fix, 4, '19', '3\xA0of\xA03', [false, false, true, true]);
-            expect(treeGrid.totalPages).toBe(3);
+            expect(treeGrid.paginator.totalPages).toBe(3);
 
-            treeGrid.page = 0;
+            treeGrid.paginator.page = 0;
             fix.detectChanges();
             tick(16);
             indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
@@ -458,16 +454,17 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             // // Verify current page
             verifyGridPager(fix, 5, '147', '1\xA0of\xA02', [true, true, false, false]);
-            expect(treeGrid.totalPages).toBe(2);
+            expect(treeGrid.paginator.totalPages).toBe(2);
         }));
 
-        it('Should update the paginator when navigating through pages', () => {
-            // Test prerequisites
+        it('Should update the paginator when navigating through pages', async () => {
+            // Async tick is required for the pager to be rendered
             fix.detectChanges();
+            await wait();
 
             // Verify current page
             verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
-            expect(treeGrid.totalPages).toBe(1);
+            expect(treeGrid.paginator.totalPages).toBe(1);
 
             // Go to third page
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
@@ -484,25 +481,23 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
             // Verify current page
             verifyGridPager(fix, 1, '101', '2\xA0of\xA02', [false, false, true, true]);
-            expect(treeGrid.totalPages).toBe(2);
+            expect(treeGrid.paginator.totalPages).toBe(2);
 
             GridFunctions.navigateToFirstPage(tGrid);
             fix.detectChanges();
             // Verify current page
             verifyGridPager(fix, 10, '147', '1\xA0of\xA02', [true, true, false, false]);
-            expect(treeGrid.totalPages).toBe(2);
+            expect(treeGrid.paginator.totalPages).toBe(2);
         });
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
-            fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.expansionDepth = 0;
             fix.detectChanges();
-        }));
+        });
 
         it('check row expanding and collapsing are changing rows count (UI)', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -906,7 +901,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             // Test prerequisites
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            treeGrid.perPage = 5;
+            treeGrid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -932,7 +927,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
             // Verify current page
             verifyGridPager(fix, 1, '9', '2\xA0of\xA02', [false, false, true, true]);
-            expect(treeGrid.totalPages).toBe(2);
+            expect(treeGrid.paginator.totalPages).toBe(2);
 
             GridFunctions.navigateToPrevPage(tGrid);
             fix.detectChanges();
@@ -946,12 +941,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     describe('Load On Demand', () => {
 
         describe('Primary/Foreign key', () => {
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandComponent);
                 fix.detectChanges();
-                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
-            }));
+            });
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);
@@ -1047,7 +1041,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 treeGrid.expandRow(1);
                 fix.detectChanges();
-                tick(1000);
+                tick();
                 fix.detectChanges();
 
                 expect(treeGrid.rowList.length).toBe(5);
@@ -1058,7 +1052,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 treeGrid.expandRow(2);
                 fix.detectChanges();
-                tick(1000);
+                tick();
                 fix.detectChanges();
 
                 expect(treeGrid.rowList.length).toBe(7);
@@ -1072,12 +1066,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         describe('ChildDataKey', () => {
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandChildDataComponent);
                 fix.detectChanges();
-                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
-            }));
+            });
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);
@@ -1088,14 +1081,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 let indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 fix.detectChanges();
-                await wait(500);
+                await wait();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, true);
                 expect(rows.length).toBe(3);
                 fix.detectChanges();
-                await wait(550);
+                await wait();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1104,7 +1097,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 fix.detectChanges();
-                await wait(16);
+                await wait();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1119,13 +1112,13 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(3);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
-                await wait(500);
+                await wait();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, true);
                 expect(rows.length).toBe(3);
-                await wait(550);
+                await wait();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1135,12 +1128,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         describe('HasChildrenKey', () => {
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridLoadOnDemandHasChildrenComponent);
                 fix.detectChanges();
-                tick(16);
                 treeGrid = fix.componentInstance.treeGrid;
-            }));
+            });
 
             it('check expanding and collapsing a row with children', async () => {
                 let rows = TreeGridFunctions.getAllRows(fix);
@@ -1152,22 +1144,22 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 let indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
-                await wait(500);
                 fix.detectChanges();
+                await wait();
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(firstRow, true);
                 expect(rows.length).toBe(3);
-                await wait(550);
                 fix.detectChanges();
+                await wait();
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
                 expect(rows.length).toBe(5);
                 indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
-                await wait(16);
                 fix.detectChanges();
+                await wait();
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
