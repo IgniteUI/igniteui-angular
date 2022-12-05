@@ -511,7 +511,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
             this.clear();
-            return;
         }
     }
 
