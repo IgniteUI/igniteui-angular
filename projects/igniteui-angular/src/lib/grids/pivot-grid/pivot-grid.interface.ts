@@ -111,6 +111,9 @@ export interface IPivotDimension {
     childLevel?: IPivotDimension;
     /** Field name to use in order to extract value. */
     memberName: string;
+
+    /* csTreatAsEvent: MemberFunctionHandler */
+    /* blazorOnlyScript */
     /** Function that extracts the value */
     memberFunction?: (data: any) => any;
     /** Enables/Disables a particular dimension from pivot structure. */
