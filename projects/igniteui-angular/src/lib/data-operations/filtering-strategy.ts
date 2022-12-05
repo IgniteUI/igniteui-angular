@@ -217,10 +217,33 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         const column = grid?.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, fieldName);
 
-        value = column?.formatter && this.shouldFormatFilterValues(column) ?
-            column.formatter(value, rec) :
-            value && (isDate || isTime) ? parseDate(value) : value;
+        if (column?.formatter) {
+            if (this.shouldFormatFilterValues(column)) {
+                return column.formatter(value, rec);
+            }
 
+            return value && (isDate || isTime) ? parseDate(value) : value;
+        }
+
+        if (column) {
+            const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
+            const locale = grid.locale;
+
+            switch (column.dataType) {
+                case GridColumnDataType.Date:
+                case GridColumnDataType.DateTime:
+                case GridColumnDataType.Time:
+                    return formatDate(value, format, locale, timezone);
+                case GridColumnDataType.Currency:
+                    return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
+                case GridColumnDataType.Number:
+                    return formatNumber(value, locale, digitsInfo);
+                case GridColumnDataType.Percent:
+                    return formatPercent(value, locale, digitsInfo);
+                default:
+                    return value;
+            }
+        }
         return value;
     }
 }
