@@ -3,6 +3,7 @@ import { IgxSummaryResult } from './grid-summary';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
+import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
 /** @hidden */
 @Injectable()
@@ -110,7 +111,7 @@ export class IgxGridSummaryService {
         return this.summaryHeight;
     }
 
-    public calculateSummaries(rowID, data, groupRecord) {
+    public calculateSummaries(rowID, data, groupRecord?: IGroupByRecord) {
         let rowSummaries = this.summaryCacheMap.get(rowID);
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
