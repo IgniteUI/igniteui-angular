@@ -5,6 +5,7 @@ import { OverlaySettings } from '../../services/overlay/utilities';
 /* blazorElement */
 /* wcElementTag: igc-grid-toolbar-advanced-filtering */
 /* blazorIndirectRender */
+/* blazorAlternateBaseType: GridToolbarBaseAction */
 /* jsonAPIManageItemInMarkup */
 /**
  * Provides a pre-configured button to open the advanced filtering dialog of the grid.

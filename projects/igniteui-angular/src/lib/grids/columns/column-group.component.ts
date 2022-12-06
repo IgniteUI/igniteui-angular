@@ -40,6 +40,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /* contentChildren */
     /* blazorTreatAsCollection */
     /* blazorCollectionName: ColumnCollection */
+    /* blazorCollectionItemName: Column */
+    /* alternateType: HTMLCollection */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public children = new QueryList<IgxColumnComponent>();
 

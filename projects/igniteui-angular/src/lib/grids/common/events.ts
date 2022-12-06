@@ -69,6 +69,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 }
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
+    /* blazorSuppress */
     owner: GridType;
 }
 
