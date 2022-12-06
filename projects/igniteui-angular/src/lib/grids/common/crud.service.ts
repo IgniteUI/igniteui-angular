@@ -569,7 +569,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
 
-        if(this.nonEditable){
+        if (this.nonEditable){
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
             return;
         }
