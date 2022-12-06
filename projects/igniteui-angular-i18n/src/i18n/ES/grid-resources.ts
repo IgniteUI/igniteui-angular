@@ -165,7 +165,7 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'No escriba más de {0} caracteres',
     igx_grid_email_validation_error: 'Debe introducirse una dirección de correo electrónico válida.',
     igx_grid_pattern_validation_error: 'La entrada no coincide con el patrón necesario.',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_pivot_no_aggregator: 'No se encontró un agregador válido para {0}. Establezca un aggregatorName o aggregator válido.'
 };
 
 /**
