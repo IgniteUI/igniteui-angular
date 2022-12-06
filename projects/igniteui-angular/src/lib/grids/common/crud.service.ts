@@ -619,7 +619,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         if (!this.rowEditing && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
-        }        
+        }
         this.endEdit(true, event);
 
         if (parentRow != null && this.grid.expansionStates.get(parentRow.key)) {
