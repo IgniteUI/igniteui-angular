@@ -165,6 +165,7 @@ const GridResourceStringsNB_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Oppføringen må ikke være mer enn {0} tegn(er) lang',
     igx_grid_email_validation_error: 'Du må angi en gyldig e-postadresse',
     igx_grid_pattern_validation_error: 'Oppføringen samsvarer ikke med det nødvendige mønsteret',
+    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
 };
 
 /**

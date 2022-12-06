@@ -165,6 +165,7 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Długość wpisu nie może przekraczać {0} znaków',
     igx_grid_email_validation_error: 'Należy podać prawidłowy adres e-mail',
     igx_grid_pattern_validation_error: 'Wpis nie pasuje do wymaganego wzorca',
+    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
 };
 
 /**
