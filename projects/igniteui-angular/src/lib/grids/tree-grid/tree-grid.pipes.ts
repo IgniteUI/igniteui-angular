@@ -23,11 +23,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
         const flatData: any[] = [];
 
-        if (primaryKey && foreignKey) {
-            hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
-        } else if (childDataKey) {
+        if (childDataKey) {
             hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
+        } else if (primaryKey) {
+            hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         }
 
         this.grid.flatData = this.grid.transactions.enabled ?
@@ -253,14 +253,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                 const foreignKey = this.grid.foreignKey;
                 const childDataKey = this.grid.childDataKey;
 
-                if (foreignKey) {
-                    const flatDataClone = cloneArray(collection);
-                    return DataUtil.mergeTransactions(
-                        flatDataClone,
-                        aggregatedChanges,
-                        this.grid.primaryKey,
-                        this.grid.dataCloneStrategy);
-                } else if (childDataKey) {
+                if (childDataKey) {
                     const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
                     return DataUtil.mergeHierarchicalTransactions(
                         hierarchicalDataClone,
@@ -268,7 +261,14 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                         childDataKey,
                         this.grid.primaryKey,
                         this.grid.dataCloneStrategy
-                        );
+                    );
+                } else {
+                    const flatDataClone = cloneArray(collection);
+                    return DataUtil.mergeTransactions(
+                        flatDataClone,
+                        aggregatedChanges,
+                        this.grid.primaryKey,
+                        this.grid.dataCloneStrategy);
                 }
             }
         }
