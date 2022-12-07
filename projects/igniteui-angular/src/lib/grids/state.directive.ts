@@ -401,7 +401,7 @@ export class IgxGridStateDirective {
         pivotConfiguration: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
                 const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
-                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) {
                     return { pivotConfiguration: undefined };
                 }
                 const configCopy = cloneValue(config);
@@ -418,14 +418,14 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
                 const config: IPivotConfiguration = state;
-                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) {
                     return;
                 }
                 context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
                 context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             },
-            
+
 
         }
     };
@@ -600,7 +600,7 @@ export class IgxGridStateDirective {
      * This method restores the IgxPivotDateDimension with its default functions and resource strings.
      */
     private restoreDateDimension(dim: IgxPivotDateDimension) {
-        const dateDim = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+        const dateDim = new IgxPivotDateDimension((dim as any)._baseDimension, (dim as any)._options);
         // restore functions and resource strings
         dim.resourceStrings = dateDim.resourceStrings;
         dim.memberFunction = dateDim.memberFunction;
@@ -617,7 +617,7 @@ export class IgxGridStateDirective {
      * Returns if this is a IgxPivotDateDimension.
      */
     private isDateDimension(dim: IPivotDimension) {
-        return (dim as any).inBaseDimension;
+        return (dim as any)._baseDimension;
     }
 
     /**
@@ -677,11 +677,11 @@ export class IgxGridStateDirective {
 
                 let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
                                 this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
-               
+
                 if (condition) {
                     expr.condition = condition;
                     expressionsTree.filteringOperands.push(expr);
-                } 
+                }
             }
         }
 
