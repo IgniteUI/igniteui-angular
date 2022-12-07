@@ -53,7 +53,7 @@ describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
-    
+
     configureTestSuite();
 
     describe('Unit tests: ', () => {
@@ -1291,7 +1291,7 @@ describe('IgxSimpleCombo', () => {
 
             expect(toggleIcon.nativeElement.textContent).toBe('search');
             expect(combo.collapsed).toBeTruthy();
-            
+
             toggleIcon.nativeElement.click();
             tick();
             fixture.detectChanges();
@@ -1801,7 +1801,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.instance;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick(1200);
+            tick(16);
             fixture.detectChanges();
 
             const expectedOutput = 'One';
@@ -1898,8 +1898,8 @@ export class IgxSimpleComboIconTemplatesComponent {
     public combo: IgxSimpleComboComponent;
 
     public data: any[] =  [
-        { name: 'Sofia', id: '1' }, 
-        { name: 'London', id: '2' }, 
+        { name: 'Sofia', id: '1' },
+        { name: 'London', id: '2' },
     ];;
     public name!: string;
 }
@@ -2084,10 +2084,10 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
     constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
             { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
             this.cdr.detectChanges();
-        }, 1000);
+        });
     }
 }
