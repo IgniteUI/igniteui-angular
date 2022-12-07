@@ -591,6 +591,8 @@
     igx-years-view,
     igx-month-picker,
     igx-months-view {
+        color: var-get($theme, 'content-text-color');
+
         %cal-body-display {
             @if $bootstrap-theme {
                 padding-bottom: 0;
