@@ -297,7 +297,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
     public closeRowEditingOverlay = new Subject();
 
     private _rowEditingBlocked = false;
-    private _rowEditingStarted = false;
 
     public get primaryKey(): any {
         return this.grid.primaryKey;
@@ -330,17 +329,12 @@ export class IgxRowCrudState extends IgxCellCrudState {
             if (!this.row) {
                 this.createRow(this.cell);
             }
+            const rowArgs = this.row.createEditEventArgs(false, event);
 
-            if (!this._rowEditingStarted) {
-                const rowArgs = this.row.createEditEventArgs(false, event);
-
-                this.grid.rowEditEnter.emit(rowArgs);
-                if (rowArgs.cancel) {
-                    this.endEditMode();
-                    return true;
-                }
-
-                this._rowEditingStarted = true;
+            this.grid.rowEditEnter.emit(rowArgs);
+            if (rowArgs.cancel) {
+                this.endEditMode();
+                return true;
             }
 
             this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
@@ -441,7 +435,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
     public endRowEdit() {
         this.row = null;
         this.rowEditingBlocked = false;
-        this._rowEditingStarted = false;
     }
 
     /** Clears cell and row editing state and closes row editing template if it is open */

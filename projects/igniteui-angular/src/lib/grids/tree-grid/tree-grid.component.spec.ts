@@ -144,7 +144,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(container.getAttribute('role')).toMatch('row');
         }));
 
-        fit('should display flat data even if no foreignKey is set', () => {
+        it('should display flat data even if no foreignKey is set', () => {
             fix = TestBed.createComponent(IgxTreeGridWithNoForeignKeyComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
