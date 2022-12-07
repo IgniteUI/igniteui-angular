@@ -30,7 +30,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         if (childDataKey) {
             hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
-        } else {
+        } else if (primaryKey) {
             hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         }
 
