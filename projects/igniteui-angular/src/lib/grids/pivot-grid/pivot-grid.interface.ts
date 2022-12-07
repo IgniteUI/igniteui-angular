@@ -198,6 +198,7 @@ export interface IPivotKeys {
     rowDimensionSeparator: string;
 }
 
+/* mustCoerceToInt */
 /** The dimension types - Row, Column or Filter. */
 export enum PivotDimensionType {
     Row,

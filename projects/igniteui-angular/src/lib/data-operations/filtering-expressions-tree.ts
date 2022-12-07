@@ -1,6 +1,7 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
 
+/* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
     Regular,
     Advanced

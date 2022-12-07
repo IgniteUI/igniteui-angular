@@ -18,6 +18,7 @@ export interface IPivotDateDimensionOptions {
 }
 
 /* blazorAlternateBaseType: PivotDimension */
+/* alternateBaseType: PivotDimension */
 // Equals to pretty much this configuration:
 // {
 //     member: () => 'All Periods',

@@ -1,6 +1,7 @@
 import { IBaseEventArgs } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
+/* mustCoerceToInt */
 export enum SortingDirection {
     None = 0,
     Asc = 1,
