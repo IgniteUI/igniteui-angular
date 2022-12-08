@@ -67,7 +67,9 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
             // showPivotConfigurationUI -> showPivotConfigurationUi -> show-pivot-configuration-ui
             // evenRowCSS -> evenRowCss -> even-row-css
             // DOMRect -> DomRect -> dom-rect
-            const newKey = key.replace(/(?<=[A-Z])[A-Z]+(?![a-z])/g, char => char.toLowerCase());
+
+            // const newKey = key.replace(/(?<=[A-Z])[A-Z]+(?![a-z])/g, char => char.toLowerCase()); // no Lookbehind assertion in Safari yet
+            const newKey = key.replace(/([A-Z])([A-Z]+)(?![a-z])/g, (match, p1, p2) => p1 + p2.toLowerCase());
             inputs[newKey] = input;
             // TODO: consider deleting the original key
         }
