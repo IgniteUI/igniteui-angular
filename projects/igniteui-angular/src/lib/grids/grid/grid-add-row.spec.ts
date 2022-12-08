@@ -481,7 +481,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
         });
 
-        it(`Should emit 'rowEditEnter' only once while adding a new row`, fakeAsync(() => {
+        it(`Should emit 'rowEditEnter' only once while adding a new row`, () => {
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
             const row = grid.gridAPI.get_row_by_index(0);
             row.beginAddRow();
@@ -501,7 +501,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it('Should scroll and start adding a row as the first one when using the public API method', async () => {
             await wait(DEBOUNCETIME);
