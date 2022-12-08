@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.1.0
+
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to relatively `baseDimension` and `options`.
+
 ## 15.0.1
 
 - `IgxGrid`
@@ -52,6 +57,34 @@ All notable changes for each version of this project will be documented in this 
     Added support for shift key + mouse click interactions.
     - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
     - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
+### Theme Changes
+- **Breaking Changes** - The `palette` function no longer provides `info`, `success`, `warn` and `error` colors. Therefore you have to pass custom values for them if you need to use these colors. You can also use the values for `info`, `success`, `warn` and `error` colors from our predefined color palettes.
+
+    - Code example:
+
+    ```scss
+    // Mandatory colors
+    $primary-color: #2a38b7;
+    $secondary-color: #f96a88;
+    $surface-color: #e1ebe4;
+    // Additional colors
+    $error-color: color($light-fluent-palette, 'error');
+    $warn-color: color($light-fluent-palette, 'warn');
+    $info-color: color($light-fluent-palette, 'info');
+    $success-color: color($light-fluent-palette, 'success');
+
+    // Creating custom palette
+    $my-color-palette: palette(
+        $primary: $primary-color,
+        $secondary: $secondary-color,
+        $surface: $surface-color,
+        $error: $error-color,
+        $warn: $warn-color,
+        $info: $info-color,
+        $success: $success-color
+    );
+    ```
 
 ## 14.2.0
 

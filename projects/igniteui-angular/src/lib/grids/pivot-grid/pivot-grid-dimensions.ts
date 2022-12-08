@@ -49,14 +49,14 @@ export interface IPivotDateDimensionOptions {
 export class IgxPivotDateDimension implements IPivotDimension {
     /** Enables/Disables a particular dimension from pivot structure. */
     public enabled = true;
-    
+
     /**
      * Gets/Sets data type
      */
     public dataType?: GridColumnDataType;
 
     /* blazorSuppress */
-    /** Default options used for initialization. */
+    /** Default options. */
     public defaultOptions = {
         total: true,
         years: true,
@@ -78,35 +78,57 @@ export class IgxPivotDateDimension implements IPivotDimension {
         return this._resourceStrings;
     }
 
+    /**
+     * Gets/Sets the base dimension that is used by this class to determine the other dimensions and their values.
+     * Having base dimension set is required in order for the Date Dimensions to show.
+     */
+    public get baseDimension(): IPivotDimension {
+        return this._baseDimension;
+    }
+    public set baseDimension(value: IPivotDimension) {
+        this._baseDimension = value;
+        this.initialize(this.baseDimension, this.options);
+    }
+
+    /**
+     * Gets/Sets the options for the predefined date dimensions whether to show quarter, years and etc.
+     */
+    public get options(): IPivotDateDimensionOptions {
+        return this._options;
+    }
+    public set options(value: IPivotDateDimensionOptions) {
+        this._options = value;
+        if (this.baseDimension) {
+            this.initialize(this.baseDimension, this.options);
+        }
+    }
+
+    /**
+     * @deprecated since version 15.1.x. Please use the new name `baseDimension` for future versions.
+     *
+     * Gets the base dimension that is used by this class to determine the other dimensions and their values.
+     * Having base dimension set is required in order for the Date Dimensions to show.
+     */
+    public get inBaseDimension(): IPivotDimension {
+        return this._baseDimension;
+    }
+
+    /**
+     * @deprecated since version 15.1.x. Please use the new name `options` for future versions.
+     *
+     * Gets the options for the predefined date dimensions whether to show quarter, years and etc.
+     */
+    public get inOptions(): IPivotDateDimensionOptions {
+        return this._options;
+    }
+
     /** @hidden @internal */
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
-
-
-    private _inBaseDimension: IPivotDimension;
-    public get inBaseDimension(): IPivotDimension {
-        return this._inBaseDimension;
-    }
-    public set inBaseDimension(value: IPivotDimension) {
-        this._inBaseDimension = value;
-        if (this.inBaseDimension && this.inOptions) {
-            this.initialize(this.inBaseDimension, this.inOptions);
-        }
-    }
-
-    private _inOptions: IPivotDateDimensionOptions;
-    public get inOptions(): IPivotDateDimensionOptions {
-        return this._inOptions;
-    }
-    public set inOptions(value: IPivotDateDimensionOptions) {
-        this._inOptions = value;
-        if (this.inBaseDimension && this.inOptions) {
-            this.initialize(this.inBaseDimension, this.inOptions);
-        }
-    }
-
+    private _baseDimension: IPivotDimension;
+    private _options: IPivotDateDimensionOptions = {};
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
      *
@@ -119,20 +141,15 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * ```
      */
     constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
-        this._inOptions = inOptions;
-        this._inBaseDimension = inBaseDimension;
-        if (this.inBaseDimension && this.inOptions) {
-            this.initialize(this.inBaseDimension, this.inOptions);
+        this._baseDimension = inBaseDimension;
+        this._options = inOptions;
+        if (this.baseDimension && this.options) {
+            this.initialize(this.baseDimension, this.options);
         }
     }
 
     protected initialize(inBaseDimension, inOptions) {
         const options = { ...this.defaultOptions, ...inOptions };
-
-        if (!inBaseDimension) {
-            console.warn(`Please provide data child level to the pivot dimension.`);
-            return;
-        }
 
         this.dataType = GridColumnDataType.Date;
         inBaseDimension.dataType = GridColumnDataType.Date;
