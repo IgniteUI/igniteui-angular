@@ -137,9 +137,9 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
      * ```
      */
-    constructor(private _inBaseDimension: IPivotDimension, private _inOptions: IPivotDateDimensionOptions = {}) {
-        this._options = _inOptions;
-        this._baseDimension = _inBaseDimension;
+    constructor(inBaseDimension: IPivotDimension, inOptions: IPivotDateDimensionOptions = {}) {
+        this._baseDimension = inBaseDimension;
+        this._options = inOptions;
         if (this.baseDimension && this.options) {
             this.initialize(this.baseDimension, this.options);
         }
