@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild } from '@angular/core';
@@ -29,11 +29,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         });
     }));
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
-    }));
+    });
 
     it('should retain expansion state when scrolling.', async () => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
@@ -264,23 +264,22 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(
             hierarchicalGrid.verticalScrollContainer.state.startIndex +
-            hierarchicalGrid.verticalScrollContainer.state.chunkSize)
-        .toBe(80);
+            hierarchicalGrid.verticalScrollContainer.state.chunkSize).toBe(80);
         expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
-        .toEqual(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight -
-        parseInt(hierarchicalGrid.verticalScrollContainer.igxForContainerSize, 10));
+            .toEqual(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight -
+                    parseInt(hierarchicalGrid.verticalScrollContainer.igxForContainerSize, 10));
     });
 
     it('should update scroll height after expanding/collapsing rows.', async () => {
         const scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-            UIInteractions.simulateClickAndSelectEvent(firstRow.nativeElement.children[0]);
-            fixture.detectChanges();
-            await wait(200);
-            const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
-            expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight)
+        UIInteractions.simulateClickAndSelectEvent(firstRow.nativeElement.children[0]);
+        fixture.detectChanges();
+        await wait(200);
+        const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight)
             .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
-            expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
+        expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
             .not.toBe(-1);
     });
 
@@ -408,7 +407,8 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
                 IgxHierarchicalGridNoScrollTestComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
+                NoopAnimationsModule, IgxHierarchicalGridModule
+            ]
         });
     }));
 
