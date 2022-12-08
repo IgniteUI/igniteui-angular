@@ -6,7 +6,6 @@ import {
     PivotAggregation,
     IgxPivotDateDimension,
     IPivotDimension,
-    IDimensionsChange,
     DisplayDensity,
     FilteringExpressionsTree,
     FilteringLogic,
@@ -114,7 +113,7 @@ export class PivotGridSampleComponent {
             },
         ],
         rows: [
-            
+
             {
                 memberName: 'SellerName',
                 enabled: true,
@@ -126,7 +125,7 @@ export class PivotGridSampleComponent {
                 member: 'UnitsSold',
                 aggregate: {
                     key: 'SUM',
-                    aggregator: IgxPivotNumericAggregate.sum,
+                    aggregatorName: 'SUM',
                     label: 'Sum'
                 },
                 enabled: true,
@@ -135,7 +134,7 @@ export class PivotGridSampleComponent {
                     downFont: (rowData: IPivotGridRecord, columnData: IPivotGridColumn): boolean => rowData.aggregationValues.get(columnData.field) <= 300
                 },
                 // dataType: 'currency',
-                formatter: (value, rowData: IPivotGridRecord, columnData: IPivotGridColumn) => {
+                formatter: (value) => {
                     return value ? value + '$' : undefined;
                 }
             },
@@ -373,7 +372,7 @@ export class PivotGridSampleComponent {
                     member: 'UnitsSold',
                     aggregate: {
                         key: 'SUM',
-                        aggregator: IgxPivotNumericAggregate.sum,
+                        aggregatorName: 'SUM',
                         label: 'Sum'
                     },
                     enabled: true,

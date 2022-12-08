@@ -5,7 +5,7 @@ import {
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
@@ -44,6 +44,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             gridHeader = GridFunctions.getGridHeader(grid);
             tick();
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('when click on a header it should stay in the view', async () => {
             grid.headerContainer.getScroll().scrollLeft = 1000;
@@ -748,6 +752,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             gridHeader = GridFunctions.getGridHeader(grid);
         }));
 
+        afterEach(() => {
+            clearGridSubs();
+        });
+
         it('should navigate through a layout with right and left arrow keys in first level', async () => {
             let header = GridFunctions.getColumnHeader('CompanyName', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
@@ -948,6 +956,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should navigate through groups with right and left arrow keys in first level', () => {
             let header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);

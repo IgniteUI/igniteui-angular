@@ -14,22 +14,18 @@
 /// @param {Color} $track-background [null] - The background color used for the track.
 /// @param {Number | String} $size [null] - The size of the track.
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
-///
 /// @example scss Change the background and track colors
 ///   $my-scrollbar-theme: scrollbar-theme($thumb-background: black, $track-background: gray);
-///   // Pass the theme to the scrollbar component mixin
-///   @include scrollbar($my-scrollbar-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-scrollbar-theme);
 @function scrollbar-theme(
     $schema: $light-schema,
     $size: null,
     $thumb-background: null,
     $track-background: null,
 ) {
-    $name: 'igx-scrollbar';
-    $selector: '.igx-scrollbar';
+    $name: 'ig-scrollbar';
+    $selector: '.ig-scrollbar';
     $scrollbar-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -50,9 +46,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin scrollbar($theme) {
     @include css-vars($theme);
 

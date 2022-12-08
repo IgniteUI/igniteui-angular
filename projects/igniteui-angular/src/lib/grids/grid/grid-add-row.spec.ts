@@ -5,7 +5,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
-    IgxAddRowComponent, IgxGridRowEditingTransactionComponent
+    IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent
 } from '../../test-utils/grid-samples.spec';
 
 import { By } from '@angular/platform-browser';
@@ -45,7 +45,8 @@ describe('IgxGrid - Row Adding #grid', () => {
                 IgxAddRowComponent,
                 ColumnLayoutTestComponent,
                 DefaultGridMasterDetailComponent,
-                IgxGridRowEditingTransactionComponent
+                IgxGridRowEditingTransactionComponent,
+                IgxGridRowEditingDefinedColumnsComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1081,6 +1082,23 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(states.length).toEqual(1);
             expect(states[0].type).toEqual(TransactionType.ADD);
             expect(states[0].newValue['ProductName']).toEqual('aaa');
+        });
+
+        it('Should display number of defined columns for rowChangesCount', () => {
+            fixture = TestBed.createComponent(IgxGridRowEditingDefinedColumnsComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+            endTransition();
+
+            let cellElem = grid.gridAPI.get_cell_by_index(10, 'ProductName');
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fixture.detectChanges();
+
+            expect(grid.rowChangesCount).toEqual(3);
         });
     });
 });

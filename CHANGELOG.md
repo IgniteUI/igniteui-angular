@@ -2,10 +2,21 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.0.1
+
+- `IgxGrid`
+    - Added new auto-sizing API `recalculateAutoSizes` that recalculates widths of columns that have size set to `auto`. Can be used in scenarios where you want to auto-size the columns again post initialization.
+- `igxPivotGrid`
+    - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
+
 ## 15.0.0
 
 ### New Features
 - `igxGrid` - exposing new Input properties:
+
+    - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
+        * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
+        * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
 
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
@@ -21,6 +32,54 @@ All notable changes for each version of this project will be documented in this 
     - `dragGhostCustomTemplate` - Gets/Sets the custom template used for row drag.
     - `dragIndicatorIconTemplate` - Gets/Sets the custom template used for row drag indicator.
     - `detailTemplate` - Gets/Sets the master-detail template.
+- `IgxGridToolbar`
+    - **Breaking Change** - The `IgxGridToolbarTitleDirective` and `IgxGridToolbarActionsDirective` have been converted to components, keeping only the element selector. For apps using the preferred element markup of `<igx-grid-toolbar-title>` and `<igx-grid-toolbar-actions>` there should be no functional change. Apps using the `igxGridToolbarTitle` and `igxGridToolbarActions` directives on other elements will need to convert those to the mentioned elements instead.
+
+    - **Behavioral Change** - When adding new row in grid with enabled batch editing, `rowChangesCount` displays the number of the defined columns.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - When editing a row, `rowChangesCount` and `hiddenColumnsCount`would be displayed.
+    - **Behavioral Change** - The Grid Paginator component is no longer hidden when there's no data and/or all columns are hidden.
+
+- `IgxExcelExporterService`
+    - Added support for exporting grid summaries.
+    - Columns of type `currency` will be formatted as currency in Excel based on grid's locale. Locale currency different than `USD`, `EUR`, `GBP`, `CNY` or `JPY` will result in exporting the column as number instead.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`
+    - Adding `Image` column data type
+
+- `IgxCalendar`
+
+    Added support for shift key + mouse click interactions.
+    - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
+    - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
+### Theme Changes
+- **Breaking Changes** - The `palette` function no longer provides `info`, `success`, `warn` and `error` colors. Therefore you have to pass custom values for them if you need to use these colors. You can also use the values for `info`, `success`, `warn` and `error` colors from our predefined color palettes.
+
+    - Code example:
+
+    ```scss
+    // Mandatory colors
+    $primary-color: #2a38b7;
+    $secondary-color: #f96a88;
+    $surface-color: #e1ebe4;
+    // Additional colors
+    $error-color: color($light-fluent-palette, 'error');
+    $warn-color: color($light-fluent-palette, 'warn');
+    $info-color: color($light-fluent-palette, 'info');
+    $success-color: color($light-fluent-palette, 'success');
+
+    // Creating custom palette
+    $my-color-palette: palette(
+        $primary: $primary-color,
+        $secondary: $secondary-color,
+        $surface: $surface-color,
+        $error: $error-color,
+        $warn: $warn-color,
+        $info: $info-color,
+        $success: $success-color
+    );
+    ```
 
 ## 14.2.0
 

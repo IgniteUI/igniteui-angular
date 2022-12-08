@@ -18,15 +18,12 @@ $base-dark-dialog: (
 
 /// Generates a dark dialog schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $light-dialog
-/// @see $default-palette
 /// @requires $base-dark-dialog
 $dark-dialog: extend($light-dialog, $base-dark-dialog);
 
 /// Generates a dark fluent dialog schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $fluent-dialog
 /// @requires $base-dark-dialog
 $dark-fluent-dialog: extend($fluent-dialog, $base-dark-dialog);
@@ -34,7 +31,6 @@ $dark-fluent-dialog: extend($fluent-dialog, $base-dark-dialog);
 /// Generates a dark bootstrap dialog schema.
 /// @type {Map}
 /// @prop {Map} border-color [color: ('gray', 100)] - The border color for dialog component.
-/// @requires {function} extend
 /// @requires $bootstrap-dialog
 /// @requires $base-dark-dialog
 $dark-bootstrap-dialog: extend(
@@ -49,7 +45,6 @@ $dark-bootstrap-dialog: extend(
 
 /// Generates a dark indigo dialog schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires $indigo-dialog
 /// @requires $base-dark-dialog
 $dark-indigo-dialog: extend($indigo-dialog, $base-dark-dialog);

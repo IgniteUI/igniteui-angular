@@ -26,7 +26,6 @@
 /// @prop {Color} horizontal-axis-brush [null] - Sets the horizontal axis line brush of the sparkline.
 /// @prop {Color} vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
 /// @prop {Color} normal-range-fill [null] - Sets the normal range brush of the sparkline.
-/// @see $default-palette
 $light-sparkline: (
     'brush': (
         color: ('primary', 500)
@@ -54,19 +53,16 @@ $light-sparkline: (
 
 /// Generates a fluent sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $fluent-sparkline: $light-sparkline;
 
 /// Generates a bootstrap sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $bootstrap-sparkline: $light-sparkline;
 
 /// Generates an indigo sparkline schema.
 /// @type {Map}
-/// @requires {function} extend
 /// @requires {Map} $light-sparkline
 $indigo-sparkline: $light-sparkline;
 

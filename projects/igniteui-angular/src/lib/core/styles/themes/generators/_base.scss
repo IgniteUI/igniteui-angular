@@ -8,7 +8,10 @@
 @use 'igniteui-theming/sass/elevations/presets' as elevations;
 @use 'igniteui-theming/sass/utils' as *;
 @use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/charts' as *;
 
+/// @group themes
+/// @access public
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
@@ -31,8 +34,14 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
-    @include palette($palette);
-    @include elevations($elevations);
+
+    @if not(list.index($exclude, 'palette')) {
+        @include palette($palette);
+    }
+
+    @if not(list.index($exclude, 'elevations')) {
+        @include elevations($elevations);
+    }
 
     @if $elevation == false {
         #{$scope} {
@@ -362,7 +371,7 @@
         ));
     }
 
-    @if is-used('igx-scrollbar', $exclude) {
+    @if is-used('ig-scrollbar', $exclude) {
         @include scrollbar(scrollbar-theme(
             $schema: $schema
         ));
@@ -433,6 +442,8 @@
     }
 }
 
+/// @group themes
+/// @access public
 /// Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
@@ -465,6 +476,8 @@
     );
 }
 
+/// @group themes
+/// @access public
 /// Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.

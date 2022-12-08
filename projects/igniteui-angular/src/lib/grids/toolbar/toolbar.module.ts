@@ -9,9 +9,9 @@ import { IgxGridToolbarPinningComponent } from './grid-toolbar-pinning.component
 import {
     IgxCSVTextDirective,
     IgxExcelTextDirective,
-    IgxGridToolbarActionsDirective,
+    IgxGridToolbarActionsComponent,
     IgxGridToolbarDirective,
-    IgxGridToolbarTitleDirective
+    IgxGridToolbarTitleComponent
 } from './common';
 export * from './grid-toolbar.component';
 export * from './common';
@@ -25,13 +25,13 @@ export * from './grid-toolbar-pinning.component';
     declarations: [
         IgxCSVTextDirective,
         IgxExcelTextDirective,
-        IgxGridToolbarActionsDirective,
+        IgxGridToolbarActionsComponent,
         IgxGridToolbarAdvancedFilteringComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarExporterComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarPinningComponent,
-        IgxGridToolbarTitleDirective,
+        IgxGridToolbarTitleComponent,
         IgxGridToolbarDirective
     ],
     imports: [
@@ -41,13 +41,13 @@ export * from './grid-toolbar-pinning.component';
     exports: [
         IgxCSVTextDirective,
         IgxExcelTextDirective,
-        IgxGridToolbarActionsDirective,
+        IgxGridToolbarActionsComponent,
         IgxGridToolbarAdvancedFilteringComponent,
         IgxGridToolbarComponent,
         IgxGridToolbarExporterComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarPinningComponent,
-        IgxGridToolbarTitleDirective,
+        IgxGridToolbarTitleComponent,
         IgxGridToolbarDirective
     ]
 })

@@ -94,9 +94,12 @@ export const logSuccess = (options: Options): Rule => (tree: Tree, context: Sche
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const addDependencies = (options: Options) => async (tree: Tree, context: SchematicContext): Promise<void> => {
     const pkgJson = require('../../package.json');
+    const workspaceHost = createHost(tree);
+    const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
 
-    await includeDependencies(pkgJson, context, tree);
+    await includeDependencies(workspaceHost, workspace, pkgJson, context, tree);
 
+    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree)
 
     addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
 };
@@ -154,10 +157,34 @@ const addHammerToConfig =
         }
     };
 
-const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
-    const workspaceHost = createHost(tree);
-    const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
+const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
+    await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
+        await addStylePreprocessorOptions(project, tree, "build", context);
+        await addStylePreprocessorOptions(project, tree, "test", context);
+    }));
 
+    await workspaces.writeWorkspace(workspace, workspaceHost);
+};
+
+const addStylePreprocessorOptions =
+    async (project: workspaces.ProjectDefinition, tree: Tree, config: string, context: SchematicContext): Promise<void> => {
+        const projectOptions = getTargetedProjectOptions(project, config, context);
+
+        // if there are no elements in the architect[config]options.stylePreprocessorOptions.includePaths that contain node_modules
+        const stylePrepropPath = 'node_modules';
+        if (!projectOptions?.stylePreprocessorOptions?.includePaths?.some(el => el.includes(stylePrepropPath))) {
+            if (projectOptions?.stylePreprocessorOptions?.includePaths) {
+                projectOptions?.stylePreprocessorOptions?.includePaths.push(stylePrepropPath);
+            } else if (!projectOptions?.stylePreprocessorOptions) {
+                projectOptions["stylePreprocessorOptions"] = { includePaths: [stylePrepropPath]};
+            } else {
+                context.logger.warn(`Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
+                    `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`);
+            }
+        }
+    };
+
+const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
