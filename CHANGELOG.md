@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.1.0
+
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to relatively `baseDimension` and `options`.
+
 ## 15.0.1
 
 - `IgxGrid`
