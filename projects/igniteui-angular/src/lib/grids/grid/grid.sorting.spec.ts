@@ -28,16 +28,16 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         });
     }));
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
-        fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         grid.width = '800px';
-    }));
+        fixture.detectChanges();
+    });
 
     describe('API tests', () => {
 
-        it('Should sort grid ascending by column name', fakeAsync (() => {
+        it('Should sort grid ascending by column name', fakeAsync(() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
             spyOn(grid.sortingDone, 'emit').and.callThrough();
             const currentColumn = 'Name';

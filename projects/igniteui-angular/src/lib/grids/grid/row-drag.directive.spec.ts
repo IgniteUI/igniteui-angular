@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -71,7 +71,7 @@ describe('Row Drag Tests', () => {
                         ]
                     });
                 }));
-                beforeEach(fakeAsync(() => {
+                beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
                     grid = fixture.componentInstance.instance;
                     fixture.detectChanges();
@@ -80,7 +80,7 @@ describe('Row Drag Tests', () => {
                     nonDroppableAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_NON_DROPPABLE_AREA)).nativeElement;
                     dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
                     dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-                }));
+                });
     
                 it('should drag and drop draggable row over droppable container', () => {
                     dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -116,7 +116,7 @@ describe('Row Drag Tests', () => {
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
                     verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
                 });
-                it('should be able to drag row only by drag icon', (async () => {
+                it('should be able to drag row only by drag icon', async () => {
                     dragIndicatorElement = dragIndicatorElements[2].nativeElement;
                     rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
                     rowToDrag = rows[1];
@@ -145,13 +145,13 @@ describe('Row Drag Tests', () => {
                     expect(rowToDrag.grid.rowDragging).toBeTruthy();
                     verifyRowDragStartEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective);
                     await pointerUp(dragIndicatorElement, movePoint, fixture);
-                }));
+                });
                 it('should not be able to drag grid header', () => {
                     const header = fixture.debugElement.query(By.css(CSS_CLASS_GRID_ROW));
                     const headerDragDirective = header.injector.get(IgxRowDragDirective, false);
                     expect(headerDragDirective).toBe(false);
                 });
-                it('should cancel dragging when ESCAPE key is pressed.', (async () => {
+                it('should cancel dragging when ESCAPE key is pressed.', async () => {
                     dragIndicatorElement = dragIndicatorElements[2].nativeElement;
                     const row = rows[1];
                     rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
@@ -173,7 +173,7 @@ describe('Row Drag Tests', () => {
                     expect(row.dragging).toBeFalsy();
                     expect(grid.rowDragging).toBeFalsy();
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
-                }));
+                });
                 it('should create ghost element upon row dragging', () => {
                     dragIndicatorElement = dragIndicatorElements[2].nativeElement;
                     rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
@@ -422,11 +422,11 @@ describe('Row Drag Tests', () => {
                         ]
                     });
                 }));
-                beforeEach(fakeAsync(() => {
+                beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
                     grid = fixture.componentInstance.instance;
                     fixture.detectChanges();
-                }));
+                });
                 it('should correctly create custom ghost element', () => {
                     dropAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_DROPPABLE_AREA)).nativeElement;
                     rows = grid.rowList.toArray();
@@ -511,7 +511,7 @@ describe('Row Drag Tests', () => {
                     ]
                 });
             }));
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
                 dragGrid = fixture.componentInstance.dragGrid;
                 dropGrid = fixture.componentInstance.dropGrid;
@@ -520,7 +520,7 @@ describe('Row Drag Tests', () => {
                 dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
                 dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
                 dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-            }));
+            });
             const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
                 const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
                 const dragRowCells = (dragRow.cells as QueryList<CellType>).toArray();
@@ -548,10 +548,9 @@ describe('Row Drag Tests', () => {
                 fixture.detectChanges();
                 verifyDragAndDropRowCellValues(1, 0);
             });
-            it('should be able to drag grid row when column moving is enabled', fakeAsync(() => {
+            it('should be able to drag grid row when column moving is enabled', () => {
                 const dragGridColumns = dragGrid.columns;
                 dragGrid.moveColumn(dragGridColumns[0], dragGridColumns[2]);
-                tick();
                 fixture.detectChanges();
     
                 dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -589,7 +588,7 @@ describe('Row Drag Tests', () => {
                 expect(dropRowCells[2].value).toEqual(dragRowCells[1].value);
                 expect(dropRowCells[3].value).toEqual(dragRowCells[3].value);
                 expect(dropRowCells[4].value).toEqual(dragRowCells[4].value);
-            }));
+            });
             it('should be able to drag grid row when column pinning is enabled', () => {
                 dragGrid.pinColumn('ProductName');
                 fixture.detectChanges();
