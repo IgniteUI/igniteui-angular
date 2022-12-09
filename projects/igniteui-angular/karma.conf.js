@@ -20,7 +20,7 @@ module.exports = function (config) {
         '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
-      executors: 4,
+      executors: 2,
       shardStrategy: 'round-robin'
     },
     client: {
@@ -45,7 +45,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadlessNoSandbox'],
-    browserDisconnectTimeout: 6000,
+    browserDisconnectTimeout: 4000,
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
