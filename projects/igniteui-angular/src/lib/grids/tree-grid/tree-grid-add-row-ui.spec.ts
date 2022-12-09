@@ -1,5 +1,5 @@
 
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../test-utils/tree-grid-components.spec';
@@ -10,7 +10,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
-    let fix: ComponentFixture<IgxTreeGridEditActionsComponent>;
+    let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
     const endTransition = () => {
