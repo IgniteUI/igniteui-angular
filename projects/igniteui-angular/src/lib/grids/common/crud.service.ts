@@ -641,7 +641,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
         this.grid.navigateTo(this.row.index, -1);
         // when selecting the dummy row we need to adjust for top pinned rows
-        const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
+        const indexAdjust = this.grid.isRowPinningToTop ?
+            (!this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0) :
+            (!this.addRowParent.isPinned ? 0 : this.grid.unpinnedRecords.length);
 
         // TODO: Type this without shoving a bunch of internal properties in the row type
         const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust) as any;
