@@ -18,7 +18,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridActionStripComponent
             ],

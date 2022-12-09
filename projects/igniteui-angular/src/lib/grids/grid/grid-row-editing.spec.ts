@@ -39,7 +39,7 @@ const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowEditingComponent,
                 IgxGridRowEditingTransactionComponent,

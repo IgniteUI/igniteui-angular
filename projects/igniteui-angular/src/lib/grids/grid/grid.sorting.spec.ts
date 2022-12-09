@@ -17,8 +17,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,

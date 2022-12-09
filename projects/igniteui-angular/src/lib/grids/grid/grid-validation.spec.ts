@@ -22,7 +22,7 @@ import { IgxGridModule } from './grid.module';
 describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,

@@ -43,7 +43,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const DEBOUNCETIME = 30;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 SummaryColumnComponent,

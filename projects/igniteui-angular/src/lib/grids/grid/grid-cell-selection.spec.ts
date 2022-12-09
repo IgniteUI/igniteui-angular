@@ -22,7 +22,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,

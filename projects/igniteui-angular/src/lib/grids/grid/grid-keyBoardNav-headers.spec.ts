@@ -27,7 +27,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     SelectionWithScrollsComponent
                 ],
@@ -733,7 +733,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     MRLTestComponent
                 ],
@@ -938,7 +938,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     ColumnGroupsNavigationTestComponent
                 ],

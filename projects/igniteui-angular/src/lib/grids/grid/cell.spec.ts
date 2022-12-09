@@ -23,7 +23,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let firstCellElem: CellType;
 
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
@@ -159,7 +159,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let grid: IgxGridComponent;
 
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
                 ],
@@ -275,7 +275,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('iOS tests', () => {
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
@@ -334,7 +334,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('No column widths', () => {
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     NoColumnWidthGridComponent
                 ],
@@ -355,7 +355,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('Cells styles', () => {
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     ConditionalCellStyleTestComponent
                 ],
@@ -388,7 +388,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('Cell properties', () => {
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDateTimeColumnComponent
                 ],

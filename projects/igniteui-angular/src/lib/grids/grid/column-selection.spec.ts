@@ -33,7 +33,7 @@ describe('IgxGrid - Column Selection #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 ColumnSelectionGroupTestComponent

@@ -30,7 +30,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     const CHIP = 'igx-chip';
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 GroupableGridComponent,

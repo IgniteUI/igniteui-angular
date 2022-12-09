@@ -40,7 +40,7 @@ describe('IgxGrid - Row Adding #grid', () => {
           animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
                 ColumnLayoutTestComponent,
@@ -1088,7 +1088,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture = TestBed.createComponent(IgxGridRowEditingDefinedColumnsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            
+
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();

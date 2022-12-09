@@ -26,7 +26,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let emptyCol;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,

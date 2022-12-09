@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
@@ -8,7 +8,7 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  * @hidden
  */
 
-export const configureTestSuite = (configureAction?: () => void) => {
+export const configureTestSuite = (configureAction?: () => TestBed) => {
 
     const testBed: any = getTestBed();
     const originReset = testBed.resetTestingModule;
@@ -28,10 +28,9 @@ export const configureTestSuite = (configureAction?: () => void) => {
     });
 
     if (configureAction) {
-        beforeAll(async () => {
-            configureAction();
-            await TestBed.compileComponents();
-        });
+        beforeAll(waitForAsync(() => {
+            configureAction().compileComponents();
+        }));
     }
 
     afterEach(() => {

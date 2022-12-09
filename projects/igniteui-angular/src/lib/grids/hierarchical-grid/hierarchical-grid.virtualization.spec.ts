@@ -20,7 +20,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
@@ -401,7 +401,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridNoScrollTestComponent

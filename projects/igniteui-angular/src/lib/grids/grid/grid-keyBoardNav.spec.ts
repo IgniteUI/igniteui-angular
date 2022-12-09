@@ -27,7 +27,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
@@ -211,7 +211,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
                 ],
@@ -692,7 +692,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
     describe('Group By navigation ', () => {
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     IgxGridGroupByComponent
                 ],
