@@ -314,7 +314,12 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
         }
         const copy = collection.slice(0);
         const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
-        copy.splice(this.grid.crudService.row.index, 0, rec);
+        if (this.grid.crudService.addRowParent.isPinned) {
+            const parentRowIndex = copy.findIndex(record => record.rowID === this.grid.crudService.addRowParent.rowID);
+            copy.splice(parentRowIndex + 1, 0, rec);
+        } else {
+            copy.splice(this.grid.crudService.row.index, 0, rec);            
+        }
         this.grid.records.set(rec.key, rec);
         return copy;
     }
