@@ -113,7 +113,7 @@ export class IgxCell {
 
     public set editValue(value) {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
-        
+
         if (this.grid.validationTrigger === 'change') {
             // in case trigger is change, mark as touched.
             formControl.setValue(value);
@@ -389,7 +389,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
                 this.grid.validation.clear(id);
             } else {
                 this.grid.validation.update(id, rowEditArgs.oldValue);
-            } 
+            }
         } else if (this.row.getClassName() === IgxEditRow.name) {
             rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
@@ -639,7 +639,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
         this.grid.navigateTo(this.row.index, -1);
         // when selecting the dummy row we need to adjust for top pinned rows
-        const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
+        const indexAdjust = this.grid.isRowPinningToTop ?
+            (!this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0) :
+            (!this.addRowParent.isPinned ? 0 : this.grid.unpinnedRecords.length);
 
         // TODO: Type this without shoving a bunch of internal properties in the row type
         const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust) as any;
