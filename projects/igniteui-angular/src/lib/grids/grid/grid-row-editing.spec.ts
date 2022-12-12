@@ -84,15 +84,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Throws warning but still sets the property correctly
             expect(grid.rowEditable).toBeTruthy();
 
-            spyOn(grid, 'openRowOverlay');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
-
 
             fix.detectChanges();
             expect(console.warn).toHaveBeenCalledWith('The grid must have a `primaryKey` specified when using `rowEditable`!');
             expect(console.warn).toHaveBeenCalledTimes(1);
-            // Still calls openRowOverlay, just logs the warning
-            expect(grid.openRowOverlay).toHaveBeenCalled();
         });
 
         it('Should be able to enter edit mode on dblclick, enter and f2', () => {
@@ -120,6 +116,26 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(true);
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(false);
+        });
+
+        it('Should not be able to enter edit mode on dblclick, enter and f2 when [rowEditable] is set on a grid w/o [primaryKey]', () => {
+            grid.primaryKey = null;
+            grid.rowEditable = true;
+            fix.detectChanges();
+
+            const row = grid.gridAPI.get_row_by_index(2);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
             fix.detectChanges();
             expect(row.inEditMode).toBe(false);
         });
