@@ -20,11 +20,11 @@ module.exports = function (config) {
         '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
-      executors: 2,
+      executors: 4,
       shardStrategy: 'round-robin'
     },
     client: {
-      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      // clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
         random: false
       },
@@ -49,7 +49,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu'],
+        flags: ['--no-sandbox', '--disable-gpu', '--js-flags="--max_old_space_size=4096"'],
         debug: false
       }
     },
