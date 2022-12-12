@@ -311,6 +311,10 @@ export class IgxRowCrudState extends IgxCellCrudState {
         return this.grid.rowEditable;
     }
 
+    public get nonEditable(): boolean {
+        return this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null);
+    }
+
     public get rowEditingBlocked() {
         return this._rowEditingBlocked;
     }
@@ -321,10 +325,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
     /** Enters row edit mode */
     public beginRowEdit(event?: Event) {
-        if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
-            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
-        }
-
         if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
             if (!this.row) {
                 this.createRow(this.cell);
@@ -566,6 +566,11 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
     public enterEditMode(cell, event?: Event) {
         if (this.isInCompositionMode) {
+            return;
+        }
+
+        if (this.nonEditable){
+            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
             return;
         }
 
