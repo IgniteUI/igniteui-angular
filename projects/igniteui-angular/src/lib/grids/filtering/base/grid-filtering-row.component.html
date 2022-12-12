@@ -136,7 +136,7 @@
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
-<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
+<button igxButton="icon" type="button" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
     <igx-icon>navigate_before</igx-icon>
 </button>
 
@@ -162,7 +162,7 @@
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
-                    <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="column.grid.displayDensity">
+                    <button igxButton type="button" (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators" [displayDensity]="displayDensity">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
@@ -176,16 +176,16 @@
     </div>
 </div>
 
-<button igxButton="icon" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
+<button igxButton="icon" type="button" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
     <igx-icon>navigate_next</igx-icon>
 </button>
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
-    <button [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+    <button [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" type="button" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
         <igx-icon>refresh</igx-icon>
         <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</span>
     </button>
-    <button #closeButton [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
+    <button #closeButton [displayDensity]="displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" type="button" igxRipple (click)="close()">
         <igx-icon>close</igx-icon>
         <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</span>
     </button>

@@ -23,19 +23,19 @@ $dark-fluent-scrollbar: $fluent-scrollbar;
 
 /// Generates a dark bootstrap scrollbar schema.
 /// @type {Map}
-/// @property {Map} thumb-background [color: ('grays', 50)] - The background color used for the thumb.
-/// @property {Color} track-background [color: ('grays', 50, .3)] - The background color used for the track.
+/// @property {Map} thumb-background [color: ('grays', 200, .5)] - The background color used for the thumb.
+/// @property {Color} track-background [color: ('grays', 100, .5)] - The background color used for the track.
 /// @requires {function} extend
 /// @requires $light-scrollbar
 $dark-bootstrap-scrollbar: extend(
     $bootstrap-scrollbar,
     (
         thumb-background: (
-            color: ('grays', 50)
+            color: ('grays', 200, .5)
         ),
 
         track-background: (
-            color: ('grays', 50, .3)
+            color: ('grays', 100, .5)
         ),
     )
 );
