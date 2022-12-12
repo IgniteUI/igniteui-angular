@@ -159,13 +159,13 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_pivot_selector_panel_empty: '항목을 여기로 끌어',
     igx_grid_pivot_empty_message: '피벗 그리드에는 차원과 값이 없습니다.',
     igx_grid_required_validation_error: '이 필드는 필수입니다',
-    igx_grid_min_validation_error: 'A value of at least {0} should be entered',
-    igx_grid_max_validation_error: 'A value no more than {0} should be entered',
-    igx_grid_min_length_validation_error: 'Entry should be at least {0} character(s) long',
-    igx_grid_max_length_validation_error: 'Entry should be no more than {0} character(s) long',
-    igx_grid_email_validation_error: 'A valid email address should be entered',
-    igx_grid_pattern_validation_error: 'Entry does not match the required pattern',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_min_validation_error: '최소 {0} 의 값을 입력해야합니다',
+    igx_grid_max_validation_error: '{0} 이하의 값을 입력해야합니다',
+    igx_grid_min_length_validation_error: '항목은 {0} 자 이상이어야합니다',
+    igx_grid_max_length_validation_error: '항목은 {0} 자 이상이어야합니다',
+    igx_grid_email_validation_error: '유효한 이메일 주소를 입력해야합니다',
+    igx_grid_pattern_validation_error: '항목이 필요한 패턴과 일치하지 않습니다',
+    igx_grid_pivot_no_aggregator: '{0} 에 유효한 집계 가 없습니다. 유효한 "aggregatorName" 또는 "aggregator" 를 설정하십시오.'
 };
 
 
