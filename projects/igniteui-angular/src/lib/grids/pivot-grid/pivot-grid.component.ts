@@ -1156,7 +1156,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     public get pivotContentCalcWidth() {
-        const totalDimWidth = this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur);
+        const totalDimWidth = this.rowDimensions.length > 0 ?
+            this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
+            0;
         return this.calcWidth - totalDimWidth;
     }
 
