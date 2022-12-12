@@ -1,6 +1,8 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -21,10 +23,10 @@ module.exports = function (config) {
     ],
     parallelOptions: {
       executors: 4,
-      shardStrategy: 'description-length'
+      shardStrategy: 'round-robin'
     },
     client: {
-      // clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      //clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
         random: false
       },
@@ -49,7 +51,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--js-flags="--max_old_space_size=4096"'],
+        flags: ['--no-sandbox', '--disable-gpu'],
         debug: false
       }
     },

@@ -126,6 +126,7 @@
     "karma-spec-reporter": "^0.0.34",
     "ng-packagr": "^15.0.0",
     "postcss-scss": "^4.0.3",
+    "puppeteer": "^19.4.0",
     "sass": "^1.56.0",
     "sass-true": "^6.0.1",
     "sassdoc": "^2.7.4",
