@@ -481,6 +481,28 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
         });
 
+        it(`Should emit 'rowEditEnter' only once while adding a new row`, () => {
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            const row = grid.gridAPI.get_row_by_index(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            const newRow = grid.gridAPI.get_row_by_index(1);
+            expect(newRow.addRowUI).toBeTrue();
+
+            let targetCell = grid.gridAPI.get_cell_by_index(1, 'ContactName') as any;
+            UIInteractions.simulateClickAndSelectEvent(targetCell);
+            fixture.detectChanges();
+
+            targetCell = grid.gridAPI.get_cell_by_index(1, 'CompanyName') as any;
+            UIInteractions.simulateClickAndSelectEvent(targetCell);
+            fixture.detectChanges();
+
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+        });
+
         it('Should scroll and start adding a row as the first one when using the public API method', async () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
