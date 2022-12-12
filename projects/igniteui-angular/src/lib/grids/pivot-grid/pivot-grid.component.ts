@@ -1155,6 +1155,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (width * 100 / this.calcWidth);
     }
 
+    public get pivotContentCalcWidth() {
+        const totalDimWidth = this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur);
+        return this.calcWidth - totalDimWidth;
+    }
+
     public get rowDimensions() {
         return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
     }
@@ -1930,7 +1935,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const expressions =  flattenedColumnsWithSorting.length > 0? PivotSortUtil.generateDimensionSortingExpressions(flattenedColumnsWithSorting) : [];
         let sortedData = data;
         if (expressions.length > 0) {
-            sortedData = DataUtil.sort(cloneArray(data), expressions, this.sortStrategy, this);    
+            sortedData = DataUtil.sort(cloneArray(data), expressions, this.sortStrategy, this);
         }
         let fieldsMap;
         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {
