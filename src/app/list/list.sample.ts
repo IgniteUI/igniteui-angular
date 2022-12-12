@@ -145,7 +145,7 @@ export class ListSampleComponent implements OnInit {
 
     public get fo1() {
         const _fo = new IgxFilterOptions();
-        _fo.key = 'text';
+        _fo.key = ['text', 'key'];
         _fo.inputValue = this.search1;
         return _fo;
     }
