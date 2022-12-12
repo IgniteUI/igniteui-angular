@@ -21,7 +21,7 @@ module.exports = function (config) {
     ],
     parallelOptions: {
       executors: 4,
-      shardStrategy: 'round-robin'
+      shardStrategy: 'description-length'
     },
     client: {
       // clearContext: false, // leave Jasmine Spec Runner output visible in browser
