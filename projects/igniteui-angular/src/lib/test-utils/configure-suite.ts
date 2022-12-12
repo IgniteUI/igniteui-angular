@@ -23,7 +23,7 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
     let _resizerSub: jasmine.Spy<OnErrorEventHandlerNonNull>;
 
     beforeAll(() => {
-        // testBed.resetTestingModule();
+        testBed.resetTestingModule();
         testBed.resetTestingModule = () => testBed;
         _resizerSub = resizeObserverIgnoreError();
     });
@@ -39,7 +39,7 @@ export const configureTestSuite = (configureAction?: () => TestBed) => {
         clearSVGContainer();
         (testBed as any)._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
             const element = fixture.debugElement.nativeElement as HTMLElement;
-            // fixture.destroy();
+            fixture.destroy();
             // If the fixture element ID changes, then it's not properly disposed
             element?.remove();
         });
