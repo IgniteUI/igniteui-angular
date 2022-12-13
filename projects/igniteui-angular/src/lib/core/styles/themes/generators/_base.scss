@@ -55,6 +55,24 @@
         }
     }
 
+    #{$scope} {
+        --ig-size-small: 1;
+        --ig-size-medium: 2;
+        --ig-size-large: 3;
+
+        --ig-spacing-small: 1;
+        --ig-spacing-medium: 1;
+        --ig-spacing-large: 1;
+
+        --ig-spacing-inline-small: 1;
+        --ig-spacing-inline-medium: 1;
+        --ig-spacing-inline-large: 1;
+
+        --ig-spacing-block-small: 1;
+        --ig-spacing-block-medium: 1;
+        --ig-spacing-block-large: 1;
+    }
+
     @if list.length($exclude) > 0 {
         $excluded: is-component($exclude);
     }

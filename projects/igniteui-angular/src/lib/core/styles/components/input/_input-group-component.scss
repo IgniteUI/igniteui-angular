@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-input-group) {
+        @include sizable();
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -26,6 +27,24 @@
                 @extend %form-group-bundle--hover !optional;
             }
         }
+
+        // Material only elements start
+        @include e(notch) {
+            @extend  %igx-input-group__notch !optional;
+        }
+
+        @include e(filler) {
+            @extend  %igx-input-group__filler !optional;
+        }
+
+        @include e(bundle-start) {
+            @extend %form-group-bundle-start !optional;
+        }
+
+        @include e(bundle-end) {
+            @extend %form-group-bundle-end !optional;
+        }
+        // Material only elements END
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main !optional;
@@ -79,6 +98,29 @@
 
             &:focus {
                 @extend %form-group-input--focus !optional;
+            }
+        }
+
+        @include m(textarea-group) {
+
+            @include e(bundle) {
+                @extend  %form-group-textarea-group-bundle !optional;
+            }
+
+            @include e(label) {
+                @extend %form-group-label-textarea !optional;
+            }
+        }
+
+        @include mx(textarea-group, focused) {
+            @include e(label) {
+                @extend %form-group-label-textarea--float !optional;
+            }
+        }
+
+        @include mx(textarea-group, filled) {
+            @include e(label) {
+                @extend %form-group-label-textarea--float !optional;
             }
         }
 
@@ -231,10 +273,6 @@
         @include m(cosy) {
             @extend %form-group-display--cosy !optional;
 
-            @include e(bundle) {
-                @extend %form-group-bundle--cosy !optional;
-            }
-
             @include e(label) {
                 @extend %form-group-label--cosy !optional;
             }
@@ -246,18 +284,10 @@
             @include e(file-input) {
                 @extend %form-group-file-input--cosy !optional;
             }
-
-            @include e(textarea) {
-                @extend %form-group-textarea--cosy !optional;
-            }
         }
 
         @include m(compact) {
             @extend %form-group-display--compact !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--compact !optional;
-            }
 
             @include e(label) {
                 @extend %form-group-label--compact !optional;
@@ -270,13 +300,11 @@
             @include e(file-input) {
                 @extend %form-group-file-input--compact !optional;
             }
-
-            @include e(textarea) {
-                @extend %form-group-textarea--compact !optional;
-            }
         }
 
         @include m(box) {
+            @extend %form-group-display--box !optional;
+
             @extend %form-group-display--no-margin !optional;
 
             @include e(wrapper) {
@@ -309,24 +337,12 @@
         }
 
         @include mx(box, cosy) {
-            @extend %form-group-display--no-margin-cosy !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--box-cosy !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-cosy !optional;
             }
         }
 
         @include mx(box, compact) {
-            @extend %form-group-display--no-margin-compact !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--box-compact !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-compact !optional;
             }
@@ -343,13 +359,10 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--border !optional;
-
-                &:hover {
-                    @extend %form-group-bundle-border--hover !optional;
-                }
             }
 
             @include e(bundle-main) {
+                @extend %form-group-bundle-main--border !optional;
                 @extend %form-group-bundle-main--box !optional;
             }
 
@@ -375,126 +388,122 @@
         }
 
         @include mx(border, filled) {
+            @extend %form-group-label--filled-border !optional;
+
             @include e(label) {
                 @extend %form-group-label--float-border !optional;
             }
         }
 
         @include mx(border, file) {
+            @extend %form-group-label--file-border !optional;
+
             @include e(label) {
                 @extend %form-group-label--float-border !optional;
             }
         }
 
         @include mx(border, focused) {
+            @extend %form-group-label--focused-border !optional;
+
             @include e(label) {
                 @extend %form-group-label--float-border !optional;
             }
         }
 
         @include mx(border, placeholder) {
+            @extend %form-group-label--placeholder-border !optional;
+
             @include e(label) {
                 @extend %form-group-label--float-border !optional;
             }
         }
 
         @include mx(border, cosy) {
-            @extend %form-group-display--no-margin-cosy !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--border-cosy !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-cosy !optional;
             }
         }
 
-        @include mx(border, cosy, filled) {
-            @include e(label) {
-                @extend %form-group-label--float-border-cosy !optional;
-            }
-        }
-
-        @include mx(border, cosy, file) {
-            @include e(label) {
-                @extend %form-group-label--float-border-cosy !optional;
-            }
-        }
-
-        @include mx(border, cosy, focused) {
-            @include e(label) {
-                @extend %form-group-label--float-border-cosy !optional;
-            }
-        }
-
-        @include mx(border, cosy, placeholder) {
-            @include e(label) {
-                @extend %form-group-label--float-border-cosy !optional;
-            }
-        }
-
         @include mx(border, compact) {
-            @extend %form-group-display--no-margin-compact !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--border-compact !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-compact !optional;
             }
         }
 
-        @include mx(border, compact, filled) {
-            @include e(label) {
-                @extend %form-group-label--float-border-compact !optional;
-            }
-        }
-
-        @include mx(border, compact, file) {
-            @include e(label) {
-                @extend %form-group-label--float-border-compact !optional;
-            }
-        }
-
-        @include mx(border, compact, focused) {
-            @include e(label) {
-                @extend %form-group-label--float-border-compact !optional;
-            }
-        }
-
-        @include mx(border, compact, placeholder) {
-            @include e(label) {
-                @extend %form-group-label--float-border-compact !optional;
-            }
+        @include mx(warning, border) {
+            @extend %form-group-border--warning !optional;
         }
 
         @include mx(valid, border) {
-            @include e(bundle) {
-                @extend %form-group-bundle-border--success !optional;
-            }
+            @extend %form-group-border--success !optional;
         }
 
         @include mx(invalid, border) {
-            @include e(bundle) {
-                @extend %form-group-bundle-border--error !optional;
-            }
-        }
-
-        @include mx(focused, border) {
-            @include e(bundle) {
-                @extend %form-group-bundle-border--focus !optional;
-            }
+            @extend %form-group-border--error !optional;
         }
 
         @include mx(disabled, border) {
+            @extend %form-group-border--disabled !optional;
+
             @include e(bundle) {
                 @extend %form-group-bundle-border--disabled !optional;
             }
+        }
+
+        @include m(search) {
+            @extend %form-group-display--no-margin !optional;
+
+            @include e(bundle) {
+                @extend %form-group-bundle--search !optional;
+
+                &:hover {
+                    @extend %form-group-bundle-search--hover !optional;
+                }
+            }
+
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--box !optional;
+            }
+
+            @include e(border) {
+                @extend %form-group-border--hidden !optional;
+            }
+
+            @include e(input) {
+                @extend %form-group-input--search !optional;
+            }
 
             @include e(label) {
-                @extend %form-group-label--float-border-disabled !optional;
+                @extend %form-group-label--search !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--box !optional;
+            }
+        }
+
+        @include mx(search, cosy) {
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--box-cosy !optional;
+            }
+        }
+
+        @include mx(search, compact) {
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--box-compact !optional;
+            }
+        }
+
+        @include mx(focused, search) {
+            @include e(bundle) {
+                @extend %form-group-bundle-search--focus !optional;
+            }
+        }
+
+        @include mx(disabled, search) {
+            @include e(bundle) {
+                @extend %form-group-bundle-search--disabled !optional;
             }
         }
 
@@ -530,8 +539,8 @@
                 @extend %fluent-label !optional;
             }
 
-            @include e(textarea) {
-                @extend %fluent-textarea !optional;
+            @include e(upload-button) {
+                @extend %fluent-upload-button !optional;
             }
         }
 
@@ -539,10 +548,6 @@
             @include e(label) {
                 @extend %fluent-placeholder-label !optional;
             }
-        }
-
-        @include mx(cosy, fluent) {
-            @extend %igx-input-group-fluent--cosy !optional;
         }
 
         @include mx(compact, fluent) {
@@ -650,6 +655,52 @@
                 @extend %fluent-label-error !optional;
             }
         }
+
+        @include mx(search, fluent) {
+            @extend %igx-input-group-fluent-search !optional;
+
+            @include e(bundle) {
+                @extend %form-group-bundle--fluent !optional;
+
+                &:hover {
+                    @extend %form-group-bundle--fluent--hover !optional;
+                }
+            }
+
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--fluent !optional;
+            }
+
+            @include e(input) {
+                @extend %fluent-input !optional;
+            }
+
+            @include e(label) {
+                @extend %fluent-label !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--box !optional;
+            }
+        }
+
+        @include mx(fluent, search, cosy) {
+            @extend %igx-input-group-fluent-search--cosy !optional;
+        }
+
+        @include mx(fluent, search, compact) {
+            @extend %igx-input-group-fluent-search--compact !optional;
+        }
+
+        @include mx(focused, fluent, search) {
+            @extend %igx-input-group-fluent-search--focused !optional;
+        }
+
+        @include mx(disabled, fluent, search) {
+            @include e(bundle) {
+                @extend %form-group-bundle-search--disabled !optional;
+            }
+        }
         // Fluent Theme End //
 
         // Indigo Theme Start //
@@ -690,34 +741,14 @@
         }
 
         @include mx(indigo, cosy) {
-            @extend %form-group-display--no-margin-cosy !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--box-cosy !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-cosy !optional;
-            }
-
-            @include e(textarea) {
-                @extend %form-group-textarea--indigo-cosy !optional;
             }
         }
 
         @include mx(indigo, compact) {
-            @extend %form-group-display--no-margin-compact !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--box-compact !optional;
-            }
-
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-compact !optional;
-            }
-
-            @include e(textarea) {
-                @extend %form-group-textarea--indigo-compact !optional;
             }
         }
 
@@ -789,6 +820,26 @@
             @include e(textarea) {
                 @extend %bootstrap-input !optional;
             }
+
+            @include e(upload-button) {
+                @extend %bootstrap-upload-button !optional;
+            }
+
+            @include e(bundle-start) {
+                @extend %form-group-bundle-start--bootstrap !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end--bootstrap !optional;
+            }
+        }
+
+        @include mx(bootstrap, prefixed) {
+            @extend %form-group-display--bootstrap-prefixed !optional;
+        }
+
+        @include mx(bootstrap, suffixed) {
+            @extend %form-group-display--bootstrap-suffixed !optional;
         }
 
         @include mx(focused, bootstrap) {
@@ -894,152 +945,6 @@
                 @extend %bootstrap-input--disabled !optional;
             }
         }
-
-        @include mx(cosy, bootstrap) {
-            @extend %form-group-display--cosy-bootstrap !optional;
-
-            @include e(label) {
-                @extend %bootstrap-label--cosy !optional;
-            }
-
-            @include e(input) {
-                @extend %bootstrap-input--cosy !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--cosy !optional;
-            }
-        }
-
-        @include mx(compact, bootstrap) {
-            @extend %form-group-display--compact-bootstrap !optional;
-
-            @include e(label) {
-                @extend %bootstrap-label--compact !optional;
-            }
-
-            @include e(input) {
-                @extend %bootstrap-input--compact !optional;
-            }
-
-            @include e(textarea) {
-                @extend %bootstrap-input--compact !optional;
-            }
-        }
         // Bootstrap Theme End //
-
-        @include m(search) {
-            @extend %form-group-display--no-margin !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--search !optional;
-
-                &:hover {
-                    @extend %form-group-bundle-search--hover !optional;
-                }
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box !optional;
-            }
-
-            @include e(border) {
-                @extend %form-group-border--hidden !optional;
-            }
-
-            @include e(input) {
-                @extend %form-group-input--search !optional;
-            }
-
-            @include e(label) {
-                @extend %form-group-label--search !optional;
-            }
-
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
-            }
-        }
-
-        @include mx(search, cosy) {
-            @extend %form-group-display--no-margin-cosy !optional;
-
-            @include b(bundle) {
-                @extend %form-group-bundle--search-cosy !optional;
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-cosy !optional;
-            }
-        }
-
-        @include mx(search, compact) {
-            @extend %form-group-display--no-margin-compact !optional;
-
-            @include b(bundle) {
-                @extend %form-group-bundle--search-compact !optional;
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-compact !optional;
-            }
-        }
-
-        @include mx(focused, search) {
-            @include e(bundle) {
-                @extend %form-group-bundle-search--focus !optional;
-            }
-        }
-
-        @include mx(disabled, search) {
-            @include e(bundle) {
-                @extend %form-group-bundle-search--disabled !optional;
-            }
-        }
-
-        @include mx(search, fluent) {
-            @extend %igx-input-group-fluent-search !optional;
-
-            @include e(bundle) {
-                @extend %form-group-bundle--fluent !optional;
-
-                &:hover {
-                    @extend %form-group-bundle--fluent--hover !optional;
-                }
-            }
-
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--fluent !optional;
-            }
-
-            @include e(input) {
-                @extend %fluent-input !optional;
-            }
-
-            @include e(label) {
-                @extend %fluent-label !optional;
-            }
-
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
-            }
-        }
-
-        @include mx(fluent, search, cosy) {
-            @extend %igx-input-group-fluent-search--cosy !optional;
-        }
-
-        @include mx(fluent, search, compact) {
-            @extend %igx-input-group-fluent-search--compact !optional;
-        }
-
-        @include mx(focused, fluent, search) {
-            @extend %igx-input-group-fluent-search--focused !optional;
-        }
-
-        @include mx(disabled, fluent, search) {
-            @include e(bundle) {
-                @extend %form-group-bundle-search--disabled !optional;
-            }
-        }
     }
 }

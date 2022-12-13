@@ -21,7 +21,7 @@
 </ng-template>
 
 <ng-template #uploadButton>
-    <igx-prefix *ngIf="isFileType" class="igx-prefix--upload">
+    <igx-prefix *ngIf="isFileType" class="igx-input-group__upload-button">
         <button
             igxButton="raised"
             (click)="uploadButtonHandler()"
@@ -63,17 +63,31 @@
 
 <ng-template #materialBundle>
     <div class="igx-input-group__bundle">
-        <ng-container *ngTemplateOutlet="prefix"></ng-container>
-        <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        <div class="igx-input-group__bundle-start">
+            <ng-container *ngTemplateOutlet="prefix"></ng-container>
+            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        </div>
 
         <div class="igx-input-group__bundle-main">
-            <ng-container *ngTemplateOutlet="label"></ng-container>
+            <ng-container *ngIf="!isTypeBorder">
+                <ng-container *ngTemplateOutlet="label"></ng-container>
+            </ng-container>
             <ng-container *ngTemplateOutlet="input"></ng-container>
             <ng-container *ngTemplateOutlet="files"></ng-container>
         </div>
 
-        <ng-container *ngTemplateOutlet="clear"></ng-container>
-        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        <ng-container *ngIf="isTypeBorder">
+            <div class="igx-input-group__notch">
+                <ng-container *ngTemplateOutlet="label"></ng-container>
+            </div>
+        </ng-container>
+
+        <div *ngIf="isTypeBorder" class="igx-input-group__filler"></div>
+
+        <div class="igx-input-group__bundle-end">
+            <ng-container *ngTemplateOutlet="clear"></ng-container>
+            <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        </div>
     </div>
 </ng-template>
 
@@ -81,16 +95,21 @@
     <ng-container *ngTemplateOutlet="label"></ng-container>
 
     <div class="igx-input-group__bundle">
-        <ng-container *ngTemplateOutlet="prefix"></ng-container>
-        <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        <div class="igx-input-group__bundle-start">
+            <ng-container *ngTemplateOutlet="prefix"></ng-container>
+            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        </div>
+
 
         <div class="igx-input-group__bundle-main">
             <ng-container *ngTemplateOutlet="input"></ng-container>
             <ng-container *ngTemplateOutlet="files"></ng-container>
         </div>
 
-        <ng-container *ngTemplateOutlet="clear"></ng-container>
-        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        <div class="igx-input-group__bundle-end">
+            <ng-container *ngTemplateOutlet="clear"></ng-container>
+            <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        </div>
     </div>
 </ng-template>
 
@@ -98,13 +117,18 @@
     <ng-container *ngTemplateOutlet="label"></ng-container>
 
     <div class="igx-input-group__bundle">
-        <ng-container *ngTemplateOutlet="prefix"></ng-container>
+        <div class="igx-input-group__bundle-start">
+            <ng-container *ngTemplateOutlet="prefix"></ng-container>
+            <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
+        </div>
 
-        <ng-container *ngTemplateOutlet="uploadButton"></ng-container>
         <ng-container *ngTemplateOutlet="input"></ng-container>
         <ng-container *ngTemplateOutlet="files"></ng-container>
-        <ng-container *ngTemplateOutlet="clear"></ng-container>
-        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+
+        <div class="igx-input-group__bundle-end">
+            <ng-container *ngTemplateOutlet="clear"></ng-container>
+            <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        </div>
     </div>
 </ng-template>
 
