@@ -172,7 +172,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
             UIInteractions.triggerEventHandlerKeyDown('home', childGridContent, false, false, true);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME * 2);
+            await wait(DEBOUNCE_TIME * 3);
 
             const selectedCell = fixture.componentInstance.selectedCell;
             expect(selectedCell.value).toEqual(0);
@@ -949,10 +949,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" (selected)='selected($event)'
-     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
-        <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
-            <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
+    <igx-hierarchical-grid #grid1 [data]="data" (selected)="selected($event)"
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]="true">
+        <igx-row-island (selected)="selected($event)" [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
+            <igx-row-island (selected)="selected($event)" [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`

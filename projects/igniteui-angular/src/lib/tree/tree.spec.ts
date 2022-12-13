@@ -690,7 +690,6 @@ describe('IgxTree #treeView', () => {
             });
             it('Should render proper roles for nodes containing link children', () => {
                 pending('Test not implemented');
-
             });
         });
     });
