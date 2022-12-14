@@ -91,8 +91,6 @@ export class GridExportComponent {
 
     public toggleSummary(column: ColumnType) {
         column.hasSummary = !column.hasSummary;
-        this.grid.summaryService.clearSummaryCache();
-        this.tGrid.summaryService.clearSummaryCache();
     }
 
     public configureExport(args: IGridToolbarExportEventArgs) {
