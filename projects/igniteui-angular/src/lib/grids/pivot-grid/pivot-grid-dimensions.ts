@@ -103,6 +103,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
     }
 
+    /* blazorSuppress */
     /**
      * @deprecated since version 15.1.x. Please use the new name `baseDimension` for future versions.
      *
@@ -113,6 +114,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         return this._baseDimension;
     }
 
+    /* blazorSuppress */
     /**
      * @deprecated since version 15.1.x. Please use the new name `options` for future versions.
      *
