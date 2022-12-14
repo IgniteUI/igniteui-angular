@@ -673,7 +673,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public getSelectedData(formatters = false, headers = false): any[] {
         let source = [];
@@ -1072,7 +1072,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             parentData[this.childDataKey] = children;
         }
         this.selectionService.clearHeaderCBState();
-        this.pipeTrigger++;
+        this.pipeTrigger++; 
         if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();

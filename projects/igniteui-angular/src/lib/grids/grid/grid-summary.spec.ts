@@ -24,7 +24,7 @@ import {
     SummariesGroupByComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -88,7 +88,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
                 expect(grid.getColumnByName('ProductName').hasSummary).toBe(true);
                 expect(grid.getColumnByName('OrderDate').hasSummary).toBe(false);
-                
+
                 grid.summaryRowHeight = 0;
                 fixture.detectChanges();
 
@@ -867,6 +867,10 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
             tick(100);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should be able to select summaries with arrow keys', async () => {
             const gridFooter = GridFunctions.getGridFooter(fix);

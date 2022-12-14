@@ -28,21 +28,15 @@
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
 /// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for the navdrawer item.
-///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-/// @requires elevation
-///
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: navdrawer-theme(
 ///     $background: #2d313a,
 ///     $item-active-background: #ecc256,
 ///     $item-icon-color: #ecc256
 ///   );
-///   // Pass the theme to the navdrawer component mixin
-///   @include navdrawer($navdrawer-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($navdrawer-theme);
 @function navdrawer-theme(
     $schema: $light-schema,
     $elevations: null,
@@ -146,9 +140,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin navdrawer($theme) {
     @include css-vars($theme);
 
@@ -425,7 +416,6 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(item: 'subtitle-2', header: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin navdrawer-typography(
     $categories: (
         item: 'subtitle-2',

@@ -11,7 +11,6 @@
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} $accent-color [null] - Sets the pinned header background color, the joystick background and border colors, as well as the context menu background color.
 /// @param {Color} $active-color [null] - Sets the active text and border colors for tabs, panes, and menus.
 /// @param {Color} $border-color [null] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
@@ -46,15 +45,10 @@
 /// @param {Color} $tab-text [null] - Sets the text color for tabs.
 /// @param {Color} $tab-text-active [null] - Sets the text color for active tabs.
 /// @param {Color} $text-color [null] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires text-contrast
-/// @requires extend
-///
 /// @example scss Change the background and icon colors in icon dock-managers
 ///   $my-dock-manager-theme: dock-manager-theme();
-///   // Pass the theme to the dock-manager component mixin
+///   // Pass the theme to the css-vars() mixin
 ///   @include css-vars($my-dock-manager-theme);
 @function dock-manager-theme(
     $schema: $light-schema,
@@ -75,7 +69,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
 @mixin dock-manager($theme) {
     @include css-vars($theme);
 }
@@ -83,7 +76,6 @@
 /// Adds typography styles for the dock manager component.
 /// @access private
 /// @group typography
-/// @requires {mixin} type-style
 @mixin dock-manager-typography() {
     igx-dock-manager {
         --igc-font-family: var(--ig-font-family, inherit);

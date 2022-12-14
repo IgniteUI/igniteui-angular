@@ -5,7 +5,7 @@ import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } fr
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 
@@ -405,6 +405,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             setupGridScrollDetection(fix, treeGrid);
             tick(16);
         }));
+
+        afterEach(() => {
+            clearGridSubs();
+        });
 
         it('should navigate with arrow Up and Down keys', async () => {
             spyOn(treeGrid.selected, 'emit').and.callThrough();

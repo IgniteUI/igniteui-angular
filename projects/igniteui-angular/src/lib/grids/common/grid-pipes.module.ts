@@ -18,6 +18,7 @@ import {
     IgxGridAddRowPipe,
     IgxGridRowClassesPipe,
     IgxGridRowStylesPipe,
+    IgxGridCellImageAltPipe,
 } from './pipes';
 export * from './pipes';
 
@@ -29,6 +30,7 @@ export * from './pipes';
         IgxGridTopLevelColumns,
         IgxGridCellStylesPipe,
         IgxGridCellStyleClassesPipe,
+        IgxGridCellImageAltPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,
@@ -48,6 +50,7 @@ export * from './pipes';
         IgxGridTopLevelColumns,
         IgxGridCellStylesPipe,
         IgxGridCellStyleClassesPipe,
+        IgxGridCellImageAltPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
         IgxGridRowPinningPipe,

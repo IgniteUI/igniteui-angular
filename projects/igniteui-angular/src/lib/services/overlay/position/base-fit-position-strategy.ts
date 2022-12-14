@@ -5,7 +5,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     protected _initialSize: Size;
     protected _initialSettings: PositionSettings;
 
-    /** @inheritdoc */
+    /** @inheritDoc */
     public position(
         contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         const targetElement = target || this.settings.target;

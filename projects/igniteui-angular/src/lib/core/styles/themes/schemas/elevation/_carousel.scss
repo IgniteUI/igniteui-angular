@@ -19,17 +19,14 @@ $flat-carousel: (
 );
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-carousel
+/// @requires {Map} $flat-carousel
 $fluent-elevation-carousel: extend($flat-carousel);
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-carousel
+/// @requires {Map} $flat-carousel
 $bootstrap-elevation-carousel: extend($flat-carousel);
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-carousel
+/// @requires {Map} $flat-carousel
 $indigo-elevation-carousel: extend($flat-carousel);
 

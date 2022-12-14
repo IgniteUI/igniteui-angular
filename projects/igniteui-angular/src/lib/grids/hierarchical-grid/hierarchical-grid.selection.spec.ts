@@ -26,7 +26,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland1;
     let rowIsland2;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -40,17 +42,17 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridModule,
                 IgxIconModule,
                 IgxGridSelectionModule]
-        });
-    }));
+        }).compileComponents();
+    }))
 
     describe('Cell selection', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        }));
+        });
 
         it('should allow only one cell to be selected in the whole hierarchical grid.', () => {
             hierarchicalGrid.height = '500px';
@@ -482,13 +484,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     });
 
     describe('Row Selection', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        }));
+        });
 
         it('should have checkboxes on each row', fakeAsync(() => {
             hierarchicalGrid.expandChildren = true;
@@ -638,7 +640,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 newSelection: ['00'],
                 oldSelection: [],
                 removed: [],
-                owner: childGrid
+                owner: childGrid,
+                allRowsSelected: false
             });
 
             // Click on checkbox on second row
@@ -655,7 +658,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 newSelection: ['01'],
                 oldSelection: ['00'],
                 removed: ['00'],
-                owner: childGrid
+                owner: childGrid,
+                allRowsSelected: false
             });
 
             // Click on a row in parent grid
@@ -672,7 +676,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 event: mockEvent,
                 newSelection: ['1'],
                 oldSelection: [],
-                removed: []
+                removed: [],
+                allRowsSelected: false
             });
 
             // Click on a header checkbox in parent grid
@@ -688,7 +693,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 event: mockEvent,
                 newSelection: ['1', '0', '2', '3', '4'],
                 oldSelection: ['1'],
-                removed: []
+                removed: [],
+                allRowsSelected: true
             });
         });
         it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {
@@ -1296,13 +1302,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     });
 
     describe('Row Selection CRUD', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionNoTransactionsComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
             rowIsland1 = fix.componentInstance.rowIsland;
             rowIsland2 = fix.componentInstance.rowIsland2;
-        }));
+        });
 
         it('should deselect deleted row', () => {
             hierarchicalGrid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
@@ -1376,12 +1382,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     describe('Custom row selectors', () => {
         let hGrid;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
             fix.detectChanges();
             hGrid = fix.componentInstance.hGrid;
             hGrid.rowSelection = GridSelectionMode.multiple;
-        }));
+        });
 
         it('Row context `select` method selects a single row', () => {
             // root grid

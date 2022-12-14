@@ -140,12 +140,17 @@
     <h4 class="sample-title">Sample three (batch editing)</h4>
     <div class="sample-actions">
         <button igxButton="raised" (click)='riToggle = !riToggle'>Change row islands runtime</button>
+        <button igxButton="raised" (click)="columnsReady = !columnsReady">Toggle columns</button>
+        <button igxButton="raised" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
     </div>
     <igx-hierarchical-grid [batchEditing]="true"
-    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'" #hGrid2>
-
-        <igx-row-island [key]="'childData'" [primaryKey]="'ID'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'800px'" #hGrid2>
+        <igx-column *ngIf="columnsReady" field="ID"></igx-column>
+        <igx-column *ngIf="columnsReady" field="ProductName"></igx-column>
+        <igx-row-island *ngIf="layoutsReady" [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ChildLevels"></igx-column>
             <div *ngIf='riToggle'>
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
                     [allowFiltering]="true"></igx-row-island>

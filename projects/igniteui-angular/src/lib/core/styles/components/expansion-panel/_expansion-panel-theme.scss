@@ -21,19 +21,12 @@
 /// @param {Color} $body-background [null] - The panel body background color.
 /// @param {Color} $disabled-color [null] - The panel body disabled text color.
 /// @param {Number} $expanded-margin [null] - The expansion panel margin in expanded state when positioned inside accordion.
-///
 /// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
-///
-/// @requires $default-palette
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
-/// @requires text-contrast
-///
-/// @example scss Change the background color
-///   $my-expansion-panel-theme: expansion-panel($header-background: black);
-///   // Pass the theme to the expansion-panel component mixin
-///   @include expansion-panel($my-expansion-panel-theme);
+/// @example scss Change the header background color
+///   $my-expansion-panel-theme: expansion-panel-theme($header-background: black);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-expansion-panel-theme);
 @function expansion-panel-theme(
     $schema: $light-schema,
 
@@ -93,9 +86,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires rem
-/// @requires var-get
 @mixin expansion-panel($theme) {
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
@@ -227,7 +217,6 @@
 /// Adds typography styles for the igx-expansion-panel component.
 /// @group typography
 /// @param {Map} $categories [(title: 'h5', description: 'subtitle-2', body: 'body-2')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin expansion-panel-typography($categories: (
     title: 'h5',
     description: 'subtitle-2',

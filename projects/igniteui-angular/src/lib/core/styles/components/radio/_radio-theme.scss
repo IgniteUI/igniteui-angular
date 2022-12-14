@@ -26,14 +26,13 @@
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
 ///
 /// @requires $light-schema
-/// @requires digest-schema
-/// @requires extend
+///
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
 ///   $my-radio-theme: radio-theme($fill-color: magenta);
-///   // Pass the theme to the radio component mixin
-///   @include radio($my-radio-theme);
+///   // Pass the theme to the css-vars() mixin
+///   @include css-vars($my-radio-theme);
 @function radio-theme(
     $schema: $light-schema,
 
@@ -73,29 +72,22 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} css-vars
-/// @requires {mixin} scale-in-out
-/// @requires {mixin} animation
-/// @requires {mixin} ripple
-/// @requires {mixin} hide-default
 /// @requires ripple-theme
-/// @requires em
-/// @requires var-get
 @mixin radio($theme) {
     @include css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $label-margin: em(8px);
+    $label-margin: rem(8px);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
     $size: map.get((
-        material: em(20px),
-        fluent: em(20px),
-        bootstrap: em(16px),
-        indigo-design: em(20px),
+        material: rem(20px),
+        fluent: rem(20px),
+        bootstrap: rem(16px),
+        indigo-design: rem(20px),
     ), $variant);
 
     $scale: map.get((
@@ -128,7 +120,7 @@
 
     $transition: all .2s ease-in;
 
-    $ripple-size: em(48px);
+    $ripple-size: rem(48px);
     $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: ripple-theme(
@@ -397,7 +389,6 @@
 /// Uses the 'subtitle-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
-/// @requires {mixin} type-style
 @mixin radio-typography(
     $categories: (label: 'subtitle-1')
 ) {
