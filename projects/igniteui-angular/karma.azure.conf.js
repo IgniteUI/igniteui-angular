@@ -12,13 +12,13 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
-        'karma-parallel',
-        'karma-jasmine',
-        'karma-coverage',
-        'karma-chrome-launcher',
-        'karma-spec-reporter',
-        'karma-junit-reporter',
-        '@angular-devkit/build-angular/plugins/karma'
+      'karma-parallel',
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-chrome-launcher',
+      'karma-spec-reporter',
+      'karma-junit-reporter',
+      '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
       executors: 2,
