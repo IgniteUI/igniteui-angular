@@ -24,7 +24,7 @@ import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
  *
  * @hidden @internal
  */
- @Directive()
+@Directive()
 export abstract class IgxGroupByAreaDirective {
     /**
      * The drop area template if provided by the parent grid.
@@ -37,7 +37,7 @@ export abstract class IgxGroupByAreaDirective {
     public density: DisplayDensity = DisplayDensity.comfortable;
 
     @HostBinding('class.igx-grid-grouparea')
-    public defaultClass =  true;
+    public defaultClass = true;
 
     @HostBinding('class.igx-grid-grouparea--cosy')
     public get cosyStyle() {
@@ -118,7 +118,7 @@ export abstract class IgxGroupByAreaDirective {
         this.updateGroupSorting(id);
     }
 
-     public onDragDrop(event) {
+    public onDragDrop(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column = drag.column;
@@ -161,6 +161,8 @@ export abstract class IgxGroupByAreaDirective {
     protected updateGroupSorting(id: string) {
         const expr = this.expressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
+        const expressionsChangeEvent = this.grid.groupingExpressionsChange || this.expressionsChange;
+        expressionsChangeEvent.emit(this.expressions);
         this.grid.pipeTrigger++;
         this.grid.notifyChanges();
     }
