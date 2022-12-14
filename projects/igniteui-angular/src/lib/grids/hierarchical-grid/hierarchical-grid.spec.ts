@@ -15,7 +15,7 @@ import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
 
-describe('Basic IgxHierarchicalGrid', () => {
+describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -1583,7 +1583,7 @@ describe('Basic IgxHierarchicalGrid', () => {
     describe('Columns and row islands runtime change', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridToggleRIAndColsComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        
+
         it('should allow changing columns runtime in root grid when there are no row islands.', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIAndColsComponent);
             fixture.detectChanges();
@@ -1593,7 +1593,7 @@ describe('Basic IgxHierarchicalGrid', () => {
             fixture.componentInstance.toggleColumns = true;
             fixture.detectChanges();
             tick();
-    
+
             expect(hierarchicalGrid.columns.length).toBe(2);
 
             fixture.componentInstance.toggleRI = true;
@@ -1680,7 +1680,7 @@ describe('Basic IgxHierarchicalGrid', () => {
             expect(gridCellValues.length).toBe(1);
         }));
     });
-    
+
 });
 
 @Component({
