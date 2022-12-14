@@ -640,6 +640,25 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
     }));
 
+    it('should emit groupingExpressionsChange when a group is sorted through the chip', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        // group by string column
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
+        }); 
+        fix.detectChanges();
+        spyOn(grid.groupingExpressionsChange, 'emit');
+        fix.detectChanges();
+        const chips = grid.groupArea.chips;
+        grid.groupArea.handleClick(chips.first.id);
+        fix.detectChanges();
+        expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(1);
+    }));
+
     it('should group unbound column with custom grouping strategy', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         fix.componentInstance.data.forEach((r, i) => {
