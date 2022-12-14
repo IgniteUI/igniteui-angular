@@ -123,11 +123,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /** @hidden */
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
-    public prefixes: QueryList<IgxPrefixDirective>;
+    protected _prefixes: QueryList<IgxPrefixDirective>;
 
     /** @hidden */
     @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
-    public suffixes: QueryList<IgxSuffixDirective>;
+    protected _suffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
@@ -249,7 +249,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         @Inject(DOCUMENT)
         private document: any,
         private platform: PlatformUtil,
-        private cdr: ChangeDetectorRef
+        public cdr: ChangeDetectorRef
     ) {
         super(_displayDensityOptions);
 
@@ -301,13 +301,23 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--prefixed')
     public get hasPrefixes() {
-        return this.prefixes.length > 0;
+        return this._prefixes.length > 0 || this.isFileType;
+    }
+
+    /** @hidden @internal */
+    public set prefixes(items: QueryList<IgxPrefixDirective>) {
+        this._prefixes = items;
     }
 
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this.suffixes.length > 0;
+        return this._suffixes.length > 0;
+    }
+
+    /** @hidden @internal */
+    public set suffixes(items: QueryList<IgxPrefixDirective>) {
+        this._suffixes = items;
     }
 
     /**

@@ -39,7 +39,7 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IgxSuffixDirective, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxOverlayService } from '../services/overlay/overlay';
 
@@ -104,6 +104,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxPrefixDirective, { descendants: true })
+    protected prefixes: QueryList<IgxPrefixDirective>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxSuffixDirective, { descendants: true })
+    protected suffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
@@ -513,6 +521,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngAfterViewInit() {
+        if(this.prefixes.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if(this.suffixes.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
+        }
+
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
