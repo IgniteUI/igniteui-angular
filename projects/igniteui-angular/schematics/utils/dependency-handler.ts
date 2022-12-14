@@ -99,7 +99,7 @@ export const addDependencies = (options: Options) => async (tree: Tree, context:
 
     await includeDependencies(workspaceHost, workspace, pkgJson, context, tree);
 
-    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree)
+    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree);
 
     addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
 };
@@ -157,7 +157,7 @@ const addHammerToConfig =
         }
     };
 
-const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
+export const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
     await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
         await addStylePreprocessorOptions(project, tree, "build", context);
         await addStylePreprocessorOptions(project, tree, "test", context);
