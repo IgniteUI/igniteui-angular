@@ -5,10 +5,9 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
-    // ColumnType,
+    ColumnType,
     GridSelectionMode
 } from 'igniteui-angular';
-import { ColumnType } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
     providers: [],

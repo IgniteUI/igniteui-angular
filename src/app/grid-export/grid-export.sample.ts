@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-    IgxColumnComponent,
+    ColumnType,
     IgxNumberSummaryOperand,
     IgxSummaryResult,
-    IgxExcelExporterService,
     IGridToolbarExportEventArgs,
     IgxExporterOptionsBase,
-    IgxExcelExporterOptions,
     IColumnExportingEventArgs,
     IRowExportingEventArgs,
     IgxGridComponent,
@@ -91,7 +89,7 @@ export class GridExportComponent {
         this.productId = GRID_DATA.length;
     }
 
-    public toggleSummary(column: IgxColumnComponent) {
+    public toggleSummary(column: ColumnType) {
         column.hasSummary = !column.hasSummary;
         this.grid.summaryService.clearSummaryCache();
         this.tGrid.summaryService.clearSummaryCache();
@@ -99,23 +97,23 @@ export class GridExportComponent {
 
     public configureExport(args: IGridToolbarExportEventArgs) {
         console.log(args);
-        //const options: IgxExporterOptionsBase = args.options;
+        // const options: IgxExporterOptionsBase = args.options;
 
-        // Change exporter options
-        //
+        // // Change exporter options
+
         // options.fileName = `Report_${new Date().toDateString()}`;
         // options.exportSummaries = false;
 
-        // Cancel column exporting
-        //
+        // // Cancel column exporting
+
         // args.exporter.columnExporting.subscribe((colExportingArgs: IColumnExportingEventArgs) => {
         //     if (colExportingArgs.columnIndex === 1) {
         //         colExportingArgs.cancel = true;
         //     }
         // });
 
-        // Cancel row exporting
-        //
+        // // Cancel row exporting
+
         // args.exporter.rowExporting.subscribe((rowExportingArgs: IRowExportingEventArgs) => {
         //     if (rowExportingArgs.rowIndex === 1) {
         //         rowExportingArgs.cancel = true;
