@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-    WEEKDAYS, isDateInRanges, IFormattingViews, IFormattingOptions
+    isDateInRanges, IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
 import {
     IgxInputDirective, IgxInputGroupComponent,

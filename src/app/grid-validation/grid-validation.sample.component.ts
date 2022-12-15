@@ -1,8 +1,8 @@
 import { Component, Directive, ViewChild, Input } from '@angular/core';
 import { data } from '../shared/data';
 
-import {  IgxGridComponent, IRecordValidationState, IgxGridValidationService, IGridValidationStatusEventArgs, RowType, GridColumnDataType, IGridFormGroupCreatedEventArgs } from 'igniteui-angular';
-import { AbstractControl, FormGroup, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {  IgxGridComponent, IRecordValidationState, IGridValidationStatusEventArgs, RowType, GridColumnDataType, IGridFormGroupCreatedEventArgs } from 'igniteui-angular';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
@@ -133,7 +133,6 @@ public hColumns2 = [
         if (invalid.length > 0) {
            if (confirm('There are invalid values about to be submitted. Do you want to continue')) {
             this.gridWithTransaction.transactions.commit(this.transactionData);
-            const validator : IgxGridValidationService = this.gridWithTransaction.validation;
             this.gridWithTransaction.validation.clear();
            }
         } else {
@@ -156,15 +155,15 @@ public hColumns2 = [
 
     public cellEdit(evt) {
         // can cancel if there are validation errors
-        // if (!evt.isValid && !this.rowEditNoTransactions) {
-        //     evt.cancel = true;
-        // }
+        if (!evt.isValid && !this.rowEditNoTransactions) {
+            evt.cancel = true;
+        }
     }
 
-    public formCreateHandler(formGr: IGridFormGroupCreatedEventArgs) {
+    public formCreateHandler(form: IGridFormGroupCreatedEventArgs) {
         // can add validators here
-        //    const prodName = formGr.get('ProductName');
-        //    prodName.addValidators(forbiddenNameValidator(/bob/i));
+        const prodName = form.formGroup.get('ProductName');
+        prodName.addValidators(forbiddenNameValidator(/bob/i));
     }
 
     public validationChange(evtArgs: IGridValidationStatusEventArgs){

@@ -317,7 +317,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             GridFunctions.focusCell(fixture, fCell);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, false, false, false);
-            await wait(DEBOUNCE_TIME * 2);
+            await wait(DEBOUNCE_TIME * 3);
             fixture.detectChanges();
 
             const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];

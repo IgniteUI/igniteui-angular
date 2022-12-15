@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxHierarchicalGridModule, IgxHierarchicalGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

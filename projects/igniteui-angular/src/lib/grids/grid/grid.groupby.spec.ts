@@ -72,7 +72,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     };
 
-    const checkChips = (chips: QueryList<IgxChipComponent>, grouping: IGroupingExpression[], sorting: ISortingExpression[]) => {
+    const checkChips = (chips: QueryList<IgxChipComponent>, grouping: IGroupingExpression[]) => {
         chips.forEach((chip, index) => {
             const content = chip.nativeElement.querySelector('.igx-chip__content').textContent.trim();
             const icon = chip.nativeElement.querySelector('[igxsuffix]').textContent.trim();
@@ -262,7 +262,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
         expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
@@ -2360,7 +2360,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 false, 'Ignite UI for Angular', false, null, '', true, null, true],
             grid.groupingExpressions);
         const chips = grid.groupArea.chips;
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
 
         // change order
         grid.groupingExpressions = [
@@ -2381,7 +2381,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
                 'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
             grid.groupingExpressions);
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
     }));
 
     it('should apply the chip correctly when there is grouping at runtime', fakeAsync(() => {
@@ -2394,7 +2394,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         const groupRows = grid.groupsRowList.toArray();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
     }));
 
@@ -2434,7 +2434,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         tick();
         expect(chips.length).toBe(1);
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
         expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
     }));
 
@@ -2453,7 +2453,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const chips = grid.groupArea.chips;
         tick();
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
     }));
 
     it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', async () => {
@@ -2744,7 +2744,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
         fix.detectChanges();
         const chips = grid.groupArea.chips;
-        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkChips(chips, grid.groupingExpressions);
 
         // verify groups
         const groupRows = grid.groupsRowList.toArray();
@@ -3095,7 +3095,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
 
             const chips = grid.groupArea.chips;
-            checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+            checkChips(chips, grid.groupingExpressions);
 
             const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
             expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);

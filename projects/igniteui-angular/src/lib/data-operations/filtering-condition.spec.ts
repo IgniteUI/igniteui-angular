@@ -155,7 +155,7 @@ class CustomFilter extends IgxFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
+            logic: (value: any, searchVal: any) => value === searchVal,
             isUnary: false,
             iconName: 'starts-with'
         });
