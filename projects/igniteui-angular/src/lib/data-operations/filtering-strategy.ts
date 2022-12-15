@@ -36,14 +36,19 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
-        let val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
+        const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
 
-        const column = grid.getColumnByName(expr.fieldName);
+        let formattedValue = '';
+        let formattedConditionMet = false;
+        const column = grid?.getColumnByName(expr.fieldName);
+
         if (typeof expr.searchVal === 'string' && column) {
-            val = this.getFormattedValue(column, val);
+            formattedValue = this.getFormattedValue(column, val);
+            formattedConditionMet = cond.logic(formattedValue, expr.searchVal, expr.ignoreCase);
         }
 
-        return cond.logic(val, expr.searchVal, expr.ignoreCase);
+        return cond.logic(val, expr.searchVal, expr.ignoreCase)
+            || formattedConditionMet;
     }
 
     // protected
