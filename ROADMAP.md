@@ -2,11 +2,11 @@
 
 # Current Milestone
 
-## Milestone 24, version 15.0 (Due by Nov, 2022)
+## Milestone 25, version 15.0 (Due by Jan, 2023)
 
-1. **[DONE]** Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
-2. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
-3. Support for Angular 15
+1. Design update of ComboBox Component
+2. Design update of Input Component
+3. Desugn update of List Component
 
 ## Going down the road
 
@@ -19,6 +19,12 @@
 7. Switch overlay service from angular animations to native Web Animations [#8780](https://github.com/IgniteUI/igniteui-angular/issues/8780)
 
 # Previous Milestone
+
+## Milestone 24, version 15.0 (Due by Nov, 2022) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-december-release-2022)
+
+1. **[DONE]** Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
+2. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
+3. **[DONE]** Support for Angular 15
 
 ## Milestone 24, version 14.2 (Released October 06th, 2022) [Release Blog 22.2](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-for-angular-22-2)
 
