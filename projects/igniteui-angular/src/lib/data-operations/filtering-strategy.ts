@@ -36,7 +36,13 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
-        const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
+        let val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
+
+        const column = grid.getColumnByName(expr.fieldName);
+        if (typeof expr.searchVal === 'string' && column) {
+            val = this.getFormattedValue(column, val);
+        }
+
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
@@ -104,14 +110,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         return Promise.resolve(filterItems);
     }
 
-    protected getFilterItemLabel(column: ColumnType, value: any, applyFormatter: boolean, data: any) {
-        if (column.formatter) {
-            if (applyFormatter) {
-                return column.formatter(value, data);
-            }
-            return value;
-        }
-
+    private getFormattedValue(column: any, value: any) {
         const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
         const locale = column.grid.locale;
 
@@ -131,6 +130,17 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
         }
     }
 
+    protected getFilterItemLabel(column: ColumnType, value: any, applyFormatter: boolean, data: any) {
+        if (column.formatter) {
+            if (applyFormatter) {
+                return column.formatter(value, data);
+            }
+            return value;
+        }
+
+        return this.getFormattedValue(column, value);
+    }
+    
     protected getUniqueFilterItems(column: ColumnType, filterItems: IgxFilterItem[]) {
         const filteredUniqueValues = filterItems.reduce((map, item) => {
             let key = item.value;
@@ -217,33 +227,10 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         const column = grid?.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, fieldName);
 
-        if (column?.formatter) {
-            if (this.shouldFormatFilterValues(column)) {
-                return column.formatter(value, rec);
-            }
+        value = column?.formatter && this.shouldFormatFilterValues(column) ?
+            column.formatter(value, rec) :
+            value && (isDate || isTime) ? parseDate(value) : value;
 
-            return value && (isDate || isTime) ? parseDate(value) : value;
-        }
-
-        if (column) {
-            const { display, format, digitsInfo, currencyCode, timezone } = column.pipeArgs;
-            const locale = grid.locale;
-
-            switch (column.dataType) {
-                case GridColumnDataType.Date:
-                case GridColumnDataType.DateTime:
-                case GridColumnDataType.Time:
-                    return formatDate(value, format, locale, timezone);
-                case GridColumnDataType.Currency:
-                    return formatCurrency(value, currencyCode || getLocaleCurrencyCode(locale), display, digitsInfo, locale);
-                case GridColumnDataType.Number:
-                    return formatNumber(value, locale, digitsInfo);
-                case GridColumnDataType.Percent:
-                    return formatPercent(value, locale, digitsInfo);
-                default:
-                    return value;
-            }
-        }
         return value;
     }
 }
