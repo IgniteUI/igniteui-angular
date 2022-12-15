@@ -76,14 +76,14 @@
         "igniteui-trial-watermark": "^1.0.3",
         "lodash-es": "^4.17.21",
         "uuid": "^8.3.0",
+        "igniteui-theming": "^1.2.0",
         "@igniteui/material-icons-extended": "^2.10.0"
     },
     "peerDependencies": {
         "@angular/common": "^15.0.0",
         "@angular/core": "^15.0.0",
         "@angular/animations": "^15.0.0",
-        "@angular/forms": "^15.0.0",
-        "igniteui-theming": "^1.2.0"
+        "@angular/forms": "^15.0.0"
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~15.0.1100"
