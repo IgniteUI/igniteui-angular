@@ -13,14 +13,35 @@ describe(`Update to ${version}`, () => {
         projects: {
             testProj: {
                 root: '/',
-                sourceRoot: '/testSrc'
+                sourceRoot: '/testSrc',
+                architect: {
+                    build: {
+                      options: {
+                      }
+                    }
+                }
             }
         },
-        schematics: {
-            '@schematics/angular:component': {
-                prefix: 'appPrefix'
+        version: 1
+    };
+    const configJson_15 = {
+        defaultProject: 'testProj',
+        projects: {
+            testProj: {
+                root: '/',
+                sourceRoot: '/testSrc',
+                architect: {
+                    build: {
+                        options: {
+                            stylePreprocessorOptions: {
+                                includePaths: ["node_modules"]
+                            }
+                        }
+                    }
+                }
             }
-        }
+        },
+        version: 1
     };
 
     beforeEach(() => {
@@ -28,16 +49,12 @@ describe(`Update to ${version}`, () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    const migrationName = 'migration-26';
+    const migrationName = 'migration-27';
 
-    it(`should add minireset css package and import`, async () => {
-        appTree.create('angular.json', '{}');
-
+    it(`should add igniteui-theming to pacakage json and configure it`, async () => {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(JSON.parse(tree.readContent('package.json'))).toEqual({
-            stylePreprocessorOptions: { includePaths: ['node_modules']}
-        });
+        expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).toEqual(JSON.stringify(configJson_15));
     });
 });
