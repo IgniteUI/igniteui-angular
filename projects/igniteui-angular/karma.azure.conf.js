@@ -17,6 +17,7 @@ module.exports = function (config) {
       'karma-coverage',
       'karma-chrome-launcher',
       'karma-spec-reporter',
+      'karma-junit-reporter',
       '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
@@ -36,10 +37,10 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         // reporters not supporting the `file` property
-        { type: 'lcov' },
+        { type: 'cobertura' },
       ]
     },
-    reporters: ['spec'],
+    reporters: ['spec', 'junit'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
