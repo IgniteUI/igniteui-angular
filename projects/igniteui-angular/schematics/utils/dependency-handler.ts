@@ -172,7 +172,7 @@ const addStylePreprocessorOptions =
         const warn = `Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
             `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`;
 
-        if(!projectOptions) {
+        if (!projectOptions) {
             context.logger.warn(warn);
             return;
         }
