@@ -24,25 +24,6 @@ describe(`Update to ${version}`, () => {
         },
         version: 1
     };
-    const configJson_15 = {
-        defaultProject: 'testProj',
-        projects: {
-            testProj: {
-                root: '/',
-                sourceRoot: '/testSrc',
-                architect: {
-                    build: {
-                        options: {
-                            stylePreprocessorOptions: {
-                                includePaths: ["node_modules"]
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        version: 1
-    };
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -55,6 +36,6 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).toEqual(JSON.stringify(configJson_15));
+        expect(JSON.parse(JSON.stringify(tree.readContent('angular.json')))).toContain("stylePreprocessorOptions");
     });
 });
