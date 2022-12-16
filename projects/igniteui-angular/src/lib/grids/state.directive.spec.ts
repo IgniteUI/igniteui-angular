@@ -20,7 +20,7 @@ import { CustomFilter } from '../test-utils/grid-samples.spec';
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent,

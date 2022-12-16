@@ -57,7 +57,7 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/displayDensity';
-import { cloneArray, flatten, PlatformUtil } from '../../core/utils';
+import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -69,9 +69,8 @@ import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
-import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
@@ -1930,7 +1929,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const expressions =  flattenedColumnsWithSorting.length > 0? PivotSortUtil.generateDimensionSortingExpressions(flattenedColumnsWithSorting) : [];
         let sortedData = data;
         if (expressions.length > 0) {
-            sortedData = DataUtil.sort(cloneArray(data), expressions, this.sortStrategy, this);    
+            sortedData = DataUtil.sort(cloneArray(data), expressions, this.sortStrategy, this);
         }
         let fieldsMap;
         if (this.pivotConfiguration.columnStrategy && this.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy) {

@@ -1816,7 +1816,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.instance;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick(1200);
+            tick(16);
             fixture.detectChanges();
 
             const expectedOutput = 'One';
@@ -2122,10 +2122,10 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
     constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
             { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
             this.cdr.detectChanges();
-        }, 1000);
+        });
     }
 }

@@ -160,7 +160,6 @@ describe('IgxInputGroup', () => {
     });
 
     it('should handle disabled attribute without value', () => {
-        pending();
         const fixture = TestBed.createComponent(InputGroupDisabledWithoutValueComponent);
         fixture.detectChanges();
 

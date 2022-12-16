@@ -4,9 +4,6 @@ import {
     IgxNumberSummaryOperand,
     IgxSummaryResult,
     IGridToolbarExportEventArgs,
-    IgxExporterOptionsBase,
-    IColumnExportingEventArgs,
-    IRowExportingEventArgs,
     IgxGridComponent,
     IgxTreeGridComponent
 } from 'igniteui-angular';
