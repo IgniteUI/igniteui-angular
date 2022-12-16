@@ -35,8 +35,6 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         let hierarchies;
         let data: IPivotGridRecord[];
         const prevRowDims = [];
-        let prevDim;
-        let prevDimTopRecords = [];
         const currRows = cloneArray(rows, true);
         PivotUtil.assignLevels(currRows);
 
@@ -54,8 +52,6 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
                 // generate flat data from the hierarchies
                 data = PivotUtil.processHierarchy(hierarchies, pivotKeys, 0, true);
                 prevRowDims.push(row);
-                prevDim = row;
-                prevDimTopRecords = data;
             } else {
                 PivotUtil.processGroups(data, row, pivotKeys);
             }
@@ -94,7 +90,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
     private groupColumns(rec: IPivotGridRecord, columns, values, pivotKeys) {
         const children = rec.children;
         if (children && children.size > 0) {
-            children.forEach((childRecs, key) => {
+            children.forEach((childRecs) => {
                 if (childRecs) {
                     childRecs.forEach(child => {
                         this.groupColumns(child, columns, values, pivotKeys);
