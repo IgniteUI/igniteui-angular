@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig } from '../grids/public_api';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
-import { DefaultSortingStrategy } from 'igniteui-angular';
+import { DefaultSortingStrategy, RowPinningPosition } from 'igniteui-angular';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
 
@@ -334,6 +334,23 @@ export class IgxTreeGridSummariesComponent {
     `
 })
 export class IgxTreeGridSummariesKeyScroliingComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" width="400px" height="800px">
+        <igx-column [field]="'ID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" width="150px" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" width="150px" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" width="150px" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithNoForeignKeyComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
 }
@@ -1008,4 +1025,27 @@ export class IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
     public actionStrip: IgxActionStripComponent;
     public data = SampleTestData.employeeSmallPrimaryForeignKeyTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px" [rowEditable]="true">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+    </igx-action-strip>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridEditActionsPinningComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public pinningConfig: IPinningConfig = { rows: RowPinningPosition.Bottom };
 }

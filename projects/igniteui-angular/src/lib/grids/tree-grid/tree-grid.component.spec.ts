@@ -9,7 +9,8 @@ import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridDefaultLoadingComponent,
     IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSummariesTransactionsComponent
+    IgxTreeGridSummariesTransactionsComponent,
+    IgxTreeGridWithNoForeignKeyComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -29,7 +30,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSummariesTransactionsComponent
+                IgxTreeGridSummariesTransactionsComponent,
+                IgxTreeGridWithNoForeignKeyComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -141,6 +143,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             expect(container.getAttribute('role')).toMatch('row');
         }));
+
+        it('should display flat data even if no foreignKey is set', () => {
+            fix = TestBed.createComponent(IgxTreeGridWithNoForeignKeyComponent);
+            grid = fix.componentInstance.treeGrid;
+            fix.detectChanges();
+
+            expect(grid.dataView.length).toBeGreaterThan(0);
+        });
     });
 
     describe('Auto-generated columns', () => {
