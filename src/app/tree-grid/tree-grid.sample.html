@@ -19,15 +19,13 @@
                 </igx-grid-toolbar-exporter>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
-        <!-- <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
-            [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+        <!-- <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [sortable]="true">
         </igx-column> -->
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-tree-grid>
 
     <div class="topMargin">
-        <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+        <igx-switch [(ngModel)]="paging">Enable Paging</igx-switch>
         <igx-switch [(ngModel)]="grid1.rowEditable">Enable RowEditing</igx-switch>
         <div class="sample-buttons">
             <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>

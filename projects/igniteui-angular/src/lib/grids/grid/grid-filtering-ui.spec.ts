@@ -59,7 +59,7 @@ const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
@@ -2969,7 +2969,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringESFEmptyTemplatesComponent,
@@ -6326,7 +6326,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent
             ],
