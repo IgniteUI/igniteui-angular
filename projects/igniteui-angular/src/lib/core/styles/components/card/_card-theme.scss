@@ -113,8 +113,7 @@
 
     @include css-vars($theme);
 
-    $card-heading-padding: rem(16px);
-    $card-heading-compact-padding: rem(16px, 16px);
+    $card-heading-padding: rem(16px, 16px);
     $card-content-padding: rem(14px);
     $card-actions-padding: rem(8px);
 
@@ -183,10 +182,6 @@
             margin-inline-end: 0;
             margin-bottom: rem(16px);
         }
-    }
-
-    %igx-card-header--compact {
-        padding: $card-heading-compact-padding;
     }
 
     %igx-card-header-thumbnail {

@@ -86,24 +86,22 @@
 @mixin badge($theme) {
     @include css-vars($theme);
 
-    $badge-width: rem(22px);
-    $badge-height: $badge-width;
-
-    $badge-font-size: rem(11px);
     $badge-font-weight: normal;
 
-    $badge-icon-font-size: rem(12px);
-
-    $badge-value-padding: rem(4px);
+    $badge-value-padding: rem(4px) rem(8px);
     $border-type: solid;
 
     %igx-badge-display {
+        --size: #{rem(22px)};
+        --font-size: calc(var(--size) / 2);
+        --icon-font-size: #{rem(12px)};
+
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: $badge-width;
-        height: $badge-height;
-        font-size: $badge-font-size;
+        min-width: var(--size);
+        min-height: var(--size);
+        font-size: var(--font-size);
         font-weight: $badge-font-weight;
         color: var-get($theme, 'text-color');
         line-height: 1;
@@ -119,9 +117,9 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: var(--igx-icon-size, #{$badge-width - rem(2px)});
-            height: var(--igx-icon-size, #{$badge-width - rem(2px)});
-            font-size: var(--igx-icon-size, #{$badge-icon-font-size});
+            width: var(--igx-icon-size, #{var(--size) - rem(2px)});
+            height: var(--igx-icon-size, #{var(--size) - rem(2px)});
+            font-size: var(--igx-icon-size, #{var(--icon-font-size)});
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
         }

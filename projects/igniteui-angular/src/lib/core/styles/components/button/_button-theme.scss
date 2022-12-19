@@ -254,40 +254,75 @@
     ), $variant);
 
     $button-icon-height: $button-icon-width;
-    $button-icon-font-size: rem(24px, 24px);
-    $button-icon-padding: 0;
 
-    $button-padding-material: (
-        comfortable: rem(7px, 16px) rem(16px, 16px),
-        cosy: rem(4px, 16px) rem(16px, 16px),
-        compact: rem(1px, 16px) rem(16px, 16px)
+    $button-padding-material-inline: (
+        comfortable: rem(16px, 16px),
+        cosy: rem(16px, 16px),
+        compact: rem(16px, 16px)
     );
 
-    $outlined-button-padding-material: (
-        comfortable: rem(7px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(14px, 16px),
-        compact: rem(1px, 16px) rem(14px, 16px)
+    $button-padding-material-block: (
+        comfortable: rem(7px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(1px, 16px)
     );
 
-    $button-padding-fluent: (
-        comfortable: 0 rem(16px, 16px),
-        cosy: 0 rem(16px, 16px),
-        compact: 0 rem(16px, 16px)
+    $button-padding-fluent-inline: (
+        comfortable: rem(16px, 16px),
+        cosy: rem(16px, 16px),
+        compact: rem(16px, 16px)
     );
 
-    $button-padding-bootstrap: (
-        comfortable: rem(6px, 16px) rem(12px, 16px),
+    $button-padding-fluent-block: (
+        comfortable: rem(16px, 16px),
+        cosy: rem(16px, 16px),
+        compact: rem(16px, 16px)
+    );
+
+    $button-padding-bootstrap-inline: (
+        comfortable: rem(12px, 16px),
+        cosy: rem(10px, 16px),
+        compact: rem(8px, 16px)
+    );
+
+    $button-padding-bootstrap-block: (
+        comfortable: rem(6px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(2px, 16px)
+    );
+
+    $button-padding-indigo-inline: (
+        comfortable: rem(12px, 16px),
+        cosy: rem(12px, 16px),
+        compact: rem(8px, 16px)
+    );
+
+    $button-padding-indigo-block: (
+        comfortable: rem(3px, 16px),
+        cosy: rem(2px, 16px),
+        compact: rem(1px, 16px)
+    );
+
+    $outlined-button-padding-material-inline: (
+        comfortable: rem(14px, 16px),
+        cosy: rem(14px, 16px),
+        compact: rem(14px, 16px)
+    );
+
+    $outlined-button-padding-material-block: (
+        comfortable: rem(7px, 16px),
+        cosy: rem(4px, 16px),
+        compact: rem(1px, 16px)
+    );
+
+
+    $outlined-button-padding-indigo-inline: (
+        comfortable: rem(6px, 16px) rem(14px, 16px),
         cosy: rem(4px, 16px) rem(10px, 16px),
-        compact: rem(2px, 16px) rem(8px, 16px)
+        compact: rem(2px, 16px) rem(6px, 16px)
     );
 
-    $button-padding-indigo: (
-        comfortable: rem(3px, 16px) rem(12px, 16px),
-        cosy: rem(2px, 16px) rem(12px, 16px),
-        compact: rem(1px, 16px) rem(8px, 16px)
-    );
-
-    $outlined-button-padding-indigo: (
+    $outlined-button-padding-indigo-block: (
         comfortable: rem(6px, 16px) rem(14px, 16px),
         cosy: rem(4px, 16px) rem(10px, 16px),
         compact: rem(2px, 16px) rem(6px, 16px)
@@ -317,18 +352,32 @@
         compact: rem(28px, 16px),
     );
 
-    $button-padding: map.get((
-        material: $button-padding-material,
-        fluent: $button-padding-fluent,
-        bootstrap: $button-padding-bootstrap,
-        indigo-design: $button-padding-indigo,
+    $button-padding-inline: map.get((
+        material: $button-padding-material-inline,
+        fluent: $button-padding-fluent-inline,
+        bootstrap: $button-padding-bootstrap-inline,
+        indigo-design: $button-padding-indigo-inline,
     ), $variant);
 
-    $outlined-button-padding: map.get((
-        material: $outlined-button-padding-material,
-        fluent: $button-padding-fluent,
-        bootstrap: $button-padding-bootstrap,
-        indigo-design: $outlined-button-padding-indigo
+    $button-padding-block: map.get((
+        material: $button-padding-material-block,
+        fluent: $button-padding-fluent-block,
+        bootstrap: $button-padding-bootstrap-block,
+        indigo-design: $button-padding-indigo-block,
+    ), $variant);
+
+    $outlined-button-padding-inline: map.get((
+        material: $outlined-button-padding-material-inline,
+        fluent: $button-padding-fluent-inline,
+        bootstrap: $button-padding-bootstrap-inline,
+        indigo-design: $outlined-button-padding-indigo-inline
+    ), $variant);
+
+    $outlined-button-padding-block: map.get((
+        material: $outlined-button-padding-material-block,
+        fluent: $button-padding-fluent-block,
+        bootstrap: $button-padding-bootstrap-block,
+        indigo-design: $outlined-button-padding-indigo-block
     ), $variant);
 
     $icon-button-width: map.get((
@@ -369,10 +418,16 @@
         indigo-design: $button--size-indigo,
     ), $variant);
 
-    $button-floating-padding: (
-        comfortable: rem(8px) rem(14px),
-        cosy: rem(4px) rem(10px),
-        compact: 0 rem(6px)
+    $button-floating-padding-block: (
+        comfortable: rem(8px),
+        cosy: rem(4px),
+        compact: 0
+    );
+
+    $button-floating-padding-inline: (
+        comfortable: rem(14px),
+        cosy: rem(10px),
+        compact: rem(6px)
     );
 
     $button-floating-size: (
@@ -471,13 +526,17 @@
     ), $variant);
 
     %igx-button-display {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($button-size, 'compact')}, #{map.get($button-size, 'cosy')}, #{map.get($button-size, 'comfortable')})};
+
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         min-width: $button-width;
-        padding: map.get($button-padding, 'comfortable');
-        min-height: map.get($button-size, 'comfortable');
+        padding-inline: pad(map.get($button-padding-inline, 'compact'), map.get($button-padding-inline, 'cosy'), map.get($button-padding-inline, 'comfortable'));
+        padding-block: pad(map.get($button-padding-block, 'compact'), map.get($button-padding-block, 'cosy'), map.get($button-padding-block, 'comfortable'));
+        min-height: var(--size);
         border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
         user-select: none;
@@ -502,13 +561,12 @@
         }
 
         * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'comfortable');
+            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
         }
     }
 
     %igx-button-display--cosy {
-        padding: map.get($button-padding, 'cosy');
-        min-height: map.get($button-size, 'cosy');
+        --component-size: var(--ig-size, var(--ig-size-medium));
 
         * + * {
             margin-inline-start: map.get($icon-in-button-margin, 'cosy');
@@ -516,8 +574,7 @@
     }
 
     %igx-button-display--compact {
-        padding: map.get($button-padding, 'compact');
-        min-height: map.get($button-size, 'compact');
+        --component-size: var(--ig-size, var(--ig-size-small));
 
         * + * {
             margin-inline-start: map.get($icon-in-button-margin, 'compact');
@@ -526,8 +583,10 @@
 
     igx-grid-filtering-row {
         @if ($variant == 'bootstrap') {
+            --size: #{sizable(#{map.get($filtering-row-button-size, 'compact')}, #{map.get($filtering-row-button-size, 'cosy')}, #{map.get($filtering-row-button-size, 'comfortable')})};
+
             %igx-button-display {
-                min-height: map.get($filtering-row-button-size, 'comfortable');
+                min-height: var(--size);
                 padding-block: 0;
 
                 > * {
@@ -535,14 +594,6 @@
                     align-items: center;
                     height: rem(18px);
                 }
-            }
-
-            %igx-button-display--cosy {
-                min-height: map.get($filtering-row-button-size, 'cosy');
-            }
-
-            %igx-button-display--compact {
-                min-height: map.get($filtering-row-button-size, 'compact');
             }
         }
     }
@@ -588,11 +639,14 @@
     }
 
     %igx-button--outlined {
+        --size: #{sizable(map.get($button-size, 'compact'), map.get($button-size, 'cosy'), map.get($button-size, 'comfortable'))};
         background: var-get($outlined-theme, 'background');
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
-        padding: map.get($outlined-button-padding, 'comfortable');
+        padding-block: pad(map.get($outlined-button-padding-block, 'compact'), map.get($outlined-button-padding-block, 'cosy'), map.get($outlined-button-padding-block, 'comfortable'));
+        padding-inline: pad(map.get($outlined-button-padding-inline, 'compact'), map.get($outlined-button-padding-inline, 'cosy'), map.get($outlined-button-padding-inline, 'comfortable'));
+        min-height: var(--size);
 
         @if $variant == 'indigo-design' {
             border-width: rem(2px);
@@ -674,23 +728,9 @@
                 /* stylelint-enable */
             }
         }
-    }
-
-    %igx-button--outlined-cosy {
-        padding: map.get($outlined-button-padding, 'cosy');
-        min-height: map.get($button-size, 'cosy');
 
         * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
-        }
-    }
-
-    %igx-button--outlined-compact {
-        padding: map.get($outlined-button-padding, 'compact');
-        min-height: map.get($button-size, 'compact');
-
-        * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'compact');
+            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
         }
     }
 
@@ -797,9 +837,18 @@
     }
 
     %igx-button--fab {
-        padding: map.get($button-floating-padding, 'comfortable');
-        min-width: map.get($button-floating-size, 'comfortable');
-        min-height: map.get($button-floating-size, 'comfortable');
+        @if $variant != 'indigo-design' {
+            --size: #{sizable(map.get($button-floating-size, 'compact'), map.get($button-floating-size, 'cosy'), map.get($button-floating-size, 'comfortable'))};
+        }
+
+        @if $variant == 'indigo-design' {
+            --size: #{sizable(map.get($button-floating-size-indigo, 'compact'), map.get($button-floating-size-indigo, 'cosy'), map.get($button-floating-size-indigo, 'comfortable'))};
+        }
+
+        padding-block: pad(map.get($button-floating-padding-block, 'compact'), map.get($button-floating-padding-block, 'cosy'), map.get($button-floating-padding-block, 'comfortable'));
+        padding-inline: pad(map.get($button-floating-padding-inline, 'compact'), map.get($button-floating-padding-inline, 'cosy'), map.get($button-floating-padding-inline, 'comfortable'));
+        min-width: var(--size);
+        min-height: var(--size);
         line-height: unset;
         white-space: nowrap;
         color: var-get($fab-theme, 'foreground');
@@ -807,11 +856,6 @@
         border-color: var-get($flat-theme, 'border-color');
         box-shadow: $fab-shadow;
         border-radius: var-get($fab-theme, 'border-radius');
-
-        @if $variant == 'indigo-design' {
-            min-width: map.get($button-floating-size-indigo, 'comfortable');
-            min-height: map.get($button-floating-size-indigo, 'comfortable');
-        }
 
         &:hover {
             color: var-get($fab-theme, 'hover-foreground');
@@ -894,47 +938,18 @@
         }
 
         * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'comfortable');
-        }
-    }
-
-    %igx-button--fab-cosy {
-        padding: map.get($button-floating-padding, 'cosy');
-        min-width: map.get($button-floating-size, 'cosy');
-        min-height: map.get($button-floating-size, 'cosy');
-
-        @if $variant == 'indigo-design' {
-            min-width: map.get($button-floating-size-indigo, 'cosy');
-            min-height: map.get($button-floating-size-indigo, 'cosy');
-        }
-
-        * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
-        }
-    }
-
-    %igx-button--fab-compact {
-        padding: map.get($button-floating-padding, 'compact');
-        min-width: map.get($button-floating-size, 'compact');
-        min-height: map.get($button-floating-size, 'compact');
-
-        @if $variant == 'indigo-design' {
-            min-width: map.get($button-floating-size-indigo, 'compact');
-            min-height: map.get($button-floating-size-indigo, 'compact');
-        }
-
-        * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'compact');
+            margin-inline-start: pad-inline(map.get($icon-in-button-margin, 'compact'), map.get($icon-in-button-margin, 'cosy'), map.get($icon-in-button-margin, 'comfortable'));
         }
     }
 
     %igx-button--icon {
-        width: map.get($icon-button-width, 'comfortable');
-        height: map.get($icon-button-width, 'comfortable');
+        --size: #{sizable(map.get($icon-button-width, 'compact'), map.get($icon-button-width, 'cosy'), map.get($icon-button-width, 'comfortable'))};
+        width: var(--size);
+        height: var(--size);
         min-width: unset;
         min-height: unset;
-        font-size: $button-icon-font-size;
-        padding: $button-icon-padding;
+        font-size: rem(24px, 24px);
+        padding: 0;
         color: var-get($icon-theme, 'foreground');
         background: var-get($icon-theme, 'background');
         border-radius: var-get($icon-theme, 'border-radius');
@@ -943,7 +958,6 @@
         @if $variant == 'indigo-design' {
             border-width: rem(3px);
         }
-
 
         &:hover {
             @if $variant != 'fluent' {
@@ -1007,16 +1021,6 @@
                 box-shadow: $icon-shadow;
             }
         }
-    }
-
-    %igx-button--icon-cosy {
-        width: map.get($icon-button-width, 'cosy');
-        height: map.get($icon-button-width, 'cosy');
-    }
-
-    %igx-button--icon-compact {
-        width: map.get($icon-button-width, 'compact');
-        height: map.get($icon-button-width, 'compact');
     }
 
     %igx-button--disabled {

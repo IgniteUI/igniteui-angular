@@ -15,7 +15,6 @@
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
-/// @param {number} $size [null] - The size of the avatar.
 /// @requires $light-schema
 ///
 /// @example scss Change the background and icon colors in icon avatars
@@ -27,7 +26,6 @@
     $background: null,
     $color: null,
     $border-radius: null,
-    $size: null,
 ) {
     $name: 'igx-avatar';
     $avatar-schema: ();
@@ -53,18 +51,12 @@
         background: $background,
         color: $color,
         border-radius: $border-radius,
-        size: $size
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 @mixin avatar($theme) {
     @include css-vars($theme);
-
-    $size: map.get($theme, 'size');
-    $small-size: rem(40px);
-    $medium-size: rem(64px);
-    $large-size: rem(88px);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
@@ -86,6 +78,8 @@
     }
 
     %igx-avatar-display {
+        --sizes: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
+
         position: relative;
         display: inline-flex;
         justify-content: center;
@@ -97,6 +91,8 @@
         border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
+        width: var(--sizes);
+        height: var(--sizes);
 
         &::after {
             box-shadow: none;
@@ -126,41 +122,22 @@
 
     %igx-avatar--initials {
         text-transform: uppercase;
+        font-size: calc(var(--sizes) / 2);
+        line-height: calc(var(--sizes) / 2);
     }
 
+    %igx-avatar--small,
     %igx-avatar-initials--small {
-        --size: #{$size or $small-size};
-        font-size: calc(#{var-get(('size': $size or $small-size), 'size')} / 2);
-        line-height: calc(#{var-get(('size': $size or $small-size), 'size')} / 2);
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
+    %igx-avatar--medium,
     %igx-avatar-initials--medium {
-        --size: #{$size or $medium-size};
-        font-size: calc(#{var-get(('size': $size or $medium-size), 'size')} / 2);
-        line-height: calc(#{var-get(('size': $size or $medium-size), 'size')} / 2);
+        --component-size: var(--ig-size, var(--ig-size-medium));
     }
 
+    %igx-avatar--large,
     %igx-avatar-initials--large {
-        --size: #{$size or $large-size};
-        font-size: calc(#{var-get(('size': $size or $large-size), 'size')} / 2);
-        line-height: calc(#{var-get(('size': $size or $large-size), 'size')} / 2);
-    }
-
-    %igx-avatar--small {
-        --size: #{$size or $small-size};
-        width: var-get(('size': $size or $small-size), 'size');
-        height: var-get(('size': $size or $small-size), 'size');
-    }
-
-    %igx-avatar--medium {
-        --size: #{$size or $medium-size};
-        width: var-get(('size': $size or $medium-size), 'size');
-        height: var-get(('size': $size or $medium-size), 'size');
-    }
-
-    %igx-avatar--large {
-        --size: #{$size or $large-size};
-        width: var-get(('size': $size or $large-size), 'size');
-        height: var-get(('size': $size or $large-size), 'size');
+        --component-size: var(--ig-size, var(--ig-size-large));
     }
 }

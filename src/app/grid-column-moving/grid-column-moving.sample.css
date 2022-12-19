@@ -1,15 +1,23 @@
-.sample-buttons {
-    margin-top: 24px;
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 32px
 }
 
-[igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
+.sample-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .density-chooser {
-    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+igx-buttongroup {
     max-width: 900px;
+    margin: 0 auto;
 }
 
 .references {

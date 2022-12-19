@@ -9,6 +9,7 @@
     }
 
     @include b(igx-chip) {
+        @include sizable();
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),

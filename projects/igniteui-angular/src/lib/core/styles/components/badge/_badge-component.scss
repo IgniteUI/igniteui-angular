@@ -19,10 +19,6 @@
             @extend %igx-badge-value !optional;
         }
 
-        @include m(default) {
-            @extend %igx-badge--default !optional;
-        }
-
         @include m(info) {
             @extend %igx-badge--info !optional;
         }

@@ -264,10 +264,10 @@
         indigo-design: $chip-height-material
     ), $variant);
 
-    $chip-padding: (
-        comfortable: 0 rem(8px),
-        cosy: 0 rem(4px),
-        compact: 0 rem(2px)
+    $chip-padding-inline: (
+        comfortable: rem(8px),
+        cosy: rem(4px),
+        compact: rem(2px)
     );
 
     $box-shadow: map.get((
@@ -306,6 +306,9 @@
     }
 
     %igx-chip {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(map.get($chip-height, 'compact'), map.get($chip-height, 'cosy'), map.get($chip-height, 'comfortable'))};
+
         @extend  %igx-chip-custom-icon;
 
         position: relative;
@@ -315,7 +318,7 @@
         transition-property: top, left;
 
         [dir='rtl'] & {
-            transition-property: top right;
+            transition-property: top, right;
         }
 
         touch-action: none;
@@ -357,10 +360,14 @@
     }
 
     %igx-chip--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+
         @extend  %igx-chip-custom-icon--cosy;
     }
 
     %igx-chip--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
+
         @extend  %igx-chip-custom-icon--compact;
     }
 
@@ -429,20 +436,13 @@
 
     %igx-chip__content {
         @include ellipsis();
-        padding: map.get($chip-padding, 'comfortable');
+        padding-inline: pad-inline(map.get($chip-padding-inline, 'compact'), map.get($chip-padding-inline, 'cosy'), map.get($chip-padding-inline, 'comfortable'));
+        padding-block: 0;
         max-width: $chip-max-width;
 
         &:empty {
             display: none;
         }
-    }
-
-    %igx-chip__content--cosy {
-        padding: map.get($chip-padding, 'cosy');
-    }
-
-    %igx-chip__content--compact {
-        padding: map.get($chip-padding, 'compact');
     }
 
     %igx-chip__remove {
@@ -506,7 +506,7 @@
         align-items: center;
         justify-content: center;
         flex: 1 1 auto;
-        height: map.get($chip-height, 'comfortable');
+        height: var(--size);
         padding: $chip-item-padding;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
@@ -517,7 +517,7 @@
         user-select: none;
         overflow: hidden;
         cursor: pointer;
-        //hacking overflow hidden with border radius
+        // hacking overflow hidden with border radius
         // not playing nicely together
         filter: opacity(1);
     }
@@ -565,17 +565,11 @@
         }
     }
 
-    %igx-chip__item--cosy {
-        height: map.get($chip-height, 'cosy');
-        padding: map.get($chip-padding, 'cosy');
-    }
-
-    %igx-chip__item--compact {
-        height: map.get($chip-height, 'compact');
-        padding: map.get($chip-padding, 'compact');
-    }
-
     %igx-chip__ghost {
+        --component-size: var(--ig-size, var(--ig-size-small));
+        --size: #{sizable(map.get($chip-height, 'compact'), map.get($chip-height, 'cosy'), map.get($chip-height, 'comfortable'))};
+
+        height: var(--size);
         position: absolute;
         box-shadow: var-get($theme, 'ghost-shadow');
         overflow: hidden;
@@ -589,20 +583,13 @@
     }
 
     %igx-chip__ghost--cosy {
-        height: map.get($chip-height, 'cosy');
-
-        %igx-chip__content {
-            padding: map.get($chip-padding, 'cosy');
-        }
+        --component-size: var(--ig-size, var(--ig-size-medium));
     }
 
     %igx-chip__ghost--compact {
-        @extend  %igx-chip-custom-icon--compact;
-        height: map.get($chip-height, 'compact');
+        --component-size: var(--ig-size, var(--ig-size-small));
 
-        %igx-chip__content {
-            padding: map.get($chip-padding, 'compact');
-        }
+        @extend  %igx-chip-custom-icon--compact;
     }
 
     // Remark: If z-index is not set, the chip would

@@ -196,40 +196,28 @@
         compact: rem(28px)
     );
 
-    $item-padding-comfortable: 0 rem(24px);
-    $item-padding-cosy: 0 rem(20px);
-    $item-padding-compact: 0 rem(16px);
-
-    $prefix-margin-comfortable: rem(20px);
-    $prefix-margin-cosy: rem(16px);
-    $prefix-margin-compact: rem(12px);
-
-    $suffix-margin-comfortable: rem(8px);
-    $suffix-margin-cosy: rem(6px);
-    $suffix-margin-compact: rem(4px);
-
-    $item-padding: (
-        comfortable: $item-padding-comfortable,
-        cosy: $item-padding-cosy,
-        compact: $item-padding-compact
+    $item-padding-inline: (
+        comfortable: rem(24px),
+        cosy: rem(20px),
+        compact: rem(16px)
     );
 
     $prefix-margin: (
-        comfortable: $prefix-margin-comfortable,
-        cosy: $prefix-margin-cosy,
-        compact: $prefix-margin-compact
+        comfortable: rem(20px),
+        cosy: rem(16px),
+        compact: rem(12px)
     );
 
     $suffix-margin: (
-        comfortable: $suffix-margin-comfortable,
-        cosy: $suffix-margin-cosy,
-        compact: $suffix-margin-compact
+        comfortable: rem(8px),
+        cosy: rem(6px),
+        compact: rem(4px)
     );
 
-    $header-item-padding: (
-        comfortable: 0 rem(16px),
-        cosy: 0 rem(12px),
-        compact: 0 rem(8px)
+    $header-item-padding-inline: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
     );
 
     %igx-drop-down {
@@ -237,12 +225,22 @@
     }
 
     %igx-drop-down__list {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --item-size: #{sizable(map.get($item-height, 'compact'), map.get($item-height, 'cosy'), map.get($item-height, 'comfortable'))};
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
         box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
+    }
+
+    %igx-drop-down__list--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    %igx-drop-down__list--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-drop-down__list-scroll {
@@ -263,7 +261,7 @@
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: map.get($item-height, 'comfortable');
+        height: var(--item-size);
         position: relative;
 
         igx-prefix,
@@ -287,7 +285,8 @@
     %igx-drop-down__item {
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
-        padding: map.get($item-padding, 'comfortable');
+        padding-inline: pad-inline(map.get($item-padding-inline, 'compact'), map.get($item-padding-inline, 'cosy'), map.get($item-padding-inline, 'comfortable'));
+        padding-block: 0;
         border-radius: var-get($theme, 'item-border-radius');
 
         &:focus {
@@ -316,9 +315,6 @@
     }
 
     %igx-drop-down__item--cosy {
-        height: map.get($item-height, 'cosy');
-        padding: map.get($item-padding, 'cosy');
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--cosy;
@@ -331,9 +327,6 @@
     }
 
     %igx-drop-down__item--compact {
-        height: map.get($item-height, 'compact');
-        padding: map.get($item-padding, 'compact');
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--compact;
@@ -381,13 +374,11 @@
     %igx-drop-down__header {
         color: var-get($theme, 'header-text-color');
         pointer-events: none;
-        padding: map.get($header-item-padding, 'comfortable');
+        padding-inline: pad-inline(map.get($header-item-padding-inline, 'compact'), map.get($header-item-padding-inline, 'cosy'), map.get($header-item-padding-inline, 'comfortable'));
+        padding-block: 0;
     }
 
     %igx-drop-down__header--cosy {
-        height: map.get($item-height, 'cosy');
-        padding: map.get($header-item-padding, 'cosy');
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--cosy;
@@ -400,9 +391,6 @@
     }
 
     %igx-drop-down__header--compact {
-        height: map.get($item-height, 'compact');
-        padding: map.get($header-item-padding, 'compact');
-
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--compact;
@@ -422,7 +410,7 @@
         }
 
         %igx-drop-down__item {
-            text-indent: map.get($item-padding, 'comfortable');
+            text-indent: pad-inline(map.get($item-padding-inline, 'comfortable'));
         }
     }
 

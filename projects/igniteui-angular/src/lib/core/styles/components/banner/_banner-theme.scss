@@ -31,7 +31,7 @@
     $banner-illustration-color: null
 ) {
     $name: 'igx-banner';
-    $selector: 'igx-banner, .igx-banner, .igx-banner--cosy, .igx-banner--compact';
+    $selector: 'igx-banner, .igx-banner';
     $banner-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -61,11 +61,8 @@
     @include css-vars($theme);
     $variant: map.get($theme, 'variant');
 
-    $banner-padding: (
-        comfortable: rem(8px),
-        cosy: rem(8px),
-        compact: rem(8px)
-    );
+    $padding: rem(8px);
+    $padding-inline-start: calc(#{$padding} * 2);
 
     %igx-banner-host {
         igx-expansion-panel-body {
@@ -86,15 +83,26 @@
     }
 
     %igx-banner {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
-        grid-gap: rem(8px);
-        padding-inline-start: calc(#{map.get($banner-padding, 'comfortable') * 2});
-        padding-inline-end: map.get($banner-padding, 'comfortable');
-        padding-block-start: map.get($banner-padding, 'comfortable');
-        padding-block-end: map.get($banner-padding, 'comfortable');
+        gap: rem(8px);
+
+        padding-inline-start: pad-inline($padding-inline-start, $padding-inline-start, $padding-inline-start);
+        padding-inline-end: pad-inline(rem(4px), rem(8px), rem(16px));
+        padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
+        padding-block-end: pad-block(rem(4px), rem(8px), rem(16px));
         background: var-get($theme, 'banner-background');
+    }
+
+    %igx-banner--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+    }
+
+    %igx-banner--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-banner__illustration {
@@ -124,19 +132,6 @@
         }
     }
 
-    %igx-banner--cosy {
-        padding-inline-start: calc(#{map.get($banner-padding, 'cosy') * 2});
-        padding-inline-end: map.get($banner-padding, 'cosy');
-        padding-block-start: map.get($banner-padding, 'cosy');
-        padding-block-end: map.get($banner-padding, 'cosy');
-    }
-
-    %igx-banner--compact {
-        padding-inline-start: calc(#{map.get($banner-padding, 'compact') * 2});
-        padding-inline-end: map.get($banner-padding, 'compact');
-        padding-block-start: map.get($banner-padding, 'compact');
-        padding-block-end: map.get($banner-padding, 'compact');
-    }
 
     %igx-banner__message {
         min-width: rem(150px);

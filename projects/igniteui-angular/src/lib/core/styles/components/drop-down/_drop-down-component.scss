@@ -14,7 +14,17 @@
         @extend %igx-drop-down !optional;
 
         @include e(list) {
+            @include sizable();
+
             @extend %igx-drop-down__list !optional;
+        }
+
+        @include e(list, $m: cosy) {
+            @extend %igx-drop-down__list--cosy !optional;
+        }
+
+        @include e(list, $m: compact) {
+            @extend %igx-drop-down__list--compact !optional;
         }
 
         @include e(list-scroll) {

@@ -1,18 +1,32 @@
-.density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 32px
 }
 
 .sample-buttons {
-    margin-top: 24px;
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
 }
 
-igx-checkbox {
-    margin: 0px 10px;
+.density-chooser {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-[igxButton]+[igxButton] {
-    margin-left: 8px;
+igx-buttongroup {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.references {
+    font-size: .75em;
+}
+
+.references > p {
+    margin: 0;
+    letter-spacing: initial;
+    line-height: initial;
+    font-size: 1em;
 }
