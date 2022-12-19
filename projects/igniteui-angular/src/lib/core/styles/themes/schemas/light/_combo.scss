@@ -22,7 +22,50 @@ $light-combo: (
 
     empty-list-placeholder-color: (
         color: ('gray', 700),
-    )
+    ),
+
+    toggle-button-background: (
+        color: ('gray', 300),
+    ),
+
+    toggle-button-background-hover: (
+        color: ('gray', 300),
+    ),
+
+    toggle-button-background-focus: (
+        color: ('gray', 400, .3),
+    ),
+
+    toggle-button-foreground: (
+        contrast-color: ('gray', 300),
+    ),
+
+    toggle-button-foreground-hover: (
+        contrast-color: ('gray', 300),
+    ),
+
+    toggle-button-foreground-focus: (
+        contrast-color: ('gray', 400),
+    ),
+
+    clear-button-background: transparent,
+
+    clear-button-background-hover: transparent,
+
+    clear-button-background-focus: transparent,
+
+    clear-button-foreground: (
+        color: ('gray', 900),
+    ),
+
+    clear-button-foreground-hover: (
+        color: ('gray', 900),
+    ),
+
+    clear-button-foreground-focus: (
+        color: ('gray', 900),
+    ),
+
 );
 
 /// Generates a fluent combo schema.

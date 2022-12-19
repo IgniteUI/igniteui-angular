@@ -25,7 +25,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
@@ -279,6 +279,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     @ViewChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxPrefixDirective, { descendants: true })
+    protected prefixes: QueryList<IgxPrefixDirective>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxSuffixDirective, { descendants: true })
+    protected suffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     @ContentChildren(IgxDateRangeInputsBaseComponent)
@@ -596,6 +604,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this.attachOnTouched();
 
         this.setRequiredToInputs();
+
+        if(this.prefixes.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if(this.suffixes.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
+        }
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));

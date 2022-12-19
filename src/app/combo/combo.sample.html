@@ -1,179 +1,159 @@
-<div class="sample-content">
-    <section class="combo-sample">
-        <div class="input-wrapper">
-            <div class="input-row">
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="fristName" placeholder="First Name" />
-                </igx-input-group>
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="lastName" placeholder="Last Name" />
-                </igx-input-group>
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="age" placeholder="Age" />
-                </igx-input-group>
-            </div>
-            <div>
-                <h5 class="sample-title">Simple Combo in Template Form</h5>
-                <form>
-                    <igx-simple-combo #simpleCombo class="input-container" [placeholder]="'Locations'" name="anyName"
-                        #comboModel="ngModel" [(ngModel)]="singleValue" minlength="2" required [data]="items"
-                        [displayKey]="valueKeyVar" [disabled]="isDisabled" [valueKey]="valueKeyVar"
-                        [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
-                        <label igxLabel>States</label>
-                        <igx-hint>Please select the state you've visited</igx-hint>
-                    </igx-simple-combo>
-                    <igx-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
-                        [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
-                        [disabled]="isDisabled">
-                        <label igxLabel>Falsy unique values (combo)</label>
-                        <igx-hint>Select a unique falsy value</igx-hint>
-                    </igx-combo>
-                    <igx-simple-combo [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
-                        [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
-                        [disabled]="isDisabled">
-                        <label igxLabel>Falsy unique values (simple-combo)</label>
-                        <igx-hint>Select a unique falsy value</igx-hint>
-                    </igx-simple-combo>
-                </form>
-                <button igxButton (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
-                <button igxButton (click)="values1 = []">Clear values </button>
-            </div>
-            <div>
-                <h5 class="sample-title">Template Form</h5>
-                <form>
-                    <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
-                        [(ngModel)]="values1" minlength="2" required [data]="items" [filterable]="filterableFlag"
-                        [displayKey]="valueKeyVar" [disabled]="isDisabled" [valueKey]="valueKeyVar"
-                        [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
-                        <label igxLabel>States</label>
-                        <igx-hint>Please select the states you've visited</igx-hint>
-                    </igx-combo>
-                </form>
-                <button igxButton (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
-                <button igxButton (click)="values1 = []">Clear values </button>
-            </div>
-            <div>
-                <h5 class="sample-title">Reactive Form</h5>
-                <form class="input-group-form" [formGroup]="user">
-                    <div class="container">
-                        <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130" [data]="genres"
-                            [valueKey]="'type'" [displayKey]="'type'" type="line" formControlName="genres"
-                            searchPlaceholder="Search...">
-                            <label igxLabel>States</label>
-                        </igx-combo>
-                    </div>
-                </form>
-            </div>
+<div class="combo-sample">
 
-            <div>
-                <h5 class="sample-title">Remote Binding</h5>
-                <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
-                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'"
-                    (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
-                    (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
-                    (opening)="onOpening()" placeholder="Location(s)">
-                </igx-combo>
-                <igx-toast #loadingToast></igx-toast>
+    <!-- Simple combo -->
+    <div class="combo-sample__column">
+        <h1 class="combo-sample__title">Combos and input mixed in a form</h1>
 
-            </div>
-
-            <div class="input-row">
-                <igx-combo #playgroundCombo class="input-container" [placeholder]="'Locations'"
-                    [showSearchCaseIcon]='true' (addition)="handleAddition($event)"
-                    (selectionChanging)="handleSelectionChange($event)" [data]="items"
-                    [allowCustomValues]="customValuesFlag" [displayDensity]="'comfortable'"
-                    [autoFocusSearch]="autoFocusSearch" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
-                    [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
-                    <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
-                        <div class="state-card--simple">
-                            <div class="display-value--main">{{display[key]}}</div>
-                            <div class="display-value--sub">{{display.region}}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
-                        <div class="state-card--simple">
-                            <div class="display-value--main">{{display}}</div>
-                            <div class="display-value--sub"></div>
-                        </div>
-                    </ng-template>
-                    <ng-template igxComboHeader>
-                        <div class="custom-combo-header">This is a header</div>
-                    </ng-template>
-                    <ng-template igxComboFooter>
-                        <div class="custom-combo-footer">This is a footer</div>
-                    </ng-template>
-                    <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display
-                        let-key="groupKey">
-                        <div>Group header for {{display[key]}}</div>
-                    </ng-template>
-                    <ng-template igxComboAddItem>
-                        <button igxButton="flat" igxRipple>Add VERY CUSTOM item</button>
-                    </ng-template>
+        <form class="combo-sample__column">
+            <div class="combo-sample__row combo-sample__row--stretch">
+                <igx-input-group class="input-container" [displayDensity]="'comfortable'">
+                    <input [disabled]="isDisabled" igxInput name="fristName" placeholder="Simple input" />
+                    <igx-hint>Input helper text</igx-hint>
+                </igx-input-group>
+                <igx-simple-combo type="line" #simpleCombo class="input-container" [placeholder]="'Simple combo'" name="anyName"
+                  #comboModel="ngModel" [(ngModel)]="singleValue" minlength="2" required [data]="items"
+                  [displayDensity]="'comfortable'" [displayKey]="valueKeyVar" [disabled]="isDisabled"
+                  [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <label igxLabel>States</label>
-                    <igx-prefix>
-                        <igx-icon>home</igx-icon>
-                    </igx-prefix>
-                    <igx-hint>Please select the states you've visited</igx-hint>
+                    <igx-hint>Please select the state you've visited</igx-hint>
+                </igx-simple-combo>
+                <igx-combo [displayDensity]="'comfortable'" [allowCustomValues]="true" [placeholder]="'Normal combo'" name="falsyValueCombo"
+                   [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
+                   [disabled]="isDisabled">
+                    <label igxLabel>Falsy unique values (combo)</label>
+                    <igx-hint>Select a unique falsy value</igx-hint>
                 </igx-combo>
             </div>
+            <igx-simple-combo [displayDensity]="'comfortable'" [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+                              [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
+                              [disabled]="isDisabled">
+                <label igxLabel>Falsy unique values (simple-combo)</label>
+                <igx-hint>Select a unique falsy value</igx-hint>
+            </igx-simple-combo>
+        </form>
+    </div>
+
+    <div class="combo-sample__column">
+        <h1 class="combo-sample__title">Combo Template Form</h1>
+        <div class="combo-sample__row">
+            <button igxButton="raised" (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
+            <button igxButton="outlined" (click)="values1 = []">
+                <span><igx-icon>clear</igx-icon></span>
+                <span>Clear values</span>
+            </button>
         </div>
-        <div class="btn-wrapper mb24">
-            <div class="btn-container">
-                <button igxButton="raised" igxRipple (click)="isDisabled = !isDisabled">Toggle disabled
-                </button>
-                <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
-                </button>
-                <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
+        <form class="combo-sample__form">
+            <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
+                [(ngModel)]="values1" minlength="2" required [data]="items" [filterable]="filterableFlag"
+                [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                <label igxLabel>States</label>
+                <igx-hint>Please select the states you've visited</igx-hint>
+            </igx-combo>
+        </form>
+    </div>
+
+
+    <div class="combo-sample__column">
+        <h1 class="combo-sample__title">Reactive Form</h1>
+        <form class="input-group-form" [formGroup]="user">
+            <div class="container">
+                <igx-combo #combo1 class="input-container" type="box" [itemsMaxHeight]="130" [data]="genres"
+                    [valueKey]="'type'" [displayKey]="'type'" formControlName="genres"
+                    searchPlaceholder="Search...">
+                    <label igxLabel>States</label>
+                </igx-combo>
             </div>
-            <div class="btn-container">
-                <igx-switch (change)="changeFiltering($event)">Use custom filter function</igx-switch>
-                <igx-switch (change)="changeFilteringKey($event)">Filter by group key</igx-switch>
-            </div>
+        </form>
+    </div>
+
+    <div class="combo-sample__column">
+        <h1 class="combo-sample__title">Remote Binding</h1>
+        <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+            [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'"
+            (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
+            (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
+            (opening)="onOpening()" placeholder="Location(s)">
+        </igx-combo>
+        <igx-toast #loadingToast></igx-toast>
+    </div>
+
+    <div class="combo-sample__column">
+        <h1 class="combo-sample__title">Template items</h1>
+
+        <div class="combo-sample__row">
+            <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+            <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
         </div>
+
+        <div class="combo-sample__row">
+            <igx-switch (change)="changeFiltering($event)">Use custom filter function</igx-switch>
+            <igx-switch (change)="changeFilteringKey($event)">Filter by group key</igx-switch>
+        </div>
+
+        <div class="combo-sample__row">
+            <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch>
+            <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
+            <igx-switch [(ngModel)]="autoFocusSearch">Automatic Search Focus</igx-switch>
+        </div>
+
+        <igx-buttongroup>
+            <button igxButton [disabled]="playgroundCombo.itemHeight === 56"
+                    (click)="playgroundCombo.itemHeight = 56">
+                Set ItemHeight to 56
+            </button>
+            <button igxButton [disabled]="playgroundCombo.itemHeight === null"
+                    (click)="playgroundCombo.itemHeight = null">
+                Reset ItemHeight
+            </button>
+        </igx-buttongroup>
+        <small>Overlay Settings</small>
+        <igx-buttongroup [alignment]="alignment">
+            <button igxButton (click)="changeOverlaySettings(1)">Elastic Top</button>
+            <button igxButton (click)="changeOverlaySettings(2)">Global with Animations</button>
+            <button igxButton (click)="changeOverlaySettings(3)">Connected</button>
+            <button igxButton (click)="changeOverlaySettings(0)">Default (Auto)</button>
+        </igx-buttongroup>
+        <igx-combo #playgroundCombo [placeholder]="'Locations'"
+            [showSearchCaseIcon]='true' (addition)="handleAddition($event)"
+            (selectionChanging)="handleSelectionChange($event)" [data]="items"
+            [allowCustomValues]="customValuesFlag"
+            [autoFocusSearch]="autoFocusSearch" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
+            [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+            <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
+                <div class="state-card--simple">
+                    <div class="display-value--main">{{display[key]}}</div>
+                    <div class="display-value--sub">{{display.region}}</div>
+                </div>
+            </ng-template>
+            <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
+                <div class="state-card--simple">
+                    <div class="display-value--main">{{display}}</div>
+                    <div class="display-value--sub"></div>
+                </div>
+            </ng-template>
+            <ng-template igxComboHeader>
+                <div class="custom-combo-header">This is a header</div>
+            </ng-template>
+            <ng-template igxComboFooter>
+                <div class="custom-combo-footer">This is a footer</div>
+            </ng-template>
+            <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display
+                let-key="groupKey">
+                <div>Group header for {{display[key]}}</div>
+            </ng-template>
+            <ng-template igxComboAddItem>
+                <button igxButton="flat" igxRipple>Add VERY CUSTOM item</button>
+            </ng-template>
+            <label igxLabel>States</label>
+            <igx-icon igx-prefix>home</igx-icon>
+            <igx-hint>Please select the states you've visited</igx-hint>
+        </igx-combo>
         <ng-template #customItemTemplate let-display let-key="valueKey">
             <div class="state-card--simple">
                 <div class="display-value--main">{{display[key]}}</div>
                 <div class="display-value--sub">In Region {{display.region}}</div>
             </div>
         </ng-template>
-        <h4>Search Input</h4>
-        <div class="switch-settings">
-            <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch>
-            <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
-            <igx-switch [(ngModel)]="autoFocusSearch">Automatic Search Focus</igx-switch>
-        </div>
-        <h4>Overlay Settings</h4>
-        <div>
-            <igx-buttongroup [alignment]="alignment">
-                <button igxButton (click)="changeOverlaySettings(1)">Elastic Top</button>
-                <button igxButton (click)="changeOverlaySettings(2)">Global with Animations</button>
-                <button igxButton (click)="changeOverlaySettings(3)">Connected</button>
-                <button igxButton (click)="changeOverlaySettings(0)">Default (Auto)</button>
-            </igx-buttongroup>
-        </div>
-        <h4>Display Density</h4>
-        <div>
-            <igx-buttongroup>
-                <button igxButton [disabled]="igxCombo.displayDensity === compact"
-                    (click)="setDensity('compact')">Compact</button>
-                <button igxButton [disabled]="igxCombo.displayDensity === cosy"
-                    (click)="setDensity('cosy')">Cosy</button>
-                <button igxButton [disabled]="igxCombo.displayDensity === comfortable"
-                    (click)="setDensity('comfortable')">Comfortable</button>
-            </igx-buttongroup>
-        </div>
-        <h4>Item Height</h4>
-        <div>
-            <igx-buttongroup>
-                <button igxButton [disabled]="playgroundCombo.itemHeight === 56"
-                    (click)="playgroundCombo.itemHeight = 56">
-                    Set ItemHeight to 56
-                </button>
-                <button igxButton [disabled]="playgroundCombo.itemHeight === null"
-                    (click)="playgroundCombo.itemHeight = null">
-                    Reset ItemHeight
-                </button>
-            </igx-buttongroup>
-        </div>
-    </section>
+    </div>
 </div>

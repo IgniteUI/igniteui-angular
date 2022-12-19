@@ -1,10 +1,13 @@
 <igx-input-group #inputGroup [displayDensity]="displayDensity" [suppressInputAutofocus]="true" [type]="type">
+
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
+
     <ng-container ngProjectAs="igx-prefix">
         <ng-content select="igx-prefix"></ng-content>
     </ng-container>
+
     <ng-container ngProjectAs="igx-hint, [igxHint]">
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
@@ -20,7 +23,8 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="comboInput.value.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+
+    <igx-suffix *ngIf="comboInput.value.length" aria-label="Clear Selection" class="igx-input-group__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -29,12 +33,14 @@
             clear
         </igx-icon>
     </igx-suffix>
+
     <igx-suffix *ngIf="showSearchCaseIcon">
         <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
-    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
+
+    <igx-suffix class="igx-input-group__toggle-button" (click)="onClick($event)">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
@@ -42,6 +48,7 @@
             {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}
         </igx-icon>
     </igx-suffix>
+
 </igx-input-group>
 
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"

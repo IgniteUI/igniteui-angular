@@ -105,6 +105,20 @@
     $input-prefix-background: null,
     $input-suffix-color: null,
     $input-suffix-background: null,
+
+    $toggle-button-background: null,
+    $toggle-button-background-hover: null,
+    $toggle-button-background-focus: null,
+    $toggle-button-foreground: null,
+    $toggle-button-foreground-hover: null,
+    $toggle-button-foreground-focus: null,
+
+    $clear-button-background: null,
+    $clear-button-background-hover: null,
+    $clear-button-background-focus: null,
+    $clear-button-foreground: null,
+    $clear-button-foreground-hover: null,
+    $clear-button-foreground-focus: null,
 ) {
     $name: 'igx-input-group';
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
@@ -196,6 +210,18 @@
         input-prefix-background: $input-prefix-background,
         input-suffix-color: $input-suffix-color,
         input-suffix-background: $input-suffix-background,
+        toggle-button-background: $toggle-button-background,
+        toggle-button-background-hover: $toggle-button-background-hover,
+        toggle-button-background-focus: $toggle-button-background-focus,
+        toggle-button-foreground: $toggle-button-foreground,
+        toggle-button-foreground-hover: $toggle-button-foreground-hover,
+        toggle-button-foreground-focus: $toggle-button-foreground-focus,
+        clear-button-background: $clear-button-background,
+        clear-button-background-hover: $clear-button-background-hover,
+        clear-button-background-focus: $clear-button-background-focus,
+        clear-button-foreground: $clear-button-foreground,
+        clear-button-foreground-hover: $clear-button-foreground-hover,
+        clear-button-foreground-focus: $clear-button-foreground-focus,
     ));
 }
 
@@ -206,7 +232,7 @@
     $transition-timing: .25s $out-cubic;
 
     $variant: map.get($theme, variant);
-    $indigo-theme: $variant == 'material';
+    $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo-design';
     $fluent-theme: $variant == 'fluent';
     $bootstrap-theme: $variant == 'bootstrap';
@@ -270,7 +296,11 @@
         display: inline-flex;
         width: max-content;
         align-items: center;
-        height: 100%;
+        @if $indigo-theme {
+            height: calc(100% - #{rem(1px)});
+        } @else {
+            height: 100%;
+        }
         transition: color $transition-timing;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
@@ -289,12 +319,8 @@
     }
 
     %form-group-display--box {
-        igx-prefix,
-        [igxPrefix],
-        igx-suffix,
-        [igxSuffix] {
-            height: calc(100% - #{rem(2px)});
-            padding-block-start: rem(2px);
+        %form-group-border {
+            margin-bottom: 0;
         }
     }
 
@@ -380,7 +406,10 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: var-get($theme, 'box-border-radius');
+        @if $variant != 'bootstrap' {
+            border-radius: var-get($theme, 'box-border-radius');
+        }
+
         @if $variant == 'material' {
             border-end-start-radius: border-radius(rem(0));
             border-end-end-radius: border-radius(rem(0));
@@ -408,19 +437,35 @@
     }
 
     %form-group-bundle {
+        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
+
         position: relative;
         display: grid;
         grid-template-columns: auto 1fr auto;
         max-width: 100%;
 
-        @if $variant == 'material' {
+        @if $variant != 'material' {
+            height: var(--size);
+        }
+
+        @if $material-theme or $indigo-theme {
             padding-block-start: pad-inline(map.get($bundle-padding-top, 'compact'), map.get($bundle-padding-top, 'cosy'), map.get($bundle-padding-top, 'comfortable'));
         }
 
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
-        transition: box-shadow $transition-timing, color $transition-timing;
         font-size: 1rem;
         grid-area: 1 / 2 / span 1 / span 2;
+
+        @if $material-theme or $indigo-theme {
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0%;
+                width: 100%;
+                height: rem(1px);
+                background: var-get($theme, 'idle-bottom-line-color');
+                transition: height $transition-timing, background-color $transition-timing;
+            }
+        }
     }
 
     %form-group-bundle--box {
@@ -432,38 +477,63 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
+
         @if not $indigo-theme {
-            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'hover-bottom-line-color');
+            &::after {
+                height: rem(2px);
+                background: var-get($theme, 'hover-bottom-line-color');
+            }
         } @else {
-            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'hover-bottom-line-color');
+            &::after {
+                height: rem(1px);
+                background: var-get($theme, 'hover-bottom-line-color');
+            }
         }
     }
 
     %form-group-bundle--focus {
         caret-color: var-get($theme, 'focused-secondary-color');
         @if not $indigo-theme {
-            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'interim-bottom-line-color');
+            &::after {
+                height: rem(2px);
+                background: var-get($theme, 'interim-bottom-line-color');
+            }
         } @else {
-            box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'focused-bottom-line-color');
+            &::after {
+                height: rem(2px);
+                background: var-get($theme, 'focused-bottom-line-color');
+            }
         }
     }
 
     %form-group-bundle--success {
         caret-color: var-get($theme, 'success-secondary-color');
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'success-secondary-color');
+
+        &::after {
+            height: rem(1px);
+            background: var-get($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle--error {
         caret-color: var-get($theme, 'error-secondary-color');
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'error-secondary-color');
+
+        &::after {
+            height: rem(1px);
+            background: var-get($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle--disabled {
         @if not $indigo-theme {
             box-shadow: none;
         } @else {
-            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
+            &::after {
+                height: rem(1px);
+                background: var-get($theme, 'disabled-bottom-line-color');
+            }
         }
+
         background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
         background-size: rem(4px) rem(1px);
@@ -597,6 +667,15 @@
                 };
             }
         }
+
+        %form-group-prefix,
+        %form-group-suffix {
+            height: 100%;
+        }
+
+        &::after {
+            display: none;
+        }
     }
 
     %form-group-bundle-border--disabled {
@@ -714,7 +793,8 @@
 
     %form-group-label--float {
         overflow: visible;
-        transform: translateY(-50%) scale(.75);
+        transform: translateY(-50%);
+        font-size: rem(12px);
         margin-top: auto;
     }
 
@@ -869,8 +949,10 @@
     }
 
     %form-group-label-textarea--float {
-        transform: translateY(rem(-5px)) !important;
-        margin-bottom: auto !important;
+        @if $variant != 'bootstrap' {
+            transform: translateY(rem(-5px)) !important;
+            margin-bottom: auto !important;
+        }
     }
 
 
@@ -904,7 +986,7 @@
         position: relative;
         display: block;
         border: none;
-        height: rem(32px, map.get($base-scale-size, 'comfortable'));
+        height: #{sizable(rem(32px, map.get($base-scale-size, 'cosy')), rem(32px, map.get($base-scale-size, 'compact')), rem(32px, map.get($base-scale-size, 'comfortable')))};
         width: 100%;
         min-width: 0;
         background: transparent;
@@ -934,9 +1016,9 @@
         width: 100%;
         max-width: 100%;
         overflow: hidden;
-        height: rem(32px, map.get($base-scale-size, 'comfortable'));
+        height: #{sizable(rem(32px, map.get($base-scale-size, 'compact')), rem(32px, map.get($base-scale-size, 'cosy')), rem(32px, map.get($base-scale-size, 'comfortable')))};
         color: var-get($theme, 'filled-text-color');
-        line-height: 1;
+        margin-block-start: rem(3px);
 
         span {
             @include ellipsis();
@@ -949,17 +1031,8 @@
         }
     }
 
-    %form-group-input--cosy {
-        height: rem(32px, map.get($base-scale-size, 'cosy'));
-    }
-
-    %form-group-file-input--cosy {
-        height: rem(32px, map.get($base-scale-size, 'cosy'));
-    }
-
     %form-group-input--compact {
         font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
-        height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-file-input--compact {
@@ -1034,10 +1107,6 @@
     }
 
     %form-group-textarea {
-        // this fixes resizing in chrome !?!?
-        --end-margin: #{sizable(rem(-16px, map.get($base-scale-size, 'compact')), rem(-16px, map.get($base-scale-size, 'cosy')), rem(-16px, map.get($base-scale-size, 'comfortable')))};
-        margin-inline-end: calc(var(--end-margin) * -1);
-
         --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
         min-height: var(--size);
 
@@ -1073,27 +1142,10 @@
         &:focus {
             background: var-get($theme, 'box-background');
         }
-
-        igx-suffix,
-        [igxSuffix] {
-            padding-inline-end: rem(16px, map.get($base-scale-size, 'comfortable'));
-        }
     }
 
     %indigo--box-focused {
         background: var-get($theme, 'box-background');
-    }
-
-    %form-group-bundle-success--indigo {
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'success-secondary-color');
-    }
-
-    %form-group-bundle-error--indigo {
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'error-secondary-color');
-    }
-
-    %form-group-bundle-error--indigo--hover {
-        border-color: var-get($theme, 'error-secondary-color');
     }
 
     %form-group-helper--indigo--disabled {
@@ -1218,12 +1270,18 @@
         min-height: var(--size);
         padding: 0;
         border: rem(1px) solid var-get($theme, 'border-color');
-        border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
-        position: relative;
         align-items: stretch;
         box-shadow: none !important;
         overflow: hidden;
+
+        @if $variant == 'fluent' {
+            border-radius: var-get($theme, 'border-border-radius');
+        }
+
+        &::after {
+            display: none;
+        }
     }
 
     %form-group-bundle--fluent--hover {
@@ -1234,15 +1292,6 @@
     %form-group-bundle--fluent--focus {
         caret-color: var-get($theme, 'focused-text-color');
         border-color: var-get($theme, 'focused-border-color');
-
-        &::after {
-            pointer-events: none;
-            position: absolute;
-            content: '';
-            width: 100%;
-            height: 100%;
-            border: rem(1px) solid var-get($theme, 'focused-border-color');
-        }
     }
 
     %form-group-bundle--fluent--hover-disabled,
@@ -1261,18 +1310,6 @@
     %form-group-bundle-success--fluent--hover,
     %form-group-bundle-success--fluent--focus {
         border-color: var-get($theme, 'success-secondary-color');
-    }
-
-    %form-group-bundle-success--fluent--focus {
-        &::after {
-            border: rem(1px) solid var-get($theme, 'success-secondary-color');
-        }
-    }
-
-    %form-group-bundle-error--fluent--focus {
-        &::after {
-            border: rem(1px) solid var-get($theme, 'error-secondary-color');
-        }
     }
 
     %fluent-input {
@@ -1393,11 +1430,13 @@
     // FLUENT END
 
     %form-group-border {
-        height: 2px; /* 2px, when base is 16px */
-        margin-top: -2px; /* 2px, when base is 16px */
+        height: rem(2px);
+        margin-bottom: rem(-2px);
+        grid-column: 1 / -1;
         transform: scaleX(0);
         transform-origin: center;
         background: var-get($theme, 'focused-secondary-color');
+        z-index: 1;
     }
 
     %form-group-border--focus {
@@ -1493,6 +1532,7 @@
         color: var-get($theme, 'disabled-text-color');
     }
 
+    // Input group
     %form-group-display--bootstrap {
         igx-prefix,
         [igxPrefix] {
@@ -1574,6 +1614,7 @@
         }
     }
 
+    // Bundle
     %form-group-bundle--bootstrap {
         --size: #{sizable(rem(31px), rem(38px), rem(48px))};
 
@@ -1585,48 +1626,6 @@
     %form-group-bundle--bootstrap-hover {
         border: none;
         box-shadow: none;
-    }
-
-    %bootstrap-label {
-        position: static;
-        display: block;
-        color: var-get($theme, 'idle-secondary-color');
-        padding: 0;
-        line-height: normal !important;
-        transform: translateY(0);
-        transform-origin: top left;
-        margin-top: 0 !important;
-        margin-bottom: pad-inline(rem(4px), rem(6px), rem(8px));
-        height: auto;
-        font-size: pad(rem(14px), rem(14px), rem(16px));
-
-        [dir='rtl'] & {
-            transform-origin: top right;
-        }
-    }
-
-    %bootstrap-input {
-        height: auto;
-        line-height: 1.5;
-        margin: 0;
-        font-size: pad(map.get($bootstrap-font-size, 'compact'), map.get($bootstrap-font-size, 'cosy'), map.get($bootstrap-font-size, 'comfortable'));
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
-        transition: box-shadow .15s ease-out, border .15s ease-out;
-    }
-
-    %bootstrap-input,
-    %bootstrap-file-input {
-        border: rem(1px) solid var-get($theme, 'border-color');
-        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
-        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
-        grid-area: 1 / 2 / auto / auto;
-        border-radius: border-radius(rem(4px));
-        z-index: 1;
-    }
-
-    %bootstrap-file-input {
-        height: inherit;
     }
 
     %form-group-bundle-start--bootstrap,
@@ -1683,6 +1682,51 @@
         }
     }
 
+    // Label
+    %bootstrap-label {
+        position: static;
+        display: block;
+        color: var-get($theme, 'idle-secondary-color');
+        padding: 0;
+        line-height: normal !important;
+        transform: translateY(0);
+        transform-origin: top left;
+        margin-block-start: 0 !important;
+        margin-block-end: pad-inline(rem(4px), rem(6px), rem(8px));
+        height: auto;
+        font-size: pad(rem(14px), rem(14px), rem(16px));
+
+        [dir='rtl'] & {
+            transform-origin: top right;
+        }
+    }
+
+
+    // Native Input
+    %bootstrap-input {
+        height: auto;
+        line-height: 1.5;
+        margin: 0;
+        font-size: pad(map.get($bootstrap-font-size, 'compact'), map.get($bootstrap-font-size, 'cosy'), map.get($bootstrap-font-size, 'comfortable'));
+        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
+        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        transition: box-shadow .15s ease-out, border .15s ease-out;
+    }
+
+    %bootstrap-input,
+    %bootstrap-file-input {
+        border: rem(1px) solid var-get($theme, 'border-color');
+        padding-block: pad-inline(map.get($bootstrap-block-padding, 'compact'), map.get($bootstrap-block-padding, 'cosy'), map.get($bootstrap-block-padding, 'comfortable'));
+        padding-inline: pad-inline(map.get($bootstrap-inline-padding, 'compact'), map.get($bootstrap-inline-padding, 'cosy'), map.get($bootstrap-inline-padding, 'comfortable'));
+        grid-area: 1 / 2 / auto / auto;
+        border-radius: border-radius(rem(4px));
+        z-index: 1;
+    }
+
+    %bootstrap-file-input {
+        height: inherit;
+    }
+
     %bootstrap-input--focus {
         border: rem(1px) solid var-get($theme, 'focused-border-color');
         box-shadow: 0 0 0 rem(4px) var-get($theme, 'focused-secondary-color');
@@ -1708,6 +1752,7 @@
         transform: translateY(0);
     }
 
+    // Upload button for file type input
     %bootstrap-upload-button {
         padding: 0;
 

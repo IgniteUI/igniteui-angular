@@ -2,8 +2,6 @@
     <ng-container *ngTemplateOutlet="bundle"></ng-container>
 </div>
 
-<div class="igx-input-group__border" *ngIf="hasBorder"></div>
-
 <div class="igx-input-group__hint" (click)="hintClickHandler($event)">
     <ng-content select="igx-hint, [igxHint]"></ng-content>
 </div>
@@ -88,6 +86,8 @@
             <ng-container *ngTemplateOutlet="clear"></ng-container>
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
+
+        <div class="igx-input-group__border" *ngIf="hasBorder"></div>
     </div>
 </ng-template>
 
@@ -110,6 +110,8 @@
             <ng-container *ngTemplateOutlet="clear"></ng-container>
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
+
+        <div class="igx-input-group__border" *ngIf="hasBorder"></div>
     </div>
 </ng-template>
 

@@ -14,7 +14,7 @@ import {
 } from '../calendar/public_api';
 import {
     IgxInputDirective, IgxInputGroupComponent,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -390,6 +390,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ContentChild(IgxPickerActionsDirective)
     private pickerActions: IgxPickerActionsDirective;
 
+    /** @hidden @internal */
+    @ContentChildren(IgxPrefixDirective, { descendants: true })
+    protected prefixes: QueryList<IgxPrefixDirective>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxSuffixDirective, { descendants: true })
+    protected suffixes: QueryList<IgxSuffixDirective>;
+
     private get dialogOverlaySettings(): OverlaySettings {
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
     }
@@ -725,6 +733,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
+
+        if(this.prefixes.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if(this.suffixes.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
+        }
 
         this.subToIconsClicked(this.clearComponents, () => this.clear());
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))

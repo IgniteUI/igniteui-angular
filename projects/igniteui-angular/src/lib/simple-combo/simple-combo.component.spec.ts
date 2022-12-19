@@ -28,8 +28,8 @@ const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
-const CSS_CLASS_TOGGLEBUTTON = 'igx-combo__toggle-button';
-const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
+const CSS_CLASS_TOGGLEBUTTON = 'igx-input-group__toggle-button';
+const CSS_CLASS_CLEARBUTTON = 'igx-input-group__clear-button';
 const CSS_CLASS_ADDBUTTON = 'igx-combo__add-item';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -53,7 +53,7 @@ describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
-    
+
     configureTestSuite();
 
     describe('Unit tests: ', () => {
@@ -1291,7 +1291,7 @@ describe('IgxSimpleCombo', () => {
 
             expect(toggleIcon.nativeElement.textContent).toBe('search');
             expect(combo.collapsed).toBeTruthy();
-            
+
             toggleIcon.nativeElement.click();
             tick();
             fixture.detectChanges();
@@ -1898,8 +1898,8 @@ export class IgxSimpleComboIconTemplatesComponent {
     public combo: IgxSimpleComboComponent;
 
     public data: any[] =  [
-        { name: 'Sofia', id: '1' }, 
-        { name: 'London', id: '2' }, 
+        { name: 'Sofia', id: '1' },
+        { name: 'London', id: '2' },
     ];;
     public name!: string;
 }

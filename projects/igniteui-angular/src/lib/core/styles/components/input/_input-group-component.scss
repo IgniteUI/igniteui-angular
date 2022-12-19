@@ -507,6 +507,14 @@
             }
         }
 
+        @include e(toggle-button) {
+            @extend %igx-input-group__toggle-button !optional;
+        }
+
+        @include e(clear-button) {
+            @extend %igx-input-group__clear-button !optional;
+        }
+
         // Fluent Theme Start //
         @include m(fluent) {
             @extend %igx-input-group-fluent !optional;

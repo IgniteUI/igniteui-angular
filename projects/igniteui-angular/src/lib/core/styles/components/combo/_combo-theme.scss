@@ -13,6 +13,19 @@
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
 /// @param {Color} $empty-list-background [null] - The combo list background color.
+/// @param {Color} $toggle-button-background [null] - The combo toggle button background color.
+/// @param {Color} $toggle-button-background-hover [null] - The combo toggle button background color on hover.
+/// @param {Color} $toggle-button-background-focus [null] - The combo toggle button background color when the combo is focused.
+/// @param {Color} $toggle-button-foreground [null] - The combo toggle button background color.
+/// @param {Color} $toggle-button-foreground-hover [null] - The combo toggle button background color on hover.
+/// @param {Color} $toggle-button-foreground-focus [null] - TThe combo toggle button background color when the combo is focused.
+
+/// @param {Color} $toggle-button-background [null] - The combo clear button background color.
+/// @param {Color} $toggle-button-background-hover [null] - The combo clear button background color on hover.
+/// @param {Color} $toggle-button-background-focus [null] - The combo clear button background color when the combo is focused.
+/// @param {Color} $toggle-button-foreground [null] - The combo toggle clear background color.
+/// @param {Color} $toggle-button-foreground-hover [null] - The combo clear button background color on hover.
+/// @param {Color} $toggle-button-foreground-focus [null] - TThe combo clear button background color when the combo is focused.
 /// @requires $light-schema
 /// @example scss Change the combo empty list background
 ///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
@@ -22,9 +35,24 @@
     $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
-    $empty-list-background: null
+    $empty-list-background: null,
+    $toggle-button-background: null,
+    $toggle-button-background-hover: null,
+    $toggle-button-background-focus: null,
+    $toggle-button-foreground: null,
+    $toggle-button-foreground-hover: null,
+    $toggle-button-foreground-focus: null,
+
+    $clear-button-background: null,
+    $clear-button-background-hover: null,
+    $clear-button-background-focus: null,
+    $clear-button-foreground: null,
+    $clear-button-foreground-hover: null,
+    $clear-button-foreground-focus: null,
 ) {
     $name: 'igx-combo';
+    $selector: 'igx-combo, igx-simple-combo';
+
     $combo-schema: ();
 
     @if map.has-key($schema, $name) {
@@ -37,9 +65,23 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
-        empty-list-background: $empty-list-background
+        empty-list-background: $empty-list-background,
+        toggle-button-background: $toggle-button-background,
+        toggle-button-background-hover: $toggle-button-background-hover,
+        toggle-button-background-focus: $toggle-button-background-focus,
+        toggle-button-foreground: $toggle-button-foreground,
+        toggle-button-foreground-hover: $toggle-button-foreground-hover,
+        toggle-button-foreground-focus: $toggle-button-foreground-focus,
+
+        clear-button-background: $clear-button-background,
+        clear-button-background-hover: $clear-button-background-hover,
+        clear-button-background-focus: $clear-button-background-focus,
+        clear-button-foreground: $clear-button-foreground,
+        clear-button-foreground-hover: $clear-button-foreground-hover,
+        clear-button-foreground-focus: $clear-button-foreground-focus,
     ));
 }
 
@@ -70,6 +112,10 @@
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
+
+        .igx-input-group__bundle {
+            padding-block-start: 0;
+        }
     }
 
     %igx-combo__content {
@@ -101,21 +147,33 @@
         font-size: rem(13px);
     }
 
-    // TODO: make this part better
-    %igx-combo__add-item {
-        &%igx-drop-down__item {
-            width: auto !important;
-            padding: 0 !important;
+    %igx-input-group__toggle-button {
+        background: var-get($theme, 'toggle-button-background');
+        color: var-get($theme, 'toggle-button-foreground') !important;
 
-            &:hover {
-                background: transparent!important;
-            }
+        &:hover {
+            background: var-get($theme, 'toggle-button-background-hover');
+            color: var-get($theme, 'toggle-button-foreground-hover') !important;
         }
 
-        &%igx-drop-down__item--focused {
-            &:focus {
-                background: transparent!important;
-            }
+        &:focus {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus') !important;
+        }
+    }
+
+    %igx-combo__clear-button {
+        background: var-get($theme, 'clear-button-background');
+        color: var-get($theme, 'clear-button-foreground');
+
+        &:hover {
+            background: var-get($theme, 'clear-button-background-hover');
+            color: var-get($theme, 'clear-button-foreground-hover');
+        }
+
+        &:focus {
+            background: var-get($theme, 'clear-button-background-focus');
+            color: var-get($theme, 'clear-button-foreground-focus');
         }
     }
 }
