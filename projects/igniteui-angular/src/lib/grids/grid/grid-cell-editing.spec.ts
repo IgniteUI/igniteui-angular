@@ -24,7 +24,7 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
@@ -39,12 +39,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CellEditingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
-        }));
+        });
 
         it('should be able to enter edit mode on dblclick, enter and f2', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
@@ -316,14 +316,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CellEditingScrollTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
-        }));
+        });
 
-        it('edit mode - leaves edit mode on blur', fakeAsync(/** height/width setter rAF */() => {
+        it('edit mode - leaves edit mode on blur', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             const button = fixture.debugElement.query(By.css('.btnTest'));
 
@@ -340,9 +340,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
-        }));
+        });
 
-        it('edit mode - exit edit mode and submit when pin/unpin unpin column', fakeAsync(/** height/width setter rAF */() => {
+        it('edit mode - exit edit mode and submit when pin/unpin unpin column', () => {
             let cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             const cacheValue = cell.value;
             const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -374,9 +374,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.gridAPI.crudService.cell).toBeNull();
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(cellValue);
-        }));
+        });
 
-        it('edit mode - leaves cell in edit mode on scroll', (async () => {
+        it('edit mode - leaves cell in edit mode on scroll', async () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             const editableCellId = cell.cellID;
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -399,7 +399,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
-        }));
+        });
 
         it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
             const verticalScroll = grid.verticalScrollContainer.getScroll();
@@ -551,13 +551,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let gridContent: DebugElement;
         const $destroyer = new Subject<boolean>();
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CellEditingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
             grid.ngAfterViewInit();
-        }));
+        });
 
         afterEach(fakeAsync(() => {
             $destroyer.next(true);
@@ -1093,12 +1093,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(CellEditingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
-        }));
+        });
 
         it(`Should exit edit mode when rowEditable changes`, () => {
             const cell = grid.getCellByColumn(0, 'personNumber');

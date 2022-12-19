@@ -23,7 +23,7 @@ import { ExpressionUI } from '../filtering/excel-style/common';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
             ],
@@ -1151,7 +1151,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringBindingComponent
             ],
