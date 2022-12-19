@@ -31,7 +31,7 @@ describe('IgxGrid Master Detail #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,

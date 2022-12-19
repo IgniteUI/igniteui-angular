@@ -1,7 +1,7 @@
 <div class="density-chooser">
     <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
 </div>
-<igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
+<igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [width]="w" [height]="h"
     [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
     [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'" [displayDensity]="density">
     <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">

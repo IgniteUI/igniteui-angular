@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, waitForAsync, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -13,8 +13,9 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-describe('Column Pinning UI #grid', () => {
+import { wait } from '../../test-utils/ui-interactions.spec';
 
+describe('Column Pinning UI #grid', () => {
     let fix: ComponentFixture<ColumnPinningTestComponent>;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnActionsComponent;
@@ -23,7 +24,9 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    configureTestSuite((() => {
+    configureTestSuite();
+
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
@@ -34,24 +37,24 @@ describe('Column Pinning UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        });
+        }).compileComponents();
     }));
 
-    describe('', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    describe('Base', () => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnPinningTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = GridFunctions.getColumnPinningElement(fix);
-        }));
+        });
 
-        it('title is initially empty.', waitForAsync(() => {
+        it('title is initially empty.', () => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);
             expect(title).toBe(null);
-        }));
+        });
 
-        it('title can be successfully changed.', waitForAsync(() => {
+        it('title can be successfully changed.', () => {
             columnChooser.title = 'Pin/Unpin Columns';
             fix.detectChanges();
 
@@ -68,7 +71,7 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
 
             expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
-        }));
+        });
 
         it(`filter input visibility is controlled via 'hideFilter' property.`, () => {
             let filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
@@ -271,7 +274,9 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(grid.columnList.get(2), true, 3);
         });
 
-        it('toolbar should contain only pinnable columns', () => {
+        it('toolbar should contain only pinnable columns', async () => {
+            // Toolbar rendering tick
+            await wait();
             fix.detectChanges();
 
             const pinningUIButton = GridFunctions.getColumnPinningButton(fix);
@@ -289,7 +294,7 @@ describe('Column Pinning UI #grid', () => {
             expect(GridFunctions.getOverlay(fix).querySelectorAll('igx-checkbox').length).toEqual(4);
         });
 
-            it('Checks order of columns after unpinning', () => {
+        it('Checks order of columns after unpinning', () => {
             for (const column of grid.columnList) {
                 column.pin();
             }
@@ -311,14 +316,14 @@ describe('Column Pinning UI #grid', () => {
         });
     });
 
-    describe('', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    describe('Pinning with Column Groups', () => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnGroupsPinningTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = GridFunctions.getColumnPinningElement(fix);
-        }));
+        });
 
         it('shows only top level columns.', () => {
             const columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
@@ -352,7 +357,7 @@ describe('Column Pinning UI #grid', () => {
         });
     });
 
-    it('- should size cells correctly when there is a large pinned templated column', fakeAsync(/** height/width setter rAF */() => {
+    it('- should size cells correctly when there is a large pinned templated column', () => {
         fix = TestBed.createComponent(ColumnPinningWithTemplateTestComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
@@ -361,5 +366,5 @@ describe('Column Pinning UI #grid', () => {
         cells.forEach((cell) => {
             expect(cell.nativeElement.offsetHeight).toBe(100);
         });
-    }));
+    });
 });

@@ -33,17 +33,17 @@
     <article class="sample-column">
         <h4 class="sample-title">Radio group without data model (Vertical Alignment)</h4>
         <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required (change)="onRadioChange($event)" [alignment]="alignment">
-            <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
+            <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}" [disabled]="disabled">
                 {{item}}
             </igx-radio>
         </igx-radio-group>
         <label>
-            <input type="checkbox" [checked]="radioGroup.disabled" (change)="radioGroup.disabled = !radioGroup.disabled"> Disabled
+            <input type="checkbox" [checked]="disabled" (change)="disabled = !disabled"> Disabled
         </label>
         <label>
             <input type="checkbox" [checked]="radioGroup.required" (change)="radioGroup.required = !radioGroup.required"> Required
         </label>
-        Disabled = '{{radioGroup.disabled}}'<br>
+        Disabled = '{{disabled}}'<br>
         Required = '{{radioGroup.required}}'<br>
         SelectedValue = '{{selectedValue}}'<br>
         <button igxButton type="button" (click)="onBtnClick()" style="width: 200px">Select 'Baz'</button>

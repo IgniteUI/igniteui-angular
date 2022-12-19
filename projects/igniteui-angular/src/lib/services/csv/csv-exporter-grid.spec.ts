@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -39,22 +39,21 @@ describe('CSV Grid Exporter', () => {
                 ColumnsAddedOnInitComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
         exporter = new IgxCsvExporterService();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    }));
+    });
 
-    afterEach(waitForAsync(() => {
+    afterEach(() => {
         exporter.columnExporting.unsubscribe();
         exporter.rowExporting.unsubscribe();
-    }));
+    });
 
     it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;
@@ -66,7 +65,6 @@ describe('CSV Grid Exporter', () => {
     });
 
     it('should honor \'ignoreFiltering\' option.', async () => {
-
         const result = await TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
@@ -85,7 +83,6 @@ describe('CSV Grid Exporter', () => {
     });
 
     it('should honor filter criteria changes.', async () => {
-
         const result = await TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
@@ -378,15 +375,14 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.gridColumnsAddedOnInit, 'Columns should be exported in the same order as in the grid!');
     });
 
-    describe('', () => {
+    describe('Tree Grid CSV export', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should export tree grid as displayed.', async () => {
             const wrapper = await getExportedData(treeGrid, options);
