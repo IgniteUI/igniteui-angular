@@ -20,7 +20,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
     let pivotGrid: IgxPivotGridComponent;
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxPivotGridMultipleRowComponent
             ],

@@ -8,69 +8,74 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-describe('IgxDirectionality DI', () => {
-    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
-            declarations: [
-                InjectsIgxDirectionalityComponent
-            ],
-        }).compileComponents()));
-
-    it('should inject the document through the injectionToken properly', () => {
-        const injectionToken = TestBed.inject(DIR_DOCUMENT);
-        const document = TestBed.inject(DOCUMENT);
-
-        expect(injectionToken).toEqual(document);
-        expect(injectionToken).toEqual(jasmine.any(Document));
-        expect(document).toBeTruthy(jasmine.any(Document));
-    });
-
-    it('should read dir from html if not specified on the body', inject([DOCUMENT], () => {
-        const fixture = TestBed.createComponent(InjectsIgxDirectionalityComponent);
-        const component = fixture.debugElement.componentInstance;
-
-        expect(component.dir.document).not.toBeNull();
-        expect(component.dir.document).not.toBeUndefined();
-        expect(component.dir.document).toEqual(jasmine.any(Document));
-    }));
-
-});
 describe('IgxDirectionality', () => {
-    let fakeDoc: FakeDoc;
-    beforeEach(() => {
-        fakeDoc = {body: {}, documentElement: {}};
+    describe('DI', () => {
+        beforeAll(waitForAsync(() =>
+            TestBed.configureTestingModule({
+                declarations: [
+                    InjectsIgxDirectionalityComponent
+                ],
+            }).compileComponents()
+        ));
+
+        it('should inject the document through the injectionToken properly', () => {
+            const injectionToken = TestBed.inject(DIR_DOCUMENT);
+            const document = TestBed.inject(DOCUMENT);
+
+            expect(injectionToken).toEqual(document);
+            expect(injectionToken).toEqual(jasmine.any(Document));
+            expect(document).toBeTruthy(jasmine.any(Document));
+        });
+
+        it('should read dir from html if not specified on the body', inject([DOCUMENT], () => {
+            const fixture = TestBed.createComponent(InjectsIgxDirectionalityComponent);
+            const component = fixture.debugElement.componentInstance;
+
+            expect(component.dir.document).not.toBeNull();
+            expect(component.dir.document).not.toBeUndefined();
+            expect(component.dir.document).toEqual(jasmine.any(Document));
+        }));
+
     });
 
-    let expectedRes: string;
-    let dirInstance: IgxDirectionality;
-    it('should read dir from html if not specified on the body', () => {
-        expectedRes = 'rtl';
-        fakeDoc.documentElement.dir = expectedRes;
+    describe('RLT, LTR', () => {
+        let fakeDoc: FakeDoc;
+        beforeEach(() => {
+            fakeDoc = {body: {}, documentElement: {}};
+        });
 
-        dirInstance = new IgxDirectionality(fakeDoc);
-        expect(dirInstance.value).toEqual(expectedRes);
-    });
-    it('should read dir from body even it is also specified on the html element', () => {
-        fakeDoc.documentElement.dir = 'ltr';
-        expectedRes = 'rtl';
-        fakeDoc.body.dir = expectedRes;
+        let expectedRes: string;
+        let dirInstance: IgxDirectionality;
+        it('should read dir from html if not specified on the body', () => {
+            expectedRes = 'rtl';
+            fakeDoc.documentElement.dir = expectedRes;
 
-        dirInstance = new IgxDirectionality(fakeDoc);
-        expect(dirInstance.value).toEqual(expectedRes);
-    });
+            dirInstance = new IgxDirectionality(fakeDoc);
+            expect(dirInstance.value).toEqual(expectedRes);
+        });
+        it('should read dir from body even it is also specified on the html element', () => {
+            fakeDoc.documentElement.dir = 'ltr';
+            expectedRes = 'rtl';
+            fakeDoc.body.dir = expectedRes;
 
-    it('should default to ltr if nothing specified', () => {
-        expectedRes = 'ltr';
+            dirInstance = new IgxDirectionality(fakeDoc);
+            expect(dirInstance.value).toEqual(expectedRes);
+        });
 
-        dirInstance = new IgxDirectionality(fakeDoc);
-        expect(dirInstance.value).toEqual(expectedRes);
-    });
+        it('should default to ltr if nothing specified', () => {
+            expectedRes = 'ltr';
 
-    it('should default to ltr if invalid values are set both on body or html elements', () => {
-        fakeDoc.documentElement.dir = 'none';
-        fakeDoc.body.dir = 'irrelevant';
+            dirInstance = new IgxDirectionality(fakeDoc);
+            expect(dirInstance.value).toEqual(expectedRes);
+        });
 
-        dirInstance = new IgxDirectionality(fakeDoc);
-        expect(dirInstance.value).toEqual('ltr');
+        it('should default to ltr if invalid values are set both on body or html elements', () => {
+            fakeDoc.documentElement.dir = 'none';
+            fakeDoc.body.dir = 'irrelevant';
+
+            dirInstance = new IgxDirectionality(fakeDoc);
+            expect(dirInstance.value).toEqual('ltr');
+        });
     });
 });
 

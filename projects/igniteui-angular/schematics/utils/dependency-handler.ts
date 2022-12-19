@@ -99,7 +99,7 @@ export const addDependencies = (options: Options) => async (tree: Tree, context:
 
     await includeDependencies(workspaceHost, workspace, pkgJson, context, tree);
 
-    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree)
+    await includeStylePreprocessorOptions(workspaceHost, workspace, context, tree);
 
     addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
 };
@@ -157,7 +157,7 @@ const addHammerToConfig =
         }
     };
 
-const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
+export const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
     await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
         await addStylePreprocessorOptions(project, tree, "build", context);
         await addStylePreprocessorOptions(project, tree, "test", context);
@@ -169,6 +169,13 @@ const includeStylePreprocessorOptions = async (workspaceHost: workspaces.Workspa
 const addStylePreprocessorOptions =
     async (project: workspaces.ProjectDefinition, tree: Tree, config: string, context: SchematicContext): Promise<void> => {
         const projectOptions = getTargetedProjectOptions(project, config, context);
+        const warn = `Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
+            `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`;
+
+        if (!projectOptions) {
+            context.logger.warn(warn);
+            return;
+        }
 
         // if there are no elements in the architect[config]options.stylePreprocessorOptions.includePaths that contain node_modules
         const stylePrepropPath = 'node_modules';
@@ -178,8 +185,7 @@ const addStylePreprocessorOptions =
             } else if (!projectOptions?.stylePreprocessorOptions) {
                 projectOptions["stylePreprocessorOptions"] = { includePaths: [stylePrepropPath]};
             } else {
-                context.logger.warn(`Could not find a matching stylePreprocessorOptions includePaths array property under ${config} options. ` +
-                    `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`);
+                context.logger.warn(warn);
             }
         }
     };
