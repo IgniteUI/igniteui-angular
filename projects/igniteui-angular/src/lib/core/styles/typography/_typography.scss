@@ -31,8 +31,6 @@
     @if is-root() {
         .ig-typography {
             font-family: var(--ig-font-family);
-            font-size: theming.$browser-context;
-            line-height: theming.rem(27px);
 
             @if not(list.index($exclude, 'charts')) {
                 @include charts-typography($type-scale);

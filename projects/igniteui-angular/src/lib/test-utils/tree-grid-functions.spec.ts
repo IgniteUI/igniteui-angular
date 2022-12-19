@@ -6,6 +6,7 @@ import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
 import { IgxRowDirective } from '../grids/row.directive';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { DebugElement } from '@angular/core';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -27,7 +28,7 @@ export class TreeGridFunctions {
         return fix.debugElement.query(By.css(TREE_HEADER_ROW_CSS_CLASS));
     }
 
-    public static getAllRows(fix) {
+    public static getAllRows(fix): DebugElement [] {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-row'));
     }
 

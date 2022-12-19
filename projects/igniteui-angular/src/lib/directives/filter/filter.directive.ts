@@ -18,15 +18,15 @@ export class IgxFilterOptions {
     public inputValue = '';
 
     // Item property, which value should be used for filtering
-    public key: string;
+    public key: string | string[];
 
-    // Represent items of the list. It should be used to handle decalaratevely defined widgets
+    // Represent items of the list. It should be used to handle declaratively defined widgets
     public items: any[];
 
     // Function - get value to be tested from the item
     // item - single item of the list to be filtered
     // key - property name of item, which value should be tested
-    // Default behavior - returns "key"- named property value of item if key si provided,
+    // Default behavior - returns "key"- named property value of item if key is provided,
     // otherwise textContent of the item's html element
     public get_value(item: any, key: string): string {
         let result = '';
@@ -86,7 +86,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input('igxFilter') public filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef, renderer: Renderer2) {
+    constructor(private element: ElementRef) {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -125,6 +125,22 @@ export class IgxFilterDirective implements OnChanges {
 })
 
 export class IgxFilterPipe implements PipeTransform {
+    private findMatchByKey(item: any, options: IgxFilterOptions, key: string) {
+        const match = options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue);
+
+        if (match) {
+            if (options.metConditionFn) {
+                options.metConditionFn(item);
+            }
+        } else {
+            if (options.overdueConditionFn) {
+                options.overdueConditionFn(item);
+            }
+        }
+
+        return match;
+    }
+
     public transform(items: any[],
                      // options - initial settings of filter functionality
                      options: IgxFilterOptions) {
@@ -140,19 +156,17 @@ export class IgxFilterPipe implements PipeTransform {
         }
 
         result = items.filter((item: any) => {
-            const match = options.matchFn(options.formatter(options.get_value(item, options.key)), options.inputValue);
-
-            if (match) {
-                if (options.metConditionFn) {
-                    options.metConditionFn(item);
-                }
+            if (!Array.isArray(options.key)) {
+                return this.findMatchByKey(item, options, options.key);
             } else {
-                if (options.overdueConditionFn) {
-                    options.overdueConditionFn(item);
-                }
+                let isMatch = false;
+                options.key.forEach(key => {
+                    if (this.findMatchByKey(item, options, key)) {
+                        isMatch = true;
+                    }
+                });
+                return isMatch;
             }
-
-            return match;
         });
 
         return result;
