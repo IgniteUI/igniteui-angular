@@ -11,7 +11,6 @@ import {
     SimpleChanges,
     ViewChildren
 } from '@angular/core';
-import { first } from 'rxjs/operators';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../chips/chip.component';
 import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';

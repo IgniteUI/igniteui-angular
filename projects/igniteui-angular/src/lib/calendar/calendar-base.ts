@@ -8,7 +8,7 @@ import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { getLocaleFirstDayOfWeek, getLocaleId } from "@angular/common";
+import { getLocaleFirstDayOfWeek } from "@angular/common";
 
 /**
  * Sets the selection type - single, multi or range.

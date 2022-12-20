@@ -10,6 +10,7 @@ import {
     IChangeSwitchEventArgs,
     IComboSearchInputEventArgs,
     IComboSelectionChangingEventArgs,
+    ISimpleComboSelectionChangingEventArgs,
     IForOfState,
     IgxComboComponent,
     IgxSimpleComboComponent,
@@ -40,6 +41,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('remoteCombo')
     public remoteCombo: IgxComboComponent;
 
+    @ViewChild('remoteSimpleCombo')
+    public remoteSimpleCombo: IgxSimpleComboComponent;
+
     @ViewChild('playgroundCombo', { read: ElementRef, static: true })
     private comboRef: ElementRef;
 
@@ -59,11 +63,17 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public singleValue = 'Arizona';
     public values2: Array<any>;
     public isDisabled = false;
+
     public rData: any;
+    public prevRequest: any;
+    public simpleComboPrevRequest: any;
     private searchText: string = '';
     private defaultVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
+    private currentVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
     private hasSelection: boolean;
-    public prevRequest: any;
+    private additionalScroll: number = 0;
+    private itemID = 1;
+    private itemCount: number = 0;
 
     public valueKeyVar = 'field';
     public currentDataType = '';
@@ -219,7 +229,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             chunkSize: Math.ceil(250 / this.remoteCombo.itemHeight),
         };
         this.remoteService.getData(initSize, null, (data) => {
-            this.remoteCombo.totalItemCount = data['@odata.count'];
+            this.remoteCombo.totalItemCount = this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
+            this.itemCount = this.remoteSimpleCombo.totalItemCount;
         });
     }
 
@@ -318,5 +329,82 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public handleSelectionChanging(evt: IComboSelectionChangingEventArgs) {
         this.hasSelection = !!evt?.newSelection.length;
+    }
+
+    public onSimpleComboDataLoading() {
+        if (this.simpleComboPrevRequest) {
+            this.simpleComboPrevRequest.unsubscribe();
+        }
+        this.loadingToast.positionSettings.verticalDirection = VerticalAlignment.Middle;
+        this.loadingToast.autoHide = false;
+        this.loadingToast.open('Loading Remote Data...');
+        this.cdr.detectChanges();
+
+        this.simpleComboPrevRequest = this.remoteService.getData(
+            this.remoteSimpleCombo.virtualizationState,
+            this.searchText,
+            (data) => {
+                this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
+                this.loadingToast.close();
+                this.cdr.detectChanges();
+            }
+        );
+    }
+
+    public onSimpleComboOpened() {
+        const scroll: number = this.remoteSimpleCombo.virtualScrollContainer.getScrollForIndex(this.itemID - 1);
+        this.remoteSimpleCombo.virtualScrollContainer.scrollPosition = scroll + this.additionalScroll;
+        this.cdr.detectChanges();
+    }
+
+    public onSimpleComboClosing() {
+        this.searchText = '';
+    }
+
+    public onSimpleComboClosed() {
+        this.currentVirtState.startIndex = (this.itemID || 1) - 1;
+        this.remoteService.getData(
+            this.currentVirtState,
+            this.searchText,
+            (data) => {
+                this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
+                this.cdr.detectChanges();
+            }
+        );
+    }
+
+    public onSimpleComboSelectionChanging(evt: ISimpleComboSelectionChangingEventArgs) {
+        this.hasSelection = evt.newSelection !== undefined;
+
+        if (!this.hasSelection) {
+            this.itemID = 1;
+            this.currentVirtState = this.defaultVirtState;
+            return;
+        }
+
+        this.currentVirtState.chunkSize = Math.ceil(this.remoteSimpleCombo.itemsMaxHeight / this.remoteSimpleCombo.itemHeight);
+
+        this.itemCount === evt.newSelection ?
+            this.additionalScroll = this.remoteSimpleCombo.itemHeight :
+            this.additionalScroll = 0;
+
+        if (this.itemCount - evt.newSelection >= this.currentVirtState.chunkSize - 1) {
+            this.itemID = this.currentVirtState.startIndex = evt.newSelection;
+        } else {
+            this.itemID = this.currentVirtState.startIndex = this.itemCount - (this.currentVirtState.chunkSize - 1);
+        }
+    }
+
+    public onSimpleComboSearchInputUpdate(searchData: IComboSearchInputEventArgs) {
+        this.currentVirtState.startIndex = 0;
+        this.currentVirtState.chunkSize = Math.ceil(this.remoteSimpleCombo.itemsMaxHeight / this.remoteSimpleCombo.itemHeight);
+        this.searchText = searchData?.searchText || '';
+        this.remoteService.getData(
+            this.searchText ? this.currentVirtState : this.defaultVirtState,
+            this.searchText,
+            (data) => {
+                this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
+            }
+        );
     }
 }

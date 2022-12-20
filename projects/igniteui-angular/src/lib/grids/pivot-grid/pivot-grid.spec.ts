@@ -39,7 +39,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
     }));
 
     describe('Basic IgxPivotGrid #pivotGrid', () => {
-        let fixture;
+        let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
@@ -214,7 +214,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.values[1].enabled).toBeFalse();
             expect(pivotGrid.values.length).toBe(0);
-            expect(pivotGrid.columns.length).toBe(3)
+            expect(pivotGrid.columns.length).toBe(3);
         });
 
         it('should remove filter dimension from chip', () => {
@@ -271,7 +271,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         memberName: 'Country',
                         enabled: true
                     }
-                ]
+                ],
+                values: null
             };
             pivotGrid.pipeTrigger++;
             pivotGrid.setupColumns();
@@ -1127,7 +1128,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
                     { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
                     { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
@@ -1140,7 +1141,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.pivotConfiguration.columns = [{
                     memberName: 'Country',
                     memberFunction: (data) => {
-                        const len = data['Country'].length;
                         return data['Country'];
                     },
                     enabled: true
@@ -1167,7 +1167,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expected = ['Uruguay', 'USA', 'Bulgaria'];
                 expect(colHeaders).toEqual(expected);
                 const expectedExpressions: ISortingExpression[] = [
-                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()}, 
+                    { dir: SortingDirection.None, fieldName: 'All', strategy: DefaultPivotSortingStrategy.instance()},
                     { dir: SortingDirection.None, fieldName: 'ProductCategory', strategy: DefaultPivotSortingStrategy.instance()},
                     { dir: SortingDirection.Desc, fieldName: 'Country', strategy: DefaultPivotSortingStrategy.instance() }
                 ];
@@ -1830,7 +1830,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
     });
 
     describe('IgxPivotGrid complex hierarchy #pivotGrid', () => {
-        let fixture;
+        let fixture: ComponentFixture<IgxPivotGridTestComplexHierarchyComponent>;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);

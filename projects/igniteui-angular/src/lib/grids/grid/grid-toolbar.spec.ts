@@ -30,7 +30,7 @@ const DATA = [
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 DefaultToolbarComponent,
                 ToolbarActionsComponent
@@ -298,7 +298,7 @@ export class DefaultToolbarComponent {
 export class ToolbarActionsComponent {
     @ViewChild(IgxGridComponent, { static: true })
     public grid: IgxGridComponent;
-    
+
     @ViewChild('pinningAction', {static: true})
     public pinningAction;
 
