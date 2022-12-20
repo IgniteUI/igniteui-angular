@@ -117,7 +117,9 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         // be sure row is in view
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.gridAPI.crudService.enterEditMode(firstEditable, event);
-            firstEditable.activate(event);
+            if (!grid.gridAPI.crudService.nonEditable){
+                firstEditable.activate(event);
+            }
         }
         this.strip.hide();
     }

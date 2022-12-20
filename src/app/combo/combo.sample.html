@@ -68,13 +68,22 @@
             <div>
                 <h5 class="sample-title">Remote Binding</h5>
                 <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
-                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'"
+                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
                     (dataPreLoad)="dataLoading()" (searchInputUpdate)="searchInput($event)"
                     (selectionChanging)="handleSelectionChanging($event)" (closing)="onClosing()"
-                    (opening)="onOpening()" placeholder="Location(s)">
+                    (opening)="onOpening()">
+                    <label igxLabel>Combo</label>
                 </igx-combo>
                 <igx-toast #loadingToast></igx-toast>
 
+                <igx-simple-combo #remoteSimpleCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
+                    [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product"
+                    (dataPreLoad)="onSimpleComboDataLoading()" (closing)="onSimpleComboClosing()"
+                    (opened)="onSimpleComboOpened()" (closed)="onSimpleComboClosed()"
+                    (selectionChanging)="onSimpleComboSelectionChanging($event)"
+                    (searchInputUpdate)="onSimpleComboSearchInputUpdate($event)">
+                    <label igxLabel>Simple Combo</label>
+                </igx-simple-combo>
             </div>
 
             <div class="input-row">

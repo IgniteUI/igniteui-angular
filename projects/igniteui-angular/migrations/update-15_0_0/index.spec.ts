@@ -30,6 +30,110 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-26';
 
+    it('should replace CSS custom properties prefix from --igx-primary to --ig-primary', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`::ng-deep {
+	.custom-body {
+		color: var(--igx-primary-500-contrast);
+		background: hsla(var(--igx-primary-500));
+	}
+}`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`::ng-deep {
+	.custom-body {
+		color: var(--ig-primary-500-contrast);
+		background: hsla(var(--ig-primary-500));
+	}
+}`
+        );
+    });
+
+    it('should replace CSS custom properties from  -igx-grays to -ig-gray', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`::ng-deep {
+	.custom-body {
+		color: var(--igx-grays-900);
+	}
+}`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`::ng-deep {
+	.custom-body {
+		color: var(--ig-gray-900);
+	}
+}`
+        );
+    });
+
+    it('should replace CSS custom properties prefix from --igx-h[number]- to --ig-h[number]-', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`::ng-deep {
+	.custom-body {
+		font-family: var(--igx-h1-font-family);
+		font-size: var(--igx-h3-font-size);
+	}
+}`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`::ng-deep {
+	.custom-body {
+		font-family: var(--ig-h1-font-family);
+		font-size: var(--ig-h3-font-size);
+	}
+}`
+        );
+    });
+
+    it('should NOT replace CSS custom properties prefix for internal variables', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`::ng-deep {
+	.custom-body {
+		width: var(--igx-icon-size);
+	}
+}`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`::ng-deep {
+	.custom-body {
+		width: var(--igx-icon-size);
+	}
+}`
+        );
+    });
+
     it('should remove the $palette prop from component themes', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,

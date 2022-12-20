@@ -30,7 +30,7 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,

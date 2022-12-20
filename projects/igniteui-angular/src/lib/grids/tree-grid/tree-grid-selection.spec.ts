@@ -57,19 +57,16 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     describe('API Row Selection', () => {
-        // configureTestSuite();
-        beforeEach(async () => {
+
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
-            fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelection = GridSelectionMode.multiple;
-            await wait();
             fix.detectChanges();
         });
 
@@ -261,7 +258,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            treeGrid.perPage = 4;
+            treeGrid.paginator.perPage = 4;
             fix.detectChanges();
             tick(16);
 
@@ -270,7 +267,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
 
-            treeGrid.page = 1;
+            treeGrid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -279,7 +276,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
 
-            treeGrid.page = 2;
+            treeGrid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
 
@@ -305,14 +302,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('UI Row Selection', () => {
-        // configureTestSuite();
-        beforeEach(async () => {
+
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
-            fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelection = GridSelectionMode.multiple;
-            await wait();
             fix.detectChanges();
         });
 
@@ -516,7 +511,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            treeGrid.perPage = 4;
+            treeGrid.paginator.perPage = 4;
             fix.detectChanges();
             tick(16);
 
@@ -525,7 +520,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
 
-            treeGrid.page = 1;
+            treeGrid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -534,7 +529,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
 
-            treeGrid.page = 2;
+            treeGrid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
 
@@ -542,26 +537,25 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         }));
 
-        it('Should update selectedRows when selecting rows from UI', fakeAsync(() => {
+        it('Should update selectedRows when selecting rows from UI', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
             expect(treeGrid.selectedRows.length).toBe(3);
-        }));
+        });
     });
 
     describe('Row Selection with transactions - Hierarchical DS', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(() => {
+
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
-            fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-        }));
+        });
 
         it('should deselect row when delete its parent', () => {
             treeGrid.selectRows([treeGrid.gridAPI.get_row_by_index(3).key, treeGrid.gridAPI.get_row_by_index(5).key], true);
@@ -739,14 +733,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Row Selection with transactions - flat DS', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-        }));
+        });
 
         it('Should select deleted rows through API', () => {
             treeGrid.deleteRowById(6);
@@ -784,13 +777,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Cell Selection', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should return the correct type of cell when clicking on a cells', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
@@ -981,13 +973,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Cell/Row Selection With Row Editing', () => {
-        // configureTestSuite();
-        beforeEach(async () => {
+
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionRowEditingComponent);
-            fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            await wait();
             fix.detectChanges();
         });
 
@@ -1042,12 +1032,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Cascading Row Selection - Child collection data', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             actionStrip = fix.componentInstance.actionStrip;
-        }));
+        });
 
         it('Should select/deselect all leaf nodes and set the correct state to their checkboxes on parent rows checkbox click', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
@@ -1208,7 +1198,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(4);
-            
+
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
 
             const secondRow = treeGrid.gridAPI.get_row_by_index(8);
@@ -1756,14 +1746,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Cascading Row Selection - Primary/Foreign key data', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             actionStrip = fix.componentInstance.actionStrip;
-        }));
+        });
 
-        it(`Filter out all children for a certain parent, except for one. Select it. 
+        it(`Filter out all children for a certain parent, except for one. Select it.
         Parent should also become selected. Clear filters. Parent should become in
         indeterminate state as there are non-selected children.`, async () => {
             treeGrid.filter('ID', 475, IgxNumberFilteringOperand.instance().condition('equals'));
@@ -1935,12 +1925,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Cascading Row Selection with Transaction', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             actionStrip = fix.componentInstance.actionStrip;
-        }));
+        });
 
         it('Add a new leaf row to a selected parent and revert the transaction. The parent SHOULD be selected.', async () => {
             const trans = treeGrid.transactions;
@@ -2102,11 +2092,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 
     describe('Custom row selectors', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCustomRowSelectorsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = treeGrid.gridAPI.get_row_by_index(0);
@@ -2148,7 +2138,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('Should have correct indices on all pages', () => {
-            treeGrid.nextPage();
+            treeGrid.paginator.nextPage();
             fix.detectChanges();
 
             const firstRootRow = treeGrid.gridAPI.get_row_by_index(0);
