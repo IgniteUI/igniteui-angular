@@ -81,8 +81,8 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
-    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
+    <div class="igx-grid__scroll-start" [style.width.px]='pivotPinnedWidth' [style.min-width.px]='pivotPinnedWidth'></div>
+    <div class="igx-grid__scroll-main" [style.width.px]='pivotUnpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='EMPTY_DATA' #scrollContainer>
         </ng-template>
     </div>
