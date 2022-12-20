@@ -235,7 +235,11 @@
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo-design';
     $fluent-theme: $variant == 'fluent';
-    $bootstrap-theme: $variant == 'bootstrap';
+    $bootstrap-theme: $variant != 'bootstrap';
+    $NOT-material-theme: $variant != 'material';
+    $NOT-indigo-theme: $variant != 'indigo-design';
+    $NOT-fluent-theme: $variant != 'fluent';
+    $NOT-bootstrap-theme: $variant != 'bootstrap';
 
     $required-symbol: '*';
     $required-symbol-margin: rem(2px);
@@ -278,6 +282,7 @@
     $hint-padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
     $hint--box-margin: rem(12px, map.get($base-scale-size, 'comfortable'));
 
+    // Base Start
     %form-group-prefix--upload {
         padding: 0;
     }
@@ -478,7 +483,7 @@
     %form-group-bundle--hover {
         cursor: pointer;
 
-        @if not $indigo-theme {
+        @if $NOT-indigo-theme {
             &::after {
                 height: rem(2px);
                 background: var-get($theme, 'hover-bottom-line-color');
@@ -493,7 +498,7 @@
 
     %form-group-bundle--focus {
         caret-color: var-get($theme, 'focused-secondary-color');
-        @if not $indigo-theme {
+        @if $NOT-indigo-theme {
             &::after {
                 height: rem(2px);
                 background: var-get($theme, 'interim-bottom-line-color');
@@ -525,7 +530,7 @@
     }
 
     %form-group-bundle--disabled {
-        @if not $indigo-theme {
+        @if $NOT-indigo-theme {
             box-shadow: none;
         } @else {
             &::after {
@@ -545,7 +550,7 @@
     }
 
     %form-group-bundle--box-disabled {
-        @if not $indigo-theme {
+        @if $NOT-indigo-theme {
             background: var-get($theme, 'box-disabled-background');
         } @else {
             background: transparent;
@@ -738,6 +743,7 @@
         padding-block-start: pad-inline(rem(18px, map.get($base-scale-size, 'compact')), rem(18px, map.get($base-scale-size, 'cosy')), rem(18px, map.get($base-scale-size, 'comfortable')));
     }
 
+    // Base Label
     %form-group-label {
         @include ellipsis();
         position: absolute;
@@ -763,6 +769,7 @@
         margin-top: rem(-4px);
     }
 
+    // Base box label
     %form-group-label--box {
         transform: translateY(0);
 
@@ -772,6 +779,7 @@
         }
     }
 
+    // Base box border
     %form-group-label--border {
         display: inline-block;
         position: relative;
@@ -949,12 +957,11 @@
     }
 
     %form-group-label-textarea--float {
-        @if $variant != 'bootstrap' {
+        @if $NOT-bootstrap-theme and $NOT-indigo-theme {
             transform: translateY(rem(-5px)) !important;
             margin-bottom: auto !important;
         }
     }
-
 
     %form-group-label--fixed {
         transition: color $transition-timing;
@@ -1132,11 +1139,97 @@
         }
     }
 
+    %form-group-border {
+        height: rem(2px);
+        grid-column: 1 / -1;
+        align-self: end;
+        transform: scaleX(0);
+        transform-origin: center;
+        background: var-get($theme, 'focused-secondary-color');
+        z-index: 1;
+    }
+
+    %form-group-border--focus {
+        transform: scaleX(1);
+        transition: transform $transition-timing;
+    }
+
+    %form-group-border--hidden {
+        display: none;
+    }
+
+    %form-group-helper {
+        position: relative;
+        display: flex;
+        padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
+        justify-content: space-between;
+
+        > * {
+            margin-inline-end: rem(8px);
+
+            &:last-child {
+                margin-inline-end: 0;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %form-group-help--cosy {
+        padding-top: rem(6px, map.get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-help--compact {
+        padding-top: rem(6px, map.get($base-scale-size, 'compact'));
+    }
+
+    %form-group-helper--box {
+        margin-inline-start: $hint--box-margin; /* 16px, base is 12px */
+        margin-inline-end: $hint--box-margin; /* 16px, base is 12px */
+    }
+
+    %form-group-helper--success {
+        color: var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-helper--error {
+        color: var-get($theme, 'error-secondary-color');
+    }
+
+    %form-group-helper-item {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    %form-group-helper-item--start {
+        justify-content: flex-start;
+    }
+
+    %form-group-helper-item--end {
+        justify-content: flex-end;
+    }
+
+    %form-group-helper-item--start,
+    %form-group-helper-item--end {
+        width: 100%;
+    }
+
+    %form-group-prefix--disabled,
+    %form-group-suffix--disabled {
+        color: var-get($theme, 'disabled-text-color');
+    }
+    // BASE END
+
+    // ==============================================
 
     // INDIGO START
     %form-group-bundle--indigo {
         transition: background $transition-timing, box-shadow $transition-timing;
         box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
+        padding-top: 0;
 
         &:hover,
         &:focus {
@@ -1156,10 +1249,12 @@
         --margin-start: #{sizable(rem(18px, map.get($base-scale-size, 'comfortable')), rem(18px, map.get($base-scale-size, 'comfortable')), rem(18px, map.get($base-scale-size, 'comfortable')))};
         margin-block-start: calc(var(--margin-start) * -1);
     }
-
     // INDIGO END
 
+    // ==============================================
+
     // FLUENT START
+    // Input
     %igx-input-group-fluent {
         display: flex;
         flex-direction: column;
@@ -1247,6 +1342,7 @@
         }
     }
 
+    // Bundle
     %form-group-bundle-required--fluent {
         &::before {
             content: '*';
@@ -1254,12 +1350,6 @@
             top: rem(-8px);
             inset-inline-start: calc(100% + #{rem(4px)});
             color: var-get($theme, 'error-secondary-color');
-        }
-    }
-
-    %fluent-label + %form-group-bundle-required--fluent {
-        &::before {
-            display: none;
         }
     }
 
@@ -1312,6 +1402,13 @@
         border-color: var-get($theme, 'success-secondary-color');
     }
 
+    %form-group-bundle-main--fluent {
+        padding-inline: rem(8px);
+        align-self: center;
+        cursor: default;
+    }
+
+    // Native input
     %fluent-input {
         padding: 0;
         margin: 0;
@@ -1322,24 +1419,9 @@
         color: var-get($theme, 'disabled-text-color');
     }
 
-    %form-group-bundle-main--fluent {
-        padding-inline: rem(8px);
-        align-self: center;
-        cursor: default;
-    }
-
-    igx-prefix + %form-group-bundle-main--fluent,
-    [igx-prefix] + %form-group-bundle-main--fluent {
-        @if $variant != 'fluent' {
-            padding-inline-start: 0;
-        }
-    }
-
-    %fluent-placeholder-label {
-        transform: translateY(0) scale(1);
-    }
-
+    // Label
     %fluent-label {
+        display: inline-flex;
         padding: rem(5px) 0;
         font-size: rem(14px, 16px);
         font-weight: 600;
@@ -1349,10 +1431,19 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        color: color(null, 'gray', 800);
+
+        @if $fluent-theme {
+            color: color(null, 'gray', 800);
+        }
 
         [dir='rtl'] & {
             transform-origin: top right;
+        }
+    }
+
+    %fluent-label + %form-group-bundle-required--fluent {
+        &::before {
+            display: none;
         }
     }
 
@@ -1375,6 +1466,18 @@
     %fluent-label-focused {
         color: color(null, 'gray', 800);
         transform: translateY(0) scale(1);
+    }
+
+    %fluent-placeholder-label {
+        transform: translateY(0) scale(1);
+    }
+
+    // Suffix & prefix
+    igx-prefix + %form-group-bundle-main--fluent,
+    [igx-prefix] + %form-group-bundle-main--fluent {
+        @if $variant != 'fluent' {
+            padding-inline-start: 0;
+        }
     }
 
     %form-group-prefix-fluent {
@@ -1403,12 +1506,7 @@
     %form-group-prefix-fluent-search,
     %form-group-suffix-fluent-search {
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
-    }
 
-    %form-group-prefix-fluent,
-    %form-group-suffix-fluent,
-    %form-group-prefix-fluent-search,
-    %form-group-suffix-fluent-search {
         igx-icon {
             width: var(--igx-icon-size, #{rem(18px)});
             height: var(--igx-icon-size, #{rem(18px)});
@@ -1426,113 +1524,12 @@
     %fluent-upload-button {
         padding: 0;
     }
-
     // FLUENT END
 
-    %form-group-border {
-        height: rem(2px);
-        margin-bottom: rem(-2px);
-        grid-column: 1 / -1;
-        transform: scaleX(0);
-        transform-origin: center;
-        background: var-get($theme, 'focused-secondary-color');
-        z-index: 1;
-    }
-
-    %form-group-border--focus {
-        transform: scaleX(1);
-        transition: transform $transition-timing;
-    }
-
-    %form-group-border--hidden {
-        display: none;
-    }
-
-    %form-group-helper {
-        position: relative;
-        display: flex;
-        padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
-        justify-content: space-between;
-
-        > * {
-            margin-inline-end: rem(8px);
-
-            &:last-child {
-                margin-inline-end: 0;
-            }
-        }
-
-        &:empty {
-            display: none;
-        }
-    }
-
-    %form-group-help--cosy {
-        padding-top: rem(6px, map.get($base-scale-size, 'cosy'));
-    }
-
-    %form-group-help--compact {
-        padding-top: rem(6px, map.get($base-scale-size, 'compact'));
-    }
-
-    %form-group-helper--box {
-        margin-inline-start: $hint--box-margin; /* 16px, base is 12px */
-        margin-inline-end: $hint--box-margin; /* 16px, base is 12px */
-    }
-
-    %form-group-helper--success {
-        color: var-get($theme, 'success-secondary-color');
-    }
-
-    %form-group-helper--error {
-        color: var-get($theme, 'error-secondary-color');
-    }
-
-    %form-group-helper-item {
-        display: flex;
-        align-items: center;
-        position: relative;
-    }
-
-    %form-group-helper-item--start {
-        justify-content: flex-start;
-    }
-
-    %form-group-helper-item--end {
-        justify-content: flex-end;
-    }
-
-    %form-group-helper-item--start,
-    %form-group-helper-item--end {
-        width: 100%;
-    }
-
-    %form-group-prefix--disabled,
-    %form-group-suffix--disabled {
-        color: var-get($theme, 'disabled-text-color');
-    }
-
-    // Bootstrap //
     // ==============================================
 
-    // Suffix / prefix
-    %form-group-prefix--bootstrap {
-        color: var-get($theme, 'input-prefix-color');
-        background: var-get($theme, 'input-prefix-background');
-    }
-
-    %form-group-suffix--bootstrap {
-        color: var-get($theme, 'input-suffix-color');
-        background: var-get($theme, 'input-suffix-background');
-    }
-
-    %form-group-prefix--disabled-bootstrap,
-    %form-group-suffix--disabled-bootstrap {
-        border: rem(1px) solid var-get($theme, 'disabled-border-color');
-        color: var-get($theme, 'disabled-text-color');
-    }
-
-    // Input group
+    // === BOOTSTRAP START === //
+    // Input group host
     %form-group-display--bootstrap {
         igx-prefix,
         [igxPrefix] {
@@ -1701,7 +1698,6 @@
         }
     }
 
-
     // Native Input
     %bootstrap-input {
         height: auto;
@@ -1750,6 +1746,22 @@
 
     %bootstrap-input--search {
         transform: translateY(0);
+    }
+
+    // Suffix & prefix
+    %form-group-prefix--bootstrap {
+        color: var-get($theme, 'input-prefix-color');
+        background: var-get($theme, 'input-prefix-background');
+    }
+    %form-group-suffix--bootstrap {
+        color: var-get($theme, 'input-suffix-color');
+        background: var-get($theme, 'input-suffix-background');
+    }
+
+    %form-group-prefix--disabled-bootstrap,
+    %form-group-suffix--disabled-bootstrap {
+        border: rem(1px) solid var-get($theme, 'disabled-border-color');
+        color: var-get($theme, 'disabled-text-color');
     }
 
     // Upload button for file type input

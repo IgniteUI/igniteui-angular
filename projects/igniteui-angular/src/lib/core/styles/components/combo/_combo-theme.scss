@@ -112,10 +112,6 @@
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
-
-        .igx-input-group__bundle {
-            padding-block-start: 0;
-        }
     }
 
     %igx-combo__content {
