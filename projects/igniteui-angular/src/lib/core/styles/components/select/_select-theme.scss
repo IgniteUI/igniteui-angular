@@ -17,12 +17,6 @@
 /// @param {Color} $toggle-button-foreground [null] - The select toggle button background color.
 /// @param {Color} $toggle-button-foreground-hover [null] - The select toggle button background color on hover.
 /// @param {Color} $toggle-button-foreground-focus [null] - TThe select toggle button background color when the select is focused.
-/// @param {Color} $clear-button-background [null] - The select clear button background color.
-/// @param {Color} $clear-button-background-hover [null] - The select clear button background color on hover.
-/// @param {Color} $clear-button-background-focus [null] - The select clear button background color when the select is focused.
-/// @param {Color} $clear-button-foreground [null] - The select toggle clear background color.
-/// @param {Color} $clear-button-foreground-hover [null] - The select clear button background color on hover.
-/// @param {Color} $clear-button-foreground-focus [null] - TThe select clear button background color when the select is focused.
 /// @example scss Change the select empty list background
 ///   $my-select-theme: igx-select-theme($empty-list-background);
 ///   // Pass the theme to the css-vars mixin
@@ -35,12 +29,6 @@
     $toggle-button-foreground: null,
     $toggle-button-foreground-hover: null,
     $toggle-button-foreground-focus: null,
-    $clear-button-background: null,
-    $clear-button-background-hover: null,
-    $clear-button-background-focus: null,
-    $clear-button-foreground: null,
-    $clear-button-foreground-hover: null,
-    $clear-button-foreground-focus: null,
 ) {
     $name: 'igx-select';
     $selector: 'igx-select';
@@ -64,12 +52,6 @@
         toggle-button-foreground: $toggle-button-foreground,
         toggle-button-foreground-hover: $toggle-button-foreground-hover,
         toggle-button-foreground-focus: $toggle-button-foreground-focus,
-        clear-button-background: $clear-button-background,
-        clear-button-background-hover: $clear-button-background-hover,
-        clear-button-background-focus: $clear-button-background-focus,
-        clear-button-foreground: $clear-button-foreground,
-        clear-button-foreground-hover: $clear-button-foreground-hover,
-        clear-button-foreground-focus: $clear-button-foreground-focus,
     ));
 }
 
@@ -96,25 +78,6 @@
         &:focus {
             background: var-get($theme, 'toggle-button-background-focus');
             color: var-get($theme, 'toggle-button-foreground-focus') !important;
-        }
-    }
-
-    %igx-select__clear-button {
-        background: var-get($theme, 'clear-button-background');
-        color: var-get($theme, 'clear-button-foreground');
-
-        @if $variant == 'bootstrap' {
-            border-right: rem(1px) solid var(--border-color);
-        }
-
-        &:hover {
-            background: var-get($theme, 'clear-button-background-hover');
-            color: var-get($theme, 'clear-button-foreground-hover');
-        }
-
-        &:focus {
-            background: var-get($theme, 'clear-button-background-focus');
-            color: var-get($theme, 'clear-button-foreground-focus');
         }
     }
 }
