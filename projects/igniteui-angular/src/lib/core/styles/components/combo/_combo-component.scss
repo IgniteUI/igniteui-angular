@@ -41,8 +41,12 @@
             @extend %igx-combo__empty !optional;
         }
 
-        @include e(add-item) {
-            @extend %igx-combo__add-item !optional;
+        @include e(clear-button) {
+            @extend %igx-combo__clear-button !optional;
+        }
+
+        @include e(toggle-button) {
+            @extend %igx-combo__toggle-button !optional;
         }
     }
 }

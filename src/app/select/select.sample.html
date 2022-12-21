@@ -1,95 +1,107 @@
-<div class="sampleWrapper">
-    <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
-    <div class="sample-actions">
-        <button igxButton="raised" (click)="btnAddBr()">+ white space</button>
-        <button igxButton="raised" (click)="btnRemoveBr()">- white space</button>
-    </div>
-    <igx-select #displayDensitySelect
-    required
-    [placeholder]="'Pick One'"
-    [(ngModel)]="value"
-    [ngModelOptions]="{updateOn: 'blur'}" #selectModel="ngModel"
-    required
-    (opening)="testOnOpening($event)"
-    (opened)="testOnOpened()"
-    (closing)="testOnClosing($event)"
-    (closed)="testOnClosed()"
-    (selectionChanging)="testOnSelection($event)"
-    [disabled]="isDisabled"
-    [displayDensity]="'cosy'">
-        <label igxLabel>Sample Label</label>
-        <igx-prefix igxPrefix>
-            <igx-icon>alarm</igx-icon>
-        </igx-prefix>
-        <igx-select-item>None</igx-select-item>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
-            {{ item.field }}
-        </igx-select-item>
-        <ng-template igxSelectHeader>
-            <div class="custom-select-header" (click)="headerFootedClick($event);">iHEADER</div>
-        </ng-template>
-        <ng-template igxSelectFooter>
-            <div class="custom-select-footer" (click)="headerFootedClick($event);">
-                <div>iFOOTER</div>
-                <button igxButton="raised" (click)="btnClick()">Click Me!</button>
-            </div>
-        </ng-template>
-    </igx-select>
-    <div>Model: {{selectModel.value}}</div>
+<div class="select-sample">
+    <section class="select-sample__section">
+        <h1 class="select-sample__title">Select with ngModel, set items OnInit</h1>
 
-    <div>
-        <h4>Display Density</h4>
         <igx-buttongroup (selected)="setDensity($event)">
-            <button igxButton value="compact">Compact</button>
+            <button igxButton value="comfortable" [selected]="true">Comfortable</button>
             <button igxButton value="cosy">Cosy</button>
-            <button igxButton value="comfortable">Comfortable</button>
+            <button igxButton value="compact">Compact</button>
         </igx-buttongroup>
-    </div>
 
-    <h4 class="sample-title">Select - declare items in html template</h4>
-    <igx-select #select2
-                [placeholder]="'Pick One'"
-                [value]="value"
-                (opening)="testOnOpening($event)"
-                (opened)="testOnOpened()"
-                (closing)="testOnClosing($event)"
-                (closed)="testOnClosed()"
-                (selectionChanging)="testOnSelection($event)"
-                [disabled]="false"
-                [type]="'box'">
-        <label igxLabel>Sample Label</label>
-        <igx-prefix>
-            <igx-icon>favorite</igx-icon>
-        </igx-prefix>
-        <igx-suffix>
-            <igx-icon>alarm</igx-icon>
-        </igx-suffix>
-        <igx-hint>I am a Hint</igx-hint>
-        <igx-select-item>None</igx-select-item>
-        <igx-select-item [value]="1">Sofia</igx-select-item>
-        <igx-select-item [value]="2">London</igx-select-item>
-        <igx-select-item [value]="3">Paris</igx-select-item>
-        <igx-select-item [value]="4">New York</igx-select-item>
-    </igx-select>
+        <div class="select-sample__row">
+            <button igxButton="raised" (click)="handleOpen()">Open</button>
+            <button igxButton="outlined" (click)="handleClose()">Close</button>
+            <button igxButton (click)="isDisabled = !isDisabled">toggle Disable</button>
+            <button igxButton (click)="openCustomOverlaySettings()">open Custom Overlay</button>
+        </div>
 
-    <h4 class="sample-title">Select - disabled item</h4>
-    <igx-select #select3
-                [placeholder]="'Pick One'"
-                (opening)="testOnOpening($event)"
-                (opened)="testOnOpened()"
-                (closing)="testOnClosing($event)"
-                (closed)="testOnClosed()"
-                (selectionChanging)="testOnSelection($event)"
-                [disabled]="false"
-                [type]="'border'">
-        <igx-hint>I am a Hint</igx-hint>
-        <igx-select-item [value] = "'Apple'" [disabled]="true">Apple</igx-select-item>
-        <igx-select-item [value] = "'Orange'">Orange</igx-select-item>
-        <igx-select-item [value] = "'Grapes'">Grapes</igx-select-item>
-        <igx-select-item [value] = "'Banana'">Banana</igx-select-item>
-    </igx-select>
+        <igx-select #displayDensitySelect
+                    required
+                    [placeholder]="'Pick One'"
+                    [(ngModel)]="value"
+                    [ngModelOptions]="{updateOn: 'blur'}"
+                    #selectModel="ngModel"
+                    (opening)="testOnOpening($event)"
+                    (opened)="testOnOpened()"
+                    (closing)="testOnClosing($event)"
+                    (closed)="testOnClosed()"
+                    (selectionChanging)="testOnSelection($event)"
+                    [disabled]="isDisabled"
+                    [displayDensity]="'comfortable'">
+            <label igxLabel>Sample Label</label>
+            <igx-prefix igxPrefix>
+                <igx-icon>alarm</igx-icon>
+            </igx-prefix>
+            <igx-select-item>None</igx-select-item>
+            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+                {{ item.field }}
+            </igx-select-item>
+            <ng-template igxSelectHeader>
+                <div class="custom-select-header" (click)="headerFootedClick($event);">
+                    Header content
+                </div>
+            </ng-template>
+            <ng-template igxSelectFooter>
+                <div class="custom-select-footer" (click)="headerFootedClick($event);">
+                    <div>Footer content</div>
+                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                </div>
+            </ng-template>
+        </igx-select>
+        <div>Model: {{selectModel.value}}</div>
+    </section>
 
-    <h4 class="sample-title">Select - using Groups</h4>
+    <section class="select-sample__section">
+        <h1 class="select-sample__title">Select - declare items in html template</h1>
+        <igx-select #select2
+                    [placeholder]="'Pick One'"
+                    [value]="value"
+                    (opening)="testOnOpening($event)"
+                    (opened)="testOnOpened()"
+                    (closing)="testOnClosing($event)"
+                    (closed)="testOnClosed()"
+                    (selectionChanging)="testOnSelection($event)"
+                    [disabled]="false"
+                    [type]="'box'">
+            <label igxLabel>Sample Label</label>
+            <igx-prefix>
+                <igx-icon>favorite</igx-icon>
+            </igx-prefix>
+            <igx-suffix>
+                <igx-icon>alarm</igx-icon>
+            </igx-suffix>
+            <igx-hint>I am a Hint</igx-hint>
+            <igx-select-item>None</igx-select-item>
+            <igx-select-item [value]="1">Sofia</igx-select-item>
+            <igx-select-item [value]="2">London</igx-select-item>
+            <igx-select-item [value]="3">Paris</igx-select-item>
+            <igx-select-item [value]="4">New York</igx-select-item>
+        </igx-select>
+    </section>
+
+    <section class="select-sample__section">
+        <h1 class="select-sample__title">Select - disabled item</h1>
+        <igx-select #select3
+                    [placeholder]="'Pick One'"
+                    (opening)="testOnOpening($event)"
+                    (opened)="testOnOpened()"
+                    (closing)="testOnClosing($event)"
+                    (closed)="testOnClosed()"
+                    (selectionChanging)="testOnSelection($event)"
+                    [disabled]="false"
+                    [type]="'border'">
+            <label igxLabel>Sample Label</label>
+            <igx-icon igxPrefix>favorite</igx-icon>
+            <igx-hint>I am a Hint</igx-hint>
+            <igx-select-item [value] = "'Apple'" [disabled]="true">Apple</igx-select-item>
+            <igx-select-item [value] = "'Orange'">Orange</igx-select-item>
+            <igx-select-item [value] = "'Grapes'">Grapes</igx-select-item>
+            <igx-select-item [value] = "'Banana'">Banana</igx-select-item>
+        </igx-select>
+    </section>
+
+    <section class="select-sample__section">
+    <h1 class="select-sample__title">Select - using Groups</h1>
     <igx-select #select4
                 [placeholder]="'Pick One'"
                 [value]="value"
@@ -110,53 +122,47 @@
             <igx-select-item value="4">InsideGroup3</igx-select-item>
         </igx-select-item-group>
     </igx-select>
+    </section>
 
-    <div class="sample-actions">
-        <button igxButton="raised" (click)="handleOpen()">Open</button>
-        <button igxButton="raised" (click)="handleClose()">Close</button>
-        <button igxButton="raised" (click)="isDisabled = !isDisabled">toggle Disable</button>
-        <button igxButton="raised" (click)="openCustomOverlaySettings()">open Custom Overlay</button>
-    </div>
-    <section>
-        <h3 class="sample-title"> Select in a Form</h3>
-        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
-            <p>
-                <igx-select formControlName="citiesSelect" #selectReactive [placeholder]="'City'">
-                    <label igxLabel>Choose a city</label>
-                    <igx-prefix igxPrefix>
-                        <igx-icon>alarm</igx-icon>
-                    </igx-prefix>
-                    <igx-select-item *ngFor="let city of cities; let inx=index" [value]="city">
-                        {{ city }}
-                    </igx-select-item>
-                </igx-select>
-            </p>
-            <p>
-                <button type="submit" igxButton="raised" [disabled]="!reactiveForm.valid">Submit</button>
-            </p>
+    <section class="select-sample__section">
+        <h1 class="select-sample__title"> Select in a Form</h1>
+        <form class="select-sample__form" [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <igx-select formControlName="citiesSelect" #selectReactive [placeholder]="'City'">
+                <label igxLabel>Choose a city</label>
+                <igx-prefix igxPrefix>
+                    <igx-icon>alarm</igx-icon>
+                </igx-prefix>
+                <igx-select-item *ngFor="let city of cities; let inx=index" [value]="city">
+                    {{ city }}
+                </igx-select-item>
+            </igx-select>
+            <button type="submit" igxButton="raised" [disabled]="!reactiveForm.valid">Submit</button>
         </form>
-        <h4 class="sample-title">Select - dynamically change required</h4>
-        <form>
-            <igx-switch [(ngModel)]="selectRequired" [ngModelOptions]="{standalone: true}">Required</igx-switch>
-            <div class="select-wrapper">
-                <igx-select #model="ngModel"
-                        [(ngModel)]="selected"
-                        [ngModelOptions]="{standalone: true}"
-                        [required]="selectRequired"
-                        [placeholder]="'Pick One'">
-                    <label igxLabel>Favorite fruit</label>
-                    <igx-prefix>Fruit</igx-prefix>
-                    <igx-select-item> None </igx-select-item>
-                    <igx-select-item *ngFor="let fruit of fruits" [value]="fruit">
-                        {{fruit}}
-                    </igx-select-item>
-                </igx-select>
-                <div class="output">Selected: {{selected}}</div>
+    </section>
 
-                <div class="output">Valid: {{model.valid}}</div>
-            </div>
-            <button igxButton (click)="selectBanana()">Select Banana</button>
-            <button igxButton (click)="setToNull()">Set To Null</button>
+    <section class="select-sample__section">
+        <h1 class="select-sample__title">Select - dynamically change required</h1>
+        <div class="select-sample__row">
+            <button igxButton="raised" (click)="selectBanana()">Select Banana</button>
+            <button igxButton="raised" (click)="setToNull()">Set To Null</button>
+        </div>
+        <igx-switch [(ngModel)]="selectRequired" [ngModelOptions]="{standalone: true}">Required</igx-switch>
+
+        <form class="select-sample__form">
+            <igx-select #model="ngModel"
+                    [(ngModel)]="selected"
+                    [ngModelOptions]="{standalone: true}"
+                    [required]="selectRequired"
+                    [placeholder]="'Pick One'">
+                <label igxLabel>Favorite fruit</label>
+                <igx-prefix>Fruit</igx-prefix>
+                <igx-select-item> None </igx-select-item>
+                <igx-select-item *ngFor="let fruit of fruits" [value]="fruit">
+                    {{fruit}}
+                </igx-select-item>
+            </igx-select>
+            <div>Selected: {{selected}}</div>
+            <div>Valid: {{model.valid}}</div>
         </form>
     </section>
 </div>

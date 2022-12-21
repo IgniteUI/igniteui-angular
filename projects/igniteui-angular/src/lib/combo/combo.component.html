@@ -17,7 +17,7 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-input-group__clear-button"
+    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClearItems($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -26,7 +26,7 @@
             clear
         </igx-icon>
     </igx-suffix>
-    <igx-suffix class="igx-input-group__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>

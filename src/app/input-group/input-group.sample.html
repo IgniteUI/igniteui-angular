@@ -1,5 +1,6 @@
 <div class="input-group-sample">
     <form #testForm="ngForm" class="input-group-sample-form">
+
         <div class="form__fields-settings">
             <strong>Select density</strong>
             <igx-buttongroup
@@ -7,7 +8,8 @@
                 [values]="displayDensities"
                 (selected)="selectDensity($event)"
             ></igx-buttongroup>
-            <strong>Select Input type</strong>
+            <strong class="no-bm">Select Input type</strong>
+            <small class="attention">Works only for material</small>
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="inputTypes"
@@ -18,77 +20,108 @@
             <strong>Enable Required</strong>
             <igx-switch name="requiredswitch" [(ngModel)]="isRequired"></igx-switch>
         </div>
+
         <div class="form__fields">
-            <!-- input type search - suffix/prefix -->
-            <igx-input-group class="material-theme" [displayDensity]="density">
-                <label igxLabel>Always Material & Use Input type TOKEN</label>
-                <igx-icon igxPrefix>search</igx-icon>
-                <input
-                    name="inputSearchTest"
-                    #input
-                    [(ngModel)]="inputValue"
-                    igxInput
-                    placeholder="Search"
-                    [disabled]="isDisabled"
-                />
-                <igx-suffix
-                    *ngIf="input.value.length > 0"
-                    (click)="input.value = input.defaultValue"
-                >
-                <igx-icon>clear</igx-icon>
-                </igx-suffix>
-            </igx-input-group>
-            <br />
-
-            <!-- text field -->
-            <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
-                <label for="fluentfirstName" igxLabel>Always Material - set type</label>
-                <igx-prefix>
-                    <igx-icon>face</igx-icon>
-                </igx-prefix>
-                <input
-                    name="inputTest"
-                    placeholder="Placeholder"
-                    [required]="isRequired"
-                    id="fluentfirstName"
-                    igxInput
-                    [(ngModel)]="inputValue"
-                    [disabled]="isDisabled"
-                />
-                <igx-icon igxSuffix>data_usage</igx-icon>
-            </igx-input-group>
-            <br />
-
-            <!-- text field prefix/suffix -->
-            <igx-input-group [displayDensity]="density" [type]="inputType" theme="fluent">
-                <label igxLabel>Web address</label>
-                <igx-prefix>
-                    http://
-                </igx-prefix>
-                <input
-                    name="inputWebTest"
-                    [required]="isRequired"
-                    [disabled]="isDisabled"
-                    [(ngModel)]="inputValue"
-                    igxInput
-                    type="text"
-                />
-                <igx-suffix>
-                    .com
-                </igx-suffix>
-                <igx-hint>Type your web address</igx-hint>
-            </igx-input-group>
-            <br />
-
-
             <input
-                name="inputWebTestSimple"
-                [required]="isRequired"
-                [disabled]="isDisabled"
-                [(ngModel)]="inputValue"
-                type="text"
+                    name="inputWebTestSimple"
+                    placeholder="Native input web test simple"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    [(ngModel)]="inputValue"
+                    type="text"
             />
-            <br />
+
+            <div class="border-wrapper">
+                <p class="input-group-sample__info">
+                    The inputs inside the colored block preserve their theme no mather which global theme you set.
+                    The idea is to see how for example <strong>fluent</strong> input will look in
+                    <strong>bootstrap</strong> theme.
+                    <br>
+                    <br>
+                    Also only material theme has input types, so don't expect fluent and bootstrap
+                    inputs to change by selecting any of the material types (border,line, adn box).
+                    This is true also for the <strong>search input</strong>, there is no such thing as border-search or line-search.
+                </p>
+
+                <!-- input Always Fluent -->
+                <igx-input-group [displayDensity]="density" [type]="inputType" theme="fluent">
+                    <label igxLabel>Always fluent</label>
+                    <igx-prefix>
+                        http://
+                    </igx-prefix>
+                    <input
+                            name="inputWebTest"
+                            [required]="isRequired"
+                            [disabled]="isDisabled"
+                            [(ngModel)]="inputValue"
+                            igxInput
+                            type="text"
+                    />
+                    <igx-suffix>
+                        .com
+                    </igx-suffix>
+                    <igx-hint>Enter valid web address</igx-hint>
+                </igx-input-group>
+
+                <!-- input Always Bootstrap -->
+                <igx-input-group [displayDensity]="density" [type]="inputType" theme="bootstrap">
+                    <label igxLabel>Always Bootstrap</label>
+                    <igx-prefix>
+                        http://
+                    </igx-prefix>
+                    <input
+                            name="inputWebTest"
+                            [required]="isRequired"
+                            [disabled]="isDisabled"
+                            [(ngModel)]="inputValue"
+                            igxInput
+                            type="text"
+                    />
+                    <igx-suffix>
+                        .com
+                    </igx-suffix>
+                    <igx-hint>Enter valid web address</igx-hint>
+                </igx-input-group>
+
+                <!-- input-search input Always Material -->
+                <igx-input-group class="material-theme" [displayDensity]="density">
+                    <label igxLabel>Always Material & Use Input type TOKEN</label>
+                    <igx-icon igxPrefix>search</igx-icon>
+                    <input
+                            name="inputSearchTest"
+                            #input
+                            [(ngModel)]="inputValue"
+                            igxInput
+                            placeholder="Search"
+                            [disabled]="isDisabled"
+                    />
+                    <igx-suffix
+                            *ngIf="input.value.length > 0"
+                            (click)="input.value = input.defaultValue"
+                    >
+                        <igx-icon>clear</igx-icon>
+                    </igx-suffix>
+                </igx-input-group>
+
+                <!-- input Always Material -->
+                <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
+                    <label for="fluentfirstName" igxLabel>Always Material - set type</label>
+                    <igx-prefix>
+                        <igx-icon>face</igx-icon>
+                    </igx-prefix>
+                    <input
+                            name="inputTest"
+                            placeholder="Placeholder"
+                            [required]="isRequired"
+                            id="fluentfirstName"
+                            igxInput
+                            [(ngModel)]="inputValue"
+                            [disabled]="isDisabled"
+                    />
+                    <igx-icon igxSuffix>data_usage</igx-icon>
+                </igx-input-group>
+
+            </div>
 
             <!-- text field with validation -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -107,7 +140,6 @@
                 />
                 <igx-hint>Type your web address</igx-hint>
             </igx-input-group>
-            <br />
 
             <!-- input type file -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -123,7 +155,7 @@
                 <igx-hint>Upload a file to begin...</igx-hint>
             </igx-input-group>
 
-            <br />
+
             <!-- textarea -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Textarea</label>
@@ -141,7 +173,7 @@
                     <igx-icon>phone</igx-icon>
                 </igx-suffix>
             </igx-input-group>
-            <br />
+
 
             <!-- Text field mask -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -156,7 +188,7 @@
                     type="text"
                 />
             </igx-input-group>
-            <br />
+
 
             <!-- date field -->
             <igx-date-picker *ngIf="!isRequired" #datePicker
@@ -185,7 +217,7 @@
                 </igx-picker-toggle>
                 <igx-picker-clear></igx-picker-clear>
             </igx-date-picker>
-            <br />
+
 
             <!-- Read only -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -199,7 +231,7 @@
                     placeholder="Placeholder"
                 />
             </igx-input-group>
-            <br />
+
 
             <!-- Select field -->
             <igx-select
@@ -218,7 +250,7 @@
                 <igx-select-item>Paris</igx-select-item>
                 <igx-select-item>New York</igx-select-item>
             </igx-select>
-            <br />
+
             <igx-checkbox required [(ngModel)]="isRequired" name="requiredCheckbox">Required Toggle #2</igx-checkbox>
         </div>
     </form>

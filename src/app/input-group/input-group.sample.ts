@@ -29,7 +29,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public isRequired = true;
     public isDisabled = false;
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
-    public density: DisplayDensity = 'comfortable';
+    public density: DisplayDensity = 'compact';
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];

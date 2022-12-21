@@ -245,6 +245,12 @@
         ));
     }
 
+    @if is-used('igx-select', $exclude) {
+        @include select(select-theme(
+            $schema: $schema
+        ));
+    }
+
     @if is-used('igx-date-picker', $exclude) {
         @include date-picker(calendar-theme(
             $schema: $schema

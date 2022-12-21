@@ -29,6 +29,7 @@
 @use '../components/chip/chip-component' as chip;
 @use '../components/column-actions/column-actions-component' as column-actions;
 @use '../components/combo/combo-component' as combo;
+@use '../components/select/select-component' as select;
 @use '../components/charts/category-chart-component' as category-chart;
 @use '../components/charts/data-chart-component' as data-chart;
 @use '../components/charts/doughnut-chart-component' as doughnut-chart;
@@ -123,6 +124,7 @@
     @include chip.component();
     @include column-actions.component();
     @include combo.component();
+    @include select.component();
     @include category-chart.component();
     @include data-chart.component();
     @include doughnut-chart.component();

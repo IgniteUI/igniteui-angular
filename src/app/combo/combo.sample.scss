@@ -6,7 +6,7 @@
     margin: 0 auto;
     padding: 32px 16px;
 
-    &__column,
+    &__section,
     &__row {
         display: flex;
         gap: 16px
@@ -20,8 +20,16 @@
         }
     }
 
-    &__column {
+    &__section {
         flex-direction: column;
+        padding: 16px;
+        border: 1px dashed #ddd;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 
     &__title {
@@ -34,6 +42,12 @@
 
     strong {
         color: #606;
+    }
+
+    igx-simple-combo,
+    igx-combo {
+        max-width: 100%;
+        min-width: 30%;
     }
 }
 

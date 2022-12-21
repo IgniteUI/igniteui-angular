@@ -1,0 +1,120 @@
+@use 'sass:map';
+@use '../../base' as *;
+@use '../../themes/schemas' as *;
+
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @requires $light-schema
+/// @param {Color} $toggle-button-background [null] - The select toggle button background color.
+/// @param {Color} $toggle-button-background-hover [null] - The select toggle button background color on hover.
+/// @param {Color} $toggle-button-background-focus [null] - The select toggle button background color when the select is focused.
+/// @param {Color} $toggle-button-foreground [null] - The select toggle button background color.
+/// @param {Color} $toggle-button-foreground-hover [null] - The select toggle button background color on hover.
+/// @param {Color} $toggle-button-foreground-focus [null] - TThe select toggle button background color when the select is focused.
+/// @param {Color} $clear-button-background [null] - The select clear button background color.
+/// @param {Color} $clear-button-background-hover [null] - The select clear button background color on hover.
+/// @param {Color} $clear-button-background-focus [null] - The select clear button background color when the select is focused.
+/// @param {Color} $clear-button-foreground [null] - The select toggle clear background color.
+/// @param {Color} $clear-button-foreground-hover [null] - The select clear button background color on hover.
+/// @param {Color} $clear-button-foreground-focus [null] - TThe select clear button background color when the select is focused.
+/// @example scss Change the select empty list background
+///   $my-select-theme: igx-select-theme($empty-list-background);
+///   // Pass the theme to the css-vars mixin
+///   @include css-vars($my-select-theme);
+@function select-theme(
+    $schema: $light-schema,
+    $toggle-button-background: null,
+    $toggle-button-background-hover: null,
+    $toggle-button-background-focus: null,
+    $toggle-button-foreground: null,
+    $toggle-button-foreground-hover: null,
+    $toggle-button-foreground-focus: null,
+    $clear-button-background: null,
+    $clear-button-background-hover: null,
+    $clear-button-background-focus: null,
+    $clear-button-foreground: null,
+    $clear-button-foreground-hover: null,
+    $clear-button-foreground-focus: null,
+) {
+    $name: 'igx-select';
+    $selector: 'igx-select';
+
+    $select-schema: ();
+
+    @if map.has-key($schema, $name) {
+        $select-schema: map.get($schema, $name);
+    } @else {
+        $select-schema: $schema;
+    }
+
+    $theme: digest-schema($select-schema);
+
+    @return extend($theme, (
+        name: $name,
+        selector: $selector,
+        toggle-button-background: $toggle-button-background,
+        toggle-button-background-hover: $toggle-button-background-hover,
+        toggle-button-background-focus: $toggle-button-background-focus,
+        toggle-button-foreground: $toggle-button-foreground,
+        toggle-button-foreground-hover: $toggle-button-foreground-hover,
+        toggle-button-foreground-focus: $toggle-button-foreground-focus,
+        clear-button-background: $clear-button-background,
+        clear-button-background-hover: $clear-button-background-hover,
+        clear-button-background-focus: $clear-button-background-focus,
+        clear-button-foreground: $clear-button-foreground,
+        clear-button-foreground-hover: $clear-button-foreground-hover,
+        clear-button-foreground-focus: $clear-button-foreground-focus,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+@mixin select($theme) {
+    @include css-vars($theme);
+
+    $variant: map.get($theme, variant);
+
+    %igx-select {
+        position: relative;
+        display: block;
+    }
+
+    %igx-select__toggle-button {
+        background: var-get($theme, 'toggle-button-background');
+        color: var-get($theme, 'toggle-button-foreground') !important;
+
+        &:hover {
+            background: var-get($theme, 'toggle-button-background-hover');
+            color: var-get($theme, 'toggle-button-foreground-hover') !important;
+        }
+
+        &:focus {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus') !important;
+        }
+    }
+
+    %igx-select__clear-button {
+        background: var-get($theme, 'clear-button-background');
+        color: var-get($theme, 'clear-button-foreground');
+
+        @if $variant == 'bootstrap' {
+            border-right: rem(1px) solid var(--border-color);
+        }
+
+        &:hover {
+            background: var-get($theme, 'clear-button-background-hover');
+            color: var-get($theme, 'clear-button-foreground-hover');
+        }
+
+        &:focus {
+            background: var-get($theme, 'clear-button-background-focus');
+            color: var-get($theme, 'clear-button-foreground-focus');
+        }
+    }
+}

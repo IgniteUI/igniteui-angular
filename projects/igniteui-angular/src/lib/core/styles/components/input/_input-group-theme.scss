@@ -31,6 +31,7 @@
 /// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
 /// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
+/// @param {Color} $box-background-hover [null] - The background color on hover of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
 /// @param {Color} $border-background [null] - The background color of an input group of type border.
 /// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
@@ -55,9 +56,10 @@
     $schema: $light-schema,
     $elevations: null,
 
+    $box-background: null,
+    $box-background-hover: null,
+    $box-disabled-background: null,
     $box-border-radius: null,
-    $border-border-radius: null,
-    $search-border-radius: null,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -79,14 +81,13 @@
     $focused-border-color: null,
     $disabled-border-color: null,
 
-    $box-background: null,
-    $box-disabled-background: null,
+    $border-border-radius: null,
     $border-background: null,
     $border-disabled-background: null,
 
     $search-background: null,
     $search-disabled-background: null,
-
+    $search-border-radius: null,
     $search-resting-shadow: null,
     $search-hover-shadow: null,
     $search-disabled-shadow: null,
@@ -94,7 +95,6 @@
     $success-secondary-color: null,
     $warning-secondary-color: null,
     $error-secondary-color: null,
-
     $success-shadow-color: null,
     $error-shadow-color: null,
 
@@ -138,6 +138,10 @@
 
     @if not($placeholder-color) and $box-background {
         $placeholder-color: text-contrast($box-background);
+    }
+
+    @if not($placeholder-color) and $box-background-hover {
+        $placeholder-color: text-contrast($box-background-hover);
     }
 
     @if not($placeholder-color) and $search-background {
@@ -191,6 +195,7 @@
         focused-border-color: $focused-border-color,
         disabled-border-color: $disabled-border-color,
         box-background: $box-background,
+        box-background-hover: $box-background-hover,
         box-disabled-background: $box-disabled-background,
         border-background: $border-background,
         border-disabled-background: $border-disabled-background,
@@ -422,10 +427,6 @@
         overflow: hidden;
     }
 
-    %form-group-display--hover {
-        cursor: pointer;
-    }
-
     %form-group-display--disabled {
         user-select: none;
         color: var-get($theme, 'disabled-text-color') !important;
@@ -448,28 +449,22 @@
         display: grid;
         grid-template-columns: auto 1fr auto;
         max-width: 100%;
+        padding-block-start: pad-inline(map.get($bundle-padding-top, 'compact'), map.get($bundle-padding-top, 'cosy'), map.get($bundle-padding-top, 'comfortable'));
+        font-size: 1rem;
+        grid-area: 1 / 2 / span 1 / span 2;
 
         @if $variant != 'material' {
             height: var(--size);
         }
 
-        @if $material-theme or $indigo-theme {
-            padding-block-start: pad-inline(map.get($bundle-padding-top, 'compact'), map.get($bundle-padding-top, 'cosy'), map.get($bundle-padding-top, 'comfortable'));
-        }
-
-        font-size: 1rem;
-        grid-area: 1 / 2 / span 1 / span 2;
-
-        @if $material-theme or $indigo-theme {
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: 0%;
-                width: 100%;
-                height: rem(1px);
-                background: var-get($theme, 'idle-bottom-line-color');
-                transition: height $transition-timing, background-color $transition-timing;
-            }
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0%;
+            width: 100%;
+            height: rem(1px);
+            background: var-get($theme, 'idle-bottom-line-color');
+            transition: height $transition-timing, background-color $transition-timing;
         }
     }
 
@@ -477,35 +472,42 @@
         // padding 0 i needed here because of the search variant
         padding: 0 !important;
         background: var-get($theme, 'box-background');
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'idle-bottom-line-color');
+
+        &:hover {
+            background: var-get($theme, 'box-background-hover');
+        }
+    }
+
+    %form-group-bundle--box-focus {
+        background: var-get($theme, 'box-background-hover');
+    }
+
+    %form-group-bundle--box-disabled {
+        @if $NOT-indigo-theme {
+            background: var-get($theme, 'box-disabled-background');
+        } @else {
+            background: transparent;
+        }
     }
 
     %form-group-bundle--hover {
         cursor: pointer;
 
-        @if $NOT-indigo-theme {
-            &::after {
-                height: rem(2px);
-                background: var-get($theme, 'hover-bottom-line-color');
-            }
-        } @else {
-            &::after {
-                height: rem(1px);
-                background: var-get($theme, 'hover-bottom-line-color');
-            }
+        &::after {
+            height: rem(1px);
+            background: var-get($theme, 'hover-bottom-line-color');
         }
     }
 
     %form-group-bundle--focus {
         caret-color: var-get($theme, 'focused-secondary-color');
+
         @if $NOT-indigo-theme {
             &::after {
-                height: rem(2px);
                 background: var-get($theme, 'interim-bottom-line-color');
             }
         } @else {
             &::after {
-                height: rem(2px);
                 background: var-get($theme, 'focused-bottom-line-color');
             }
         }
@@ -547,13 +549,9 @@
         [dir='rtl'] & {
             background-image: linear-gradient(to right, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         }
-    }
 
-    %form-group-bundle--box-disabled {
-        @if $NOT-indigo-theme {
-            background: var-get($theme, 'box-disabled-background');
-        } @else {
-            background: transparent;
+        &::after {
+            display: none;
         }
     }
 
@@ -562,6 +560,7 @@
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
         min-width: var(--min-width);
         min-height: 100%;
+        overflow: hidden;
     }
 
     %form-group-bundle--border {
@@ -747,7 +746,8 @@
     %form-group-label {
         @include ellipsis();
         position: absolute;
-        // width: 100%;
+        max-width: 100%;
+        padding-inline-end: rem(4px);
         transform: translateY(50%); /* 8px, base is 16px */
         line-height: 1 !important;
         height: rem(18px);
@@ -781,6 +781,7 @@
 
     // Base box border
     %form-group-label--border {
+        padding-inline-end: 0;
         display: inline-block;
         position: relative;
         background: transparent;
@@ -800,7 +801,6 @@
     }
 
     %form-group-label--float {
-        overflow: visible;
         transform: translateY(-50%);
         font-size: rem(12px);
         margin-top: auto;
@@ -843,7 +843,7 @@
         }
 
         %igx-input-group__notch {
-            border-block-start: transparent !important;
+            //border-block-start: transparent !important;
             border-block-end-color: var-get($theme, 'focused-border-color');
         }
 
@@ -1025,7 +1025,10 @@
         overflow: hidden;
         height: #{sizable(rem(32px, map.get($base-scale-size, 'compact')), rem(32px, map.get($base-scale-size, 'cosy')), rem(32px, map.get($base-scale-size, 'comfortable')))};
         color: var-get($theme, 'filled-text-color');
-        margin-block-start: rem(3px);
+
+        @if $NOT-bootstrap-theme {
+            margin-block-start: rem(3px);
+        }
 
         span {
             @include ellipsis();
@@ -1140,6 +1143,9 @@
     }
 
     %form-group-border {
+        position: absolute;
+        width: 100%;
+        inset-inline-end: 0;
         height: rem(2px);
         grid-column: 1 / -1;
         align-self: end;
@@ -1154,6 +1160,7 @@
         transition: transform $transition-timing;
     }
 
+    // Hides the border for border type input
     %form-group-border--hidden {
         display: none;
     }
@@ -1228,17 +1235,18 @@
     // INDIGO START
     %form-group-bundle--indigo {
         transition: background $transition-timing, box-shadow $transition-timing;
+        background: var-get($theme, 'box-background');
         box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
         padding-top: 0;
 
         &:hover,
         &:focus {
-            background: var-get($theme, 'box-background');
+            background: var-get($theme, 'box-background-hover');
         }
     }
 
     %indigo--box-focused {
-        background: var-get($theme, 'box-background');
+        background: var-get($theme, 'box-background-hover');
     }
 
     %form-group-helper--indigo--disabled {
@@ -1403,7 +1411,7 @@
     }
 
     %form-group-bundle-main--fluent {
-        padding-inline: rem(8px);
+        padding-inline-start: rem(8px);
         align-self: center;
         cursor: default;
     }
@@ -1470,14 +1478,6 @@
 
     %fluent-placeholder-label {
         transform: translateY(0) scale(1);
-    }
-
-    // Suffix & prefix
-    igx-prefix + %form-group-bundle-main--fluent,
-    [igx-prefix] + %form-group-bundle-main--fluent {
-        @if $variant != 'fluent' {
-            padding-inline-start: 0;
-        }
     }
 
     %form-group-prefix-fluent {
@@ -1618,6 +1618,10 @@
         padding: 0;
         box-shadow: none;
         z-index: 0;
+
+        &::after {
+            display: none;
+        }
     }
 
     %form-group-bundle--bootstrap-hover {

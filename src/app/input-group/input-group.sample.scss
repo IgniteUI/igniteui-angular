@@ -1,5 +1,31 @@
 .input-group-sample {
     padding: 16px;
+
+    &__info {
+        font-size: 14px;
+        line-height: 20px;
+        margin: 0;
+        padding: 16px;
+        background: hsla(var(--ig-gray-50));
+        border-left: 4px solid #09f;
+    }
+
+    .no-bm {
+        margin-bottom: 0 !important;
+    }
+
+    .attention {
+        color: darkred;
+    }
+}
+
+
+.border-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border: 1px dashed hsla(var(--ig-primary-500));
+    padding: 16px;
 }
 
 .input-group-sample-form {
@@ -7,11 +33,16 @@
     flex-wrap: wrap;
     max-width: 900px;
     margin: 0 auto;
+    padding: 16px;
+    border: 1px dashed hsla(var(--ig-gray-200));
 }
 
 .form__fields {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     margin-left: 32px;
+    gap: 16px;
 }
 
 .form__fields-settings {

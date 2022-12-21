@@ -1,0 +1,28 @@
+@use '../../../base' as *;
+@use '../light/select' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark select schema.
+/// @type {Map}
+/// @requires $light-select
+$dark-select: $light-select;
+
+/// Generates a dark fluent select schema.
+/// @type {Map}
+/// @requires $fluent-select
+$dark-fluent-select: $fluent-select;
+
+/// Generates a dark bootstrap select schema.
+/// @type {Map}
+/// @requires $bootstrap-select
+$dark-bootstrap-select: extend($bootstrap-select);
+
+/// Generates a dark indigo select schema.
+/// @type {Map}
+/// @requires $indigo-select
+$dark-indigo-select: $indigo-select;

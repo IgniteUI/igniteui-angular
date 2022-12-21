@@ -19,13 +19,12 @@
 /// @param {Color} $toggle-button-foreground [null] - The combo toggle button background color.
 /// @param {Color} $toggle-button-foreground-hover [null] - The combo toggle button background color on hover.
 /// @param {Color} $toggle-button-foreground-focus [null] - TThe combo toggle button background color when the combo is focused.
-
-/// @param {Color} $toggle-button-background [null] - The combo clear button background color.
-/// @param {Color} $toggle-button-background-hover [null] - The combo clear button background color on hover.
-/// @param {Color} $toggle-button-background-focus [null] - The combo clear button background color when the combo is focused.
-/// @param {Color} $toggle-button-foreground [null] - The combo toggle clear background color.
-/// @param {Color} $toggle-button-foreground-hover [null] - The combo clear button background color on hover.
-/// @param {Color} $toggle-button-foreground-focus [null] - TThe combo clear button background color when the combo is focused.
+/// @param {Color} $clear-button-background [null] - The combo clear button background color.
+/// @param {Color} $clear-button-background-hover [null] - The combo clear button background color on hover.
+/// @param {Color} $clear-button-background-focus [null] - The combo clear button background color when the combo is focused.
+/// @param {Color} $clear-button-foreground [null] - The combo toggle clear background color.
+/// @param {Color} $clear-button-foreground-hover [null] - The combo clear button background color on hover.
+/// @param {Color} $clear-button-foreground-focus [null] - TThe combo clear button background color when the combo is focused.
 /// @requires $light-schema
 /// @example scss Change the combo empty list background
 ///   $my-combo-theme: igx-checkbox-theme($empty-list-background);
@@ -42,7 +41,6 @@
     $toggle-button-foreground: null,
     $toggle-button-foreground-hover: null,
     $toggle-button-foreground-focus: null,
-
     $clear-button-background: null,
     $clear-button-background-hover: null,
     $clear-button-background-focus: null,
@@ -75,7 +73,6 @@
         toggle-button-foreground: $toggle-button-foreground,
         toggle-button-foreground-hover: $toggle-button-foreground-hover,
         toggle-button-foreground-focus: $toggle-button-foreground-focus,
-
         clear-button-background: $clear-button-background,
         clear-button-background-hover: $clear-button-background-hover,
         clear-button-background-focus: $clear-button-background-focus,
@@ -88,6 +85,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 @mixin combo($theme) {
     @include css-vars($theme);
+
+    $variant: map.get($theme, variant);
 
     %igx-combo {
         position: relative;
@@ -112,6 +111,11 @@
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
+
+        .igx-input-group__bundle {
+            padding-block-start: 0;
+            height: auto;
+        }
     }
 
     %igx-combo__content {
@@ -143,7 +147,7 @@
         font-size: rem(13px);
     }
 
-    %igx-input-group__toggle-button {
+    %igx-combo__toggle-button {
         background: var-get($theme, 'toggle-button-background');
         color: var-get($theme, 'toggle-button-foreground') !important;
 
@@ -161,6 +165,10 @@
     %igx-combo__clear-button {
         background: var-get($theme, 'clear-button-background');
         color: var-get($theme, 'clear-button-foreground');
+
+        @if $variant == 'bootstrap' {
+            border-right: rem(1px) solid var(--border-color);
+        }
 
         &:hover {
             background: var-get($theme, 'clear-button-background-hover');

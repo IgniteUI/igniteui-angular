@@ -17,14 +17,11 @@
         // BASE START
         @extend %form-group-display !optional;
 
-        &:hover {
-            @extend	%form-group-display--hover !optional;
-        }
-
         @include e(label) {
             @extend %form-group-label !optional;
         }
 
+        // Base bundle
         @include e(bundle) {
             @extend %form-group-bundle !optional;
 
@@ -106,7 +103,7 @@
             @extend %form-group-border !optional;
         }
 
-        // This is on the textarea itself
+        // Textarea element
         @include e(textarea) {
             @extend %form-group-input !optional;
             @extend %form-group-textarea !optional;
@@ -120,7 +117,7 @@
             }
         }
 
-        // This mod is on the input-group host
+        // Textarea modifier
         @include m(textarea-group) {
 
             @include e(bundle) {
@@ -336,6 +333,12 @@
 
             @include e(hint) {
                 @extend %form-group-helper--box !optional;
+            }
+        }
+
+        @include mx(box, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle--box-focus !optional;
             }
         }
 

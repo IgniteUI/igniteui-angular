@@ -1,39 +1,55 @@
 <div class="combo-sample">
+    <section class="combo-sample__section">
+        <igx-buttongroup>
+            <button igxButton (click)="setDensity('comfortable')">Comfortable</button>
+            <button igxButton (click)="setDensity('cosy')">Cosy</button>
+            <button igxButton (click)="setDensity('compact')">Compact</button>
+        </igx-buttongroup>
 
-    <!-- Simple combo -->
-    <div class="combo-sample__column">
-        <h1 class="combo-sample__title">Combos and input mixed in a form</h1>
+        <!-- Simple combo -->
+        <igx-simple-combo #playgroundCombo [allowCustomValues]="true" [displayDensity]="'comfortable'" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+                          required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
+                          [disabled]="isDisabled">
+            <label igxLabel>Falsy unique values (simple-combo)</label>
+            <igx-hint>Select a unique falsy value</igx-hint>
+        </igx-simple-combo>
+    </section>
 
-        <form class="combo-sample__column">
+    <section class="combo-sample__section">
+        <h1 class="combo-sample__title">Normal and simple combo next to each other</h1>
+        <form class="combo-sample__form">
             <div class="combo-sample__row combo-sample__row--stretch">
-                <igx-input-group class="input-container" [displayDensity]="'comfortable'">
-                    <input [disabled]="isDisabled" igxInput name="fristName" placeholder="Simple input" />
-                    <igx-hint>Input helper text</igx-hint>
-                </igx-input-group>
-                <igx-simple-combo type="line" #simpleCombo class="input-container" [placeholder]="'Simple combo'" name="anyName"
-                  #comboModel="ngModel" [(ngModel)]="singleValue" minlength="2" required [data]="items"
-                  [displayDensity]="'comfortable'" [displayKey]="valueKeyVar" [disabled]="isDisabled"
-                  [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
-                    <label igxLabel>States</label>
-                    <igx-hint>Please select the state you've visited</igx-hint>
-                </igx-simple-combo>
-                <igx-combo [displayDensity]="'comfortable'" [allowCustomValues]="true" [placeholder]="'Normal combo'" name="falsyValueCombo"
-                   [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
-                   [disabled]="isDisabled">
-                    <label igxLabel>Falsy unique values (combo)</label>
+                <!-- Simple combo -->
+                <igx-combo [allowCustomValues]="true"
+                           [displayDensity]="'comfortable'"
+                           name="falsyValueCombo"
+                           required
+                           [data]="uniqueFalsyData"
+                           displayKey="field"
+                           valueKey="value"
+                           [disabled]="isDisabled">
+                    <label igxLabel>Falsy unique values (Normal combo)</label>
                     <igx-hint>Select a unique falsy value</igx-hint>
                 </igx-combo>
+                <igx-simple-combo  #simpleCombo class="input-container"
+                           name="anyName" #comboModel="ngModel"
+                           [displayDensity]="'comfortable'"
+                           [(ngModel)]="singleValue"
+                           minlength="2"
+                           required
+                           [data]="items"
+                           [displayKey]="valueKeyVar"
+                           [disabled]="isDisabled"
+                           [valueKey]="valueKeyVar"
+                           [groupKey]="valueKeyVar ? 'region' : ''" >
+                    <label igxLabel>If there is an ellipsis the required indicator is gone Lorem ipsum dolor sit</label>
+                    <igx-hint>Hint text.</igx-hint>
+                </igx-simple-combo>
             </div>
-            <igx-simple-combo [displayDensity]="'comfortable'" [allowCustomValues]="true" [placeholder]="'Falsy Values'" name="falsyValueCombo"
-                              [width]="'100%'" required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
-                              [disabled]="isDisabled">
-                <label igxLabel>Falsy unique values (simple-combo)</label>
-                <igx-hint>Select a unique falsy value</igx-hint>
-            </igx-simple-combo>
         </form>
-    </div>
+    </section>
 
-    <div class="combo-sample__column">
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Combo Template Form</h1>
         <div class="combo-sample__row">
             <button igxButton="raised" (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
@@ -46,15 +62,15 @@
             <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
                 [(ngModel)]="values1" minlength="2" required [data]="items" [filterable]="filterableFlag"
                 [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
-                [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                [groupKey]="valueKeyVar ? 'region' : ''">
                 <label igxLabel>States</label>
                 <igx-hint>Please select the states you've visited</igx-hint>
             </igx-combo>
         </form>
-    </div>
+    </section>
 
 
-    <div class="combo-sample__column">
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Reactive Form</h1>
         <form class="input-group-form" [formGroup]="user">
             <div class="container">
@@ -65,9 +81,9 @@
                 </igx-combo>
             </div>
         </form>
-    </div>
+    </section>
 
-    <div class="combo-sample__column">
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Remote Binding</h1>
         <igx-combo #remoteCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
             [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product(s)"
@@ -78,6 +94,7 @@
         </igx-combo>
         <igx-toast #loadingToast></igx-toast>
 
+        <!-- Simple combo -->
         <igx-simple-combo #remoteSimpleCombo class="input-container" [itemsMaxHeight]="250" [itemHeight]="48"
                           [data]="rData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'" placeholder="Product"
                           (dataPreLoad)="onSimpleComboDataLoading()" (closing)="onSimpleComboClosing()"
@@ -86,12 +103,12 @@
                           (searchInputUpdate)="onSimpleComboSearchInputUpdate($event)">
             <label igxLabel>Simple Combo</label>
         </igx-simple-combo>
-    </div>
+    </section>
 
-    <div class="combo-sample__column">
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Template items</h1>
 
-        <div class="combo-sample__row">
+        <div class="combo-sample__row combo-sample__row--buttons">
             <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
             <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
         </div>
@@ -129,7 +146,7 @@
             (selectionChanging)="handleSelectionChange($event)" [data]="items"
             [allowCustomValues]="customValuesFlag"
             [autoFocusSearch]="autoFocusSearch" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
-            [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+            [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''">
             <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">
                     <div class="display-value--main">{{display[key]}}</div>
@@ -165,5 +182,5 @@
                 <div class="display-value--sub">In Region {{display.region}}</div>
             </div>
         </ng-template>
-    </div>
+    </section>
 </div>
