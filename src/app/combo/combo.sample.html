@@ -7,7 +7,7 @@
         </igx-buttongroup>
 
         <!-- Simple combo -->
-        <igx-simple-combo #playgroundCombo [allowCustomValues]="true" [displayDensity]="'comfortable'" [placeholder]="'Falsy Values'" name="falsyValueCombo"
+        <igx-simple-combo #densityCombo [allowCustomValues]="true" [displayDensity]="'comfortable'" [placeholder]="'Falsy Values'" name="falsyValueCombo"
                           required [data]="uniqueFalsyData" displayKey="field" valueKey="value"
                           [disabled]="isDisabled">
             <label igxLabel>Falsy unique values (simple-combo)</label>
@@ -27,6 +27,7 @@
                            [data]="uniqueFalsyData"
                            displayKey="field"
                            valueKey="value"
+                           type="border"
                            [disabled]="isDisabled">
                     <label igxLabel>Falsy unique values (Normal combo)</label>
                     <igx-hint>Select a unique falsy value</igx-hint>
@@ -37,6 +38,7 @@
                            [(ngModel)]="singleValue"
                            minlength="2"
                            required
+                           type="border"
                            [data]="items"
                            [displayKey]="valueKeyVar"
                            [disabled]="isDisabled"
@@ -74,7 +76,7 @@
         <h1 class="combo-sample__title">Reactive Form</h1>
         <form class="input-group-form" [formGroup]="user">
             <div class="container">
-                <igx-combo #combo1 class="input-container" type="box" [itemsMaxHeight]="130" [data]="genres"
+                <igx-combo #combo1 type="line" class="input-container" [itemsMaxHeight]="130" [data]="genres"
                     [valueKey]="'type'" [displayKey]="'type'" formControlName="genres"
                     searchPlaceholder="Search...">
                     <label igxLabel>States</label>
@@ -142,11 +144,16 @@
             <button igxButton (click)="changeOverlaySettings(0)">Default (Auto)</button>
         </igx-buttongroup>
         <igx-combo #playgroundCombo [placeholder]="'Locations'"
-            [showSearchCaseIcon]='true' (addition)="handleAddition($event)"
-            (selectionChanging)="handleSelectionChange($event)" [data]="items"
+            [showSearchCaseIcon]='true'
+            (addition)="handleAddition($event)"
+            (selectionChanging)="handleSelectionChange($event)"
+            [data]="items"
             [allowCustomValues]="customValuesFlag"
-            [autoFocusSearch]="autoFocusSearch" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
-            [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''">
+            [autoFocusSearch]="autoFocusSearch"
+            [filterable]="filterableFlag"
+            [displayKey]="valueKeyVar"
+            [valueKey]="valueKeyVar"
+            [groupKey]="valueKeyVar ? 'region' : ''">
             <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">
                     <div class="display-value--main">{{display[key]}}</div>

@@ -15,6 +15,8 @@
 /// @prop {Map} $toggle-button-foreground-hover [contrast-color: ('gray', 300)] - The select toggle button background color on hover.
 /// @prop {Map} $toggle-button-foreground-focus [contrast-color: ('gray', 400)] - TThe select toggle button background color when the select is focused.
 $light-select: (
+    variant:'material',
+
     toggle-button-background: (
         color: ('gray', 300),
     ),
@@ -43,14 +45,29 @@ $light-select: (
 /// Generates a fluent select schema.
 /// @type {Map}
 /// @requires {Map} $light-select
-$fluent-select: $light-select;
+$fluent-select: extend(
+    $light-select,
+    (
+        variant:'fluent',
+    )
+);
 
 /// Generates a bootstrap select schema.
 /// @type {Map}
 /// @requires {Map} $light-select
-$bootstrap-select: $light-select;
+$bootstrap-select: extend(
+    $light-select,
+    (
+        variant:'bootstrap',
+    )
+);
 
 /// Generates an indigo select schema.
 /// @type {Map}
 /// @requires {Map} $light-select
-$indigo-select: $light-select;
+$indigo-select: extend(
+    $light-select,
+    (
+        variant:'indigo-design',
+    )
+);

@@ -24,6 +24,8 @@
 /// @prop {Map} $clear-button-foreground-hover [contrast-color: ('gray', 300)] - The combo clear button background color on hover.
 /// @prop {Map} $clear-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo clear button background color when the combo is focused.
 $light-combo: (
+    variant:'material',
+
     empty-list-background: (
         color: 'surface'
     ),
@@ -89,7 +91,12 @@ $light-combo: (
 /// Generates a fluent combo schema.
 /// @type {Map}
 /// @requires {Map} $light-combo
-$fluent-combo: $light-combo;
+$fluent-combo: extend(
+    $light-combo,
+    (
+        variant:'fluent',
+    )
+);
 
 /// Generates a bootstrap combo schema.
 /// @type {Map}
@@ -100,6 +107,8 @@ $fluent-combo: $light-combo;
 $bootstrap-combo: extend(
     $light-combo,
     (
+        variant:'bootstrap',
+
         empty-list-background: (
             color: ('surface')
         ),
@@ -126,6 +135,8 @@ $bootstrap-combo: extend(
 $indigo-combo: extend(
     $light-combo,
     (
+        variant:'indigo-design',
+
         clear-button-background:  transparent,
 
         clear-button-background-hover:  transparent,

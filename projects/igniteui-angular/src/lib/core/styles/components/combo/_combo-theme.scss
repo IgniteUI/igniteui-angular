@@ -134,7 +134,14 @@
         align-items: center;
         position: relative;
         padding: rem(16px);
+        gap: rem(16px);
         background: var-get($theme, 'empty-list-background');
+    }
+
+    %igx-combo__add-item {
+        height: auto !important;
+        background: var-get($theme, 'empty-list-background') !important;
+        justify-content: center !important;
     }
 
     %igx-combo__empty {
@@ -167,7 +174,7 @@
         color: var-get($theme, 'clear-button-foreground');
 
         @if $variant == 'bootstrap' {
-            border-right: rem(1px) solid var(--border-color);
+            border-inline-end: rem(1px) solid var(--border-color);
         }
 
         &:hover {

@@ -141,6 +141,18 @@
             }
         }
 
+        @include mx(textarea-group, filled, border) {
+            @include e(label) {
+                @extend %form-group-label-textarea-border--float !optional;
+            }
+        }
+
+        @include mx(textarea-group, focused, border) {
+            @include e(label) {
+                @extend %form-group-label-textarea-border--float !optional;
+            }
+        }
+
         @include m(focused) {
             @extend %form-group-display !optional;
 

@@ -240,7 +240,7 @@
     $material-theme: $variant == 'material';
     $indigo-theme: $variant == 'indigo-design';
     $fluent-theme: $variant == 'fluent';
-    $bootstrap-theme: $variant != 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
     $NOT-material-theme: $variant != 'material';
     $NOT-indigo-theme: $variant != 'indigo-design';
     $NOT-fluent-theme: $variant != 'fluent';
@@ -471,6 +471,7 @@
     %form-group-bundle--box {
         // padding 0 i needed here because of the search variant
         padding: 0 !important;
+
         background: var-get($theme, 'box-background');
 
         &:hover {
@@ -755,18 +756,11 @@
         will-change: transform;
         transform-origin: top left;
         transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
+        margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
 
         [dir='rtl'] & {
             transform-origin: top right;
         }
-    }
-
-    %form-group-label--cosy {
-        margin-top: rem(-2px);
-    }
-
-    %form-group-label--compact {
-        margin-top: rem(-4px);
     }
 
     // Base box label
@@ -806,6 +800,7 @@
         margin-top: auto;
     }
 
+    %form-group-label--focused-border,
     %form-group-label--filled-border,
     %form-group-label--placeholder-border,
     %form-group-label--file-border {
@@ -843,7 +838,6 @@
         }
 
         %igx-input-group__notch {
-            //border-block-start: transparent !important;
             border-block-end-color: var-get($theme, 'focused-border-color');
         }
 
@@ -956,10 +950,16 @@
         transition-duration: 0ms;
     }
 
+    %form-group-label-textarea-border--float {
+        @if $material-theme {
+            margin-bottom: calc(100% + #{rem(4px)}) !important;
+        }
+    }
+
     %form-group-label-textarea--float {
-        @if $NOT-bootstrap-theme and $NOT-indigo-theme {
+        @if $material-theme {
             transform: translateY(rem(-5px)) !important;
-            margin-bottom: auto !important;
+            margin-block-end: auto !important;
         }
     }
 
@@ -1118,11 +1118,14 @@
 
     %form-group-textarea {
         --size: #{sizable(rem(82px, map.get($base-scale-size, 'compact')), rem(82px, map.get($base-scale-size, 'cosy')), rem(82px, map.get($base-scale-size, 'comfortable')))};
-        min-height: var(--size);
 
+        min-height: var(--size);
         height: auto;
         resize: vertical;
         overflow: hidden;
+        @if $material-theme {
+            margin-block-start: rem(10px) !important;
+        }
 
         // resets typography styles
         line-height: normal !important;
@@ -1254,7 +1257,7 @@
     }
 
     %form-group-textarea--indigo {
-        --margin-start: #{sizable(rem(18px, map.get($base-scale-size, 'comfortable')), rem(18px, map.get($base-scale-size, 'comfortable')), rem(18px, map.get($base-scale-size, 'comfortable')))};
+        --margin-start: #{sizable(rem(18px, map.get($base-scale-size, 'compact')), rem(18px, map.get($base-scale-size, 'cosy')), rem(18px, map.get($base-scale-size, 'comfortable')))};
         margin-block-start: calc(var(--margin-start) * -1);
     }
     // INDIGO END

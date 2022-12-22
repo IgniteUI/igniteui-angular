@@ -8,8 +8,10 @@
                 [values]="displayDensities"
                 (selected)="selectDensity($event)"
             ></igx-buttongroup>
-            <strong class="no-bm">Select Input type</strong>
-            <small class="attention">Works only for material</small>
+            <div>
+                <strong class="no-bm">Select Input type</strong>
+                <small class="attention">Works only for material</small>
+            </div>
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="inputTypes"
@@ -22,15 +24,6 @@
         </div>
 
         <div class="form__fields">
-            <input
-                    name="inputWebTestSimple"
-                    placeholder="Native input web test simple"
-                    [required]="isRequired"
-                    [disabled]="isDisabled"
-                    [(ngModel)]="inputValue"
-                    type="text"
-            />
-
             <div class="border-wrapper">
                 <p class="input-group-sample__info">
                     The inputs inside the colored block preserve their theme no mather which global theme you set.
@@ -39,8 +32,13 @@
                     <br>
                     <br>
                     Also only material theme has input types, so don't expect fluent and bootstrap
-                    inputs to change by selecting any of the material types (border,line, adn box).
+                    inputs to change by selecting any of the material types (border,line, and box).
                     This is true also for the <strong>search input</strong>, there is no such thing as border-search or line-search.
+                    <br>
+                    <br>
+                    It's normal the color of the fixed theme inputs to be different when used in another theme, that's why
+                    for example in indigo theme the material box input has no background, this is because in indigo
+                    the box background is transparent. and is shown only on hover..
                 </p>
 
                 <!-- input Always Fluent -->
@@ -122,6 +120,15 @@
                 </igx-input-group>
 
             </div>
+
+            <input
+                    name="inputWebTestSimple"
+                    placeholder="Native input web test simple"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    [(ngModel)]="inputValue"
+                    type="text"
+            />
 
             <!-- text field with validation -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -256,13 +263,13 @@
     </form>
 
     <div class="input-group-sample-form">
-        <div class="form__fields-settings">
-            <button igxButton (click)="enableText()">Enable Text</button>
-            <button igxButton (click)="disableText()">Disable Text</button>
-            <button igxButton (click)="enableSelect()">Enable Select</button>
-            <button igxButton (click)="disableSelect()">Disable Select</button>
-            <button igxButton (click)="enableForm()">Enable Form</button>
-            <button igxButton (click)="disableForm()">Disable Form</button>
+        <div class="input-group-sample__column-buttons">
+            <button igxButton="raised" [displayDensity]="'compact'" (click)="enableText()">Enable Text</button>
+            <button igxButton="outlined" [displayDensity]="'compact'" (click)="disableText()">Disable Text</button>
+            <button igxButton="raised" [displayDensity]="'compact'" (click)="enableSelect()">Enable Select</button>
+            <button igxButton="outlined" [displayDensity]="'compact'" (click)="disableSelect()">Disable Select</button>
+            <button igxButton="raised" [displayDensity]="'compact'" (click)="enableForm()">Enable Form</button>
+            <button igxButton="outlined" [displayDensity]="'compact'" (click)="disableForm()">Disable Form</button>
         </div>
         <form [formGroup]="myForm" class="form__fields">
             <igx-input-group>

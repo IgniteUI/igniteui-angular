@@ -41,6 +41,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('remoteCombo')
     public remoteCombo: IgxComboComponent;
 
+    @ViewChild('densityCombo')
+    public densityCombo: IgxComboComponent;
+
     @ViewChild('remoteSimpleCombo')
     public remoteSimpleCombo: IgxSimpleComboComponent;
 
@@ -245,7 +248,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public setDensity(density: DisplayDensity) {
-        this.igxCombo.displayDensity = density;
+        this.densityCombo.displayDensity = density;
     }
 
     public handleSelectionChange(event: IComboSelectionChangingEventArgs) {

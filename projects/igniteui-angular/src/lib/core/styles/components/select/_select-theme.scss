@@ -59,8 +59,6 @@
 @mixin select($theme) {
     @include css-vars($theme);
 
-    $variant: map.get($theme, variant);
-
     %igx-select {
         position: relative;
         display: block;
