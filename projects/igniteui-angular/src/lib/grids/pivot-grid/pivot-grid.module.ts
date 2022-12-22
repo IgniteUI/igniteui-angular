@@ -2,7 +2,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { IgxAccordionModule } from '../../accordion/accordion.module';
 import { IgxDragDropModule } from "../../directives/drag-drop/drag-drop.directive";
 import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.module";
-import { IgxGridComponent } from "../grid/grid.component";
 import { IgxGridModule } from "../grid/grid.module";
 import { IgxListModule } from '../../list/list.component';
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";

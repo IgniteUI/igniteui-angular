@@ -65,7 +65,7 @@
 
     $theme: digest-schema($dock-manager-schema);
 
-    @return extend($theme, (name: $name), keywords($rest));
+    @return extend($theme, (name: $name, prefix: 'igc'), keywords($rest));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
