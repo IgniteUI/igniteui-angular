@@ -1135,8 +1135,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public rowDimensionWidthToPixels(dim: IPivotDimension): number {
-        if (this.shouldGenerate) {
+    public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit: boolean = false): number {
+        if (!ignoreBeforeInit && this.shouldGenerate) {
             return 0;
         }
 
@@ -1195,6 +1195,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.columnGroupStates.set(col.field, newState);
         this.toggleRowGroup(col, newState);
         this.reflow();
+    }
+
+    protected override getColumnWidthSum(): number {
+        let colSum = super.getColumnWidthSum();
+        colSum += this.rowDimensions.map(dim => this.rowDimensionWidthToPixels(dim, true)).reduce((prev, cur) => prev + cur, 0);
+        return colSum;
     }
 
     /**
