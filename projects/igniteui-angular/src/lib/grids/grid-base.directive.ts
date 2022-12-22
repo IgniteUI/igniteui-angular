@@ -6942,26 +6942,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
-                    expansionRowIndexes.push(key);
+                    const rowIndex = this.gridAPI.get_rec_index_by_id(key, this.dataView);
+                    expansionRowIndexes.push(rowIndex);
                 }
             }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
-                        expansionRowIndexes.forEach(row => {
-                            let rowIndex;
-                            if (!isNaN(row.ID)) {
-                                rowIndex = Number(row.ID);
-                            } else {
-                                rowIndex = Number(row);
-                            }
-
-                            if (updatedKey > Number(rowIndex)) {
-                                updatedKey--;
+                        let subtract = 0;
+                        expansionRowIndexes.forEach((row) => {
+                            if (updatedKey > Number(row)) {
+                                subtract++;
                             }
                         });
-                        selectionCollection.set(updatedKey, value);
+                        selectionCollection.set(updatedKey - subtract, value);
                     }
                 }
             } else if (activeEl) {
