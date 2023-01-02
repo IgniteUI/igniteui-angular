@@ -10,7 +10,6 @@ import {
     Inject,
     Injectable,
     Injector,
-    NgModuleRef,
     NgZone, OnDestroy, Type
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';

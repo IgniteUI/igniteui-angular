@@ -170,7 +170,7 @@ describe('IgxCalendar - ', () => {
         expect(() => calendar.timedelta(startDate, 'nope', 1)).toThrow();
     });
 
-    describe('', () => {
+    describe('Basic', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({

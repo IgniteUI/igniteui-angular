@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, CellType } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
@@ -28,13 +28,12 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         let treeGrid: IgxTreeGridComponent;
         let gridContent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             gridContent = GridFunctions.getGridContent(fix);
-        }));
+        });
 
         it('should navigate with arrow keys', () => {
             spyOn(treeGrid.selected, 'emit').and.callThrough();
@@ -396,15 +395,13 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         let gridContent: DebugElement;
         const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             gridContent = GridFunctions.getGridContent(fix);
             setupGridScrollDetection(fix, treeGrid);
-            tick(16);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

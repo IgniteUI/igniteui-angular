@@ -1128,10 +1128,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
 
-    private hg_verticalScrollHandler(event) {
+    private hg_verticalScrollHandler() {
         this.scrollTop = this.verticalScrollContainer.scrollPosition;
     }
-    private hg_horizontalScrollHandler(event) {
+    private hg_horizontalScrollHandler() {
         this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }

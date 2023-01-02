@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -22,7 +21,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
@@ -38,12 +37,12 @@ describe('IgxGrid - Cell selection #grid', () => {
         let grid: IgxGridComponent;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         it('Should be able to select a range with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
@@ -463,12 +462,12 @@ describe('IgxGrid - Cell selection #grid', () => {
         let grid;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         it('Should select a single cell', () => {
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
@@ -922,14 +921,14 @@ describe('IgxGrid - Cell selection #grid', () => {
         let detect;
         let gridContent: DebugElement;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -1683,13 +1682,13 @@ describe('IgxGrid - Cell selection #grid', () => {
         let grid;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -1970,9 +1969,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.selectRange(range);
             fix.detectChanges();
 
-            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
-            { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
+            const selectedData = [
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
@@ -1983,13 +1983,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             columnName.resizable = true;
             fix.detectChanges();
 
-            const headers = fix.debugElement.queryAll(By.css('.igx-grid-th'));
-            const headerResArea = headers[2].parent.children[1].nativeElement;
+            const header = GridFunctions.getColumnHeaderByIndex(fix, 2);
+            const headerResArea = GridFunctions.getHeaderResizeArea(header).nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
             tick();
             fix.detectChanges();
 
-            const resizer = headers[2].parent.children[1].children[0].nativeElement;
+            const resizer = GridFunctions.getResizer(fix).nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 200, 15);
             tick();
@@ -2786,11 +2786,11 @@ describe('IgxGrid - Cell selection #grid', () => {
         let fix;
         let grid;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         it('CRUD: selected range should not change when delete row', () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'HireDate' };
@@ -2953,12 +2953,12 @@ describe('IgxGrid - Cell selection #grid', () => {
         let grid: IgxGridComponent;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(CellSelectionNoneComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         it('When click on cell it should not be selected', () => {
             const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
@@ -3112,12 +3112,12 @@ describe('IgxGrid - Cell selection #grid', () => {
         let grid: IgxGridComponent;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(CellSelectionSingleComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
-        }));
+        });
 
         it('When click on cell it should selected', () => {
             const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
