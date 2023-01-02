@@ -259,8 +259,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
+    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName, groupRecord);
         result.push({
             key: 'earliest',
             label: 'Earliest',
@@ -312,7 +312,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
     /**
      * @memberof IgxTimeSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName);
         result.push({
             key: 'earliest',
