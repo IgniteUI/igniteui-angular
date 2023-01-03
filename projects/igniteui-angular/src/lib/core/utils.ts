@@ -788,3 +788,8 @@ export const formatDate = (value: string | number | Date, format: string, locale
 };
 
 export const formatCurrency = new CurrencyPipe(undefined).transform;
+
+/** Converts pixel values to their rem counterparts for a base value */
+export const rem = (value: number | string, base = 16) => {
+    return Number(value) / base;
+}
