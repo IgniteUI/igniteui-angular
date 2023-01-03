@@ -18,6 +18,9 @@ All notable changes for each version of this project will be documented in this 
         * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
         * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
 
+    - `igxSummary` directive `operate` method will expose another optional parameter that would receive the collection of grouped data when `groupBy` has been applied:
+        * - `groupRecord ` - a collection of type `IGroupByRecord`
+
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
