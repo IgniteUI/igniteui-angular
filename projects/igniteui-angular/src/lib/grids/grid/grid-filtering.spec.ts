@@ -823,7 +823,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
     it('should respect pipeArgs when applying global filtering', fakeAsync(() => {
         spyOn(grid.filtering, 'emit');
         spyOn(grid.filteringDone, 'emit');
-        debugger;
 
         const pipeArgs: IColumnPipeArgs = {
             format: 'short'
