@@ -7253,12 +7253,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     }
                 }
             } else if (activeEl) {
+                let subtract = 0;
                 if (expansionRowIndexes.length > 0) {
                     expansionRowIndexes.forEach(row => {
                         if (activeEl.row > Number(row)) {
-                            activeEl.row--;
+                            subtract++;
                         }
                     });
+                    activeEl.row -= subtract;
                 }
             }
         }
