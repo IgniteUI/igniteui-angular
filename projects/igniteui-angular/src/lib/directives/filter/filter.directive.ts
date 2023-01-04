@@ -86,7 +86,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input('igxFilter') public filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef, renderer: Renderer2) {
+    constructor(private element: ElementRef) {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -138,7 +138,7 @@ export class IgxFilterPipe implements PipeTransform {
             }
         }
 
-        return match;        
+        return match;
     }
 
     public transform(items: any[],
@@ -157,7 +157,7 @@ export class IgxFilterPipe implements PipeTransform {
 
         result = items.filter((item: any) => {
             if (!Array.isArray(options.key)) {
-                return this.findMatchByKey(item, options, options.key);            
+                return this.findMatchByKey(item, options, options.key);
             } else {
                 let isMatch = false;
                 options.key.forEach(key => {

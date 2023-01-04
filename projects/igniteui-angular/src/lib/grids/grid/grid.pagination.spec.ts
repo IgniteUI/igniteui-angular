@@ -33,7 +33,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,
                 GridWithUndefinedDataComponent,

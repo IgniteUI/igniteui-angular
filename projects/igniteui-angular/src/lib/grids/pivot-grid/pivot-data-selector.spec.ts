@@ -27,7 +27,7 @@ describe("Pivot data selector", () => {
     let pivotItems: (IPivotDimension | IPivotValue)[];
 
     configureTestSuite(() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [IgxPivotGridTestBaseComponent],
             imports: [NoopAnimationsModule, IgxPivotGridModule],
         });
@@ -340,7 +340,7 @@ describe("Pivot data selector", () => {
         expect(selector.onItemDropped).toHaveBeenCalled();
     });
 
-    it("should reorder items in a panel using drag and drop gestures", () => {        
+    it("should reorder items in a panel using drag and drop gestures", () => {
         // Get all value items
         let items = getPanelItemsByDimensionType(null);
 

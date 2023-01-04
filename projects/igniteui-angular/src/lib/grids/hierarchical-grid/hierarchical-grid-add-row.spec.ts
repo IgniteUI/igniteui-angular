@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxHierarchicalGridModule, IgxHierarchicalGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridActionStripComponent
             ],
@@ -27,12 +27,12 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     }));
 
     describe(' Basic', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             _actionStrip = fixture.componentInstance.actionStrip;
-        }));
+        });
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
             const row = hierarchicalGrid.rowList.first;

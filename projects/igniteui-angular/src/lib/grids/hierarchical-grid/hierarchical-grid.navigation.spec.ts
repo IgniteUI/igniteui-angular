@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions, waitForSelectionChange, waitForGridScroll } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -172,7 +172,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
             UIInteractions.triggerEventHandlerKeyDown('home', childGridContent, false, false, true);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME * 2);
+            await wait(DEBOUNCE_TIME * 3);
 
             const selectedCell = fixture.componentInstance.selectedCell;
             expect(selectedCell.value).toEqual(0);
@@ -194,9 +194,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, true);
-            fixture.detectChanges();
             // wait for parent grid to complete scroll to child cell.
-            await waitForGridScroll(hierarchicalGrid);
+            await wait();
+            fixture.detectChanges();
 
             const selectedCell = fixture.componentInstance.selectedCell;
             expect(selectedCell.value).toBe(9);
@@ -227,8 +227,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, true);
-            fixture.detectChanges();
             await wait();
+            fixture.detectChanges();
 
             const childLastRowCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
             const selectedCell = fixture.componentInstance.selectedCell;
@@ -307,8 +307,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             childGrid.verticalScrollContainer.scrollTo(9);
-            fixture.detectChanges();
             await wait();
+            fixture.detectChanges();
 
             let currScrTop = childGrid.verticalScrollContainer.getScroll().scrollTop;
             expect(currScrTop).toBeGreaterThan(0);
@@ -317,8 +317,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
             GridFunctions.focusCell(fixture, fCell);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, false, false, false);
+            await wait(DEBOUNCE_TIME * 3);
             fixture.detectChanges();
-            await wait();
 
             const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
             const selectedCell = fixture.componentInstance.selectedCell;
@@ -859,7 +859,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
 
             childLastCell = childGrid.selectedCells;
             expect(childLastCell.length).toBe(1);
@@ -949,10 +949,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" (selected)='selected($event)'
-     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
-        <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
-            <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
+    <igx-hierarchical-grid #grid1 [data]="data" (selected)="selected($event)"
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]="true">
+        <igx-row-island (selected)="selected($event)" [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
+            <igx-row-island (selected)="selected($event)" [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`

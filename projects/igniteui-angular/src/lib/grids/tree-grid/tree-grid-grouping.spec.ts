@@ -29,13 +29,13 @@ describe('IgxTreeGrid', () => {
     const DROP_AREA_MSG = 'Drag a column header and drop it here to group by that column.';
     describe(' GroupByArea Standalone', ()=> {
 
-        beforeEach(waitForAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupByAreaTestComponent);
             fix.detectChanges();
 
             groupByArea = fix.componentInstance.groupByArea;
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('loads successfully', fakeAsync(() => {
             const groupByAreaElement = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
@@ -87,14 +87,14 @@ describe('IgxTreeGrid', () => {
 
     describe('', () => {
         let groupingExpressions;
-        beforeEach(waitForAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             groupByArea = fix.componentInstance.groupByArea;
             groupingExpressions = fix.componentInstance.groupingExpressions;
             setupGridScrollDetection(fix, treeGrid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

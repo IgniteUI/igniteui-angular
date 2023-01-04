@@ -1,5 +1,5 @@
 
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../test-utils/tree-grid-components.spec';
@@ -7,8 +7,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-
-
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
@@ -20,7 +18,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
-  };
+    };
+
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -28,17 +27,16 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
                 IgxTreeGridEditActionsPinningComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule, IgxActionStripModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    describe(' Basic', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    describe('Basic', () => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridEditActionsComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             actionStrip = fix.componentInstance.actionStrip;
-        }));
+        });
 
         it('should show action strip "add row" button only for root level rows.', () => {
             actionStrip.show(treeGrid.rowList.first);
