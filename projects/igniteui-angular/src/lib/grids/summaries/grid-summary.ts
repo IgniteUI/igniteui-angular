@@ -61,7 +61,7 @@ export class IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string): IgxSummaryResult[] {
+     *   public operate(data: any[], allData: any[], fieldName: string, groupRecord: IGroupByRecord): IgxSummaryResult[] {
      *     const result = [];
      *     result.push({
      *       key: "test",
@@ -151,8 +151,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string): IgxSummaryResult[] {
-     *     const result = super.operate(data, allData, fieldName);
+     *   public operate(data: any[], allData: any[], fieldName: string, groupRecord: IGroupByRecord): IgxSummaryResult[] {
+     *     const result = super.operate(data, allData, fieldName, groupRecord);
      *     result.push({
      *       key: "avg",
      *       label: "Avg",
@@ -244,8 +244,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string): IgxSummaryResult[] {
-     *     const result = super.operate(data, allData, fieldName);
+     *   public operate(data: any[], allData: any[], fieldName: string, groupRecord: IGroupByRecord): IgxSummaryResult[] {
+     *     const result = super.operate(data, allData, fieldName, groupRecord);
      *     result.push({
      *       key: "deadline",
      *       label: "Deadline Date",
