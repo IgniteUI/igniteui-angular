@@ -110,7 +110,7 @@ export class IgxGridSummaryService {
         return this.summaryHeight;
     }
 
-    public calculateSummaries(rowID, data) {
+    public calculateSummaries(rowID, data, groupRecord) {
         let rowSummaries = this.summaryCacheMap.get(rowID);
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
@@ -122,7 +122,7 @@ export class IgxGridSummaryService {
         this.grid.columns.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
-                    data, column.field, this.grid.locale, column.pipeArgs);
+                    data, column.field, groupRecord, this.grid.locale, column.pipeArgs);
                 rowSummaries.set(column.field, summaryResult);
             }
         });
