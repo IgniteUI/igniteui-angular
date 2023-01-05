@@ -169,6 +169,11 @@
         + igx-grid-header-row {
             margin-top: map.get($grid-toolbar-height, 'comfortable');
         }
+
+        + igx-grid-group-by-area {
+            margin-top: map.get($grid-toolbar-height, 'comfortable');
+            height: auto;
+        }
     }
 
 
@@ -183,6 +188,11 @@
         + igx-grid-header-row {
             margin-top: map.get($grid-toolbar-height, 'cosy');
         }
+
+        + igx-grid-group-by-area {
+            margin-top: map.get($grid-toolbar-height, 'cosy');
+            height: auto;
+        }
     }
 
     %igx-grid-toolbar--compact {
@@ -195,6 +205,11 @@
 
         + igx-grid-header-row {
             margin-top: map.get($grid-toolbar-height, 'compact');
+        }
+
+        + igx-grid-group-by-area {
+            margin-top: map.get($grid-toolbar-height, 'compact');
+            height: auto;
         }
     }
 
