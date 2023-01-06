@@ -1,4 +1,4 @@
-﻿import {
+import {
     Component,
     ContentChildren,
     ChangeDetectorRef,
@@ -24,6 +24,7 @@ import {
 import { IDropBaseEventArgs, IDragBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { rem } from '../core/utils';
 
 export interface IBaseChipsAreaEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -112,24 +113,34 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      *
      * @example
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="300" [height]="10" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
      * ```
      */
-    @HostBinding('style.width.px')
     @Input()
     public width: number;
+
+    /** @hidden @internal */
+    @HostBinding('style.width.rem')
+    public get _widthToRem() {
+        return rem(this.width);
+    }
 
     /**
      * An @Input property that sets the height of the `IgxChipsAreaComponent`.
      *
      * @example
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="300" [height]="10" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
      * ```
      */
-    @HostBinding('style.height.px')
     @Input()
     public height: number;
+
+    /** @hidden @internal */
+    @HostBinding('style.height.rem')
+    public get _heightToRem() {
+        return rem(this.height);
+    }
 
     /**
      * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
