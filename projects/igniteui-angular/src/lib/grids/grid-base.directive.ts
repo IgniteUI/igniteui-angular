@@ -3616,6 +3616,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
+/*         this.overlayService.closing.pipe(filter(() => !this._init), destructor).subscribe((event) => {
+            console.log(event);
+        }); */
+
         this.overlayService.closed.pipe(filter(() => !this._init), destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this.overlayService.detach(this._advancedFilteringOverlayId);
@@ -7611,8 +7615,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-
-        this.hideOverlays();
+        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+            this.hideOverlays();
+        }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
     }
