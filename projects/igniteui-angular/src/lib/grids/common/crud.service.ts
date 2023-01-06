@@ -368,8 +368,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
             this.updateRowEditData(this.row, this.row.newData);
             args = this.rowEdit(event);
             if (args.cancel) {
-                delete this.row.newData;
-                this.grid.transactions.clear(this.row.id);
                 return args;
             }
         }
@@ -576,7 +574,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
 
-        if (this.nonEditable){
+        if (this.nonEditable) {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
             return;
         }
@@ -688,10 +686,13 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return args.cancel;
             }
         } else {
+            // needede because this.cell is null after exitCellEdit
+            // thus the next if is always false
+            const cell = this.cell;
             this.exitCellEdit(event);
-            if (!this.grid.rowEditable && this.cell) {
-                const value = this.grid.transactions.getAggregatedValue(this.cell.id.rowID, true) || this.cell.rowData;
-                this.grid.validation.update(this.cell.id.rowID, value);
+            if (!this.grid.rowEditable && cell) {
+                const value = this.grid.transactions.getAggregatedValue(cell.id.rowID, true) || cell.rowData;
+                this.grid.validation.update(cell.id.rowID, value);
             }
         }
 
