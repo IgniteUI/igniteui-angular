@@ -56,10 +56,14 @@
 @mixin paginator($theme) {
     @include css-vars($theme);
 
-    $paginator-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+    igx-paginator {
+        @include sizable();
+    }
+
+    $paginator-padding-inline: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
     );
 
     $paginator-height: (
@@ -69,6 +73,9 @@
     );
 
     %igx-paginator {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($paginator-height, 'compact')}, #{map.get($paginator-height, 'cosy')}, #{map.get($paginator-height, 'comfortable')})};
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -77,8 +84,9 @@
         font-size: rem(12px);
         border-top: rem(1px) solid var-get($theme, 'border-color');
         z-index: 1;
-        padding: map.get($paginator-padding, 'comfortable');
-        height: map.get($paginator-height, 'comfortable');
+        padding-inline: pad-inline(map.get($paginator-padding-inline, 'compact'), map.get($paginator-padding-inline, 'cosy'), map.get($paginator-padding-inline, 'comfortable'));
+        padding-block: 0;
+        height: var(--size);
         width: 100%;
 
         &:empty {
@@ -87,13 +95,11 @@
     }
 
     %igx-paginator--cosy {
-        padding: map.get($paginator-padding, 'cosy');
-        height: map.get($paginator-height, 'cosy');
+        --component-size: var(--ig-size, var(--ig-size-medium));
     }
 
     %igx-paginator--compact {
-        padding: map.get($paginator-padding, 'compact');
-        height: map.get($paginator-height, 'compact');
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-paginator-content {
