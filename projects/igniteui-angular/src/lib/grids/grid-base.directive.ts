@@ -3616,10 +3616,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-/*         this.overlayService.closing.pipe(filter(() => !this._init), destructor).subscribe((event) => {
-            console.log(event);
-        }); */
-
         this.overlayService.closed.pipe(filter(() => !this._init), destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this.overlayService.detach(this._advancedFilteringOverlayId);
