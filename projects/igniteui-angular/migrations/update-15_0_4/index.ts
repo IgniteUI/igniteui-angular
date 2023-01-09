@@ -3,9 +3,12 @@ import {
     SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
+import { workspaces } from '@angular-devkit/core';
 import { UpdateChanges } from '../common/UpdateChanges';
+import { includeStylePreprocessorOptions } from '../../schematics/utils/dependency-handler';
+import { createHost } from '../../schematics/utils/util';
 
-const version = '15.0.0';
+const version = '15.0.4';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
@@ -13,6 +16,10 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     const update = new UpdateChanges(__dirname, host, context);
     update.applyChanges();
 
+    const workspaceHost = createHost(host);
+    const { workspace } = await workspaces.readWorkspace(host.root.path, workspaceHost);
+    await includeStylePreprocessorOptions(workspaceHost, workspace, context, host);
+    await workspaces.writeWorkspace(workspace, workspaceHost);
 
     // replace CSS custom properties prefix from --igx to --ig and grays to gray
     const CUSTOM_CSS_PROPERTIES = [

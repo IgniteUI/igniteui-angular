@@ -165,7 +165,7 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Giriş, {0} karakterden uzun olmamalıdır',
     igx_grid_email_validation_error: 'Geçerli bir e-posta adresi girilmelidir',
     igx_grid_pattern_validation_error: 'Giriş, gerekli modelle eşleşmiyor',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_pivot_no_aggregator: '{0} için geçerli bir toplayıcı bulunamadı. Lütfen geçerli bir "aggregatorName" veya "aggregator" ayarlayın.'
 };
 
 /**

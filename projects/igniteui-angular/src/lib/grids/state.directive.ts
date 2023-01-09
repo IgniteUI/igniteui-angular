@@ -15,7 +15,6 @@ import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
-import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridType, IGX_GRID_BASE } from './common/grid.interface';
@@ -401,7 +400,7 @@ export class IgxGridStateDirective {
         pivotConfiguration: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
                 const config = (context.currGrid as IgxPivotGridComponent).pivotConfiguration;
-                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) {
                     return { pivotConfiguration: undefined };
                 }
                 const configCopy = cloneValue(config);
@@ -418,14 +417,14 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState(context: IgxGridStateDirective, state: any): void {
                 const config: IPivotConfiguration = state;
-                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) { 
+                if (!config || !(context.currGrid instanceof IgxPivotGridComponent)) {
                     return;
                 }
                 context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
                 context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             },
-            
+
 
         }
     };
@@ -677,11 +676,11 @@ export class IgxGridStateDirective {
 
                 let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
                                 this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
-               
+
                 if (condition) {
                     expr.condition = condition;
                     expressionsTree.filteringOperands.push(expr);
-                } 
+                }
             }
         }
 

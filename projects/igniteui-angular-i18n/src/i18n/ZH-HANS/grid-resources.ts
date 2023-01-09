@@ -165,7 +165,7 @@ const GridResourceStringsZHHANS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: '输入项的字符不得超过 {0} 个字符',
     igx_grid_email_validation_error: '必须输入有效的电子邮件地址',
     igx_grid_pattern_validation_error: '输入项与要求的模式不匹配',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_pivot_no_aggregator: '找不到 {0} 的有效聚合器。请设置有效的 aggregatorName 或 aggregator。'
 };
 
 /**
