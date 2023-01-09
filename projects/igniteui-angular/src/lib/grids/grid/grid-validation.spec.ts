@@ -247,7 +247,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -259,7 +259,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
         });
 
         it('should return invalid transaction using the transaction service API', () => {
@@ -407,7 +407,7 @@ describe('IgxGrid - Validation #grid', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
-            grid.updateCell('IG', 2,'ProductName');
+            grid.updateCell('IG', 2, 'ProductName');
             grid.validation.markAsTouched(2);
             fixture.detectChanges();
 
@@ -523,6 +523,44 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             expect((grid.validation as any).getValidity().length).toEqual(0);
+        });
+
+        it('should update validity when all transactions are cleared', () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
+            let secondCell = grid.gridAPI.get_cell_by_visible_index(2, 1);
+
+            // update first cell
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
+            cell.editMode = true;
+            cell.update('IG');
+            fixture.detectChanges();
+
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            GridFunctions.verifyCellValid(cell, false);
+
+            //update second cell
+            UIInteractions.simulateDoubleClickAndSelectEvent(secondCell.element);
+            secondCell.editMode = true;
+            secondCell.update('bob');
+            fixture.detectChanges();
+
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+            GridFunctions.verifyCellValid(cell, false);
+            expect(grid.validation.getInvalid().length).toBe(2);
+
+
+            // clear transactions
+            grid.transactions.clear();
+            fixture.detectChanges();
+            expect(grid.validation.getInvalid().length).toBe(0);
+
+
+            grid.validation.clear();
+            fixture.detectChanges();
         });
 
         it('should not show errors when the row is deleted', () => {
