@@ -17,10 +17,6 @@
 
         @extend %igx-select !optional;
 
-        @include e(clear-button) {
-            @extend %igx-select__clear-button !optional;
-        }
-
         @include e(toggle-button) {
             @extend %igx-select__toggle-button !optional;
         }

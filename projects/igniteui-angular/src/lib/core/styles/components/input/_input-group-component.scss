@@ -767,6 +767,12 @@
             }
         }
 
+        @include mx(indigo, disabled) {
+            @include e(bundle) {
+                @extend %form-group-bundle--indigo--disabled !optional;
+            }
+        }
+
         @include mx(indigo, cosy) {
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--box-cosy !optional;

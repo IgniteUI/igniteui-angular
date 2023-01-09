@@ -11,18 +11,18 @@
 /// @prop {Map} empty-list-background [color: 'surface'] - The combo list background color.
 /// @prop {Map} search-separator-border-color [color: ('gray', 500)] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [color: ('gray', 700)] - The combo placeholder text color.
-/// @prop {Map} $toggle-button-background [color: ('gray', 300)] - The combo toggle button background color.
-/// @prop {Map} $toggle-button-background-hover [color: ('gray', 300)] - The combo toggle button background color on hover.
-/// @prop {Map} $toggle-button-background-focus [color: ('gray', 400, .3)] - The combo toggle button background color when the combo is focused.
-/// @prop {Map} $toggle-button-foreground [contrast-color: ('gray', 300)] - The combo toggle button background color.
-/// @prop {Map} $toggle-button-foreground-hover [contrast-color: ('gray', 300)] - The combo toggle button background color on hover.
-/// @prop {Map} $toggle-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo toggle button background color when the combo is focused.
-/// @prop {Map} $clear-button-background [color: ('gray', 300)] - The combo clear button background color.
-/// @prop {Map} $clear-button-background-hover [color: ('gray', 300)] - The combo clear button background color on hover.
-/// @prop {Map} $clear-button-background-focus [color: ('gray', 400, .3)] - The combo clear button background color when the combo is focused.
-/// @prop {Map} $clear-button-foreground [contrast-color: ('gray', 300)] - The combo toggle clear background color.
-/// @prop {Map} $clear-button-foreground-hover [contrast-color: ('gray', 300)] - The combo clear button background color on hover.
-/// @prop {Map} $clear-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo clear button background color when the combo is focused.
+/// @prop {Map} toggle-button-background [color: ('gray', 300)] - The combo toggle button background color.
+/// @prop {Map} toggle-button-background-hover [color: ('gray', 300)] - The combo toggle button background color on hover.
+/// @prop {Map} toggle-button-background-focus [color: ('gray', 400, .3)] - The combo toggle button background color when the combo is focused.
+/// @prop {Map} toggle-button-foreground [contrast-color: ('gray', 300)] - The combo toggle button background color.
+/// @prop {Map} toggle-button-foreground-hover [contrast-color: ('gray', 300)] - The combo toggle button background color on hover.
+/// @prop {Map} toggle-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo toggle button background color when the combo is focused.
+/// @prop {Map} clear-button-background [color: ('gray', 300)] - The combo clear button background color.
+/// @prop {Map} clear-button-background-hover [color: ('gray', 300)] - The combo clear button background color on hover.
+/// @prop {Map} clear-button-background-focus [color: ('gray', 400, .3)] - The combo clear button background color when the combo is focused.
+/// @prop {Map} clear-button-foreground [contrast-color: ('gray', 300)] - The combo toggle clear background color.
+/// @prop {Map} clear-button-foreground-hover [contrast-color: ('gray', 300)] - The combo clear button background color on hover.
+/// @prop {Map} clear-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo clear button background color when the combo is focused.
 $light-combo: (
     variant:'material',
 
@@ -85,7 +85,6 @@ $light-combo: (
     clear-button-foreground-focus: (
         contrast-color: ('gray', 400),
     ),
-
 );
 
 /// Generates a fluent combo schema.
