@@ -6515,6 +6515,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
 
             });
+        } else if (event.origin === TransactionEventOrigin.CLEAR) {
+            this.validation.clear();
         }
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
