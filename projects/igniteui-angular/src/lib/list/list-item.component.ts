@@ -16,6 +16,7 @@ import {
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
+import { rem } from '../core/utils';
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
@@ -239,6 +240,16 @@ export class IgxListItemComponent implements IListChild {
      */
     public get maxRight() {
         return this.width;
+    }
+
+    /** @hidden @internal */
+    public get offsetWidthInRem() {
+        return rem(this.element.offsetWidth);
+    }
+
+    /** @hidden @internal */
+    public get offsetHeightInRem() {
+        return rem(this.element.offsetHeight);
     }
 
     constructor(
