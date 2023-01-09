@@ -7611,8 +7611,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-
-        this.hideOverlays();
+        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+            this.hideOverlays();
+        }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
     }
