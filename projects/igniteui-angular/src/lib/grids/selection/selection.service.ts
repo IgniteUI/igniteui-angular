@@ -453,13 +453,14 @@ export class IgxGridSelectionService {
             return;
         }
 
-        const rowsToSelect = keys.filter(x => !this.isRowDeleted(x) && !this.rowSelection.has(x));
+        let rowsToSelect = keys.filter(x => !this.isRowDeleted(x) && !this.rowSelection.has(x));
         if (!rowsToSelect.length && !clearPrevSelection) {
             // no valid/additional rows to select and no clear
             return;
         }
 
-        const selectedRows = this.getSelectedRows();
+        const selectedRows = this.getSelectedRowsData();
+        rowsToSelect = this.grid.primaryKey ? rowsToSelect.map(r => this.getRowDataById(r)) : rowsToSelect;
         const newSelection = clearPrevSelection ? rowsToSelect : [...selectedRows, ...rowsToSelect];
         const keysAsSet = new Set(rowsToSelect);
         const removed = clearPrevSelection ? selectedRows.filter(x => !keysAsSet.has(x)) : [];
@@ -470,7 +471,7 @@ export class IgxGridSelectionService {
         if (!this.rowSelection.size) {
             return;
         }
-
+debugger;
         const rowsToDeselect = keys.filter(x => this.rowSelection.has(x));
         if (!rowsToDeselect.length) {
             return;
@@ -531,8 +532,8 @@ export class IgxGridSelectionService {
         const newIndex = gridData.indexOf(rowData);
         const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
 
-        const added = this.getRowIDs(rows).filter(rID => !this.isRowSelected(rID));
-        const newSelection = this.getSelectedRows().concat(added);
+        const added = rows.filter(r => !this.isRowSelected( this.grid.primaryKey ? r[this.grid.primaryKey] : r));
+        const newSelection = this.getSelectedRowsData().concat(added);
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
