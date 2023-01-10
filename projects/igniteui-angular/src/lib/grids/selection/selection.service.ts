@@ -389,7 +389,7 @@ export class IgxGridSelectionService {
 
     public getSelectedRowsData() {
         const pk = this.grid.primaryKey;
-        return this.rowSelection.size ? this.allData.filter(row => this.rowSelection.has(pk ? row[pk]: row)) : [];
+        return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(pk ? row[pk]: row)) : [];
     }
 
     /** Returns array of the selected row id's. */
@@ -408,7 +408,7 @@ export class IgxGridSelectionService {
         const selectedRows = this.getSelectedRowsData();
         const removedRec = this.isFilteringApplied() ?
             this.allData.filter(row => this.isRowSelected( pk ? row[pk] : row)) : selectedRows;
-        const newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes( pk ? x[pk] : x)) : [];
+        const newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
@@ -471,7 +471,6 @@ export class IgxGridSelectionService {
         if (!this.rowSelection.size) {
             return;
         }
-debugger;
         const rowsToDeselect = keys.filter(x => this.rowSelection.has(x));
         if (!rowsToDeselect.length) {
             return;
