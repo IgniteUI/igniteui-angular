@@ -2,12 +2,13 @@ import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconModule } from '../icon/public_api';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxActionStripModule } from './action-strip.module';
+import { IgxDropDownModule } from '../drop-down/public_api';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -20,33 +21,48 @@ describe('igxActionStrip', () => {
     let innerContainer: ViewContainerRef;
 
     describe('Unit tests: ', () => {
-        const mockViewContainerRef = jasmine.createSpyObj('ViewContainerRef', ['element']);
-        const mockRenderer2 = jasmine.createSpyObj('Renderer2', ['appendChild', 'removeChild']);
-        const mockContext = jasmine.createSpyObj('context', ['element']);
-        const mockDisplayDensity = jasmine.createSpyObj('IDisplayDensityOptions', ['displayDensity']);
-        const cdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
-        it('should properly get/set hidden', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockRenderer2, mockDisplayDensity, cdr);
-            expect(actionStrip.hidden).toBeFalsy();
-            actionStrip.hidden = true;
-            expect(actionStrip.hidden).toBeTruthy();
+        configureTestSuite(() => {
+            return TestBed.configureTestingModule({
+                declarations: [
+                    IgxActionStripComponent
+                ],
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDropDownModule
+                ]
+            });
         });
 
+        // This test is only testing whether a setter ran. Removing it
+        // it('should properly get/set hidden', () => {
+        //     fixture = TestBed.createComponent(IgxActionStripComponent);
+        //     actionStrip = fixture.componentInstance as IgxActionStripComponent;
+        //     fixture.detectChanges();
+        //     expect(actionStrip.hidden).toBeFalsy();
+        //     actionStrip.hidden = true;
+        //     expect(actionStrip.hidden).toBeTruthy();
+        // });
+
         it('should properly show and hide using API', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockRenderer2, mockDisplayDensity, cdr);
-            actionStrip.show(mockContext);
+            fixture = TestBed.createComponent(IgxActionStripComponent);
+            actionStrip = fixture.componentInstance as IgxActionStripComponent;
+            fixture.detectChanges();
+
+            const el = document.createElement('div');
+            fixture.debugElement.nativeElement.appendChild(el);
+            actionStrip.show(el);
             expect(actionStrip.hidden).toBeFalsy();
-            expect(actionStrip.context).toBe(mockContext);
+            expect(actionStrip.context).toBe(el);
             actionStrip.hide();
             expect(actionStrip.hidden).toBeTruthy();
+            fixture.debugElement.nativeElement.removeChild(el);
         });
     });
 
     describe('Initialization and rendering tests: ', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite(() => {
+            return TestBed.configureTestingModule({
                 declarations: [
                     IgxActionStripTestingComponent
                 ],
@@ -56,16 +72,18 @@ describe('igxActionStrip', () => {
                     NoopAnimationsModule,
                     IgxToggleModule
                 ]
-            }).compileComponents();
-        }));
-        beforeEach(fakeAsync(() => {
+            })
+        });
+
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             actionStripElement = fixture.componentInstance.actionStripElement;
             parentContainer = fixture.componentInstance.parentContainer;
             innerContainer = fixture.componentInstance.innerContainer;
-        }));
+        });
+
         it('should be overlapping its parent container when no context is applied', () => {
             const parentBoundingRect = parentContainer.nativeElement.getBoundingClientRect();
             const actionStripBoundingRect = actionStripElement.nativeElement.getBoundingClientRect();
@@ -102,9 +120,8 @@ describe('igxActionStrip', () => {
     });
 
     describe('render content as menu', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        configureTestSuite(() => {
+            return TestBed.configureTestingModule({
                 declarations: [
                     IgxActionStripMenuTestingComponent,
                     IgxActionStripCombinedMenuTestingComponent
@@ -115,8 +132,8 @@ describe('igxActionStrip', () => {
                     NoopAnimationsModule,
                     IgxToggleModule
                 ]
-            }).compileComponents();
-        }));
+            });
+        });
 
         it('should render tree-dot button which toggles the content as menu', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
