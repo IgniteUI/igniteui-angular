@@ -4,7 +4,7 @@
 
 ## Milestone 25, version 15.0 (Due by Jan, 2023)
 
-1. Design update of ComboBox Component
+1. Design update of Combo Component
 2. Design update of Input Component
 3. Desugn update of List Component
 
