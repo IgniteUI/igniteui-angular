@@ -242,21 +242,27 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $list-empty-padding: (
+    $list-item-padding-inline: (
         comfortable: rem(16px),
         cosy: rem(8px),
         compact: rem(4px)
     );
 
-    $list-item-padding: (
-        comfortable: rem(8px) rem(16px),
-        cosy: rem(4px) rem(8px),
-        compact: rem(2px) rem(4px)
+    $list-item-padding-block: (
+        comfortable: rem(8px),
+        cosy: rem(4px),
+        compact: rem(2px)
     );
 
-    $list-icon-margin: (
-        comfortable: rem(8px) rem(16px),
-        cosy: rem(6px) rem(8px),
+    $list-icon-margin-inline: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    $list-icon-margin-block: (
+        comfortable: rem(8px),
+        cosy: rem(6px),
         compact: rem(4px)
     );
 
@@ -264,6 +270,12 @@
         comfortable: rem(16px),
         cosy: rem(12px),
         compact: rem(8px)
+    );
+
+    $list-actions-margin: (
+        comfortable: rem(8px),
+        cosy: rem(6px),
+        compact: rem(4px)
     );
 
     %igx-list {
@@ -286,25 +298,29 @@
     %igx-list__message--empty {
         text-align: center;
         color: var-get($theme, 'item-text-color');
-        padding: map.get($list-empty-padding, 'comfortable');
+        padding: rem(16px);
         z-index: 1;
     }
 
     %igx-list-header {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: flex;
         align-items: center;
         color: var-get($theme, 'header-text-color');
         background: var-get($theme, 'header-background');
-        padding: map.get($list-item-padding, 'comfortable');
+        padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
+        padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
         user-select: none;
     }
 
-    %igx-list-header--cosy {
-        padding: map.get($list-item-padding, 'cosy');
+    %igx-list-header--cosy,
+    %igx-list-item-content--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
     }
 
-    %igx-list-header--compact {
-        padding: map.get($list-item-padding, 'compact');
+    %igx-list-header--compact,
+    %igx-list-item-content--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-list-item-base {
@@ -391,7 +407,8 @@
         color: var-get($theme, 'item-action-color');
 
         > * {
-            margin-inline-start: rem(8px);
+            --component-size: var(--ig-size, var(--ig-size-large));
+            margin-inline-start: pad-inline(map.get($list-actions-margin, 'compact'), map.get($list-actions-margin, 'cosy'), map.get($list-actions-margin, 'comfortable'));
         }
 
         &:empty {
@@ -410,21 +427,15 @@
     }
 
     %igx-list-item-content {
+        --component-size: var(--ig-size, var(--ig-size-large));
         display: flex;
         align-items: center;
         position: relative;
-        padding: map.get($list-item-padding, 'comfortable');
+        padding-inline: pad-inline(map.get($list-item-padding-inline, 'compact'), map.get($list-item-padding-inline, 'cosy'), map.get($list-item-padding-inline, 'comfortable'));
+        padding-block: pad-block(map.get($list-item-padding-block, 'compact'), map.get($list-item-padding-block, 'cosy'), map.get($list-item-padding-block, 'comfortable'));
         border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
-    }
-
-    %igx-list-item-content--compact {
-        padding: map.get($list-item-padding, 'compact');
-    }
-
-    %igx-list-item-content--cosy {
-        padding: map.get($list-item-padding, 'cosy');
     }
 
     %igx-list__item-thumbnail {
@@ -436,8 +447,10 @@
         color: var-get($theme, 'item-thumbnail-color');
 
         > igx-icon {
-            margin: map.get($list-icon-margin, 'comfortable');
+            --component-size: var(--ig-size, var(--ig-size-large));
+            margin-inline-end: pad-inline(map.get($list-icon-margin-inline, 'compact'), map.get($list-icon-margin-inline, 'cosy'), map.get($list-icon-margin-inline, 'comfortable'));
             margin-inline-start: 0;
+            margin-block: pad-block(map.get($list-icon-margin-block, 'compact'), map.get($list-icon-margin-block, 'cosy'), map.get($list-icon-margin-block, 'comfortable'));
         }
 
         > igx-avatar {
@@ -452,44 +465,21 @@
     }
 
     %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
+        --component-size: var(--ig-size, var(--ig-size-large));
         margin: 0;
-        margin-inline-start: map.get($list-line-margin, 'comfortable');
+        margin-inline-start: pad-inline(map.get($list-line-margin, 'compact'), map.get($list-line-margin, 'cosy'), map.get($list-line-margin, 'comfortable'));
     }
 
-    %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
-        margin: 0;
-        margin-inline-start: map.get($list-line-margin, 'cosy');
+    %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines,
+    %igx-list__item-thumbnail--cosy > igx-icon,
+    %igx-list__item-actions--cosy > * {
+        --component-size: var(--ig-size, var(--ig-size-medium));
     }
 
-    %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
-        margin: 0;
-        margin-inline-start: map.get($list-line-margin, 'compact');
-    }
-
-    %igx-list__item-thumbnail--cosy {
-        > igx-icon {
-            margin: map.get($list-icon-margin, 'cosy');
-            margin-inline-start: 0;
-        }
-    }
-
-    %igx-list__item-thumbnail--compact {
-        > igx-icon {
-            margin: map.get($list-icon-margin, 'compact');
-            margin-inline-start: 0;
-        }
-    }
-
-    %igx-list__item-actions--cosy {
-        > * {
-            margin-inline-start: rem(6px);
-        }
-    }
-
-    %igx-list__item-actions--compact {
-        > * {
-            margin-inline-start: rem(4px);
-        }
+    %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines,
+    %igx-list__item-thumbnail--compact > igx-icon,
+    %igx-list__item-actions--compact > * {
+        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-list__item-lines + %igx-list__item-actions {

@@ -15,6 +15,7 @@
 
         // css class 'igx-list__header'
         @include e(header) {
+            @include sizable();
             @extend %igx-list-header !optional;
         }
 
@@ -35,6 +36,7 @@
 
         // css class 'igx-list__item-content'
         @include e(item-content) {
+            @include sizable();
             @extend %igx-list-item-content !optional;
 
             &:active {

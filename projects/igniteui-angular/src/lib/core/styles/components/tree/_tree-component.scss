@@ -21,6 +21,7 @@
         @extend %tree-node !optional;
 
         @include e(wrapper) {
+            @include sizable();
             @extend %node-wrapper !optional;
 
             &:hover {
@@ -65,6 +66,7 @@
         }
 
         @include e(spacer) {
+            @include sizable();
             @extend %node-spacer !optional;
         }
 
