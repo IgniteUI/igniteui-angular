@@ -5,7 +5,7 @@
 ## Milestone 25, version 15.0 (Due by Jan, 2023)
 
 1. Design update of Combo Component
-2. Design update of Input Component
+2. Design update of Input Group Component
 3. Design update of List Component
 
 ## Going down the road
