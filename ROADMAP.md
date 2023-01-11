@@ -6,7 +6,7 @@
 
 1. Design update of Combo Component
 2. Design update of Input Component
-3. Desugn update of List Component
+3. Design update of List Component
 
 ## Going down the road
 
