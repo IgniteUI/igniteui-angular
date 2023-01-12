@@ -91,6 +91,7 @@ export class MaskParsingService {
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);
+        let initialMaskedValue = maskedValue;
 
         for (let i = start; i < end || (chars.length && i < maskedValue.length); i++) {
             if (literalsPositions.indexOf(i) !== -1) {
@@ -126,7 +127,7 @@ export class MaskParsingService {
                     cursor = literalsPositions[i] + 1;
                 }
             }
-            if (!isDelete) {
+            if (!isDelete && initialMaskedValue !== maskedValue) {
                 cursor++;
             }
         }
