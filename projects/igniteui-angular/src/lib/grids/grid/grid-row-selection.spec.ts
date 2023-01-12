@@ -153,7 +153,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: allRowsArray,
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: true
+                allRowsSelected: true,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -171,7 +172,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: allRowsArray,
                 event: jasmine.anything() as any,
                 cancel: false,
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -222,7 +224,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[0]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -246,7 +249,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[0], gridData[1]],
                 oldSelection: [gridData[0]],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -265,7 +269,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1]],
                 oldSelection: [gridData[0], gridData[1]],
                 removed: [gridData[0]],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -283,7 +288,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [],
                 oldSelection: [gridData[1]],
                 removed: [gridData[1]],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -308,7 +314,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             });
 
             // Click again on same row
@@ -334,7 +341,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[2]],
                 oldSelection: [gridData[1]],
                 removed: [gridData[1]],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             });
         });
         it('Should select the row only on checkbox click when selectRowOnClick has value false', () => {
@@ -530,7 +538,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             });
 
             for (let index = 1; index < 5; index++) {
@@ -875,7 +884,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[0]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -898,7 +908,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1]],
                 oldSelection: [gridData[0]],
                 removed: [gridData[0]],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -1051,7 +1062,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: [gridData[1]],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             });
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -1387,7 +1399,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -1403,7 +1416,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: grid
             };
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
         });

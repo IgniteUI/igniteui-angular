@@ -643,7 +643,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 oldSelection: [],
                 removed: [],
                 owner: childGrid,
-                allRowsSelected: false
+                allRowsSelected: false,
             });
 
             // Click on checkbox on second row
@@ -679,7 +679,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: [],
-                allRowsSelected: false
+                allRowsSelected: false,
+                owner: hierarchicalGrid
             });
 
             // Click on a header checkbox in parent grid
@@ -696,7 +697,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 newSelection: [gridData[1], gridData[0], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: [],
-                allRowsSelected: true
+                allRowsSelected: true,
+                owner: hierarchicalGrid
             });
         });
         it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {

@@ -567,7 +567,7 @@ export class IgxGridSelectionService {
             return;
         }
         const pk = this.grid.primaryKey;
-        const args = {
+        const args = { owner: this.grid,
             oldSelection: currSelection, newSelection,
             added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection.map(r => pk? r[pk] : r))
         };
