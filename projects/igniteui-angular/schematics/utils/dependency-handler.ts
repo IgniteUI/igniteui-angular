@@ -158,8 +158,10 @@ const addHammerToConfig =
     };
 
 export const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
-    await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
+    await Promise.all(Array.from(workspace.projects.values()).map(async (project: workspaces.ProjectDefinition) => {
+        if (project.prefix === "lib") return;
         await addStylePreprocessorOptions(project, tree, "build", context);
+        await addStylePreprocessorOptions(project, tree, "serve", context);
         await addStylePreprocessorOptions(project, tree, "test", context);
     }));
 
