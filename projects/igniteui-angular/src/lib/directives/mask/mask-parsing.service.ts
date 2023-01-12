@@ -114,10 +114,21 @@ export class MaskParsingService {
             maskedValue = this.replaceCharAt(maskedValue, i, char);
         }
 
-        if (Math.abs(end - start) >= 1) {
-            // set cursor to be max between last cursor pos and the calculated `end`
-            // since on `delete` the cursor should move forward
-            cursor = Math.max(cursor, end);
+        if (value.length <= 1) {
+            let isDelete = false;
+            cursor = start;
+            for (let i = 0; i < literalsPositions.length; i++) {
+                if (value === '') {
+                    // on `delete` the cursor should move forward
+                    cursor = Math.max(cursor, end);
+                    isDelete = true;
+                } else if (cursor === literalsPositions[i]) {
+                    cursor = literalsPositions[i] + 1;
+                }
+            }
+            if (!isDelete) {
+                cursor++;
+            }
         }
 
         return { value: maskedValue, end: cursor};
