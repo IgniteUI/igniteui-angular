@@ -1607,12 +1607,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [711, 998],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(711), treeGrid.getRowData(998)],
                 added: [],
-                removed: [317, 299],
+                removed: [treeGrid.getRowData(317), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: true
+                cancel: true,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1691,12 +1692,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(847, true);
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [847, 663],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                removed: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1716,7 +1718,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it('After changing the newSelection arguments of onSelectedRowChange, the arguments SHOULD be correct.', () => {
             treeGrid.rowSelectionChanging.subscribe((e: IRowSelectionEventArgs) => {
-                e.newSelection = [847, 663];
+                e.newSelection = [treeGrid.getRowData(847), treeGrid.getRowData(663)];
             });
             spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
 
@@ -1726,12 +1728,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(19, true);
 
             const selectionArgs: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [19],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(19)],
+                removed: [treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
