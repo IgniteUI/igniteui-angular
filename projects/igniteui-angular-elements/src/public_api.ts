@@ -9,7 +9,7 @@ import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/p
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
     //Grids API
-    FilteringExpressionsTree,
+    FilteringExpressionsTree as IgcFilteringExpressionsTree,
     FilteringLogic, // TODO: already exported by analyzer?
     IgxFilteringOperand as IgcFilteringOperand,
     IgxBooleanFilteringOperand as IgcBooleanFilteringOperand,
