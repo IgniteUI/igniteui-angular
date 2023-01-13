@@ -401,9 +401,13 @@
     %igx-chip__prefix,
     %igx-chip__suffix {
         @include ellipsis();
-        display: flex;
+        display: inline-block;
         vertical-align: middle;
         max-width: $chip-max-width;
+
+        > igx-icon { 
+            display: block;
+        }
     }
 
     %igx-chip__suffix {
