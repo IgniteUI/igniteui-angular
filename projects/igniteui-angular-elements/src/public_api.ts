@@ -13,7 +13,7 @@ import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivo
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
 export {
     //Grids API
-    FilteringExpressionsTree,
+    FilteringExpressionsTree as IgcFilteringExpressionsTree,
     FilteringLogic, // TODO: already exported by analyzer?
     FilteringExpressionsTreeType,
     IgxFilteringOperand as IgcFilteringOperand,
