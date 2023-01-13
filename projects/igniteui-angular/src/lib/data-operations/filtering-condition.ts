@@ -1,7 +1,7 @@
 /**
  * Provides base filtering operations
  * Implementations should be Singleton
- * 
+ *
  * @export
  */
 export class IgxFilteringOperand {
@@ -65,6 +65,7 @@ export class IgxFilteringOperand {
     }
 }
 
+/* csSuppress */
 /**
  * Provides filtering operations for booleans
  *
@@ -177,6 +178,8 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         }
     }
 }
+
+/* csSuppress */
 /**
  * Provides filtering operations for Dates
  *
@@ -389,6 +392,7 @@ export class IgxDateFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     }
 }
 
+/* csSuppress */
 export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
@@ -598,6 +602,7 @@ export class IgxDateTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand
     }
 }
 
+/* csSuppress */
 export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     protected constructor() {
         super();
@@ -706,6 +711,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
     }
 }
 
+/* csSuppress */
 /**
  * Provides filtering operations for numbers
  *
@@ -758,6 +764,7 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
     }
 }
 
+/* csSuppress */
 /**
  * Provides filtering operations for strings
  *
