@@ -217,6 +217,23 @@ describe('IgxPaginator with default settings', () => {
         expect(paginator.perPageChange.emit).toHaveBeenCalledTimes(1);
     });
 
+    it('should display "1 of -" when there are no records to show', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+        
+        const paginator = fix.componentInstance.paginator;
+
+        paginator.totalRecords = null;
+        fix.detectChanges();
+
+        expect(paginator.totalPagesIndicator).toBe('-');
+
+        paginator.totalRecords = 0;
+        fix.detectChanges();
+
+        expect(paginator.totalPagesIndicator).toBe('-');
+    })
+
 });
 
 describe('IgxPaginator with custom settings', () => {

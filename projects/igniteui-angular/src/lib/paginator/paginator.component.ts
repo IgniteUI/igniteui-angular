@@ -314,6 +314,15 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         }
         return DisplayDensity.compact;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get totalPagesIndicator() {
+        return this.totalPages ? this.totalPages : '-';
+    }
+
     /**
      * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
      * ```typescript
