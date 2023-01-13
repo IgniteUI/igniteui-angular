@@ -355,7 +355,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         this.deleteRowFromData(rowId, index);
 
         if (grid.selectionService.isRowSelected(rowId)) {
-            grid.selectionService.deselectRow(rowId);
+            grid.selectionService.deselectRowsWithNoEvent([rowId]);
         } else {
             grid.selectionService.clearHeaderCBState();
         }
