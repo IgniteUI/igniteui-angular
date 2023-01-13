@@ -161,7 +161,7 @@ export const includeStylePreprocessorOptions = async (workspaceHost: workspaces.
     await Promise.all(Array.from(workspace.projects.values()).map(async (project: workspaces.ProjectDefinition) => {
         if (project.extensions['projectType'] === ProjectType.Library) return;
         await addStylePreprocessorOptions(project, tree, "build", context);
-        await addStylePreprocessorOptions(project, tree, "serve", context);
+        await addStylePreprocessorOptions(project, tree, "server", context);
         await addStylePreprocessorOptions(project, tree, "test", context);
     }));
 
