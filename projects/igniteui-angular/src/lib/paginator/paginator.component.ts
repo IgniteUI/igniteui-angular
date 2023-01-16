@@ -314,6 +314,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         }
         return DisplayDensity.compact;
     }
+
     /**
      * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
      * ```typescript
