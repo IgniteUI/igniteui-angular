@@ -34,16 +34,6 @@ describe('igxActionStrip', () => {
             });
         });
 
-        // This test is only testing whether a setter ran. Removing it
-        // it('should properly get/set hidden', () => {
-        //     fixture = TestBed.createComponent(IgxActionStripComponent);
-        //     actionStrip = fixture.componentInstance as IgxActionStripComponent;
-        //     fixture.detectChanges();
-        //     expect(actionStrip.hidden).toBeFalsy();
-        //     actionStrip.hidden = true;
-        //     expect(actionStrip.hidden).toBeTruthy();
-        // });
-
         it('should properly show and hide using API', () => {
             fixture = TestBed.createComponent(IgxActionStripComponent);
             actionStrip = fixture.componentInstance as IgxActionStripComponent;
