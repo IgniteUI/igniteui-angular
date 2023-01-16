@@ -474,6 +474,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.onTouchCallback();
     this.updateMask();
     super.onFocus();
+    this.nativeElement.select();
   }
 
   /** @hidden @internal */
