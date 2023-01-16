@@ -217,6 +217,24 @@ describe('IgxPaginator with default settings', () => {
         expect(paginator.perPageChange.emit).toHaveBeenCalledTimes(1);
     });
 
+    it('should display "1 of 1" when there are no records to show', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+
+        const totalPages = fix.debugElement.query(By.css('.igx-page-nav__text > span:last-child')).nativeElement;
+        const paginator = fix.componentInstance.paginator;
+
+        paginator.totalRecords = null;
+        fix.detectChanges();
+
+        expect(totalPages.innerText).toBe('1');
+
+        paginator.totalRecords = 0;
+        fix.detectChanges();
+
+        expect(totalPages.innerText).toBe('1');
+    });
+
 });
 
 describe('IgxPaginator with custom settings', () => {
