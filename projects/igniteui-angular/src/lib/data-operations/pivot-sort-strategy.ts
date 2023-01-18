@@ -17,13 +17,13 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
         valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
-        grid?: PivotGridType) {
+        _grid?: PivotGridType) {
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, fieldName, reverse, ignoreCase, this.getFieldValue, isDate, isTime);
         return this.arraySort(data, cmpFunc);
     }
 
-    protected getFieldValue(obj: IPivotGridRecord, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected getFieldValue(obj: IPivotGridRecord, key: string, _isDate: boolean = false, _isTime: boolean = false): any {
         return obj.aggregationValues.get(key);
     }
 }
@@ -52,7 +52,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return this.arraySort(data, cmpFunc);
     }
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected getFieldValue(obj: any, key: string, _isDate: boolean = false, isTime: boolean = false): any {
         let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {
