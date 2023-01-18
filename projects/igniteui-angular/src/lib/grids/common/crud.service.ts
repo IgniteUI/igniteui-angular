@@ -3,8 +3,9 @@ import { first } from 'rxjs/operators';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '../common/events';
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { copyDescriptors, isEqual } from '../../core/utils';
+import { copyDescriptors, isEqual, isDate } from '../../core/utils';
 import { FormGroup } from '@angular/forms';
+import { DateTimeUtil } from '../../date-common/util/date-time.util';
 
 export class IgxEditRow {
     public transactionState: any;
@@ -233,6 +234,12 @@ export class IgxCellCrudState {
         }
 
         let doneArgs;
+        if (this.cell.column.dataType === 'date' && !isDate(this.cell.value)) {
+            if (isEqual(DateTimeUtil.parseIsoDate(this.cell.value), this.cell.editValue)) {
+                doneArgs = this.exitCellEdit(event);
+                return doneArgs;
+            }
+        }
         if (isEqual(this.cell.value, this.cell.editValue)) {
             doneArgs = this.exitCellEdit(event);
             return doneArgs;
