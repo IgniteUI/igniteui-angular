@@ -5764,7 +5764,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Select range(s) of cells between certain rows and columns of the grid.
      */
     public selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined): void {
         if (!this.isDefined(arg)) {
@@ -5804,7 +5804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Get the currently selected ranges in the grid.
      */
     public getSelectedRanges(): GridSelectionRange[] {
         return this.selectionService.ranges;
