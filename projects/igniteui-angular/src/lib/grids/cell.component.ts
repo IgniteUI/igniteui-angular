@@ -24,7 +24,7 @@ import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -210,10 +210,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *
      * @memberof IgxGridCellComponent
      */
-    public get context(): any {
+    public get context(): IgxCellTemplateContext {
         const ctx = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
+            cell: this
         };
         if (this.editMode) {
             ctx['formControl'] = this.formControl;
