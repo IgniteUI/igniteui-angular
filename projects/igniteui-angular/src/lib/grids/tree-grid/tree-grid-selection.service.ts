@@ -184,7 +184,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
      * with the rows which will be eventually in selected/indeterminate state
      */
     private calculateRowsNewSelectionState(args: any, shouldConvert = false) {
-        this.rowsToBeSelected = new Set<any>(args.oldSelection ? shouldConvert ? args.oldSelection.map(r => r[this.grid.primaryKey]) : args.oldSelection : this.getSelectedRows());
+        this.rowsToBeSelected = new Set<any>(args.oldSelection ? shouldConvert ? args.oldSelection.map(r => r[this.grid.primaryKey]) : args.oldSelection : this.getSelectedRowsObjs());
         this.rowsToBeIndeterminate = new Set<any>(this.getIndeterminateRows());
 
         const visibleRowIDs = new Set(this.getRowIDs(this.allData));
