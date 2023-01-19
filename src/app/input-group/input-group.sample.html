@@ -2,6 +2,15 @@
     <form #testForm="ngForm" class="input-group-sample-form">
 
         <div class="form__fields-settings">
+            <input
+                    name="inputWebTestSimple"
+                    placeholder="Native input web test simple"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    [(ngModel)]="inputValue"
+                    type="text"
+            />
+
             <strong>Select density</strong>
             <igx-buttongroup
                 [alignment]="alignment"
@@ -10,7 +19,7 @@
             ></igx-buttongroup>
             <div>
                 <strong class="no-bm">Select Input type</strong>
-                <small class="attention">Works only for material</small>
+                <small class="attention">Works only for material theme!</small>
             </div>
             <igx-buttongroup
                 [alignment]="alignment"
@@ -21,9 +30,121 @@
             <igx-switch name="disabledswitch" [(ngModel)]="isDisabled"></igx-switch>
             <strong>Enable Required</strong>
             <igx-switch name="requiredswitch" [(ngModel)]="isRequired"></igx-switch>
+            <igx-checkbox required [(ngModel)]="isRequired" name="requiredCheckbox">Required Toggle #2</igx-checkbox>
         </div>
 
         <div class="form__fields">
+            <!-- text field with validation -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Web address</label>
+                <igx-prefix>
+                    <igx-icon>link</igx-icon>
+                </igx-prefix>
+                <input
+                        name="inputValidityTest"
+                        [required]="isRequired"
+                        [disabled]="isDisabled"
+                        pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                        [(ngModel)]="inputValue"
+                        igxInput
+                        type="text"
+                />
+                <igx-hint>Type your web address</igx-hint>
+            </igx-input-group>
+
+
+            <!-- input type file -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Important Documents</label>
+                <input
+                        igxInput
+                        name="testFile"
+                        [required]="isRequired"
+                        [disabled]="isDisabled"
+                        type="file"
+                        multiple
+                />
+                <igx-hint>Upload a file to begin...</igx-hint>
+            </igx-input-group>
+
+            <!-- Read only -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Read only input field</label>
+                <input
+                        readonly
+                        [disabled]="isDisabled"
+                        igxInput
+                        value="read-only"
+                        type="text"
+                        placeholder="Placeholder"
+                />
+                <igx-hint>Read only input hint</igx-hint>
+            </igx-input-group>
+
+            <!-- textarea -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Textarea</label>
+                <igx-prefix>
+                    <igx-icon>face</igx-icon>
+                </igx-prefix>
+                <textarea
+                        name="inputTextareaTest"
+                        [required]="isRequired"
+                        igxInput
+                        [disabled]="isDisabled"
+                        [(ngModel)]="inputValue"
+                ></textarea>
+                <igx-suffix>
+                    <igx-icon>phone</igx-icon>
+                </igx-suffix>
+                <igx-hint>Textarea hint</igx-hint>
+            </igx-input-group>
+
+            <!-- required date field -->
+            <igx-date-picker *ngIf="isRequired" #requiredDatePicker
+                             required
+                             name="requiredDatePicker"
+                             [(ngModel)]="date"
+                             [displayDensity]="density"
+                             [type]="inputType"
+                             [disabled]="isDisabled">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxSuffix>
+                    <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
+                </igx-picker-toggle>
+                <igx-picker-clear></igx-picker-clear>
+                <igx-hint>Input is shown only if is required is ON</igx-hint>
+            </igx-date-picker>
+
+            <!-- Text field mask -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <igx-prefix>+359</igx-prefix>
+                <label igxLabel>Input with Mask</label>
+                <input
+                        [disabled]="isDisabled"
+                        [required]="isRequired"
+                        igxInput
+                        [igxMask]="'000 000 000'"
+                        promptChar="*"
+                        type="text"
+                />
+                <igx-hint>Accepts only digits</igx-hint>
+            </igx-input-group>
+
+            <!-- date field -->
+            <igx-date-picker *ngIf="!isRequired" #datePicker
+                             [(value)]="date"
+                             [displayDensity]="density"
+                             [type]="inputType"
+                             [disabled]="isDisabled">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxSuffix>
+                    <igx-icon (click)="datePicker.open()">date_range</igx-icon>
+                </igx-picker-toggle>
+                <igx-picker-clear></igx-picker-clear>
+                <igx-hint>Input is shown only if is required is OFF</igx-hint>
+            </igx-date-picker>
+
             <div class="border-wrapper">
                 <p class="input-group-sample__info">
                     The inputs inside the colored block preserve their theme no mather which global theme you set.
@@ -31,15 +152,69 @@
                     <strong>bootstrap</strong> theme.
                     <br>
                     <br>
-                    Also only material theme has input types, so don't expect fluent and bootstrap
+                    Also only material theme has input types, so don't expect fluent, bootstrap or indigo
                     inputs to change by selecting any of the material types (border,line, and box).
                     This is true also for the <strong>search input</strong>, there is no such thing as border-search or line-search.
                     <br>
-                    <br>
-                    It's normal the color of the fixed theme inputs to be different when used in another theme, that's why
-                    for example in indigo theme the material box input has no background, this is because in indigo
-                    the box background is transparent and is shown only on hover.
                 </p>
+
+                <!-- input Always Material -->
+                <igx-input-group [displayDensity]="density" class="material-theme" [type]="inputType">
+                    <label for="fluentfirstName" igxLabel>Always Material - set type</label>
+                    <igx-prefix>
+                        <igx-icon>face</igx-icon>
+                    </igx-prefix>
+                    <input
+                            name="inputTest"
+                            [required]="isRequired"
+                            id="fluentfirstName"
+                            igxInput
+                            [(ngModel)]="inputValue"
+                            [disabled]="isDisabled"
+                    />
+                    <igx-icon igxSuffix>data_usage</igx-icon>
+                    <igx-hint>Helper text</igx-hint>
+                </igx-input-group>
+
+                <!-- input-search input Always Material -->
+                <igx-input-group [displayDensity]="density" class="material-theme">
+                    <label igxLabel>Always Material & Use Input type TOKEN</label>
+                    <igx-icon igxPrefix>search</igx-icon>
+                    <input
+                            name="inputSearchTest"
+                            #input
+                            [(ngModel)]="inputValue"
+                            igxInput
+                            placeholder="Search"
+                            [disabled]="isDisabled"
+                    />
+                    <igx-suffix
+                            *ngIf="input.value.length > 0"
+                            (click)="input.value = input.defaultValue"
+                    >
+                        <igx-icon>clear</igx-icon>
+                    </igx-suffix>
+                    <igx-hint>Helper text</igx-hint>
+                </igx-input-group>
+
+                <igx-input-group [displayDensity]="density" [type]="inputType" theme="indigo-design">
+                    <label igxLabel>Always Indigo</label>
+                    <igx-prefix>
+                        http://
+                    </igx-prefix>
+                    <input
+                            name="inputWebTest"
+                            [required]="isRequired"
+                            [disabled]="isDisabled"
+                            [(ngModel)]="inputValue"
+                            igxInput
+                            type="text"
+                    />
+                    <igx-suffix>
+                        .com
+                    </igx-suffix>
+                    <igx-hint>Enter valid web address</igx-hint>
+                </igx-input-group>
 
                 <!-- input Always Fluent -->
                 <igx-input-group [displayDensity]="density" [type]="inputType" theme="fluent">
@@ -80,165 +255,7 @@
                     </igx-suffix>
                     <igx-hint>Enter valid web address</igx-hint>
                 </igx-input-group>
-
-                <!-- input-search input Always Material -->
-                <igx-input-group class="material-theme" [displayDensity]="density">
-                    <label igxLabel>Always Material & Use Input type TOKEN</label>
-                    <igx-icon igxPrefix>search</igx-icon>
-                    <input
-                            name="inputSearchTest"
-                            #input
-                            [(ngModel)]="inputValue"
-                            igxInput
-                            placeholder="Search"
-                            [disabled]="isDisabled"
-                    />
-                    <igx-suffix
-                            *ngIf="input.value.length > 0"
-                            (click)="input.value = input.defaultValue"
-                    >
-                        <igx-icon>clear</igx-icon>
-                    </igx-suffix>
-                </igx-input-group>
-
-                <!-- input Always Material -->
-                <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
-                    <label for="fluentfirstName" igxLabel>Always Material - set type</label>
-                    <igx-prefix>
-                        <igx-icon>face</igx-icon>
-                    </igx-prefix>
-                    <input
-                            name="inputTest"
-                            placeholder="Placeholder"
-                            [required]="isRequired"
-                            id="fluentfirstName"
-                            igxInput
-                            [(ngModel)]="inputValue"
-                            [disabled]="isDisabled"
-                    />
-                    <igx-icon igxSuffix>data_usage</igx-icon>
-                </igx-input-group>
-
             </div>
-
-            <input
-                    name="inputWebTestSimple"
-                    placeholder="Native input web test simple"
-                    [required]="isRequired"
-                    [disabled]="isDisabled"
-                    [(ngModel)]="inputValue"
-                    type="text"
-            />
-
-            <!-- text field with validation -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Web address</label>
-                <igx-prefix>
-                    <igx-icon>link</igx-icon>
-                </igx-prefix>
-                <input
-                    name="inputValidityTest"
-                    [required]="isRequired"
-                    [disabled]="isDisabled"
-                    pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-                    [(ngModel)]="inputValue"
-                    igxInput
-                    type="text"
-                />
-                <igx-hint>Type your web address</igx-hint>
-            </igx-input-group>
-
-            <!-- input type file -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Important Documents</label>
-                <input
-                    igxInput
-                    name="testFile"
-                    [required]="isRequired"
-                    [disabled]="isDisabled"
-                    type="file"
-                    multiple
-                />
-                <igx-hint>Upload a file to begin...</igx-hint>
-            </igx-input-group>
-
-
-            <!-- textarea -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Textarea</label>
-                <igx-prefix>
-                    <igx-icon>face</igx-icon>
-                </igx-prefix>
-                <textarea
-                    name="inputTextareaTest"
-                    [required]="isRequired"
-                    igxInput
-                    [disabled]="isDisabled"
-                    [(ngModel)]="inputValue"
-                ></textarea>
-                <igx-suffix>
-                    <igx-icon>phone</igx-icon>
-                </igx-suffix>
-            </igx-input-group>
-
-
-            <!-- Text field mask -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <igx-prefix>+359</igx-prefix>
-                <label igxLabel>Input with Mask</label>
-                <input
-                    [disabled]="isDisabled"
-                    [required]="isRequired"
-                    igxInput
-                    [igxMask]="'000 000 000'"
-                    promptChar="*"
-                    type="text"
-                />
-            </igx-input-group>
-
-
-            <!-- date field -->
-            <igx-date-picker *ngIf="!isRequired" #datePicker
-                [(value)]="date"
-                [displayDensity]="density"
-                [type]="inputType"
-                [disabled]="isDisabled">
-                <label igxLabel>Date: </label>
-                <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="datePicker.open()">date_range</igx-icon>
-                </igx-picker-toggle>
-                <igx-picker-clear></igx-picker-clear>
-            </igx-date-picker>
-
-            <!-- required date field -->
-            <igx-date-picker *ngIf="isRequired" #requiredDatePicker
-                required
-                name="requiredDatePicker"
-                [(ngModel)]="date"
-                [displayDensity]="density"
-                [type]="inputType"
-                [disabled]="isDisabled">
-                <label igxLabel>Date: </label>
-                <igx-picker-toggle igxSuffix>
-                    <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
-                </igx-picker-toggle>
-                <igx-picker-clear></igx-picker-clear>
-            </igx-date-picker>
-
-
-            <!-- Read only -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Read only input field</label>
-                <input
-                    readonly
-                    [disabled]="isDisabled"
-                    igxInput
-                    value="read-only"
-                    type="text"
-                    placeholder="Placeholder"
-                />
-            </igx-input-group>
-
 
             <!-- Select field -->
             <igx-select
@@ -257,8 +274,6 @@
                 <igx-select-item>Paris</igx-select-item>
                 <igx-select-item>New York</igx-select-item>
             </igx-select>
-
-            <igx-checkbox required [(ngModel)]="isRequired" name="requiredCheckbox">Required Toggle #2</igx-checkbox>
         </div>
     </form>
 

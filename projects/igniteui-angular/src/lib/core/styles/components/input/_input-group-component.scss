@@ -80,10 +80,6 @@
             @extend %form-group-clear-icon !optional;
         }
 
-        @include e(upload-button) {
-            @extend %form-group-upload-button !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper !optional;
         }
@@ -99,8 +95,8 @@
         }
 
         // The border of the 'line' and 'box' input variants
-        @include e(border) {
-            @extend %form-group-border !optional;
+        @include e(line) {
+            @extend %form-group-line !optional;
         }
 
         // Textarea element
@@ -119,13 +115,12 @@
 
         // Textarea modifier
         @include m(textarea-group) {
+            @include e(bundle-main) {
+                @extend  %form-group-textarea-group-bundle-main !optional;
+            }
 
             @include e(bundle) {
                 @extend  %form-group-textarea-group-bundle !optional;
-            }
-
-            @include e(label) {
-                @extend %form-group-label-textarea !optional;
             }
         }
 
@@ -165,8 +160,8 @@
                 @extend %form-group-label--focus !optional;
             }
 
-            @include e(border) {
-                @extend %form-group-border--focus !optional;
+            @include e(line) {
+                @extend %form-group-line--focus !optional;
             }
         }
 
@@ -202,8 +197,8 @@
                 @extend %form-group-label--error !optional;
             }
 
-            @include e(border) {
-                @extend %form-group-border--error !optional;
+            @include e(line) {
+                @extend %form-group-line--error !optional;
             }
 
             @include e(hint) {
@@ -220,8 +215,8 @@
                 @extend %form-group-label--success !optional;
             }
 
-            @include e(border) {
-                @extend %form-group-border--success !optional;
+            @include e(line) {
+                @extend %form-group-line--success !optional;
             }
 
             @include e(hint) {
@@ -283,34 +278,10 @@
 
         @include m(cosy) {
             @extend %form-group-display--cosy !optional;
-
-            @include e(label) {
-                @extend %form-group-label--cosy !optional;
-            }
-
-            @include e(input) {
-                @extend %form-group-input--cosy !optional;
-            }
-
-            @include e(file-input) {
-                @extend %form-group-file-input--cosy !optional;
-            }
         }
 
         @include m(compact) {
             @extend %form-group-display--compact !optional;
-
-            @include e(label) {
-                @extend %form-group-label--compact !optional;
-            }
-
-            @include e(input) {
-                @extend %form-group-input--compact !optional;
-            }
-
-            @include e(file-input) {
-                @extend %form-group-file-input--compact !optional;
-            }
         }
 
         // Type box START
@@ -327,20 +298,8 @@
                 @extend %form-group-bundle--box !optional;
             }
 
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box !optional;
-            }
-
             @include e(input) {
                 @extend %form-group-input--box !optional;
-            }
-
-            @include e(file-input) {
-                @extend %form-group-file-input--box !optional;
-            }
-
-            @include e(label) {
-                @extend %form-group-label--box !optional;
             }
 
             @include e(hint) {
@@ -359,18 +318,6 @@
                 @extend %form-group-bundle--box-disabled !optional;
             }
         }
-
-        @include mx(box, cosy) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-cosy !optional;
-            }
-        }
-
-        @include mx(box, compact) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-compact !optional;
-            }
-        }
         // Type box END
 
         // Type border START
@@ -383,11 +330,10 @@
 
             @include e(bundle-main) {
                 @extend %form-group-bundle-main--border !optional;
-                @extend %form-group-bundle-main--box !optional;
             }
 
-            @include e(border) {
-                @extend %form-group-border--hidden !optional;
+            @include e(line) {
+                @extend %form-group-line--hidden !optional;
             }
 
             @include e(input) {
@@ -404,18 +350,6 @@
 
             @include e(hint) {
                 @extend %form-group-helper--box !optional;
-            }
-        }
-
-        @include mx(border, cosy) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-cosy !optional;
-            }
-        }
-
-        @include mx(border, compact) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-compact !optional;
             }
         }
 
@@ -484,12 +418,8 @@
                 }
             }
 
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box !optional;
-            }
-
-            @include e(border) {
-                @extend %form-group-border--hidden !optional;
+            @include e(line) {
+                @extend %form-group-line--hidden !optional;
             }
 
             @include e(input) {
@@ -502,18 +432,6 @@
 
             @include e(hint) {
                 @extend %form-group-helper--box !optional;
-            }
-        }
-
-        @include mx(search, cosy) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-cosy !optional;
-            }
-        }
-
-        @include mx(search, compact) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-compact !optional;
             }
         }
 
@@ -742,10 +660,6 @@
                 @extend %form-group-bundle--indigo !optional;
             }
 
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box !optional;
-            }
-
             @include e(input) {
                 @extend %form-group-input--indigo !optional;
             }
@@ -767,24 +681,6 @@
             }
         }
 
-        @include mx(indigo, disabled) {
-            @include e(bundle) {
-                @extend %form-group-bundle--indigo--disabled !optional;
-            }
-        }
-
-        @include mx(indigo, cosy) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-cosy !optional;
-            }
-        }
-
-        @include mx(indigo, compact) {
-            @include e(bundle-main) {
-                @extend %form-group-bundle-main--box-compact !optional;
-            }
-        }
-
         @include mx(indigo, focused) {
             @include e(bundle) {
                 @extend %indigo--box-focused !optional;
@@ -800,16 +696,24 @@
         @include mx(indigo, invalid) {
             @include e(bundle) {
                 @extend %form-group-bundle-error--indigo !optional;
+            }
+        }
 
-                &:hover {
-                    @extend %form-group-bundle-error--indigo--hover !optional;
-                }
+        @include mx(indigo, invalid, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle-focused-error--indigo !optional;
+            }
+        }
+
+        @include mx(indigo, valid, focused) {
+            @include e(bundle) {
+                @extend %form-group-bundle-focused-success--indigo !optional;
             }
         }
 
         @include mx(indigo, disabled) {
             @include e(bundle) {
-                @extend %form-group-bundle--box-disabled !optional;
+                @extend %form-group-bundle--indigo--disabled !optional;
             }
 
             @include e(input) {

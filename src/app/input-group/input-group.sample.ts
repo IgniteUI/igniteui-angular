@@ -71,17 +71,22 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
         ];
 
         this.inputTypes = [
-            { selected: true, type: 'line', label: 'Line', togglable: true },
             {
-                selected: this.inputType === 'border',
-                type: 'border',
-                label: 'Border',
-                togglable: true,
+                selected: true,
+                type: 'line',
+                label: 'Line',
+                togglable: true
             },
             {
                 selected: this.inputType === 'box',
                 type: 'box',
                 label: 'Box',
+                togglable: true,
+            },
+            {
+                selected: this.inputType === 'border',
+                type: 'border',
+                label: 'Border',
                 togglable: true,
             },
         ];

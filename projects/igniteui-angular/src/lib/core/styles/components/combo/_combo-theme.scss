@@ -162,16 +162,11 @@
             background: var-get($theme, 'toggle-button-background-hover');
             color: var-get($theme, 'toggle-button-foreground-hover') !important;
         }
-
-        &:focus {
-            background: var-get($theme, 'toggle-button-background-focus');
-            color: var-get($theme, 'toggle-button-foreground-focus') !important;
-        }
     }
 
     %igx-combo__clear-button {
         background: var-get($theme, 'clear-button-background');
-        color: var-get($theme, 'clear-button-foreground');
+        color: var-get($theme, 'clear-button-foreground') !important;
 
         @if $variant == 'bootstrap' {
             border-inline-end: rem(1px) solid var(--border-color);
@@ -179,12 +174,24 @@
 
         &:hover {
             background: var-get($theme, 'clear-button-background-hover');
-            color: var-get($theme, 'clear-button-foreground-hover');
+            color: var-get($theme, 'clear-button-foreground-hover') !important;
+        }
+    }
+
+    .igx-input-group--focused {
+        %igx-combo__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus') !important;
         }
 
-        &:focus {
+        %igx-combo__clear-button {
             background: var-get($theme, 'clear-button-background-focus');
-            color: var-get($theme, 'clear-button-foreground-focus');
+            color: var-get($theme, 'clear-button-foreground-focus') !important;
+
+            &:hover {
+                background: var-get($theme, 'clear-button-background-hover');
+                color: var-get($theme, 'clear-button-foreground-hover') !important;
+            }
         }
     }
 }

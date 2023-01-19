@@ -13,7 +13,7 @@
 /// @prop {Color} input-prefix-background [transparent] - The background color of an input prefix of type line, box and border.
 /// @prop {Map} input-suffix-color [color: ('gray', 600)] - The text color of an input sufix of type line, box and border.
 /// @prop {Color} input-suffix-background [transparent] - The background color of an input sufix of type line, box and border.
-/// @prop {Map} idle-text-color [color: ('gray', 600)] - The input text color in the idle state.
+/// @prop {Map} idle-text-color [color: ('gray', 700)] - The input text color in the idle state.
 /// @prop {Map} filled-text-color [color: ('gray', 900)] - The input text color in the filled state.
 /// @prop {Map} focused-text-color [color: ('gray', 900)] - The input text color in the focused state.
 /// @prop {Map} disabled-text-color [color: ('gray', 500)] - The input text color in the disabled state.
@@ -31,6 +31,7 @@
 /// @prop {Map} disabled-border-color [color: ('gray', 400)] - The disabled border color for input groups of type border and fluent.
 /// @prop {Map} box-background [color: ('gray', 100)] - The background color of an input group of type box.
 /// @prop {Map} box-background-hover [color: ('gray', 200)] - The background color of an input group of type box on hover.
+/// @prop {Map} box-background-focus [color: ('gray', 200)] - The background color of an input group of type box on focus.
 /// @prop {Map} box-disabled-background [color: ('gray', 100)] - The background color of an input group of type box in the disabled state.
 /// @prop {Color} border-background [transparent] - The background color of an input group of type border.
 /// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
@@ -44,13 +45,13 @@
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
 /// @prop {Map} $success-shadow-color [color: ('success', 500, .38)] - The shadow/border color for success state for bootstrap input group.
 /// @prop {Map} $error-shadow-color [color: ('error', 500, .38)] - The shadow/border color for error state for bootstrap input group.
-/// @prop {Map} placeholder-color [color: ('gray', 500)] - The placeholder color of an input group.
+/// @prop {Map} placeholder-color [color: ('gray', 700)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
 /// @prop {Number} box-border-radius [4px 4px 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Color} label-floated-background [color: surface] - The background color of the label when floated for input of type border.
-/// @prop {Color} label-floated-disabled-background [color: surface] - The background color of the label when floated for input group of type border in its disabled state.
+/// @prop {Color} label-floated-background [transparent] - The background color of the label when floated for input of type border.
+/// @prop {Color} label-floated-disabled-background [transparent] - The background color of the label when floated for input group of type border in its disabled state.
 /// @requires {Map} $default-elevation-input-group
 $light-input-group: extend(
     $default-elevation-input-group,
@@ -70,7 +71,7 @@ $light-input-group: extend(
         input-suffix-background: transparent,
 
         idle-text-color: (
-            color: ('gray', 600)
+            color: ('gray', 700)
         ),
 
         border-color: (
@@ -130,15 +131,19 @@ $light-input-group: extend(
         ),
 
         disabled-border-color: (
-            color: ('gray', 400),
+            color: ('gray', 500),
         ),
 
         box-background: (
-            color: ('gray', 100)
+            color: ('gray', 200)
         ),
 
         box-background-hover: (
             color: ('gray', 200)
+        ),
+
+        box-background-focus: (
+            color: ('gray', 300)
         ),
 
         box-disabled-background: (
@@ -149,13 +154,9 @@ $light-input-group: extend(
 
         border-disabled-background: transparent,
 
-        label-floated-background: (
-            color: surface
-        ),
+        label-floated-background: transparent,
 
-        label-floated-disabled-background: (
-            color: surface
-        ),
+        label-floated-disabled-background: transparent,
 
         search-background: (
             color: ('gray', 50)
@@ -178,11 +179,11 @@ $light-input-group: extend(
         ),
 
         placeholder-color: (
-            color: ('gray', 500)
+            color: ('gray', 700)
         ),
 
         disabled-placeholder-color: (
-            color: ('gray', 400)
+            color: ('gray', 500)
         ),
 
         box-border-radius: rem(4px),
@@ -350,6 +351,7 @@ $bootstrap-input-group: extend(
 /// @prop {Map} box-background-hover [color: ('gray', 100)] - The background color of an input group of type box on hover.
 /// @prop {Map} disabled-border-color [color: ('gray', 300)] - The disabled border color for input groups of type border and fluent.
 /// @prop {Map} disabled-bottom-line-color [color: ('gray', 300)] - The bottom line and border colors in the disabled state.
+/// @prop {Color} box-disabled-background [transparent] - The background color of an input group in the disabled state.
 /// @prop {Map} disabled-text-color [color: ('gray', 300)] - The input text color in the disabled state.
 /// @prop {Map} focused-border-color [color: ('primary', 400)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 600)] - The hover input border for input groups of type border and fluent.
@@ -394,6 +396,8 @@ $indigo-input-group: extend(
         ),
 
         box-background: transparent,
+
+        box-disabled-background: transparent,
 
         box-background-hover: (
             color: ('gray', 100)

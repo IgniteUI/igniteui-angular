@@ -12,17 +12,17 @@
 /// @prop {Map} search-separator-border-color [color: ('gray', 500)] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [color: ('gray', 700)] - The combo placeholder text color.
 /// @prop {Map} toggle-button-background [color: ('gray', 300)] - The combo toggle button background color.
-/// @prop {Map} toggle-button-background-hover [color: ('gray', 300)] - The combo toggle button background color on hover.
+/// @prop {Map} toggle-button-background-hover [color: ('gray', 400)] - The combo toggle button background color on hover.
 /// @prop {Map} toggle-button-background-focus [color: ('gray', 400, .3)] - The combo toggle button background color when the combo is focused.
 /// @prop {Map} toggle-button-foreground [contrast-color: ('gray', 300)] - The combo toggle button foreground color.
-/// @prop {Map} toggle-button-foreground-hover [contrast-color: ('gray', 300)] - The combo toggle button foreground color on hover.
+/// @prop {Map} toggle-button-foreground-hover [contrast-color: ('gray', 400)] - The combo toggle button foreground color on hover.
 /// @prop {Map} toggle-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo toggle button foreground color when the combo is focused.
-/// @prop {Map} clear-button-background [color: ('gray', 300)] - The combo clear button background color.
+/// @prop {Color} clear-button-background [transparent] - The combo clear button background color.
 /// @prop {Map} clear-button-background-hover [color: ('gray', 300)] - The combo clear button background color on hover.
-/// @prop {Map} clear-button-background-focus [color: ('gray', 400, .3)] - The combo clear button background color when the combo is focused.
+/// @prop {Color} clear-button-background-focus [transparent] - The combo clear button background color when the combo is focused.
 /// @prop {Map} clear-button-foreground [contrast-color: ('gray', 300)] - The combo toggle clear foreground color.
 /// @prop {Map} clear-button-foreground-hover [contrast-color: ('gray', 300)] - The combo clear button foreground color on hover.
-/// @prop {Map} clear-button-foreground-focus [contrast-color: ('gray', 400)] - TThe combo clear button foreground color when the combo is focused.
+/// @prop {Map} clear-button-foreground-focus [contrast-color: ('gray', 100)] - TThe combo clear button foreground color when the combo is focused.
 $light-combo: (
     variant:'material',
 
@@ -43,7 +43,7 @@ $light-combo: (
     ),
 
     toggle-button-background-hover: (
-        color: ('gray', 300),
+        color: ('gray', 400, .3),
     ),
 
     toggle-button-background-focus: (
@@ -55,35 +55,31 @@ $light-combo: (
     ),
 
     toggle-button-foreground-hover: (
-        contrast-color: ('gray', 300),
+        contrast-color: ('gray', 400),
     ),
 
     toggle-button-foreground-focus: (
         contrast-color: ('gray', 400),
     ),
 
-    clear-button-background:  (
-        color: ('gray', 300),
-    ),
+    clear-button-background:  transparent,
 
     clear-button-background-hover:  (
-        color: ('gray', 300),
-    ),
-
-    clear-button-background-focus:  (
         color: ('gray', 400, .3),
     ),
 
+    clear-button-background-focus: transparent,
+
     clear-button-foreground: (
-        contrast-color: ('gray', 300),
+        contrast-color: ('gray', 100),
     ),
 
     clear-button-foreground-hover: (
-        contrast-color: ('gray', 300),
+        contrast-color: ('gray', 400),
     ),
 
     clear-button-foreground-focus: (
-        contrast-color: ('gray', 400),
+        contrast-color: ('gray', 100),
     ),
 );
 
@@ -124,7 +120,6 @@ $bootstrap-combo: extend(
 
 /// Generates an indigo combo schema.
 /// @type {Map}
-/// @prop {Color} $clear-button-background [transparent] - The combo clear button background color.
 /// @prop {Color} $clear-button-background-hover [transparent] - The combo clear button background color on hover.
 /// @prop {Color} $clear-button-background-focus [transparent] - The combo clear button background color when the combo is focused.
 /// @prop {Map} $clear-button-foreground [color: ('gray', 600)] - The combo toggle clear foreground color.
@@ -135,8 +130,6 @@ $indigo-combo: extend(
     $light-combo,
     (
         variant:'indigo-design',
-
-        clear-button-background:  transparent,
 
         clear-button-background-hover:  transparent,
 

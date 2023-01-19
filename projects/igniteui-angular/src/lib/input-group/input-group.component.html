@@ -67,27 +67,24 @@
         </div>
 
         <div class="igx-input-group__bundle-main">
-            <ng-container *ngIf="!isTypeBorder">
-                <ng-container *ngTemplateOutlet="label"></ng-container>
-            </ng-container>
             <ng-container *ngTemplateOutlet="input"></ng-container>
             <ng-container *ngTemplateOutlet="files"></ng-container>
         </div>
 
-        <ng-container *ngIf="isTypeBorder">
+        <ng-container>
             <div class="igx-input-group__notch">
                 <ng-container *ngTemplateOutlet="label"></ng-container>
             </div>
         </ng-container>
 
-        <div *ngIf="isTypeBorder" class="igx-input-group__filler"></div>
+        <div class="igx-input-group__filler"></div>
 
         <div class="igx-input-group__bundle-end">
             <ng-container *ngTemplateOutlet="clear"></ng-container>
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
 
-        <div class="igx-input-group__border" *ngIf="hasBorder"></div>
+        <div class="igx-input-group__line" *ngIf="hasBorder"></div>
     </div>
 </ng-template>
 
@@ -111,7 +108,7 @@
             <ng-container *ngTemplateOutlet="suffix"></ng-container>
         </div>
 
-        <div class="igx-input-group__border" *ngIf="hasBorder"></div>
+        <div class="igx-input-group__line" *ngIf="hasBorder"></div>
     </div>
 </ng-template>
 

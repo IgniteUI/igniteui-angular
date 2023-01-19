@@ -32,6 +32,7 @@
 /// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-background-hover [null] - The background color on hover of an input group of type box.
+/// @param {Color} $box-background-focus [null] - The background color on hover of an input group of type focus.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
 /// @param {Color} $border-background [null] - The background color of an input group of type border.
 /// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
@@ -58,6 +59,7 @@
 
     $box-background: null,
     $box-background-hover: null,
+    $box-background-focus: null,
     $box-disabled-background: null,
     $box-border-radius: null,
 
@@ -105,20 +107,6 @@
     $input-prefix-background: null,
     $input-suffix-color: null,
     $input-suffix-background: null,
-
-    $toggle-button-background: null,
-    $toggle-button-background-hover: null,
-    $toggle-button-background-focus: null,
-    $toggle-button-foreground: null,
-    $toggle-button-foreground-hover: null,
-    $toggle-button-foreground-focus: null,
-
-    $clear-button-background: null,
-    $clear-button-background-hover: null,
-    $clear-button-background-focus: null,
-    $clear-button-foreground: null,
-    $clear-button-foreground-hover: null,
-    $clear-button-foreground-focus: null,
 ) {
     $name: 'igx-input-group';
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
@@ -142,6 +130,10 @@
 
     @if not($placeholder-color) and $box-background-hover {
         $placeholder-color: text-contrast($box-background-hover);
+    }
+
+    @if not($placeholder-color) and $box-background-focus {
+        $placeholder-color: text-contrast($box-background-focus);
     }
 
     @if not($placeholder-color) and $search-background {
@@ -196,6 +188,7 @@
         disabled-border-color: $disabled-border-color,
         box-background: $box-background,
         box-background-hover: $box-background-hover,
+        box-background-focus: $box-background-focus,
         box-disabled-background: $box-disabled-background,
         border-background: $border-background,
         border-disabled-background: $border-disabled-background,
@@ -215,18 +208,6 @@
         input-prefix-background: $input-prefix-background,
         input-suffix-color: $input-suffix-color,
         input-suffix-background: $input-suffix-background,
-        toggle-button-background: $toggle-button-background,
-        toggle-button-background-hover: $toggle-button-background-hover,
-        toggle-button-background-focus: $toggle-button-background-focus,
-        toggle-button-foreground: $toggle-button-foreground,
-        toggle-button-foreground-hover: $toggle-button-foreground-hover,
-        toggle-button-foreground-focus: $toggle-button-foreground-focus,
-        clear-button-background: $clear-button-background,
-        clear-button-background-hover: $clear-button-background-hover,
-        clear-button-background-focus: $clear-button-background-focus,
-        clear-button-foreground: $clear-button-foreground,
-        clear-button-foreground-hover: $clear-button-foreground-hover,
-        clear-button-foreground-focus: $clear-button-foreground-focus,
     ));
 }
 
@@ -278,6 +259,9 @@
         'compact': rem(14px),
     );
 
+    $input-top-padding: rem(20px);
+    $input-bottom-padding: rem(6px);
+
     $bundle-padding-top: (
         'comfortable': rem(18px, map.get($base-scale-size, 'comfortable')),
         'cosy': rem(18px, map.get($base-scale-size, 'cosy')),
@@ -311,7 +295,7 @@
         } @else {
             height: 100%;
         }
-        transition: color $transition-timing;
+        transition: color $transition-timing, background $transition-timing;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
     }
 
@@ -335,6 +319,7 @@
     }
 
     %form-group-display {
+        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
         --component-size: var(--ig-size, var(--ig-size-large));
 
         position: relative;
@@ -443,19 +428,13 @@
     }
 
     %form-group-bundle {
-        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
-
+        height: var(--size);
         position: relative;
         display: grid;
         grid-template-columns: auto 1fr auto;
         max-width: 100%;
-        padding-block-start: pad-inline(map.get($bundle-padding-top, 'compact'), map.get($bundle-padding-top, 'cosy'), map.get($bundle-padding-top, 'comfortable'));
         font-size: 1rem;
         grid-area: 1 / 2 / span 1 / span 2;
-
-        @if $variant != 'material' {
-            height: var(--size);
-        }
 
         &::after {
             content: '';
@@ -480,15 +459,14 @@
     }
 
     %form-group-bundle--box-focus {
-        background: var-get($theme, 'box-background-hover');
+        background: var-get($theme, 'box-background-focus');
     }
 
     %form-group-bundle--box-disabled {
+        background-color: var-get($theme, 'box-disabled-background');
+
         @if $NOT-indigo-theme {
-            background-color: var-get($theme, 'box-disabled-background');
             background-image: none !important;
-        } @else {
-            background: transparent;
         }
 
         &::after {
@@ -562,10 +540,43 @@
         }
     }
 
+    %form-group-bundle-start {
+        grid-area: 1 / 1;
+    }
+
+    %form-group-bundle-main {
+        grid-area: 1 / 2 / span 1 / span 2;
+    }
+
+    %igx-input-group__notch {
+        display: flex;
+        align-items: center;
+        width: auto;
+        min-width: 0;
+        height: 100%;
+        padding: 0 rem(4px);
+        grid-area: 1 / 2;
+    }
+
+    %igx-input-group__filler {
+        grid-area: 1 / 3;
+    }
+
+    %form-group-bundle-end {
+        grid-area: 1 / 4;
+    }
+
+    %form-group-bundle--box,
+    %form-group-bundle--border {
+        grid-template-columns: auto auto 1fr auto;
+    }
+
     %form-group-bundle-start,
     %form-group-bundle-end {
-        --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
-        min-width: var(--min-width);
+        @if $material-theme {
+            min-width: rem(12px);
+        }
+
         min-height: 100%;
         overflow: hidden;
     }
@@ -574,7 +585,6 @@
         --size: #{sizable(rem(40px), rem(48px), rem(56px))};
 
         display: grid;
-        grid-template-columns: auto auto 1fr auto;
         align-items: initial;
         padding: 0;
         box-shadow: none;
@@ -584,7 +594,6 @@
         %form-group-bundle-start {
             width: auto;
             flex-shrink: 0;
-            grid-area: 1 / 1;
 
             border: {
                 color: var-get($theme, 'border-color');
@@ -611,25 +620,16 @@
         }
 
         %igx-input-group__filler {
-            grid-area: 1 / 3;
             border: {
                 width: rem(1px);
                 style: solid;
-                color: var-get($theme, 'idle-text-color');
+                color: var-get($theme, 'border-color');
                 left: none;
                 right: none;
             }
         }
 
         %igx-input-group__notch {
-            display: flex;
-            align-items: center;
-            width: auto;
-            min-width: 0;
-            height: 100%;
-            grid-area: 1 / 2;
-            padding: 0 rem(4px);
-
             border-block-start: rem(1px) solid var-get($theme, 'border-color');
             border-block-end: rem(1px) solid var-get($theme, 'border-color');
 
@@ -644,7 +644,6 @@
             background: transparent;
             padding: 0 rem(4px) !important;
             font-size: rem(16px);
-            grid-area: 1 / 2 / span 1 / span 2;
         }
 
         %form-group-bundle-end {
@@ -696,6 +695,7 @@
     %form-group-input--border {
         width: 100%;
         height: 100% !important;
+        padding-block: 0;
         border: none;
         outline-style: none;
         color: inherit;
@@ -745,23 +745,16 @@
         min-height: var(--size);
     }
 
-    %form-group-bundle-main--box {
-        padding-block-start: pad-inline(rem(18px, map.get($base-scale-size, 'compact')), rem(18px, map.get($base-scale-size, 'cosy')), rem(18px, map.get($base-scale-size, 'comfortable')));
-    }
-
-    // Base Label
     %form-group-label {
         @include ellipsis();
         position: absolute;
         max-width: 100%;
         padding-inline-end: rem(4px);
-        transform: translateY(50%); /* 8px, base is 16px */
         line-height: 1 !important;
-        height: rem(18px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
+        transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
 
         [dir='rtl'] & {
@@ -769,24 +762,12 @@
         }
     }
 
-    // Base box label
-    %form-group-label--box {
-        transform: translateY(0);
 
-        + %form-group-input--box,
-        ~ %form-group-file-input--box {
-            transform: translateY(0);
-        }
-    }
-
-    // Base box border
     %form-group-label--border {
         padding-inline-end: 0;
         display: inline-block;
         position: relative;
         background: transparent;
-        transition: all $transition-timing;
-        height: auto;
     }
 
     %form-group-label--border,
@@ -801,9 +782,9 @@
     }
 
     %form-group-label--float {
-        transform: translateY(-50%);
+        --floating-label-position: -106%;
+        transform: translateY(var(--floating-label-position));
         font-size: rem(12px);
-        margin-top: auto;
     }
 
     %form-group-label--focused-border,
@@ -860,82 +841,6 @@
         }
     }
 
-    %form-group-border--success {
-        %form-group-bundle-start {
-            border-inline-start-color: var-get($theme, 'success-secondary-color');
-            border-block-start-color: var-get($theme, 'success-secondary-color');
-            border-block-end-color: var-get($theme, 'success-secondary-color');
-        }
-
-        %form-group-bundle-end {
-            border-inline-end-color: var-get($theme, 'success-secondary-color');
-            border-block-start-color: var-get($theme, 'success-secondary-color');
-            border-block-end-color: var-get($theme, 'success-secondary-color');
-        }
-
-        %igx-input-group__notch,
-        %igx-input-group__filler {
-            border-block-color: var-get($theme, 'success-secondary-color');
-        }
-    }
-
-    %form-group-border--warning {
-        %form-group-bundle-start {
-            border-inline-start-color: var-get($theme, 'warning-secondary-color');
-            border-block-start-color: var-get($theme, 'warning-secondary-color');
-            border-block-end-color: var-get($theme, 'warning-secondary-color');
-        }
-
-        %form-group-bundle-end {
-            border-inline-end-color: var-get($theme, 'warning-secondary-color');
-            border-block-start-color: var-get($theme, 'warning-secondary-color');
-            border-block-end-color: var-get($theme, 'warning-secondary-color');
-        }
-
-        %igx-input-group__notch,
-        %igx-input-group__filler {
-            border-block-color: var-get($theme, 'warning-secondary-color');
-        }
-    }
-
-    %form-group-border--error {
-        %form-group-bundle-start {
-            border-inline-start-color: var-get($theme, 'error-secondary-color');
-            border-block-start-color: var-get($theme, 'error-secondary-color');
-            border-block-end-color: var-get($theme, 'error-secondary-color');
-        }
-
-        %form-group-bundle-end {
-            border-inline-end-color: var-get($theme, 'error-secondary-color');
-            border-block-start-color: var-get($theme, 'error-secondary-color');
-            border-block-end-color: var-get($theme, 'error-secondary-color');
-        }
-
-        %igx-input-group__notch,
-        %igx-input-group__filler {
-            border-block-color: var-get($theme, 'error-secondary-color');
-        }
-    }
-
-    %form-group-border--disabled {
-        %form-group-bundle-start {
-            border-inline-start-color: var-get($theme, 'disabled-border-color');
-            border-block-start-color: var-get($theme, 'disabled-border-color');
-            border-block-end-color: var-get($theme, 'disabled-border-color');
-        }
-
-        %form-group-bundle-end {
-            border-inline-end-color: var-get($theme, 'disabled-border-color');
-            border-block-start-color: var-get($theme, 'disabled-border-color');
-            border-block-end-color: var-get($theme, 'disabled-border-color');
-        }
-
-        %igx-input-group__notch,
-        %igx-input-group__filler {
-            border-block-color: var-get($theme, 'disabled-border-color');
-        }
-    }
-
     %form-group-label--float-border {
         --label-position: #{sizable(18px, 22px, 26px)};
         transform: translateY(calc(var(--label-position) * -1));
@@ -952,20 +857,19 @@
         height: auto !important;
     }
 
-    %form-group-label-textarea {
-        transition-duration: 0ms;
-    }
+    //%form-group-label-textarea {
+    //    transition-duration: 0ms;
+    //}
 
-    %form-group-label-textarea-border--float {
-        @if $material-theme {
+    @if $material-theme {
+        %form-group-label-textarea-border--float {
             margin-bottom: calc(100% + #{rem(4px)}) !important;
         }
-    }
 
-    %form-group-label-textarea--float {
-        @if $material-theme {
-            transform: translateY(rem(-5px)) !important;
-            margin-block-end: auto !important;
+        // TODO FIX THIS FOR BORDER SIZE
+        %form-group-label-textarea--float {
+            transform: translateY(0) !important;
+            top: calc(#{$input-top-padding} / 4);
         }
     }
 
@@ -999,7 +903,10 @@
         position: relative;
         display: block;
         border: none;
-        height: #{sizable(rem(32px, map.get($base-scale-size, 'cosy')), rem(32px, map.get($base-scale-size, 'compact')), rem(32px, map.get($base-scale-size, 'comfortable')))};
+        padding-block-start: $input-top-padding;
+        padding-block-end: $input-bottom-padding;
+        padding-inline-start: rem(4px);
+        height: calc(var(--size) - 2px);
         width: 100%;
         min-width: 0;
         background: transparent;
@@ -1025,38 +932,24 @@
     }
 
     %form-group-file-input {
-        position: relative;
         width: 100%;
         max-width: 100%;
         overflow: hidden;
-        height: #{sizable(rem(32px, map.get($base-scale-size, 'compact')), rem(32px, map.get($base-scale-size, 'cosy')), rem(32px, map.get($base-scale-size, 'comfortable')))};
+        padding-block-start: $input-top-padding;
+        padding-block-end: $input-bottom-padding;
+        padding-inline-start: rem(4px);
+        height: var(--size);
         color: var-get($theme, 'filled-text-color');
-
-        @if $NOT-bootstrap-theme {
-            margin-block-start: rem(3px);
-        }
 
         span {
             @include ellipsis();
-            position: absolute;
+            position: relative;
             display: inline-block;
             width: inherit;
             max-width: inherit;
             top: 50%;
             transform: translateY(-50%);
         }
-    }
-
-    %form-group-input--compact {
-        font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
-    }
-
-    %form-group-file-input--compact {
-        height: rem(32px, map.get($base-scale-size, 'compact'));
-    }
-
-    %form-group-upload-button[igxButton] {
-        margin-bottom: rem(10px);
     }
 
     %form-group-clear-icon {
@@ -1097,12 +990,9 @@
         }
     }
 
-    %form-group-input--box,
-    %form-group-file-input--box,
     %form-group-input--search,
-    %form-group-input--indigo,
     %form-group-file-input-indigo {
-        transform: translateY(-25%);
+        padding-block: 0;
     }
 
     %form-group-input--hover {
@@ -1129,9 +1019,8 @@
         height: auto;
         resize: vertical;
         overflow: hidden;
-        @if $material-theme {
-            margin-block-start: rem(10px) !important;
-        }
+
+        padding-block: 0;
 
         // resets typography styles
         line-height: normal !important;
@@ -1143,6 +1032,17 @@
         }
     }
 
+    %form-group-textarea-group-bundle-main {
+        overflow: hidden;
+        height: calc(100% - 1px);
+
+        @if $material-theme {
+            padding-block-start: $input-top-padding;
+        } @else if $fluent-theme {
+            padding-block-start: rem(8px);
+        }
+    }
+
     %form-group-textarea--disabled {
         color: var-get($theme, 'disabled-text-color') !important;
 
@@ -1151,12 +1051,11 @@
         }
     }
 
-    %form-group-border {
+    %form-group-line {
         position: absolute;
         width: 100%;
         inset-inline-end: 0;
         height: rem(2px);
-        grid-column: 1 / -1;
         align-self: end;
         transform: scaleX(0);
         transform-origin: center;
@@ -1164,13 +1063,101 @@
         z-index: 1;
     }
 
-    %form-group-border--focus {
+    %form-group-line--success {
+        background: var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-border--success {
+        %form-group-bundle-start {
+            border-inline-start-color: var-get($theme, 'success-secondary-color');
+            border-block-start-color: var-get($theme, 'success-secondary-color');
+            border-block-end-color: var-get($theme, 'success-secondary-color');
+        }
+
+        %form-group-bundle-end {
+            border-inline-end-color: var-get($theme, 'success-secondary-color');
+            border-block-start-color: var-get($theme, 'success-secondary-color');
+            border-block-end-color: var-get($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__notch,
+        %igx-input-group__filler {
+            border-block-color: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-line--warning {
+        background: var-get($theme, 'error-secondary-color');
+    }
+
+    %form-group-border--warning {
+        %form-group-bundle-start {
+            border-inline-start-color: var-get($theme, 'warning-secondary-color');
+            border-block-start-color: var-get($theme, 'warning-secondary-color');
+            border-block-end-color: var-get($theme, 'warning-secondary-color');
+        }
+
+        %form-group-bundle-end {
+            border-inline-end-color: var-get($theme, 'warning-secondary-color');
+            border-block-start-color: var-get($theme, 'warning-secondary-color');
+            border-block-end-color: var-get($theme, 'warning-secondary-color');
+        }
+
+        %igx-input-group__notch,
+        %igx-input-group__filler {
+            border-block-color: var-get($theme, 'warning-secondary-color');
+        }
+    }
+
+    %form-group-line--error {
+        background: var-get($theme, 'error-secondary-color');
+    }
+
+    %form-group-border--error {
+        %form-group-bundle-start {
+            border-inline-start-color: var-get($theme, 'error-secondary-color');
+            border-block-start-color: var-get($theme, 'error-secondary-color');
+            border-block-end-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %form-group-bundle-end {
+            border-inline-end-color: var-get($theme, 'error-secondary-color');
+            border-block-start-color: var-get($theme, 'error-secondary-color');
+            border-block-end-color: var-get($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__notch,
+        %igx-input-group__filler {
+            border-block-color: var-get($theme, 'error-secondary-color');
+        }
+    }
+
+    %form-group-border--disabled {
+        %form-group-bundle-start {
+            border-inline-start-color: var-get($theme, 'disabled-border-color');
+            border-block-start-color: var-get($theme, 'disabled-border-color');
+            border-block-end-color: var-get($theme, 'disabled-border-color');
+        }
+
+        %form-group-bundle-end {
+            border-inline-end-color: var-get($theme, 'disabled-border-color');
+            border-block-start-color: var-get($theme, 'disabled-border-color');
+            border-block-end-color: var-get($theme, 'disabled-border-color');
+        }
+
+        %igx-input-group__notch,
+        %igx-input-group__filler {
+            border-block-color: var-get($theme, 'disabled-border-color');
+        }
+    }
+
+    %form-group-line--focus {
         transform: scaleX(1);
         transition: transform $transition-timing;
     }
 
     // Hides the border for border type input
-    %form-group-border--hidden {
+    %form-group-line--hidden {
         display: none;
     }
 
@@ -1245,7 +1232,7 @@
     // INDIGO START
     %form-group-bundle--indigo {
         transition: background $transition-timing, box-shadow $transition-timing;
-        background: var-get($theme, 'box-background');
+        //background: var-get($theme, 'box-background');
         box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
         padding-top: 0;
 
@@ -1255,8 +1242,29 @@
         }
     }
 
+    %form-group-input--indigo {
+        padding: rem(8px);
+    }
+
     %indigo--box-focused {
         background: var-get($theme, 'box-background-hover');
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'focused-bottom-line-color');
+    }
+
+    %form-group-bundle-success--indigo {
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-bundle-error--indigo {
+        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'error-secondary-color');
+    }
+
+    %form-group-bundle-focused-success--indigo {
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'success-secondary-color');
+    }
+
+    %form-group-bundle-focused-error--indigo {
+        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-helper--indigo--disabled {
@@ -1264,6 +1272,7 @@
     }
 
     %form-group-bundle--indigo--disabled {
+        background: transparent;
         box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
 
         &:hover,
@@ -1817,6 +1826,7 @@
 
     %form-group-input {
         @include type-style($input-text) {
+            font-size: 16px;
             margin: 0;
         }
     }
