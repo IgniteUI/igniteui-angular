@@ -21,9 +21,9 @@
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <ng-container *ngTemplateOutlet="rowDimensions.length ? defaultRowDimensionsTemplate : emptyRowDimensionsTemplate; context: this"></ng-container>
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
-        (dragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
+        (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='totalHeight' [style.width.px]='pivotContentCalcWidth || null' #tbody [attr.aria-activedescendant]="activeDescendant">
+        [style.height.px]="totalHeight" [style.width.px]="pivotContentCalcWidth || null" #tbody [attr.aria-activedescendant]="activeDescendant">
         <span *ngIf="hasMovableColumns && columnInDrag && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
@@ -38,15 +38,15 @@
         | pivotGridAutoTransform:pivotConfiguration:pipeTrigger
         | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger
         | pivotGridRowExpansion:pivotConfiguration:expansionStates:defaultExpandState:pipeTrigger"
-            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
-            [igxForContainerSize]='calcHeight'
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
+            [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
-            [igxGridForOfVariableSizes]='false'
+            [igxGridForOfVariableSizes]="false"
             #verticalScrollContainer>
             <ng-template
-                [igxTemplateOutlet]='recordTemplate'
-                [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (cachedViewLoaded)='cachedViewLoaded($event)'>
+                [igxTemplateOutlet]="recordTemplate"
+                [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
+                (cachedViewLoaded)="cachedViewLoaded($event)">
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
@@ -60,33 +60,33 @@
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
+        <igx-circular-bar [indeterminate]="true" *ngIf="shouldOverlayLoading">
         </igx-circular-bar>
     </div>
     <span *ngIf="hasMovableColumns && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
-        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
-        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
-            <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+    <div [hidden]="!hasVerticalScroll()" class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
+        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=" isRowPinningToTop ? pinnedRowHeight : 0"></div>
+        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]="calcHeight">
+            <ng-template igxGridFor [igxGridForOf]="[]" #verticalScrollHolder></ng-template>
         </div>
-        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]="!isRowPinningToTop ? pinnedRowHeight : 0"></div>
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
     <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]='pivotPinnedWidth' [style.min-width.px]='pivotPinnedWidth'></div>
-    <div class="igx-grid__scroll-main" [style.width.px]='pivotUnpinnedWidth'>
-        <ng-template igxGridFor [igxGridForOf]='EMPTY_DATA' #scrollContainer>
+    <div class="igx-grid__scroll-start" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth"></div>
+    <div class="igx-grid__scroll-main" [style.width.px]="pivotUnpinnedWidth">
+        <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pivotPinnedWidth' [style.min-width.px]='pivotPinnedWidth' [hidden]="pivotPinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pivotPinnedWidth" [style.min-width.px]="pivotPinnedWidth" [hidden]="pivotPinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" #tfoot>
@@ -122,36 +122,36 @@
     <div class="igx-grid__tr--header">
         <igx-icon [attr.draggable]="false"
                   (click)="toggleColumn(column)">
-                  {{getColumnGroupExpandState(column) ? 'chevron_right' : 'expand_more'}}</igx-icon>
+                  {{getColumnGroupExpandState(column) ? "chevron_right" : "expand_more"}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
 
 <ng-template #defaultRowDimensionsTemplate>
-    <div tabindex="0" [style.height.px]='totalHeight' *ngFor='let dim of rowDimensions; let dimIndex = index;' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+    <div tabindex="0" [style.height.px]="totalHeight" *ngFor="let dim of rowDimensions; let dimIndex = index;" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
         <ng-template igxGridFor let-rowData [igxGridForOf]="dataView
         | pivotGridCellMerging:pivotConfiguration:dim:pipeTrigger"
-                     let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
-                     [igxForContainerSize]='calcHeight'
+                     let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
+                     [igxForContainerSize]="calcHeight"
                      [igxForItemSize]="renderedRowHeight"
-                     [igxForSizePropName]='"height"'
+                     [igxForSizePropName]="'height'"
                      #verticalRowDimScrollContainer>
-            <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
-                                             [dimension]='rowData.dimensions[dimIndex]'
-                                             [rootDimension]='dim'
+            <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
+                                             [dimension]="rowData.dimensions[dimIndex]"
+                                             [rootDimension]="dim"
                                              [style.height.px]="renderedRowHeight * (rowData.rowSpan || 1)"
-                                             [rowIndex]='rowIndex' [rowData]='rowData'
+                                             [rowIndex]="rowIndex" [rowData]="rowData"
                                              [density]="displayDensity" [width]="rowDimensionWidthToPixels(dim)">
             </igx-pivot-row-dimension-content>
         </ng-template>
     </div>
 </ng-template>
 <ng-template #emptyRowDimensionsTemplate>
-    <div tabindex="0" *ngIf='columnDimensions.length > 0 || values.length > 0' #rowDimensionContainer role="rowgroup" class='igx-grid__tbody-pivot-dimension' (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
-        <igx-pivot-row-dimension-content role='row' class="igx-grid-thead" [grid]="this"
-            [dimension]='emptyRowDimension'
-            [rootDimension]='emptyRowDimension'
-            [rowIndex]='0' [rowData]='dataView[0]'
+    <div tabindex="0" *ngIf="columnDimensions.length > 0 || values.length > 0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)">
+        <igx-pivot-row-dimension-content role="row" class="igx-grid-thead" [grid]="this"
+            [dimension]="emptyRowDimension"
+            [rootDimension]="emptyRowDimension"
+            [rowIndex]="0" [rowData]="dataView[0]"
             [density]="displayDensity" [width]="rowDimensionWidthToPixels(emptyRowDimension)">
         </igx-pivot-row-dimension-content>
     </div>
@@ -163,9 +163,9 @@
     </span>
 </ng-template>
 
-<div [hidden]='true'>
-    <igx-grid-excel-style-filtering [maxHeight]='excelStyleFilterMaxHeight' [minHeight]='excelStyleFilterMinHeight'>
-        <div igxExcelStyleColumnOperations [hidden]='true'></div>
+<div [hidden]="true">
+    <igx-grid-excel-style-filtering [maxHeight]="excelStyleFilterMaxHeight" [minHeight]="excelStyleFilterMinHeight">
+        <div igxExcelStyleColumnOperations [hidden]="true"></div>
         <igx-excel-style-filter-operations>
             <igx-excel-style-search></igx-excel-style-search>
         </igx-excel-style-filter-operations>
