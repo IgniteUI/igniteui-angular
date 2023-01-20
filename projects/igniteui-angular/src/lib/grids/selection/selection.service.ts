@@ -12,6 +12,7 @@ import {
     ISelectionPointerState,
     SelectionState
 } from '../common/types';
+import { PivotUtil } from '../pivot-grid/pivot-util';
 
 
 @Injectable()
@@ -388,6 +389,12 @@ export class IgxGridSelectionService {
     }
 
     public getSelectedRowsData() {
+        if (this.grid.isPivot) {
+            return this.grid.dataView.filter(r => {
+                const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
+                return keys.some(k => this.isPivotRowSelected(k));
+            });
+        }
         const pk = this.grid.primaryKey;
         return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(pk ? row[pk]: row)) : [];
     }
@@ -427,7 +434,10 @@ export class IgxGridSelectionService {
             return;
         }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
-
+        if (this.grid.isPivot) {
+            this.selectPivotRowById(rowID, clearPrevSelection, event);
+            return;
+        }
         const selectedRows = this.getSelectedRowsData();
         const newSelection = clearPrevSelection ? [this.getRowDataById(rowID)] : this.rowSelection.has(rowID) ?
             selectedRows : [...selectedRows, this.getRowDataById(rowID)];
@@ -435,9 +445,25 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, [this.getRowDataById(rowID)], removed, event);
     }
 
+    public selectPivotRowById(rowID, clearPrevSelection: boolean, event?): void {
+        const selectedRows = this.getSelectedRows();
+        const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ?
+            selectedRows : [...selectedRows, rowID];
+        const removedRows = clearPrevSelection ? selectedRows : [];
+        const currSelection = this.getSelectedRows();
+        const added = this.getPivotRows([rowID]);
+        const removed = this.getPivotRows(removedRows);
+        debugger;
+        this.emitRowSelectionEventPivotGrid(currSelection, newSelection, added, removed, event);
+    }
+
     /** Deselect the specified row and emit event. */
     public deselectRow(rowID, event?): void {
         if (!this.isRowSelected(rowID)) {
+            return;
+        }
+        if(this.grid.isPivot) {
+            this.deselectPivotRowByID(rowID, event);
             return;
         }
         const pk = this.grid.primaryKey;
@@ -445,6 +471,33 @@ export class IgxGridSelectionService {
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             this.emitRowSelectionEvent(newSelection, [], [this.getRowDataById(rowID)], event);
         }
+    }
+
+    public deselectPivotRowByID(rowID, event?) {
+        if (this.rowSelection.size && this.rowSelection.has(rowID)) {
+            const currSelection = this.getSelectedRows();
+            const newSelection = currSelection.filter(r => r !== rowID);
+            const removed  = this.getPivotRows([rowID]);
+            this.emitRowSelectionEventPivotGrid(currSelection, newSelection, [], removed, event);
+        }
+    }
+
+    private emitRowSelectionEventPivotGrid(currSelection, newSelection, added, removed, event) {
+        if (this.areEqualCollections(currSelection, newSelection)) {
+            return;
+        }
+        const currSelectedRows = this.getSelectedRowsData();
+        const args = { owner: this.grid, oldSelection: currSelectedRows,
+            newSelection: this.getPivotRows(newSelection),
+            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection)
+        };
+        console.log(args);
+        this.grid.rowSelectionChanging.emit(args);
+        if (args.cancel) {
+            this.clearHeaderCBState();
+            return;
+        }
+        this.selectRowsWithNoEvent(newSelection, true);
     }
 
     /** Select the specified rows and emit event. */
@@ -578,6 +631,13 @@ export class IgxGridSelectionService {
             return;
         }
         this.selectRowsWithNoEvent(args.newSelection.map(r => pk? r[pk] : r), true);
+    }
+
+    public getPivotRows(ids: any[]) {
+        return this.grid.dataView.filter(r => {
+            const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
+            return new Set(ids.concat(keys)).size < ids.length + keys.length;
+        });
     }
 
     public getRowDataById(rowID): any {
