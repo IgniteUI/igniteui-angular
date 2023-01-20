@@ -395,8 +395,7 @@ export class IgxGridSelectionService {
                 return keys.some(k => this.isPivotRowSelected(k));
             });
         }
-        const pk = this.grid.primaryKey;
-        return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(pk ? row[pk]: row)) : [];
+        return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(this.getRecordKey(row))) : [];
     }
 
     /** Returns array of the selected row id's. */
@@ -411,18 +410,16 @@ export class IgxGridSelectionService {
 
     /** Clears row selection, if filtering is applied clears only selected rows from filtered data. */
     public clearRowSelection(event?): void {
-        const pk = this.grid.primaryKey;
         const selectedRows = this.getSelectedRowsData();
         const removedRec = this.isFilteringApplied() ?
-            this.allData.filter(row => this.isRowSelected( pk ? row[pk] : row)) : selectedRows;
+            this.allData.filter(row => this.isRowSelected(this.getRecordKey(row))) : selectedRows;
         const newSelection = this.isFilteringApplied() ? selectedRows.filter(x => !removedRec.includes(x)) : [];
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
     /** Select all rows, if filtering is applied select only from filtered data. */
     public selectAllRows(event?) {
-        const pk = this.grid.primaryKey;
-        const addedRows = this.allData.filter((row) => !this.isRowSelected( pk ? row[pk] : row));
+        const addedRows = this.allData.filter((row) => !this.isRowSelected(this.getRecordKey(row)));
         const newSelection = this.rowSelection.size ? this.getSelectedRowsData().concat(addedRows) : addedRows;
         this.indeterminateRows.clear();
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
@@ -447,13 +444,10 @@ export class IgxGridSelectionService {
 
     public selectPivotRowById(rowID, clearPrevSelection: boolean, event?): void {
         const selectedRows = this.getSelectedRows();
-        const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ?
-            selectedRows : [...selectedRows, rowID];
-        const removedRows = clearPrevSelection ? selectedRows : [];
+        const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ? selectedRows : [...selectedRows, rowID];
         const currSelection = this.getSelectedRows();
         const added = this.getPivotRows([rowID]);
-        const removed = this.getPivotRows(removedRows);
-        debugger;
+        const removed = this.getPivotRows(clearPrevSelection ? selectedRows : []);
         this.emitRowSelectionEventPivotGrid(currSelection, newSelection, added, removed, event);
     }
 
@@ -466,8 +460,7 @@ export class IgxGridSelectionService {
             this.deselectPivotRowByID(rowID, event);
             return;
         }
-        const pk = this.grid.primaryKey;
-        const newSelection = this.getSelectedRowsData().filter(r => (pk ? r[pk] : r) !== rowID);
+        const newSelection = this.getSelectedRowsData().filter(r =>  this.getRecordKey(r) !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             this.emitRowSelectionEvent(newSelection, [], [this.getRowDataById(rowID)], event);
         }
@@ -491,7 +484,6 @@ export class IgxGridSelectionService {
             newSelection: this.getPivotRows(newSelection),
             added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection)
         };
-        console.log(args);
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             this.clearHeaderCBState();
@@ -584,7 +576,7 @@ export class IgxGridSelectionService {
         const newIndex = gridData.indexOf(rowData);
         const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
 
-        const added = rows.filter(r => !this.isRowSelected( this.grid.primaryKey ? r[this.grid.primaryKey] : r));
+        const added = rows.filter(r => !this.isRowSelected(this.getRecordKey(r)));
         const newSelection = this.getSelectedRowsData().concat(added);
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
@@ -619,10 +611,9 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
-        const pk = this.grid.primaryKey;
         const args = { owner: this.grid,
             oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection.map(r => pk? r[pk] : r))
+            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
         };
 
         this.grid.rowSelectionChanging.emit(args);
@@ -630,7 +621,7 @@ export class IgxGridSelectionService {
             this.clearHeaderCBState();
             return;
         }
-        this.selectRowsWithNoEvent(args.newSelection.map(r => pk? r[pk] : r), true);
+        this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), true);
     }
 
     public getPivotRows(ids: any[]) {
@@ -654,6 +645,10 @@ export class IgxGridSelectionService {
 
     public getRowIDs(data): Array<any> {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
+    }
+
+    public getRecordKey(record) {
+        return this.grid.primaryKey ? record[this.grid.primaryKey] : record;
     }
 
     /** Clear rowSelection and update checkbox state */
