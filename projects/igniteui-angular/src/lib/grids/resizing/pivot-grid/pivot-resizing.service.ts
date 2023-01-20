@@ -41,5 +41,5 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
         this.rowHeaderGroup.grid.resizeRowDimensionPixels(rowDim, newWidth);
     }
 
-    protected _handlePercentageResize(diff: number, column: ColumnType) { }
+    protected _handlePercentageResize() { }
 }
