@@ -42,15 +42,13 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<GridType> 
     }
 
     public getChildGrids(inDepth?: boolean) {
-        const allChildren: GridType [] = [];
+        let allChildren: GridType [] = [];
         this.childGrids.forEach((layoutMap) => {
             layoutMap.forEach((grid) => {
                 allChildren.push(grid);
                 if (inDepth) {
                     const children = grid.gridAPI.getChildGrids(inDepth);
-                    children.forEach((item) => {
-                        allChildren.push(item);
-                    });
+                    allChildren = allChildren.concat(children);
                 }
             });
         });
