@@ -8,6 +8,7 @@ import { DropPosition } from 'projects/igniteui-angular/src/lib/grids/moving/mov
 import { IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotNumericAggregate, IgxPivotTimeAggregate } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid-dimensions';
 import { PivotDimensionType } from 'projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.interface';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxTimeSummaryOperand } from 'projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 
 
 /** Export Public API, TODO: reorganize, Generate all w/ renames? */
@@ -23,6 +24,11 @@ export {
     IgxDateFilteringOperand as IgcDateFilteringOperand,
     IgxDateTimeFilteringOperand as IgcDateTimeFilteringOperand,
     IgxTimeFilteringOperand as IgcTimeFilteringOperand,
+
+    IgxSummaryOperand as IgcSummaryOperand,
+    IgxNumberSummaryOperand as IgcNumberSummaryOperand,
+    IgxDateSummaryOperand as IgcDateSummaryOperand,
+    IgxTimeSummaryOperand as IgcTimeSummaryOperand,
 
     // Pivot API
     IgxPivotDateDimension as IgcPivotDateDimension,
