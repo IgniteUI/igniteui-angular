@@ -212,7 +212,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public get context(): IgxCellTemplateContext {
         const getCellType = () => this.getCellType(true);
-        const ctx = {
+        const ctx: IgxCellTemplateContext = {
             $implicit: this.value,
             additionalTemplateContext: this.column.additionalTemplateContext,
             get cell() {
@@ -224,10 +224,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             }
         };
         if (this.editMode) {
-            ctx['formControl'] = this.formControl;
+            ctx.formControl = this.formControl;
         }
         if (this.isInvalid) {
-            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+            ctx.defaultErrorTemplate = this.defaultErrorTemplate;
         }
         return ctx;
     }
