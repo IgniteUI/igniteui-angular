@@ -211,10 +211,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @memberof IgxGridCellComponent
      */
     public get context(): IgxCellTemplateContext {
+        const getCellType = () => this.getCellType(true);
         const ctx = {
             $implicit: this.value,
             additionalTemplateContext: this.column.additionalTemplateContext,
-            cell: this
+            get cell() {
+                /* Turns the `cell` property from the template context object into lazy-evaluated one.
+                 * Otherwise on each detection cycle the cell template is recreating N cell instances where
+                 * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+                 */
+                return getCellType();
+            }
         };
         if (this.editMode) {
             ctx['formControl'] = this.formControl;
@@ -222,13 +229,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.isInvalid) {
             ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
         }
-        /* Turns the `cell` property from the template context object into lazy-evaluated one.
-         * Otherwise on each detection cycle the cell template is recreating N cell instances where
-         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
-         */
-        Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType(true)
-        });
         return ctx;
     }
 
