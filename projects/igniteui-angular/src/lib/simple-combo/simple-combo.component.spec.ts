@@ -1311,12 +1311,19 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.selection.length).toEqual(1);
 
+            let clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+
             input.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
             UIInteractions.simulateTyping('L', input, 9, 10);
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
+
+            //should hide the clear button immediately when clearing the selectio by typing
+            clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
         });
     });
 
