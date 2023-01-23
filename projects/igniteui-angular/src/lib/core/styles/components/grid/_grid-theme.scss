@@ -393,10 +393,12 @@
     }
 
     @if not($filtering-header-background) and $header-background {
-        @if meta.type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-header-background: to-opaque(color.scale($header-background, $lightness: 5%));
-        } @else {
-            $filtering-header-background: to-opaque(color.scale($header-background, $lightness: -5%));
+        @if meta.type-of($header-background) == 'color' {
+            @if luminance($header-background) < .5 {
+                $filtering-header-background: to-opaque(color.scale($header-background, $lightness: 5%));
+            } @else {
+                $filtering-header-background: to-opaque(color.scale($header-background, $lightness: -5%));
+            }
         }
     }
 
@@ -405,10 +407,12 @@
     }
 
     @if not($filtering-row-background) and $header-background {
-        @if meta.type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-row-background: to-opaque(color.scale($header-background, $lightness: 5%));
-        } @else {
-            $filtering-row-background: to-opaque(color.scale($header-background, $lightness: -5%));
+        @if meta.type-of($header-background) == 'color' {
+            @if luminance($header-background) < .5 {
+                $filtering-row-background: to-opaque(color.scale($header-background, $lightness: 5%));
+            } @else {
+                $filtering-row-background: to-opaque(color.scale($header-background, $lightness: -5%));
+            }
         }
     }
 

@@ -100,18 +100,22 @@
     }
 
     @if not($item-background-hover) and $item-background {
-        @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-hover: color.scale($item-background, $lightness: 8%);
-        } @else {
-            $item-background-hover: color.scale($item-background, $lightness: -8%);
+        @if meta.type-of($item-background) == 'color' {
+            @if luminance($item-background) < .5 {
+                $item-background-hover: color.scale($item-background, $lightness: 8%);
+            } @else {
+                $item-background-hover: color.scale($item-background, $lightness: -8%);
+            }
         }
     }
 
     @if not($item-background-active) and $item-background {
-        @if meta.type-of($item-background) == 'color' and luminance($item-background) < .5 {
-            $item-background-active: color.scale($item-background, $lightness: 8%);
-        } @else {
-            $item-background-active: color.scale($item-background, $lightness: -8%);
+        @if meta.type-of($item-background) == 'color' {
+            @if luminance($item-background) < .5 {
+                $item-background-active: color.scale($item-background, $lightness: 8%);
+            } @else {
+                $item-background-active: color.scale($item-background, $lightness: -8%);
+            }
         }
     }
 
