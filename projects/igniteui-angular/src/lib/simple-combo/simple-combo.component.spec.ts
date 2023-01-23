@@ -1286,7 +1286,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
 
-            const toggleIcon = fixture.debugElement.query(By.directive(IgxIconComponent));
+            const toggleIcon = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
             expect(toggleIcon).toBeDefined();
 
             expect(toggleIcon.nativeElement.textContent).toBe('search');
@@ -1321,7 +1321,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.selection.length).toEqual(0);
 
-            //should hide the clear button immediately when clearing the selectio by typing
+            //should hide the clear button immediately when clearing the selection by typing
             clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
         });

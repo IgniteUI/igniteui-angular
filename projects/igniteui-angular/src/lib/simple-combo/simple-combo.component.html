@@ -20,7 +20,7 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="selectedItem" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
