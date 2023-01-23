@@ -7550,7 +7550,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         column.resetCaches();
     }
 
-    protected buildDataView(data: any[]) {
+    protected buildDataView(_data: any[]) {
         this._dataView = this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];
@@ -7611,8 +7611,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-
-        this.hideOverlays();
+        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+            this.hideOverlays();
+        }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
     }
