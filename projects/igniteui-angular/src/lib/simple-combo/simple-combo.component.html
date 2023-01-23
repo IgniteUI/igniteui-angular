@@ -14,7 +14,7 @@
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
-        (focus)="onFocus()" (input)="handleInputChange($event)"
+        (focus)="onFocus()" (input)="handleInputChange($event)" (click)="handleInputClick()"
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
 
     <ng-container ngProjectAs="igx-suffix">
