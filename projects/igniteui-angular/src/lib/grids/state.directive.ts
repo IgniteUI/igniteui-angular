@@ -421,7 +421,7 @@ export class IgxGridStateDirective {
                     return;
                 }
                 context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
-                context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
+                context.restoreDimensions(config);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             },
 
@@ -578,7 +578,7 @@ export class IgxGridStateDirective {
      * This method restores complex objects in the pivot dimensions
      * Like the IgxPivotDateDimension and filters.
      */
-    private restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+    private restoreDimensions(config: IPivotConfiguration) {
         const collections = [config.rows, config.columns, config.filters];
         for (const collection of collections) {
             for (let index = 0; index < collection?.length; index++) {
