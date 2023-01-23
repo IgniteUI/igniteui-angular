@@ -278,6 +278,7 @@ $fluent-input-group: extend(
 
 /// Generates a bootstrap input-group schema.
 /// @type {Map}
+/// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
 /// @prop {Map} border-color [color: ('gray', 400)] - The border color for input groups of type border and fluent.
 /// @prop {Map} input-prefix-color [color: ('gray', 800)] - The text color of an input prefix of type line, box and border.
 /// @prop {Map} idle-secondary-color [color: ('gray', 800)] - The label color in the idle state.
@@ -289,6 +290,7 @@ $fluent-input-group: extend(
 /// @prop {Map} success-secondary-color [color: ('success', 500)] - The success color used in the valid state.
 /// @prop {Map} warning-secondary-color [color: ('warn', 500)] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error')] - The error color used in the error state.
+/// @prop {Map} disabled-text-color [color: ('gray', 400)] - The input text color in the disabled state.
 /// @prop {Number} box-border-radius [4px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
@@ -297,6 +299,10 @@ $bootstrap-input-group: extend(
     $light-input-group,
     (
         variant: 'bootstrap',
+
+        border-disabled-background: (
+            color: ('gray', 100),
+        ),
 
         focused-secondary-color: (
             color: ('primary', 500, .38)
@@ -338,8 +344,16 @@ $bootstrap-input-group: extend(
             color: ('gray', 300)
         ),
 
+        disabled-text-color: (
+            color: ('gray', 400)
+        ),
+
         disabled-border-color: (
             color: ('gray', 300)
+        ),
+
+        box-disabled-background: (
+            color: ('gray', 100)
         ),
     )
 );
@@ -353,10 +367,12 @@ $bootstrap-input-group: extend(
 /// @prop {Map} disabled-bottom-line-color [color: ('gray', 300)] - The bottom line and border colors in the disabled state.
 /// @prop {Color} box-disabled-background [transparent] - The background color of an input group in the disabled state.
 /// @prop {Map} disabled-text-color [color: ('gray', 300)] - The input text color in the disabled state.
+/// @prop {Map} idle-bottom-line-color [color: ('gray', 500)] - The bottom line and border colors in the idle state.
+/// @prop {Map} focused-bottom-line-color [color: ('secondary', 500)] - The bottom line and border colors in the focused state.
 /// @prop {Map} focused-border-color [color: ('primary', 400)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 600)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} hover-bottom-line-color [color: ('gray', 600)] - The bottom line and border colors in the hover state.
-/// @prop {Map} idle-text-color [color: ('gray', 500)] - The input text color in the idle state.
+/// @prop {Map} idle-text-color [color: ('gray', 600)] - The input text color in the idle state.
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [1] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state of the search input.
@@ -387,6 +403,14 @@ $indigo-input-group: extend(
             color: ('gray', 300)
         ),
 
+        idle-bottom-line-color: (
+            color: ('gray', 500)
+        ),
+
+        focused-bottom-line-color: (
+            color: ('secondary', 500)
+        ),
+
         hover-bottom-line-color: (
             color: ('gray', 600)
         ),
@@ -404,11 +428,11 @@ $indigo-input-group: extend(
         ),
 
         idle-text-color: (
-            color: ('gray', 500)
+            color: ('gray', 600)
         ),
 
         disabled-text-color: (
-            color: ('gray', 400)
+            color: ('gray', 300)
         ),
 
         box-border-radius: rem(0),

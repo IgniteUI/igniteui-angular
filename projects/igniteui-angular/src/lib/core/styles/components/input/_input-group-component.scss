@@ -94,7 +94,7 @@
             @extend %form-group-helper-item--end !optional;
         }
 
-        // The border of the 'line' and 'box' input variants
+        // The animated bottom line of the LINE and BOX input types.
         @include e(line) {
             @extend %form-group-line !optional;
         }
@@ -126,25 +126,39 @@
 
         @include mx(textarea-group, focused) {
             @include e(label) {
-                @extend %form-group-label-textarea--float !optional;
+                @extend %textarea-group-label--focused !optional;
             }
         }
 
         @include mx(textarea-group, filled) {
+            @include e(notch) {
+                @extend %textarea-group-notch--focused !optional;
+            }
+
             @include e(label) {
-                @extend %form-group-label-textarea--float !optional;
+                @extend %textarea-group-label--focused !optional;
+            }
+        }
+
+        @include mx(textarea-group, border) {
+            @include e(bundle-main) {
+                @extend  %form-group-textarea-group-bundle-main--border !optional;
             }
         }
 
         @include mx(textarea-group, filled, border) {
+            @include e(notch) {
+                @extend %textarea-group-notch--focused !optional;
+            }
+
             @include e(label) {
-                @extend %form-group-label-textarea-border--float !optional;
+                @extend %textarea-group-label--filled--border !optional;
             }
         }
 
         @include mx(textarea-group, focused, border) {
             @include e(label) {
-                @extend %form-group-label-textarea-border--float !optional;
+                @extend %textarea-group-label--focused--border !optional;
             }
         }
 
@@ -237,6 +251,7 @@
 
             @include e(label) {
                 @extend %form-group-label--fixed !optional;
+                @extend %form-group-label--disabled !optional;
             }
 
             @include e(input) {
@@ -249,6 +264,10 @@
 
             @include e(file-input) {
                 @extend %form-group-input--disabled !optional;
+            }
+
+            @include e(hint) {
+                @extend %form-group-helper--disabled !optional;
             }
         }
 
@@ -302,8 +321,20 @@
                 @extend %form-group-input--box !optional;
             }
 
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
+            @include e(bundle-start) {
+                @extend %form-group-bundle-start--box !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end--box !optional;
+            }
+
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--box !optional;
+            }
+
+            @include e(notch) {
+                @extend %form-group-notch--box !optional;
             }
         }
 
@@ -318,6 +349,7 @@
                 @extend %form-group-bundle--box-disabled !optional;
             }
         }
+
         // Type box END
 
         // Type border START
@@ -348,8 +380,16 @@
                 @extend %form-group-label--border !optional;
             }
 
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
+            @include e(bundle-start) {
+                @extend %form-group-bundle-start--border !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end--border !optional;
+            }
+
+            @include e(notch) {
+                @extend  %igx-input-group__notch--border !optional;
             }
         }
 
@@ -429,10 +469,6 @@
             @include e(label) {
                 @extend %form-group-label--search !optional;
             }
-
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
-            }
         }
 
         @include mx(search, focused) {
@@ -461,7 +497,8 @@
                     @extend %form-group-bundle--fluent--hover !optional;
                 }
 
-                &:focus-within {
+                &:focus-within,
+                &:focus {
                     @extend %form-group-bundle--fluent--focus !optional;
                 }
             }
@@ -472,6 +509,10 @@
 
             @include e(input) {
                 @extend %fluent-input !optional;
+            }
+
+            @include e(textarea) {
+                @extend %fluent-textarea !optional;
             }
 
             @include e(file-input) {
@@ -491,10 +532,6 @@
             @include e(label) {
                 @extend %fluent-placeholder-label !optional;
             }
-        }
-
-        @include mx(fluent, compact) {
-            @extend %igx-input-group-fluent--compact !optional;
         }
 
         @include mx(fluent, disabled) {
@@ -548,12 +585,26 @@
         }
 
         @include mx(fluent, focused) {
-            @include e(bundle) {
-                @extend %form-group-bundle--focus !optional;
+            @include e(bundle-start) {
+                @extend %form-group-bundle-start--fluent--focused !optional;
+            }
+
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--fluent--focused !optional;
+            }
+
+            @include e(bundle-end) {
+                @extend %form-group-bundle-end--fluent--focused !optional;
             }
 
             @include e(label) {
                 @extend %fluent-label-focused !optional;
+            }
+        }
+
+        @include mx(fluent, focused, textarea-group) {
+            @include e(hint) {
+                @extend %form-group-helper--textarea--fluent--focused !optional;
             }
         }
 
@@ -621,18 +672,6 @@
             @include e(label) {
                 @extend %fluent-label !optional;
             }
-
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
-            }
-        }
-
-        @include mx(fluent, search, cosy) {
-            @extend %igx-input-group-fluent-search--cosy !optional;
-        }
-
-        @include mx(fluent, search, compact) {
-            @extend %igx-input-group-fluent-search--compact !optional;
         }
 
         @include mx(fluent, search, focused) {
@@ -670,14 +709,15 @@
 
             @include e(label) {
                 @extend %fluent-label !optional;
-            }
-
-            @include e(textarea) {
-                @extend %form-group-textarea--indigo !optional;
+                @extend %fluent-label--indigo !optional;
             }
 
             @include e(hint) {
                 @extend %form-group-helper--box !optional;
+            }
+
+            @include e(textarea) {
+                @extend %indigo-textarea !optional;
             }
         }
 
@@ -723,11 +763,8 @@
             @include e(file-input) {
                 @extend %form-group-input--disabled !optional;
             }
-
-            @include e(hint) {
-                @extend %form-group-helper--indigo--disabled !optional;
-            }
         }
+
         // INDIGO END
 
         // ============================== //
@@ -882,6 +919,34 @@
 
             @include e(textarea) {
                 @extend %bootstrap-input--disabled !optional;
+            }
+        }
+
+        @include mx(bootstrap, disabled, prefixed) {
+            @include e(input) {
+                @extend %bootstrap-input--disabled--prefixed !optional;
+            }
+
+            @include e(file-input) {
+                @extend %bootstrap-input--disabled--prefixed !optional;
+            }
+
+            @include e(textarea) {
+                @extend %bootstrap-input--disabled--prefixed !optional;
+            }
+        }
+
+        @include mx(bootstrap, disabled, suffixed) {
+            @include e(input) {
+                @extend %bootstrap-input--disabled--suffixed !optional;
+            }
+
+            @include e(file-input) {
+                @extend %bootstrap-input--disabled--suffixed !optional;
+            }
+
+            @include e(textarea) {
+                @extend %bootstrap-input--disabled--suffixed !optional;
             }
         }
         // BOOTSTRAP END

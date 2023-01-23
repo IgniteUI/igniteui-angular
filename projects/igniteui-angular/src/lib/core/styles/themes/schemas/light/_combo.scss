@@ -98,6 +98,8 @@ $fluent-combo: extend(
 /// @prop {Color} empty-list-background [color: ('surface')] - The combo list background color.
 /// @prop {Map} search-separator-border-color [color: ('gray', 400)] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [color: ('gray', 600)] - The combo placeholder text color.
+/// @prop {Map} clear-button-background-focus [color: ('gray', 400, .3)] - The combo clear button background color when the combo is focused.
+
 /// @requires {Map} $light-combo
 $bootstrap-combo: extend(
     $light-combo,
@@ -114,6 +116,10 @@ $bootstrap-combo: extend(
 
         empty-list-placeholder-color: (
             color: ('gray', 600)
+        ),
+
+        clear-button-background-focus: (
+            color: ('gray', 400, .3)
         ),
     )
 );
