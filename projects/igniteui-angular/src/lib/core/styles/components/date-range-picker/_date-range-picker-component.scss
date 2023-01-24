@@ -30,12 +30,10 @@
 
         @include m(cosy){
             @extend %igx-date-range-picker !optional;
-            @extend %igx-date-range-picker--cosy !optional;
         }
 
         @include m(compact){
             @extend %igx-date-range-picker !optional;
-            @extend %igx-date-range-picker--compact !optional;
         }
     }
 
