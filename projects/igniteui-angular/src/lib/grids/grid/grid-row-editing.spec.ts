@@ -851,6 +851,40 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 2 changes in this row and 1 hidden columns');
         }));
 
+        it(`Should update row changes when changing the cell value to the original one`, (async () => {
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            fix.detectChanges();
+
+            const originalValue = targetCell.value;
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+
+            // change first editable cell value
+            targetCell.editValue = '500';
+            fix.detectChanges();
+
+            // go to next cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row and 0 hidden columns');
+
+            // return to first editable cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            fix.detectChanges();
+
+            // change cell value to the original one
+            targetCell.editValue = originalValue;
+            fix.detectChanges();
+
+            // go to next cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 0 changes in this row and 0 hidden columns');
+        }));
+
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);

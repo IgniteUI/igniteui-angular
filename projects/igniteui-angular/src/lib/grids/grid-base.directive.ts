@@ -33,7 +33,7 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { formatDate, resizeObservable } from '../core/utils';
+import { formatDate, matchOriginalValue, resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
@@ -3223,7 +3223,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         const f = (obj: any) => {
             let changes = 0;
-            Object.keys(obj).forEach(key => isObject(obj[key]) ? changes += f(obj[key]) : changes++);
+            const rowData = this.crudService.row.data;
+            Object.keys(obj).forEach(key => {
+                if (!matchOriginalValue(obj[key], rowData, key)) {
+                    isObject(obj[key]) ? changes += f(obj[key]) : changes++
+                }
+            });
             return changes;
         };
         if (this.transactions.getState(this.crudService.row.id)?.type === TransactionType.ADD) {

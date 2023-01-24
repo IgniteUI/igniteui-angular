@@ -25,6 +25,7 @@ import {
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
 import { isDevMode } from '@angular/core';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 /**
  * @hidden
@@ -215,6 +216,27 @@ export const isEqual = (obj1, obj2): boolean => {
  * @hidden
  */
  export const isNaNvalue = (value: any): boolean => isNaN(value) && value !== undefined && typeof value !== 'string';
+
+ /**
+ * Checks if the passed value equals the rowData value
+ *
+ * @param value Value to check
+ * @param rowData
+ * @param field
+ * @returns `boolean`
+ * @hidden
+ */
+ export const matchOriginalValue = (value: any, rowData: any, field: any): boolean => {
+    if (rowData) {
+        const date = DateTimeUtil.parseIsoDate(rowData[field]);
+        if (date && isEqual(date, value)
+            || isEqual(rowData[field], value)
+            || isEqual(rowData[field]?.toString(), value?.toString())) {
+            return true;
+        }
+        return false;
+    }
+};
 
 /**
  * Utility service taking care of various utility functions such as

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { cloneArray, matchOriginalValue, resolveNestedPath } from '../../core/utils';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
 import { IgxSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
@@ -315,12 +315,13 @@ export class IgxStringReplacePipe implements PipeTransform {
 @Pipe({ name: 'transactionState' })
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
-    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
+    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, row: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
                 const value = resolveNestedPath(rowCurrentState, field);
-                return value !== undefined && value !== null;
+                const rowData = row?.data;
+                return value !== undefined && value !== null && !matchOriginalValue(value, rowData, field);
             }
         } else {
             const transaction = transactions.getState(row_id);
