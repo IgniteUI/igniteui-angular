@@ -7554,7 +7554,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         column.resetCaches();
     }
 
-    protected buildDataView(data: any[]) {
+    protected buildDataView(_data: any[]) {
         this._dataView = this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];
