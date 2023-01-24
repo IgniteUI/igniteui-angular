@@ -1,0 +1,11 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$size",
+      "replaceWith": "$scrollbar-size",
+      "owner": "igx-scrollbar-theme",
+      "type":"property"
+    }
+  ]
+}

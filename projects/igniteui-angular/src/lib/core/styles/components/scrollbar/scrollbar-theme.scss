@@ -44,8 +44,6 @@
         scrollbar-size: $scrollbar-size
     ));
 }
-// TODO Write a migration for size before merging the PR.
-
 /// @param {Map} $theme - The theme used to style the component.
 @mixin scrollbar($theme) {
     @include css-vars($theme);
