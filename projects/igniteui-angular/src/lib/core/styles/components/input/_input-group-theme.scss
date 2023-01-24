@@ -1365,6 +1365,12 @@
         }
     }
 
+    %form-group-label-required--fluent {
+        &::after {
+            color: var-get($theme, 'error-secondary-color');
+        }
+    }
+
     %form-group-bundle--fluent {
         --size: #{sizable(rem(32px), rem(40px), rem(48px))};
         --min-width: #{sizable(rem(4px), rem(6px), rem(8px))};
@@ -1462,8 +1468,7 @@
     // Label
     %fluent-label {
         display: inline-flex;
-        padding: rem(5px) 0;
-        font-size: rem(14px, 16px);
+        font-size: rem(14px);
         font-weight: 600;
         line-height: normal !important;
         position: static;
@@ -1471,10 +1476,7 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-
-        @if $fluent-theme {
-            color: color(null, 'gray', 800);
-        }
+        margin-block-end: rem(8px);
 
         [dir='rtl'] & {
             transform-origin: top right;

@@ -612,6 +612,10 @@
             @include e(bundle) {
                 @extend %form-group-bundle-required--fluent !optional;
             }
+
+            @include e(label) {
+                @extend %form-group-label-required--fluent !optional;
+            }
         }
 
         @include mx(fluent, valid) {
