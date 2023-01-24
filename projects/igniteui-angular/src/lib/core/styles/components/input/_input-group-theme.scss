@@ -947,6 +947,12 @@
         }
     }
 
+    %igx-input-group__notch:empty + %form-group-bundle-main {
+        %form-group-input {
+            padding-block: 0;
+        }
+    }
+
     %form-group-file-input {
         width: 100%;
         max-width: 100%;

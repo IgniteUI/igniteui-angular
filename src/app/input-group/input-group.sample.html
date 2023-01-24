@@ -36,6 +36,23 @@
         <div class="form__fields">
             <!-- text field with validation -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
+                <igx-prefix>
+                    <igx-icon>link</igx-icon>
+                </igx-prefix>
+                <input
+                        name="inputValidityTest"
+                        [required]="isRequired"
+                        [disabled]="isDisabled"
+                        pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                        [(ngModel)]="inputValue"
+                        igxInput
+                        type="text"
+                />
+                <igx-hint>NO LABEL</igx-hint>
+            </igx-input-group>
+
+            <!-- text field with validation -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Web address</label>
                 <igx-prefix>
                     <igx-icon>link</igx-icon>
