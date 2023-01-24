@@ -388,7 +388,7 @@
         }
     }
 
-    %igx-card-content > p {
+    %igx-card-content > * {
         @include type-style($content) {
             margin: 0;
         }
