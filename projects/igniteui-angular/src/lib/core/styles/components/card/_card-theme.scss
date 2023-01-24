@@ -265,7 +265,10 @@
 
     %igx-card-actions--vertical {
         flex-direction: column;
-        margin-block: initial;
+
+        &:is(:first-child, :last-child) {
+            margin-block: initial;
+        }
 
         [dir='rtl'] & {
             order: -1;
