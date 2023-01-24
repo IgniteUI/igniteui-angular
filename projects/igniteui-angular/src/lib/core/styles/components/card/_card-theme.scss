@@ -156,7 +156,6 @@
 
     %igx-card-header {
         display: flex;
-        flex: 1 1 auto;
         flex-flow: row wrap;
         align-content: flex-start;
         width: 100%;
@@ -221,9 +220,9 @@
     %igx-card-content {
         display: block;
         width: 100%;
-        flex: 1 1 auto;
         padding: $card-content-padding;
         color: var-get($theme, 'content-text-color');
+        overflow: auto;
     }
 
     %igx-card-media {
@@ -248,9 +247,16 @@
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
+
+        &:first-child {
+            margin-block-end: auto;
+        }
+
+        &:last-child {
+            margin-block-start: auto;
+        }
 
         [igxButton] ~ [igxButton] {
             margin-inline-start: rem(8px);
@@ -259,6 +265,7 @@
 
     %igx-card-actions--vertical {
         flex-direction: column;
+        margin-block: initial;
 
         [dir='rtl'] & {
             order: -1;
@@ -360,7 +367,7 @@
 }
 
 /// Adds typography styles for the igx-card component.
-/// Uses the 'h5', 'subtitle-2' and 'body-2'
+/// Uses the 'h6', 'subtitle-2' and 'body-2'
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $categories [(title: 'h6', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
