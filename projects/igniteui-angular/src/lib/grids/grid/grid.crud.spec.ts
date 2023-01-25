@@ -16,7 +16,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let data;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent
             ],

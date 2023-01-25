@@ -177,7 +177,7 @@ export class IgxSelectionAPIService {
      * @param componentID ID of the component, which we add new items to.
      * @param itemIDs Array of IDs of the items to add to component selection.
      */
-    public deselect_items(componentID: string, itemID: any[], clearSelection?: boolean) {
+    public deselect_items(componentID: string, itemID: any[], _clearSelection?: boolean) {
         this.set(componentID, this.delete_items(componentID, itemID));
     }
 

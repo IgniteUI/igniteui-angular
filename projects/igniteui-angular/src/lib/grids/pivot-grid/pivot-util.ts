@@ -17,14 +17,13 @@ export class PivotUtil {
             // process existing children
             if (rec.children && rec.children.size > 0) {
                 // process hierarchy in dept
-                rec.children.forEach((values, key) => {
+                rec.children.forEach((values) => {
                     this.processGroups(values, dimension, pivotKeys);
                 });
             }
             // add children for current dimension
             const hierarchyFields = PivotUtil
                 .getFieldsHierarchy(rec.records, [dimension], PivotDimensionType.Row, pivotKeys);
-            const values = Array.from(hierarchyFields.values()).find(x => x.dimension.memberName === dimension.memberName);
             const siblingData = PivotUtil
                 .processHierarchy(hierarchyFields, pivotKeys, 0);
             rec.children.set(dimension.memberName, siblingData);
@@ -107,7 +106,7 @@ export class PivotUtil {
             const vals = dimensionType === PivotDimensionType.Column ?
                 this.extractValuesForColumn(dimensions, rec, pivotKeys) :
                 this.extractValuesForRow(dimensions, rec, pivotKeys);
-            for (const [key, val] of vals) { // this should go in depth also vals.children
+            for (const [_key, val] of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 } else {
@@ -350,7 +349,7 @@ export class PivotUtil {
             }
         } else {
             const hierarchyChild = hierarchyValue[childKey];
-            for (const [key, child] of childCollection) {
+            for (const [_key, child] of childCollection) {
                 let hierarchyChildValue = hierarchyChild.get(child.value);
                 if (!hierarchyChildValue) {
                     hierarchyChild.set(child.value, child);

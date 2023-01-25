@@ -18,6 +18,8 @@ All notable changes for each version of this project will be documented in this 
         * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
         * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
 
+    - A new `groupRecord` parameter has been exposed in `operate` method, that is an `IGroupByRecord` object describing the grouped row in case grouping is applied.
+
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
     - `headSelectorTemplate` - Gets/Sets the header row selector template.
@@ -52,6 +54,9 @@ All notable changes for each version of this project will be documented in this 
     Added support for shift key + mouse click interactions.
     - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
     - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
+- `IgxFilterOptions`
+    - Added support for multiple keys.
 
 ### Theme Changes
 - **Breaking Changes** - The `palette` function no longer provides `info`, `success`, `warn` and `error` colors. Therefore you have to pass custom values for them if you need to use these colors. You can also use the values for `info`, `success`, `warn` and `error` colors from our predefined color palettes.

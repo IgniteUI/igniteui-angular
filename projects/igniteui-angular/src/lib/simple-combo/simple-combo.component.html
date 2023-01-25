@@ -20,7 +20,7 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="comboInput.value.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -51,7 +51,7 @@
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
-        [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown"
+        [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">

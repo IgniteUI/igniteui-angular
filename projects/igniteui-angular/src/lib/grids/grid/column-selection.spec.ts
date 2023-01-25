@@ -33,7 +33,7 @@ describe('IgxGrid - Column Selection #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 ColumnSelectionGroupTestComponent
@@ -46,7 +46,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         let colProductName: IgxColumnComponent;
         let colProductID: IgxColumnComponent;
         let colInStock: IgxColumnComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -55,7 +55,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colInStock = grid.getColumnByName('InStock');
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-        }));
+        });
 
         it('setting selected and selectable properties ', () => {
             spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
@@ -350,7 +350,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         let colProductName: IgxColumnComponent;
         let colProductID: IgxColumnComponent;
         let colInStock: IgxColumnComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -359,7 +359,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colInStock = grid.getColumnByName('InStock');
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-        }));
+        });
 
         it('selecting a column with ctrl + mouse click', () => {
             spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
@@ -540,7 +540,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         let colProductName: IgxColumnComponent;
         let colProductID: IgxColumnComponent;
         let colInStock: IgxColumnComponent;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -549,7 +549,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colInStock = grid.getColumnByName('InStock');
             grid.columnSelection = GridSelectionMode.single;
             fix.detectChanges();
-        }));
+        });
 
         it('selecting a column', () => {
             // Click on column to select it.
@@ -625,11 +625,11 @@ describe('IgxGrid - Column Selection #grid', () => {
     });
 
     describe('Multi column headers tests: ', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnSelectionGroupTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         it('setting selected on a column group', () => {
             const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
@@ -949,7 +949,7 @@ describe('IgxGrid - Column Selection #grid', () => {
     describe('Integration tests: ', () => {
         let colProductID;
         let colProductName;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -957,7 +957,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
             colProductID = grid.getColumnByName('ProductID');
             colProductName = grid.getColumnByName('ProductName');
-        }));
+        });
 
         it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
             grid.allowFiltering = true;

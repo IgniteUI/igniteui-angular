@@ -92,6 +92,17 @@
     ));
 }
 
+@mixin _offset-sibling-elements($offset) {
+    + igx-grid-header-row,
+    + igx-grid-group-by-area {
+        margin-top: $offset;
+    }
+
+    + igx-grid-group-by-area {
+        height: auto;
+    }
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 @mixin grid-toolbar($theme) {
     @include css-vars($theme);
@@ -121,6 +132,11 @@
     );
 
     %igx-grid-toolbar {
+        $height: map.get($grid-toolbar-height, 'comfortable');
+        @include _offset-sibling-elements($height);
+
+        position: absolute;
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -135,8 +151,7 @@
 
         background: var-get($theme, 'background-color');
         height: auto;
-        min-height: map.get($grid-toolbar-height, 'comfortable');
-        position: relative;
+        min-height: $height;
         padding-block: 0;
         padding-inline: map.get($grid-toolbar-padding, 'comfortable');
 
@@ -167,7 +182,10 @@
     }
 
     %igx-grid-toolbar--cosy {
-        min-height: map.get($grid-toolbar-height, 'cosy');
+        $height: map.get($grid-toolbar-height, 'cosy');
+        @include _offset-sibling-elements($height);
+
+        min-height: $height;
         padding-inline: map.get($grid-toolbar-padding, 'cosy');
 
         [igxButton] {
@@ -176,7 +194,10 @@
     }
 
     %igx-grid-toolbar--compact {
-        min-height: map.get($grid-toolbar-height, 'compact');
+        $height: map.get($grid-toolbar-height, 'compact');
+        @include _offset-sibling-elements($height);
+
+        min-height: $height;
         padding-inline: map.get($grid-toolbar-padding, 'compact');
 
         [igxButton] {

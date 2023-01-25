@@ -3,8 +3,9 @@ import { first } from 'rxjs/operators';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataEventArgs } from '../common/events';
 import { GridType, RowType } from './grid.interface';
 import { Subject } from 'rxjs';
-import { copyDescriptors, isEqual } from '../../core/utils';
+import { copyDescriptors, isEqual, isDate } from '../../core/utils';
 import { FormGroup } from '@angular/forms';
+import { DateTimeUtil } from '../../date-common/util/date-time.util';
 
 export class IgxEditRow {
     public transactionState: any;
@@ -233,6 +234,12 @@ export class IgxCellCrudState {
         }
 
         let doneArgs;
+        if (this.cell.column.dataType === 'date' && !isDate(this.cell.value)) {
+            if (isEqual(DateTimeUtil.parseIsoDate(this.cell.value), this.cell.editValue)) {
+                doneArgs = this.exitCellEdit(event);
+                return doneArgs;
+            }
+        }
         if (isEqual(this.cell.value, this.cell.editValue)) {
             doneArgs = this.exitCellEdit(event);
             return doneArgs;
@@ -297,6 +304,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
     public closeRowEditingOverlay = new Subject();
 
     private _rowEditingBlocked = false;
+    private _rowEditingStarted = false;
 
     public get primaryKey(): any {
         return this.grid.primaryKey;
@@ -311,6 +319,10 @@ export class IgxRowCrudState extends IgxCellCrudState {
         return this.grid.rowEditable;
     }
 
+    public get nonEditable(): boolean {
+        return this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null);
+    }
+
     public get rowEditingBlocked() {
         return this._rowEditingBlocked;
     }
@@ -321,20 +333,21 @@ export class IgxRowCrudState extends IgxCellCrudState {
 
     /** Enters row edit mode */
     public beginRowEdit(event?: Event) {
-        if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
-            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
-        }
-
         if (!this.row || !(this.row.getClassName() === IgxEditRow.name)) {
             if (!this.row) {
                 this.createRow(this.cell);
             }
-            const rowArgs = this.row.createEditEventArgs(false, event);
 
-            this.grid.rowEditEnter.emit(rowArgs);
-            if (rowArgs.cancel) {
-                this.endEditMode();
-                return true;
+            if (!this._rowEditingStarted) {
+                const rowArgs = this.row.createEditEventArgs(false, event);
+
+                this.grid.rowEditEnter.emit(rowArgs);
+                if (rowArgs.cancel) {
+                    this.endEditMode();
+                    return true;
+                }
+
+                this._rowEditingStarted = true;
             }
 
             this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
@@ -435,6 +448,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
     public endRowEdit() {
         this.row = null;
         this.rowEditingBlocked = false;
+        this._rowEditingStarted = false;
     }
 
     /** Clears cell and row editing state and closes row editing template if it is open */
@@ -569,6 +583,11 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
 
+        if (this.nonEditable){
+            console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
+            return;
+        }
+
         if (this.cellInEditMode) {
             // TODO: case solely for f2/enter nav that uses enterEditMode as toggle. Refactor.
             const canceled = this.endEdit(true, event);
@@ -634,7 +653,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
         this.grid.navigateTo(this.row.index, -1);
         // when selecting the dummy row we need to adjust for top pinned rows
-        const indexAdjust = this.grid.isRowPinningToTop && !this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0;
+        const indexAdjust = this.grid.isRowPinningToTop ?
+            (!this.addRowParent.isPinned ? this.grid.pinnedRows.length : 0) :
+            (!this.addRowParent.isPinned ? 0 : this.grid.unpinnedRecords.length);
 
         // TODO: Type this without shoving a bunch of internal properties in the row type
         const dummyRow = this.grid.gridAPI.get_row_by_index(this.row.index + indexAdjust) as any;
