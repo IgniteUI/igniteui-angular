@@ -48,7 +48,7 @@ describe(`Update to ${version}`, () => {
         appTree = new UnitTestTree(new EmptyTree());
     });
 
-    const migrationName = 'migration-27';
+    const migrationName = 'migration-28';
 
     it(`should add igniteui-theming to pacakage json and configure it`, async () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
