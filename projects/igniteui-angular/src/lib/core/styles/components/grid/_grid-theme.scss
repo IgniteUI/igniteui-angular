@@ -696,7 +696,7 @@
         position: relative;
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
         overflow: hidden;
         box-shadow: $grid-shadow;
 

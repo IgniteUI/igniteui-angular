@@ -121,7 +121,6 @@
     );
 
     %igx-grid-toolbar {
-        position: absolute;
         width: 100%;
         display: flex;
         align-items: center;
@@ -165,12 +164,7 @@
                 }
             }
         }
-
-        + igx-grid-header-row {
-            margin-top: map.get($grid-toolbar-height, 'comfortable');
-        }
     }
-
 
     %igx-grid-toolbar--cosy {
         min-height: map.get($grid-toolbar-height, 'cosy');
@@ -178,10 +172,6 @@
 
         [igxButton] {
             margin-inline-start: map.get($grid-toolbar-spacer, 'cosy');
-        }
-
-        + igx-grid-header-row {
-            margin-top: map.get($grid-toolbar-height, 'cosy');
         }
     }
 
@@ -191,10 +181,6 @@
 
         [igxButton] {
             margin-inline-start: map.get($grid-toolbar-spacer, 'compact');
-        }
-
-        + igx-grid-header-row {
-            margin-top: map.get($grid-toolbar-height, 'compact');
         }
     }
 
