@@ -196,7 +196,7 @@ export class IgxGridNavigationService {
         return row.expression || row.detailsData ? false : !this.isColumnFullyVisible(visibleColIndex);
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
+    public shouldPerformVerticalScroll(targetRowIndex: number, _visibleColIndex: number): boolean {
         if (this.grid.isRecordPinnedByViewIndex(targetRowIndex)) {
             return false;
         }
