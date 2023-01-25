@@ -4,7 +4,7 @@
     {
       "name": "$size",
       "replaceWith": "$scrollbar-size",
-      "owner": "igx-scrollbar-theme",
+      "owner": "scrollbar-theme",
       "type":"property"
     }
   ]
