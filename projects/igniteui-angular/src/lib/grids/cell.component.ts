@@ -1071,7 +1071,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.selected.emit({ cell: this.getCellType(), event });
+            this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));
         }
     }
 
