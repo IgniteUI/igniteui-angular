@@ -851,7 +851,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 2 changes in this row and 1 hidden columns');
         }));
 
-        it(`Should update row changes when changing the cell value to the original one`, (async () => {
+        it(`Should update row changes when changing the cell value to the original one`, () => {
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
             fix.detectChanges();
 
@@ -883,7 +883,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 0 changes in this row and 0 hidden columns');
-        }));
+        });
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
