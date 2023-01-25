@@ -4,7 +4,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { ProjectType } from '../../schematics/utils/util';
 
-const version = '15.0.4';
+const version = '15.0.8';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
