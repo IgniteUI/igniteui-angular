@@ -445,7 +445,7 @@
     }
 
     %form-group-bundle--box {
-        // padding 0 i needed here because of the search variant
+        // padding 0 is needed here because of the search variant
         padding: 0 !important;
 
         background: var-get($theme, 'box-background');
