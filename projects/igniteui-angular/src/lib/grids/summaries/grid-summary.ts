@@ -76,7 +76,7 @@ export class IgxSummaryOperand {
      *
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, groupRecord?: IGroupByRecord): IgxSummaryResult[] {
+    public operate(data: any[] = [], _allData: any[] = [], _fieldName?: string, _groupRecord?: IGroupByRecord): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',

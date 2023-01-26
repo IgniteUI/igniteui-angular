@@ -7522,7 +7522,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         directive.scrollTo(goal);
     }
 
-    private getColumnWidthSum(): number {
+
+    /**
+     * @hidden
+     */
+    protected getColumnWidthSum(): number {
         let colSum = 0;
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
@@ -7552,7 +7556,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         column.resetCaches();
     }
 
-    protected buildDataView(data: any[]) {
+    protected buildDataView(_data: any[]) {
         this._dataView = this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];

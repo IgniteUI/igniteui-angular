@@ -10,7 +10,6 @@ import {
 } from '@angular/platform-browser-dynamic/testing';
 import { registerLocaleData } from '@angular/common';
 
-
 import localeFr from '@angular/common/locales/fr';
 import localeDe from '@angular/common/locales/de';
 import localeJa from '@angular/common/locales/ja';

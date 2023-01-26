@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IDimensionsChange, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
+import { IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({

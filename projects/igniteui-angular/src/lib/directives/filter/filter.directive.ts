@@ -9,7 +9,6 @@ import {
     Output,
     Pipe,
     PipeTransform,
-    Renderer2,
     SimpleChanges
 } from '@angular/core';
 

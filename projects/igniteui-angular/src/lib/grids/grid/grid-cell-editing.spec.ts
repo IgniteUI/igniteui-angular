@@ -309,6 +309,24 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
         });
+    
+        it('should focus the first cell when editing mode is cell', fakeAsync(() => {
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+            expect(cell.editMode).toBe(false);
+            expect(document.activeElement.nodeName).toEqual('BODY')
+            
+            // Enter cell edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            tick(100);
+
+            // Check focused element and selection
+            expect(cell.editMode).toBe(true);
+            expect(document.activeElement.nodeName).toEqual('INPUT')
+            expect((document.activeElement as HTMLInputElement).value).toBe('John Brown');
+            expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0)
+            expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
+        }));
     });
 
     describe('Scroll, pin and blur', () => {

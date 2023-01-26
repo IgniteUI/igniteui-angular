@@ -170,7 +170,6 @@ export class GridCellEditingComponent {
     public updateSelectedCell() {
         let newValue;
         const selectedCell = this.gridWithoutPK.selectedCells[0];
-        console.log(selectedCell.column.dataType);
         switch (selectedCell.column.dataType) {
             case 'string': newValue = 'UpdatedCell'; break;
             case 'number': newValue = 0; break;
