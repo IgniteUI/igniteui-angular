@@ -24,12 +24,12 @@ import { IgxDatePickerComponent } from './date-picker.component';
         FormsModule,
         CommonModule,
         IgxIconModule,
+        IgxDateTimeEditorModule,
         IgxMaskModule,
         IgxCalendarModule,
         IgxInputGroupModule,
         IgxPickersCommonModule,
-        IgxTextSelectionModule,
-        IgxDateTimeEditorModule,
+        IgxTextSelectionModule,        
         IgxCalendarContainerModule,
     ]
 })
