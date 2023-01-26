@@ -187,7 +187,7 @@ const FILTER_ROW_HEIGHT = 50;
 // but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
-/* blazorIndirectRender 
+/* blazorIndirectRender
    blazorComponent
    omitModule */
 @Directive()
@@ -5921,7 +5921,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
 
-    
+
     /**
      * Select specified columns.
      *
@@ -7261,8 +7261,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /* blazorSuppress */
+    /** TODO: TEMPORARY, replace with final approach from https://github.com/IgniteUI/igniteui-angular/issues/12577 */
+    @Input()
+    public keyFilter: (keys: string[]) => string[] = (x) => x;
+
     protected generateDataFields(data: any[]): string[] {
-        return Object.keys(data && data.length !== 0 ? data[0] : []);
+        const keys = Object.keys(data && data.length !== 0 ? data[0] : []);
+        return this.keyFilter(keys);
     }
 
     /**
