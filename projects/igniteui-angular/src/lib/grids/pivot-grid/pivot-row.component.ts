@@ -7,7 +7,6 @@ import {
     forwardRef,
     HostBinding, Inject, Input, ViewContainerRef
 } from '@angular/core';
-import { dumpTruck } from '@igniteui/material-icons-extended';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IGX_GRID_BASE, PivotGridType } from '../common/grid.interface';
 import { IgxRowDirective } from '../row.directive';

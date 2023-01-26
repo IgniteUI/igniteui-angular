@@ -1,5 +1,5 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
@@ -22,7 +22,7 @@ import { IgxGridModule } from './grid.module';
 describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,

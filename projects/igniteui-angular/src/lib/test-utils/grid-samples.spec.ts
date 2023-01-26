@@ -200,19 +200,6 @@ export class RowSelectionComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [selectRowOnClick]="false" [rowSelection]="'multiple'"
-            [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
-        '', ColumnDefinitions.productBasicNumberID)
-})
-export class RowSelectionWithDisabledSelectRowOnClickComponent extends BasicGridComponent {
-    public data = SampleTestData.foodProductDataExtended();
-    public width = '800px';
-    public height = '600px';
-    public selectedRows = [];
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
         '', ColumnDefinitions.productBasicNumberID)
 })
@@ -2142,7 +2129,7 @@ export class ColumnSelectionGroupTestComponent {
 
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
         <igx-column field="ID"></igx-column>
-        <igx-column-group header="General Information" [collapsible]="true" >
+        <igx-column-group header="General Information" [collapsible]="true">
             <igx-column  field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
             <igx-column-group header="Person Details" [visibleWhenCollapsed]="false">
                 <igx-column  field="ContactName"></igx-column>
@@ -2155,7 +2142,7 @@ export class ColumnSelectionGroupTestComponent {
         <igx-column-group header="Address Information" [collapsible]="true">
                 <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
                 <igx-column-group header="Region Information" [visibleWhenCollapsed]="true">
-                    <igx-column field="Region" ></igx-column>
+                    <igx-column field="Region"></igx-column>
                     <igx-column field="PostalCode"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="City Information" [visibleWhenCollapsed]="false">

@@ -52,7 +52,13 @@ export class IgxTotalSaleAggregate {
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;
-    public gridDensity = 'superCompact';
+    public gridDensity: DisplayDensity | 'superCompact' = 'superCompact';
+    public get density(): DisplayDensity {
+        if (this.gridDensity === 'superCompact') {
+            return 'compact';
+        }
+        return this.gridDensity;
+    }
 
     public filterExpTree = new FilteringExpressionsTree(FilteringLogic.And);
 
@@ -113,7 +119,6 @@ export class PivotGridSampleComponent {
             },
         ],
         rows: [
-
             {
                 memberName: 'SellerName',
                 enabled: true,
@@ -270,7 +275,7 @@ export class PivotGridSampleComponent {
         this.selected = allEnabled;
     }
 
-    public setDensity(density: DisplayDensity) {
+    public setDensity(density: DisplayDensity | 'superCompact') {
         this.gridDensity = density;
     }
 

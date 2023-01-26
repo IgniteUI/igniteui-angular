@@ -165,7 +165,7 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_max_length_validation_error: 'Záznam by neměl mít více než {0} znaků',
     igx_grid_email_validation_error: 'Je třeba zadat platnou e-mailovou adresu',
     igx_grid_pattern_validation_error: 'Položka neodpovídá požadovanému vzoru',
-    igx_grid_pivot_no_aggregator: 'No valid aggregator found for {0}. Please set either a valid aggregatorName or aggregator.'
+    igx_grid_pivot_no_aggregator: 'Pro {0} nebyl nalezen žádný platný agregátor. Nastavte prosím buď platný aggregatorName nebo aggregator.'
 };
 
 /**

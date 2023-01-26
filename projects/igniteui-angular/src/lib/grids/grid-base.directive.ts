@@ -7235,35 +7235,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
-                    expansionRowIndexes.push(key);
+                    const rowIndex = this.gridAPI.get_rec_index_by_id(key, this.dataView);
+                    expansionRowIndexes.push(rowIndex);
                 }
             }
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
-                        expansionRowIndexes.forEach(row => {
-                            let rowIndex;
-                            if (!isNaN(row.ID)) {
-                                rowIndex = Number(row.ID);
-                            } else {
-                                rowIndex = Number(row);
-                            }
-
-                            if (updatedKey > Number(rowIndex)) {
-                                updatedKey--;
+                        let subtract = 0;
+                        expansionRowIndexes.forEach((row) => {
+                            if (updatedKey > Number(row)) {
+                                subtract++;
                             }
                         });
-                        selectionCollection.set(updatedKey, value);
+                        selectionCollection.set(updatedKey - subtract, value);
                     }
                 }
             } else if (activeEl) {
+                let subtract = 0;
                 if (expansionRowIndexes.length > 0) {
                     expansionRowIndexes.forEach(row => {
                         if (activeEl.row > Number(row)) {
-                            activeEl.row--;
+                            subtract++;
                         }
                     });
+                    activeEl.row -= subtract;
                 }
             }
         }
@@ -7523,7 +7520,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         directive.scrollTo(goal);
     }
 
-    private getColumnWidthSum(): number {
+
+    /**
+     * @hidden
+     */
+    protected getColumnWidthSum(): number {
         let colSum = 0;
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
@@ -7553,7 +7554,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         column.resetCaches();
     }
 
-    protected buildDataView(data: any[]) {
+    protected buildDataView(_data: any[]) {
         this._dataView = this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];
@@ -7614,8 +7615,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         });
-
-        this.hideOverlays();
+        if(!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
+            this.hideOverlays();
+        }
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.gridScroll.emit(args);
     }

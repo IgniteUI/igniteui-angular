@@ -150,8 +150,8 @@
                 <ng-template igxHeader let-column="column">
                     <p style="color: crimson">{{column.field}}</p>
                 </ng-template>
-                <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid2.updateCell($event.checkbox.checked, ri, column?.field)"></igx-checkbox>
+                <ng-template igxCell let-value let-cell="cell">
+                    <igx-checkbox [checked]="value" (change)="grid2.updateCell($event.checkbox.checked, cell.row.key, cell.column.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
             <igx-paginator [perPage]="10"></igx-paginator>
@@ -193,8 +193,8 @@
                 <ng-template igxHeader let-column="column">
                     <p style="color: crimson">{{column.field</p>
                 </ng-template>
-                <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid3.updateCell($event.checkbox.checked, ri, column?.field)"></igx-checkbox>
+                <ng-template igxCell let-item let-cell="cell">
+                    <igx-checkbox [checked]="item" (change)="grid3.updateCell($event.checkbox.checked, cell.row.key, cell.column.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
             <igx-paginator [perPage]="10"></igx-paginator>

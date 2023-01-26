@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
@@ -19,16 +19,14 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
                 IgxTreeGridSortingComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    beforeEach(() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);
         fix.detectChanges();
-        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
-    }));
+    });
 
     describe('API sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
