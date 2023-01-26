@@ -122,6 +122,10 @@
             @include e(bundle) {
                 @extend  %form-group-textarea-group-bundle !optional;
             }
+
+            @include e(label) {
+                @extend  %form-group-textarea-label !optional;
+            }
         }
 
         @include mx(textarea-group, focused) {
@@ -164,6 +168,7 @@
 
         @include m(focused) {
             @extend %form-group-display !optional;
+            @extend %form-group-display--focused !optional;
 
             @include e(bundle) {
                 @extend %form-group-bundle--focus	!optional;
@@ -713,11 +718,6 @@
 
             @include e(label) {
                 @extend %fluent-label !optional;
-                @extend %fluent-label--indigo !optional;
-            }
-
-            @include e(hint) {
-                @extend %form-group-helper--box !optional;
             }
 
             @include e(textarea) {

@@ -385,6 +385,8 @@
     }
 
     %form-group-display--filled {
+        color: var-get($theme, 'filled-text-color');
+
         igx-prefix,
         [igxPrefix],
         igx-suffix,
@@ -397,16 +399,15 @@
         }
     }
 
-    %form-group-box-wrapper {
-        @if $variant != 'bootstrap' {
-            border-radius: var-get($theme, 'box-border-radius');
-        }
+    %form-group-display--focused {
+        color: var-get($theme, 'focused-text-color');
 
-        @if $variant == 'material' {
-            border-end-start-radius: border-radius(rem(0));
-            border-end-end-radius: border-radius(rem(0));
+        igx-prefix,
+        [igxPrefix],
+        igx-suffix,
+        [igxSuffix] {
+            color: var-get($theme, 'focused-text-color');
         }
-        overflow: hidden;
     }
 
     %form-group-display--disabled {
@@ -424,14 +425,26 @@
         }
     }
 
+    %form-group-box-wrapper {
+        @if $variant != 'bootstrap' {
+            border-radius: var-get($theme, 'box-border-radius');
+        }
+
+        @if $variant == 'material' {
+            border-end-start-radius: border-radius(rem(0));
+            border-end-end-radius: border-radius(rem(0));
+        }
+        overflow: hidden;
+    }
+
     %form-group-bundle {
-        height: var(--size);
-        position: relative;
         display: grid;
         grid-template-columns: auto 1fr auto;
+        grid-area: 1 / 2 / span 1 / span 2;
+        height: var(--size);
+        position: relative;
         max-width: 100%;
         font-size: 1rem;
-        grid-area: 1 / 2 / span 1 / span 2;
 
         &::after {
             content: '';
@@ -442,6 +455,72 @@
             background: var-get($theme, 'idle-bottom-line-color');
             transition: height $transition-timing, background-color $transition-timing;
         }
+    }
+
+    // We need to target the bundle :after here with classes since we have cases that
+    // The theme is for example indigo but the input stays fluent, that's the case in the grid.
+    .igx-input-group--fluent,
+    .igx-input-group--bootstrap {
+        %form-group-bundle {
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    %form-group-bundle--hover {
+        cursor: pointer;
+
+        &::after {
+            height: rem(1px);
+            background: var-get($theme, 'hover-bottom-line-color');
+        }
+    }
+
+    %form-group-bundle--focus {
+        &::after {
+            height: rem(2px);
+            background: var-get($theme, 'focused-bottom-line-color');
+        }
+    }
+
+    %form-group-bundle--success {
+        &::after {
+            background: var-get($theme, 'success-secondary-color');
+        }
+    }
+
+    %form-group-bundle--error {
+        &::after {
+            background: var-get($theme, 'error-secondary-color');
+        }
+    }
+
+    %form-group-bundle--disabled {
+        cursor: default;
+        background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
+        background-position: bottom;
+        background-size: rem(4px) rem(1px);
+        background-repeat: repeat-x;
+
+        &::after {
+            background: var-get($theme, 'disabled-bottom-line-color');
+        }
+
+        [dir='rtl'] & {
+            background-image: linear-gradient(to right, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
+        }
+    }
+
+    %form-group-bundle-start {
+        grid-area: 1 / 1;
+    }
+
+    %form-group-bundle-main {
+        grid-area: 1 / 2 / span 1 / span 2;
+        flex-grow: 1;
+        position: relative;
+        max-width: inherit;
     }
 
     %form-group-bundle--box {
@@ -477,82 +556,6 @@
         %form-group-notch--box {
             padding-inline-start: rem(4px)
         }
-    }
-
-    %form-group-bundle--hover {
-        cursor: pointer;
-
-        &::after {
-            height: rem(1px);
-            background: var-get($theme, 'hover-bottom-line-color');
-        }
-    }
-
-    %form-group-bundle--focus {
-        caret-color: var-get($theme, 'focused-secondary-color');
-
-        @if $NOT-indigo-theme {
-            &::after {
-                background: var-get($theme, 'interim-bottom-line-color');
-            }
-        } @else {
-            &::after {
-                background: var-get($theme, 'focused-bottom-line-color');
-            }
-        }
-    }
-
-    %form-group-bundle--success {
-        caret-color: var-get($theme, 'success-secondary-color');
-
-        &::after {
-            height: rem(1px);
-            background: var-get($theme, 'success-secondary-color');
-        }
-    }
-
-    %form-group-bundle--error {
-        caret-color: var-get($theme, 'error-secondary-color');
-
-        &::after {
-            height: rem(1px);
-            background: var-get($theme, 'error-secondary-color');
-        }
-    }
-
-    %form-group-bundle--disabled {
-        @if $NOT-indigo-theme {
-            box-shadow: none;
-        } @else {
-            &::after {
-                height: rem(1px);
-                background: var-get($theme, 'disabled-bottom-line-color');
-            }
-        }
-
-        background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
-        background-position: bottom;
-        background-size: rem(4px) rem(1px);
-        background-repeat: repeat-x;
-
-        [dir='rtl'] & {
-            background-image: linear-gradient(to right, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
-        }
-
-        &::after {
-            display: none;
-        }
-    }
-
-    %form-group-bundle-start {
-        grid-area: 1 / 1;
-    }
-
-    %form-group-bundle-main {
-        grid-area: 1 / 2 / span 1 / span 2;
-        flex-grow: 1;
-        position: relative;
-        max-width: inherit;
     }
 
     %igx-input-group__notch {
@@ -864,7 +867,7 @@
         height: auto !important;
     }
 
-    %form-group-label-textarea {
+    %form-group-textarea-label {
         transition-duration: 0ms;
     }
 
@@ -1026,6 +1029,8 @@
     }
 
     %form-group-input--disabled {
+        cursor: default;
+
         color: var-get($theme, 'disabled-text-color') !important;
 
         &::placeholder {
@@ -1081,16 +1086,18 @@
         }
     }
 
-    %form-group-line {
-        position: absolute;
-        width: 100%;
-        inset-inline-end: 0;
-        height: rem(2px);
-        align-self: end;
-        transform: scaleX(0);
-        transform-origin: center;
-        background: var-get($theme, 'focused-secondary-color');
-        z-index: 1;
+    @if $material-theme {
+        %form-group-line {
+            position: absolute;
+            width: 100%;
+            inset-inline-end: 0;
+            height: rem(2px);
+            align-self: end;
+            transform: scaleX(0);
+            transform-origin: center;
+            background: var-get($theme, 'focused-secondary-color');
+            z-index: 1;
+        }
     }
 
     %form-group-line--success {
@@ -1255,9 +1262,7 @@
 
     // INDIGO START
     %form-group-bundle--indigo {
-        transition: background $transition-timing, box-shadow $transition-timing;
-        //background: var-get($theme, 'box-background');
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'idle-bottom-line-color');
+        transition: background $transition-timing;
         padding-top: 0;
 
         &:hover,
@@ -1267,38 +1272,20 @@
     }
 
     %form-group-input--indigo {
-        padding: rem(8px);
+        padding-block: rem(8px);
+        padding-inline: rem(12px);
     }
 
     %indigo--box-focused {
         background: var-get($theme, 'box-background-hover');
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'focused-bottom-line-color');
-    }
-
-    %form-group-bundle-success--indigo {
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'success-secondary-color');
-    }
-
-    %form-group-bundle-error--indigo {
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'error-secondary-color');
-    }
-
-    %form-group-bundle-focused-success--indigo {
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'success-secondary-color');
-    }
-
-    %form-group-bundle-focused-error--indigo {
-        box-shadow: inset 0 rem(-2px) 0 0 var-get($theme, 'error-secondary-color');
     }
 
     %form-group-bundle--indigo--disabled {
         background: transparent;
-        box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
 
         &:hover,
         &:focus {
             background: transparent;
-            box-shadow: inset 0 rem(-1px) 0 0 var-get($theme, 'disabled-bottom-line-color');
         }
     }
     // INDIGO END
@@ -1386,19 +1373,13 @@
         @if $variant == 'fluent' {
             border-radius: var-get($theme, 'border-border-radius');
         }
-
-        &::after {
-            display: none;
-        }
     }
 
     %form-group-bundle--fluent--hover {
         border-color: var-get($theme, 'hover-border-color');
-        box-shadow: none;
     }
 
     %form-group-bundle--fluent--focus {
-        caret-color: var-get($theme, 'focused-text-color');
         border-color: var-get($theme, 'focused-border-color');
 
         @if $fluent-theme {
@@ -1430,23 +1411,25 @@
         cursor: default;
     }
 
-    %form-group-bundle-start--fluent--focused {
-        margin-block-start: rem(-1px);
-        margin-inline-start: rem(-1px);
-    }
+    @if $fluent-theme {
+        %form-group-bundle-start--fluent--focused {
+            margin-block-start: rem(-1px);
+            margin-inline-start: rem(-1px);
+        }
 
-    %form-group-bundle-end--fluent--focused {
-        margin-block-start: rem(-1px);
-        margin-inline-end: rem(-1px);
-    }
+        %form-group-bundle-end--fluent--focused {
+            margin-block-start: rem(-1px);
+            margin-inline-end: rem(-1px);
+        }
 
-    %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
-    %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
-        margin-inline-start: rem(-1px);
-    }
+        %form-group-bundle-start--fluent--focused:empty + %form-group-bundle-main--fluent--focused,
+        %form-group-bundle-end--fluent--focused:empty + %form-group-bundle-main--fluent--focused {
+            margin-inline-start: rem(-1px);
+        }
 
-    %form-group-bundle-main--fluent--focused {
-        margin-block-start: rem(-1px);
+        %form-group-bundle-main--fluent--focused {
+            margin-block-start: rem(-1px);
+        }
     }
 
     // Native input
@@ -1470,22 +1453,18 @@
         display: inline-flex;
         font-size: rem(14px);
         font-weight: 600;
-        line-height: normal !important;
+        line-height: 1 !important;
         position: static;
         transform: translateY(0);
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        margin-block-end: rem(8px);
+        margin-block-end: rem(4px);
+        color: var-get($theme, 'idle-secondary-color');
 
         [dir='rtl'] & {
             transform-origin: top right;
         }
-    }
-
-    %fluent-label--indigo {
-        font-size: 16px;
-        font-weight: 400 !important;
     }
 
     %fluent-label + %form-group-bundle-required--fluent {
@@ -1654,10 +1633,6 @@
         padding: 0;
         box-shadow: none;
         z-index: 0;
-
-        &::after {
-            display: none;
-        }
     }
 
     %form-group-bundle--bootstrap-hover {

@@ -21,6 +21,14 @@
             @extend %igx-combo__drop-down !optional;
         }
 
+        @include e(case-icon) {
+            @extend %igx-combo__case-icon !optional;
+        }
+
+        @include e(case-icon, $m: active) {
+            @extend %igx-combo__case-icon--active !optional;
+        }
+
         @include e(search) {
             @extend %igx-combo__search !optional;
         }

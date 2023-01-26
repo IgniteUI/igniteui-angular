@@ -39,17 +39,19 @@
     [labelledBy]="this.ariaLabelledBy || this.label?.id || this.placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()">
-    <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" theme="material" class="igx-combo__search">
-        <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text"
-            [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-            (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
-            aria-autocomplete="list" role="searchbox" aria-label="search"/>
-        <igx-suffix *ngIf="showSearchCaseIcon">
-            <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"
-                (click)="toggleCaseSensitive()">
-            </igx-icon>
-        </igx-suffix>
-    </igx-input-group>
+    <div class="igx-combo__search">
+        <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" theme="material" >
+            <input igxInput #searchInput name="searchInput" autocomplete="off" type="text"
+                   [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
+                   (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
+                   aria-autocomplete="list" role="searchbox" aria-label="search"/>
+            <igx-suffix *ngIf="showSearchCaseIcon" (click)="toggleCaseSensitive()">
+                <span class="{{filteringOptions.caseSensitive? 'igx-combo__case-icon--active' : 'igx-combo__case-icon'}}">
+                    <igx-icon family="imx-icons" name="case-sensitive" [active]="filteringOptions.caseSensitive"></igx-icon>
+                </span>
+            </igx-suffix>
+        </igx-input-group>
+    </div>
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
