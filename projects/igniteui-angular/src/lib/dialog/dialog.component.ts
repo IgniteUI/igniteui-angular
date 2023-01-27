@@ -485,7 +485,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     constructor(
         private elementRef: ElementRef,
         @Optional() private navService: IgxNavigationService,
-        private overlayService: IgxOverlayService,
+        private overlayService: IgxOverlayService
     ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
 
