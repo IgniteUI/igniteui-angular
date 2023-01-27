@@ -15,11 +15,11 @@
 /// @param {Color} $toggle-button-background-hover [null] - The select toggle button background color on hover.
 /// @param {Color} $toggle-button-background-focus [null] - The select toggle button background color when the select is focused.
 /// @param {Color} $toggle-button-background-disabled [null] - The select toggle button background color when the select is disabled.
-/// @param {Color} $toggle-button-foreground [null] - The select toggle button background color.
-/// @param {Color} $toggle-button-foreground-hover [null] - The select toggle button background color on hover.
-/// @param {Color} $toggle-button-foreground-focus [null] - TThe select toggle button background color when the select is focused.
-/// @param {Color} $toggle-button-foreground-disabled [null] - TThe select toggle button background color when the select is disabled.
-/// @param {Color} $toggle-button-foreground-filled [null] - TThe select toggle button background color when the select is filled.
+/// @param {Color} $toggle-button-foreground [null] - The select toggle button foreground color.
+/// @param {Color} $toggle-button-foreground-hover [null] - The select toggle button foreground color on hover.
+/// @param {Color} $toggle-button-foreground-focus [null] - The select toggle button foreground color when the select is focused.
+/// @param {Color} $toggle-button-foreground-disabled [null] - The select toggle button foreground color when the select is disabled.
+/// @param {Color} $toggle-button-foreground-filled [null] - The select toggle button foreground color when the select is filled.
 /// @example scss Change the select empty list background
 ///   $my-select-theme: igx-select-theme($empty-list-background);
 ///   // Pass the theme to the css-vars mixin

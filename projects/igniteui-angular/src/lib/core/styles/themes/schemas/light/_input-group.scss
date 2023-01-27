@@ -11,8 +11,8 @@
 /// @type {Map}
 /// @prop {Map} input-prefix-color [color: ('gray', 600)] - The text color of an input prefix of type line, box and border.
 /// @prop {Color} input-prefix-background [transparent] - The background color of an input prefix of type line, box and border.
-/// @prop {Map} input-suffix-color [color: ('gray', 600)] - The text color of an input sufix of type line, box and border.
-/// @prop {Color} input-suffix-background [transparent] - The background color of an input sufix of type line, box and border.
+/// @prop {Map} input-suffix-color [color: ('gray', 600)] - The text color of an input suffix of type line, box and border.
+/// @prop {Color} input-suffix-background [transparent] - The background color of an input suffix of type line, box and border.
 /// @prop {Map} idle-text-color [color: ('gray', 700)] - The input text color in the idle state.
 /// @prop {Map} filled-text-color [color: ('gray', 900)] - The input text color in the filled state.
 /// @prop {Map} focused-text-color [color: ('gray', 900)] - The input text color in the focused state.
@@ -289,7 +289,7 @@ $fluent-input-group: extend(
 
         border-border-radius: rem(2px),
 
-        search-border-radius: rem(2px)
+        search-border-radius: rem(2px),
     )
 );
 
@@ -470,6 +470,6 @@ $indigo-input-group: extend(
 
         idle-secondary-color: (
             color: ('gray', 900)
-        )
+        ),
     )
 );
