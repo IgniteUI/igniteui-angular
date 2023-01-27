@@ -399,7 +399,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
     }));
 
-it('Should chenaged closeOnEscape property while the dialog is open', fakeAsync(() => {
+    it('Should chenaged closeOnEscape property while the dialog is open', fakeAsync(() => {
         const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
         fixture.detectChanges();
 
@@ -688,7 +688,6 @@ class CustomDialogComponent {
 
 @Component({
     template: `
-                <h1>Dialog</h1>
                 <igx-dialog
                     #dialog
                     [closeOnEscape]="true"
