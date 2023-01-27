@@ -9,6 +9,7 @@ import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { slideOutBottom, slideInTop } from '../animations/main';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { SimpleChange } from '@angular/core';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
@@ -28,7 +29,8 @@ describe('Dialog', () => {
                 CustomTemplates2DialogComponent,
                 DialogSampleComponent,
                 PositionSettingsDialogComponent,
-                DialogTwoWayDataBindingComponent
+                DialogTwoWayDataBindingComponent,
+                ChangeClosePropertyOnOpenDialogComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
@@ -360,6 +362,83 @@ describe('Dialog', () => {
         expect(childDialog.isOpen).toEqual(false);
     }));
 
+    it('Should chenaged closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+
+        dialogElem.click();
+        tick();
+        fixture.detectChanges();
+        
+        expect(dialog.isOpen).toEqual(false);
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+
+        dialog.closeOnOutsideSelect = false;
+        tick();
+        fixture.detectChanges();
+
+        dialog.ngOnChanges({
+            closeOnOutsideSelect: new SimpleChange(true, false, true)
+        });
+        tick();
+        fixture.detectChanges();
+
+        dialogElem.click();
+        tick();
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(true);
+    }));
+
+    it('Should chenaged closeOnEscape property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+        console.log(dialog.closeOnEscape)
+        
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
+        tick(100);
+        fixture.detectChanges();
+        
+        expect(dialog.isOpen).toEqual(false);
+        
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+        
+        dialog.closeOnEscape = false;
+        tick();
+        fixture.detectChanges();
+
+        dialog.ngOnChanges({
+            closeOnEscape: new SimpleChange(true, false, true)
+        });
+        tick();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(true);
+    }));
+
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
             component: CustomTemplates1DialogComponent
@@ -605,6 +684,18 @@ class DialogSampleComponent {
                             </igx-dialog>
                         <div>` })
 class CustomDialogComponent {
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+}
+
+@Component({
+    template: `
+                <igx-dialog
+                    #dialog
+                    [closeOnEscape]="true"
+                    [closeOnOutsideSelect]="true"
+                    >
+                </igx-dialog>` })
+class ChangeClosePropertyOnOpenDialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 

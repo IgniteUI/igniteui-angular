@@ -523,6 +523,16 @@ export class IgxOverlayService implements OnDestroy {
         return info;
     }
 
+    /** @hidden */
+    public resetCloseSettings(element: HTMLElement, closeOnOutsideClick: boolean, closeOnEscape: boolean){
+        for (let i = this._overlayInfos.length; i--;) {
+            if (element === this._overlayInfos[i].elementRef.nativeElement) {
+                this._overlayInfos[i].settings.closeOnOutsideClick = closeOnOutsideClick;
+                this._overlayInfos[i].settings.closeOnEscape = closeOnEscape;
+            }
+        }
+    }
+
     private _hide(id: string, event?: Event) {
         const info: OverlayInfo = this.getOverlayById(id);
         if (!info) {
@@ -788,7 +798,11 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
                     .pipe(takeUntil(this.destroy$))
-                    .subscribe((e: Event) => this._hide(info.id, e));
+                    .subscribe((e: Event) =>  {
+                        if (info.settings.closeOnOutsideClick) {
+                            this._hide(info.id, e);
+                        }
+                    });
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
