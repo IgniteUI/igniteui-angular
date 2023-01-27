@@ -688,7 +688,6 @@ class CustomDialogComponent {
 
 @Component({
     template: `
-                <h1>Dialog</h1>
                 <igx-dialog
                     #dialog
                     [closeOnEscape]="true"
