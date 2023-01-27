@@ -11,7 +11,9 @@ import {
     Optional,
     Output,
     ViewChild,
-    AfterContentInit
+    AfterContentInit,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +22,7 @@ import { IgxButtonModule, IgxButtonType } from '../directives/button/button.dire
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
+import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings, IgxOverlayService } from '../services/public_api';
 import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
 import { IgxFocusTrapModule } from '../directives/focus-trap/focus-trap.directive';
@@ -58,7 +60,7 @@ let DIALOG_ID = 0;
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html'
 })
-export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
+export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit, OnChanges {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
@@ -478,10 +480,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private _closeOnEscape = true;
     private _isModal = true;
     private _titleId: string;
+    private _initialize = false;
 
     constructor(
         private elementRef: ElementRef,
-        @Optional() private navService: IgxNavigationService
+        @Optional() private navService: IgxNavigationService,
+        private overlayService: IgxOverlayService
     ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
 
@@ -585,9 +589,18 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * @hidden
      */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (this._initialize && (changes.closeOnOutsideSelect || changes.closeOnEscape)) {
+            this.overlayService.resetCloseSettings(this.toggleRef.element, this.closeOnOutsideSelect, this.closeOnEscape);
+        }
+    }
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         if (this.navService && this.id) {
             this.navService.add(this.id, this);
+            this._initialize = true;
         }
     }
     /**

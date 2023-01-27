@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, SimpleChange, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,7 +28,8 @@ describe('Dialog', () => {
                 CustomTemplates2DialogComponent,
                 DialogSampleComponent,
                 PositionSettingsDialogComponent,
-                DialogTwoWayDataBindingComponent
+                DialogTwoWayDataBindingComponent,
+                ChangeClosePropertyOnOpenDialogComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
@@ -360,6 +361,83 @@ describe('Dialog', () => {
         expect(childDialog.isOpen).toEqual(false);
     }));
 
+    it('Should chenaged closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+
+        dialogElem.click();
+        tick();
+        fixture.detectChanges();
+        
+        expect(dialog.isOpen).toEqual(false);
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+
+        dialog.closeOnOutsideSelect = false;
+        tick();
+        fixture.detectChanges();
+
+        dialog.ngOnChanges({
+            closeOnOutsideSelect: new SimpleChange(true, false, true)
+        });
+        tick();
+        fixture.detectChanges();
+
+        dialogElem.click();
+        tick();
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(true);
+    }));
+
+    it('Should chenaged closeOnEscape property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+        fixture.detectChanges();
+
+        const dialog = fixture.componentInstance.dialog;
+        const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
+
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+        console.log(dialog.closeOnEscape)
+        
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
+        tick(100);
+        fixture.detectChanges();
+        
+        expect(dialog.isOpen).toEqual(false);
+        
+        dialog.open();
+        tick();
+        fixture.detectChanges();
+        
+        dialog.closeOnEscape = false;
+        tick();
+        fixture.detectChanges();
+
+        dialog.ngOnChanges({
+            closeOnEscape: new SimpleChange(true, false, true)
+        });
+        tick();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(true);
+    }));
+
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
             component: CustomTemplates1DialogComponent
@@ -605,6 +683,19 @@ class DialogSampleComponent {
                             </igx-dialog>
                         <div>` })
 class CustomDialogComponent {
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+}
+
+@Component({
+    template: `
+                <h1>Dialog</h1>
+                <igx-dialog
+                    #dialog
+                    [closeOnEscape]="true"
+                    [closeOnOutsideSelect]="true"
+                    >
+                </igx-dialog>` })
+class ChangeClosePropertyOnOpenDialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 

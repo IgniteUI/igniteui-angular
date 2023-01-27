@@ -384,6 +384,25 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
+     * Reset overlay settings closeOnOutsideClick and closeOnEscape for the close behavior with the provided element and settings.
+     *
+     * @param element HTMLElement on which the close settings will be reset.
+     * @param closeOnOutsideClick Boolean value for closeOnOutsideClick property of the OverlaySettings.
+     * @param closeOnEscape Boolean value for closeOnEscape property of the OverlaySettings.
+     * ```typescript
+     * this.overlay.resetCloseSettings(element, closeOnOutsideClick, closeOnEscape);
+     * ```
+     */
+    public resetCloseSettings(element: HTMLElement, closeOnOutsideClick: boolean, closeOnEscape: boolean){
+        for (let i = this._overlayInfos.length; i--;) {
+            if (element === this._overlayInfos[i].elementRef.nativeElement) {
+                this._overlayInfos[i].settings.closeOnOutsideClick = closeOnOutsideClick;
+                this._overlayInfos[i].settings.closeOnEscape = closeOnEscape;
+            }
+        }
+    }
+
+    /**
      * Shows the overlay for provided id.
      *
      * @param id Id to show overlay for
@@ -789,7 +808,11 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
                     .pipe(takeUntil(this.destroy$))
-                    .subscribe((e: Event) => this._hide(info.id, e));
+                    .subscribe((e: Event) =>  {
+                        if (info.settings.closeOnOutsideClick) {
+                            this._hide(info.id, e);
+                        }
+                    });
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
