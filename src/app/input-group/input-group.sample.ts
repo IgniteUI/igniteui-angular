@@ -26,10 +26,10 @@ interface Selection {
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;
-    public isRequired = true;
+    public isRequired = false;
     public isDisabled = false;
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
-    public density: DisplayDensity = 'compact';
+    public density: DisplayDensity = 'cosy';
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
@@ -72,13 +72,13 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
 
         this.inputTypes = [
             {
-                selected: true,
+                selected: this.inputType === 'line',
                 type: 'line',
                 label: 'Line',
                 togglable: true
             },
             {
-                selected: this.inputType === 'box',
+                selected: true,
                 type: 'box',
                 label: 'Box',
                 togglable: true,
