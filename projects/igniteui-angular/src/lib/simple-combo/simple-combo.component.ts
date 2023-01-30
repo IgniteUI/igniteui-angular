@@ -189,7 +189,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
-                    let current = e ? e[this.valueKey] : undefined;
+                    let current = e? e[this.valueKey] : undefined;
                     if (this.valueKey === null || this.valueKey === undefined) {
                         current = e;
                     }
@@ -382,7 +382,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public handleOpened(): void {
         this.triggerCheck();
         if (!this.comboInput.focused) {
-            this.dropdownContainer.nativeElement.focus();
+        this.dropdownContainer.nativeElement.focus();
         }
         this.opened.emit({ owner: this });
     }
@@ -536,8 +536,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private isValid(value: any): boolean {
         return this.required
-            ? value !== null && value !== '' && value !== undefined
-            : value !== undefined;
+        ? value !== null && value !== '' && value !== undefined
+        : value !== undefined;
     }
 }
 

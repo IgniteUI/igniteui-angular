@@ -672,9 +672,9 @@ describe('IgxSimpleCombo', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
-            combo.data = ['New York', 'Sofia', undefined, 'Istanbul', 'Paris'];
+            combo.data = ['New York', 'Sofia', undefined, 'Istanbul','Paris'];
 
-            expect(combo.data).toEqual(['New York', 'Sofia', 'Istanbul', 'Paris']);
+            expect(combo.data).toEqual(['New York', 'Sofia', 'Istanbul','Paris']);
         });
         it('should bind combo data to array of objects', () => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
@@ -1224,7 +1224,7 @@ describe('IgxSimpleCombo', () => {
             item1.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('0');
-            expect(combo.selection).toEqual([0]);
+            expect(combo.selection).toEqual([ 0 ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1234,7 +1234,7 @@ describe('IgxSimpleCombo', () => {
             item2.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('false');
-            expect(combo.selection).toEqual([false]);
+            expect(combo.selection).toEqual([ false ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1244,7 +1244,7 @@ describe('IgxSimpleCombo', () => {
             item3.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('');
-            expect(combo.selection).toEqual(['']);
+            expect(combo.selection).toEqual([ '' ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1254,7 +1254,7 @@ describe('IgxSimpleCombo', () => {
             item4.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('null');
-            expect(combo.selection).toEqual([null]);
+            expect(combo.selection).toEqual([ null ]);
 
             combo.open();
             fixture.detectChanges();
@@ -1264,7 +1264,7 @@ describe('IgxSimpleCombo', () => {
             item5.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('NaN');
-            expect(combo.selection).toEqual([NaN]);
+            expect(combo.selection).toEqual([ NaN ]);
 
             // should not select "undefined"
             // combo.value & combo.selection equal the values from the previous selection
@@ -1276,7 +1276,7 @@ describe('IgxSimpleCombo', () => {
             item6.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toBe('NaN');
-            expect(combo.selection).toEqual([NaN]);
+            expect(combo.selection).toEqual([ NaN ]);
         });
 
         it('should select falsy values except "undefined" with "writeValue" method', () => {
@@ -1532,7 +1532,7 @@ describe('IgxSimpleCombo', () => {
                 combo.valueKey = undefined;
                 combo.displayKey = undefined;
                 combo.groupKey = undefined;
-                combo.data = [0, false, '', null, NaN, undefined];
+                combo.data = [ 0, false, '', null, NaN, undefined];
 
                 fixture.componentInstance.form.resetForm();
                 fixture.detectChanges();
@@ -1605,7 +1605,7 @@ describe('IgxSimpleCombo', () => {
                 combo.valueKey = undefined;
                 combo.displayKey = undefined;
                 combo.groupKey = undefined;
-                combo.data = [0, false, '', null, NaN, undefined];
+                combo.data = [ 0, false, '', null, NaN, undefined];
 
                 fixture.componentInstance.form.resetForm();
                 fixture.detectChanges();
@@ -1710,7 +1710,7 @@ describe('IgxSimpleCombo', () => {
                 // primitive data - undefined is not displayed in the dropdown
                 combo.valueKey = undefined;
                 combo.displayKey = undefined;
-                combo.data = [0, false, '', null, NaN, undefined];
+                combo.data = [ 0, false, '', null, NaN, undefined];
 
                 fixture.componentInstance.reactiveForm.resetForm();
                 fixture.detectChanges();
@@ -1783,7 +1783,7 @@ describe('IgxSimpleCombo', () => {
                 // primitive data - undefined is not displayed in the dropdown
                 combo.valueKey = undefined;
                 combo.displayKey = undefined;
-                combo.data = [0, false, '', null, NaN, undefined];
+                combo.data = [ 0, false, '', null, NaN, undefined];
 
                 fixture.componentInstance.reactiveForm.resetForm();
                 fixture.detectChanges();
@@ -1975,7 +1975,7 @@ export class IgxSimpleComboIconTemplatesComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
     public combo: IgxSimpleComboComponent;
 
-    public data: any[] = [
+    public data: any[] =  [
         { name: 'Sofia', id: '1' },
         { name: 'London', id: '2' },
     ];;
