@@ -144,12 +144,6 @@
             }
         }
 
-        @include mx(textarea-group, border) {
-            @include e(bundle-main) {
-                @extend  %form-group-textarea-group-bundle-main--border !optional;
-            }
-        }
-
         @include mx(textarea-group, filled, border) {
             @include e(notch) {
                 @extend %textarea-group-notch--focused !optional;
@@ -352,6 +346,18 @@
         @include mx(box, disabled) {
             @include e(bundle) {
                 @extend %form-group-bundle--box-disabled !optional;
+            }
+        }
+
+        @include mx(box, textarea-group, filled) {
+            @include e(notch) {
+                @extend %form-group-notch--box-textarea !optional;
+            }
+        }
+
+        @include mx(box, textarea-group, focused) {
+            @include e(notch) {
+                @extend %form-group-notch--box-textarea !optional;
             }
         }
         // Type box END
@@ -727,30 +733,6 @@
         @include mx(indigo, focused) {
             @include e(bundle) {
                 @extend %indigo--box-focused !optional;
-            }
-        }
-
-        @include mx(indigo, valid) {
-            @include e(bundle) {
-                @extend %form-group-bundle-success--indigo !optional;
-            }
-        }
-
-        @include mx(indigo, invalid) {
-            @include e(bundle) {
-                @extend %form-group-bundle-error--indigo !optional;
-            }
-        }
-
-        @include mx(indigo, invalid, focused) {
-            @include e(bundle) {
-                @extend %form-group-bundle-focused-error--indigo !optional;
-            }
-        }
-
-        @include mx(indigo, valid, focused) {
-            @include e(bundle) {
-                @extend %form-group-bundle-focused-success--indigo !optional;
             }
         }
 

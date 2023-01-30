@@ -34,7 +34,7 @@
 /// @prop {Map} box-background-focus [color: ('gray', 200)] - The background color of an input group of type box on focus.
 /// @prop {Map} box-disabled-background [color: ('gray', 100)] - The background color of an input group of type box in the disabled state.
 /// @prop {Color} border-background [transparent] - The background color of an input group of type border.
-/// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
+/// @prop {Color} border-disabled-background [transparent] - The background color of an input group of type border in the disabled state.
 /// @prop {Map} search-background [color: ('gray', 50)] - The background color of an input group of type search.
 /// @prop {Map} search-disabled-background [color: ('gray', 100)] - The background color of an input group of type search in the disabled state.
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
@@ -58,32 +58,20 @@ $light-input-group: extend(
     (
         variant: 'material',
 
-        input-prefix-color: (
-            color: ('gray', 600)
-        ),
-
         input-prefix-background: transparent,
 
-        input-suffix-color: (
+        input-prefix-color: (
             color: ('gray', 600)
         ),
 
         input-suffix-background: transparent,
 
-        idle-text-color: (
-            color: ('gray', 700)
-        ),
-
-        border-color: (
+        input-suffix-color: (
             color: ('gray', 600)
         ),
 
-        hover-border-color: (
-            color: ('gray', 900)
-        ),
-
-        focused-border-color: (
-            color: ('primary', 500)
+        idle-text-color: (
+            color: ('gray', 700)
         ),
 
         filled-text-color: (
@@ -111,11 +99,11 @@ $light-input-group: extend(
         ),
 
         idle-bottom-line-color: (
-            color: ('gray', 600)
+            color: ('gray', 500)
         ),
 
         hover-bottom-line-color: (
-            color: ('gray', 900)
+            color: ('gray', 800)
         ),
 
         focused-bottom-line-color: (
@@ -134,27 +122,21 @@ $light-input-group: extend(
             color: ('gray', 500),
         ),
 
-        box-background: (
-            color: ('gray', 200)
+        border-color: (
+            color: ('gray', 600)
         ),
 
-        box-background-hover: (
-            color: ('gray', 200)
+        hover-border-color: (
+            color: ('gray', 900)
         ),
 
-        box-background-focus: (
-            color: ('gray', 300)
-        ),
-
-        box-disabled-background: (
-            color: ('gray', 100)
+        focused-border-color: (
+            color: ('primary', 500)
         ),
 
         border-background: transparent,
 
-        border-disabled-background: (
-            color: ('gray', 100)
-        ),
+        border-disabled-background: transparent,
 
         label-floated-background: transparent,
 
@@ -186,6 +168,22 @@ $light-input-group: extend(
 
         disabled-placeholder-color: (
             color: ('gray', 500)
+        ),
+
+        box-background: (
+            color: ('gray', 200)
+        ),
+
+        box-background-hover: (
+            color: ('gray', 200)
+        ),
+
+        box-background-focus: (
+            color: ('gray', 300)
+        ),
+
+        box-disabled-background: (
+            color: ('gray', 100)
         ),
 
         box-border-radius: rem(4px),

@@ -1062,6 +1062,10 @@
         }
     }
 
+    %form-group-notch--box-textarea {
+        padding-inline-start: 0;
+    }
+
     %form-group-textarea-group-bundle-main {
         overflow: hidden;
         padding-inline-start: 0 !important;
@@ -1074,10 +1078,6 @@
         @if $material-theme {
             padding-block-start: $input-top-padding;
         }
-    }
-
-    %form-group-textarea-group-bundle-main--border {
-        padding-block-start: calc($input-top-padding / 2);
     }
 
     %form-group-textarea--disabled {
@@ -1369,7 +1369,6 @@
         border: rem(1px) solid var-get($theme, 'border-color');
         background: var-get($theme, 'border-background');
         align-items: stretch;
-        box-shadow: none !important;
         overflow: hidden;
 
         @if $variant == 'fluent' {
@@ -1436,6 +1435,7 @@
 
     // Native input
     %fluent-input {
+        font-size: rem(14px);
         padding: 0;
         margin: 0;
         border: none;
@@ -1758,14 +1758,6 @@
         background: var-get($theme, 'border-disabled-background');
         border: rem(1px) solid var-get($theme, 'disabled-border-color');
         box-shadow: none;
-    }
-
-    %bootstrap-input--disabled--prefixed {
-        border-inline-start-color: transparent;
-    }
-
-    %bootstrap-input--disabled--suffixed {
-        border-inline-end-color: transparent;
     }
 
     %bootstrap-input--search {
