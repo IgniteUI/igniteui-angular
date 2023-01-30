@@ -299,6 +299,27 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
     public set disabled(value: boolean) {
         this._disabled = (value as any === '') || value;
     }
+    
+    /**
+     * Sets/gets whether the radio button is invalid.
+     * Default value is `false`.
+     * ```html
+     * <igx-radio invalid></igx-radio>
+     * ```
+     * ```typescript
+     * let isInvalid =  this.radio.invalid;
+     * ```
+     *
+     * @memberof IgxRadioComponent
+     */
+    @HostBinding('class.igx-radio--invalid')
+    @Input()
+    public get invalid(): boolean {
+        return this._invalid || false;
+    }
+    public set invalid(value: boolean) {
+        this._invalid = (value as any === '') || value;
+    }
 
     /**
      * Sets/gets whether the radio component is on focus.
@@ -324,6 +345,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @internal
      */
     private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _invalid: boolean;
     /**
      * @hidden
      * @internal
@@ -472,5 +498,12 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      */
     public setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
+    }
+
+    /**
+     * @hidden
+     */
+    public setInvalidState(isInvalid: boolean) {
+        this.invalid = isInvalid;
     }
 }
