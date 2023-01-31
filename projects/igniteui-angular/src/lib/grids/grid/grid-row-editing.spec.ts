@@ -1715,11 +1715,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             // On button click
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.click();
+            fix.detectChanges();
 
             const rowData = Object.assign({}, cell.row.data, { ProductName: 'New Name' });
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
-            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.data).not.toEqual(rowData);
+            expect(cell.row.data.ProductName).toEqual('New Name');
+            expect(grid.dataView[0]).not.toEqual(rowData);
         });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {
