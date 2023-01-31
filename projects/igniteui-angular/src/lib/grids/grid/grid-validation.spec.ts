@@ -247,7 +247,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -259,7 +259,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
         });
 
         it('should return invalid transaction using the transaction service API', () => {
@@ -407,7 +407,7 @@ describe('IgxGrid - Validation #grid', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
-            grid.updateCell('IG', 2,'ProductName');
+            grid.updateCell('IG', 2, 'ProductName');
             grid.validation.markAsTouched(2);
             fixture.detectChanges();
 
