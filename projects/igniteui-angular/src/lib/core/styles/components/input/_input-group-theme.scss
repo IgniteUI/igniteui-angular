@@ -453,9 +453,8 @@
             position: absolute;
             bottom: 0%;
             width: 100%;
-            height: rem(1px);
-            background: var-get($theme, 'idle-bottom-line-color');
-            transition: height $transition-timing, background-color $transition-timing;
+            border-block-end: rem(1px) solid var-get($theme, 'idle-bottom-line-color');
+            transition: all $transition-timing
         }
     }
 
@@ -474,43 +473,36 @@
         cursor: pointer;
 
         &::after {
-            height: rem(1px);
-            background: var-get($theme, 'hover-bottom-line-color');
+            border-block-end-width: rem(1px);
+            border-block-end-color: var-get($theme, 'hover-bottom-line-color');
         }
     }
 
     %form-group-bundle--focus {
         &::after {
-            height: rem(2px);
-            background: var-get($theme, 'focused-bottom-line-color');
+            border-block-end-width: rem(2px);
+            border-block-end-color: var-get($theme, 'focused-bottom-line-color');
         }
     }
 
     %form-group-bundle--success {
         &::after {
-            background: var-get($theme, 'success-secondary-color');
+            border-block-end-color: var-get($theme, 'success-secondary-color');
         }
     }
 
     %form-group-bundle--error {
         &::after {
-            background: var-get($theme, 'error-secondary-color');
+            border-block-end-color: var-get($theme, 'error-secondary-color');
         }
     }
 
     %form-group-bundle--disabled {
         cursor: default;
-        background-image: linear-gradient(to left, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
-        background-position: bottom;
-        background-size: rem(4px) rem(1px);
-        background-repeat: repeat-x;
 
         &::after {
-            background: var-get($theme, 'disabled-bottom-line-color');
-        }
-
-        [dir='rtl'] & {
-            background-image: linear-gradient(to right, var-get($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
+            border-block-end-color: var-get($theme, 'disabled-bottom-line-color');
+            border-block-end-style: dashed;
         }
     }
 
@@ -542,15 +534,6 @@
 
     %form-group-bundle--box-disabled {
         background-color: var-get($theme, 'box-disabled-background');
-
-        @if $NOT-indigo-theme {
-            background-image: none !important;
-        }
-
-        &::after {
-            display: block !important;
-            background: var-get($theme, 'disabled-bottom-line-color');
-        }
     }
 
     @if $material-theme {
@@ -769,6 +752,7 @@
         transform-origin: top left;
         transition: all $transition-timing;
         margin-inline-start: pad-inline(0, rem(-2px), rem(-4px));
+        color: var-get($theme, 'idle-secondary-color');
 
         [dir='rtl'] & {
             transform-origin: top right;

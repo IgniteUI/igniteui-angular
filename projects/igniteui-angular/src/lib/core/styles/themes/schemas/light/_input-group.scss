@@ -17,7 +17,7 @@
 /// @prop {Map} filled-text-color [color: ('gray', 900)] - The input text color in the filled state.
 /// @prop {Map} focused-text-color [color: ('gray', 900)] - The input text color in the focused state.
 /// @prop {Map} disabled-text-color [color: ('gray', 500)] - The input text color in the disabled state.
-/// @prop {Map} idle-secondary-color [color: ('gray', 600)] - The label color in the idle state.
+/// @prop {Map} idle-secondary-color [color: ('gray', 700)] - The label color in the idle state.
 /// @prop {Map} filled-secondary-color [color: ('gray', 600)] - The label color in the filled state.
 /// @prop {Map} focused-secondary-color [ color: ('primary', 500)] - The label color in the focused state.
 /// @prop {Map} idle-bottom-line-color [color: ('gray', 600)] - The bottom line and border colors in the idle state.
@@ -87,7 +87,7 @@ $light-input-group: extend(
         ),
 
         idle-secondary-color: (
-            color: ('gray', 600)
+            color: ('gray', 700)
         ),
 
         filled-secondary-color: (
