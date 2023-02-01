@@ -334,9 +334,9 @@ describe('List', () => {
 
         expect(list.itemClicked.emit).toHaveBeenCalledTimes(2);
         expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
-    
+
         list.headers[0].element.dispatchEvent(event);
-        
+
         expect(list.itemClicked.emit).toHaveBeenCalledTimes(3);
         expect(list.itemClicked.emit).toHaveBeenCalledWith(args);
     });
@@ -359,25 +359,6 @@ describe('List', () => {
         expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
     });
 
-    // It should not emit itemClicked at all while panning. Only panning events should be emitted.
-    // it('should emit ItemClicked with correct direction argument when panning left', () => {
-    //     const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
-    //     const list = fixture.componentInstance.list;
-
-    //     spyOn(list.itemClicked, 'emit').and.callThrough();
-
-    //     fixture.detectChanges();
-    //     const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
-    //     panItem(itemNativeElements[1], -0.8); // operating over the second list item because the first one is a header
-
-    //     const args: IListItemClickEventArgs = {
-    //         item: list.items[0],
-    //         event: null,
-    //         direction: IgxListPanState.LEFT
-    //     };
-    //     expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
-    // });
-
     it('should emit ItemClicked with correct direction argument when swiping right', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
@@ -395,22 +376,6 @@ describe('List', () => {
         };
         expect(list.itemClicked.emit).toHaveBeenCalledOnceWith(args);
     });
-
-    // It should not emit itemClicked at all while panning. Only panning events should be emitted.
-    // it('should emit ItemClicked with correct direction argument when panning right', (done) => {
-    //     const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
-    //     const list = fixture.componentInstance.list;
-
-    //     list.itemClicked.subscribe((eventArgs) => {
-    //         expect(eventArgs.direction).toBe(IgxListPanState.RIGHT);
-    //         unsubscribeEvents(list);
-    //         done();
-    //     });
-
-    //     fixture.detectChanges();
-    //     const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
-    //     panItem(itemNativeElements[1], 0.8); // operating over the second list item because the first one is a header
-    // });
 
     it('should display multiple headers properly.', () => {
         const fixture = TestBed.createComponent(TwoHeadersListComponent);
@@ -485,7 +450,7 @@ describe('List', () => {
 
         elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
         panItem(elementRefCollection[1], 0.8);
-            
+
         expect(item.panState).toBe(IgxListPanState.NONE);
 
         elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
