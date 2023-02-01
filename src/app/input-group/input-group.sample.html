@@ -69,6 +69,25 @@
                 <igx-hint>Type your web address</igx-hint>
             </igx-input-group>
 
+            <!-- text field with validation and placeholder -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Web address</label>
+                <igx-prefix>
+                    <igx-icon>link</igx-icon>
+                </igx-prefix>
+                <input
+                        placeholder="Placeholder"
+                        name="inputValidityTest"
+                        [required]="isRequired"
+                        [disabled]="isDisabled"
+                        pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                        [(ngModel)]="inputValue"
+                        igxInput
+                        type="text"
+                />
+                <igx-hint>Type your web address</igx-hint>
+            </igx-input-group>
+
 
             <!-- input type file -->
             <igx-input-group [displayDensity]="density" [type]="inputType">

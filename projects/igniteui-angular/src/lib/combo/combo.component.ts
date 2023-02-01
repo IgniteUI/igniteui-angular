@@ -216,11 +216,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     public ngAfterViewInit() {
-        if(this.prefixes.length > 0) {
+        if(this.inputGroup && this.prefixes.length > 0) {
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if(this.suffixes.length > 0) {
+        if(this.inputGroup && this.suffixes.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
     }
