@@ -144,7 +144,27 @@
             }
         }
 
+        @include mx(textarea-group, placeholder) {
+            @include e(notch) {
+                @extend %textarea-group-notch--focused !optional;
+            }
+
+            @include e(label) {
+                @extend %textarea-group-label--focused !optional;
+            }
+        }
+
         @include mx(textarea-group, filled, border) {
+            @include e(notch) {
+                @extend %textarea-group-notch--focused !optional;
+            }
+
+            @include e(label) {
+                @extend %textarea-group-label--filled--border !optional;
+            }
+        }
+
+        @include mx(textarea-group, placeholder, border) {
             @include e(notch) {
                 @extend %textarea-group-notch--focused !optional;
             }
@@ -350,6 +370,12 @@
         }
 
         @include mx(box, textarea-group, filled) {
+            @include e(notch) {
+                @extend %form-group-notch--box-textarea !optional;
+            }
+        }
+
+        @include mx(box, textarea-group, placeholder) {
             @include e(notch) {
                 @extend %form-group-notch--box-textarea !optional;
             }

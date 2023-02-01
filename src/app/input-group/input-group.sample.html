@@ -34,7 +34,7 @@
         </div>
 
         <div class="form__fields">
-            <!-- text field with validation -->
+            <!-- No label -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <igx-prefix>
                     <igx-icon>link</igx-icon>
@@ -51,7 +51,7 @@
                 <igx-hint>NO LABEL</igx-hint>
             </igx-input-group>
 
-            <!-- text field with validation -->
+            <!-- Only prefix -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Web address</label>
                 <igx-prefix>
@@ -69,7 +69,7 @@
                 <igx-hint>Type your web address</igx-hint>
             </igx-input-group>
 
-            <!-- text field with validation and placeholder -->
+            <!-- With placeholder -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Web address</label>
                 <igx-prefix>
@@ -88,7 +88,6 @@
                 <igx-hint>Type your web address</igx-hint>
             </igx-input-group>
 
-
             <!-- input type file -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Important Documents</label>
@@ -103,7 +102,7 @@
                 <igx-hint>Upload a file to begin...</igx-hint>
             </igx-input-group>
 
-            <!-- Read only -->
+            <!-- Read only no prefix -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Read only input field</label>
                 <input
@@ -124,6 +123,7 @@
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
                 <textarea
+                        placeholder="Placeholder"
                         name="inputTextareaTest"
                         [required]="isRequired"
                         igxInput
