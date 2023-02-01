@@ -1,20 +1,35 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, EventEmitter,
+    AfterViewInit,
+    ChangeDetectorRef, 
+    Component,
+    ElementRef,
+    EventEmitter,
     HostBinding,
     HostListener,
+    Injector,
     Input,
     OnDestroy,
+    OnInit,
+    Optional,
     Output,
+    Renderer2,
     ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EditorProvider } from '../core/edit-provider';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
     radio: IgxRadioComponent;
+}
+
+export enum IgxRadioState {
+    INITIAL,
+    VALID,
+    INVALID,
 }
 
 export const RadioLabelPosition = mkenum({
@@ -48,7 +63,7 @@ let nextId = 0;
     selector: 'igx-radio',
     templateUrl: 'radio.component.html'
 })
-export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, OnDestroy {
+export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
     private static ngAcceptInputType_disabled: boolean | '';
 
@@ -79,6 +94,18 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      */
     @ViewChild('nativeLabel', { static: true })
     public nativeLabel: ElementRef;
+
+    /**
+     * Gets the `nativeElement` of the igx-radio.
+     *
+     * @example
+     * ```typescript
+     * let igxRadioNativeElement = this.igxRadio.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this.nativeRadio.nativeElement;
+    }
 
     /**
      * Returns reference to the label placeholder element.
@@ -207,8 +234,12 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @memberof IgxRadioComponent
      */
      @Input()
-     public get required(): boolean {
-         return this._required;
+     public get required() {
+        let validation;
+        if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            validation = this.ngControl.control.validator({} as AbstractControl);
+        }
+        return validation && validation.required || this.nativeElement.hasAttribute('required');
      }
      public set required(value: boolean) {
          this._required = (value as any === '') || value;
@@ -314,11 +345,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      */
     @HostBinding('class.igx-radio--invalid')
     @Input()
-    public get invalid(): boolean {
-        return this._invalid || false;
+    public get invalid(): IgxRadioState {
+        return this._invalid;
     }
-    public set invalid(value: boolean) {
-        this._invalid = (value as any === '') || value;
+    public set invalid(value: IgxRadioState) {
+        this._invalid = value;
     }
 
     /**
@@ -349,12 +380,22 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @hidden
      * @internal
      */
-    private _invalid: boolean;
+    private _valid = IgxRadioState.INITIAL;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _invalid = IgxRadioState.INITIAL;
     /**
      * @hidden
      * @internal
      */
     private _disabled: boolean;
+    /**
+     * @hidden
+     * @internal
+     */
+    protected ngControl: NgControl = null;
     /**
      * @hidden
      */
@@ -365,7 +406,19 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      */
     private _onChangeCallback: (_: any) => void = noop;
 
-    constructor(private cdr: ChangeDetectorRef) { }
+    constructor(
+        private cdr: ChangeDetectorRef,
+        protected renderer: Renderer2,
+        @Optional() protected _injector: Injector
+    ) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnInit() {
+        this.ngControl = this._injector.get<NgControl>(NgControl, null);
+    }
 
     /**
      * @hidden
@@ -374,6 +427,29 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    /** 
+     * @hidden 
+     * @internal
+    */
+    public ngAfterViewInit() {
+        // Make sure we do not invalidate the radio on init
+        if (!this.ngControl) {
+            this._valid = IgxRadioState.INITIAL;
+        } else {
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
+        }
+
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+        this.cdr.detectChanges();
+    }
+
+    protected onStatusChanged() {
+        if (this.disabled !== this.ngControl.disabled) {
+            this.disabled = this.ngControl.disabled;
+        }
+        this.updateValidityState();
     }
 
      /**
@@ -477,6 +553,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
+        if (this.ngControl && this.ngControl.invalid) {
+            this._invalid = IgxRadioState.INVALID;
+        } else {
+            this._invalid = IgxRadioState.INITIAL;
+        }
     }
 
     /**
@@ -502,8 +583,50 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
 
     /**
      * @hidden
+     * @internal
      */
-    public setInvalidState(isInvalid: boolean) {
-        this.invalid = isInvalid;
+    protected updateValidityState() {
+        if (this.ngControl) {
+            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                // Run the validation with empty object to check if required is enabled.
+                const error = this.ngControl.control.validator({} as AbstractControl);
+                this.required = error && error.required;
+                if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
+                    // the control is not disabled and is touched or dirty
+                    this._valid = this.ngControl.invalid ?
+                        IgxRadioState.INVALID : this.focused ? IgxRadioState.VALID :
+                        IgxRadioState.INITIAL;
+                } else {
+                    //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
+                    //  with the radio or when form/control is reset
+                    this._valid = IgxRadioState.INITIAL;
+                    this._invalid = IgxRadioState.INITIAL;
+                }
+            } else {
+                // If validator is dynamically cleared, reset required class
+                this._valid = IgxRadioState.INITIAL;
+                this.required = false;
+            }
+            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+            const ariaInvalid = this._valid === IgxRadioState.INVALID;
+            this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
+        } else {
+            this.checkNativeValidity();
+        }
+    }
+
+    /**
+     * A function to assign a native validity property of an input.
+     * This should be used when there's no ngControl
+     *
+     * @hidden
+     * @internal
+     */
+    private checkNativeValidity() {
+        if (!this.disabled && this._required) {
+            this._valid = this.nativeElement.checkValidity() ?
+                this.focused ? IgxRadioState.VALID : IgxRadioState.INITIAL :
+                IgxRadioState.INVALID;
+        }
     }
 }
