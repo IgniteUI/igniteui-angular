@@ -36,7 +36,7 @@ $dark-input-group: extend(
 /// @prop {Map} border-color [color: ('gray', 500)] - The border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 700)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} focused-border-color [color: ('gray', 500)] - The focused input border color for input groups of type border and fluent.
-/// @prop {Map} disabled-border-color [color: ('gray', 500)] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [color: ('gray', 100)] - The disabled border color for input groups of type border and fluent.
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
 $dark-fluent-input-group: extend(
@@ -68,27 +68,7 @@ $dark-fluent-input-group: extend(
         ),
 
         disabled-border-color: (
-            color: ('gray', 300)
-        ),
-
-        idle-bottom-line-color: (
-            color: ('gray', 400)
-        ),
-
-        hover-bottom-line-color: (
-            color: ('gray', 600)
-        ),
-
-        focused-bottom-line-color: (
-            color: ('primary', 600)
-        ),
-
-        interim-bottom-line-color: (
-            color: ('primary', 500, .12),
-        ),
-
-        disabled-bottom-line-color: (
-            color: ('gray', 400)
+            color: ('gray', 100)
         ),
     )
 );
@@ -110,6 +90,8 @@ $dark-bootstrap-input-group: extend(
 /// @prop {Map} $idle-secondary-color [contrast-color: ('surface')] - The label color in the idle state.
 /// @prop {Map} $filled-secondary-color [color: ('gray', 900)] - The label color in the filled state.
 /// @prop {Map} $focused-secondary-color [color: ('gray', 900)] - The label color in the focused state.
+/// @prop {Map} placeholder-color [color: ('gray', 400)] - The placeholder color of an input group.
+/// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
 /// @requires $indigo-input-group
 /// @see $default-palette
 $dark-indigo-input-group: extend(
@@ -139,6 +121,14 @@ $dark-indigo-input-group: extend(
 
         focused-secondary-color: (
             color: ('gray', 900)
+        ),
+
+        placeholder-color: (
+            color: ('gray', 400)
+        ),
+
+        disabled-placeholder-color: (
+            color: ('gray', 400)
         ),
     )
 );

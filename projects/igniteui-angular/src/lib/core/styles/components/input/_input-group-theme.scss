@@ -16,6 +16,7 @@
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
 /// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
+/// @param {Color} $helper-text-color [null] - The helper text color.
 /// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
 /// @param {Color} $input-prefix-background [null] - The background color of an input prefix in the idle state.
 /// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
@@ -68,6 +69,7 @@
     $idle-text-color: null,
     $filled-text-color: null,
     $focused-text-color: null,
+    $helper-text-color: null,
     $disabled-text-color: null,
 
     $idle-secondary-color: null,
@@ -173,6 +175,7 @@
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
+        helper-text-color: $helper-text-color,
         box-border-radius: $box-border-radius,
         border-border-radius: $border-border-radius,
         search-border-radius: $search-border-radius,
@@ -1185,6 +1188,7 @@
     }
 
     %form-group-helper {
+        color: var-get($theme, 'helper-text-color');
         position: relative;
         display: flex;
         padding-block-start: $hint-spacing-block;
@@ -1257,9 +1261,13 @@
         }
     }
 
+    %form-group-bundle--indigo-start {
+        min-width: rem(12px);
+    }
+
     %form-group-input--indigo {
         padding-block: rem(8px);
-        padding-inline: rem(12px);
+        padding-inline-end: rem(12px);
     }
 
     %indigo--box-focused {
@@ -1272,6 +1280,10 @@
         &:hover,
         &:focus {
             background: transparent;
+        }
+
+        &::after {
+            border-bottom-style: solid;
         }
     }
     // INDIGO END
@@ -1341,6 +1353,12 @@
     %form-group-label-required--fluent {
         &::after {
             color: var-get($theme, 'error-secondary-color');
+        }
+    }
+
+    %form-group-label-required--disabled--fluent {
+        &::after {
+            color: var-get($theme, 'disabled-text-color');
         }
     }
 
@@ -1468,7 +1486,7 @@
     }
 
     %fluent-label-disabled {
-        color: color(null, 'gray', 500);
+        color: var-get($theme, 'disabled-text-color') !important;
     }
 
     %fluent-label-filled {

@@ -17,6 +17,7 @@
 /// @prop {Map} filled-text-color [color: ('gray', 900)] - The input text color in the filled state.
 /// @prop {Map} focused-text-color [color: ('gray', 900)] - The input text color in the focused state.
 /// @prop {Map} disabled-text-color [color: ('gray', 500)] - The input text color in the disabled state.
+/// @prop {Map} helper-text-color [color: ('gray', 700)] - The helper text color.
 /// @prop {Map} idle-secondary-color [color: ('gray', 700)] - The label color in the idle state.
 /// @prop {Map} filled-secondary-color [color: ('gray', 600)] - The label color in the filled state.
 /// @prop {Map} focused-secondary-color [ color: ('primary', 500)] - The label color in the focused state.
@@ -57,6 +58,10 @@ $light-input-group: extend(
     $default-elevation-input-group,
     (
         variant: 'material',
+
+        helper-text-color: (
+            color: ('gray', 700)
+        ),
 
         input-prefix-background: transparent,
 
@@ -206,7 +211,7 @@ $light-input-group: extend(
 /// @type {Map}
 /// @prop {Map} idle-secondary-color [color: ('gray', 900)] - The label color in the idle state.
 /// @prop {Map} idle-text-color [color: ('gray', 900)] - The input text color in the idle state.
-/// @prop {Map} disabled-text-color [color: ('gray', 400)] - The input text color in the disabled state.
+/// @prop {Map} disabled-text-color [color: ('gray', 500)] - The input text color in the disabled state.
 /// @prop {Map} border-color [color: ('gray', 500)] - The border color for input groups of type border and fluent.
 /// @prop {Map} hover-border-color [color: ('gray', 700)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} disabled-border-color [color: ('gray', 100)] - The disabled border color for input groups of type border and fluent.
@@ -240,7 +245,7 @@ $fluent-input-group: extend(
         ),
 
         disabled-text-color: (
-            color: ('gray', 400)
+            color: ('gray', 500)
         ),
 
         border-color: (
@@ -385,6 +390,7 @@ $bootstrap-input-group: extend(
 
 /// Generates an indigo input-group schema.
 /// @type {Map}
+/// @prop {Map} helper-text-color [color: ('gray', 600)] - The helper text color.
 /// @prop {Map} border-color [color: ('gray', 400)] - The border color for input groups of type border and fluent.
 /// @prop {Color} box-background [transparent] - The background color of an input group of type box.
 /// @prop {Map} box-background-hover [color: ('gray', 100)] - The background color of an input group of type box on hover.
@@ -404,6 +410,8 @@ $bootstrap-input-group: extend(
 /// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} placeholder-color [color: ('gray', 300)] - The placeholder color of an input group.
+/// @prop {Map} disabled-placeholder-color [color: ('gray', 300)] - The disabled placeholder color of an input group.
 /// @requires {Map} $light-input-group
 /// @requires {Map} $indigo-elevation-input-group
 $indigo-input-group: extend(
@@ -411,6 +419,10 @@ $indigo-input-group: extend(
     $indigo-elevation-input-group,
     (
         variant: 'indigo-design',
+
+        helper-text-color: (
+            color: ('gray', 600)
+        ),
 
         border-color: (
             color: ('gray', 400)
@@ -457,6 +469,14 @@ $indigo-input-group: extend(
         ),
 
         disabled-text-color: (
+            color: ('gray', 300)
+        ),
+
+        placeholder-color: (
+            color: ('gray', 300)
+        ),
+
+        disabled-placeholder-color: (
             color: ('gray', 300)
         ),
 

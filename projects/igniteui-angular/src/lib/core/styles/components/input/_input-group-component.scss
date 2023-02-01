@@ -654,6 +654,12 @@
             }
         }
 
+        @include mx(fluent, required, disabled) {
+            @include e(label) {
+                @extend %form-group-label-required--disabled--fluent !optional;
+            }
+        }
+
         @include mx(fluent, valid) {
             @include e(bundle) {
                 @extend %form-group-bundle-success--fluent !optional;
@@ -737,6 +743,10 @@
 
             @include e(bundle) {
                 @extend %form-group-bundle--indigo !optional;
+            }
+
+            @include e(bundle-start) {
+                @extend %form-group-bundle--indigo-start !optional;
             }
 
             @include e(input) {
