@@ -26,12 +26,6 @@ export interface IChangeRadioEventArgs extends IBaseEventArgs {
     radio: IgxRadioComponent;
 }
 
-export enum IgxRadioState {
-    INITIAL,
-    VALID,
-    INVALID,
-}
-
 export const RadioLabelPosition = mkenum({
     BEFORE: 'before',
     AFTER: 'after'
@@ -345,11 +339,11 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      */
     @HostBinding('class.igx-radio--invalid')
     @Input()
-    public get invalid(): IgxRadioState {
-        return this._invalid;
+    public get invalid(): boolean {
+        return this._invalid || false;
     }
-    public set invalid(value: IgxRadioState) {
-        this._invalid = value;
+    public set invalid(value: boolean) {
+        this._invalid = (value as any === '') || value;
     }
 
     /**
@@ -380,12 +374,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      * @hidden
      * @internal
      */
-    private _valid = IgxRadioState.INITIAL;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _invalid = IgxRadioState.INITIAL;
+    private _invalid = false;
     /**
      * @hidden
      * @internal
@@ -436,7 +425,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     public ngAfterViewInit() {
         // Make sure we do not invalidate the radio on init
         if (!this.ngControl) {
-            this._valid = IgxRadioState.INITIAL;
+            this._invalid = false;
         } else {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
         }
@@ -554,9 +543,9 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         this.focused = false;
         this._onTouchedCallback();
         if (this.ngControl && this.ngControl.invalid) {
-            this._invalid = IgxRadioState.INVALID;
+            this._invalid = true;
         } else {
-            this._invalid = IgxRadioState.INITIAL;
+            this._invalid = false;
         }
     }
 
@@ -593,22 +582,21 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
                 this.required = error && error.required;
                 if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                     // the control is not disabled and is touched or dirty
-                    this._valid = this.ngControl.invalid ?
-                        IgxRadioState.INVALID : this.focused ? IgxRadioState.VALID :
-                        IgxRadioState.INITIAL;
+                    this._invalid = this.ngControl.invalid ?
+                        true : this.focused ? false :
+                        false;
                 } else {
                     //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
                     //  with the radio or when form/control is reset
-                    this._valid = IgxRadioState.INITIAL;
-                    this._invalid = IgxRadioState.INITIAL;
+                    this._invalid = false;
                 }
             } else {
                 // If validator is dynamically cleared, reset required class
-                this._valid = IgxRadioState.INITIAL;
+                this._invalid = false;
                 this.required = false;
             }
             this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
-            const ariaInvalid = this._valid === IgxRadioState.INVALID;
+            const ariaInvalid = this._invalid === false;
             this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
         } else {
             this.checkNativeValidity();
@@ -624,9 +612,8 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      */
     private checkNativeValidity() {
         if (!this.disabled && this._required) {
-            this._valid = this.nativeElement.checkValidity() ?
-                this.focused ? IgxRadioState.VALID : IgxRadioState.INITIAL :
-                IgxRadioState.INVALID;
+            this._invalid = this.nativeElement.checkValidity() ?
+                this.focused ? false : false : true;
         }
     }
 }
