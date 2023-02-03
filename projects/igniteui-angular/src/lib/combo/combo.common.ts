@@ -1,4 +1,5 @@
 import {
+    AfterViewChecked,
     AfterViewInit,
     ChangeDetectorRef,
     ContentChild,
@@ -125,7 +126,7 @@ export interface IComboFilteringOptions {
 }
 
 @Directive()
-export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, OnInit, DoCheck,
+export abstract class IgxComboBaseDirective extends DisplayDensityBase implements IgxComboBase, AfterViewChecked, OnInit, DoCheck,
     AfterViewInit, OnDestroy, ControlValueAccessor {
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
@@ -960,18 +961,22 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         this.open();
     }
 
-    /** @hidden @internal */
-    public ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        const targetElement = this.elementRef.nativeElement;
+    public ngAfterViewChecked() {
+        const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement
+
         this._overlaySettings = {
             target: targetElement,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(),
             modal: false,
             closeOnOutsideClick: true,
-            excludeFromOutsideClick: [targetElement as HTMLElement]
+            excludeFromOutsideClick: [targetElement]
         };
+    }
+
+    /** @hidden @internal */
+    public ngOnInit() {
+        this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
     }
