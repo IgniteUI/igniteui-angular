@@ -306,11 +306,16 @@
         display: inline-flex;
         width: max-content;
         align-items: center;
-        font-size: sizable(rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact')), rem(map.get($base-scale-size, 'cosy') - 1px, map.get($base-scale-size, 'cosy')), rem(map.get($base-scale-size, 'comfortable') - 1px, map.get($base-scale-size, 'comfortable')));
+        font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+
+        igx-icon {
+            font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+        }
+
         @if $indigo-theme {
-            height: calc(100% - #{rem(1px)});
+            height: calc(100% - #{rem(1px)}) !important;
         } @else {
-            height: 100%;
+            height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
         padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
@@ -575,6 +580,8 @@
 
     %form-group-bundle-start,
     %form-group-bundle-end {
+        display: flex;
+        align-items: center;
         min-width: 0;
         min-height: 100%;
         overflow: hidden;

@@ -155,7 +155,7 @@
                     [required]="selectRequired"
                     [placeholder]="'Pick One'">
                 <label igxLabel>Favorite fruit</label>
-                <igx-prefix>Fruit</igx-prefix>
+                <span igxPrefix>Fruit</span>
                 <igx-select-item> None </igx-select-item>
                 <igx-select-item *ngFor="let fruit of fruits" [value]="fruit">
                     {{fruit}}
