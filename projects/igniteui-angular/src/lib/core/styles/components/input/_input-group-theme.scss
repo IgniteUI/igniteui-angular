@@ -309,6 +309,8 @@
 
         igx-icon {
             font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+            width: auto;
+            height: auto;
         }
 
         @if $indigo-theme {
@@ -317,16 +319,23 @@
             height: 100% !important;
         }
         transition: color $transition-timing, background $transition-timing;
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
-    }
 
-    igx-icon[igxPrefix],
-    igx-icon[igxSuffix] {
-        font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+        @if $material-theme {
+            padding-inline: pad-inline(rem(12px), rem(14px), rem(16px));
+        } @else {
+            padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
+        }
     }
 
     igx-input-group {
         --theme: #{map.get($theme, 'variant')};
+
+        igx-icon[igxPrefix],
+        igx-icon[igxSuffix] {
+            width: auto;
+            height: auto;
+            font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+        }
     }
 
     %form-group-display--box {
