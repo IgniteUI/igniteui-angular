@@ -35,6 +35,7 @@ const clear = (el) => el === 0 || Boolean(el);
 const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
 
+/* csSuppress */
 export class IgxSummaryOperand {
     /**
      * Counts all the records in the data source.
@@ -88,6 +89,7 @@ export class IgxSummaryOperand {
     }
 }
 
+/* csSuppress */
 // @dynamic
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     /**
@@ -203,6 +205,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     }
 }
 
+/* csSuppress */
 // @dynamic
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
     /**
@@ -279,6 +282,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     }
 }
 
+/* csSuppress */
 // @dynamic
 export class IgxTimeSummaryOperand extends IgxSummaryOperand {
     /**
