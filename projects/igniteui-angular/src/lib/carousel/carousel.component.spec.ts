@@ -873,7 +873,7 @@ class HelperTestFunctions {
         return prev.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
     }
 
-    public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
+    public static getIndicatorsContainer(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom): HTMLElement {
         const carouselNative = fixture.nativeElement;
         if (position === CarouselIndicatorsOrientation.bottom) {
             return carouselNative.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
