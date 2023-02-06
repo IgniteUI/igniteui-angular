@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, NgZone, ɵclearResolutionOfComponentResourcesQueue } from '@angular/core';
+import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -546,6 +546,9 @@ export class IgxGridSelectionService {
     }
 
     public isRowSelected(rowID): boolean {
+        if (rowID.ProductID === 4) {
+            console.log(this.rowSelection.has(rowID));
+        }
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
@@ -649,7 +652,7 @@ export class IgxGridSelectionService {
             this.clearHeaderCBState();
             return;
         }
-        this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), true);
+        this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), false);
     }
 
     public getPivotRows(ids: any[]) {
