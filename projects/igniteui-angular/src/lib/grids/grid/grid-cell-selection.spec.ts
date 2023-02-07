@@ -341,7 +341,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             ];
             const expectedData2 = [
                 { ID: 475, ParentID: 147, Name: 'Michael Langdon' },
-                { ID: 957, ParentID: 147 },
+                { ID: 957 },
                 { ID: 317, ParentID: 147 }
             ];
 
@@ -362,18 +362,17 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
             GridSelectionFunctions.verifyCellSelected(thirdCell);
 
-            // Click on a cell in the region and verify it is not changed
+            // Click on a cell in the region and verify it is deselected
             let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             UIInteractions.simulateClickAndSelectEvent(cell, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
-            GridSelectionFunctions.verifyCellSelected(thirdCell);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 0, 0, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 2, 0, 1);
+            GridSelectionFunctions.verifyCellSelected(cell, false);
+            GridSelectionFunctions.verifyCellSelected(grid.gridAPI.get_cell_by_index(1, 'ID'), true);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedData()).toEqual(expectedData2);
-            GridSelectionFunctions.verifySelectedRange(grid, 0, 2, 0, 1, 0, 3);
-            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 2, 2, 1, 3);
-            GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1, 2, 3);
 
             // Click on a cell without holding Ctrl
             cell = grid.gridAPI.get_cell_by_index(0, 'ID');
