@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ':bug: bug, :new: status: new'
+labels: ':bug: bug,:new: status: new'
 assignees: ''
 projects: 'IgniteUI/16'
 
