@@ -112,6 +112,8 @@ All notable changes for each version of this project will be documented in this 
 - **Breaking Changes** - The Excel exporter service `exportEnded` event has its `xlsx` argument type changed as `igniteui-angular` no longer depends on `JSZip`. Instead of providing a `JSZip` instance it is now an object describing the structure of the Excel file with property names corresponding to folders or files, folders being objects themselves that can be traversed down, while files have their contents as `Uint8Array`. The same structure is used to package as a zip file by `fflate`'s API.
 - `IgxDropDown`
     - The `aria-label` attribute of the `IgxDropDownItemBase` can now be se to a custom value for its descendants (of which `IgxDropDownItem`) by the `ariaLabel` property.
+- `IgxSimpleComboComponent`
+    - **Behavioral Change** - When the user clicks on the input, the dropdown opens up.    
 
 ## 14.1.0
 
