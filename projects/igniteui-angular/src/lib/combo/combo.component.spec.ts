@@ -2243,6 +2243,29 @@ describe('igxCombo', () => {
             const expectedOutput = 'One';
             expect(input.nativeElement.value).toEqual(expectedOutput);
         }));
+        it('should display custom displayText on selection/deselection', () => {
+            combo.valueKey = 'key';
+            combo.displayKey = 'value';
+            combo.data = [
+                { key: 1, value: 'One' },
+                { key: 2, value: 'Two' },
+                { key: 3, value: 'Three' },
+            ];
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake(
+                (event: IComboSelectionChangingEventArgs) => event.displayText = `Selected Count: ${event.newSelection.length}`);
+
+            combo.select([1]);
+            fixture.detectChanges();
+
+            expect(combo.selection).toEqual([1]);
+            expect(combo.value).toBe('Selected Count: 1');
+
+            combo.deselect([1]);
+
+            expect(combo.selection).toEqual([]);
+            expect(combo.value).toBe('Selected Count: 0');
+        });
     });
     describe('Grouping tests: ', () => {
         configureTestSuite();

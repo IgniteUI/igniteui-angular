@@ -26,7 +26,7 @@ import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue } from '../core/utils';
+import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/public_api';
@@ -235,6 +235,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
 
     public set itemsMaxHeight(val: number) {
         this._itemsMaxHeight = val;
+    }
+
+    /** @hidden */
+    public get itemsMaxHeightInRem() {
+        return rem(this.itemsMaxHeight);
     }
 
     /**
@@ -986,12 +991,12 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         });
     }
 
-        /** @hidden @internal */
-        public ngDoCheck() {
-            if (this.data?.length && this.selection.length) {
-                this._value = this.createDisplayText(this.selection, []);
-            }
+    /** @hidden @internal */
+    public ngDoCheck() {
+        if (this.data?.length && this.selection.length && !this._value) {
+            this._value = this.createDisplayText(this.selection, []);
         }
+    }
 
     /** @hidden @internal */
     public ngOnDestroy() {

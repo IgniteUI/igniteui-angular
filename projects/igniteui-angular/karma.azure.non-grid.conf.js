@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['parallel','jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },

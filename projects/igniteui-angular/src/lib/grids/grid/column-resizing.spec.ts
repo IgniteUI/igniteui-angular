@@ -18,7 +18,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,
                 GridFeaturesComponent,
@@ -374,7 +374,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(2).width).toEqual('92px');
         }));
 
-        it('should autosize column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize column programmatically.', () => {
             const column = grid.getColumnByName('ID');
             column.minWidth = '30px';
             expect(column.width).toEqual('100px');
@@ -383,9 +383,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('67px');
-        }));
+        });
 
-        it('should autosize column correctly if there is scaling via css.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize column correctly if there is scaling via css.', () => {
             grid.nativeElement.style.transform = 'scale(0.6)';
             const column = grid.getColumnByName('Items');
 
@@ -394,9 +394,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.width).toEqual('92px');
             grid.nativeElement.style.transform = '';
-        }));
+        });
 
-        it('should autosize column programmatically based only on header.', fakeAsync(() => {
+        it('should autosize column programmatically based only on header.', () => {
             const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ReleaseDate')[0];
             expect(column.width).toEqual('100px');
 
@@ -404,9 +404,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('112px');
-        }));
+        });
 
-        it('should autosize pinned column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize pinned column programmatically.', () => {
             const column = grid.getColumnByName('Released');
             expect(column.width).toEqual('100px');
 
@@ -414,9 +414,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('95px');
-        }));
+        });
 
-        it('should autosize last pinned column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize last pinned column programmatically.', () => {
             const column = grid.getColumnByName('Items');
             expect(column.width).toEqual('100px');
 
@@ -424,9 +424,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('92px');
-        }));
+        });
 
-        it('should autosize column when minWidth is set.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize column when minWidth is set.', () => {
             const column = grid.getColumnByName('ID');
             column.minWidth = '70px';
             expect(column.minWidth).toEqual('70px');
@@ -436,7 +436,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('70px');
-        }));
+        });
     });
 
     describe('Percentage tests: ', () => {
@@ -718,7 +718,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('should autosize filterable/sortable/resizable/movable column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize filterable/sortable/resizable/movable column programmatically.', () => {
             const column = grid.getColumnByName('Missing');
             expect(column.width).toEqual('100px');
 
@@ -726,9 +726,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             // the exact width is different between chrome and chrome headless so an exact match is erroneous
             expect(Math.abs(parseInt(column.width, 10) - 120)).toBeLessThan(2);
-        }));
+        });
 
-        it('should autosize MCHs programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize MCHs programmatically.', () => {
             let column = grid.getColumnByName('CompanyName');
             expect(column.width).toEqual('130px');
 
@@ -756,7 +756,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize();
             fixture.detectChanges();
             expect(column.width).toEqual('111px');
-        }));
+        });
     });
 
     describe('Different columns widths tests: ', () => {
