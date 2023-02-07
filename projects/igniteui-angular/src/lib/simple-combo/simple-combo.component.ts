@@ -382,7 +382,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public handleOpened(): void {
         this.triggerCheck();
         if (!this.comboInput.focused) {
-        this.dropdownContainer.nativeElement.focus();
+            this.dropdownContainer.nativeElement.focus();
         }
         this.opened.emit({ owner: this });
     }
