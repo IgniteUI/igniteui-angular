@@ -1121,6 +1121,37 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should open the combo when input is focused', () => {
+            spyOn(combo, 'open').and.callThrough();
+            spyOn(combo, 'close').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.close).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+        });
+
         it('should empty any invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
