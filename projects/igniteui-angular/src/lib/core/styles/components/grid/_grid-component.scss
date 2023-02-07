@@ -25,6 +25,8 @@
             )
         );
 
+        @extend %grid-host !optional;
+
         @extend %grid-display !optional;
 
         @include e(caption) {
@@ -319,10 +321,6 @@
             @extend %grid-cell--pinned-first !optional;
         }
 
-        @include e(td, $m: pinned-end) {
-            @extend %grid-cell-pinned--end !optional;
-        }
-
         @include e(td, $m: fw) {
             @extend %grid-cell--fixed-width !optional;
         }
@@ -443,14 +441,6 @@
             @extend %igx-grid__filtering-cell !optional;
         }
 
-        @include e(filtering-cell, $m: cosy) {
-            @extend %igx-grid__filtering-cell--cosy !optional;
-        }
-
-        @include e(filtering-cell, $m: compact) {
-            @extend %igx-grid__filtering-cell--compact !optional;
-        }
-
         @include e(filtering-cell, $m: 'selected') {
             @extend %igx-grid__filtering-cell !optional;
             @extend %igx-grid__filtering-cell--selected !optional;
@@ -475,14 +465,6 @@
 
         @include e(filtering-row) {
             @extend %igx-grid__filtering-row !optional;
-        }
-
-        @include e(filtering-row, $m: cosy) {
-            @extend %igx-grid__filtering-row--cosy !optional;
-        }
-
-        @include e(filtering-row, $m: compact) {
-            @extend %igx-grid__filtering-row--compact !optional;
         }
 
         @include e(filtering-row-editing-buttons) {
@@ -608,81 +590,12 @@
             @extend %grid-display !optional;
             @extend %grid-display-cosy !optional;
 
-            @include e(tr-pivot) {
-                @extend %igx-grid__tr-pivot--cosy !optional
-            }
-
-            @include e(tr-pivot, $m: 'row-area') {
-                @extend %igx-grid__tr-pivot--row-area--cosy !optional
-            }
-
-            @include e(tr-pivot, $m: 'filter') {
-                @extend %igx-grid__tr-pivot--filter--cosy !optional
-            }
-
-            @include e(drag-indicator) {
-                @extend %igx-grid__drag-indicator--cosy !optional;
-            }
-
-            @include e(cbx-padding) {
-                @extend %cbx-padding--cosy !optional;
-            }
-
             @include e(cbx-selection, $m: push) {
                 @extend %grid__cbx-selection--push--cosy !optional;
             }
 
-            @include e(drag-ghost-image) {
-                @extend %grid__drag-ghost-image--cosy !optional;
-            }
-
-            @include e(td) {
-                @extend %grid-cell-display--cosy !optional;
-            }
-
-            @include e(group-content) {
-                @extend %igx-grid__group-content--cosy !optional;
-            }
-
-            @include e(row-indentation) {
-                @extend %igx-grid__row-indentation--cosy !optional;
-            }
-
-            @include e(header-indentation) {
-                @extend %igx-grid__header-indentation--cosy !optional;
-            }
-
-            @include e(grouping-indicator) {
-                @extend %igx-grid__grouping-indicator--cosy !optional;
-            }
-
-            @include e(group-expand-btn) {
-                @extend %igx-grid__group-expand-btn--cosy !optional;
-            }
-
-            @include e(group-row) {
-                @extend %igx-grid__group-row--cosy !optional;
-            }
-
-            @include e(hierarchical-indent) {
-                @extend %igx-grid__hierarchical-indent--cosy !optional;
-            }
-
-            @include e(hierarchical-indent, $m: scroll) {
-                @extend %igx-grid__hierarchical-indent--cosy--scroll !optional;
-            }
-
-            @include e(hierarchical-expander) {
-                @extend %igx-grid__hierarchical-expander--cosy !optional;
-            }
-
             @include e(hierarchical-expander, $m: empty) {
-                @extend %igx-grid__hierarchical-expander--cosy !optional;
                 @extend %igx-grid__hierarchical-expander--empty !optional;
-            }
-
-            @include e(hierarchical-expander, $m: push) {
-                @extend %igx-grid__hierarchical-expander--push--cosy !optional;
             }
 
             @for $i from 1 through 10 {
@@ -694,91 +607,18 @@
                     @extend %igx-grid__group-row-cosy--padding-level-#{$i} !optional;
                 }
             }
-
-            @include e(td, $m: pinned-chip) {
-                @extend %grid-cell--pinned-chip--cosy !optional;
-            }
         }
 
         @include m(compact) {
             @extend %grid-display !optional;
             @extend %grid-display-compact !optional;
 
-            @include e(tr-pivot) {
-                @extend %igx-grid__tr-pivot--compact !optional
-            }
-
-            @include e(tr-pivot, $m: 'row-area') {
-                @extend %igx-grid__tr-pivot--row-area--compact !optional
-            }
-
-            @include e(tr-pivot, $m: 'filter') {
-                @extend %igx-grid__tr-pivot--filter--compact !optional
-            }
-
-            @include e(drag-indicator) {
-                @extend %igx-grid__drag-indicator--compact !optional;
-            }
-
-            @include e(cbx-padding) {
-                @extend %cbx-padding--compact !optional;
-            }
-
             @include e(cbx-selection, $m: push) {
                 @extend %grid__cbx-selection--push--compact !optional;
             }
 
-            @include e(drag-ghost-image) {
-                @extend %grid__drag-ghost-image--compact !optional;
-            }
-
-            @include e(td) {
-                @extend %grid-cell-display--compact !optional;
-            }
-
-            @include e(group-content) {
-                @extend %igx-grid__group-content--compact !optional;
-            }
-
-            @include e(row-indentation) {
-                @extend %igx-grid__row-indentation--compact !optional;
-            }
-
-            @include e(header-indentation) {
-                @extend %igx-grid__header-indentation--compact !optional;
-            }
-
-            @include e(grouping-indicator) {
-                @extend %igx-grid__grouping-indicator--compact !optional;
-            }
-
-            @include e(group-expand-btn) {
-                @extend %igx-grid__group-expand-btn--compact !optional;
-            }
-
-            @include e(group-row) {
-                @extend %igx-grid__group-row--compact !optional;
-            }
-
-            @include e(hierarchical-indent) {
-                @extend %igx-grid__hierarchical-indent--compact !optional;
-            }
-
-            @include e(hierarchical-indent, $m: scroll) {
-                @extend %igx-grid__hierarchical-indent--compact--scroll !optional;
-            }
-
-            @include e(hierarchical-expander) {
-                @extend %igx-grid__hierarchical-expander--compact !optional;
-            }
-
             @include e(hierarchical-expander, $m: empty) {
-                @extend %igx-grid__hierarchical-expander--compact !optional;
                 @extend %igx-grid__hierarchical-expander--empty !optional;
-            }
-
-            @include e(hierarchical-expander, $m: push) {
-                @extend %igx-grid__hierarchical-expander--push--compact !optional;
             }
 
             @for $i from 1 through 10 {
@@ -789,10 +629,6 @@
                 @include e(group-row, $m: padding-level-#{$i}) {
                     @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
                 }
-            }
-
-            @include e(td, $m: pinned-chip) {
-                @extend %grid-cell--pinned-chip--compact !optional;
             }
         }
 

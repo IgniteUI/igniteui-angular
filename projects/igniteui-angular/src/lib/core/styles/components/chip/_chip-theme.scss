@@ -412,7 +412,7 @@
         vertical-align: middle;
         max-width: $chip-max-width;
 
-        > igx-icon { 
+        > igx-icon {
             display: block;
         }
     }
@@ -511,7 +511,7 @@
         justify-content: center;
         flex: 1 1 auto;
         height: var(--size);
-        padding: $chip-item-padding;
+        padding-inline: pad-inline(map.get($chip-padding-inline, 'compact'), map.get($chip-padding-inline, 'cosy'), $item-padding);
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border-width: rem(1px);

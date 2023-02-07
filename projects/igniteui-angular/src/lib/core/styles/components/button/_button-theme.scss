@@ -279,9 +279,9 @@
     );
 
     $button-padding-fluent-block: (
-        comfortable: rem(16px, 16px),
-        cosy: rem(16px, 16px),
-        compact: rem(16px, 16px)
+        comfortable: 0,
+        cosy: 0,
+        compact: 0
     );
 
     $button-padding-bootstrap-inline: (
@@ -539,8 +539,8 @@
         align-items: center;
         justify-content: center;
         min-width: $button-width;
-        padding-inline: pad(map.get($button-padding-inline, 'compact'), map.get($button-padding-inline, 'cosy'), map.get($button-padding-inline, 'comfortable'));
-        padding-block: pad(map.get($button-padding-block, 'compact'), map.get($button-padding-block, 'cosy'), map.get($button-padding-block, 'comfortable'));
+        padding-inline: pad-inline(map.get($button-padding-inline, 'compact'), map.get($button-padding-inline, 'cosy'), map.get($button-padding-inline, 'comfortable'));
+        padding-block: pad-block(map.get($button-padding-block, 'compact'), map.get($button-padding-block, 'cosy'), map.get($button-padding-block, 'comfortable'));
         min-height: var(--size);
         border: rem(1px) solid var-get($flat-theme, 'border-color');
         cursor: pointer;
@@ -572,18 +572,10 @@
 
     %igx-button-display--cosy {
         --component-size: var(--ig-size, var(--ig-size-medium));
-
-        * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'cosy');
-        }
     }
 
     %igx-button-display--compact {
         --component-size: var(--ig-size, var(--ig-size-small));
-
-        * + * {
-            margin-inline-start: map.get($icon-in-button-margin, 'compact');
-        }
     }
 
     igx-grid-filtering-row {
@@ -649,8 +641,8 @@
         color: var-get($outlined-theme, 'foreground');
         border-color: var-get($outlined-theme, 'border-color');
         border-radius: var-get($outlined-theme, 'border-radius');
-        padding-block: pad(map.get($outlined-button-padding-block, 'compact'), map.get($outlined-button-padding-block, 'cosy'), map.get($outlined-button-padding-block, 'comfortable'));
-        padding-inline: pad(map.get($outlined-button-padding-inline, 'compact'), map.get($outlined-button-padding-inline, 'cosy'), map.get($outlined-button-padding-inline, 'comfortable'));
+        padding-block: pad-block(map.get($outlined-button-padding-block, 'compact'), map.get($outlined-button-padding-block, 'cosy'), map.get($outlined-button-padding-block, 'comfortable'));
+        padding-inline: pad-inline(map.get($outlined-button-padding-inline, 'compact'), map.get($outlined-button-padding-inline, 'cosy'), map.get($outlined-button-padding-inline, 'comfortable'));
         min-height: var(--size);
 
         @if $variant == 'indigo-design' {
@@ -844,14 +836,12 @@
     %igx-button--fab {
         @if $variant != 'indigo-design' {
             --size: #{sizable(map.get($button-floating-size, 'compact'), map.get($button-floating-size, 'cosy'), map.get($button-floating-size, 'comfortable'))};
-        }
-
-        @if $variant == 'indigo-design' {
+        } @else {
             --size: #{sizable(map.get($button-floating-size-indigo, 'compact'), map.get($button-floating-size-indigo, 'cosy'), map.get($button-floating-size-indigo, 'comfortable'))};
         }
 
-        padding-block: pad(map.get($button-floating-padding-block, 'compact'), map.get($button-floating-padding-block, 'cosy'), map.get($button-floating-padding-block, 'comfortable'));
-        padding-inline: pad(map.get($button-floating-padding-inline, 'compact'), map.get($button-floating-padding-inline, 'cosy'), map.get($button-floating-padding-inline, 'comfortable'));
+        padding-block: pad-block(map.get($button-floating-padding-block, 'compact'), map.get($button-floating-padding-block, 'cosy'), map.get($button-floating-padding-block, 'comfortable'));
+        padding-inline: pad-inline(map.get($button-floating-padding-inline, 'compact'), map.get($button-floating-padding-inline, 'cosy'), map.get($button-floating-padding-inline, 'comfortable'));
         min-width: var(--size);
         min-height: var(--size);
         line-height: unset;
