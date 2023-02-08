@@ -9,7 +9,6 @@ import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { slideOutBottom, slideInTop } from '../animations/main';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { SimpleChange } from '@angular/core';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
