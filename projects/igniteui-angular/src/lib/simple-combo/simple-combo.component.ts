@@ -398,7 +398,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.dropdownContainer.nativeElement.focus();
         } else {
             this.comboInput.nativeElement.focus();
-            this.toggle();
         }
     }
 
