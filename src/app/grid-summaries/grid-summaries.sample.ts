@@ -4,7 +4,8 @@ import {
     IgxNumberSummaryOperand,
     IgxSummaryResult,
     ColumnPinningPosition,
-    IPinningConfig
+    IPinningConfig,
+    DisplayDensity
 } from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
@@ -52,7 +53,7 @@ export class GridSummaryComponent implements OnInit {
     public columnPinning = false;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
     public rowSelection = false;
-    public density = 'compact';
+    public density: DisplayDensity = 'compact';
     public displayDensities;
 
     public data = [{

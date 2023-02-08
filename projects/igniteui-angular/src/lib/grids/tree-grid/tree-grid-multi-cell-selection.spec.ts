@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -34,13 +34,13 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -558,14 +558,13 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
         let detect;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
             detect = () => treeGrid.cdr.detectChanges();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -671,14 +670,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let fix;
         let treeGrid;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick(16);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -803,14 +800,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let fix;
         let treeGrid;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
-            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
-            tick(16);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

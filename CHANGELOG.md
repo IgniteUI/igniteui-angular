@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - Added new auto-sizing API `recalculateAutoSizes` that recalculates widths of columns that have size set to `auto`. Can be used in scenarios where you want to auto-size the columns again post initialization.
 - `igxPivotGrid`
     - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
+- `IgxSimpleCombo`
+    - **Behavioral Change** - Keyboard navigation `ArrowUp` - when the combo is opened `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
 
 ## 15.0.0
 
@@ -22,6 +24,8 @@ All notable changes for each version of this project will be documented in this 
     - Parameters in grid templates now have types for their context. This can also cause issues if the app is in strict template mode and uses the wrong type. References to the template that may require conversion:
         * - `IgxColumnComponent` - `ColumnType` (for example the column parameter in `igxFilterCellTemplate`)
         * - `IgxGridCell` - `CellType` (for example the cell parameter in `igxCell` template)
+
+    - A new `groupRecord` parameter has been exposed in `operate` method, that is an `IGroupByRecord` object describing the grouped row in case grouping is applied.
 
     - `excelStyleHeaderIconTemplate` - Gets/Sets the excel style header icon.
     - `groupRowTemplate` - Gets/Sets the template reference for the group row.
@@ -57,6 +61,9 @@ All notable changes for each version of this project will be documented in this 
     Added support for shift key + mouse click interactions.
     - `multi` mode - select/deselect all dates between the last selected/deselected and the one clicked while holding `Shift`.
     - `range` mode - extend/shorten the range from the last selected date to the one clicked while holding `Shift`.
+
+- `IgxFilterOptions`
+    - Added support for multiple keys.
 
 ### Theme Changes
 - **Breaking Changes** - The `palette` function no longer provides `info`, `success`, `warn` and `error` colors. Therefore you have to pass custom values for them if you need to use these colors. You can also use the values for `info`, `success`, `warn` and `error` colors from our predefined color palettes.

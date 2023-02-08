@@ -205,6 +205,11 @@
         &[igxButton] {
             border-radius: 0;
             border-color: var-get($theme, 'item-border-color');
+
+            @if $bootstrap-theme {
+                margin: 0 !important;
+                border: none;
+            }
         }
 
         &:not(:nth-child(0)) {

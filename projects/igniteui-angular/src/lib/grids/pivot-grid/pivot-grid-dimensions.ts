@@ -126,6 +126,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
+    private _monthIntl = new Intl.DateTimeFormat('default', { month: 'long' });
+
     /**
      * Creates additional pivot date dimensions based on a provided dimension describing date data:
      *
@@ -156,7 +158,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Months',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                return recordValue ? new Date(recordValue).toLocaleString('default', { month: 'long' }) : rec['Months'];
+                return recordValue ? this._monthIntl.format(new Date(recordValue)) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
