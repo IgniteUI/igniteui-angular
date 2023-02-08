@@ -78,8 +78,8 @@ glob(path.posix.join(ROOT, IGNITEUI_ANGULAR_PROJ, '**/*.ts'), { ignore: '**/*.sp
                 const firstArg = expression.arguments && expression.arguments[0];
                 let queryType: ts.Identifier | null;
                 let descendants = false;
-                if (firstArg && ts.isIdentifier(firstArg)) {
-                    queryType = firstArg;
+                if (firstArg) {
+                    queryType = getTypeExpressionIdentifier(firstArg);
                 }
 
                 if (expression.arguments.length === 2 && expression.arguments[1].kind === ts.SyntaxKind.ObjectLiteralExpression) {
@@ -297,18 +297,39 @@ function isUseExistingType(useExisting: ts.ObjectLiteralExpression, type: ts.Int
         return false;
     }
 
-    const initializer = useExistingValue.initializer;
-    if (ts.isIdentifier(initializer)) {
-        // `useExisting: <type>`
+    // `useExisting: <type>`
+    // `useExisting: forwardRef(() => <type>)`
+    const initializer = getTypeExpressionIdentifier(useExistingValue.initializer);
+
+    if (initializer) {
         return initializer.getText() === type.symbol.escapedName;
     }
-    if (ts.isCallExpression(initializer)
-        && initializer.expression.getText() === 'forwardRef'
-        && ts.isArrowFunction(initializer.arguments[0])) {
-        // `useExisting: forwardRef(() => <type>)`
-        return initializer.arguments[0].body.getText() === type.symbol.escapedName;
-    }
     return false;
+}
+
+/**
+ * Get type identifier from expression, unpacking Angular's `forwardRef` if needed.
+ * @param expression the expression of the type identifier
+ *
+ * @example <caption>Use to get Identifier for values like `useExisting: <type>` props or `ContentChild(<type>)` decorator arguments:</caption>
+ * ```ts
+ * getTypeExpressionIdentifier(useExistingProp.initializer);
+ * getTypeExpressionIdentifier(decorator.expression.arguments[0])
+ * ```
+ */
+function getTypeExpressionIdentifier(expression: ts.Expression): ts.Identifier | undefined {
+    if (ts.isIdentifier(expression)) {
+        // `<type>`
+        return expression;
+    }
+
+    if (ts.isCallExpression(expression)
+        && expression.expression.getText() === 'forwardRef'
+        && ts.isArrowFunction(expression.arguments[0])
+        && ts.isIdentifier(expression.arguments[0].body)) {
+        // `forwardRef(() => <type>)`
+        return expression.arguments[0].body;
+    }
 }
 
 
