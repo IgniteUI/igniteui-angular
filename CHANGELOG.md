@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - Clicking with the Left Mouse key while holding `Ctrl` on selected cell will deselect the cell.
 - `igxPivotGrid`
     - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
+- `IgxSimpleCombo`
+    - **Behavioral Change** - Keyboard navigation `ArrowUp` - when the combo is opened `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
 
 ## 15.0.0
 
