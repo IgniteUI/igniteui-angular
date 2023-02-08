@@ -6,7 +6,7 @@ import {
 
 @Component({
     selector: 'app-chips-sample',
-    styleUrls: ['chips.sample.scss', '../app.component.css'],
+    styleUrls: ['chips.sample.scss'],
     templateUrl: 'chips.sample.html'
 })
 export class ChipsSampleComponent {

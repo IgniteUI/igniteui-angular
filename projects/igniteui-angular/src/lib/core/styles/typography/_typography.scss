@@ -5,6 +5,7 @@
 
 @use 'sass:map';
 @use 'sass:list';
+@use 'sass:selector';
 @use 'material';
 @use 'bootstrap';
 @use 'fluent';
@@ -27,8 +28,10 @@
     $exclude: null
 ) {
     $variant: map.get(map.get($type-scale, '_meta'), 'variant');
+    $root: is-root();
+    $host: not($root) and selector.is-superselector(':host', &);
 
-    @if is-root() {
+    @if $root or $host {
         .ig-typography {
             font-family: var(--ig-font-family);
 
