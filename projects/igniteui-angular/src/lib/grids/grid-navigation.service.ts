@@ -136,9 +136,11 @@ export class IgxGridNavigationService {
             this.activeNode = null;
             return;
         }
-        if ((!this.activeNode || !Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) &&
-            this.grid.selectionService.isInMap(this.lastActiveNode)) {
+        if (!this.activeNode || !Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
+            if (hasLastActiveNode && this.grid.cellSelection !== GridSelectionMode.none && !this.grid.selectionService.isInMap(this.lastActiveNode)) {
+                return;
+            }
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
                 this.firstVisibleNode(this.lastActiveNode.row) : this.firstVisibleNode());

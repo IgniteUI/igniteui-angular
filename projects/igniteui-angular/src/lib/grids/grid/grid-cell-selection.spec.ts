@@ -3154,6 +3154,25 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
         });
 
+        it('Should deselect a selected cell with Ctrl + click', () => {
+            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
+
+            // Click on a cell
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+
+            // Click on same cell holding Ctrl
+            UIInteractions.simulateClickAndSelectEvent(firstCell, false, true);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyCellSelected(firstCell, false);
+            expect(grid.selectedCells.length).toBe(0);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+        });
+
         it('When when navigate with arrow keys cell selection should be changed', () => {
             const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
             let cell = grid.gridAPI.get_cell_by_index(1, 'Name');
