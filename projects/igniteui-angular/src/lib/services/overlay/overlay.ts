@@ -131,6 +131,7 @@ export class IgxOverlayService implements OnDestroy {
     private _document: Document;
     private _keyPressEventListener: Subscription;
     private destroy$ = new Subject<boolean>();
+    private removeClick$ = new Subject<boolean>();
     private _cursorStyleIsSet = false;
     private _cursorOriginalValue: string;
 
@@ -332,7 +333,9 @@ export class IgxOverlayService implements OnDestroy {
         info.id = (this._componentId++).toString();
         info.visible = false;
         settings = Object.assign({}, this._defaultSettings, settings);
-        info.settings = settings;
+        this.proxy.info = info;
+        this.proxy.settings = settings;
+        info.settings = this.proxy.settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
@@ -522,16 +525,6 @@ export class IgxOverlayService implements OnDestroy {
         }
         const info = this._overlayInfos.find(e => e.id === id);
         return info;
-    }
-
-    /** @hidden */
-    public resetCloseSettings(element: HTMLElement, closeOnOutsideClick: boolean, closeOnEscape: boolean){
-        for (let i = this._overlayInfos.length; i--;) {
-            if (element === this._overlayInfos[i].elementRef.nativeElement) {
-                this._overlayInfos[i].settings.closeOnOutsideClick = closeOnOutsideClick;
-                this._overlayInfos[i].settings.closeOnEscape = closeOnEscape;
-            }
-        }
     }
 
     private _hide(id: string, event?: Event) {
@@ -794,15 +787,13 @@ export class IgxOverlayService implements OnDestroy {
         }
     };
 
-    private addOutsideClickListener(info: OverlayInfo) {
+    private addOutsideClickListener = (info: OverlayInfo) => {
         if (info.settings.closeOnOutsideClick) {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this.removeClick$))
                     .subscribe((e: Event) =>  {
-                        if (info.settings.closeOnOutsideClick) {
-                            this._hide(info.id, e);
-                        }
+                        this._hide(info.id, e);
                     });
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
@@ -822,7 +813,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private removeOutsideClickListener(info: OverlayInfo) {
+    private removeOutsideClickListener = (info: OverlayInfo) => {
         if (info.settings.modal === false) {
             let shouldRemoveClickEventListener = true;
             this._overlayInfos.forEach(o => {
@@ -837,6 +828,11 @@ export class IgxOverlayService implements OnDestroy {
                     this._cursorStyleIsSet = false;
                 }
                 this._document.removeEventListener('click', this.documentClicked, true);
+                if (this.removeClick$.observers.length > 1) {
+                    this.removeClick$.observers[this.removeClick$.observers.length - 1].next(true);
+                } else {
+                    this.removeClick$.next(true);
+                }
             }
         }
     }
@@ -861,7 +857,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private addCloseOnEscapeListener(info: OverlayInfo) {
+    private addCloseOnEscapeListener = (info: OverlayInfo) => {
         if (info.settings.closeOnEscape && !this._keyPressEventListener) {
             this._keyPressEventListener = fromEvent(this._document, 'keydown').pipe(
                 filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc')
@@ -878,7 +874,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private removeCloseOnEscapeListener() {
+    private removeCloseOnEscapeListener = () => {
         if (this._keyPressEventListener) {
             this._keyPressEventListener.unsubscribe();
             this._keyPressEventListener = null;
@@ -953,4 +949,44 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationPlayer.finish();
         }
     }
+
+    /**
+     * @hidden
+     */
+    public proxy = new Proxy(
+        {
+            info: null,
+            settings: this._defaultSettings,
+            closeOnOutsideClick: this._defaultSettings.closeOnOutsideClick,
+            closeOnEscape: this._defaultSettings.closeOnEscape,
+            addClick: this.addOutsideClickListener,
+            addEscape: this.addCloseOnEscapeListener,
+            removeClick: this.removeOutsideClickListener,
+            removeEscape: this.removeCloseOnEscapeListener,
+        },
+        {
+            get(obj, prop) {
+                return obj[prop];
+            },
+            set(obj, prop, value) {
+                obj[prop] = value;
+                if(prop === "closeOnOutsideClick"){
+                    obj.settings.closeOnOutsideClick = value;
+                    if (value) {
+                        obj.addClick(obj.info);
+                    } else {
+                        obj.removeClick(obj.info);
+                    }
+                } else if(prop === "closeOnEscape") {
+                    obj.settings.closeOnEscape = value;
+                    if(value){
+                        obj.addEscape(obj.info);
+                    } else {
+                        obj.removeEscape();
+                    }
+                }
+                return true;
+            }
+        }
+    );
 }

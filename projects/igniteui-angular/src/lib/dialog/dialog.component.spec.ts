@@ -386,12 +386,6 @@ describe('Dialog', () => {
         tick();
         fixture.detectChanges();
 
-        dialog.ngOnChanges({
-            closeOnOutsideSelect: new SimpleChange(true, false, true)
-        });
-        tick();
-        fixture.detectChanges();
-
         dialogElem.click();
         tick();
         fixture.detectChanges();
@@ -422,12 +416,6 @@ describe('Dialog', () => {
         fixture.detectChanges();
         
         dialog.closeOnEscape = false;
-        tick();
-        fixture.detectChanges();
-
-        dialog.ngOnChanges({
-            closeOnEscape: new SimpleChange(true, false, true)
-        });
         tick();
         fixture.detectChanges();
 
