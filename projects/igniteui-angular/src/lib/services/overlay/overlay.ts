@@ -814,25 +814,23 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private removeOutsideClickListener = (info: OverlayInfo) => {
-        if (info.settings.modal === false) {
-            let shouldRemoveClickEventListener = true;
-            this._overlayInfos.forEach(o => {
-                if (o.settings.modal === false && o.id !== info.id) {
-                    shouldRemoveClickEventListener = false;
-                }
-            });
-            if (shouldRemoveClickEventListener) {
-                if (this._cursorStyleIsSet) {
-                    this._document.body.style.cursor = this._cursorOriginalValue;
-                    this._cursorOriginalValue = '';
-                    this._cursorStyleIsSet = false;
-                }
-                this._document.removeEventListener('click', this.documentClicked, true);
-                if (this.removeClick$.observers.length > 1) {
-                    this.removeClick$.observers[this.removeClick$.observers.length - 1].next(true);
-                } else {
-                    this.removeClick$.next(true);
-                }
+        let shouldRemoveClickEventListener = true;
+        this._overlayInfos.forEach(o => {
+            if (o.settings.modal === false && o.id !== info.id) {
+                shouldRemoveClickEventListener = false;
+            }
+        });
+        if (shouldRemoveClickEventListener) {
+            if (this._cursorStyleIsSet) {
+                this._document.body.style.cursor = this._cursorOriginalValue;
+                this._cursorOriginalValue = '';
+                this._cursorStyleIsSet = false;
+            }
+            this._document.removeEventListener('click', this.documentClicked, true);
+            if (this.removeClick$.observers.length > 1) {
+                this.removeClick$.observers[this.removeClick$.observers.length - 1].next(true);
+            } else {
+                this.removeClick$.next(true);
             }
         }
     }
