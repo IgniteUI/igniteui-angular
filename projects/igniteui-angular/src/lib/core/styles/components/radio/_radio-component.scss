@@ -62,6 +62,12 @@
             @include e(ripple) {
                 @extend %radio-ripple--focused !optional;
             }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %radio-ripple--focused !optional;
+                }
+            }
         }
 
         @include m(checked) {

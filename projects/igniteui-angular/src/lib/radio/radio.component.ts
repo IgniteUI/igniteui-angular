@@ -442,7 +442,6 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
-        this.select();
     }
 
     /**

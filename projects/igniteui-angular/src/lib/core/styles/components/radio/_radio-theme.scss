@@ -488,24 +488,6 @@
         }
     }
 
-    %radio-ripple--focused {
-        background: var-get($theme, 'empty-color');
-        transition: background .2s $ease-out-quad;
-        opacity: .12;
-
-        @if $type == 'dark' {
-            opacity: .24;
-        }
-    }
-
-    %radio-ripple--focused-checked {
-        background: var-get($theme, 'fill-color');
-    }
-
-    %radio-ripple--focused-invalid {
-        background: var-get($theme, 'error-color');
-    }
-
     %radio-ripple--hover {
         background: var-get($theme, 'empty-color');
         transition: background .2s $ease-out-quad;
@@ -521,6 +503,24 @@
     }
 
     %radio-ripple--hover-invalid {
+        background: var-get($theme, 'error-color');
+    }
+
+    %radio-ripple--focused {
+        background: var-get($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .12;
+
+        @if $type == 'dark' {
+            opacity: .24;
+        }
+    }
+
+    %radio-ripple--focused-checked {
+        background: var-get($theme, 'fill-color');
+    }
+
+    %radio-ripple--focused-invalid {
         background: var-get($theme, 'error-color');
     }
 
