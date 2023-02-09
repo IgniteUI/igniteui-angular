@@ -47,4 +47,38 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
             }
         });
     }
+
+    const updateTypographyAndScrollbar = (content: string) => {
+        const typography = /igx-typography/g,
+            scrollbar = /igx-scrollbar/g;
+        return content
+            .replace(typography, 'ig-typography')
+            .replace(scrollbar, 'ig-scrollbar');
+    };
+
+    const indexPath = '/src/index.html';
+    if (host.exists(indexPath)) {
+        host.overwrite(indexPath, updateTypographyAndScrollbar(host.read(indexPath).toString()));
+    }
+
+    update.templateFiles.forEach(path =>
+        host.overwrite(path, updateTypographyAndScrollbar(host.read(path).toString()))
+    );
+
+    const graysVar = /\$grays:\s{0,}(#\w+)(\r\n|\r|\n|,)/s,
+        graysString = /'grays'/g,
+        graysTarget = `'gray'`;
+    update.sassFiles.forEach(path => {
+        let content = host.read(path).toString();
+        const matches = content.matchAll(new RegExp(graysVar, 'g'));
+        for (const match of matches) {
+            content = content.replace(graysVar, `$gray: ${match[1]}${match[2]}`);
+        }
+
+        if (graysString.test(content)) {
+            content = content.replace(graysString, graysTarget);
+        }
+
+        host.overwrite(path, updateTypographyAndScrollbar(content));
+    });
 };
