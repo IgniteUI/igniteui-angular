@@ -599,7 +599,7 @@ export class IgxGridStateDirective {
      * This method restores the IgxPivotDateDimension with its default functions and resource strings.
      */
     private restoreDateDimension(dim: IgxPivotDateDimension) {
-        const dateDim = new IgxPivotDateDimension((dim as any).inBaseDimension, (dim as any).inOptions);
+        const dateDim = new IgxPivotDateDimension((dim as any)._baseDimension, (dim as any)._options);
         // restore functions and resource strings
         dim.resourceStrings = dateDim.resourceStrings;
         dim.memberFunction = dateDim.memberFunction;
@@ -616,7 +616,7 @@ export class IgxGridStateDirective {
      * Returns if this is a IgxPivotDateDimension.
      */
     private isDateDimension(dim: IPivotDimension) {
-        return (dim as any).inBaseDimension;
+        return (dim as any)._baseDimension;
     }
 
     /**
