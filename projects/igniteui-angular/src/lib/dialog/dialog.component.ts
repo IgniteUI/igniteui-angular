@@ -110,8 +110,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._overlayDefaultSettings.closeOnEscape = val;
         this._closeOnEscape = val;
         if (this.navService.get(this.id) && this.toggleRef.overlayId) {
-            this.overlayService.proxy.info = this.overlayService.getOverlayById(this.toggleRef.overlayId);
-            this.overlayService.proxy.closeOnEscape = val;
+            this.overlayService.getOverlayById(this.toggleRef.overlayId).settings.closeOnEscape = val;
         }
     }
 
@@ -258,8 +257,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._overlayDefaultSettings.closeOnOutsideClick = val;
         this._closeOnOutsideSelect = val;
         if (this.navService.get(this.id) && this.toggleRef.overlayId) {
-            this.overlayService.proxy.info = this.overlayService.getOverlayById(this.toggleRef.overlayId);
-            this.overlayService.proxy.closeOnOutsideClick = val;
+            this.overlayService.getOverlayById(this.toggleRef.overlayId).settings.closeOnOutsideClick = val;
         }
     }
 

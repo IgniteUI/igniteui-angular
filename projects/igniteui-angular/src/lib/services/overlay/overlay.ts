@@ -330,12 +330,40 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
+        let proxy = {
+            get(obj, prop) {
+                return obj.settings[prop];
+            },
+            set(obj, prop, value) {
+                if (prop === "closeOnOutsideClick") {
+                    obj.settings.closeOnOutsideClick = value;
+                    if (value) {
+                        obj.addClickListener(info);
+                    } else {
+                        obj.removeClickListener(info);
+                    }
+                } else if (prop === "closeOnEscape") {
+                    obj.settings.closeOnEscape = value;
+                    if (value) {
+                        obj.addEscapeListener(info);
+                    } else {
+                        obj.removeEscapeListener();
+                    }
+                }
+                return true;
+            }
+        }
+
         info.id = (this._componentId++).toString();
         info.visible = false;
         settings = Object.assign({}, this._defaultSettings, settings);
-        this.proxy.info = info;
-        this.proxy.settings = settings;
-        info.settings = this.proxy.settings;
+        info.settings = new Proxy({
+            settings,
+            addClickListener: this.addOutsideClickListener, 
+            addEscapeListener: this.addCloseOnEscapeListener,
+            removeClickListener: this.removeOutsideClickListener, 
+            removeEscapeListener: this.removeCloseOnEscapeListener
+        }, proxy);
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
@@ -688,6 +716,8 @@ export class IgxOverlayService implements OnDestroy {
                 this._overlayElement = null;
             }
             this.removeCloseOnEscapeListener();
+        } else if (!this._overlayInfos[this._overlayInfos.length - 1].settings.closeOnEscape) {
+            this.removeCloseOnEscapeListener();
         }
 
         // clean all the resources attached to info
@@ -814,19 +844,22 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private removeOutsideClickListener = (info: OverlayInfo) => {
-        let shouldRemoveClickEventListener = true;
-        this._overlayInfos.forEach(o => {
-            if (o.settings.modal === false && o.id !== info.id) {
-                shouldRemoveClickEventListener = false;
+        if (info.settings.modal === false) {
+            let shouldRemoveClickEventListener = true;
+            this._overlayInfos.forEach(o => {
+                if (o.settings.modal === false && o.id !== info.id) {
+                    shouldRemoveClickEventListener = false;
+                }
+            });
+            if (shouldRemoveClickEventListener) {
+                if (this._cursorStyleIsSet) {
+                    this._document.body.style.cursor = this._cursorOriginalValue;
+                    this._cursorOriginalValue = '';
+                    this._cursorStyleIsSet = false;
+                }
+                this._document.removeEventListener('click', this.documentClicked, true);
             }
-        });
-        if (shouldRemoveClickEventListener) {
-            if (this._cursorStyleIsSet) {
-                this._document.body.style.cursor = this._cursorOriginalValue;
-                this._cursorOriginalValue = '';
-                this._cursorStyleIsSet = false;
-            }
-            this._document.removeEventListener('click', this.documentClicked, true);
+        } else {
             if (this.removeClick$.observers.length > 1) {
                 this.removeClick$.observers[this.removeClick$.observers.length - 1].next(true);
             } else {
@@ -947,44 +980,4 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationPlayer.finish();
         }
     }
-
-    /**
-     * @hidden
-     */
-    public proxy = new Proxy(
-        {
-            info: null,
-            settings: this._defaultSettings,
-            closeOnOutsideClick: this._defaultSettings.closeOnOutsideClick,
-            closeOnEscape: this._defaultSettings.closeOnEscape,
-            addClick: this.addOutsideClickListener,
-            addEscape: this.addCloseOnEscapeListener,
-            removeClick: this.removeOutsideClickListener,
-            removeEscape: this.removeCloseOnEscapeListener,
-        },
-        {
-            get(obj, prop) {
-                return obj[prop];
-            },
-            set(obj, prop, value) {
-                obj[prop] = value;
-                if(prop === "closeOnOutsideClick"){
-                    obj.settings.closeOnOutsideClick = value;
-                    if (value) {
-                        obj.addClick(obj.info);
-                    } else {
-                        obj.removeClick(obj.info);
-                    }
-                } else if(prop === "closeOnEscape") {
-                    obj.settings.closeOnEscape = value;
-                    if(value){
-                        obj.addEscape(obj.info);
-                    } else {
-                        obj.removeEscape();
-                    }
-                }
-                return true;
-            }
-        }
-    );
 }
