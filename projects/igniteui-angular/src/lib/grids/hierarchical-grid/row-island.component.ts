@@ -10,6 +10,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    forwardRef,
     Inject,
     Injector,
     Input,
@@ -89,7 +90,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
+    @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
     /**

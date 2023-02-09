@@ -57,7 +57,7 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/displayDensity';
-import { cloneArray, flatten, PlatformUtil } from '../../core/utils';
+import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -69,9 +69,8 @@ import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
-import { DefaultPivotSortingStrategy } from '../../data-operations/pivot-sort-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
-import { FilterUtil, IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -1200,7 +1199,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public rowDimensionWidthToPixels(dim: IPivotDimension): number {
+    public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit: boolean = false): number {
+        if (!ignoreBeforeInit && this.shouldGenerate) {
+            return 0;
+        }
+
         if (!dim.width) {
             return MINIMUM_COLUMN_WIDTH;
         }
@@ -1217,6 +1220,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public reverseDimensionWidthToPercent(width: number): number {
         return (width * 100 / this.calcWidth);
+    }
+
+    public get pivotContentCalcWidth() {
+        const totalDimWidth = this.rowDimensions.length > 0 ?
+            this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
+            0;
+        return this.calcWidth - totalDimWidth;
+    }
+
+    public get pivotPinnedWidth() {
+        return !this.shouldGenerate ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
+    }
+
+    public get pivotUnpinnedWidth() {
+        return !this.shouldGenerate ? this.unpinnedWidth : 0;
     }
 
     public get rowDimensions() {
@@ -1241,6 +1259,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.columnGroupStates.set(col.field, newState);
         this.toggleRowGroup(col, newState);
         this.reflow();
+    }
+
+    protected override getColumnWidthSum(): number {
+        let colSum = super.getColumnWidthSum();
+        colSum += this.rowDimensions.map(dim => this.rowDimensionWidthToPixels(dim, true)).reduce((prev, cur) => prev + cur, 0);
+        return colSum;
     }
 
     /**

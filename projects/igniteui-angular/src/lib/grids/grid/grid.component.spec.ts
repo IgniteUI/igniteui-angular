@@ -2376,8 +2376,13 @@ describe('IgxGrid Component Tests #grid', () => {
             tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
 
-            grid.navigateTo(grid.data.length - 1, grid.columnList.length - 1);
+            grid.navigateTo(0,  grid.columnList.length - 1);
+            await wait(100);
+            fix.detectChanges();
+            grid.navigateTo(grid.data.length - 1);
             await wait(100);
             fix.detectChanges();
 

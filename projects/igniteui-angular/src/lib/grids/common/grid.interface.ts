@@ -832,7 +832,7 @@ export interface IgxCellTemplateContext {
     formControl?: FormControl<any>,
     /* blazorSuppress */
     defaultErrorTemplate?: TemplateRef<any>,
-    cell?: CellType
+    cell: CellType
 }
 
 export interface IgxRowSelectorTemplateDetails {

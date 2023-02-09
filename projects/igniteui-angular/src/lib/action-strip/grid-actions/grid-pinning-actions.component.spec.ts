@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -31,12 +31,12 @@ describe('igxGridPinningActions #grid ', () => {
     }));
 
     describe('Base ', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should allow pinning and unpinning rows in a grid', () => {
             actionStrip.show(grid.rowList.first);
@@ -80,12 +80,12 @@ describe('igxGridPinningActions #grid ', () => {
     });
 
     describe('Menu ', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripPinMenuComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-        }));
+        });
         it('should allow pinning row via menu', async () => {
             const row = grid.rowList.toArray()[0];
             actionStrip.show(row);

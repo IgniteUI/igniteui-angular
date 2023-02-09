@@ -78,7 +78,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             name: 'all',
             isUnary: true,
             iconName: 'select-all',
-            logic: (target: boolean) => true
+            logic: (_target: boolean) => true
         }, {
             name: 'true',
             isUnary: true,

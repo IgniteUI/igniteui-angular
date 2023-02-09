@@ -243,10 +243,10 @@ When defining one of them, you need to reference list of predefined names, as fo
 ## Keyboard Navigation
 
 When the combo is closed and focused:
-- `ArrowDown` or `Alt` + `ArrowDown` will open the dropdown and will move focus to the selected item, if no selected item is present, the first item in the list will lbe focused.
+- `ArrowDown` or `Alt` + `ArrowDown` will open the dropdown and will move focus to the selected item, if no selected item is present, the first item in the list will be focused.
 
 When the combo is opened:
-- `ArrowUp` will close the dropdown and will move focus to the input while also selecting all of the text in the input if the currently focused item is the first item in the list. Otherwise `ArrowUp` will move to the previous list item.
+- `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
 - `ArrowDown` will move focus from the search input to the first list item. If list is empty and custom values are enabled will move it to the Add new item button.
 - `Alt` + `ArrowUp` will close the dropdown.
 

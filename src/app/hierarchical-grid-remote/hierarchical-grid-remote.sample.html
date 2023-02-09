@@ -15,7 +15,7 @@
     <igx-column field="Phone"></igx-column>
     <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
         <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
-            <igx-grid-toolbar-title>Child Toolbar - Level {{ grid.parentIsland.level }}</igx-grid-toolbar-title>
+            <igx-grid-toolbar-title>Child Toolbar - Level 2</igx-grid-toolbar-title>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
             </igx-grid-toolbar-actions>
@@ -27,7 +27,7 @@
         <igx-column field="ShipAddress"></igx-column>
         <igx-row-island #rowIsland2 [key]="'Order_Details'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
-                <igx-grid-toolbar-title>Child Toolbar - Level {{ grid.parentIsland.level }}</igx-grid-toolbar-title>
+                <igx-grid-toolbar-title>Child Toolbar - Level 3</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
