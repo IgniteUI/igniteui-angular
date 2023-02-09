@@ -13,7 +13,7 @@ import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DataParent } from '../../test-utils/sample-test-data.spec';
+import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -39,7 +39,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent,
                 GridGroupByRowCustomSelectorsComponent,
-                GridGroupByCaseSensitiveComponent
+                GridGroupByCaseSensitiveComponent,
+                GridGroupByTestDateTimeDataComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         });
@@ -178,6 +179,145 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkGroups(
             groupRows,
             [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
+    }));
+
+    it('should only account for year, month and day when grouping by \'date\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'DateField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+
+        const targetTestVal = new Date(2012, 1, 12);
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getTime() === targetTestVal.getTime());
+        expect(groupRows[index].groupRow.records.length).toEqual(2);
+
+        // compare the date values in the target group which are two identical dates with different time values
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+
+        // the time portions of the two records differ, so the Dates are not equal even though they are in the same group
+        expect(rec1Date.getTime()).not.toEqual(rec2Date.getTime());
+        // the date portions are the same, so they are in the same group, as the column type is `date`
+        expect(rec1Date.getDate()).toEqual(rec2Date.getDate());
+        expect(rec1Date.getMonth()).toEqual(rec2Date.getMonth());
+        expect(rec1Date.getFullYear()).toEqual(rec2Date.getFullYear());
+    }));
+
+    it('should only account for hours, minutes, seconds and ms when grouping by \'time\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'TimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+
+        const targetTestVal = new Date(new Date().setHours(3, 20, 0, 1));
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getHours() === targetTestVal.getHours()
+            && new Date(gr.groupRow.value).getMinutes() === targetTestVal.getMinutes()
+            && new Date(gr.groupRow.value).getSeconds() === targetTestVal.getSeconds()
+            && new Date(gr.groupRow.value).getMilliseconds() === targetTestVal.getMilliseconds());
+
+        expect(groupRows[index].groupRow.records.length).toEqual(3);
+
+        // compare the date values in the target group which are three different dates with same time values
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const record3 = groupRows[index].groupRow.records[2];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+        const rec3Date = new Date(record3[field]);
+
+        // the date portions of the following records differ, so the Dates are not equal even though they are in the same group
+        expect(rec1Date.getTime()).not.toEqual(rec2Date.getTime());
+        // the below are equal by date as well
+        expect(rec2Date.getTime()).toEqual(rec3Date.getTime());
+        // the time portions of the not equal dates are the same, so they are in the same group, as the column type is `time`
+        expect(rec1Date.getHours()).toEqual(rec2Date.getHours());
+        expect(rec1Date.getMinutes()).toEqual(rec2Date.getMinutes());
+        expect(rec1Date.getSeconds()).toEqual(rec2Date.getSeconds());
+        expect(rec1Date.getMilliseconds()).toEqual(rec2Date.getMilliseconds());
+    }));
+
+    it('should account for all date values when grouping by \'dateTime\' dataType column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'DateTimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        // there are two identical DateTime values, so 4 groups out of 5 data records
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+
+        const targetTestVal = new Date(new Date('2003-03-17').setHours(3, 20, 0, 1));
+        const index = groupRows.findIndex(gr => new Date(gr.groupRow.value).getTime() === targetTestVal.getTime());
+        expect(groupRows[index].groupRow.records.length).toEqual(2);
+
+        // compare the date values in the target group which are two identical dates - date and time portions
+        const field = groupRows[index].groupRow.expression.fieldName;
+        const record1 = groupRows[index].groupRow.records[0];
+        const record2 = groupRows[index].groupRow.records[1];
+        const rec1Date = new Date(record1[field]);
+        const rec2Date = new Date(record2[field]);
+
+        expect(rec1Date.getTime()).toEqual(rec2Date.getTime());
+    }));
+
+    it('should display time value in the group by row when grouped by a \'time\' column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'TimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        expect(expectedValue1).toEqual(actualValue1);
+    }));
+
+    it('should display time value in the group by row when grouped by a \'dateTime\' column', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridGroupByTestDateTimeDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        grid.groupBy({
+            fieldName: 'DateTimeField', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const groupRows = grid.groupsRowList.toArray();
+        const expectedValue1 = groupRows[0].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[4].textContent;
+        const actualValue1 = groupRows[0].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        expect(expectedValue1).toEqual(actualValue1);
     }));
 
     it('should allow grouping by multiple columns.', fakeAsync(() => {
@@ -3815,4 +3955,28 @@ export class GridGroupByCaseSensitiveComponent {
             ContactTitle: 'Order Administrator'
         }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid
+            #grid
+            [width]='width'
+            [height]='height'
+            [data]="datesData">
+            <igx-column [field]="'ProductID'" [width]="200" [groupable]="true" dataType="number"></igx-column>
+            <igx-column [field]="'ProductName'" [width]="200" [groupable]="true" dataType="string"></igx-column>
+            <igx-column [field]="'DateField'" [width]="200" [groupable]="true" dataType="date"></igx-column>
+            <igx-column [field]="'TimeField'" [width]="200" [groupable]="true" dataType="time"></igx-column>
+            <igx-column [field]="'DateTimeField'" [width]="200" [groupable]="true" dataType="dateTime"></igx-column>
+        </igx-grid>
+    `
+})
+export class GridGroupByTestDateTimeDataComponent {
+    @ViewChild("grid", { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public width = '800px';
+    public height = null;
+    public datesData = SampleTestData.generateTestDateTimeData();
 }
