@@ -9,7 +9,8 @@ import { TemplateWrapperComponent } from './wrapper/wrapper.component';
 export const ComponentRefKey = Symbol('ComponentRef');
 const SCHEDULE_DELAY = 10;
 
-abstract class IgcNgElement extends NgElement {
+/** @hidden @internal */
+export abstract class IgcNgElement extends NgElement {
     public override readonly ngElementStrategy: IgxCustomNgElementStrategy;
 }
 
