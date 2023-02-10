@@ -171,6 +171,51 @@ $my-palette: palette(
         );
     });
 
+    it('should replace CSS $grays parameters variations', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+`$my-palette: palette(
+    $grays: red,
+    $grays: rgb(204, 102, 153),
+    $grays: rgba(107, 113, 127, 0.8),
+    $grays: hsl(228, 7%, 86%),
+    $grays: hsla(20, 20%, 85%, 0.7),
+);
+
+$my-palette: palette(
+    $grays: red,
+    $grays: rgb(204, 102, 153),
+    $grays: rgba(107, 113, 127, 0.8),
+    $grays: hsl(228, 7%, 86%),
+    $grays: hsla(20, 20%, 85%, 0.7),
+);`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
+        ).toEqual(
+`$my-palette: palette(
+    $gray: red,
+    $gray: rgb(204, 102, 153),
+    $gray: rgba(107, 113, 127, 0.8),
+    $gray: hsl(228, 7%, 86%),
+    $gray: hsla(20, 20%, 85%, 0.7),
+);
+
+$my-palette: palette(
+    $gray: red,
+    $gray: rgb(204, 102, 153),
+    $gray: rgba(107, 113, 127, 0.8),
+    $gray: hsl(228, 7%, 86%),
+    $gray: hsla(20, 20%, 85%, 0.7),
+);`
+        );
+    });
+
     it('should NOT replace $grays as custom var', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,

@@ -65,7 +65,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
         host.overwrite(path, updateTypographyAndScrollbar(host.read(path).toString()))
     );
 
-    const graysVar = /\$grays:\s{0,}(#\w+)(\r\n|\r|\n|,)/s,
+    const graysVar = /\$grays:\s*(.+)(\r\n|\r|\n|,)/,
         graysString = /'grays'/g,
         graysTarget = `'gray'`;
     update.sassFiles.forEach(path => {
