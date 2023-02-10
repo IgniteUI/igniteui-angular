@@ -334,7 +334,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         return this._invalid || false;
     }
     public set invalid(value: boolean) {
-        this._invalid = (value as any === '') || value;
+        this._invalid = !!value;
     }
 
     /**
