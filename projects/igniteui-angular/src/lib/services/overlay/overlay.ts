@@ -330,7 +330,17 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        let proxy = {
+        settings = Object.assign({}, this._defaultSettings, settings);
+
+        let target = {
+            settings: settings,
+            addOutsideClickListener: this.addOutsideClickListener,
+            addCloseOnEscapeListener: this.addCloseOnEscapeListener,
+            removeOutsideClickListener: this.removeOutsideClickListener,
+            removeCloseOnEscapeListener: this.removeCloseOnEscapeListener
+        };
+
+        let handler = {
             get(obj, prop) {
                 return obj.settings[prop];
             },
@@ -338,32 +348,25 @@ export class IgxOverlayService implements OnDestroy {
                 if (prop === "closeOnOutsideClick") {
                     obj.settings.closeOnOutsideClick = value;
                     if (value) {
-                        obj.addClickListener(info);
+                        obj.addOutsideClickListener(info);
                     } else {
-                        obj.removeClickListener(info);
+                        obj.removeOutsideClickListener(info);
                     }
                 } else if (prop === "closeOnEscape") {
                     obj.settings.closeOnEscape = value;
                     if (value) {
-                        obj.addEscapeListener(info);
+                        obj.addCloseOnEscapeListener(info);
                     } else {
-                        obj.removeEscapeListener();
+                        obj.removeCloseOnEscapeListener();
                     }
                 }
                 return true;
             }
-        }
+        };
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        settings = Object.assign({}, this._defaultSettings, settings);
-        info.settings = new Proxy({
-            settings,
-            addClickListener: this.addOutsideClickListener, 
-            addEscapeListener: this.addCloseOnEscapeListener,
-            removeClickListener: this.removeOutsideClickListener, 
-            removeEscapeListener: this.removeCloseOnEscapeListener
-        }, proxy);
+        info.settings = new Proxy(target, handler);
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
