@@ -2,11 +2,16 @@
 @use '../schemas' as *;
 @use 'igniteui-theming/sass/color' as *;
 
+////
 /// @group themes
 /// @access public
-/// Creates a global indigo theme that can be used with light backgrounds.
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// A wrapper around the theme mixin. Creates a global indigo theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin indigo-light-theme(
     $palette,
     $exclude: (),
@@ -39,11 +44,10 @@
     );
 }
 
-/// @group themes
-/// @access public
-/// Creates a global indigo theme that can be used with dark backgrounds.
+/// A wrapper around the theme mixin. Creates a global indigo theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin indigo-dark-theme(
     $palette,
     $exclude: (),
