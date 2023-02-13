@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.1.0
+
+ - `IgxPivotGrid`
+    - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.
+
 ## 15.0.1
 
 - `IgxGrid`
@@ -9,7 +14,9 @@ All notable changes for each version of this project will be documented in this 
 - `igxPivotGrid`
     - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
 - `IgxSimpleCombo`
-    - **Behavioral Change** - Keyboard navigation `ArrowUp` - when the combo is opened `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
+    - **Behavioral Change** 
+    - When the user clicks on the combo's input, the dropdown opens up.
+    - Keyboard navigation `ArrowUp` - when the combo is opened `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
 
 ## 15.0.0
 
