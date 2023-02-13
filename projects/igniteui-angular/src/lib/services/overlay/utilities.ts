@@ -130,6 +130,14 @@ export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     animationType: 'open' | 'close';
 }
 
+export interface Handler extends ProxyHandler<OverlaySettings> {
+    info: OverlayInfo;
+    addOutsideClickListener: (info: OverlayInfo) => void;
+    addCloseOnEscapeListener: (info: OverlayInfo) => void;
+    removeOutsideClickListener: (info: OverlayInfo) => void;
+    removeCloseOnEscapeListener: () => void;
+}
+
 export interface Size {
     /** Gets or sets the horizontal component of Size */
     width: number;
