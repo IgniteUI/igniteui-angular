@@ -138,7 +138,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Hide or not the Action Strip based on if it is a menu.
-     * 
+     *
      * @hidden
      * @internal
      */
@@ -305,7 +305,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public hide(): void {
         this.hidden = true;
         this.closeMenu();
-        if (this.context && this.context.element) {
+        if (this.context && this.context.element && !!this._originalParent) {
             // D.P. fix(elements) don't detach native DOM, instead move back. Might not matter for Angular, but Elements will destroy
             this.renderer.appendChild(this._originalParent, this._viewContainer.element.nativeElement);
         }
