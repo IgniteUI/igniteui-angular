@@ -76,7 +76,7 @@
         "igniteui-trial-watermark": "^1.0.3",
         "lodash-es": "^4.17.21",
         "uuid": "^8.3.0",
-        "igniteui-theming": "^1.4.0",
+        "igniteui-theming": "^1.4.1",
         "@igniteui/material-icons-extended": "^2.10.0"
     },
     "peerDependencies": {
