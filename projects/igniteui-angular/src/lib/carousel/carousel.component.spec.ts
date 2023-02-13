@@ -882,17 +882,17 @@ class HelperTestFunctions {
         }
     }
 
-    public static getIndicatorsLabel(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsLabel(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelector(HelperTestFunctions.INDICATORS_LABEL_CLASS);
     }
 
-    public static getIndicators(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicators(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_CLASS);
     }
 
-    public static getIndicatorsDots(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsDots(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_DOT_CLASS);
     }
