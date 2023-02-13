@@ -775,7 +775,7 @@ export interface IgxCellTemplateContext {
     additionalTemplateContext: any,
     formControl?: FormControl<any>,
     defaultErrorTemplate?: TemplateRef<any>,
-    cell?: CellType
+    cell: CellType
 }
 
 export interface IgxRowSelectorTemplateContext {

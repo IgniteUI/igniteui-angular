@@ -1558,7 +1558,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public set sortDescendingHeaderIconTemplate(template: TemplateRef<IgxGridHeaderTemplateContext>) {
-            this._sortDescendingHeaderIconTemplate = template;
+        this._sortDescendingHeaderIconTemplate = template;
     }
 
     /**
@@ -4445,12 +4445,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public recalculateAutoSizes() {
         // reset auto-size and calculate it again.
-            this._columns.forEach( x => x.autoSize = undefined);
-            this.resetCaches();
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.cdr.detectChanges();
-                this.autoSizeColumnsInView();
-            });
+        this._columns.forEach(x => x.autoSize = undefined);
+        this.resetCaches();
+        this.zone.onStable.pipe(first()).subscribe(() => {
+            this.cdr.detectChanges();
+            this.autoSizeColumnsInView();
+        });
     }
 
     /**
@@ -6518,6 +6518,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             });
         }
+
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
@@ -7064,8 +7065,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.tbody.nativeElement.style.display = 'none';
         const parentElement = this.nativeElement.parentElement || (this.nativeElement.getRootNode() as any).host;
         let res = !parentElement ||
-        parentElement.clientHeight === 0 ||
-        parentElement.clientHeight === renderedHeight;
+            parentElement.clientHeight === 0 ||
+            parentElement.clientHeight === renderedHeight;
         if ((!this.platform.isChromium && !this.platform.isFirefox) || this._autoSize) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
