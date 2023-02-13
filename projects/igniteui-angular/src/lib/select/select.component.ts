@@ -105,11 +105,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
 
-    /** @hidden @internal */
     @ContentChildren(IgxPrefixDirective, { descendants: true })
     protected prefixes: QueryList<IgxPrefixDirective>;
 
-    /** @hidden @internal */
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 

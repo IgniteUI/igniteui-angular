@@ -121,11 +121,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
     protected hints: QueryList<IgxHintDirective>;
 
-    /** @hidden */
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
     protected _prefixes: QueryList<IgxPrefixDirective>;
 
-    /** @hidden */
     @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
     protected _suffixes: QueryList<IgxSuffixDirective>;
 
@@ -249,7 +247,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         @Inject(DOCUMENT)
         private document: any,
         private platform: PlatformUtil,
-        public cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef
     ) {
         super(_displayDensityOptions);
 

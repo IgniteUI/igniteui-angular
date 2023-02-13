@@ -80,6 +80,16 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
     /** @hidden @internal */
+    public get toggleIcon(): string {
+        return this.inputGroup.theme === 'material' ? this.dropdown.collapsed ? 'expand_more' : 'expand_less' : this.dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'
+    }
+
+    /** @hidden @internal */
+    public get clearIcon(): string {
+        return this.inputGroup.theme === 'material' ? 'cancel' : 'clear'
+    }
+
+    /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
 

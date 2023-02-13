@@ -175,13 +175,21 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return !this.value && !this.placeholder;
     }
 
-    /** @hidden @internal */
     @ContentChildren(IgxPrefixDirective, { descendants: true })
     protected prefixes: QueryList<IgxPrefixDirective>;
 
-    /** @hidden @internal */
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
+
+    /** @hidden @internal */
+    public get toggleIcon(): string {
+        return this.inputGroup.theme === 'material' ? this.dropdown.collapsed ? 'expand_more' : 'expand_less' : this.dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'
+    }
+
+    /** @hidden @internal */
+    public get clearIcon(): string {
+        return this.inputGroup.theme === 'material' ? 'cancel' : 'clear'
+    }
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
