@@ -67,7 +67,7 @@
     "core-js": "^3.27.1",
     "fflate": "^0.7.3",
     "hammerjs": "^2.0.8",
-    "igniteui-theming": "^1.4.0",
+    "igniteui-theming": "^1.4.1",
     "igniteui-trial-watermark": "^1.0.3",
     "karma-junit-reporter": "^2.0.1",
     "lodash-es": "^4.17.21",
