@@ -235,8 +235,7 @@
           "options": {
             "main": "projects/igniteui-angular/src/test.ts",
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js",
-            "styles": ["dist/igniteui-angular/styles/igniteui-angular.css"]
+            "karmaConfig": "projects/igniteui-angular/karma.conf.js"
           }
         },
         "lint": {
