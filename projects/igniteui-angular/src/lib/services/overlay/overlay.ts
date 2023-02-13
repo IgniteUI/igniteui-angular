@@ -45,6 +45,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     AbsolutePosition,
+    Handler,
     HorizontalAlignment,
     OverlayAnimationEventArgs,
     OverlayCancelableEventArgs,
@@ -330,34 +331,26 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        settings = Object.assign({}, this._defaultSettings, settings);
-
-        let target = {
-            settings: settings,
+        let handler: Handler = {
+            info: info,
             addOutsideClickListener: this.addOutsideClickListener,
             addCloseOnEscapeListener: this.addCloseOnEscapeListener,
             removeOutsideClickListener: this.removeOutsideClickListener,
-            removeCloseOnEscapeListener: this.removeCloseOnEscapeListener
-        };
-
-        let handler = {
-            get(obj, prop) {
-                return obj.settings[prop];
-            },
+            removeCloseOnEscapeListener: this.removeCloseOnEscapeListener,
             set(obj, prop, value) {
                 if (prop === "closeOnOutsideClick") {
-                    obj.settings.closeOnOutsideClick = value;
+                    obj.closeOnOutsideClick = value;
                     if (value) {
-                        obj.addOutsideClickListener(info);
+                        this.addOutsideClickListener(this.info);
                     } else {
-                        obj.removeOutsideClickListener(info);
+                        this.removeOutsideClickListener(this.info);
                     }
                 } else if (prop === "closeOnEscape") {
-                    obj.settings.closeOnEscape = value;
+                    obj.closeOnEscape = value;
                     if (value) {
-                        obj.addCloseOnEscapeListener(info);
+                        this.addCloseOnEscapeListener(this.info);
                     } else {
-                        obj.removeCloseOnEscapeListener();
+                        this.removeCloseOnEscapeListener();
                     }
                 }
                 return true;
@@ -366,7 +359,8 @@ export class IgxOverlayService implements OnDestroy {
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        info.settings = new Proxy(target, handler);
+        settings = Object.assign({}, this._defaultSettings, settings);
+        info.settings = new Proxy(settings, handler);
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
