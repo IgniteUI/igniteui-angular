@@ -210,7 +210,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
-        if(this.prefixes.length > 0) {
+        if (this.prefixes.length > 0) {
             this.inputGroup.prefixes = this.prefixes;
         }
 
