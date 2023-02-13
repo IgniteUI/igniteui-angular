@@ -214,7 +214,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.inputGroup.prefixes = this.prefixes;
         }
 
-        if(this.suffixes.length > 0) {
+        if (this.suffixes.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
 
