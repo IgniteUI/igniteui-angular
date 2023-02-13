@@ -962,7 +962,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     public ngAfterViewChecked() {
-        const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement
+        const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
 
         this._overlaySettings = {
             target: targetElement,
