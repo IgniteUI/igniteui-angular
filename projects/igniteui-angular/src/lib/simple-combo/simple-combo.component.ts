@@ -273,6 +273,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
+    public handleInputClick(): void {
+        if (this.collapsed) {
+            this.open();
+            this.comboInput.focus();
+        }
+    }
+
+    /** @hidden @internal */
     public handleKeyDown(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ENTER) {
             const filtered = this.filteredData.find(this.findAllMatches);
@@ -373,7 +381,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleOpened(): void {
         this.triggerCheck();
-        this.dropdownContainer.nativeElement.focus();
+        if (!this.comboInput.focused) {
+            this.dropdownContainer.nativeElement.focus();
+        }
         this.opened.emit({ owner: this });
     }
 
