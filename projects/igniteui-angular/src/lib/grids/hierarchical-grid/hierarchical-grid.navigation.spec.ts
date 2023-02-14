@@ -303,11 +303,10 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const ri = fixture.componentInstance.rowIsland;
             ri.height = '200px';
             fixture.detectChanges();
-            await wait();
 
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             childGrid.verticalScrollContainer.scrollTo(9);
-            await wait();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             let currScrTop = childGrid.verticalScrollContainer.getScroll().scrollTop;
@@ -317,7 +316,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             GridFunctions.focusCell(fixture, fCell);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, false, false, false);
-            await wait(DEBOUNCE_TIME * 3);
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
