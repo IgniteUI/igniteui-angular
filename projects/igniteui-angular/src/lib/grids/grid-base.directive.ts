@@ -3971,7 +3971,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.initPinning();
         this.calculateGridSizes();
         this._init = false;
-        console.log("init");
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
