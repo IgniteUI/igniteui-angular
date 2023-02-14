@@ -220,8 +220,8 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      * @memberof IgxRadioComponent
      */
     @Input()
-    public get required() {
-       return this._required;
+    public get required(): boolean {
+        return this._required || this.nativeElement.hasAttribute('required');
     }
     public set required(value: boolean) {
         this._required = (value as any === '') || value;
@@ -521,6 +521,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     /**
      * @hidden
      */
+    @HostListener('blur')
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();

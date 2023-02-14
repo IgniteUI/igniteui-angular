@@ -50,6 +50,7 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_invalid: boolean | '';
     /**
      * Returns reference to the child radio buttons.
      *
