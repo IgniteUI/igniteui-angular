@@ -3772,8 +3772,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this.resetColumnsCaches();
         this.resetColumnCollections();
-        this.resetCachedWidths();
         this.resetForOfCache();
+        this.resetCachedWidths();
         this.hasVisibleColumns = undefined;
         this._columnGroups = this._columns.some(col => col.columnGroup);
     }
@@ -3971,6 +3971,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.initPinning();
         this.calculateGridSizes();
         this._init = false;
+        console.log("init");
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
