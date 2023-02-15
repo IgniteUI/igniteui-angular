@@ -55,8 +55,9 @@
                 <ng-container *ngIf="dataType === 'number'">
                     <span class="igx-group-label__text">{{ groupRow.value | number }}</span>
                 </ng-container>
-                <ng-container *ngIf="dataType === 'date'">
-                    <span class="igx-group-label__text">{{ groupRow.value | date }}</span>
+                <ng-container *ngIf="dataType === 'date' || dataType === 'dateTime' || dataType === 'time'">
+                    <span class="igx-group-label__text">{{ groupRow.value |
+                        date:groupRow.column.pipeArgs.format:groupRow.column.pipeArgs.timezone:grid.locale }}</span>
                 </ng-container>
             </ng-template>
 
