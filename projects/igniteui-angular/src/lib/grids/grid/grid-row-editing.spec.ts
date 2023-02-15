@@ -1753,7 +1753,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // TODO: rowEdit should emit updated rowData - issue #7304
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1794,7 +1794,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1820,7 +1820,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
@@ -1852,7 +1852,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalled();
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -1880,7 +1880,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditEnter.emit).toHaveBeenCalled();
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: false,
@@ -1912,7 +1912,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: true,
@@ -1946,7 +1946,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -1978,7 +1978,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                key: 1,
+                primaryKey: 1,
                 rowData: initialData,
                 newValue: initialData,
                 oldValue: initialData,
@@ -1997,7 +1997,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const cellArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 'Chai',
                 newValue: 'New Value',
