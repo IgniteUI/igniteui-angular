@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTextSelectionModule } from './text-selection.directive';
@@ -12,6 +12,8 @@ describe('IgxSelection', () => {
             declarations: [
                 TriggerTextSelectionComponent,
                 TriggerTextSelectionOnClickComponent,
+                TextSelectionWithMaskComponent,
+                IgxTestFocusDirective
             ],
             imports: [IgxTextSelectionModule]
         });
@@ -128,6 +130,17 @@ describe('IgxSelection', () => {
         fix.detectChanges();
         expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
     });
+
+    it('should apply selection properly if present on an element with multiple focus handlers', fakeAsync(() => {
+        const fix = TestBed.createComponent(TextSelectionWithMaskComponent);
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.css('input')).nativeElement;
+        input.focus();
+        tick(16);
+        expect(input.selectionEnd).toEqual(input.value.length);
+        expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
+    }));
 });
 
 @Component({
@@ -160,6 +173,23 @@ class TriggerTextSelectionOnClickComponent {
       }
  }
 
- interface Types {
-     [key: string]: any;
+ @Component({
+    template: `<input #input type="text" igxTextFocusDirective [igxTextSelection]="true" [value]="inputValue" />`
+ })
+ class TextSelectionWithMaskComponent {
+    public inputValue: any = "12-34-56";
  }
+
+@Directive({selector: '[igxTextFocusDirective]'})
+class IgxTestFocusDirective {
+    constructor(private element: ElementRef) { }
+
+    @HostListener('focus')
+    public onFocus() {
+        this.element.nativeElement.value = `$${this.element.nativeElement.value}`;
+    }
+}
+
+interface Types {
+    [key: string]: any;
+}
