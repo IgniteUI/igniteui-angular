@@ -351,6 +351,8 @@ export class IgxOverlayService implements OnDestroy {
                     } else {
                         this.removeCloseOnEscapeListener();
                     }
+                } else {
+                    obj[prop] = value;
                 }
                 return true;
             }
