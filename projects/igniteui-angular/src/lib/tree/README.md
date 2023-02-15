@@ -113,7 +113,7 @@ When selection is enabled, end-user selection of nodes is **only allowed through
    | nodeExpanded   | Emitted when node expanding animation finishes and node is expanded.    | false      | `{ node: IgxTreeNodeComponent<any>, owner: IgxTreeComponent }` |
    | nodeExpanding  | Emitted when node expanding animation starts, when `node.expanded` is set to transition from `false` to `true`. | true  | `node: IgxTreeNodeComponent<any>, owner: IgxTreeComponent, cancel: boolean }` |
    | activeNodeChanged | Emitted when the tree's `active` node changes | false | `IgxTreeNodeComponent<any>` |
-   | onDensityChanged | Emitted when the display density of the tree is changed | false | `{ oldDensity: DisplayDensity, newDensity: DisplayDensity }` |
+   | densityChanged | Emitted when the display density of the tree is changed | false | `{ oldDensity: DisplayDensity, newDensity: DisplayDensity }` |
 
 ### IgxTreeNodeComponent<T>
 

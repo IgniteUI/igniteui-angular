@@ -663,32 +663,32 @@ describe('List', () => {
         verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
     });
 
-    it('should emit onDensityChanged with proper event arguments', () => {
+    it('should emit densityChanged with proper event arguments', () => {
         const fixture = TestBed.createComponent(TwoHeadersListComponent);
         fixture.detectChanges();
 
         const list = fixture.componentInstance.list as IgxListComponent;
 
-        spyOn(list.onDensityChanged, 'emit').and.callThrough();
+        spyOn(list.densityChanged, 'emit').and.callThrough();
         const args: IDensityChangedEventArgs = {
             oldDensity: undefined,
             newDensity: DisplayDensity.compact
         };
 
         list.displayDensity = DisplayDensity.compact;
-        expect(list.onDensityChanged.emit).toHaveBeenCalledOnceWith(args);
+        expect(list.densityChanged.emit).toHaveBeenCalledOnceWith(args);
 
         list.displayDensity = DisplayDensity.cosy;
         args.oldDensity = DisplayDensity.compact;
         args.newDensity = DisplayDensity.cosy;
-        expect(list.onDensityChanged.emit).toHaveBeenCalledTimes(2);
-        expect(list.onDensityChanged.emit).toHaveBeenCalledWith(args);
+        expect(list.densityChanged.emit).toHaveBeenCalledTimes(2);
+        expect(list.densityChanged.emit).toHaveBeenCalledWith(args);
 
         list.displayDensity = DisplayDensity.comfortable;
         args.oldDensity = DisplayDensity.cosy;
         args.newDensity = DisplayDensity.comfortable;
-        expect(list.onDensityChanged.emit).toHaveBeenCalledTimes(3);
-        expect(list.onDensityChanged.emit).toHaveBeenCalledWith(args);
+        expect(list.densityChanged.emit).toHaveBeenCalledTimes(3);
+        expect(list.densityChanged.emit).toHaveBeenCalledWith(args);
     });
 
     it('should allow setting the index of list items', (async () => {
@@ -851,7 +851,7 @@ describe('List', () => {
         list.panStateChange.unsubscribe();
         list.rightPan.unsubscribe();
         list.itemClicked.unsubscribe();
-        list.onDensityChanged.unsubscribe();
+        list.densityChanged.unsubscribe();
         list.startPan.unsubscribe();
         list.resetPan.unsubscribe();
         list.endPan.unsubscribe();
