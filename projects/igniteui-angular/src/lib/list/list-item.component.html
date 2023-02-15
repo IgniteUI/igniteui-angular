@@ -1,7 +1,7 @@
 
 <div *ngIf="!isHeader && list.listItemLeftPanningTemplate" #leftPanningTmpl class="igx-list__item-right"
     [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
-    <ng-container *ngTemlateOutlet="list.listItemLeftPanningTemplate.template; context: context">
+    <ng-container *ngTemplateOutlet="list.listItemLeftPanningTemplate.template; context: context">
     </ng-container>
 </div>
 
