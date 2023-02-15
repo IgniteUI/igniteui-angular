@@ -2,6 +2,7 @@ import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs, mkenum
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { EventEmitter, InjectionToken } from '@angular/core';
+import { DisplayDensityBase } from '../core/density';
 
 /** @hidden */
 export enum Navigate {
@@ -46,7 +47,7 @@ export const IGX_DROPDOWN_BASE = new InjectionToken<IDropDownBase>('IgxDropDownB
 /**
  * @hidden
  */
-export interface IDropDownList {
+export interface IDropDownList extends DisplayDensityBase {
     selectionChanging: EventEmitter<ISelectionEventArgs>;
     width: string;
     height: string;
