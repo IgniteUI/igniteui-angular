@@ -14,8 +14,6 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 
-
-const MINIMUM_COLUMN_WIDTH = 200;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row',

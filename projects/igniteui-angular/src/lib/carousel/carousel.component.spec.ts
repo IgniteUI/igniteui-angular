@@ -873,7 +873,7 @@ class HelperTestFunctions {
         return prev.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
     }
 
-    public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
+    public static getIndicatorsContainer(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom): HTMLElement {
         const carouselNative = fixture.nativeElement;
         if (position === CarouselIndicatorsOrientation.bottom) {
             return carouselNative.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
@@ -882,17 +882,17 @@ class HelperTestFunctions {
         }
     }
 
-    public static getIndicatorsLabel(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsLabel(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelector(HelperTestFunctions.INDICATORS_LABEL_CLASS);
     }
 
-    public static getIndicators(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicators(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_CLASS);
     }
 
-    public static getIndicatorsDots(fixture, position = CarouselIndicatorsOrientation.bottom) {
+    public static getIndicatorsDots(fixture, position: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom) {
         const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
         return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_DOT_CLASS);
     }
