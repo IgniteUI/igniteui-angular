@@ -24,9 +24,10 @@ describe('IgxSelection', () => {
 
         const input = fix.debugElement.query(By.css('input')).nativeElement;
         input.focus();
-
-        expect(input.selectionEnd).toEqual(input.value.length);
-        expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
+        requestAnimationFrame(() => {
+            expect(input.selectionEnd).toEqual(input.value.length);
+            expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
+        });
     });
 
     it('Should select the text when the input is clicked', ()=> {
@@ -40,9 +41,11 @@ describe('IgxSelection', () => {
         inputElem.click(); // might need to change to .focus
         fix.detectChanges();
 
-        expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
-        expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
-            .toEqual(inputNativeElem.value);
+        requestAnimationFrame(() => {
+            expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
+            expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
+                .toEqual(inputNativeElem.value);
+        });
     });
 
     it('Should check if the value is selected if based on input type', fakeAsync(() => {
@@ -72,39 +75,41 @@ describe('IgxSelection', () => {
         const inputNativeElem = input.nativeElement;
         const inputElem: HTMLElement = input.nativeElement;
 
-        selectableTypes.forEach( el => {
-            let type = Object.keys(el)[0];
-            let val = el[type];
-            fix.componentInstance.inputType = type;
-            fix.componentInstance.inputValue = val;
-            fix.detectChanges();
+        requestAnimationFrame(() => {
+            selectableTypes.forEach( el => {
+                let type = Object.keys(el)[0];
+                let val = el[type];
+                fix.componentInstance.inputType = type;
+                fix.componentInstance.inputValue = val;
+                fix.detectChanges();
 
-            inputElem.click();
-            fix.detectChanges();
+                inputElem.click();
+                fix.detectChanges();
 
-            if(type !== 'number'){
-                expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
-                expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
-                    .toEqual(val);
-            }
+                if(type !== 'number'){
+                    expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
+                    expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
+                        .toEqual(val);
+                }
 
-            if(type === 'number'){
-                let selection = document.getSelection().toString();
-                tick(1000);
-                expect((String(val)).length).toBe(selection.length);
-            }
-        });
+                if(type === 'number'){
+                    let selection = document.getSelection().toString();
+                    tick(1000);
+                    expect((String(val)).length).toBe(selection.length);
+                }
+            });
 
-        nonSelectableTypes.forEach( el => {
-            let type = Object.keys(el)[0];
-            let val = el[type];
-            fix.componentInstance.inputType = type;
-            fix.componentInstance.inputValue = val;
-            fix.detectChanges();
+            nonSelectableTypes.forEach( el => {
+                let type = Object.keys(el)[0];
+                let val = el[type];
+                fix.componentInstance.inputType = type;
+                fix.componentInstance.inputValue = val;
+                fix.detectChanges();
 
-            inputElem.focus();
-            fix.detectChanges();
-            expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
+                inputElem.focus();
+                fix.detectChanges();
+                expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
+            });
         });
     }));
 
