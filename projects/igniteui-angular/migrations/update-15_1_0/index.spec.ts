@@ -69,4 +69,57 @@ describe(`Update to ${version}`, () => {
                 </igx-slide>
             </igx-carousel>`);
     });
+
+    it('should replace on-prefixed outputs for displayDensity and onGroupingDone to groupingDone', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/carousel.component.html`,
+            `<igx-action-strip #as (onDensityChanged)="onDensityChanged($event)"></igx-action-strip>
+            <igx-buttongroup (onDensityChanged)="onDensityChanged($event)">
+                <button igxButton igxRipple (onDensityChanged)="onDensityChanged($event)" i18n>Players</button>
+                <button igxButton igxRipple (onDensityChanged)="onDensityChanged($event)" i18n>Teams</button>
+            </igx-buttongroup>
+            <igx-chip (onDensityChanged)="onDensityChanged($event)"></igx-chip>
+            <igx-combo (onDensityChanged)="onDensityChanged($event)"></igx-combo>
+            <igx-date-picker (onDensityChanged)="onDensityChanged($event)"></igx-date-picker>
+            <igx-date-range-picker (onDensityChanged)="onDensityChanged($event)"></igx-date-range-picker>
+            <igx-time-picker (onDensityChanged)="onDensityChanged($event)"></igx-time-picker>
+            <igx-drop-down (onDensityChanged)="onDensityChanged($event)"></igx-drop-down>
+            <igx-grid #grid1 (onDensityChanged)="onDensityChanged($event)" (onGroupingDone)="onGroupingDone($event)">
+                <igx-grid-toolbar (onDensityChanged)="onDensityChanged($event)"></igx-grid-toolbar>
+                <igx-paginator (onDensityChanged)="onDensityChanged($event)"></igx-paginator>
+            </igx-grid>
+            <igx-tree-grid #grid2 (onDensityChanged)="onDensityChanged($event)"></igx-tree-grid>
+            <igx-hierarchical-grid #grid3 (onDensityChanged)="onDensityChanged($event)"></igx-hierarchical-grid>
+            <igx-pivot-grid #grid4 (onDensityChanged)="onDensityChanged($event)"></igx-pivot-grid>
+            <igx-list (onDensityChanged)="onDensityChanged($event)"></igx-list>
+            <igx-input-group (onDensityChanged)="onDensityChanged($event)"></igx-input-group>
+            <igx-query-builder (onDensityChanged)="onDensityChanged($event)"></igx-query-builder>
+            <igx-tree (onDensityChanged)="onDensityChanged($event)"></igx-tree>`
+        );
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/carousel.component.html'))
+            .toEqual(`<igx-action-strip #as (densityChanged)="onDensityChanged($event)"></igx-action-strip>
+            <igx-buttongroup (densityChanged)="onDensityChanged($event)">
+                <button igxButton igxRipple (densityChanged)="onDensityChanged($event)" i18n>Players</button>
+                <button igxButton igxRipple (densityChanged)="onDensityChanged($event)" i18n>Teams</button>
+            </igx-buttongroup>
+            <igx-chip (densityChanged)="onDensityChanged($event)"></igx-chip>
+            <igx-combo (densityChanged)="onDensityChanged($event)"></igx-combo>
+            <igx-date-picker (densityChanged)="onDensityChanged($event)"></igx-date-picker>
+            <igx-date-range-picker (densityChanged)="onDensityChanged($event)"></igx-date-range-picker>
+            <igx-time-picker (densityChanged)="onDensityChanged($event)"></igx-time-picker>
+            <igx-drop-down (densityChanged)="onDensityChanged($event)"></igx-drop-down>
+            <igx-grid #grid1 (densityChanged)="onDensityChanged($event)" (groupingDone)="onGroupingDone($event)">
+                <igx-grid-toolbar (densityChanged)="onDensityChanged($event)"></igx-grid-toolbar>
+                <igx-paginator (densityChanged)="onDensityChanged($event)"></igx-paginator>
+            </igx-grid>
+            <igx-tree-grid #grid2 (densityChanged)="onDensityChanged($event)"></igx-tree-grid>
+            <igx-hierarchical-grid #grid3 (densityChanged)="onDensityChanged($event)"></igx-hierarchical-grid>
+            <igx-pivot-grid #grid4 (densityChanged)="onDensityChanged($event)"></igx-pivot-grid>
+            <igx-list (densityChanged)="onDensityChanged($event)"></igx-list>
+            <igx-input-group (densityChanged)="onDensityChanged($event)"></igx-input-group>
+            <igx-query-builder (densityChanged)="onDensityChanged($event)"></igx-query-builder>
+            <igx-tree (densityChanged)="onDensityChanged($event)"></igx-tree>`);
+    });
 });

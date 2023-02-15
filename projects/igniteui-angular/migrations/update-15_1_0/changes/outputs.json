@@ -42,14 +42,6 @@
             }
         },
         {
-            "name": "onGroupingDone",
-            "replaceWith": "groupingDone",
-            "owner": {
-                "selector": "igx-grid",
-                "type": "component"
-            }
-        },
-        {
             "name": "onDensityChanged",
             "replaceWith": "densityChanged",
             "owner": {
@@ -118,6 +110,14 @@
             "replaceWith": "densityChanged",
             "owner": {
                 "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGroupingDone",
+            "replaceWith": "groupingDone",
+            "owner": {
+                "selector": "igx-grid",
                 "type": "component"
             }
         },
