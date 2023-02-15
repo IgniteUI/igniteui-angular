@@ -1,9 +1,5 @@
 import { IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
-
-export const filteringStateDefaults = {
-    strategy: new FilteringStrategy()
-};
+import { IFilteringStrategy } from './filtering-strategy';
 
 export declare interface IFilteringState {
     expressionsTree: IFilteringExpressionsTree;
