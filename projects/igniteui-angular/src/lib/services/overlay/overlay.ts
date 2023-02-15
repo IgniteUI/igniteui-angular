@@ -44,7 +44,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     AbsolutePosition,
-    Handler,
+    OverlaySettingsProxyHandler,
     HorizontalAlignment,
     OverlayAnimationEventArgs,
     OverlayCancelableEventArgs,
@@ -330,7 +330,7 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
         
-        let handler: Handler = {
+        let handler: OverlaySettingsProxyHandler = {
             info: info,
             addOutsideClickListener: this.addOutsideClickListener,
             addCloseOnEscapeListener: this.addCloseOnEscapeListener,
