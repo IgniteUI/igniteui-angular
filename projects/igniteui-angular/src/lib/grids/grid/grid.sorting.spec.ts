@@ -163,6 +163,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             });
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            const hireDateCol = grid.columns.findIndex(col => col.field === "HireDate");
+            grid.columns[hireDateCol].dataType = 'dateTime';
+            fixture.detectChanges();
 
             const currentColumn = 'HireDate';
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
