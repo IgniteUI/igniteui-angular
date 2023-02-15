@@ -792,8 +792,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const child2 = hierarchicalGrid.gridAPI.getChildGrids(false)[5];
 
             child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
-            await wait();
 
             const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
             const lastCellPrevRI = child1.dataRowList.last.cells.toArray()[0];
