@@ -19,7 +19,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     rowID: any; // deprecated
-    key: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
+    primaryKey: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
     cellID?: {
         rowID: any;
         columnID: any;
@@ -68,7 +68,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 }
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
-    key: any; // available if primaryKey exists
+    primaryKey: any; // available if primaryKey exists
     owner: GridType;
 }
 

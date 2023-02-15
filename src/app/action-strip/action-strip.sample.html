@@ -43,7 +43,7 @@
 <div class="sample-column">
     <h5>Grid Pinning and Editing Actions</h5>
     <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
-        [rowEditable]="true" [displayDensity]="displayDensity"
+        [rowEditable]="true" [primaryKey]="'ID'" [displayDensity]="displayDensity"
         (mouseleave)="onMouseLeave(actionstrip2)"
         (rowDelete)="rowDelete($event)"
         (rowDeleted)="rowDeleted($event)"

@@ -533,7 +533,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            key: cell.row.key,
+            primaryKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -597,7 +597,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            key: cell.row.key,
+            primaryKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -667,7 +667,7 @@ describe('Edit cell with data of type Array #grid', () => {
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.key,
-            key: cell.row.key,
+            primaryKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,
@@ -732,7 +732,7 @@ describe('Edit cell with data of type Array #grid', () => {
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.key,
-            key: cell.row.key,
+            primaryKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,

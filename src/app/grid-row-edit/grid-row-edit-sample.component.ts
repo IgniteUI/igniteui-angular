@@ -99,7 +99,7 @@ export class GridRowEditSampleComponent {
     }
 
     public rowDeleted(event: IRowDataEventArgs) {
-        console.log("Row ID is: " + event.key)
+        console.log("Row ID is: " + event.primaryKey);
     }
 
     public undo(gridID) {

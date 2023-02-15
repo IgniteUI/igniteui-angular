@@ -164,7 +164,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
             const cellEditArgs: IGridEditEventArgs = {
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
@@ -177,7 +177,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
             let rowEditArgs: IGridEditEventArgs = {
                 rowID: row.key,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: initialRowData,
                 oldValue: row.data,
                 cancel: false,
@@ -197,7 +197,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.id,
                 rowID: cell.row.key,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
                 valid: true,
@@ -209,7 +209,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const rowEditExitArgs: IGridEditDoneEventArgs = {
                 rowID: row.key,
-                key: row.key,
+                primaryKey: row.key,
                 rowData: initialRowData,
                 newValue: initialRowData,
                 oldValue: row.data,
@@ -232,7 +232,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditExitArgs = {
                 cellID: cell.id,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 rowID: cell.row.key,
                 rowData: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: cell.value,
@@ -248,7 +248,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             rowEditArgs = {
                 rowID: row.key,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 rowData: initialRowData,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
                 oldValue: row.data,
@@ -261,7 +261,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
-                key: row.key,
+                primaryKey: row.key,
                 cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
@@ -274,7 +274,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
                 rowID: row.key,
-                key: row.key,
+                primaryKey: row.key,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: row.data,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),
@@ -2229,7 +2229,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
-                key: cell.row.key,
+                primaryKey: cell.row.key,
                 cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: cell.value,
@@ -2242,7 +2242,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const rowDoneArgs: IGridEditDoneEventArgs = {
                 rowID: row.key,
-                key: row.key,
+                primaryKey: row.key,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: row.data,
                 newValue: Object.assign({}, row.data, { ProductName: newCellValue }),

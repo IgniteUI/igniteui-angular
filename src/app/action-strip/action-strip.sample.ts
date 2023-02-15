@@ -92,19 +92,19 @@ export class ActionStripSampleComponent implements OnInit {
     }
 
     public rowAdd(event: IGridEditEventArgs) {
-        console.log("RowAdd is: " + event.key);
+        console.log("RowAdd is: " + event.primaryKey);
     }
 
     public rowAdded(event: IRowDataEventArgs) {
-     console.log("RowAdded is: " + event.key);
+        console.log("RowAdded is: " + event.primaryKey);
     }
 
     public rowDelete(event: IGridEditEventArgs) {
-     console.log("Row Delete is: " + event.key);
+        console.log("Row Delete is: " + event.primaryKey);
     }
 
     public rowDeleted(event: IRowDataEventArgs) {
-     console.log("Row deleted is: " + event.key);
+        console.log("Row deleted is: " + event.primaryKey);
     }
 
     public ngOnInit(): void {
