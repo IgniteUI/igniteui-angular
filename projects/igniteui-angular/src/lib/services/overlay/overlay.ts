@@ -44,7 +44,6 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import {
     AbsolutePosition,
-    OverlaySettingsProxyHandler,
     HorizontalAlignment,
     OverlayAnimationEventArgs,
     OverlayCancelableEventArgs,
@@ -52,6 +51,7 @@ import {
     OverlayEventArgs,
     OverlayInfo,
     OverlaySettings,
+    OverlaySettingsProxyHandler,
     Point,
     PositionSettings,
     RelativePosition,
