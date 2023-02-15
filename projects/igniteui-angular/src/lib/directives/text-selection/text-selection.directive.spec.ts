@@ -12,7 +12,7 @@ describe('IgxSelection', () => {
             declarations: [
                 TriggerTextSelectionComponent,
                 TriggerTextSelectionOnClickComponent,
-                TextSelectionWithMaskComponent,
+                TextSelectionWithMultipleFocusHandlersComponent,
                 IgxTestFocusDirective
             ],
             imports: [IgxTextSelectionModule]
@@ -132,7 +132,7 @@ describe('IgxSelection', () => {
     });
 
     it('should apply selection properly if present on an element with multiple focus handlers', fakeAsync(() => {
-        const fix = TestBed.createComponent(TextSelectionWithMaskComponent);
+        const fix = TestBed.createComponent(TextSelectionWithMultipleFocusHandlersComponent);
         fix.detectChanges();
 
         const input = fix.debugElement.query(By.css('input')).nativeElement;
@@ -174,13 +174,13 @@ class TriggerTextSelectionOnClickComponent {
  }
 
  @Component({
-    template: `<input #input type="text" igxTextFocusDirective [igxTextSelection]="true" [value]="inputValue" />`
+    template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`
  })
- class TextSelectionWithMaskComponent {
+ class TextSelectionWithMultipleFocusHandlersComponent {
     public inputValue: any = "12-34-56";
  }
 
-@Directive({selector: '[igxTextFocusDirective]'})
+@Directive({selector: '[igxTestFocusDirective]'})
 class IgxTestFocusDirective {
     constructor(private element: ElementRef) { }
 
