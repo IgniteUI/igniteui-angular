@@ -323,6 +323,10 @@
                 min-width: rem(20px);
                 margin-inline-start: map.get($tree-node-indent, 'comfortable');
             }
+
+            .igx-tree {
+                overflow-y: hidden;
+            }
         }
 
         %igx-excel-filter__tree-alike {
