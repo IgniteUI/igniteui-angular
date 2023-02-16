@@ -317,7 +317,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     private updateValidityOnBlur() {
         if (this.required) {
             const checked = this.radioButtons.find(x => x.checked);
-            this.invalid = checked ? false : true;
+            this.invalid = !checked;
         }
     }
 
