@@ -373,7 +373,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     constructor(
         @Optional() @Self() public ngControl: NgControl,
     ) { 
-        if (this.ngControl != null) {
+        if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
     }
