@@ -2219,6 +2219,46 @@ export class SampleTestData {
         return prods;
     }
 
+    public static generateTestDateTimeData = () => {
+        return [
+            {
+                ProductID: 1,
+                ProductName: 'Product1',
+                DateField: new Date('2012-02-12'),
+                TimeField: new Date(new Date('2012-02-12').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 5)),
+            },
+            {
+                ProductID: 2,
+                ProductName: 'Product2',
+                DateField: new Date('2012-02-13'),
+                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20)),
+            },
+            {
+                ProductID: 3,
+                ProductName: 'Product3',
+                DateField: new Date('2012-02-12').setHours(1, 55),
+                TimeField: new Date(new Date('2012-02-12').setHours(4, 4)),
+                DateTimeField: new Date(new Date('2006-03-17').setHours(1, 55)),
+            },
+            {
+                ProductID: 4,
+                ProductName: 'Product4',
+                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+            },
+            {
+                ProductID: 5,
+                ProductName: 'Product5',
+                DateField: new Date(new Date('2006-03-17').setHours(11, 11)),
+                TimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+                DateTimeField: new Date(new Date('2003-03-17').setHours(3, 20, 0, 1)),
+            }
+        ];
+    };
+
     /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
