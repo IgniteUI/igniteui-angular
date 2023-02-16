@@ -2,6 +2,7 @@ import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { GridPagingMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import {
     GridSelectionRange,
@@ -395,6 +396,19 @@ export class IgxGridSelectionService {
                 return keys.some(k => this.isPivotRowSelected(k));
             });
         }
+        if(this.rowSelection.size && (this.grid as any).totalItemCount || this.grid.pagingMode === GridPagingMode.Remote) {
+            if(!this.grid.primaryKey) {
+                return Array.from(this.rowSelection);
+            }
+            const selection = [];
+            const partialRowData = {};
+            this.rowSelection.forEach(rID =>  {
+                const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
+                partialRowData[this.grid.primaryKey] = rID;
+                selection.push(rData ? rData : partialRowData);
+            });
+            return selection;
+        }
         return this.rowSelection.size ? this.grid.gridAPI.get_all_data(true).filter(row => this.rowSelection.has(this.getRecordKey(row))) : [];
     }
 
@@ -621,38 +635,12 @@ export class IgxGridSelectionService {
             added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
         };
 
-        /* Following scenario is now a stopper, let's consider what can be done
-
-        1) Use Grid Performance Data with scroll sample (it is remote data scenario, this is important)
-        2) Select rows 3 and 4
-        3) Scroll further in the grid, new batch of data is fetched.
-        4) Select row 60, for example.
-            When line 652 is executed, args.newSelection is [60], it already "lost" previous selection
-            this.rowSelection however, still keeps old selection, but is cleared, because on line 648 we pass `true` === clearPreviousSelection
-            result is this.rowSelection now contains only newSelection - row 60
-        5) Scroll back to top, rows 3 and 4 are no longer selected
-
-        * Resolutions suggested
-        1. On line 652, pass `false` instead of `true` for clearPrevSelection
-            Still, data emitted on line 647 misses previous selection. This can be partially fixed:
-            args.oldSelection will return not the whole rowData object, but only the pk values:, i.e args.oldSelection = [{ ProductID: 3 }, { ProductID: 4 }]
-            This can be documented as a limitation
-        
-        ** What if primaryKey is not set?
-           If pk was not set, the above resolution seems to be still working (need to check why, since reference of newly fetched data !== references kept in this.rowSelection).
-           And on line 6437 we would still be able to emit correctly args.oldSelection
-        
-
-        *** Issues found with this Resolution
-        1. Select a row. Try to deselect it - row is still seelcted, but I believe this can be fixed while keeping the resolution.
-        */
-
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             this.clearHeaderCBState();
             return;
         }
-        this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), false);
+        this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), true);
     }
 
     public getPivotRows(ids: any[]) {
