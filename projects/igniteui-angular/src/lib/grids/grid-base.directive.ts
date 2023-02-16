@@ -3651,7 +3651,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges(true);
         });
 
-        this.onDensityChanged.pipe(destructor).subscribe(() => {
+        this.densityChanged.pipe(destructor).subscribe(() => {
             this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
             this.crudService.endEdit(false);
             if (this._summaryRowHeight === 0) {

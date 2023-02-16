@@ -138,8 +138,8 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log(JSON.stringify(this.groupingExpressions));
     }
 
-    public onGroupingDoneHandler(event) {
-        console.log('onGroupingDone: ');
+    public groupingDoneHandler(event) {
+        console.log('groupingDone: ');
         console.log(event);
     }
     public getData(item) {
