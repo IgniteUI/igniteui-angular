@@ -600,7 +600,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Group by: Should be able group columns with keyboard', () => {
-            spyOn(grid.onGroupingDone, 'emit').and.callThrough();
+            spyOn(grid.groupingDone, 'emit').and.callThrough();
             grid.getColumnByName('ID').groupable = true;
             grid.getColumnByName('Name').groupable = true;
 
@@ -656,7 +656,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             expect(grid.groupingExpressions.length).toEqual(1);
             expect(grid.groupingExpressions[0].fieldName).toEqual('ID');
-            expect(grid.onGroupingDone.emit).toHaveBeenCalled();
+            expect(grid.groupingDone.emit).toHaveBeenCalled();
         });
 
         it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
