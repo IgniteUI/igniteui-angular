@@ -386,7 +386,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         protected renderer: Renderer2,
         @Optional() @Self() public ngControl: NgControl,
     ) { 
-        if (this.ngControl != null) {
+        if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
     }
