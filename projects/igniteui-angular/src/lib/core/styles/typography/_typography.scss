@@ -14,6 +14,32 @@
 @use 'igniteui-theming/sass/typography/presets' as presets;
 @use 'igniteui-theming/sass/typography/charts' as *;
 
+@mixin _component-typography($type-scale, $exclude) {
+    font-family: var(--ig-font-family);
+
+    $variant: map.get(map.get($type-scale, '_meta'), 'variant');
+
+    @if not(list.index($exclude, 'charts')) {
+        @include charts-typography($type-scale);
+    }
+
+    @if ($variant == 'material' or $variant == null) {
+        @include material.typography();
+    }
+
+    @if ($variant == 'bootstrap') {
+        @include bootstrap.typography($type-scale);
+    }
+
+    @if ($variant == 'fluent') {
+        @include fluent.typography();
+    }
+
+    @if ($variant == 'indigo') {
+        @include indigo.typography();
+    }
+}
+
 /// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
 /// The produces styles are based on the passed typeface and type scale.
 /// If omitted the $material-typeface and $material-type-scale will be used.
@@ -26,32 +52,10 @@
     $type-scale: presets.$material-type-scale,
     $exclude: null
 ) {
-    $variant: map.get(map.get($type-scale, '_meta'), 'variant');
+    $_scope: if(is-root() or is-host(), '.ig-typography', '&');
 
-    @if is-root() {
-        .ig-typography {
-            font-family: var(--ig-font-family);
-
-            @if not(list.index($exclude, 'charts')) {
-                @include charts-typography($type-scale);
-            }
-
-            @if ($variant == 'material' or $variant == null) {
-                @include material.typography();
-            }
-
-            @if ($variant == 'bootstrap') {
-                @include bootstrap.typography($type-scale);
-            }
-
-            @if ($variant == 'fluent') {
-                @include fluent.typography();
-            }
-
-            @if ($variant == 'indigo') {
-                @include indigo.typography();
-            }
-        }
+    #{$_scope} {
+        @include _component-typography($type-scale, $exclude);
     }
 
     @if not(list.index($exclude, 'global')) {

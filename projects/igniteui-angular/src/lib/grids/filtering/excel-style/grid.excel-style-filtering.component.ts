@@ -163,7 +163,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             this.subscriptions.add(this.grid.columnVisibilityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.sortingExpressionsChange.subscribe(() => this.sortingChanged.emit()));
             this.subscriptions.add(this.grid.filteringExpressionsTreeChange.subscribe(() => this.init()));
-            this.subscriptions.add(this.grid.onDensityChanged.subscribe(() => this.detectChanges()));
+            this.subscriptions.add(this.grid.densityChanged.subscribe(() => this.detectChanges()));
             this.subscriptions.add(this.grid.columnMovingEnd.subscribe(() => this.cdr.markForCheck()));
         }
     }

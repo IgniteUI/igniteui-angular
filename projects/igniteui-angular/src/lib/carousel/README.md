@@ -22,19 +22,19 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `current` | number | The index of the slide currently showing. |
 | `isPlaying` | boolean | Returns whether the carousel is paused/playing. |
 | `isDestroyed` | boolean | If the carousel is destroyed (`ngOnDestroy` was called) |
-| `onSlideChanged` | event | Emitted on slide change |
-| `onSlideAdded` | event | Emitted when a slide is being added to the carousel |
-| `onSlideRemoved`| event | Emitted whe a slide is being removed from the carousel |
-| `onCarouselPaused` | event | Emitted when the carousel is pausing. |
-| `onCarouselPlaying`| event | Emitted when the carousel starts/resumes playing. |
-| `play()` | void | Emits `onCarouselPlaying` event and starts the transition between slides. |
-| `stop()` | void | Emits `onCarouselPaused` event and stops the transition between slides. |
-| `prev()` | void | Switches to the previous slide. Emits `onSlideChanged` event. |
-| `next()` | void | Switches to the next slide. Emits `onSlideChanged` event. |
-| `add(slide: IgxSlide)` | void | Adds a slide to the carousel. Emits `onSlideAdded` event. |
-| `remove(slide: IgxSlide)` | void | Removes an existing slide from the carousel. Emits `onSlideRemoved` event. |
+| `slideChanged` | event | Emitted on slide change |
+| `slideAdded` | event | Emitted when a slide is being added to the carousel |
+| `slideRemoved`| event | Emitted whe a slide is being removed from the carousel |
+| `carouselPaused` | event | Emitted when the carousel is pausing. |
+| `carouselPlaying`| event | Emitted when the carousel starts/resumes playing. |
+| `play()` | void | Emits `carouselPlaying` event and starts the transition between slides. |
+| `stop()` | void | Emits `carouselPaused` event and stops the transition between slides. |
+| `prev()` | void | Switches to the previous slide. Emits `slideChanged` event. |
+| `next()` | void | Switches to the next slide. Emits `slideChanged` event. |
+| `add(slide: IgxSlide)` | void | Adds a slide to the carousel. Emits `slideAdded` event. |
+| `remove(slide: IgxSlide)` | void | Removes an existing slide from the carousel. Emits `slideRemoved` event. |
 | `get(index: Number)` | IgxSlide or void | Returns the slide with the given index or null. |
-| `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `onSlideChanged` event. |
+| `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `slideChanged` event. |
 
 ### Keyboard navigation
 Keyboard navigation will be enabled when the **IgxCarousel** component is focused and `keyboardSupport` property is set to `true`:

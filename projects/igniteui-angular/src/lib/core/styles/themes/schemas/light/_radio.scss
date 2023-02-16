@@ -16,9 +16,12 @@
 /// @prop {Map} fill-color-hover [color: ('secondary', 500)] - The checked border and dot colors on hover.
 /// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and dot colors.
 /// @prop {Map} disabled-label-color [color: ('gray', 400)] - The disabled border and dot colors.
+/// @prop {Map} error-color [color: ('error', 500)] - The label, border and dot color in invalid state.
+/// @prop {Map} error-color-hover [color: ('error', 500)] - The border and dot color in invalid state on hover.
 $light-radio: (
     variant: 'material',
     name: 'igx-radio',
+    type: 'light',
 
     hover-color: transparent,
 
@@ -48,17 +51,26 @@ $light-radio: (
 
     disabled-label-color: (
         color: ('gray', 400)
+    ),
+
+    error-color: (
+        color: ('error', 500)
+    ),
+
+    error-color-hover: (
+        color: ('error', 500)
     )
 );
 
 /// Generates a fluent radio schema.
 /// @type {Map}
-/// @prop {Color} hover-color [color: ('gray', 700)] - The border and dot colors on hover.
-/// @prop {Color} fill-hover-border-color [color: ('primary', 900)] - The checked dot border color on hover.
-/// @prop {Color} empty-color [color: ('gray', 900)] - The unchecked border color.
-/// @prop {Color} fill-color [color: ('primary', 500)] - The checked border and dot colors.
-/// @prop {Color} fill-color-hover [color: ('primary',900)] - The checked border and dot colors on hover.
-/// @prop {Color} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
+/// @prop {Map} hover-color [color: ('gray', 700)] - The border and dot colors on hover.
+/// @prop {Map} fill-hover-border-color [color: ('primary', 900)] - The checked dot border color on hover.
+/// @prop {Map} empty-color [color: ('gray', 900)] - The unchecked border color.
+/// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
+/// @prop {Map} fill-color-hover [color: ('primary',900)] - The checked border and dot colors on hover.
+/// @prop {Map} focus-outline-color [color: ('gray', 700)] - The focus outlined color.
+/// @prop {Map} error-color-hover [color: ('error', 700)] - The border and dot color in invalid state on hover.
 /// @requires {Map} $light-radio
 $fluent-radio: extend(
     $light-radio,
@@ -88,6 +100,10 @@ $fluent-radio: extend(
         fill-color-hover: (
             color: ('primary', 900)
         ),
+
+        error-color-hover: (
+            color: ('error', 700)
+        )
     )
 );
 
@@ -97,8 +113,9 @@ $fluent-radio: extend(
 /// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and dot colors.
 /// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and dot colors.
-/// @prop {Color} fill-color-hover [color: ('gray', 50)] - The checked border and dot colors on hover.
+/// @prop {Map} fill-color-hover [color: ('gray', 50)] - The checked border and dot colors on hover.
 /// @prop {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
+/// @prop {Map} error-color-hover [color: ('error', 100)] - The focus outlined color in invalid state.
 /// @requires {Map} $light-radio
 $bootstrap-radio: extend(
     $light-radio,
@@ -128,6 +145,10 @@ $bootstrap-radio: extend(
         fill-color-hover: (
             color: ('gray', 50)
         ),
+
+        error-color-hover: (
+            color: ('error', 100)
+        )
     )
 );
 
@@ -141,6 +162,7 @@ $bootstrap-radio: extend(
 /// @prop {Map} disabled-color [color: ('gray', 300)] - The disabled border and dot colors.
 /// @prop {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @prop {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
+/// @prop {Map} error-color-hover [color: ('error', 200)] - The focus outlined color in invalid state.
 /// @requires {Map} $light-radio
 $indigo-radio: extend(
     $light-radio,
@@ -173,6 +195,10 @@ $indigo-radio: extend(
 
         fill-color-hover: (
             color: ('primary', 500)
+        ),
+
+        error-color-hover: (
+            color: ('error', 200)
         ),
 
         disabled-color: (
