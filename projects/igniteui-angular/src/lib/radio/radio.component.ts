@@ -582,7 +582,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      */
     private checkNativeValidity() {
         if (!this.disabled && this._required && !this.checked) {
-            this._invalid = this.focused ? false : true;
+            this._invalid = !this.focused;
         }
     }
 }
