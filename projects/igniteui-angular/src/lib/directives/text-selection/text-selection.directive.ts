@@ -108,7 +108,9 @@ export class IgxTextSelectionDirective {
 
     public trigger() {
         if (this.selected && this.nativeElement.value.length) {
-                this.nativeElement.select();
+            // delay the select call to avoid race conditions in case the directive is applied
+            // to an element with its own focus handler
+            requestAnimationFrame(() => this.nativeElement.select());
         }
     }
 }
