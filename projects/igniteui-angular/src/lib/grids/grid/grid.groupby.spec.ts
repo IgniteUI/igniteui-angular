@@ -576,7 +576,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should trigger an onGroupingDone event when a column is grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is grouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -593,7 +593,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an onGroupingDone event when a column is ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when a column is ungrouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -616,7 +616,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
     }));
 
-    it('should trigger an onGroupingDone event when multiple columns are grouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are grouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -640,7 +640,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns.length).toEqual(0);
     }));
 
-    it('should trigger an onGroupingDone event when multiple columns are ungrouped with the correct params.', fakeAsync(() => {
+    it('should trigger an groupingDone event when multiple columns are ungrouped with the correct params.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -666,7 +666,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(currExpr.ungroupedColumns[2].field).toEqual('Downloads');
     }));
 
-    it(`should trigger an onGroupingDone event when the user pushes a new array of grouping expressions, which results in
+    it(`should trigger an groupingDone event when the user pushes a new array of grouping expressions, which results in
     both grouping and ungrouping at the same time.`, fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -3679,7 +3679,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)">
             <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
@@ -3714,7 +3714,7 @@ export class DefaultGridComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 }
