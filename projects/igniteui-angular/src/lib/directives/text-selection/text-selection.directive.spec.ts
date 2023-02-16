@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTextSelectionModule } from './text-selection.directive';
@@ -12,24 +12,26 @@ describe('IgxSelection', () => {
             declarations: [
                 TriggerTextSelectionComponent,
                 TriggerTextSelectionOnClickComponent,
+                TextSelectionWithMultipleFocusHandlersComponent,
+                IgxTestFocusDirective
             ],
             imports: [IgxTextSelectionModule]
         });
     }));
 
 
-    it('Should select the text which is into the input', () => {
+    it('Should select the text which is into the input', fakeAsync(() => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
         const input = fix.debugElement.query(By.css('input')).nativeElement;
         input.focus();
-
+        tick(16);
         expect(input.selectionEnd).toEqual(input.value.length);
         expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
-    });
+    }));
 
-    it('Should select the text when the input is clicked', ()=> {
+    it('Should select the text when the input is clicked', fakeAsync(()=> {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 
@@ -39,11 +41,11 @@ describe('IgxSelection', () => {
 
         inputElem.click(); // might need to change to .focus
         fix.detectChanges();
-
+        tick(16);
         expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
         expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd))
             .toEqual(inputNativeElem.value);
-    });
+    }));
 
     it('Should check if the value is selected if based on input type', fakeAsync(() => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
@@ -81,6 +83,7 @@ describe('IgxSelection', () => {
 
             inputElem.click();
             fix.detectChanges();
+            tick(16);
 
             if(type !== 'number'){
                 expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
@@ -104,6 +107,7 @@ describe('IgxSelection', () => {
 
             inputElem.focus();
             fix.detectChanges();
+            tick(16);
             expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
         });
     }));
@@ -126,6 +130,17 @@ describe('IgxSelection', () => {
         fix.detectChanges();
         expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
     });
+
+    it('should apply selection properly if present on an element with multiple focus handlers', fakeAsync(() => {
+        const fix = TestBed.createComponent(TextSelectionWithMultipleFocusHandlersComponent);
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.css('input')).nativeElement;
+        input.focus();
+        tick(16);
+        expect(input.selectionEnd).toEqual(input.value.length);
+        expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
+    }));
 });
 
 @Component({
@@ -158,6 +173,23 @@ class TriggerTextSelectionOnClickComponent {
       }
  }
 
- interface Types {
-     [key: string]: any;
+ @Component({
+    template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`
+ })
+ class TextSelectionWithMultipleFocusHandlersComponent {
+    public inputValue: any = "12-34-56";
  }
+
+@Directive({selector: '[igxTestFocusDirective]'})
+class IgxTestFocusDirective {
+    constructor(private element: ElementRef) { }
+
+    @HostListener('focus')
+    public onFocus() {
+        this.element.nativeElement.value = `$${this.element.nativeElement.value}`;
+    }
+}
+
+interface Types {
+    [key: string]: any;
+}
