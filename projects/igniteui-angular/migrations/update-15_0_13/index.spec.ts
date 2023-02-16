@@ -3,7 +3,7 @@ import * as path from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
-const version = '15.0.12';
+const version = '15.0.13';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
