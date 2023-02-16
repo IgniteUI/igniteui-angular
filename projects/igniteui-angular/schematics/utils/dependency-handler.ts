@@ -175,7 +175,6 @@ const addStylePreprocessorOptions =
             `It could require you to manually update it to "stylePreprocessorOptions": { "includePaths": ["node_modules"] }`;
 
         if (!projectOptions) {
-            context.logger.warn(warn);
             return;
         }
 
