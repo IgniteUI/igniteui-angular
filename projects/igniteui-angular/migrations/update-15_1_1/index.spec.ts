@@ -3,7 +3,7 @@ import * as path from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
-const version = '15.0.13';
+const version = '15.1.1';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
@@ -13,7 +13,7 @@ describe(`Update to ${version}`, () => {
         appTree = new UnitTestTree(new EmptyTree());
     });
 
-    const migrationName = 'migration-28';
+    const migrationName = 'migration-30';
 
     it('should rename the $size property to the $scrollbar-size', async () => {
         appTree.create(
