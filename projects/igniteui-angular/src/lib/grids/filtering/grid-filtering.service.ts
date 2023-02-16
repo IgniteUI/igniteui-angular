@@ -214,7 +214,7 @@ export class IgxFilteringService implements OnDestroy {
         this.grid.page = 0;
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
@@ -291,7 +291,7 @@ export class IgxFilteringService implements OnDestroy {
         const filteringTree = this.grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of grid.columns) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }

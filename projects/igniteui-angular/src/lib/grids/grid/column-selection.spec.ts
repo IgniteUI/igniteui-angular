@@ -1115,7 +1115,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
             expect(grid.getSelectedColumnsData()).toEqual(selectedData());
 
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fix.detectChanges();
             tick(16);
 

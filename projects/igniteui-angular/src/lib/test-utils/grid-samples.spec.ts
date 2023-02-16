@@ -1538,13 +1538,14 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
         <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
-        <igx-paginator *ngIf='grid.paging'></igx-paginator>
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
     public data = SampleTestData.excelFilteringData();
     public formatter = (value: any) => `** ${value} **`;
     public allowFiltering = false;
+    public paging = false;
 }
 
 @Component({
