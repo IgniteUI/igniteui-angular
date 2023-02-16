@@ -414,7 +414,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
             this.expandToNode(this.navService.activeNode);
             this.scrollNodeIntoView(node?.header?.nativeElement);
         });
-        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
             });
