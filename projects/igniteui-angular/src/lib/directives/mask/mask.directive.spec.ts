@@ -58,6 +58,21 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('@#$YUA123_');
     });
 
+    it('Initialize an input with escaped mask', () => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.detectChanges();
+
+        const { input, maskDirective } = fixture.componentInstance;
+;
+        maskDirective.mask = '+\\9 000 000';
+        fixture.detectChanges();
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('+9 ___ ___');
+    })
+
     it('Mask rules - digit (0-9) or a space', fakeAsync(() => {
         const fixture = TestBed.createComponent(DigitSpaceMaskComponent);
         fixture.detectChanges();

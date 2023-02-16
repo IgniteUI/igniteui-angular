@@ -5,7 +5,7 @@ import {
     Input, NgModule, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MaskParsingService, MaskOptions } from './mask-parsing.service';
+import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
 
@@ -377,7 +377,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     protected setPlaceholder(value: string): void {
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || placeholder === this.mask) {
-            this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', parseMask(value ?? '').mask || this.defaultMask);
         }
     }
 
