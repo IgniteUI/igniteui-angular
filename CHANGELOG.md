@@ -12,6 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `onDensityChanged` output has been renamed to `densityChanged` to not violate the no on-prefixed outputs convention. All components exposing this event are affected. Automatic migrations are available and will be applied on `ng update`.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - `rowSelectionChanging` event arguments are changed. Now the `oldSelection`, `newSelection`, `added` and `removed` collections no longer consist of the row keys of the selected elements when the grid has set a primaryKey, but now in any case the row data is emitted.
+    When the grid is working with remote data and a primary key has been set- for the selected rows that are not currently part of the grid view, will be emitted a partial row data object.
     - **Behavioral Change** - When selected row is deleted from the grid component `rowSelectionChanging` event will no longer be emitted.
  - `IgxCarousel`
     - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
