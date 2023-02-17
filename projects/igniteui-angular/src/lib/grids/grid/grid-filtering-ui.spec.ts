@@ -3442,6 +3442,37 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData).toBeNull();
         }));
 
+        it('Should set the \'aria-disabled\' attribute for the ESF dialog clear filter button element with role=\'menuitem\'.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            expect(grid.filteredData).toBeNull();
+            let clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('true');
+
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') },
+                { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            expect(grid.filteredData.length).toEqual(2);
+            clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('false');
+
+            const clearFilterButton = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            clearFilterButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toBeNull();
+            clearFilterButtonMenuTiemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
+            expect(clearFilterButtonMenuTiemRole.getAttribute('aria-disabled')).toBe('true');
+        }));
+
         it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
