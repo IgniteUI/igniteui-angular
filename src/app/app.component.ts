@@ -6,7 +6,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
     @HostBinding('attr.id')
@@ -68,6 +68,11 @@ export class AppComponent implements OnInit {
             link: '/bottom-navigation-routing',
             icon: 'tab',
             name: 'Bottom Navigation Routing'
+        },
+        {
+            link: '/buttons',
+            icon: 'keyboard',
+            name: 'Buttons'
         },
         {
             link: '/buttonGroup',
