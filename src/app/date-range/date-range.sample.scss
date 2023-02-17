@@ -10,11 +10,9 @@ $range-sample-space: 16px;
     padding: $range-sample-space;
     border-right: 1px solid #ddd;
 
-    > * {
-        margin-bottom: 16px;
-
-        &:last-of-type {
-            margin-bottom: 0;
+    .date-picker-sample-buttons{
+        button {
+            margin: 0.5rem;
         }
     }
 
