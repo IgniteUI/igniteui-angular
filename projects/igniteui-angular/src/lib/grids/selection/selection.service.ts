@@ -401,9 +401,9 @@ export class IgxGridSelectionService {
                 return Array.from(this.rowSelection);
             }
             const selection = [];
-            const partialRowData = {};
             this.rowSelection.forEach(rID =>  {
                 const rData = this.grid.gridAPI.get_all_data(true).find(row => this.getRecordKey(row) === rID);
+                const partialRowData = {};
                 partialRowData[this.grid.primaryKey] = rID;
                 selection.push(rData ? rData : partialRowData);
             });
