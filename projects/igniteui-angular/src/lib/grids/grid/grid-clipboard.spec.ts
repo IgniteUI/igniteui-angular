@@ -17,7 +17,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     let fix;
     let grid: IgxGridComponent;
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridClipboardComponent
             ],
@@ -25,11 +25,11 @@ describe('IgxGrid - Clipboard #grid', () => {
         });
     }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    beforeEach(() => {
         fix = TestBed.createComponent(IgxGridClipboardComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
-    }));
+    });
 
     it('Copy data with default settings', () => {
         const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();

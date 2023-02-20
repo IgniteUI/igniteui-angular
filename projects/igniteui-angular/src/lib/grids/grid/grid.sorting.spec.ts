@@ -17,8 +17,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
@@ -28,16 +27,16 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         });
     }));
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
-        fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         grid.width = '800px';
-    }));
+        fixture.detectChanges();
+    });
 
     describe('API tests', () => {
 
-        it('Should sort grid ascending by column name', fakeAsync (() => {
+        it('Should sort grid ascending by column name', fakeAsync(() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
             spyOn(grid.sortingDone, 'emit').and.callThrough();
             const currentColumn = 'Name';
@@ -164,6 +163,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             });
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            const hireDateCol = grid.columns.findIndex(col => col.field === "HireDate");
+            grid.columns[hireDateCol].dataType = 'dateTime';
+            fixture.detectChanges();
 
             const currentColumn = 'HireDate';
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });

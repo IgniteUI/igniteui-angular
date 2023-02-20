@@ -20,12 +20,13 @@ export class TreeGridSampleComponent implements OnInit {
     public displayDensities;
     public selectionModes: GridSelectionMode[] = ['none', 'single', 'multiple', 'multipleCascade'];
     public filterStrategy = new TreeGridFilteringStrategy(['ID']);
+    public paging = false;
 
     private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
         private csvExporterService: IgxCsvExporterService) { }
-    
+
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
         this.displayDensities = [

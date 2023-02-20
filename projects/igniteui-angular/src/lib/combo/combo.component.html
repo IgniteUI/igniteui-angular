@@ -53,7 +53,7 @@
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
-        [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
+        [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
         [attr.aria-activedescendant]="this.activeDescendant">
         <igx-combo-item [itemHeight]='itemHeight' *igxFor="let item of data

@@ -53,7 +53,7 @@ describe('IgxSimpleCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxSimpleComboComponent;
     let input: DebugElement;
-    
+
     configureTestSuite();
 
     describe('Unit tests: ', () => {
@@ -857,6 +857,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.close).toHaveBeenCalledTimes(2);
         }));
 
+        it('should not close the dropdown on ArrowUp key if the active item is the first one in the list', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+        }));
+
         it('should select an item from the dropdown list with the Space key without closing it', () => {
             combo.open();
             fixture.detectChanges();
@@ -1121,6 +1139,37 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should open the combo when input is focused', () => {
+            spyOn(combo, 'open').and.callThrough();
+            spyOn(combo, 'close').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.close).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+        });
+
         it('should empty any invalid item values', () => {
             combo.valueKey = 'key';
             combo.displayKey = 'value';
@@ -1286,12 +1335,12 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
 
-            const toggleIcon = fixture.debugElement.query(By.directive(IgxIconComponent));
+            const toggleIcon = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`));
             expect(toggleIcon).toBeDefined();
 
             expect(toggleIcon.nativeElement.textContent).toBe('search');
             expect(combo.collapsed).toBeTruthy();
-            
+
             toggleIcon.nativeElement.click();
             tick();
             fixture.detectChanges();
@@ -1304,6 +1353,27 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.collapsed).toBeTruthy();
         }));
+
+        it('should clear the selection when typing in the input', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(1);
+
+            let clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).not.toBeNull();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('L', input, 9, 10);
+            fixture.detectChanges();
+            expect(combo.selection.length).toEqual(0);
+
+            //should hide the clear button immediately when clearing the selection by typing
+            clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButton).toBeNull();
+        });
     });
 
     describe('Display density', () => {
@@ -1783,6 +1853,7 @@ describe('IgxSimpleCombo', () => {
             fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.instance;
+            input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
         });
         it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
@@ -1801,11 +1872,34 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.instance;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-            tick(1200);
+            tick(16);
             fixture.detectChanges();
 
             const expectedOutput = 'One';
             expect(input.nativeElement.value).toEqual(expectedOutput);
+        }));
+        it('should not clear selection when bound to remote data and item is out of view', (async () => {
+            expect(combo.valueKey).toBeDefined();
+            expect(combo.selection.length).toEqual(0);
+
+            let selectedItem = combo.data[1];
+            combo.toggle();
+            combo.select(combo.data[1][combo.valueKey]);
+
+            // Scroll selected item out of view
+            combo.virtualScrollContainer.scrollTo(40);
+            await wait();
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
+            expect(combo.selection).toEqual([selectedItem[combo.valueKey]]);
         }));
     });
 });
@@ -1898,8 +1992,8 @@ export class IgxSimpleComboIconTemplatesComponent {
     public combo: IgxSimpleComboComponent;
 
     public data: any[] =  [
-        { name: 'Sofia', id: '1' }, 
-        { name: 'London', id: '2' }, 
+        { name: 'Sofia', id: '1' },
+        { name: 'London', id: '2' },
     ];;
     public name!: string;
 }
@@ -2084,10 +2178,10 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
     constructor(private cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             this.items = [{ text: 'One', id: 1 }, { text: 'Two', id: 2 }, { text: 'Three', id: 3 },
             { text: 'Four', id: 4 }, { text: 'Five', id: 5 }];
             this.cdr.detectChanges();
-        }, 1000);
+        });
     }
 }

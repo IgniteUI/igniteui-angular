@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder 
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 
 describe('IgxRadioGroupDirective', () => {
     configureTestSuite();
@@ -14,6 +15,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupComponent,
                 RadioGroupSimpleComponent,
                 RadioGroupWithModelComponent,
+                RadioGroupRequiredComponent,
                 RadioGroupReactiveFormsComponent,
                 RadioGroupDeepProjectionComponent
             ],
@@ -70,6 +72,13 @@ describe('IgxRadioGroupDirective', () => {
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
+
+        // invalid
+        radioInstance.invalid = true;
+        fixture.detectChanges();
+
+        const allInvalidButtons = radioInstance.radioButtons.filter((btn) => btn.invalid);
+        expect(allInvalidButtons.length).toEqual(radioInstance.radioButtons.length);
     }));
 
     it('Set value should change selected property and emit change event.', fakeAsync(() => {
@@ -212,6 +221,39 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.first.checked).toEqual(false);
         expect(radioGroup.radioButtons.last.checked).toEqual(true);
     }));
+
+    it('Should update styles correctly when required radio group\'s value is set.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupRequiredComponent);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
+        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
+        expect(radioGroup.invalid).toBe(false);
+        expect(radioGroup.selected).toBeUndefined;
+
+        dispatchRadioEvent('keyup', domRadio, fixture);
+        expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
+        dispatchRadioEvent('blur', domRadio, fixture);
+        fixture.detectChanges();
+        tick();
+        
+        //expect(radioGroup.invalid).toBe(true);
+        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
+
+        dispatchRadioEvent('keyup', domRadio, fixture);
+        expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
+
+        radioGroup.radioButtons.first.select();
+        fixture.detectChanges();
+        tick();
+
+        expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
+        expect(radioGroup.radioButtons.first.checked).toEqual(true);
+        expect(radioGroup.invalid).toBe(false);
+        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
+    }));
 });
 
 @Component({
@@ -235,6 +277,18 @@ class RadioGroupSimpleComponent {
 `
 })
 class RadioGroupComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+}
+
+@Component({
+    template: `<igx-radio-group #radioGroup name="radioGroup" required>
+    <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
+        {{item}}
+    </igx-radio>
+</igx-radio-group>
+`
+})
+class RadioGroupRequiredComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 }
 
@@ -344,3 +398,8 @@ class RadioGroupDeepProjectionComponent {
         });
     }
 }
+
+const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
+    radioNativeElement.dispatchEvent(new Event(eventName));
+    fixture.detectChanges();
+};

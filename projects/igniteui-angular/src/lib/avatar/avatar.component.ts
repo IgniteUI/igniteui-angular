@@ -26,7 +26,6 @@ export const IgxAvatarType = mkenum({
     ICON: 'icon',
     CUSTOM: 'custom'
 });
-
 export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 
 /**
