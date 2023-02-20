@@ -1200,7 +1200,7 @@ describe('Row Drag Tests', () => {
             [height]='height'
             primaryKey="ID"
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
         </igx-grid>
@@ -1238,7 +1238,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
     public onRowDrop(args) {
@@ -1253,7 +1253,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [height]='height'
             primaryKey="ID"
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
             <ng-template let-data igxRowDragGhost>
@@ -1312,7 +1312,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
     public onRowDrop(args) {
@@ -1327,7 +1327,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
             [height]="'300px'"
             [data]="data"
             primaryKey="ID"
-            [autoGenerate]="true" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="true" [rowDraggable]="true"
             >
         </igx-grid>
@@ -1350,7 +1350,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
     public newData = [];
     public currentSortExpressions;
 
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
     public onRowDrop(args) {

@@ -7,14 +7,13 @@ $range-sample-space: 16px;
 .range-sample-column {
     display: flex;
     flex-direction: column;
+    flex-basis: 50%;
     padding: $range-sample-space;
     border-right: 1px solid #ddd;
 
-    > * {
-        margin-bottom: 16px;
-
-        &:last-of-type {
-            margin-bottom: 0;
+    .date-picker-sample-buttons {
+        button {
+            margin: 0.5rem;
         }
     }
 
