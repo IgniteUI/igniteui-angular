@@ -1,5 +1,9 @@
 .sample-buttons {
-    margin-top: 24px;
+    margin: 1rem 0;
+
+    &:first-child{
+        width: 10rem;
+    }
 }
 
 [igxButton] {
@@ -22,3 +26,20 @@
     line-height: initial;
     font-size: 1em;
 }
+
+section {
+    height: 800px;
+    padding: 0;
+    margin-bottom :2rem;
+}
+
+.igx-input-group__bundle {
+    width: 10rem;
+}
+
+// igx-grid {
+
+//     &:last-child {
+//         margin-bottom: 3rem;
+//     }
+// }

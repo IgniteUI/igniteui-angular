@@ -4,8 +4,21 @@ button {
 
 [igxButton="raised"] {
     margin: 0.5rem 0.5rem 0.5rem 0;
+
+    &:nth-child(12) {
+        margin-bottom: 3rem;
+    }
+
+    &:last-child {
+        margin-bottom: 3rem;
+    }
 }
 
-h4 {
-    margin-top: 2rem !important;
+.density-chooser {
+    margin-bottom: 1rem;
+
+    igx-buttongroup {
+        display: block;
+        width: 500px;
+    }
 }
