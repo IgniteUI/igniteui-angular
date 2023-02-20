@@ -99,7 +99,6 @@
             display: flex;
             flex-flow: row wrap;
             justify-content: center;
-            margin-bottom: 3rem;
             padding: 48px 8px;
             @include animation(fade-in-fwd .3s $ease-out-quad);
         }
