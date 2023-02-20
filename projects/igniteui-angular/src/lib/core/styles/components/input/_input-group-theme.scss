@@ -19,8 +19,16 @@
 /// @param {Color} $helper-text-color [null] - The helper text color.
 /// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
 /// @param {Color} $input-prefix-background [null] - The background color of an input prefix in the idle state.
+/// @param {Color} $input-prefix-color--filled [null] - The input prefix color in the filled state.
+/// @param {Color} $input-prefix-background--filled] - The background color of an input prefix in the filled state.
+/// @param {Color} $input-prefix-color--focused [null] - The input prefix color in the focused state.
+/// @param {Color} $input-prefix-background--focused [null] - The background color of an input prefix in the focused state.
 /// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
 /// @param {Color} $input-suffix-background [null] - The background color of an input suffix in the idle state.
+/// @param {Color} $input-suffix-color--filled [null] - The input suffix color in the filled state.
+/// @param {Color} $input-suffix-background-filled [null] - The background color of an input suffix in the filled state.
+/// @param {Color} $input-suffix-color--focused [null] - The input suffix color in the focused state.
+/// @param {Color} $input-suffix-background--focused [null] - The background color of an input suffix in the focused state.
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
 /// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
 /// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
@@ -109,8 +117,17 @@
 
     $input-prefix-color: null,
     $input-prefix-background: null,
+    $input-prefix-color--filled: null,
+    $input-prefix-background--filled: null,
+    $input-prefix-color--focused: null,
+    $input-prefix-background--focused: null,
+
     $input-suffix-color: null,
     $input-suffix-background: null,
+    $input-suffix-color--filled: null,
+    $input-suffix-background--filled: null,
+    $input-suffix-color--focused: null,
+    $input-suffix-background--focused: null,
 ) {
     $name: 'igx-input-group';
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
@@ -154,6 +171,38 @@
 
     @if not($search-disabled-shadow) {
         $search-disabled-shadow: elevation($search-disabled-elevation);
+    }
+
+    @if not($input-prefix-background--filled) and $input-prefix-background {
+        $input-prefix-background--filled: $input-prefix-background;
+    }
+
+    @if not($input-prefix-background--focused) and $input-prefix-background {
+        $input-prefix-background--focused: $input-prefix-background;
+    }
+
+    @if not($input-prefix-color) and $input-prefix-background {
+        $input-prefix-color: text-contrast($input-prefix-background);
+    }
+
+    @if not($input-prefix-color--filled) and $input-prefix-background--filled {
+        $input-prefix-color--filled: text-contrast($input-prefix-background--filled);
+    }
+
+    @if not($input-prefix-color--focused) and $input-prefix-background--focused {
+        $input-prefix-color--focused: text-contrast($input-prefix-background--focused);
+    }
+
+    @if not($input-suffix-color) and $input-suffix-background {
+        $input-suffix-color: text-contrast($input-suffix-background);
+    }
+
+    @if not($input-suffix-color--filled) and $input-suffix-background--filled {
+        $input-suffix-color--filled: text-contrast($input-suffix-background--filled);
+    }
+
+    @if not($input-suffix-color--focused) and $input-suffix-background--focused {
+        $input-suffix-color--focused: text-contrast($input-suffix-background--focused);
     }
 
     @if not($box-border-radius) {
@@ -211,8 +260,16 @@
         disabled-placeholder-color: $disabled-placeholder-color,
         input-prefix-color: $input-prefix-color,
         input-prefix-background: $input-prefix-background,
+        input-prefix-color--filled: $input-prefix-color--filled,
+        input-prefix-background--filled: $input-prefix-background--filled,
+        input-prefix-color--focused: $input-prefix-color--focused,
+        input-prefix-background--focused: $input-prefix-background--focused,
         input-suffix-color: $input-suffix-color,
         input-suffix-background: $input-suffix-background,
+        input-suffix-color--filled: $input-suffix-color--filled,
+        input-suffix-background--filled: $input-suffix-background--filled,
+        input-suffix-color--focused: $input-suffix-color--focused,
+        input-suffix-background--focused: $input-suffix-background--focused,
     ));
 }
 
@@ -293,10 +350,14 @@
     }
 
     %form-group-prefix {
+        color: var-get($theme, 'input-prefix-color');
+        background: var-get($theme, 'input-prefix-background');
         grid-area: 1 / 1 / auto / auto;
     }
 
     %form-group-suffix {
+        color: var-get($theme, 'input-suffix-color');
+        background: var-get($theme, 'input-suffix-background');
         grid-area: 1 / 3 / auto / auto;
     }
 
@@ -404,32 +465,38 @@
     }
 
     %form-group-display--no-margin {
-        margin-top: 0;
+        margin-block-start: 0;
     }
 
     %form-group-display--filled {
-        color: var-get($theme, 'filled-text-color');
+        color: var-get($theme, 'input-prefix-color--filled');
 
         igx-prefix,
-        [igxPrefix],
+        [igxPrefix] {
+            color: var-get($theme, 'input-prefix-color--filled');
+            background: var-get($theme, 'input-prefix-background--filled');
+        }
+
         igx-suffix,
         [igxSuffix] {
-            @if $indigo-theme {
-                color: var-get($theme, 'idle-text-color');
-            } @else {
-                color: var-get($theme, 'filled-text-color');
-            }
+            color: var-get($theme, 'input-suffix-color--filled');
+            background: var-get($theme, 'input-suffix-background--filled');
         }
     }
 
     %form-group-display--focused {
-        color: var-get($theme, 'focused-text-color');
+        color: var-get($theme, 'input-prefix-color--focused');
 
         igx-prefix,
-        [igxPrefix],
+        [igxPrefix] {
+            color: var-get($theme, 'input-prefix-color--focused');
+            background: var-get($theme, 'input-prefix-background--focused');
+        }
+
         igx-suffix,
         [igxSuffix] {
-            color: var-get($theme, 'focused-text-color');
+            color: var-get($theme, 'input-suffix-color--focused');
+            background: var-get($theme, 'input-suffix-background--focused');
         }
     }
 
@@ -1258,12 +1325,13 @@
 
     %form-group-prefix--disabled,
     %form-group-suffix--disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
+        background: inherit;
         pointer-events: none;
     }
 
     %form-group-helper--disabled {
-        color: var-get($theme, 'disabled-text-color') !important;
+        color: var-get($theme, 'disabled-text-color');
     }
 
     // BASE END
@@ -1526,16 +1594,6 @@
         transform: translateY(0) scale(1);
     }
 
-    %form-group-prefix-fluent {
-        color: var-get($theme, 'input-prefix-color');
-        background: var-get($theme, 'input-prefix-background');
-    }
-
-    %form-group-suffix-fluent {
-        color: var-get($theme, 'input-suffix-color');
-        background: var-get($theme, 'input-suffix-background');
-    }
-
     %form-group-prefix-fluent,
     %form-group-suffix-fluent {
         .ig-typography [igx-button],
@@ -1563,18 +1621,6 @@
 
     // === BOOTSTRAP START === //
     // Input group host
-    %form-group-display--bootstrap {
-        igx-prefix,
-        [igxPrefix] {
-            @extend %form-group-prefix--bootstrap;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %form-group-suffix--bootstrap;
-        }
-    }
-
     %form-group-display--bootstrap-prefixed {
         %bootstrap-file-input,
         %bootstrap-input {
@@ -1778,16 +1824,6 @@
 
     %bootstrap-input--search {
         transform: translateY(0);
-    }
-
-    // Suffix & prefix
-    %form-group-prefix--bootstrap {
-        color: var-get($theme, 'input-prefix-color');
-        background: var-get($theme, 'input-prefix-background');
-    }
-    %form-group-suffix--bootstrap {
-        color: var-get($theme, 'input-suffix-color');
-        background: var-get($theme, 'input-suffix-background');
     }
 
     %form-group-prefix--disabled-bootstrap,

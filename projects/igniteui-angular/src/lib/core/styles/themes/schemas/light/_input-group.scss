@@ -51,8 +51,14 @@
 /// @prop {Number} box-border-radius [4px 4px 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [4px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Color} label-floated-background [transparent] - The background color of the label when floated for input of type border.
-/// @prop {Color} label-floated-disabled-background [transparent] - The background color of the label when floated for input group of type border in its disabled state.
+/// @prop {Map} input-prefix-color--filled [color: ('gray', 900)] - The input prefix color in the filled state.
+/// @prop {Color} input-prefix-background--filled [inherit] - The background color of an input prefix in the filled state.
+/// @prop {Map} input-prefix-color--focused [color: ('gray', 900)] - The input prefix color in the focused state.
+/// @prop {Color} input-prefix-background--focused [inherit] - The background color of an input prefix in the focused state.
+/// @prop {Map} input-suffix-color--filled [color: ('gray', 900)] - The input suffix color in the filled state.
+/// @prop {Color} input-suffix-background-filled [inherit] - The background color of an input suffix in the filled state.
+/// @prop {Map} input-suffix-color--focused [color: ('gray', 900)] - The input suffix color in the focused state.
+/// @prop {Color} input-suffix-background--focused [inherit] - The background color of an input suffix in the focused state.
 /// @requires {Map} $default-elevation-input-group
 $light-input-group: extend(
     $default-elevation-input-group,
@@ -64,17 +70,36 @@ $light-input-group: extend(
         ),
 
         input-prefix-background: transparent,
-
         input-prefix-color: (
             color: ('gray', 600)
         ),
 
-        input-suffix-background: transparent,
+        input-prefix-background--filled: inherit,
+        input-prefix-color--filled: (
+            color: ('gray', 900)
+        ),
 
+        input-prefix-background--focused: inherit,
+        input-prefix-color--focused: (
+            color: ('gray', 900)
+        ),
+
+        input-suffix-background: transparent,
         input-suffix-color: (
             color: ('gray', 600)
         ),
 
+        input-suffix-background--filled: inherit,
+        input-suffix-color--filled: (
+            color: ('gray', 900)
+        ),
+
+        input-suffix-background--focused: inherit,
+        input-suffix-color--focused: (
+            color: ('gray', 900)
+        ),
+
+        // Text colors
         idle-text-color: (
             color: ('gray', 700)
         ),
@@ -91,6 +116,7 @@ $light-input-group: extend(
             color: ('gray', 500)
         ),
 
+        // State colors
         idle-secondary-color: (
             color: ('gray', 700)
         ),
@@ -142,10 +168,6 @@ $light-input-group: extend(
         border-background: transparent,
 
         border-disabled-background: transparent,
-
-        label-floated-background: transparent,
-
-        label-floated-disabled-background: transparent,
 
         search-background: (
             color: ('gray', 50)
@@ -218,16 +240,25 @@ $light-input-group: extend(
 /// @prop {Map} focused-border-color [color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
 /// @prop {Map} search-disabled-background [color: ('gray', 100)] - The background color of an input group of type search in the disabled state.
-/// @prop {Map} input-prefix-color [color: ('gray', 700)] - The text color of an input prefix of type line, box and border.
-/// @prop {Map} input-prefix-background [color: ('gray', 100)] - The background color of an input prefix of type line, box, border and fluent.
-/// @prop {Map} input-suffix-color [color: ('gray', 700)] - The text color of an input suffix of type line, box and border.
-/// @prop {Map} input-suffix-background [ color: ('gray', 100)] - The background color of an input suffix of type line, box, border and fluent.
 /// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
 /// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} input-prefix-color [color: ('gray', 700)] - The text color of an input prefix of type line, box and border.
+/// @prop {Map} input-prefix-color--filled [color: ('gray', 700)] - The input prefix color in the filled state.
+/// @prop {Map} input-prefix-color--focused [color: ('gray', 700)] - The input prefix color in the focused state.
+/// @prop {Map} input-prefix-background [color: ('gray', 100)] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Map} input-prefix-background--filled [color: ('gray', 100)] - The background color of an input prefix in the filled state.
+/// @prop {Map} input-prefix-background--focused [color: ('gray', 100)] - The background color of an input prefix in the focused state.
+/// @prop {Map} input-suffix-color [color: ('gray', 700)] - The text color of an input suffix of type line, box and border.
+/// @prop {Map} input-suffix-color--filled [color: ('gray', 700)] - The input suffix color in the filled state.
+/// @prop {Map} input-suffix-color--focused [color: ('gray', 700)] - The input suffix color in the focused state.
+/// @prop {Map} input-suffix-background [color: ('gray', 100)] - The background color of an input suffix of type line, box and border.
+/// @prop {Map} input-suffix-background-filled [color: ('gray', 100)] - The background color of an input suffix in the filled state.
+/// @prop {Map} input-suffix-background--focused [color: ('gray', 100)] - The background color of an input suffix in the focused state.
+
 /// @requires {Map} $light-input-group
 /// @requires {Map} $fluent-elevation-input-group
 $fluent-input-group: extend(
@@ -276,7 +307,23 @@ $fluent-input-group: extend(
             color: ('gray', 700)
         ),
 
+        input-prefix-color--filled: (
+            color: ('gray', 700)
+        ),
+
+        input-prefix-color--focused: (
+            color: ('gray', 700)
+        ),
+
         input-prefix-background: (
+            color: ('gray', 100),
+        ),
+
+        input-prefix-background--filled: (
+            color: ('gray', 100),
+        ),
+
+        input-prefix-background--focused: (
             color: ('gray', 100),
         ),
 
@@ -284,7 +331,23 @@ $fluent-input-group: extend(
             color: ('gray', 700)
         ),
 
+        input-suffix-color--filled: (
+            color: ('gray', 700)
+        ),
+
+        input-suffix-color--focused: (
+            color: ('gray', 700)
+        ),
+
         input-suffix-background: (
+            color: ('gray', 100),
+        ),
+
+        input-suffix-background--filled: (
+            color: ('gray', 100),
+        ),
+
+        input-suffix-background--focused: (
             color: ('gray', 100),
         ),
 
@@ -300,12 +363,8 @@ $fluent-input-group: extend(
 /// @type {Map}
 /// @prop {Map} border-disabled-background [color: ('gray', 100)] - The background color of an input group of type border in the disabled state.
 /// @prop {Map} border-color [color: ('gray', 400)] - The border color for input groups of type border and fluent.
-/// @prop {Map} input-prefix-color [color: ('gray', 800)] - The text color of an input prefix of type line, box and border.
 /// @prop {Map} idle-secondary-color [color: ('gray', 700)] - The label color in the idle state.
-/// @prop {Map} inpupt-suffix-color [color: ('gray', 800)] - The text color of an input sufix of type line, box and border.
 /// @prop {Map} disabled-border-color [color: ('gray', 300)] - The disabled border color for input groups of type border and fluent.
-/// @prop {Map} input-prefix-background [color: ('gray', 300)] - The background color of an input prefix of type line, box, border and fluent.
-/// @prop {Map} input-suffix-background [color: ('gray', 300)] - The background color of an input suffix of type line, box, border and fluent.
 /// @prop {Map} focused-secondary-color [color: ('primary', 500, .38)] - The label color in the focused state.
 /// @prop {Map} success-secondary-color [color: ('success', 500)] - The success color used in the valid state.
 /// @prop {Map} warning-secondary-color [color: ('warn', 500)] - The warning color used in the warning state.
@@ -316,6 +375,19 @@ $fluent-input-group: extend(
 /// @prop {Number} search-border-radius [4px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} interim-bottom-line-color [color: ('primary', 500)] - The bottom line and border colors during the to-focused transition.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
+/// @prop {Map} input-prefix-color [color: ('gray', 800)] - The input prefix color in the idle state.
+/// @prop {Map} input-prefix-color--filled [color: ('gray', 800)] - The input prefix color in the filled state.
+/// @prop {Map} input-prefix-color--focused [color: ('gray', 800)] - The input prefix color in the focused state.
+/// @prop {Map} input-prefix-background [color: ('gray', 300)] - The background color of an input prefix in the idle state.
+/// @prop {Map} input-prefix-background--filled [color: ('gray', 300)] - The background color of an input prefix in the filled state.
+/// @prop {Map} input-prefix-background--focused [color: ('gray', 300)] - The background color of an input prefix in the focused state.
+/// @prop {Map} input-suffix-color [color: ('gray', 800)] - The input suffix color in the idle state
+/// @prop {Map} input-suffix-color--filled [color: ('gray', 800)] - The input suffix color in the filled state.
+/// @prop {Map} input-suffix-color--focused [color: ('gray', 800)] - The input suffix color in the focused state.
+/// @prop {Map} input-suffix-background [color: ('gray', 300)] - The background color of an input suffix in the idle state.
+/// @prop {Map} input-suffix-background-filled [color: ('gray', 300)] - The background color of an input suffix in the filled state.
+/// @prop {Map} input-suffix-background--focused [color: ('gray', 300)] - The background color of an input suffix in the focused state.
+
 /// @requires {Map} $light-input-group
 $bootstrap-input-group: extend(
     $light-input-group,
@@ -350,15 +422,11 @@ $bootstrap-input-group: extend(
             color: ('gray', 400)
         ),
 
-        input-prefix-color: (
-            color: ('gray', 800)
-        ),
-
         idle-secondary-color: (
             color: ('gray', 700)
         ),
 
-        input-suffix-color: (
+        input-prefix-color: (
             color: ('gray', 800)
         ),
 
@@ -366,7 +434,27 @@ $bootstrap-input-group: extend(
             color: ('gray', 300)
         ),
 
+        input-prefix-background--filled: (
+            color: ('gray', 300)
+        ),
+
+        input-prefix-background--focused: (
+            color: ('gray', 300)
+        ),
+
+        input-suffix-color: (
+            color: ('gray', 800)
+        ),
+
         input-suffix-background: (
+            color: ('gray', 300)
+        ),
+
+        input-suffix-background--filled: (
+            color: ('gray', 300)
+        ),
+
+        input-suffix-background--focused: (
             color: ('gray', 300)
         ),
 
@@ -412,6 +500,10 @@ $bootstrap-input-group: extend(
 /// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} placeholder-color [color: ('gray', 300)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [color: ('gray', 300)] - The disabled placeholder color of an input group.
+/// @prop {Map} input-prefix-color--filled [color: ('gray', 600)] - The input prefix color in the filled state.
+/// @param {Map} $input-suffix-color--filled [color: ('gray', 600)] - The input suffix color in the filled state.
+/// @prop {Map} input-prefix-color--focused [color: ('gray', 600)] - The input prefix color in the focused state.
+/// @param {Map} $input-suffix-color--focused [color: ('gray', 600)] - The input suffix color in the focused state.
 /// @requires {Map} $light-input-group
 /// @requires {Map} $indigo-elevation-input-group
 $indigo-input-group: extend(
@@ -419,6 +511,22 @@ $indigo-input-group: extend(
     $indigo-elevation-input-group,
     (
         variant: 'indigo-design',
+
+        input-prefix-color--filled: (
+            color: ('gray', 600)
+        ),
+
+        input-suffix-color--filled: (
+            color: ('gray', 600)
+        ),
+
+        input-prefix-color--focused: (
+            color: ('gray', 600)
+        ),
+
+        input-suffix-color--focused: (
+            color: ('gray', 600)
+        ),
 
         helper-text-color: (
             color: ('gray', 600)

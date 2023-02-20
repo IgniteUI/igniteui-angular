@@ -6,6 +6,18 @@
       "replaceWith": "$scrollbar-size",
       "owner": "scrollbar-theme",
       "type":"property"
+    },
+    {
+      "name": "$label-floated-background",
+      "remove": true,
+      "owner": "input-group-theme",
+      "type":"property"
+    },
+    {
+      "name": "$label-floated-disabled-background",
+      "remove": true,
+      "owner": "input-group-theme",
+      "type":"property"
     }
   ]
 }
