@@ -550,10 +550,12 @@
 
     %tabs-header-scroll--end {
         justify-content: flex-end;
+        min-width: max-content;
     }
 
     %tabs-header-scroll--center {
         justify-content: center;
+        min-width: max-content;
     }
 
     %tabs-header-scroll--justify {
