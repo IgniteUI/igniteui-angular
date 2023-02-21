@@ -8,7 +8,6 @@ import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxActionStripModule } from './action-strip.module';
-import { IgxDropDownModule } from '../drop-down/public_api';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -20,19 +19,24 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    describe('Unit tests: ', () => {
-
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripComponent
-                ],
-                imports: [
-                    NoopAnimationsModule,
-                    IgxDropDownModule
-                ]
-            });
+    configureTestSuite(() => {
+        return TestBed.configureTestingModule({
+            declarations: [
+                IgxActionStripComponent,
+                IgxActionStripTestingComponent,
+                IgxActionStripMenuTestingComponent,
+                IgxActionStripCombinedMenuTestingComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxActionStripModule,
+                IgxIconModule,
+                IgxToggleModule
+            ]
         });
+    });
+
+    describe('Unit tests: ', () => {
 
         it('should properly show and hide using API', () => {
             fixture = TestBed.createComponent(IgxActionStripComponent);
@@ -48,22 +52,10 @@ describe('igxActionStrip', () => {
             expect(actionStrip.hidden).toBeTruthy();
             fixture.debugElement.nativeElement.removeChild(el);
         });
+
     });
 
     describe('Initialization and rendering tests: ', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            })
-        });
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
@@ -110,20 +102,6 @@ describe('igxActionStrip', () => {
     });
 
     describe('render content as menu', () => {
-        configureTestSuite(() => {
-            return TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripMenuTestingComponent,
-                    IgxActionStripCombinedMenuTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            });
-        });
 
         it('should render tree-dot button which toggles the content as menu', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
