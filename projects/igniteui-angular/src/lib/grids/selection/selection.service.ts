@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { GridPagingMode } from '../common/enums';
+import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import {
     GridSelectionRange,
@@ -14,7 +15,6 @@ import {
     SelectionState
 } from '../common/types';
 import { PivotUtil } from '../pivot-grid/pivot-util';
-import { IRowSelectionEventArgs } from '../public_api';
 
 
 @Injectable()
