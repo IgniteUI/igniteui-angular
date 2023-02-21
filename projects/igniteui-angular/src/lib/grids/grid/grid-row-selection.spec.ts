@@ -312,8 +312,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyRowSelected(firstRow);
-            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
 
             // Click on a different row
             secondRow.nativeElement.dispatchEvent(mockEvent);
@@ -323,14 +323,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows).toEqual([3]);
-            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledWith({
-                added: [3],
+                added: [2],
                 cancel: false,
                 event: mockEvent,
-                newSelection: [3],
-                oldSelection: [2],
-                removed: [2],
+                newSelection: [2],
+                oldSelection: [],
+                removed: [],
                 allRowsSelected: false
             });
         });

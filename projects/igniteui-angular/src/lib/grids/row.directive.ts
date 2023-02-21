@@ -393,10 +393,13 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             return;
         }
 
-        if (this.selected && !this.grid.isMultiRowSelectionEnabled) {
+        // eslint-disable-next-line no-bitwise
+        const clearSelection = !(+event.ctrlKey ^ +event.metaKey) && !this.grid.isMultiRowSelectionEnabled;
+
+        if (this.selected && !clearSelection) {
             this.selectionService.deselectRow(this.key, event);
         } else {
-            this.selectionService.selectRowById(this.key, !this.grid.isMultiRowSelectionEnabled, event);
+            this.selectionService.selectRowById(this.key, clearSelection, event);
         }
     }
 
