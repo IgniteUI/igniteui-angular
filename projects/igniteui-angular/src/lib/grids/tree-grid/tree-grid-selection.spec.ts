@@ -1056,6 +1056,34 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
+        it('Should be able to select/deselect row when primaryKey is not set', () => {
+            treeGrid.primaryKey = undefined;
+            fix.detectChanges();
+
+            expect(treeGrid.primaryKey).not.toBeDefined();
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+
+            treeGrid.selectRows([treeGrid.getRowByIndex(1).data, treeGrid.getRowByIndex(2).data, treeGrid.getRowByIndex(3).data], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
         it('Should select/deselect parent row by selecting/deselecting all its children', () => {
             treeGrid.selectRows([475, 957, 711, 998, 299], true);
             fix.detectChanges();
