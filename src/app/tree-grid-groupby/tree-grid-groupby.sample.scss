@@ -10,6 +10,10 @@ igx-buttongroup {
     display: block;
 }
 
+.topMargin {
+    margin-top: 20px;
+}
+
 .sample-buttons igx-switch{
     margin: 8px;
 }
@@ -18,18 +22,6 @@ igx-buttongroup {
     margin: 8px 4px;
 }
 
-.toggle-group {
-    padding: 16px;
-    border-radius: 8px;
-}
-
-.switch-group {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-}
-
-.topMargin,
-h4 {
-    margin: 16px 0;
+[igxButton="raised"] {
+    margin: 0.5rem;
 }
