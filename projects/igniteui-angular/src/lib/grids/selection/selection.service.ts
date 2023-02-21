@@ -560,9 +560,6 @@ export class IgxGridSelectionService {
     }
 
     public isRowSelected(rowID): boolean {
-        if (rowID.ProductID === 4) {
-            console.log(this.rowSelection.has(rowID));
-        }
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
