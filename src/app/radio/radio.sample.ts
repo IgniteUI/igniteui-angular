@@ -14,7 +14,7 @@ class Person {
 
 @Component({
     selector: 'app-radio-sample',
-    styleUrls: ['radio.sample.css'],
+    styleUrls: ['radio.sample.scss'],
     templateUrl: 'radio.sample.html'
 })
 export class RadioSampleComponent implements AfterContentInit {
