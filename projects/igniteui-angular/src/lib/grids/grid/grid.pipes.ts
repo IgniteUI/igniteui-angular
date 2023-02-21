@@ -79,8 +79,8 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
 
-    public transform(collection: IGroupByResult, page = 0, perPage = 15, _id: string, _: number): IGroupByResult {
-        if (!this.grid.paginator || this.grid.pagingMode !== GridPagingMode.Local) {
+    public transform(collection: IGroupByResult, enabled: boolean, page = 0, perPage = 15, _: number): IGroupByResult {
+        if (!enabled || this.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
         const state = {
