@@ -142,7 +142,6 @@ export class IgxBadgeComponent {
      * <igx-badge [square]="true"></igx-badge>
      * ```
      */
-
     @HostBinding('class.igx-badge--square')
     @Input()
     public square = false;
