@@ -14,6 +14,7 @@ import {
     SelectionState
 } from '../common/types';
 import { PivotUtil } from '../pivot-grid/pivot-util';
+import { IRowSelectionEventArgs } from '../public_api';
 
 
 @Injectable()
@@ -495,9 +496,15 @@ export class IgxGridSelectionService {
             return;
         }
         const currSelectedRows = this.getSelectedRowsData();
-        const args = { owner: this.grid, oldSelection: currSelectedRows,
+        const args: IRowSelectionEventArgs = {
+            owner: this.grid,
+            oldSelection: currSelectedRows,
             newSelection: this.getPivotRows(newSelection),
-            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection)
+            added,
+            removed,
+            event,
+            cancel: false,
+            allRowsSelected: this.areAllRowSelected(newSelection)
         };
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
@@ -627,9 +634,13 @@ export class IgxGridSelectionService {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
-        const args = { owner: this.grid,
-            oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false, allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
+        const args: IRowSelectionEventArgs = {
+            owner: this.grid,
+            oldSelection: currSelection,
+            newSelection,
+            added, removed,
+            event, cancel: false,
+            allRowsSelected: this.areAllRowSelected(newSelection.map(r =>  this.getRecordKey(r)))
         };
 
         this.grid.rowSelectionChanging.emit(args);
