@@ -21,6 +21,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { ColumnType } from '../grids/common/grid.interface';
+import { IgxPaginatorComponent } from '../paginator/public_api';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -326,10 +327,15 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class ProductsComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
+
+    public paging = false;
+
+    @ViewChild(IgxPaginatorComponent)
+    public paginator: IgxPaginatorComponent;
 }
 
 @Component({
