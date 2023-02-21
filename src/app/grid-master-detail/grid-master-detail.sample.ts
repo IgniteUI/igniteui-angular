@@ -7,7 +7,7 @@ import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'pro
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
     selector: 'app-grid-sample',
-    styleUrls: ['grid-master-detail.sample.css'],
+    styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html'
 })
 export class GridMasterDetailSampleComponent implements OnInit {
@@ -77,7 +77,7 @@ export class GridMasterDetailSampleComponent implements OnInit {
         const state = this.state.getState() as string;
         window.sessionStorage.setItem('grid-state', state);
       }
-    
+
       public restoreState() {
         const state = window.sessionStorage.getItem('grid-state');
         this.state.setState(state as string);

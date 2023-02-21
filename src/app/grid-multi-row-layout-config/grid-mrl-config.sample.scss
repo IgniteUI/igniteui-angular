@@ -1,3 +1,8 @@
+.sample-content {
+    height: 800px;
+}
+
+
 .colsWrapper {
     display: flex;
     justify-content: center;
@@ -22,7 +27,7 @@ textarea {
     font-family: 'Titillium Web', sans-serif;
     line-height: 1.25rem;
     font-weight: 600;
-    background-color: rgb(42, 42, 42);
+    background-color: rgb(104, 104, 104);
     user-select: none;
 }
 
@@ -40,14 +45,14 @@ textarea {
     font-family: 'Titillium Web', sans-serif;
     line-height: 1.25rem;
     font-weight: 600;
-    background-color: rgb(42, 42, 42);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #bababa;
+    border: 1px solid #43434314;
     position: relative;
     user-select: none;
 }
 
 .columnInHovered {
-    background-color: rgb(52, 52, 52) !important;
+    background-color: #797979 !important;
 }
 
 .textWrapper {
@@ -89,4 +94,6 @@ textarea {
     margin: auto;
 }
 
-
+button {
+    margin: 0 0.5rem;
+}
