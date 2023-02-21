@@ -106,7 +106,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * Emitted when columns are grouped/ungrouped.
      *
      * @remarks
-     * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
+     * The `groupingDone` event would be raised only once if several columns get grouped at once by calling
      * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
      * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
      * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
@@ -115,11 +115,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * columns.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (groupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
+    public groupingDone = new EventEmitter<IGroupingDoneEventArgs>();
 
     /**
      * Gets/Sets whether created groups are rendered expanded or collapsed.
@@ -435,7 +435,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 groupedColumns: groupedCols,
                 ungroupedColumns: ungroupedCols
             };
-            this.onGroupingDone.emit(groupingDoneArgs);
+            this.groupingDone.emit(groupingDoneArgs);
         }
     }
 
@@ -698,7 +698,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @remarks
      * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
-     * The onGroupingDone event would get raised only **once** if this method gets called multiple times with the same arguments.
+     * The `groupingDone` event would get raised only **once** if this method gets called multiple times with the same arguments.
      * @example
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
@@ -1028,7 +1028,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public ngOnInit() {
         super.ngOnInit();
         this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+        this.groupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;

@@ -4,8 +4,18 @@ All notable changes for each version of this project will be documented in this 
 
 ## 15.1.0
 
+### General
  - `IgxPivotGrid`
     - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.
+ - `IgxGrid`
+    - **Breaking Change** The `onGroupingDone` output has been renamed to `groupingDone` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
+ - `DisplayDensity`
+    - **Breaking Change** The `onDensityChanged` output has been renamed to `densityChanged` to not violate the no on-prefixed outputs convention. All components expolsing this event are affected. Automatic migrations are available and will be applied on `ng update`.
+ - `IgxCarousel`
+    - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
+- `IgxRadio`, `IgxRadioGroup`
+    - Added component validation along with styles for invalid state
+
 
 ## 15.0.1
 

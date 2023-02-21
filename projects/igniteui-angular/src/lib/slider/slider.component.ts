@@ -774,7 +774,7 @@ export class IgxSliderComponent implements
     private _secondaryTicks = 0;
 
     private _labels = new Array<number | string | boolean | null | undefined>();
-    private _type = IgxSliderType.SLIDER;
+    private _type: IgxSliderType = IgxSliderType.SLIDER;
 
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
