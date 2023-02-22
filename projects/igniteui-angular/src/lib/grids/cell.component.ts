@@ -24,7 +24,7 @@ import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -210,24 +210,25 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *
      * @memberof IgxGridCellComponent
      */
-    public get context(): any {
-        const ctx = {
+    public get context(): IgxCellTemplateContext {
+        const getCellType = () => this.getCellType(true);
+        const ctx: IgxCellTemplateContext = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
+            get cell() {
+                /* Turns the `cell` property from the template context object into lazy-evaluated one.
+                 * Otherwise on each detection cycle the cell template is recreating N cell instances where
+                 * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+                 */
+                return getCellType();
+            }
         };
         if (this.editMode) {
-            ctx['formControl'] = this.formControl;
+            ctx.formControl = this.formControl;
         }
         if (this.isInvalid) {
-            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+            ctx.defaultErrorTemplate = this.defaultErrorTemplate;
         }
-        /* Turns the `cell` property from the template context object into lazy-evaluated one.
-         * Otherwise on each detection cycle the cell template is recreating N cell instances where
-         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
-         */
-        Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType(true)
-        });
         return ctx;
     }
 
@@ -742,7 +743,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
-    private _cellSelection = GridSelectionMode.multiple;
+    private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
     constructor(
