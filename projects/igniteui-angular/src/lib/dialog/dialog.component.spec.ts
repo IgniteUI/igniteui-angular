@@ -29,7 +29,7 @@ describe('Dialog', () => {
                 DialogSampleComponent,
                 PositionSettingsDialogComponent,
                 DialogTwoWayDataBindingComponent,
-                ChangeClosePropertyOnOpenDialogComponent
+                ChangeClosePropertiesOnOpenDialogComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
@@ -361,8 +361,8 @@ describe('Dialog', () => {
         expect(childDialog.isOpen).toEqual(false);
     }));
 
-    it('Should chenaged closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
-        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+    fit('Should change the closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertiesOnOpenDialogComponent);
         fixture.detectChanges();
 
         const dialog = fixture.componentInstance.dialog;
@@ -391,10 +391,20 @@ describe('Dialog', () => {
         fixture.detectChanges();
 
         expect(dialog.isOpen).toEqual(true);
+
+        dialog.closeOnOutsideSelect = true;
+        tick();
+        fixture.detectChanges();
+
+        dialogElem.click();
+        tick();
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(false);
     }));
 
-    it('Should chenaged closeOnEscape property while the dialog is open', fakeAsync(() => {
-        const fixture = TestBed.createComponent(ChangeClosePropertyOnOpenDialogComponent);
+    fit('Should chenage the closeOnEscape property while the dialog is open', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ChangeClosePropertiesOnOpenDialogComponent);
         fixture.detectChanges();
 
         const dialog = fixture.componentInstance.dialog;
@@ -403,7 +413,6 @@ describe('Dialog', () => {
         dialog.open();
         tick();
         fixture.detectChanges();
-        console.log(dialog.closeOnEscape)
         
         UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
         tick(100);
@@ -424,6 +433,16 @@ describe('Dialog', () => {
         fixture.detectChanges();
 
         expect(dialog.isOpen).toEqual(true);
+
+        dialog.closeOnEscape = true;
+        tick();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', dialogElem);
+        tick(100);
+        fixture.detectChanges();
+
+        expect(dialog.isOpen).toEqual(false);
     }));
 
     it('Should initialize igx-dialog custom title and actions', () => {
@@ -682,7 +701,7 @@ class CustomDialogComponent {
                     [closeOnOutsideSelect]="true"
                     >
                 </igx-dialog>` })
-class ChangeClosePropertyOnOpenDialogComponent {
+class ChangeClosePropertiesOnOpenDialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
 
