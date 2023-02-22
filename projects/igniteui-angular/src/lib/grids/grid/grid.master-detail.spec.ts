@@ -707,7 +707,6 @@ describe('IgxGrid Master Detail #grid', () => {
             it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
-
                 fix.detectChanges();
 
                 fix.componentInstance.paging = true;
@@ -724,7 +723,6 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
-
                 fix.detectChanges();
 
                 fix.componentInstance.paging = true;
