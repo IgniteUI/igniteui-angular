@@ -3,14 +3,17 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 15.1.0
-
 ### General
  - `IgxPivotGrid`
     - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.
  - `IgxGrid`
     - **Breaking Change** The `onGroupingDone` output has been renamed to `groupingDone` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
  - `DisplayDensity`
-    - **Breaking Change** The `onDensityChanged` output has been renamed to `densityChanged` to not violate the no on-prefixed outputs convention. All components expolsing this event are affected. Automatic migrations are available and will be applied on `ng update`.
+    - **Breaking Change** The `onDensityChanged` output has been renamed to `densityChanged` to not violate the no on-prefixed outputs convention. All components exposing this event are affected. Automatic migrations are available and will be applied on `ng update`.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** - `rowSelectionChanging` event arguments are changed. Now the `oldSelection`, `newSelection`, `added` and `removed` collections no longer consist of the row keys of the selected elements when the grid has set a primaryKey, but now in any case the row data is emitted.
+    When the grid is working with remote data and a primary key has been set- for the selected rows that are not currently part of the grid view, will be emitted a partial row data object.
+    - **Behavioral Change** - When selected row is deleted from the grid component `rowSelectionChanging` event will no longer be emitted.
  - `IgxCarousel`
     - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
 - `IgxRadio`, `IgxRadioGroup`
@@ -24,7 +27,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxPivotGrid`
     - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
 - `IgxSimpleCombo`
-    - **Behavioral Change** 
+    - **Behavioral Change**
     - When the user clicks on the combo's input, the dropdown opens up.
     - Keyboard navigation `ArrowUp` - when the combo is opened `ArrowUp` will close the dropdown if the search input is focused. If the active item is the first one in the list, the focus will be moved back to the search input while also selecting all of the text in the input. Otherwise `ArrowUp` will move to the previous list item.
 
@@ -109,7 +112,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - The filtering logic inside the grid's Advanced Filtering  is now extracted as a separate  `IgxQueryBuilder` component. The Query Builder allows you to build complex queries by specifying AND/OR operators, conditions and values using the UI. It outputs an object describing the structure of the query. Use the `locale` property to modify the locale settings. The default value is resolved to the global Angular application locale. The `resourceStrings` allows changing the displayed strings.
-    
+
     - Code example below:
 
     ```html
@@ -145,7 +148,7 @@ All notable changes for each version of this project will be documented in this 
     <ng-template igxPivotValueChip let-value>
             {{ value.member }}
     </ng-template>
-    ``` 
+    ```
     - Add support for usage with igxGridState to persist state of the pivotConfiguration with an additional `pivotConfiguration` option:
 
     ```html
@@ -161,7 +164,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 
     One known issue of the igxGridState directive is that it cannot store functions as the state is stored as string.
-    As a result any custom functions set to `memberFunction`, `aggregator`, `formatter`, `styles` etc. will not be stored. Restoring any of these can be achieved with code on application level. 
+    As a result any custom functions set to `memberFunction`, `aggregator`, `formatter`, `styles` etc. will not be stored. Restoring any of these can be achieved with code on application level.
     Hence we have also exposed 2 new events:
         - `dimensionInit` - emits when a dimension from the configuration is being initialized.
         - `valueInit` - emits when a value from the configuration is being initialized.
@@ -221,7 +224,7 @@ All notable changes for each version of this project will be documented in this 
     <column width='auto' ...>
     ```
     - Added support for restoring filtering expressions with custom filtering operands for the `IgxGridStateDirective`.
-    
+
 
 - Added the `IgcFormControl` directive that, when imported with its `IgcFormsModule`, is designed to seamlessly attach to form components from the Ignite UI for WebComponents package and allows using them in Angular templates and reactive forms with support for `ngModel` and `formControlName` directives. Currently the only Web Component with support through the directive is `igc-rating`.
 
@@ -236,7 +239,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 14.0.0
 
-- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates. 
+- Added additional theme properties for the `IgxCalendar` so that it's easier to style the `:hover` and `:focus` states inside the selected date or range of dates.
 - `IgxDatePicker` and `IgxDateRangePicker` now expose a `weekStart` input property like the `IgxCalendar`
 - `IgxCombo` and  `IgxSimpleComboComponent`
     - The combobox `role`, `aria-haspopup`, `aria-expanded`, `aria-controls` and `aria-labelledby` attributes have been moved from combo wrapper to the combo input. Additionally the  `IgxSimpleComboComponent` input is marked with `aria-readonly="false"` and `aria-autocomplete="list"` attributes. The `aria-labelled` attribute is applied to the combo dropdown as well and can be set by the `ariaLabelledBy` property, the combo label or placeholder. The serach input within the combo dropdown is now marked as `role="searchbox"`, `aria-label="search"` and `aria-autocomplete="list"`. The dropdown item container has `aria-activedescendant` attribute to identify the currently active element of the item list. The `IgxCombo` container is also marked as `aria-multiselectable="true"`. The dropdown header items role has been changed to `group`.
