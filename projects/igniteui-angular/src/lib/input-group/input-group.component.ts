@@ -310,7 +310,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--suffixed')
     public get hasSuffixes() {
-        return this._suffixes.length > 0 || this.isFileType;
+        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
     }
 
     /** @hidden @internal */
