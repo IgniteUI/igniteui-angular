@@ -110,24 +110,27 @@ export class IgxSorting implements IGridSortingStrategy {
         expression: IGroupingExpression,
         isDate: boolean = false,
         isTime: boolean = false,
-        isString: boolean
+        isString: boolean,
+        groupingComparer?: (a: any, b: any, currRec: any, groupRec: any) => number
     ): T[] {
         const res = [];
         const key = expression.fieldName;
         const len = data.length;
-        let groupval = this.getFieldValue(data[index], key, isDate, isTime);
-        res.push(data[index]);
+        const groupRecord = data[index];
+        let groupval = this.getFieldValue(groupRecord, key, isDate, isTime);
+        res.push(groupRecord);
         index++;
-        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
+        const comparer = expression.groupingComparer || groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (let i = index; i < len; i++) {
-            let fieldValue = this.getFieldValue(data[i], key, isDate, isTime);
+            const currRec = data[i];
+            let fieldValue = this.getFieldValue(currRec, key, isDate, isTime);
             if (expression.ignoreCase && isString) {
                 // when column's dataType is string but the value is number
                 fieldValue = fieldValue?.toString().toLowerCase();
                 groupval = groupval?.toString().toLowerCase();
             }
-            if (comparer(fieldValue, groupval) === 0) {
-                res.push(data[i]);
+            if (comparer(fieldValue, groupval, currRec, groupRecord) === 0) {
+                res.push(currRec);
             } else {
                 break;
             }
@@ -166,7 +169,7 @@ export class IgxSorting implements IGridSortingStrategy {
         }
         // in case of multiple sorting
         for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isTime, isString);
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isTime, isString, column.groupingComparer);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
