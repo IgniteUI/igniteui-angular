@@ -169,7 +169,7 @@ export class IgxSorting implements IGridSortingStrategy {
         }
         // in case of multiple sorting
         for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isTime, isString, column.groupingComparer);
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, isTime, isString, column?.groupingComparer);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
