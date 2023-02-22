@@ -129,7 +129,7 @@ export class IgxOverlayService implements OnDestroy {
     private _overlayElement: HTMLElement;
     private _document: Document;
     private _keyPressEventListener: Subscription;
-    private destroy$ = new Subject<boolean>();
+    private remove$ = new Subject<boolean>();
     private _cursorStyleIsSet = false;
     private _cursorOriginalValue: string;
 
@@ -510,8 +510,8 @@ export class IgxOverlayService implements OnDestroy {
 
     /** @hidden */
     public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
+        this.remove$.next(true);
+        this.remove$.complete();
     }
 
     /** @hidden @internal */
@@ -787,7 +787,7 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.closeOnOutsideClick) {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this.remove$))
                     .subscribe((e: Event) => this._hide(info.id, e));
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
@@ -822,6 +822,12 @@ export class IgxOverlayService implements OnDestroy {
                     this._cursorStyleIsSet = false;
                 }
                 this._document.removeEventListener('click', this.documentClicked, true);
+            }
+        } else {
+            if (this.remove$.observers.length > 1) {
+                this.remove$.observers[this.remove$.observers.length - 1].next(true);
+            } else {
+                this.remove$.next(true);
             }
         }
     }
@@ -895,14 +901,14 @@ export class IgxOverlayService implements OnDestroy {
             info.openAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.openAnimation, info.elementRef.nativeElement);
             info.openAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
+                .pipe(takeUntil(this.remove$))
                 .subscribe(() => this.openAnimationDone(info));
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
             info.closeAnimationPlayer = this.animationService
                 .buildAnimation(info.settings.positionStrategy.settings.closeAnimation, info.elementRef.nativeElement);
             info.closeAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
+                .pipe(takeUntil(this.remove$))
                 .subscribe(() => this.closeAnimationDone(info));
         }
     }
