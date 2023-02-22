@@ -8,7 +8,6 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    HostListener,
     Inject,
     InjectionToken,
     Injector,
@@ -949,15 +948,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
         @Optional() protected _injector: Injector) {
         super(_displayDensityOptions);
-    }
-
-    /** @hidden @internal */
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    public onArrowDown(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.open();
     }
 
     /** @hidden @internal */
