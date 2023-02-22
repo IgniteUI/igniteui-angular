@@ -1056,6 +1056,34 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
+        it('Should be able to select/deselect row when primaryKey is not set', () => {
+            treeGrid.primaryKey = undefined;
+            fix.detectChanges();
+
+            expect(treeGrid.primaryKey).not.toBeDefined();
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+
+            treeGrid.selectRows([treeGrid.getRowByIndex(1).data, treeGrid.getRowByIndex(2).data, treeGrid.getRowByIndex(3).data], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
         it('Should select/deselect parent row by selecting/deselecting all its children', () => {
             treeGrid.selectRows([475, 957, 711, 998, 299], true);
             fix.detectChanges();
@@ -1607,12 +1635,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [711, 998],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(711), treeGrid.getRowData(998)],
                 added: [],
-                removed: [317, 299],
+                removed: [treeGrid.getRowData(317), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: true
+                cancel: true,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1691,12 +1720,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(847, true);
 
             const args: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [847, 663],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                removed: [ treeGrid.getRowData(317), treeGrid.getRowData(711), treeGrid.getRowData(998), treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(args);
@@ -1716,7 +1746,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it('After changing the newSelection arguments of onSelectedRowChange, the arguments SHOULD be correct.', () => {
             treeGrid.rowSelectionChanging.subscribe((e: IRowSelectionEventArgs) => {
-                e.newSelection = [847, 663];
+                e.newSelection = [treeGrid.getRowData(847), treeGrid.getRowData(663)];
             });
             spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
 
@@ -1726,12 +1756,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectionService.selectRowById(19, true);
 
             const selectionArgs: IRowSelectionEventArgs = {
-                oldSelection: [317, 711, 998, 299],
-                newSelection: [847, 663],
-                added: [19],
-                removed: [317, 711, 998, 299],
+                oldSelection: [ treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
+                newSelection: [treeGrid.getRowData(847), treeGrid.getRowData(663)],
+                added: [treeGrid.getRowData(19)],
+                removed: [treeGrid.getRowData(317),  treeGrid.getRowData(711),  treeGrid.getRowData(998),  treeGrid.getRowData(299)],
                 event: undefined,
-                cancel: false
+                cancel: false,
+                owner: treeGrid
             };
 
             expect(treeGrid.rowSelectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
