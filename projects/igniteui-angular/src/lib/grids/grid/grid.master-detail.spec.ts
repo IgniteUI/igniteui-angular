@@ -704,12 +704,11 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Integration', () => {
         describe('Paging', () => {
-            it('Should not take into account expanded detail views as additional records.', async () => {
+            it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
 
                 fix.detectChanges();
-                await wait(); // trigger full ngAfterViewInit cycle to be sure rendered = true
 
                 fix.componentInstance.paging = true;
                 fix.detectChanges();
@@ -719,15 +718,14 @@ describe('IgxGrid Master Detail #grid', () => {
 
                 const initialTotalRecords = grid.pagingState.metadata.countRecords;
                 expect(grid.pagingState.metadata.countRecords).toEqual(initialTotalRecords);
-            });
+            }));
 
-            it('Should persist template state after paging to a page with fewer records and paging back.', async () => {
+            it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
 
                 fix.detectChanges();
-                await wait(); // trigger full ngAfterViewInit cycle to be sure rendered = true
 
                 fix.componentInstance.paging = true;
                 fix.detectChanges();
@@ -751,7 +749,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 // check checkbox state
                 checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
                 expect(checkbox.componentInstance.checked).toBeTruthy();
-            });
+            }));
         });
 
         describe('Hiding', () => {
