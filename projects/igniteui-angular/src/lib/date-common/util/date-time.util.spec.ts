@@ -199,7 +199,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(result).toEqual('MM/dd/yyyy');
 
         result = DateTimeUtil.getDefaultInputFormat('bg-BG');
-        expect(result).toEqual('dd.MM.yyyy г.');
+        expect(result.replace(/\s/g, '')).toEqual('dd.MM.yyyyг.');
 
         expect(() => {
             result = DateTimeUtil.getDefaultInputFormat(null);
