@@ -461,8 +461,8 @@ export class IgxGridSelectionService {
     public selectPivotRowById(rowID, clearPrevSelection: boolean, event?): void {
         const selectedRows = this.getSelectedRows();
         const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ? selectedRows : [...selectedRows, rowID];
-        const added = this.getPivotRows([rowID]);
-        const removed = this.getPivotRows(clearPrevSelection ? selectedRows : []);
+        const added = this.getPivotRowsByIds([rowID]);
+        const removed = this.getPivotRowsByIds(clearPrevSelection ? selectedRows : []);
         this.emitRowSelectionEventPivotGrid(selectedRows, newSelection, added, removed, event);
     }
 
@@ -486,7 +486,7 @@ export class IgxGridSelectionService {
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             const currSelection = this.getSelectedRows();
             const newSelection = currSelection.filter(r => r !== rowID);
-            const removed  = this.getPivotRows([rowID]);
+            const removed  = this.getPivotRowsByIds([rowID]);
             this.emitRowSelectionEventPivotGrid(currSelection, newSelection, [], removed, event);
         }
     }
@@ -499,7 +499,7 @@ export class IgxGridSelectionService {
         const args: IRowSelectionEventArgs = {
             owner: this.grid,
             oldSelection: currSelectedRows,
-            newSelection: this.getPivotRows(newSelection),
+            newSelection: this.getPivotRowsByIds(newSelection),
             added,
             removed,
             event,
@@ -651,7 +651,7 @@ export class IgxGridSelectionService {
         this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), true);
     }
 
-    public getPivotRows(ids: any[]) {
+    public getPivotRowsByIds(ids: any[]) {
         return this.grid.dataView.filter(r => {
             const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
             return new Set(ids.concat(keys)).size < ids.length + keys.length;
