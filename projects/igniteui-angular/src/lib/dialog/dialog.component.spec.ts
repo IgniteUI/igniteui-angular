@@ -361,7 +361,7 @@ describe('Dialog', () => {
         expect(childDialog.isOpen).toEqual(false);
     }));
 
-    fit('Should change the closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
+    it('Should change the closeOnOutsideSelect property while the dialog is open', fakeAsync(() => {
         const fixture = TestBed.createComponent(ChangeClosePropertiesOnOpenDialogComponent);
         fixture.detectChanges();
 
@@ -403,7 +403,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    fit('Should chenage the closeOnEscape property while the dialog is open', fakeAsync(() => {
+    it('Should chenage the closeOnEscape property while the dialog is open', fakeAsync(() => {
         const fixture = TestBed.createComponent(ChangeClosePropertiesOnOpenDialogComponent);
         fixture.detectChanges();
 
