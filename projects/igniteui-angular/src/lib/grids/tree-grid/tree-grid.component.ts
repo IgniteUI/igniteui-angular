@@ -1028,7 +1028,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // deselect them as well, hence using 'records' map instead of getRowByKey() method which will
         // return only row components (i.e. records in view).
         const rowToDeselect = this.records.get(recordID);
-        this.selectionService.deselectRow(recordID);
+        this.selectionService.deselectRowsWithNoEvent([recordID]);
         this.gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
