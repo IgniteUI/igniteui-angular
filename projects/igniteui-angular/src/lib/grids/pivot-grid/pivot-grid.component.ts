@@ -317,7 +317,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 newDensity: this._displayDensity
             };
 
-            this.onDensityChanged.emit(densityChangedArgs);
+            this.densityChanged.emit(densityChangedArgs);
         }
     }
 
