@@ -1402,7 +1402,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             col = this.allChildren.filter(c => !c.columnGroup && !c.hidden)[0] as any;
         }
         if (this.columnLayoutChild) {
-            return this.parent.childrenVisibleIndexes.find(x => x.column === this)?.index;
+            return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
         if (!this.pinned) {

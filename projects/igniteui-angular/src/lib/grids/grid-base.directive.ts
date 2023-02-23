@@ -3743,6 +3743,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public resetColumnCollections() {
+        if (this.hasColumnLayouts) {
+            this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+        }
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
         this._unpinnedVisible.length = 0;
@@ -7596,9 +7599,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     private _columnsReordered(column: IgxColumnComponent) {
         this.notifyChanges();
-        if (this.hasColumnLayouts) {
-            this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
-        }
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();
         column.resetCaches();
