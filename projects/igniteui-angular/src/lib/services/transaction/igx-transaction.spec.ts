@@ -740,6 +740,32 @@ describe('IgxTransaction', () => {
             expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(0);
         });
 
+        it('Should not generate changes when updating a value to the original one', () => {
+            const originalData = SampleTestData.generateProductData(50);
+            const transaction = new IgxTransactionService();
+            expect(transaction).toBeDefined();
+
+            transaction.startPending();
+
+            const itemUpdate1: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            transaction.add(itemUpdate1, originalData[1]);
+
+            expect(transaction.getState(1, true)).toBeTruthy();
+            expect(transaction.getAggregatedValue(1, false)).toEqual({ Category: 'Some new value' });
+
+            // update to original value
+            const itemUpdate2: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: originalData[1].Category } };
+            transaction.add(itemUpdate2, originalData[1]);
+
+            expect(transaction.getState(1, true)).toBeUndefined();
+            expect(transaction.getAggregatedValue(1, false)).toBeNull();
+
+            transaction.endPending(false);
+
+            expect(transaction.getTransactionLog()).toEqual([]);
+            expect(transaction.getAggregatedChanges(true)).toEqual([]);
+        });
+
         it('Should clear transactions for provided id', () => {
             const originalData = SampleTestData.generateProductData(50);
             const trans = new IgxTransactionService();
@@ -934,6 +960,75 @@ describe('IgxTransaction', () => {
             expect(data[0].Employees[2].Employees.length).toBe(1);
             expect(transaction.canUndo).toBeFalsy();
             expect(transaction.getAggregatedChanges(false).length).toBe(0);
+        });
+
+        it('Should not generate changes when updating a value to the original one', () => {
+            const originalData = SampleTestData.employeeTreeData();
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            transaction.startPending();
+
+            // root record update
+            const rootUpdate1: HierarchicalTransaction = {
+                id: 147,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Name: 'New Name'
+                },
+                path: null
+            };
+            transaction.add(rootUpdate1, originalData[0]);
+
+            expect(transaction.getState(147, true)).toBeTruthy();
+            expect(transaction.getAggregatedValue(147, false)).toEqual({ Name: 'New Name' });
+
+            // update to original value
+            const rootUpdate2: HierarchicalTransaction = {
+                id: 147,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Name: originalData[0].Name
+                },
+                path: null
+            };
+            transaction.add(rootUpdate2, originalData[0]);
+
+            expect(transaction.getState(147, true)).toBeUndefined();
+            expect(transaction.getAggregatedValue(147, false)).toBeNull();
+
+            // child record update
+            const childUpdate1: HierarchicalTransaction = {
+                id: 475,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Age: 60
+                },
+                path: [originalData[0].ID]
+            };
+            transaction.add(childUpdate1, originalData[0].Employees[0]);
+
+            expect(transaction.getState(475, true)).toBeTruthy();
+            expect(transaction.getAggregatedValue(475, false)).toEqual({ Age: 60 });
+
+            // update to original value
+            const childUpdate2: HierarchicalTransaction = {
+                id: 475,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Age: originalData[0].Employees[0].Age
+                },
+                path: [originalData[0].ID]
+            };
+            transaction.add(childUpdate2, originalData[0].Employees[0]);
+
+            expect(transaction.getState(475, true)).toBeUndefined();
+            expect(transaction.getAggregatedValue(475, false)).toBeNull();
+
+            transaction.endPending(false);
+
+            expect(transaction.getTransactionLog()).toEqual([]);
+            expect(transaction.getAggregatedChanges(true)).toEqual([]);
         });
 
         it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
