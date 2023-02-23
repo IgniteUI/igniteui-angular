@@ -18,6 +18,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
 - `IgxRadio`, `IgxRadioGroup`
     - Added component validation along with styles for invalid state
+- `igxMask` directive
+    - Added the capability to escape mask pattern literals.
 
 
 ## 15.0.1
