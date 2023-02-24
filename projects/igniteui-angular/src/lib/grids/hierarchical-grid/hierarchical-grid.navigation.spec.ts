@@ -17,7 +17,7 @@ const DEBOUNCE_TIME = 30;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
-describe('IgxHierarchicalGrid Navigation', () => {
+fdescribe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
@@ -717,25 +717,25 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
         it('should allow navigating up from parent into nested child grid', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-            fixture.detectChanges();
             await wait();
+            fixture.detectChanges();
 
             const child = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
             const lastIndex =  child.dataView.length - 1;
             child.verticalScrollContainer.scrollTo(lastIndex);
-            fixture.detectChanges();
             await wait();
+            fixture.detectChanges();
 
             child.verticalScrollContainer.scrollTo(lastIndex);
-            fixture.detectChanges();
             await wait();
+            fixture.detectChanges();
 
             const parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ID');
             GridFunctions.focusCell(fixture, parentCell);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent , false, false, false);
-            fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             const nestedChild = child.gridAPI.getChildGrids(false)[5];
             const lastCell = nestedChild.gridAPI.get_cell_by_index(4, 'ID');
