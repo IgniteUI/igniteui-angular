@@ -105,6 +105,16 @@ export class IgxOverlayService implements OnDestroy {
     public closed = new EventEmitter<OverlayEventArgs>();
 
     /**
+     * Emitted before the content is appended to the overlay.
+     * ```typescript
+     * contentAppending(event: OverlayEventArgs){
+     *     const contentAppending = event;
+     * }
+     * ```
+     */
+    public contentAppending = new EventEmitter<OverlayEventArgs>();
+
+    /**
      * Emitted after the content is appended to the overlay, and before animations are started.
      * ```typescript
      * contentAppended(event: OverlayEventArgs){
@@ -336,6 +346,7 @@ export class IgxOverlayService implements OnDestroy {
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
+        this.contentAppending.emit({ id: info.id, componentRef: info.componentRef });
         this.moveElementToOverlay(info);
         this.contentAppended.emit({ id: info.id, componentRef: info.componentRef });
         info.settings.scrollStrategy.initialize(this._document, this, info.id);
