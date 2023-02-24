@@ -3,11 +3,21 @@ import {
     IgxChipsAreaComponent, IgxChipComponent,
     IChipsAreaReorderEventArgs, IBaseChipEventArgs, IChipsAreaSelectEventArgs
 } from 'igniteui-angular';
+import { IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxChipsAreaComponent as IgxChipsAreaComponent_1 } from '../../../projects/igniteui-angular/src/lib/chips/chips-area.component';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxChipComponent as IgxChipComponent_1 } from '../../../projects/igniteui-angular/src/lib/chips/chip.component';
 
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.css'],
-    templateUrl: 'chips.sample.html'
+    templateUrl: 'chips.sample.html',
+    standalone: true,
+    imports: [IgxChipComponent_1, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxChipsAreaComponent_1, NgFor, NgIf, IgxAvatarComponent, IgxDropDirective]
 })
 export class ChipsSampleComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })

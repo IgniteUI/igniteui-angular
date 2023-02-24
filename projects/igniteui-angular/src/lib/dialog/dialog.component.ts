@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -16,14 +16,14 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { IgxButtonModule, IgxButtonType } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
 import {fadeIn, fadeOut} from '../animations/fade/index';
-import { IgxFocusModule } from '../directives/focus/focus.directive';
-import { IgxFocusTrapModule } from '../directives/focus-trap/focus-trap.directive';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
+import { IgxFocusTrapDirective } from '../directives/focus-trap/focus-trap.directive';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
@@ -56,7 +56,9 @@ let DIALOG_ID = 0;
  */
 @Component({
     selector: 'igx-dialog',
-    templateUrl: 'dialog-content.component.html'
+    templateUrl: 'dialog-content.component.html',
+    standalone: true,
+    imports: [IgxToggleDirective, IgxFocusTrapDirective, NgIf, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
     private static NEXT_ID = 1;
@@ -628,9 +630,8 @@ export interface IDialogCancellableEventArgs extends IDialogEventArgs, Cancelabl
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule, IgxFocusTrapModule]
+    imports: [CommonModule, IgxToggleModule, IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 export class IgxDialogModule { }
 

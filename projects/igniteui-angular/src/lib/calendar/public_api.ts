@@ -7,4 +7,3 @@ export * from './years-view/years-view.component';
 export * from './month-picker/month-picker.component';
 export * from './month-picker-base';
 export * from './calendar.directives';
-export * from './calendar.module';

@@ -5,18 +5,15 @@ import {
     ElementRef,
     HostBinding,
     Inject,
-    NgModule,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
-import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
-import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
+import { IgxAvatarComponent } from '../../avatar/avatar.component';
+import { IgxCalendarComponent } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
@@ -43,6 +40,7 @@ import {
     PositionSettings,
     VerticalAlignment
 } from './utilities';
+import { NgIf } from '@angular/common';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -382,11 +380,8 @@ describe('igxOverlay', () => {
         configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: [
-                    SimpleDynamicWithDirectiveComponent
-                ]
-            }).compileComponents();
+    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+}).compileComponents();
         }));
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
@@ -1218,11 +1213,8 @@ describe('igxOverlay', () => {
     describe('Unit Tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: [
-                    SimpleDynamicWithDirectiveComponent
-                ]
-            });
+    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+});
         }));
         afterAll(() => {
             TestBed.resetTestingModule();
@@ -1399,11 +1391,8 @@ describe('igxOverlay', () => {
         configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: [
-                    SimpleDynamicWithDirectiveComponent
-                ]
-            }).compileComponents();
+    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+}).compileComponents();
         }));
 
         // 1. Positioning Strategies
@@ -3389,11 +3378,8 @@ describe('igxOverlay', () => {
     describe('Integration tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: [
-                    SimpleDynamicWithDirectiveComponent
-                ]
-            });
+    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+});
         }));
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
@@ -4256,11 +4242,8 @@ describe('igxOverlay', () => {
     describe('Integration tests p3 (IgniteUI components): ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
-                declarations: [
-                    SimpleDynamicWithDirectiveComponent
-                ]
-            }).compileComponents();
+    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+}).compileComponents();
         }));
         it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
@@ -4324,7 +4307,8 @@ describe('igxOverlay', () => {
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
-    template: `<div style='width:100px; height: 100px; background-color: red;'></div>`
+    template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
+    standalone: true
 })
 export class SimpleDynamicComponent {
     @HostBinding('style.display')
@@ -4335,7 +4319,8 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red;'></div>`
+    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red;'></div>`,
+    standalone: true
 })
 export class SimpleRefComponent {
     @ViewChild('item', { static: true })
@@ -4345,7 +4330,8 @@ export class SimpleRefComponent {
 }
 
 @Component({
-    template: `<div style='width:3000px; height: 1000px; background-color: red;'></div>`
+    template: `<div style='width:3000px; height: 1000px; background-color: red;'></div>`,
+    standalone: true
 })
 export class SimpleBigSizeComponent {
     @HostBinding('style.display')
@@ -4371,7 +4357,9 @@ export class SimpleBigSizeComponent {
                     <p> AAAAA </p>
                     <p> AAAAA </p>
                 </div>
-            </div>`
+            </div>`,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class SimpleDynamicWithDirectiveComponent {
     @ViewChild(IgxToggleDirective, { static: true })
@@ -4408,7 +4396,8 @@ export class SimpleDynamicWithDirectiveComponent {
         padding: 0;
         margin: 0;
         border: none;
-    }`]
+    }`],
+    standalone: true
 })
 export class EmptyPageComponent {
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
@@ -4426,7 +4415,8 @@ export class EmptyPageComponent {
         <button #button>Show Overlay</button>
         <div igxOverlayOutlet #outlet></div>
         `,
-    encapsulation: ViewEncapsulation.ShadowDom
+    encapsulation: ViewEncapsulation.ShadowDom,
+    standalone: true
 })
 export class EmptyPageInShadowDomComponent {
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
@@ -4446,7 +4436,8 @@ export class EmptyPageInShadowDomComponent {
         padding: 0px;
         margin: 0px;
         border: 0px;
-    }`]
+    }`],
+    standalone: true
 })
 export class DownRightButtonComponent {
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
@@ -4485,7 +4476,8 @@ export class DownRightButtonComponent {
         width: 100px;
         height: 60px;
         border: 0px;
-    }`]
+    }`],
+    standalone: true
 })
 export class TopLeftOffsetComponent {
 
@@ -4505,7 +4497,8 @@ export class TopLeftOffsetComponent {
     </div>
     <div (click)='divClick($event)'>
         <button class='buttonTwo' (click)='clickTwo()'>Show second Overlay</button>
-    </div>`
+    </div>`,
+    standalone: true
 })
 export class TwoButtonsComponent {
     public settings: OverlaySettings = { modal: false };
@@ -4540,7 +4533,8 @@ export class TwoButtonsComponent {
         width: 100px;
         height: 60px;
         border: 0;
-    }`]
+    }`],
+    standalone: true
 })
 export class WidthTestOverlayComponent {
 
@@ -4578,7 +4572,9 @@ export class WidthTestOverlayComponent {
             <p>AAAAA</p>
             <p>AAAAA</p>
         </div>
-    </div>`
+    </div>`,
+    standalone: true,
+    imports: [NgIf]
 })
 export class ScrollableComponent {
     @ViewChild(IgxToggleDirective, { static: true })
@@ -4609,7 +4605,8 @@ export class ScrollableComponent {
             Show Overlay
         </button>
     </div>
-    `
+    `,
+    standalone: true
 })
 export class FlexContainerComponent {
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
@@ -4635,16 +4632,3 @@ const DYNAMIC_COMPONENTS = [
     ScrollableComponent,
     FlexContainerComponent
 ];
-
-@NgModule({
-    imports: [BrowserModule],
-    declarations: [DYNAMIC_COMPONENTS],
-    exports: [DYNAMIC_COMPONENTS]
-})
-export class DynamicModule { }
-
-@NgModule({
-    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule]
-})
-export class IgxComponentsModule {
-}

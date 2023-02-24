@@ -22,14 +22,12 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                SelectionWithScrollsComponent,
-                SelectionWithTransactionsComponent,
-                CellSelectionNoneComponent,
-                CellSelectionSingleComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        });
+    declarations: [SelectionWithScrollsComponent,
+        SelectionWithTransactionsComponent,
+        CellSelectionNoneComponent,
+        CellSelectionSingleComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
     }));
 
     describe('Base', () => {

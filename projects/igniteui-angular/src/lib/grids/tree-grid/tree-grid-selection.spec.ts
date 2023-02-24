@@ -45,19 +45,17 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSelectionRowEditingComponent,
-                IgxTreeGridSelectionWithTransactionComponent,
-                IgxTreeGridRowEditingTransactionComponent,
-                IgxTreeGridCustomRowSelectorsComponent,
-                IgxTreeGridCascadingSelectionComponent,
-                IgxTreeGridCascadingSelectionTransactionComponent,
-                IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
-        }).compileComponents();
+    declarations: [IgxTreeGridSimpleComponent,
+        IgxTreeGridCellSelectionComponent,
+        IgxTreeGridSelectionRowEditingComponent,
+        IgxTreeGridSelectionWithTransactionComponent,
+        IgxTreeGridRowEditingTransactionComponent,
+        IgxTreeGridCustomRowSelectorsComponent,
+        IgxTreeGridCascadingSelectionComponent,
+        IgxTreeGridCascadingSelectionTransactionComponent,
+        IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent],
+    imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
+}).compileComponents();
     }));
 
     describe('API Row Selection', () => {

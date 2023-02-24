@@ -55,30 +55,28 @@ describe('Excel Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                ReorderedColumnsComponent,
-                GridIDNameJobTitleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent,
-                ProductsComponent,
-                GridWithEmptyColumnsComponent,
-                GridIDNameJobTitleHireDataPerformanceComponent,
-                GridHireDateComponent,
-                GridExportGroupedDataComponent,
-                IgxHierarchicalGridExportComponent,
-                MultiColumnHeadersExportComponent,
-                IgxHierarchicalGridMultiColumnHeadersExportComponent,
-                ColumnsAddedOnInitComponent,
-                IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
-                GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
-                IgxPivotGridMultipleRowComponent,
-                IgxPivotGridTestComplexHierarchyComponent,
-                IgxTreeGridSummariesKeyComponent,
-                IgxHierarchicalGridSummariesExportComponent,
-                GroupedGridWithSummariesComponent,
-                GridCurrencySummariesComponent
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
-        }).compileComponents();
+    declarations: [ReorderedColumnsComponent,
+        GridIDNameJobTitleComponent,
+        IgxTreeGridPrimaryForeignKeyComponent,
+        ProductsComponent,
+        GridWithEmptyColumnsComponent,
+        GridIDNameJobTitleHireDataPerformanceComponent,
+        GridHireDateComponent,
+        GridExportGroupedDataComponent,
+        IgxHierarchicalGridExportComponent,
+        MultiColumnHeadersExportComponent,
+        IgxHierarchicalGridMultiColumnHeadersExportComponent,
+        ColumnsAddedOnInitComponent,
+        IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
+        GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
+        IgxPivotGridMultipleRowComponent,
+        IgxPivotGridTestComplexHierarchyComponent,
+        IgxTreeGridSummariesKeyComponent,
+        IgxHierarchicalGridSummariesExportComponent,
+        GroupedGridWithSummariesComponent,
+        GridCurrencySummariesComponent],
+    imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
+}).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {

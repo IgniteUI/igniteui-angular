@@ -23,11 +23,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestExpandedBaseComponent
-            ],
-            imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
-        }).compileComponents();
+    imports: [NoopAnimationsModule, IgxHierarchicalGridModule, IgxHierarchicalGridTestExpandedBaseComponent]
+}).compileComponents();
     }))
 
     beforeEach(() => {
@@ -685,7 +682,9 @@ class HelperFunctions {
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridModule]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

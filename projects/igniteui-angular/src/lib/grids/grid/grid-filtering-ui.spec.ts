@@ -60,19 +60,17 @@ const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringComponent,
-                IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent,
-                IgxGridFilteringTemplateComponent,
-                IgxGridDatesFilteringComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule,
-                IgxGridExcelStyleFilteringModule
-            ]
-        });
+    declarations: [IgxGridFilteringComponent,
+        IgxGridFilteringScrollComponent,
+        IgxGridFilteringMCHComponent,
+        IgxGridFilteringTemplateComponent,
+        IgxGridDatesFilteringComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule,
+        IgxGridExcelStyleFilteringModule
+    ]
+});
     }));
 
     describe(null, () => {
@@ -2970,20 +2968,19 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringComponent,
-                IgxGridFilteringESFEmptyTemplatesComponent,
-                IgxGridFilteringESFTemplatesComponent,
-                IgxGridFilteringESFLoadOnDemandComponent,
-                IgxGridFilteringMCHComponent,
-                IgxGridExternalESFComponent,
-                IgxGridExternalESFTemplateComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule,
-                IgxGridExcelStyleFilteringModule]
-        });
+    declarations: [IgxGridFilteringComponent,
+        IgxGridFilteringESFEmptyTemplatesComponent,
+        IgxGridFilteringESFTemplatesComponent,
+        IgxGridFilteringESFLoadOnDemandComponent,
+        IgxGridFilteringMCHComponent,
+        IgxGridExternalESFComponent,
+        IgxGridExternalESFTemplateComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule,
+        IgxGridExcelStyleFilteringModule
+    ]
+});
     }));
 
     describe(null, () => {
@@ -6358,13 +6355,12 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                CustomFilteringStrategyComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule]
-        });
+    declarations: [CustomFilteringStrategyComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     beforeEach(fakeAsync(() => {

@@ -1,15 +1,17 @@
 import {
     Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
-    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgModule, NgZone, Output, EventEmitter
+    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgZone, Output, EventEmitter
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
 import { IBaseEventArgs } from '../../core/utils';
 
 /**
  * @hidden
  */
-@Directive({ selector: '[igxTemplateOutlet]' })
+@Directive({
+    selector: '[igxTemplateOutlet]',
+    standalone: true
+})
 export class IgxTemplateOutletDirective implements OnChanges {
     @Input() public igxTemplateOutletContext !: any;
 
@@ -216,10 +218,4 @@ export interface ICachedViewLoadedEventArgs extends IViewChangeEventArgs {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxTemplateOutletDirective],
-    exports: [IgxTemplateOutletDirective],
-    imports: [CommonModule]
-})
-export class IgxTemplateOutletModule {
-}
+

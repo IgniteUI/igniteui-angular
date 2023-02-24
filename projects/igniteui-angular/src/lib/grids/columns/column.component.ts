@@ -72,7 +72,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
     /**

@@ -24,14 +24,12 @@ describe('General igxDrag/igxDrop', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestDragDropComponent
-            ],
-            imports: [
-                FormsModule,
-                IgxDragDropModule
-            ]
-        })
+    imports: [
+        FormsModule,
+        IgxDragDropModule,
+        TestDragDropComponent
+    ]
+})
         .compileComponents();
     }));
 
@@ -1356,16 +1354,14 @@ describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestDragDropLinkedSingleComponent,
-                TestDragDropLinkedMixedComponent,
-                TestDragDropStrategiesComponent
-            ],
-            imports: [
-                FormsModule,
-                IgxDragDropModule
-            ]
-        })
+    imports: [
+        FormsModule,
+        IgxDragDropModule,
+        TestDragDropLinkedSingleComponent,
+        TestDragDropLinkedMixedComponent,
+        TestDragDropStrategiesComponent
+    ]
+})
         .compileComponents();
     }));
 
@@ -1917,7 +1913,10 @@ const generalStyles = [`
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }"></div>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule,
+        IgxDragDropModule]
 })
 class TestDragDropComponent {
     @ViewChildren(IgxDragDirective)
@@ -1950,7 +1949,10 @@ class TestDragDropComponent {
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="1"></div>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule,
+        IgxDragDropModule]
 })
 class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
 
@@ -1969,7 +1971,10 @@ class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="[1, 3]"></div>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule,
+        IgxDragDropModule]
 })
 class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
 
@@ -1989,6 +1994,9 @@ class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
             <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }" [dragChannel]="2">Drag 2</div>
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }" [dragChannel]="3">Drag 3</div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule,
+        IgxDragDropModule]
 })
 class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }

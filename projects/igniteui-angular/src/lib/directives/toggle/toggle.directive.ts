@@ -33,7 +33,8 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
 
 @Directive({
     exportAs: 'toggle',
-    selector: '[igxToggle]'
+    selector: '[igxToggle]',
+    standalone: true
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
@@ -393,7 +394,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
 @Directive({
     exportAs: 'toggle-action',
-    selector: '[igxToggleAction]'
+    selector: '[igxToggleAction]',
+    standalone: true
 })
 export class IgxToggleActionDirective implements OnInit {
     /**
@@ -505,7 +507,8 @@ export class IgxToggleActionDirective implements OnInit {
  */
 @Directive({
     exportAs: 'overlay-outlet',
-    selector: '[igxOverlayOutlet]'
+    selector: '[igxOverlayOutlet]',
+    standalone: true
 })
 export class IgxOverlayOutletDirective {
     constructor(public element: ElementRef<HTMLElement>) { }
@@ -520,7 +523,7 @@ export class IgxOverlayOutletDirective {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
+    imports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     providers: [IgxNavigationService]
 })

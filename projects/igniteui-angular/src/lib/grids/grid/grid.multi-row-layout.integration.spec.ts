@@ -27,16 +27,15 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnLayoutPinningTestComponent,
-                ColumnLayoutFilteringTestComponent,
-                ColumnLayouHidingTestComponent,
-                ColumnLayoutGroupingTestComponent,
-                ColumnLayoutResizingTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxGridModule]
-        });
+    imports: [
+        NoopAnimationsModule, IgxGridModule,
+        ColumnLayoutPinningTestComponent,
+        ColumnLayoutFilteringTestComponent,
+        ColumnLayouHidingTestComponent,
+        ColumnLayoutGroupingTestComponent,
+        ColumnLayoutResizingTestComponent
+    ]
+});
     }));
 
     describe('Hiding ', () => {
@@ -1204,7 +1203,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayouHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1251,7 +1252,9 @@ export class ColumnLayouHidingTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1293,7 +1296,9 @@ export class ColumnLayoutPinningTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
 }
@@ -1307,7 +1312,9 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
     public showToolbar = false;
@@ -1333,7 +1340,9 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
             </igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutResizingTestComponent {
 

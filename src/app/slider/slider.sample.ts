@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxTickLabelTemplateDirective } from '../../../projects/igniteui-angular/src/lib/slider/slider.common';
+import { FormsModule } from '@angular/forms';
+import { IgxSliderComponent } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
 
 class Task {
     public title: string;
@@ -14,7 +18,9 @@ class Task {
 @Component({
     selector: 'app-slider-sample',
     styleUrls: ['slider.sample.scss'],
-    templateUrl: 'slider.sample.html'
+    templateUrl: 'slider.sample.html',
+    standalone: true,
+    imports: [IgxSliderComponent, FormsModule, IgxTickLabelTemplateDirective, IgxButtonDirective]
 })
 export class SliderSampleComponent {
     public labelOrientaion: TickLabelsOrientation = TickLabelsOrientation.Horizontal;

@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -11,7 +12,7 @@ import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
-import { IgxTreeComponent, IgxTreeModule } from './tree.component';
+import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
@@ -491,11 +492,9 @@ describe('IgxTree #treeView', () => {
         beforeAll(
             waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTreeSampleComponent,],
                     imports: [
                         NoopAnimationsModule,
-                        IgxTreeModule
+                        IgxTreeSampleComponent
                     ]
                 }).compileComponents();
             })
@@ -708,7 +707,9 @@ describe('IgxTree #treeView', () => {
             </igx-tree-node>
             <div *ngIf="divChild"></div>
         </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent]
 })
 class IgxTreeSampleComponent {
     @ViewChild(IgxTreeComponent)

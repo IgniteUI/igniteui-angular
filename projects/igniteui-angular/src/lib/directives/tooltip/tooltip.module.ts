@@ -9,9 +9,8 @@ import { IgxTooltipDirective } from './tooltip.directive';
  * @hidden
  */
  @NgModule({
-    declarations: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxTooltipComponent],
     exports: [IgxTooltipDirective, IgxTooltipTargetDirective],
-    imports: [CommonModule],
+    imports: [CommonModule, IgxTooltipDirective, IgxTooltipTargetDirective, IgxTooltipComponent],
     providers: [IgxOverlayService]
 })
 export class IgxTooltipModule { }

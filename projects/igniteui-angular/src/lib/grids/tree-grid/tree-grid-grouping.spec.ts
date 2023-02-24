@@ -14,12 +14,12 @@ describe('IgxTreeGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeGridGroupingComponent, IgxTreeGridGroupByAreaTestComponent],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule
-            ]
-        }).compileComponents();
+    declarations: [IgxTreeGridGroupingComponent, IgxTreeGridGroupByAreaTestComponent],
+    imports: [
+        BrowserAnimationsModule,
+        IgxTreeGridModule
+    ]
+}).compileComponents();
     }));
 
     let fix;

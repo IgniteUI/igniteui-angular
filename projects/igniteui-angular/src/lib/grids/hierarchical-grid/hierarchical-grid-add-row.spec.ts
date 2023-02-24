@@ -19,11 +19,9 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     };
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridActionStripComponent
-            ],
-            imports: [IgxHierarchicalGridModule, NoopAnimationsModule, IgxActionStripModule]
-        });
+    declarations: [IgxHierarchicalGridActionStripComponent],
+    imports: [IgxHierarchicalGridModule, NoopAnimationsModule, IgxActionStripModule]
+});
     }));
 
     describe(' Basic', () => {

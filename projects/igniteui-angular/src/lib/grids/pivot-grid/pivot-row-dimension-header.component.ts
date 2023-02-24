@@ -4,6 +4,9 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
+import { SortingIndexPipe } from '../headers/pipes';
+import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 /**
  * @hidden
@@ -11,7 +14,9 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-header',
-    templateUrl: '../headers/grid-header.component.html'
+    templateUrl: '../headers/grid-header.component.html',
+    standalone: true,
+    imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
 

@@ -14,12 +14,26 @@ import {
     ContainerPositionStrategy,
     IAnimationParams
 } from 'igniteui-angular';
+import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
+import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxDragDirective as IgxDragDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { FormsModule } from '@angular/forms';
+import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
+import { NgFor } from '@angular/common';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
+    standalone: true,
+    imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective_1, IgxDropDownComponent_1, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

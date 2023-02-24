@@ -31,10 +31,12 @@ import {
     AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
     OverlaySettings, PositionSettings
 } from '../services/public_api';
-import {
-    DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
-    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
-} from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxInputDirective as IgxInputDirective_1 } from '../directives/input/input.directive';
+import { IgxInputGroupComponent as IgxInputGroupComponent_1 } from '../input-group/input-group.component';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgTemplateOutlet, NgIf } from '@angular/common';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -66,7 +68,9 @@ const SingleInputDatesConcatenationString = ' - ';
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
-    ]
+    ],
+    standalone: true,
+    imports: [NgTemplateOutlet, IgxIconComponent, IgxInputGroupComponent_1, IgxInputDirective_1, NgIf, IgxPrefixDirective, DateRangePickerFormatPipe]
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {

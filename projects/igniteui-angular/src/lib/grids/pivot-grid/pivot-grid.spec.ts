@@ -28,14 +28,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxPivotGridTestBaseComponent,
-                IgxPivotGridTestComplexHierarchyComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxPivotGridModule
-            ]
-        }).compileComponents();
+    declarations: [IgxPivotGridTestBaseComponent,
+        IgxPivotGridTestComplexHierarchyComponent],
+    imports: [
+        NoopAnimationsModule, IgxPivotGridModule
+    ]
+}).compileComponents();
     }));
 
     describe('Basic IgxPivotGrid #pivotGrid', () => {

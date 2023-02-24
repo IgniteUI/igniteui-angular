@@ -19,13 +19,11 @@ describe('IgxTooltip', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTooltipSingleTargetComponent,
-                IgxTooltipMultipleTargetsComponent,
-                IgxTooltipPlainStringComponent
-            ],
-            imports: [NoopAnimationsModule, IgxTooltipModule]
-        }).compileComponents();
+    declarations: [IgxTooltipSingleTargetComponent,
+        IgxTooltipMultipleTargetsComponent,
+        IgxTooltipPlainStringComponent],
+    imports: [NoopAnimationsModule, IgxTooltipModule]
+}).compileComponents();
         UIInteractions.clearOverlay();
     }));
 

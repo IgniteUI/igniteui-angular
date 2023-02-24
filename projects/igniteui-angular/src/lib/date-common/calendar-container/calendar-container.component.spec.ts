@@ -15,11 +15,8 @@ describe('Calendar Container', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxDatePickerTestComponent
-            ],
-            imports: [IgxCalendarContainerModule, IgxPickersCommonModule, IgxButtonModule, NoopAnimationsModule]
-        })
+    imports: [IgxCalendarContainerModule, IgxPickersCommonModule, IgxButtonModule, NoopAnimationsModule, IgxDatePickerTestComponent]
+})
             .compileComponents();
     }));
 
@@ -77,7 +74,9 @@ describe('Calendar Container', () => {
         <ng-template igxPickerActions let-calendar>
             <button igxButton (click)="doWork(calendar)">action</button>
         </ng-template>
-        `
+        `,
+    standalone: true,
+    imports: [IgxCalendarContainerModule, IgxPickersCommonModule, IgxButtonModule]
 })
 export class IgxDatePickerTestComponent {
     @ViewChild(IgxCalendarContainerComponent) public container: IgxCalendarContainerComponent;

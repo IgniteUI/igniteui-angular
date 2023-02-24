@@ -37,16 +37,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                PinningComponent,
-                PinOnInitAndSelectionComponent,
-                GridFeaturesComponent,
-                MultiColumnHeadersWithGroupingComponent,
-                GridPinningMRLComponent
-
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+    declarations: [PinningComponent,
+        PinOnInitAndSelectionComponent,
+        GridFeaturesComponent,
+        MultiColumnHeadersWithGroupingComponent,
+        GridPinningMRLComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+}).compileComponents();
     }))
 
     describe('To Start', () => {

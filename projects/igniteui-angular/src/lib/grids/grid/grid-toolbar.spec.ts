@@ -31,19 +31,17 @@ const DATA = [
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                DefaultToolbarComponent,
-                ToolbarActionsComponent
-            ],
-            imports: [
-                IgxGridModule,
-                NoopAnimationsModule
-            ],
-            providers: [
-                IgxExcelExporterService,
-                IgxCsvExporterService
-            ]
-        });
+    imports: [
+        IgxGridModule,
+        NoopAnimationsModule,
+        DefaultToolbarComponent,
+        ToolbarActionsComponent
+    ],
+    providers: [
+        IgxExcelExporterService,
+        IgxCsvExporterService
+    ]
+});
     }));
 
     describe('Basic Tests - ', () => {
@@ -258,7 +256,9 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             <igx-grid-toolbar-actions *ngIf="toolbarActionsEnabled"></igx-grid-toolbar-actions>
         </igx-grid-toolbar>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class DefaultToolbarComponent {
     public toolbarEnabled = true;
@@ -293,7 +293,9 @@ export class DefaultToolbarComponent {
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ToolbarActionsComponent {
     @ViewChild(IgxGridComponent, { static: true })

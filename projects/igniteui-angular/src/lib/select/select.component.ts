@@ -40,26 +40,34 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxOverlayService } from '../services/overlay/overlay';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
+import { IgxInputDirective as IgxInputDirective_1 } from '../directives/input/input.directive';
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectToggleIcon]'
+    selector: '[igxSelectToggleIcon]',
+    standalone: true
 })
 export class IgxSelectToggleIconDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectHeader]'
+    selector: '[igxSelectHeader]',
+    standalone: true
 })
 export class IgxSelectHeaderDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectFooter]'
+    selector: '[igxSelectFooter]',
+    standalone: true
 })
 export class IgxSelectFooterDirective {
 }
@@ -85,12 +93,15 @@ export class IgxSelectFooterDirective {
     templateUrl: './select.component.html',
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
-        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }],
+        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }
+    ],
     styles: [`
         :host {
             display: block;
         }
-    `]
+    `],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective_1, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {

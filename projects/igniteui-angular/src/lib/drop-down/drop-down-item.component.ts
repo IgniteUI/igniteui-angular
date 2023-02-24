@@ -10,7 +10,8 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
  */
 @Component({
     selector: 'igx-drop-down-item',
-    templateUrl: 'drop-down-item.component.html'
+    templateUrl: 'drop-down-item.component.html',
+    standalone: true
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**

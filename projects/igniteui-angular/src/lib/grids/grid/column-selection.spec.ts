@@ -34,12 +34,10 @@ describe('IgxGrid - Column Selection #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ProductsComponent,
-                ColumnSelectionGroupTestComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    declarations: [ProductsComponent,
+        ColumnSelectionGroupTestComponent],
+    imports: [IgxGridModule, NoopAnimationsModule]
+});
     }));
 
     describe('Base tests: ', () => {

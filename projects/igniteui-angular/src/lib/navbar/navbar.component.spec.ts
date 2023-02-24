@@ -13,19 +13,17 @@ describe('IgxNavbar', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                NavbarIntializeTestComponent,
-                NavbarCustomActionIconTestComponent,
-                NavbarCustomIgxIconTestComponent,
-                NavbarCustomTitleTestComponent,
-                NavbarCustomTitleDirectiveTestComponent,
-                NavbarCustomIgxIconDirectiveTestComponent
-            ],
-            imports: [
-                IgxNavbarModule,
-                IgxIconModule
-            ]
-        }).compileComponents();
+    imports: [
+        IgxNavbarModule,
+        IgxIconModule,
+        NavbarIntializeTestComponent,
+        NavbarCustomActionIconTestComponent,
+        NavbarCustomIgxIconTestComponent,
+        NavbarCustomTitleTestComponent,
+        NavbarCustomTitleDirectiveTestComponent,
+        NavbarCustomIgxIconDirectiveTestComponent
+    ]
+}).compileComponents();
     }));
 
     let fixture; let component; let domNavbar;
@@ -200,7 +198,10 @@ describe('IgxNavbar', () => {
                             [title]="title"
                             [actionButtonIcon]="actionButtonIcon"
                             [isActionButtonVisible]="isActionButtonVisible">
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarIntializeTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
@@ -218,7 +219,10 @@ class NavbarIntializeTestComponent {
                     <igx-navbar-action>
                         <button>custom action</button>
                     </igx-navbar-action>
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarCustomActionIconTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
@@ -233,7 +237,10 @@ class NavbarCustomActionIconTestComponent {
                     <igx-navbar-action>
                         <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarCustomIgxIconTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
@@ -246,7 +253,10 @@ class NavbarCustomIgxIconTestComponent {
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
                     <igx-icon igxNavbarAction>arrow_back</igx-icon>
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
@@ -262,7 +272,10 @@ class NavbarCustomIgxIconDirectiveTestComponent {
                         <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                     <igx-navbar-title>Custom Title</igx-navbar-title>
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarCustomTitleTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
@@ -281,7 +294,10 @@ class NavbarCustomTitleTestComponent {
                         <div>Custom</div>
                         <span>Title</span>
                     </div>
-               </igx-navbar>`
+               </igx-navbar>`,
+    standalone: true,
+    imports: [IgxNavbarModule,
+        IgxIconModule]
 })
 class NavbarCustomTitleDirectiveTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;

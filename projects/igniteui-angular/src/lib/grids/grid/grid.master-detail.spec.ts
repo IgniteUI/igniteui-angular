@@ -32,13 +32,10 @@ describe('IgxGrid Master Detail #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                DefaultGridMasterDetailComponent,
-                AllExpandedGridMasterDetailComponent,
-                MRLMasterDetailComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    imports: [IgxGridModule, NoopAnimationsModule, DefaultGridMasterDetailComponent,
+        AllExpandedGridMasterDetailComponent,
+        MRLMasterDetailComponent]
+});
     }));
 
     describe('Basic', () => {
@@ -1277,7 +1274,9 @@ describe('IgxGrid Master Detail #grid', () => {
                     NEW TEMPLATE
                 </div>
     </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class DefaultGridMasterDetailComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1316,7 +1315,9 @@ export class DefaultGridMasterDetailComponent {
                 </div>
             </ng-template>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1357,7 +1358,9 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
                 </div>
             </ng-template>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 

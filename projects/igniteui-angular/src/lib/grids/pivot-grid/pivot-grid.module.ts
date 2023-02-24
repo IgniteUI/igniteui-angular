@@ -1,9 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { IgxAccordionModule } from '../../accordion/accordion.module';
-import { IgxDragDropModule } from "../../directives/drag-drop/drag-drop.directive";
-import { IgxExpansionPanelModule } from "../../expansion-panel/expansion-panel.module";
-import { IgxGridModule } from "../grid/grid.module";
-import { IgxListModule } from '../../list/list.component';
+
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
 import { IgxPivotGridComponent } from "./pivot-grid.component";
 import {
@@ -29,28 +25,7 @@ import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
  * @hidden
  */
 @NgModule({
-    declarations: [
-        IgxPivotGridComponent,
-        IgxPivotRowComponent,
-        IgxPivotHeaderRowComponent,
-        IgxPivotRowDimensionContentComponent,
-        IgxPivotRowDimensionHeaderComponent,
-        IgxPivotRowDimensionHeaderGroupComponent,
-        IgxPivotRowPipe,
-        IgxPivotRowExpansionPipe,
-        IgxPivotAutoTransform,
-        IgxPivotColumnPipe,
-        IgxPivotGridFilterPipe,
-        IgxPivotGridSortingPipe,
-        IgxPivotGridColumnSortingPipe,
-        IgxPivotCellMergingPipe,
-        IgxFilterPivotItemsPipe,
-        IgxPivotGridCellStyleClassesPipe,
-        IgxPivotDataSelectorComponent,
-        IgxPivotValueChipTemplateDirective,
-    ],
     exports: [
-        IgxGridModule,
         IgxPivotGridComponent,
         IgxPivotRowComponent,
         IgxPivotHeaderRowComponent,
@@ -70,7 +45,26 @@ import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
         IgxPivotDataSelectorComponent,
         IgxPivotValueChipTemplateDirective,
     ],
-    imports: [IgxGridModule, IgxExpansionPanelModule, IgxDragDropModule, IgxListModule, IgxAccordionModule],
+    imports: [
+        IgxPivotGridComponent,
+        IgxPivotRowComponent,
+        IgxPivotHeaderRowComponent,
+        IgxPivotRowDimensionContentComponent,
+        IgxPivotRowDimensionHeaderComponent,
+        IgxPivotRowDimensionHeaderGroupComponent,
+        IgxPivotRowPipe,
+        IgxPivotRowExpansionPipe,
+        IgxPivotAutoTransform,
+        IgxPivotColumnPipe,
+        IgxPivotGridFilterPipe,
+        IgxPivotGridSortingPipe,
+        IgxPivotGridColumnSortingPipe,
+        IgxPivotCellMergingPipe,
+        IgxFilterPivotItemsPipe,
+        IgxPivotGridCellStyleClassesPipe,
+        IgxPivotDataSelectorComponent,
+        IgxPivotValueChipTemplateDirective
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxPivotGridModule {}

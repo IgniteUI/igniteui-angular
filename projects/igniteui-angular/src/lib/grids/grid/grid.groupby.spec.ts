@@ -31,19 +31,16 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                DefaultGridComponent,
-                GroupableGridComponent,
-                CustomTemplateGridComponent,
-                GroupByDataMoreColumnsComponent,
-                GroupByEmptyColumnFieldComponent,
-                MultiColumnHeadersWithGroupingComponent,
-                GridGroupByRowCustomSelectorsComponent,
-                GridGroupByCaseSensitiveComponent,
-                GridGroupByTestDateTimeDataComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        });
+    declarations: [MultiColumnHeadersWithGroupingComponent],
+    imports: [NoopAnimationsModule, IgxGridModule, DefaultGridComponent,
+        GroupableGridComponent,
+        CustomTemplateGridComponent,
+        GroupByDataMoreColumnsComponent,
+        GroupByEmptyColumnFieldComponent,
+        GridGroupByRowCustomSelectorsComponent,
+        GridGroupByCaseSensitiveComponent,
+        GridGroupByTestDateTimeDataComponent]
+});
     }));
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
@@ -3685,7 +3682,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         <ng-template #dropArea>
             <span> Custom template </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class DefaultGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3757,7 +3756,9 @@ class MySortingStrategy extends IgxGrouping {
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GroupableGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3810,7 +3811,9 @@ export class GroupableGridComponent extends DataParent {
                     CUSTOM GROUP BY
                 </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3832,7 +3835,9 @@ export class CustomTemplateGridComponent extends DataParent {
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
                 </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3870,7 +3875,9 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
                 </ng-template>
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3901,7 +3908,9 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
                 <p>Group Row instance: {{context.groupRow}};<p>
             </ng-template>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
     @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })
@@ -3925,7 +3934,9 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
             <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="string"></igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3970,7 +3981,9 @@ export class GridGroupByCaseSensitiveComponent {
             <igx-column [field]="'TimeField'" [width]="200" [groupable]="true" dataType="time"></igx-column>
             <igx-column [field]="'DateTimeField'" [width]="200" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridGroupByTestDateTimeDataComponent {
     @ViewChild("grid", { read: IgxGridComponent, static: true })

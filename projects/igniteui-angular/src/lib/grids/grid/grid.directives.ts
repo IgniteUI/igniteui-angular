@@ -15,7 +15,8 @@ import {
  * @hidden
  */
 @Directive({
-    selector: '[igxGroupByRow]'
+    selector: '[igxGroupByRow]',
+    standalone: true
 })
 export class IgxGroupByRowTemplateDirective {
     public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective,
@@ -31,7 +32,8 @@ export class IgxGroupByRowTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxGridDetail]'
+    selector: '[igxGridDetail]',
+    standalone: true
 })
 export class IgxGridDetailTemplateDirective {
     public static ngTemplateContextGuard(_dir: IgxGridDetailTemplateDirective,
@@ -44,7 +46,8 @@ export class IgxGridDetailTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxRowExpandedIndicator]'
+    selector: '[igxRowExpandedIndicator]',
+    standalone: true
 })
 export class IgxRowExpandedIndicatorDirective {
     public static ngTemplateContextGuard(_directive: IgxRowExpandedIndicatorDirective,
@@ -57,7 +60,8 @@ export class IgxRowExpandedIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxRowCollapsedIndicator]'
+    selector: '[igxRowCollapsedIndicator]',
+    standalone: true
 })
 export class IgxRowCollapsedIndicatorDirective {
     public static ngTemplateContextGuard(_directive: IgxRowCollapsedIndicatorDirective,
@@ -71,7 +75,8 @@ export class IgxRowCollapsedIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxHeaderExpandedIndicator]'
+    selector: '[igxHeaderExpandedIndicator]',
+    standalone: true
 })
 export class IgxHeaderExpandIndicatorDirective {
     public static ngTemplateContextGuard(_directive: IgxHeaderExpandIndicatorDirective,
@@ -84,7 +89,8 @@ export class IgxHeaderExpandIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxHeaderCollapsedIndicator]'
+    selector: '[igxHeaderCollapsedIndicator]',
+    standalone: true
 })
 export class IgxHeaderCollapseIndicatorDirective {
     public static ngTemplateContextGuard(_directive: IgxHeaderCollapseIndicatorDirective,
@@ -97,7 +103,8 @@ export class IgxHeaderCollapseIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxExcelStyleHeaderIcon]'
+    selector: '[igxExcelStyleHeaderIcon]',
+    standalone: true
 })
 export class IgxExcelStyleHeaderIconDirective {
     public static ngTemplateContextGuard(_directive: IgxExcelStyleHeaderIconDirective,
@@ -110,7 +117,8 @@ export class IgxExcelStyleHeaderIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxSortHeaderIcon]'
+    selector: '[igxSortHeaderIcon]',
+    standalone: true
 })
 export class IgxSortHeaderIconDirective {
     public static ngTemplateContextGuard(_directive: IgxSortHeaderIconDirective,
@@ -123,7 +131,8 @@ export class IgxSortHeaderIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxSortAscendingHeaderIcon]'
+    selector: '[igxSortAscendingHeaderIcon]',
+    standalone: true
 })
 export class IgxSortAscendingHeaderIconDirective {
     public static ngTemplateContextGuard(_directive: IgxSortAscendingHeaderIconDirective,
@@ -136,7 +145,8 @@ export class IgxSortAscendingHeaderIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxSortDescendingHeaderIcon]'
+    selector: '[igxSortDescendingHeaderIcon]',
+    standalone: true
 })
 export class IgxSortDescendingHeaderIconDirective {
     public static ngTemplateContextGuard(_directive: IgxSortDescendingHeaderIconDirective,
@@ -149,7 +159,8 @@ export class IgxSortDescendingHeaderIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxGroupAreaDrop]'
+    selector: '[igxGroupAreaDrop]',
+    standalone: true
 })
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
 

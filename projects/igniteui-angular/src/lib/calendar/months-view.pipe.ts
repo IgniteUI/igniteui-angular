@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Calendar } from './calendar';
 
 @Pipe({
-    name: 'IgxMonthViewSlots'
+    name: 'IgxMonthViewSlots',
+    standalone: true
 })
 export class IgxMonthViewSlotsCalendar implements PipeTransform {
     public transform(monthViews: number) {
@@ -11,7 +12,8 @@ export class IgxMonthViewSlotsCalendar implements PipeTransform {
 }
 
 @Pipe({
-    name: 'IgxGetViewDate'
+    name: 'IgxGetViewDate',
+    standalone: true
 })
 export class IgxGetViewDateCalendar implements PipeTransform {
     private calendar: Calendar;

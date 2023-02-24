@@ -13,7 +13,14 @@ import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
-import { IgxGroupByAreaDirective } from './group-by-area.directive';
+import { IgxGroupByAreaDirective, IgxGroupByMetaPipe } from './group-by-area.directive';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { IgxGroupAreaDropDirective } from '../grid/grid.directives';
+import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxChipComponent } from '../../chips/chip.component';
+import { NgFor, NgTemplateOutlet } from '@angular/common';
+import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 
 /**
  * An internal component representing the group-by drop area for the igx-grid component.
@@ -23,7 +30,9 @@ import { IgxGroupByAreaDirective } from './group-by-area.directive';
 @Component({
     selector: 'igx-tree-grid-group-by-area',
     templateUrl: 'group-by-area.component.html',
-    providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxTreeGridGroupByAreaComponent }]
+    providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxTreeGridGroupByAreaComponent }],
+    standalone: true,
+    imports: [IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {
     @Input()

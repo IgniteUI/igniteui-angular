@@ -6,14 +6,13 @@ import {
     forwardRef,
     HostBinding,
     Input,
-    NgModule,
     Output,
     Provider,
     ViewChild,
     ElementRef
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
@@ -56,7 +55,9 @@ let nextId = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxCheckboxComponent, multi: true }],
     selector: 'igx-checkbox',
     preserveWhitespaces: false,
-    templateUrl: 'checkbox.component.html'
+    templateUrl: 'checkbox.component.html',
+    standalone: true,
+    imports: [IgxRippleDirective]
 })
 export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
     private static ngAcceptInputType_required: boolean | '';
@@ -474,16 +475,12 @@ export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
     selector: `igx-checkbox[required][formControlName],
     igx-checkbox[required][formControl],
     igx-checkbox[required][ngModel]`,
-    providers: [IGX_CHECKBOX_REQUIRED_VALIDATOR]
+    providers: [IGX_CHECKBOX_REQUIRED_VALIDATOR],
+    standalone: true
 })
 export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator {}
 
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
-    exports: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
-    imports: [IgxRippleModule]
-})
-export class IgxCheckboxModule {}
+

@@ -13,7 +13,10 @@ import { IgxResizeHandleDirective } from '../resize-handle.directive';
  * @hidden
  * @internal
  */
-@Directive({ selector: '[igxPivotResizeHandle]' })
+@Directive({
+    selector: '[igxPivotResizeHandle]',
+    standalone: true
+})
 export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
 
     /**

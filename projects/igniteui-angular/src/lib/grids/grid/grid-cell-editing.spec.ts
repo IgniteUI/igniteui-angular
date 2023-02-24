@@ -25,14 +25,12 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                CellEditingTestComponent,
-                CellEditingScrollTestComponent,
-                ColumnEditablePropertyTestComponent,
-                SelectionWithTransactionsComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        });
+    declarations: [CellEditingTestComponent,
+        CellEditingScrollTestComponent,
+        ColumnEditablePropertyTestComponent,
+        SelectionWithTransactionsComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
     }));
 
     describe('Base Tests', () => {

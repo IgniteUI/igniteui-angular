@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular';
 import { Router } from '@angular/router';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 
 @Component({
     selector: 'app-icon-sample',
     styleUrls: ['./icon.sample.css'],
-    templateUrl: 'icon.sample.html'
+    templateUrl: 'icon.sample.html',
+    standalone: true,
+    imports: [IgxIconComponent, IgxButtonDirective]
 })
 export class IconSampleComponent implements OnInit {
     constructor(public router: Router, private _iconService: IgxIconService) {}

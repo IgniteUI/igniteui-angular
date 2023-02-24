@@ -64,19 +64,17 @@ describe('Card', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                InitCardComponent,
-                InitOutlinedCardComponent,
-                CardWithHeaderComponent,
-                VerticalCardComponent,
-                HorizontalCardComponent
-            ],
-            imports: [
-                IgxCardModule,
-                IgxIconModule,
-                IgxButtonModule
-            ]
-        }).compileComponents();
+    imports: [
+        IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule,
+        InitCardComponent,
+        InitOutlinedCardComponent,
+        CardWithHeaderComponent,
+        VerticalCardComponent,
+        HorizontalCardComponent
+    ]
+}).compileComponents();
     }));
 
     it('Initializes default card', () => {
@@ -260,12 +258,20 @@ describe('Card', () => {
 });
 
 @Component({
-    template: `<igx-card></igx-card>`
+    template: `<igx-card></igx-card>`,
+    standalone: true,
+    imports: [IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule]
 })
 class InitCardComponent { }
 
 @Component({
-    template: `<igx-card type="outlined"></igx-card>`
+    template: `<igx-card type="outlined"></igx-card>`,
+    standalone: true,
+    imports: [IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule]
 })
 class InitOutlinedCardComponent {
     @ViewChild(IgxCardComponent, { static: true })
@@ -275,7 +281,11 @@ class InitOutlinedCardComponent {
 @Component({
     template: `<igx-card>
         <igx-card-header></igx-card-header>
-    <igx-card>`
+    <igx-card>`,
+    standalone: true,
+    imports: [IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule]
 })
 class CardWithHeaderComponent { }
 
@@ -299,7 +309,11 @@ class CardWithHeaderComponent { }
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
-    <igx-card>`
+    <igx-card>`,
+    standalone: true,
+    imports: [IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule]
 })
 class VerticalCardComponent {
     @ViewChild(IgxCardMediaDirective, { static: true }) public media: IgxCardMediaDirective;
@@ -313,7 +327,11 @@ class VerticalCardComponent {
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
-    </igx-card>`
+    </igx-card>`,
+    standalone: true,
+    imports: [IgxCardModule,
+        IgxIconModule,
+        IgxButtonModule]
 })
 class HorizontalCardComponent {
     @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;

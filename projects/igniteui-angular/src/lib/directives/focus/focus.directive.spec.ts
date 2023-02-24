@@ -13,14 +13,11 @@ describe('igxFocus', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                SetFocusComponent,
-                NoFocusComponent,
-                TriggerFocusOnClickComponent,
-                CheckboxPickerComponent
-            ],
-            imports: [ IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
-        }).compileComponents();
+    imports: [IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule, SetFocusComponent,
+        NoFocusComponent,
+        TriggerFocusOnClickComponent,
+        CheckboxPickerComponent]
+}).compileComponents();
     }));
 
     it('The second element should be focused', fakeAsync(() => {
@@ -86,28 +83,32 @@ describe('igxFocus', () => {
 });
 
 @Component({
-    template:
-    `
+    template: `
         <input type="text" value="First" />
         <input type="text" [igxFocus]="true" value="Fifth" />
         <input type="text" value="Seventh" />
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule]
 })
 class SetFocusComponent { }
 
 @Component({
-    template: `<input type="text" [igxFocus]="false" value="First" />`
+    template: `<input type="text" [igxFocus]="false" value="First" />`,
+    standalone: true,
+    imports: [IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule]
 })
 class NoFocusComponent { }
 
 @Component({
-    template:
-    `
+    template: `
     <div>First</div>
     <div>Second</div>
     <div tabindex="0" [igxFocus]>Third</div>
     <button (click)="focus()">Focus the third one</button>
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule]
 })
 class TriggerFocusOnClickComponent {
     @ViewChild(IgxFocusDirective, { static: true }) public focusRef: IgxFocusDirective;
@@ -119,11 +120,12 @@ class TriggerFocusOnClickComponent {
 }
 
 @Component({
-    template:
-    `
+    template: `
     <igx-checkbox [igxFocus]="true"></igx-checkbox>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule]
 })
 class CheckboxPickerComponent {
     @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;

@@ -12,15 +12,13 @@ describe('IgxHint', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                HintComponent,
-                StartHintComponent,
-                EndHintComponent
-            ],
-            imports: [
-                IgxInputGroupModule
-            ]
-        })
+    imports: [
+        IgxInputGroupModule,
+        HintComponent,
+        StartHintComponent,
+        EndHintComponent
+    ]
+})
         .compileComponents();
     }));
 
@@ -44,19 +42,25 @@ describe('IgxHint', () => {
 });
 
 @Component({
-    template: `<igx-hint>regular hint</igx-hint>`
+    template: `<igx-hint>regular hint</igx-hint>`,
+    standalone: true,
+    imports: [IgxInputGroupModule]
 })
 class HintComponent {
 }
 
 @Component({
-    template: `<igx-hint position="start">hin with position start</igx-hint>`
+    template: `<igx-hint position="start">hin with position start</igx-hint>`,
+    standalone: true,
+    imports: [IgxInputGroupModule]
 })
 class StartHintComponent {
 }
 
 @Component({
-    template: `<igx-hint position="end">hint with position end</igx-hint>`
+    template: `<igx-hint position="end">hint with position end</igx-hint>`,
+    standalone: true,
+    imports: [IgxInputGroupModule]
 })
 class EndHintComponent {
 }

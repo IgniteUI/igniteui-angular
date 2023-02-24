@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     ISelectionEventArgs, CancelableEventArgs,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
@@ -7,12 +7,26 @@ import {
     IgxSelectComponent,
     IButtonGroupEventArgs
 } from 'igniteui-angular';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxSelectGroupComponent } from '../../../projects/igniteui-angular/src/lib/select/select-group.component';
+import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { NgFor } from '@angular/common';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxSelectComponent as IgxSelectComponent_1, IgxSelectHeaderDirective, IgxSelectFooterDirective } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
-    templateUrl: './select.sample.html'
+    templateUrl: './select.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxSelectComponent_1, FormsModule, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, NgFor, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, ReactiveFormsModule, IgxSwitchComponent]
 })
 export class SelectSampleComponent implements OnInit {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })

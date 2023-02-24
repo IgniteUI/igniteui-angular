@@ -28,16 +28,14 @@ describe('Column Pinning UI #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                ColumnPinningTestComponent,
-                ColumnGroupsPinningTestComponent,
-                ColumnPinningWithTemplateTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        }).compileComponents();
+    declarations: [ColumnPinningTestComponent,
+        ColumnGroupsPinningTestComponent,
+        ColumnPinningWithTemplateTestComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+}).compileComponents();
     }));
 
     describe('Base', () => {

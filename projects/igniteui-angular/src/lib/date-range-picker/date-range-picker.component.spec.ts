@@ -336,25 +336,23 @@ describe('IgxDateRangePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeDefaultComponent,
-                        DateRangeDisabledComponent,
-                        DateRangeReactiveFormComponent
-                    ],
-                    imports: [
-                        CommonModule,
-                        IgxDateRangePickerModule,
-                        IgxDateTimeEditorModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        FormsModule,
-                        NoopAnimationsModule,
-                        IgxPickersCommonModule,
-                        IgxCalendarContainerModule,
-                        ReactiveFormsModule
-                    ]
-                })
+    imports: [
+        CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        NoopAnimationsModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        ReactiveFormsModule,
+        DateRangeTestComponent,
+        DateRangeDefaultComponent,
+        DateRangeDisabledComponent,
+        DateRangeReactiveFormComponent
+    ]
+})
                     .compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -798,27 +796,25 @@ describe('IgxDateRangePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent,
-                        DateRangeTwoInputsNgModelTestComponent,
-                        DateRangeDisabledComponent,
-                        DateRangeTwoInputsDisabledComponent,
-                        DateRangeReactiveFormComponent
-                    ],
-                    imports: [
-                        CommonModule,
-                        IgxDateRangePickerModule,
-                        IgxDateTimeEditorModule,
-                        IgxPickersCommonModule,
-                        IgxCalendarContainerModule,
-                        IgxInputGroupModule,
-                        FormsModule,
-                        NoopAnimationsModule,
-                        IgxIconModule,
-                        ReactiveFormsModule
-                    ]
-                })
+    imports: [
+        CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        IgxInputGroupModule,
+        FormsModule,
+        NoopAnimationsModule,
+        IgxIconModule,
+        ReactiveFormsModule,
+        DateRangeTestComponent,
+        DateRangeTwoInputsTestComponent,
+        DateRangeTwoInputsNgModelTestComponent,
+        DateRangeDisabledComponent,
+        DateRangeTwoInputsDisabledComponent,
+        DateRangeReactiveFormComponent
+    ]
+})
                     .compileComponents();
             }));
             beforeEach(async () => {
@@ -1250,24 +1246,22 @@ describe('IgxDateRangePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeDefaultComponent,
-                        DateRangeCustomComponent,
-                        DateRangeTemplatesComponent,
-                        DateRangeTwoInputsTestComponent
-                    ],
-                    imports: [
-                        IgxDateRangePickerModule,
-                        IgxDateTimeEditorModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        FormsModule,
-                        NoopAnimationsModule,
-                        IgxCalendarContainerModule,
-                        IgxPickersCommonModule
-                    ]
-                })
+    imports: [
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        NoopAnimationsModule,
+        IgxCalendarContainerModule,
+        IgxPickersCommonModule,
+        DateRangeTestComponent,
+        DateRangeDefaultComponent,
+        DateRangeCustomComponent,
+        DateRangeTemplatesComponent,
+        DateRangeTwoInputsTestComponent
+    ]
+})
                     .compileComponents();
             }));
 
@@ -1437,7 +1431,17 @@ describe('IgxDateRangePicker', () => {
 
 @Component({
     selector: 'igx-date-range-test',
-    template: ''
+    template: '',
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        ReactiveFormsModule]
 })
 export class DateRangeTestComponent implements OnInit {
     [x: string]: any;
@@ -1459,7 +1463,17 @@ export class DateRangeTestComponent implements OnInit {
     template: `
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
-    `
+    `,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        ReactiveFormsModule]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
     public disabled = false;
@@ -1484,7 +1498,17 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
             <input igxInput igxDateTimeEditor type="text">
         </igx-date-range-end>
     </igx-date-range-picker>
-`
+`,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        IgxInputGroupModule,
+        FormsModule,
+        IgxIconModule,
+        ReactiveFormsModule]
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     public range;
@@ -1502,7 +1526,17 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
         <igx-date-range-end>
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
-    </igx-date-range-picker>`
+    </igx-date-range-picker>`,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        IgxInputGroupModule,
+        FormsModule,
+        IgxIconModule,
+        ReactiveFormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
     public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
@@ -1514,7 +1548,15 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
 <igx-date-range-picker [value]="date" [mode]="'dropdown'" [formatter]="formatter">
 <label igxLabel>Select Date</label>
 </igx-date-range-picker>
-`
+`,
+    standalone: true,
+    imports: [IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxCalendarContainerModule,
+        IgxPickersCommonModule]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
     public date: DateRange;
@@ -1568,7 +1610,15 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-suffix>
         </igx-date-range-end>
     </igx-date-range-picker>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxCalendarContainerModule,
+        IgxPickersCommonModule]
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
     public range;
@@ -1576,7 +1626,17 @@ export class DateRangeTemplatesComponent extends DateRangeTestComponent {
 
 @Component({
     template: `<igx-date-range-picker [disabled]="(disabled$ | async) === true"></igx-date-range-picker>`,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        ReactiveFormsModule]
 })
 export class DateRangeDisabledComponent extends DateRangeTestComponent {
     public disabled$ = new Subject<boolean>();
@@ -1597,7 +1657,17 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
             <input igxInput igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        IgxInputGroupModule,
+        FormsModule,
+        IgxIconModule,
+        ReactiveFormsModule]
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
 
@@ -1615,7 +1685,17 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
                     <input igxInput igxDateTimeEditor>
                 </igx-date-range-end>
             </igx-date-range-picker>
-        </form>`
+        </form>`,
+    standalone: true,
+    imports: [CommonModule,
+        IgxDateRangePickerModule,
+        IgxDateTimeEditorModule,
+        IgxInputGroupModule,
+        IgxIconModule,
+        FormsModule,
+        IgxPickersCommonModule,
+        IgxCalendarContainerModule,
+        ReactiveFormsModule]
 })
 export class DateRangeReactiveFormComponent {
     @ViewChild('range', {read: IgxDateRangePickerComponent}) public dateRange: IgxDateRangePickerComponent;

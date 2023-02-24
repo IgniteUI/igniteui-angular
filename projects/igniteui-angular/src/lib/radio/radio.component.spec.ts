@@ -13,19 +13,16 @@ describe('IgxRadio', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxRadioComponent,
-                InitRadioComponent,
-                DisabledRadioComponent,
-                RequiredRadioComponent,
-                RadioFormComponent,
-                RadioWithModelComponent,
-                ReactiveFormComponent,
-                RadioExternalLabelComponent,
-                RadioInvisibleLabelComponent
-            ],
-            imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule]
-        }).compileComponents();
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule, IgxRadioComponent,
+        InitRadioComponent,
+        DisabledRadioComponent,
+        RequiredRadioComponent,
+        RadioFormComponent,
+        RadioWithModelComponent,
+        ReactiveFormComponent,
+        RadioExternalLabelComponent,
+        RadioInvisibleLabelComponent]
+}).compileComponents();
     }));
 
     it('Init a radio', () => {
@@ -266,7 +263,11 @@ describe('IgxRadio', () => {
     });
 });
 
-@Component({ template: `<igx-radio #radio>Radio</igx-radio>` })
+@Component({
+    template: `<igx-radio #radio>Radio</igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+})
 class InitRadioComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
 }
@@ -275,7 +276,9 @@ class InitRadioComponent {
     template: `
         <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']"
                     value="{{item}}"
-                    name="group" [(ngModel)]="selected">{{item}}</igx-radio>`
+                    name="group" [(ngModel)]="selected">{{item}}</igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class RadioWithModelComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -290,7 +293,9 @@ class RadioWithModelComponent {
         [(ngModel)]="selected"
         [disabled]="item.disabled">
         {{item.value}}
-    </igx-radio>`
+    </igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class DisabledRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -313,7 +318,9 @@ class DisabledRadioComponent {
         [(ngModel)]="Foo"
         required>
         {{item}}
-    </igx-radio>`
+    </igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class RequiredRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -321,7 +328,9 @@ class RequiredRadioComponent {
 
 @Component({
     template: `<p id="my-label">{{label}}</p>
-    <igx-radio #radio aria-labelledby="my-label"></igx-radio>`
+    <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class RadioExternalLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
@@ -329,7 +338,9 @@ class RadioExternalLabelComponent {
 }
 
 @Component({
-    template: `<igx-radio #radio [aria-label]="label"></igx-radio>`
+    template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class RadioInvisibleLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
@@ -342,7 +353,9 @@ class RadioInvisibleLabelComponent {
         <igx-radio #radioInForm [required]="isRequired" name="option" [(ngModel)]="selected" value="option1">Option 1</igx-radio>
         <button type="submit" [disabled]="!form.valid">Submit</button>
     </form>
-`
+`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class RadioFormComponent {
     @ViewChild('radioInForm', { read: IgxRadioComponent, static: true })
@@ -355,10 +368,11 @@ class RadioFormComponent {
 }
 
 @Component({
-    template: 
-    `<form [formGroup]="reactiveForm">
+    template: `<form [formGroup]="reactiveForm">
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
-    </form>`
+    </form>`,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
 })
 class ReactiveFormComponent {
     @ViewChild('radio', { read: IgxRadioComponent, static: true })

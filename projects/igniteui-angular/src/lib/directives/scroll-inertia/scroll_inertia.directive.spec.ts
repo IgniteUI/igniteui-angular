@@ -18,12 +18,9 @@ describe('Scroll Inertia Directive - Rendering', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTestScrollInertiaDirective,
-                ScrollInertiaComponent
-            ],
-            imports: [IgxScrollInertiaModule]
-        }).compileComponents().then(() => {
+    imports: [IgxScrollInertiaModule, IgxTestScrollInertiaDirective,
+        ScrollInertiaComponent]
+}).compileComponents().then(() => {
             fix = TestBed.createComponent(ScrollInertiaComponent);
             fix.detectChanges();
         });
@@ -303,7 +300,10 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 });
 
     /** igxScroll inertia for testing */
-@Directive({ selector: '[igxTestScrollInertia]' })
+@Directive({
+    selector: '[igxTestScrollInertia]',
+    standalone: true
+})
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
     constructor(element: ElementRef, _zone: NgZone) {
@@ -337,7 +337,9 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         <div #scrBar [style.height]='height' style='overflow: auto; width: 50px; float:right;'>
             <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxScrollInertiaModule]
 })
 export class ScrollInertiaComponent implements OnInit {
     @ViewChild('container', { static: true }) public container: ElementRef;

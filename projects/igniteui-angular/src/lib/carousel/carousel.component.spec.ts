@@ -20,15 +20,12 @@ describe('Carousel', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                CarouselTestComponent,
-                CarouselTemplateSetInMarkupTestComponent,
-                CarouselTemplateSetInTypescriptTestComponent,
-                CarouselAnimationsComponent,
-                CarouselDynamicSlidesComponent
-            ],
-            imports: [IgxCarouselModule, NoopAnimationsModule]
-        })
+    imports: [IgxCarouselModule, NoopAnimationsModule, CarouselTestComponent,
+        CarouselTemplateSetInMarkupTestComponent,
+        CarouselTemplateSetInTypescriptTestComponent,
+        CarouselAnimationsComponent,
+        CarouselDynamicSlidesComponent]
+})
             .compileComponents();
     }));
 
@@ -939,7 +936,9 @@ class HelperTestFunctions {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselModule]
 })
 class CarouselTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -957,7 +956,9 @@ class CarouselTestComponent {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselModule]
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -984,7 +985,9 @@ class CarouselAnimationsComponent {
                 <span>prev</span>
             </ng-template>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselModule]
 })
 class CarouselTemplateSetInMarkupTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1015,7 +1018,9 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide3</h3></igx-slide>
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselModule]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1036,7 +1041,9 @@ class CarouselTemplateSetInTypescriptTestComponent {
                <igx-slide><h3>{{slide.text}}</h3></igx-slide>
             </igx-slide>
         </igx-carousel>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCarouselModule]
 })
 class CarouselDynamicSlidesComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;

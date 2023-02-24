@@ -1,5 +1,5 @@
 ﻿/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
-import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
+import { DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentRef,
@@ -11,7 +11,6 @@ import {
     IterableChanges,
     IterableDiffer,
     IterableDiffers,
-    NgModule,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -28,7 +27,7 @@ import {
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
-import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
@@ -80,7 +79,8 @@ export class IgxForOfContext<T> {
 
 @Directive({
     selector: '[igxFor][igxForOf]',
-    providers: [IgxForOfScrollSyncService]
+    providers: [IgxForOfScrollSyncService],
+    standalone: true
 })
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
@@ -975,7 +975,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
                 const view = container.detach(container.length - 1);
-    
+
                 this.updateTemplateContext(embView.context, i);
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
@@ -1475,7 +1475,8 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
 }
 
 @Directive({
-    selector: '[igxGridFor][igxGridForOf]'
+    selector: '[igxGridFor][igxGridForOf]',
+    standalone: true
 })
 export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input()
@@ -1842,18 +1843,4 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxForOfDirective,
-        IgxGridForOfDirective,
-        DisplayContainerComponent,
-        VirtualHelperComponent,
-        HVirtualHelperComponent,
-        VirtualHelperBaseDirective
-    ],
-    exports: [IgxForOfDirective, IgxGridForOfDirective],
-    imports: [IgxScrollInertiaModule, CommonModule]
-})
 
-export class IgxForOfModule {
-}

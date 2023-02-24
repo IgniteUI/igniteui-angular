@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     Directive,
@@ -6,12 +5,11 @@ import {
     Optional,
     Inject,
     Input,
-    NgModule,
     OnInit,
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { IgxButtonModule } from '../directives/button/button.directive';
+
 import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
@@ -22,7 +20,8 @@ let NEXT_ID = 0;
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-media'
+    selector: 'igx-card-media',
+    standalone: true
 })
 export class IgxCardMediaDirective {
     /** @hidden @internal */
@@ -69,7 +68,8 @@ export class IgxCardMediaDirective {
  */
 @Component({
     selector: 'igx-card-header',
-    templateUrl: 'card-header.component.html'
+    templateUrl: 'card-header.component.html',
+    standalone: true
 })
 export class IgxCardHeaderComponent {
     /** @hidden @internal */
@@ -107,7 +107,8 @@ export class IgxCardHeaderComponent {
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
-    selector: '[igxCardThumbnail]'
+    selector: '[igxCardThumbnail]',
+    standalone: true
 })
 export class IgxCardThumbnailDirective { }
 
@@ -116,7 +117,8 @@ export class IgxCardThumbnailDirective { }
  * Use it to tag text nodes.
  */
 @Directive({
-    selector: '[igxCardHeaderTitle]'
+    selector: '[igxCardHeaderTitle]',
+    standalone: true
 })
 export class IgxCardHeaderTitleDirective {
     /** @hidden @internal */
@@ -129,7 +131,8 @@ export class IgxCardHeaderTitleDirective {
  * Use it to tag text nodes.
  */
 @Directive({
-    selector: '[igxCardHeaderSubtitle]'
+    selector: '[igxCardHeaderSubtitle]',
+    standalone: true
 })
 export class IgxCardHeaderSubtitleDirective {
     /** @hidden @internal */
@@ -141,7 +144,8 @@ export class IgxCardHeaderSubtitleDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-content'
+    selector: 'igx-card-content',
+    standalone: true
 })
 export class IgxCardContentDirective {
     /** @hidden @internal */
@@ -154,7 +158,8 @@ export class IgxCardContentDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-card-footer'
+    selector: 'igx-card-footer',
+    standalone: true
 })
 export class IgxCardFooterDirective {
     /**
@@ -209,7 +214,8 @@ export type IgxCardType = (typeof IgxCardType)[keyof typeof IgxCardType];
 
 @Component({
     selector: 'igx-card',
-    templateUrl: 'card.component.html'
+    templateUrl: 'card.component.html',
+    standalone: true
 })
 export class IgxCardComponent {
     /**
@@ -290,7 +296,8 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 @Component({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-actions',
-    templateUrl: 'card-actions.component.html'
+    templateUrl: 'card-actions.component.html',
+    standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
     /**
@@ -374,29 +381,4 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxCardComponent,
-        IgxCardHeaderComponent,
-        IgxCardMediaDirective,
-        IgxCardContentDirective,
-        IgxCardActionsComponent,
-        IgxCardFooterDirective,
-        IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubtitleDirective,
-        IgxCardThumbnailDirective,
-    ],
-    exports: [
-        IgxCardComponent,
-        IgxCardHeaderComponent,
-        IgxCardMediaDirective,
-        IgxCardContentDirective,
-        IgxCardActionsComponent,
-        IgxCardFooterDirective,
-        IgxCardHeaderTitleDirective,
-        IgxCardHeaderSubtitleDirective,
-        IgxCardThumbnailDirective,
-    ],
-    imports: [CommonModule, IgxButtonModule]
-})
-export class IgxCardModule { }
+

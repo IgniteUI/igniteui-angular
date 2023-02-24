@@ -1,12 +1,23 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor } from '@angular/common';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-auto-size.sample.css'],
-    templateUrl: 'grid-auto-size.sample.html'
+    templateUrl: 'grid-auto-size.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {

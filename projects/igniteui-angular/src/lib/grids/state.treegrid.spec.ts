@@ -22,11 +22,8 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     let grid;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridTreeDataTestComponent
-            ],
-            imports: [ NoopAnimationsModule, IgxTreeGridModule ]
-        }).compileComponents();
+    imports: [NoopAnimationsModule, IgxTreeGridModule, IgxTreeGridTreeDataTestComponent]
+}).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -373,7 +370,9 @@ class HelperFunctions {
         </igx-column>
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridModule]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

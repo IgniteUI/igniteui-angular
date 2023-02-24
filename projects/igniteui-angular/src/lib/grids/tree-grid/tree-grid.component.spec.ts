@@ -27,19 +27,17 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridWrappedInContComponent,
-                IgxTreeGridDefaultLoadingComponent,
-                IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSummariesTransactionsComponent,
-                IgxTreeGridNoDataComponent,
-                IgxTreeGridWithNoForeignKeyComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule
-            ]
-        }).compileComponents();
+    declarations: [IgxTreeGridWrappedInContComponent,
+        IgxTreeGridDefaultLoadingComponent,
+        IgxTreeGridCellSelectionComponent,
+        IgxTreeGridSummariesTransactionsComponent,
+        IgxTreeGridNoDataComponent,
+        IgxTreeGridWithNoForeignKeyComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxTreeGridModule
+    ]
+}).compileComponents();
     }));
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {

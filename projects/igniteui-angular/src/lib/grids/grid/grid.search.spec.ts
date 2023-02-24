@@ -25,14 +25,12 @@ describe('IgxGrid - search API #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                BasicGridSearchComponent,
-                GridWithAvatarComponent,
-                GroupableGridSearchComponent,
-                ScrollableGridSearchComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+    declarations: [BasicGridSearchComponent,
+        GridWithAvatarComponent,
+        GroupableGridSearchComponent,
+        ScrollableGridSearchComponent],
+    imports: [IgxGridModule, NoopAnimationsModule]
+}).compileComponents();
     }))
 
     describe('BasicGrid - ', () => {

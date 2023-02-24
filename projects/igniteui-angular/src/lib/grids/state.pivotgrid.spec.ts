@@ -17,11 +17,9 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     let pivotGrid;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxPivotGridPersistanceComponent
-            ],
-            imports: [NoopAnimationsModule, IgxPivotGridModule, IgxGridStateModule]
-        }).compileComponents();
+    declarations: [IgxPivotGridPersistanceComponent],
+    imports: [NoopAnimationsModule, IgxPivotGridModule, IgxGridStateModule]
+}).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {

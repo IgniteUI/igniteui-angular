@@ -5,12 +5,25 @@ import {
     IgxGridComponent, SortingDirection, ISortingExpression,
     DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions
 } from 'igniteui-angular';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
+import { NgFor } from '@angular/common';
+import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
+import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.css'],
-    templateUrl: 'grid-groupby.sample.html'
+    templateUrl: 'grid-groupby.sample.html',
+    standalone: true,
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent_1, IgxColumnComponent]
 })
 export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })

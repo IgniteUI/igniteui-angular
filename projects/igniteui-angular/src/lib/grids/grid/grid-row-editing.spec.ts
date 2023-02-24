@@ -40,19 +40,18 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridRowEditingComponent,
-                IgxGridRowEditingTransactionComponent,
-                IgxGridWithEditingAndFeaturesComponent,
-                IgxGridRowEditingWithoutEditableColumnsComponent,
-                IgxGridCustomOverlayComponent,
-                IgxGridEmptyRowEditTemplateComponent,
-                IgxGridCustomRowEditTemplateComponent,
-                VirtualGridComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxGridModule]
-        });
+    declarations: [IgxGridRowEditingComponent,
+        IgxGridRowEditingTransactionComponent,
+        IgxGridWithEditingAndFeaturesComponent,
+        IgxGridRowEditingWithoutEditableColumnsComponent,
+        IgxGridCustomOverlayComponent,
+        IgxGridEmptyRowEditTemplateComponent,
+        IgxGridCustomRowEditTemplateComponent,
+        VirtualGridComponent],
+    imports: [
+        NoopAnimationsModule, IgxGridModule
+    ]
+});
     }));
 
     describe('General tests', () => {

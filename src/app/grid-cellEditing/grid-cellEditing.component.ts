@@ -3,6 +3,13 @@ import { data, dataWithoutPK } from '../shared/data';
 
 import {
     IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity} from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 
 
@@ -10,7 +17,9 @@ import {
 
 @Component({
     selector: 'app-grid-cellediting',
-    templateUrl: 'grid-cellEditing.component.html'
+    templateUrl: 'grid-cellEditing.component.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent_1, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

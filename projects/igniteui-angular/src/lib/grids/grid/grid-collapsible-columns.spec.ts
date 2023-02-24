@@ -27,16 +27,14 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                CollapsibleColumnGroupTestComponent,
-                CollapsibleGroupsTemplatesTestComponent,
-                CollapsibleGroupsDynamicColComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        });
+    declarations: [CollapsibleColumnGroupTestComponent,
+        CollapsibleGroupsTemplatesTestComponent,
+        CollapsibleGroupsDynamicColComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     describe('Base Tests', () => {

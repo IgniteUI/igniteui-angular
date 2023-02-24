@@ -19,6 +19,7 @@ import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EditorProvider } from '../core/edit-provider';
 import { IBaseEventArgs, mkenum } from '../core/utils';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -47,7 +48,9 @@ let nextId = 0;
  */
 @Component({
     selector: 'igx-radio',
-    templateUrl: 'radio.component.html'
+    templateUrl: 'radio.component.html',
+    standalone: true,
+    imports: [IgxRippleDirective]
 })
 export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, EditorProvider, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';

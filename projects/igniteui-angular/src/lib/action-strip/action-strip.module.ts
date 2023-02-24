@@ -6,23 +6,15 @@ import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.di
 import { CommonModule } from '@angular/common';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+
+
+
 import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.component';
 
 /**
  * @hidden
  */
 @NgModule({
-    declarations: [
-        IgxActionStripComponent,
-        IgxActionStripMenuItemDirective,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective,
-        IgxGridActionButtonComponent
-    ],
     exports: [
         IgxActionStripComponent,
         IgxActionStripMenuItemDirective,
@@ -31,6 +23,11 @@ import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.
         IgxGridActionsBaseDirective,
         IgxGridActionButtonComponent
     ],
-    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule]
+    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxActionStripComponent,
+    IgxActionStripMenuItemDirective,
+    IgxGridPinningActionsComponent,
+    IgxGridEditingActionsComponent,
+    IgxGridActionsBaseDirective,
+    IgxGridActionButtonComponent]
 })
 export class IgxActionStripModule { }

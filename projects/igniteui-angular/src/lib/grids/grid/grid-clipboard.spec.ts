@@ -18,11 +18,9 @@ describe('IgxGrid - Clipboard #grid', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridClipboardComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    declarations: [IgxGridClipboardComponent],
+    imports: [IgxGridModule, NoopAnimationsModule]
+});
     }));
 
     beforeEach(() => {

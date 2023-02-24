@@ -1,11 +1,25 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor } from '@angular/common';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxLayoutDirective, IgxFlexDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
 
 @Component({
     providers: [],
     selector: 'app-grid-flex-sample',
     styleUrls: ['grid-flex.sample.css'],
-    templateUrl: 'grid-flex.sample.html'
+    templateUrl: 'grid-flex.sample.html',
+    standalone: true,
+    imports: [IgxLayoutDirective, IgxFlexDirective, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent]
 })
 
 export class GridFlexSampleComponent implements OnInit, AfterViewInit {

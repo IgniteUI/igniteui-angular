@@ -44,16 +44,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ProductsComponent,
-                SummaryColumnComponent,
-                CustomSummariesComponent,
-                FilteringComponent,
-                SummariesGroupByComponent,
-                SummariesGroupByTransactionsComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    declarations: [ProductsComponent,
+        SummaryColumnComponent,
+        FilteringComponent,
+        SummariesGroupByComponent,
+        SummariesGroupByTransactionsComponent],
+    imports: [IgxGridModule, NoopAnimationsModule, CustomSummariesComponent]
+});
     }));
 
     describe('Base tests: ', () => {
@@ -2625,7 +2622,9 @@ class AllDataAvgSummary extends IgxSummaryOperand {
             [summaries]="earliest">
         </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 
 export class CustomSummariesComponent {

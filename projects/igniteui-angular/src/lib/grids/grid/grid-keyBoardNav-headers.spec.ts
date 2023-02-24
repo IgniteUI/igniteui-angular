@@ -28,11 +28,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    SelectionWithScrollsComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [SelectionWithScrollsComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         beforeEach(() => {
@@ -734,11 +732,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    MRLTestComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [MRLTestComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         beforeEach(() => {
@@ -939,11 +935,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    ColumnGroupsNavigationTestComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [ColumnGroupsNavigationTestComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         beforeEach(() => {

@@ -1,12 +1,32 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxCheckboxComponent as IgxCheckboxComponent_1 } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxAdvancedFilteringDialogComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridExcelStyleFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { NgFor } from '@angular/common';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { IgxFlexDirective, IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
 
 @Component({
     providers: [],
     selector: 'app-grid-external-filtering-sample',
     styleUrls: ['grid-external-filtering.sample.css'],
-    templateUrl: 'grid-external-filtering.sample.html'
+    templateUrl: 'grid-external-filtering.sample.html',
+    standalone: true,
+    imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, NgFor, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent_1, FormsModule, IgxButtonDirective]
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })

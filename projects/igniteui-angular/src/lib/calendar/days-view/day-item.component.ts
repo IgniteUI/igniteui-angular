@@ -8,7 +8,8 @@ import { CalendarSelection } from '../calendar-base';
  */
 @Component({
     selector: 'igx-day-item',
-    templateUrl: 'day-item.component.html'
+    templateUrl: 'day-item.component.html',
+    standalone: true
 })
 export class IgxDayItemComponent {
     @Input()

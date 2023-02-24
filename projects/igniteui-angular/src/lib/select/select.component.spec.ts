@@ -88,29 +88,27 @@ describe('igxSelect', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxSelectSimpleComponent,
-                IgxSelectGroupsComponent,
-                IgxSelectMiddleComponent,
-                IgxSelectTopComponent,
-                IgxSelectBottomComponent,
-                IgxSelectAffixComponent,
-                IgxSelectReactiveFormComponent,
-                IgxSelectTemplateFormComponent,
-                IgxSelectHeaderFooterComponent,
-                IgxSelectCDRComponent
-            ],
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                IgxDropDownModule,
-                IgxIconModule,
-                IgxInputGroupModule,
-                IgxSelectModule,
-                IgxToggleModule,
-                NoopAnimationsModule
-            ]
-        }).compileComponents();
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule,
+        NoopAnimationsModule,
+        IgxSelectSimpleComponent,
+        IgxSelectGroupsComponent,
+        IgxSelectMiddleComponent,
+        IgxSelectTopComponent,
+        IgxSelectBottomComponent,
+        IgxSelectAffixComponent,
+        IgxSelectReactiveFormComponent,
+        IgxSelectTemplateFormComponent,
+        IgxSelectHeaderFooterComponent,
+        IgxSelectCDRComponent
+    ]
+}).compileComponents();
     }));
 
     beforeEach(() => {
@@ -2770,7 +2768,15 @@ describe('igxSelect ControlValueAccessor Unit', () => {
             {{ item }} {{'©'}}
         </igx-select-item>
     </igx-select>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectSimpleComponent {
     @ViewChild('dummyInput') public dummyInput: ElementRef;
@@ -2813,7 +2819,15 @@ class IgxSelectSimpleComponent {
             </igx-select-item>
     </igx-select-item-group>
     </igx-select>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectGroupsComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2838,7 +2852,15 @@ class IgxSelectGroupsComponent {
         </igx-select>
     <div style="width: 2500px; height: 400px;"></div>
 `,
-    styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
+    styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }'],
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectMiddleComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2856,7 +2878,15 @@ class IgxSelectMiddleComponent {
         {{ item }}
     </igx-select-item>
     </igx-select>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectTopComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2880,7 +2910,15 @@ class IgxSelectTopComponent {
         {{ item }}
     </igx-select-item>
     </igx-select>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectBottomComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2913,7 +2951,15 @@ class IgxSelectBottomComponent {
         {{ item }}
     </igx-select-item>
     </igx-select>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectAffixComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2954,7 +3000,15 @@ class IgxSelectAffixComponent {
     <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
     </p>
 </form>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectReactiveFormComponent {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
@@ -3032,7 +3086,15 @@ class IgxSelectReactiveFormComponent {
     <button type="submit" [disabled]="!form.valid">Submit</button>
     </p>
 </form>
-`
+`,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectTemplateFormComponent {
     @ViewChild('selectInForm', { read: IgxSelectComponent, static: true })
@@ -3091,8 +3153,16 @@ class IgxSelectTemplateFormComponent {
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
             }
-        `]
-    })
+        `],
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
+})
 class IgxSelectHeaderFooterComponent implements OnInit {
     @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
@@ -3117,7 +3187,15 @@ class IgxSelectHeaderFooterComponent implements OnInit {
                 </igx-select-item>
             </igx-select>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxSelectModule,
+        IgxToggleModule]
 })
 class IgxSelectCDRComponent {
     @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })

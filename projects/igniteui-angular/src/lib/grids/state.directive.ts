@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
+import { Directive, Optional, Input, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -101,7 +101,8 @@ interface Feature {
 }
 
 @Directive({
-    selector: '[igxGridState]'
+    selector: '[igxGridState]',
+    standalone: true
 })
 export class IgxGridStateDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
@@ -729,8 +730,4 @@ export class IgxGridStateDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxGridStateDirective],
-    exports: [IgxGridStateDirective]
-})
-export class IgxGridStateModule { }
+

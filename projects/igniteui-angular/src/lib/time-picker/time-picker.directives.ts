@@ -22,7 +22,8 @@ import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.comm
 /** @hidden */
 @Directive({
     selector: '[igxItemList]',
-    providers: [HammerGesturesManager]
+    providers: [HammerGesturesManager],
+    standalone: true
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
     @HostBinding('attr.tabindex')
@@ -224,7 +225,8 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
  */
 @Directive({
     selector: '[igxTimeItem]',
-    exportAs: 'timeItem'
+    exportAs: 'timeItem',
+    standalone: true
 })
 export class IgxTimeItemDirective {
     @Input('igxTimeItem')
@@ -367,7 +369,8 @@ export class IgxTimeItemDirective {
  * This directive should be used to mark which ng-template will be used from IgxTimePicker when re-templating its input group.
  */
 @Directive({
-    selector: '[igxTimePickerTemplate]'
+    selector: '[igxTimePickerTemplate]',
+    standalone: true
 })
 export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
@@ -377,7 +380,8 @@ export class IgxTimePickerTemplateDirective {
  * This directive can be used to add custom action buttons to the dropdown/dialog.
  */
 @Directive({
-    selector: '[igxTimePickerActions]'
+    selector: '[igxTimePickerActions]',
+    standalone: true
 })
 export class IgxTimePickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }

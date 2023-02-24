@@ -30,20 +30,18 @@ describe('IgxGrid - Row Selection #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                RowSelectionComponent,
-                SelectionWithScrollsComponent,
-                RowSelectionWithoutPrimaryKeyComponent,
-                SingleRowSelectionComponent,
-                SelectionWithTransactionsComponent,
-                GridCustomSelectorsComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule,
-                IgxGridSelectionModule
-            ]
-        }).compileComponents();
+    declarations: [RowSelectionComponent,
+        SelectionWithScrollsComponent,
+        RowSelectionWithoutPrimaryKeyComponent,
+        SingleRowSelectionComponent,
+        SelectionWithTransactionsComponent,
+        GridCustomSelectorsComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule,
+        IgxGridSelectionModule
+    ]
+}).compileComponents();
     }));
 
     describe('Base tests', () => {

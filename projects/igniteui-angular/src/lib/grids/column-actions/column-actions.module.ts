@@ -8,24 +8,21 @@ import {
     IgxFilterActionColumnsPipe,
     IgxSortActionColumnsPipe
 } from './column-actions.component';
-import { IgxGridPipesModule } from '../common/grid-pipes.module';
+
 export * from './column-actions.component';
 export * from './column-hiding.directive';
 export * from './column-pinning.directive';
 
 @NgModule({
-    declarations: [
-        IgxColumnHidingDirective,
-        IgxColumnPinningDirective,
-        IgxColumnActionsComponent,
-        IgxColumnActionEnabledPipe,
-        IgxFilterActionColumnsPipe,
-        IgxSortActionColumnsPipe
-    ],
     imports: [
-        IgxGridSharedModules,
-        IgxGridPipesModule
-    ],
+    IgxGridSharedModules,
+    IgxColumnHidingDirective,
+    IgxColumnPinningDirective,
+    IgxColumnActionsComponent,
+    IgxColumnActionEnabledPipe,
+    IgxFilterActionColumnsPipe,
+    IgxSortActionColumnsPipe
+],
     exports: [
         IgxColumnHidingDirective,
         IgxColumnPinningDirective,

@@ -21,7 +21,8 @@ import {
     LOCALE_ID,
     ApplicationRef,
     NgModuleRef,
-    Injector
+    Injector,
+    CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -52,13 +53,34 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridTransaction } from '../common/types';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
+import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
+import { IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe } from './tree-grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 
 let NEXT_ID = 0;
 
@@ -94,7 +116,10 @@ let NEXT_ID = 0;
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
-    ]
+    ],
+    standalone: true,
+    imports: [IgxGridHeaderRowComponent, IgxGridBodyDirective, IgxGridDragSelectDirective, NgIf, IgxColumnMovingDropDirective, NgClass, NgFor, NgTemplateOutlet, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxTreeGridRowComponent, NgStyle, IgxSummaryRowComponent, IgxOverlayOutletDirective, IgxToggleDirective, IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxButtonDirective, IgxRippleDirective, IgxRowEditTabStopDirective, IgxIconComponent, IgxGridColumnResizerComponent, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxSummaryDataPipe, IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridFilteringPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridSummaryPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**

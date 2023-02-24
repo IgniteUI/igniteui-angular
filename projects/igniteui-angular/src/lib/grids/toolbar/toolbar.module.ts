@@ -22,7 +22,9 @@ export * from './grid-toolbar-pinning.component';
 
 
 @NgModule({
-    declarations: [
+    imports: [
+        IgxColumnActionsModule,
+        IgxGridSharedModules,
         IgxCSVTextDirective,
         IgxExcelTextDirective,
         IgxGridToolbarActionsComponent,
@@ -33,10 +35,6 @@ export * from './grid-toolbar-pinning.component';
         IgxGridToolbarPinningComponent,
         IgxGridToolbarTitleComponent,
         IgxGridToolbarDirective
-    ],
-    imports: [
-        IgxColumnActionsModule,
-        IgxGridSharedModules
     ],
     exports: [
         IgxCSVTextDirective,

@@ -24,7 +24,8 @@ import {
     Injector,
     NgModuleRef,
     ApplicationRef,
-    ContentChild
+    ContentChild,
+    CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -51,11 +52,11 @@ import {
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
 import { DimensionValuesFilteringStrategy, NoopPivotDimensionsStrategy } from '../../data-operations/pivot-strategy';
-import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/displayDensity';
 import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
@@ -74,6 +75,18 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe } from './pivot-grid.pipes';
+import { IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxPivotRowComponent } from './pivot-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -112,7 +125,10 @@ const MINIMUM_COLUMN_WIDTH_SUPER_COMPACT = 104;
         IgxPivotColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
-    ]
+    ],
+    standalone: true,
+    imports: [IgxPivotHeaderRowComponent, IgxGridBodyDirective, NgTemplateOutlet, IgxGridDragSelectDirective, NgIf, IgxColumnMovingDropDirective, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxPivotRowComponent, NgClass, NgStyle, IgxToggleDirective, IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxOverlayOutletDirective, IgxPivotGridColumnResizerComponent, IgxIconComponent, NgFor, IgxPivotRowDimensionContentComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxPivotRowPipe, IgxPivotRowExpansionPipe, IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotGridFilterPipe, IgxPivotGridSortingPipe, IgxPivotGridColumnSortingPipe, IgxPivotCellMergingPipe],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnInit, AfterContentInit,
     GridType, AfterViewInit {

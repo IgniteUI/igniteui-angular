@@ -8,7 +8,8 @@ import { ColumnPinningPosition, RowPinningPosition } from './common/enums';
 
 @Directive({
     selector: '[igxGridBody]',
-    providers: [IgxForOfSyncService]
+    providers: [IgxForOfSyncService],
+    standalone: true
 })
 export class IgxGridBodyDirective {}
 

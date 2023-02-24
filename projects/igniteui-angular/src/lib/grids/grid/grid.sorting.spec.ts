@@ -18,13 +18,11 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                GridDeclaredColumnsComponent,
-                SortByParityComponent,
-                GridWithPrimaryKeyComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        });
+    declarations: [GridDeclaredColumnsComponent,
+        SortByParityComponent,
+        GridWithPrimaryKeyComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
     }));
 
     beforeEach(() => {

@@ -4,11 +4,20 @@ import {
     DateRangeType,
     IgxDaysViewComponent
 } from 'igniteui-angular';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxDaysViewComponent as IgxDaysViewComponent_1 } from '../../../projects/igniteui-angular/src/lib/calendar/days-view/days-view.component';
+import { IgxYearsViewComponent } from '../../../projects/igniteui-angular/src/lib/calendar/years-view/years-view.component';
+import { FormsModule } from '@angular/forms';
+import { IgxMonthsViewComponent } from '../../../projects/igniteui-angular/src/lib/calendar/months-view/months-view.component';
+import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
 
 @Component({
     selector: 'app-calendar-views-sample',
     templateUrl: 'calendar-views.sample.html',
-    styleUrls: ['calendar-views.sample.scss']
+    styleUrls: ['calendar-views.sample.scss'],
+    standalone: true,
+    imports: [IgxCardComponent, IgxMonthsViewComponent, FormsModule, IgxYearsViewComponent, IgxDaysViewComponent_1, IgxButtonDirective, IgxRippleDirective]
 })
 export class CalendarViewsSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true })

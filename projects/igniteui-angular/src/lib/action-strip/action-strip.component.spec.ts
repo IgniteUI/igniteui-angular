@@ -21,19 +21,17 @@ describe('igxActionStrip', () => {
 
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxActionStripComponent,
-                IgxActionStripTestingComponent,
-                IgxActionStripMenuTestingComponent,
-                IgxActionStripCombinedMenuTestingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxIconModule,
-                IgxToggleModule
-            ]
-        });
+    imports: [
+        NoopAnimationsModule,
+        IgxActionStripModule,
+        IgxIconModule,
+        IgxToggleModule,
+        IgxActionStripComponent,
+        IgxActionStripTestingComponent,
+        IgxActionStripMenuTestingComponent,
+        IgxActionStripCombinedMenuTestingComponent
+    ]
+});
     });
 
     describe('Unit tests: ', () => {
@@ -174,7 +172,11 @@ describe('igxActionStrip', () => {
         <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
     </igx-action-strip>
 </div>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxIconModule,
+        IgxToggleModule]
 })
 class IgxActionStripTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -210,7 +212,11 @@ class IgxActionStripTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxIconModule,
+        IgxToggleModule]
 })
 class IgxActionStripMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -231,7 +237,11 @@ class IgxActionStripMenuTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxIconModule,
+        IgxToggleModule]
 })
 class IgxActionStripCombinedMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })

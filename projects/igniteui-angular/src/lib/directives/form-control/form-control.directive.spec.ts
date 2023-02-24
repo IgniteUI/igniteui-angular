@@ -65,15 +65,13 @@ describe('IgcFormControlDirective - ', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    IgxFormsControlComponent
-                ],
-                imports: [
-                    IgcFormsModule,
-                    ReactiveFormsModule,
-                    FormsModule
-                ]
-            }).compileComponents();
+    imports: [
+        IgcFormsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        IgxFormsControlComponent
+    ]
+}).compileComponents();
             defineComponents(IgcRatingComponent);
         }));
 
@@ -117,7 +115,11 @@ describe('IgcFormControlDirective - ', () => {
     <input type="number" id="basicModelRating" name="model rating" min="0" max="10" [(ngModel)]="model.Rating">
     <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgcFormsModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 class IgxFormsControlComponent {
 

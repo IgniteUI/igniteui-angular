@@ -10,7 +10,8 @@ import { IgxDropDownGroupComponent } from '../drop-down/public_api';
     template: `
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-select-item"></ng-content>
-    `
+    `,
+    standalone: true
 })
 export class IgxSelectGroupComponent extends IgxDropDownGroupComponent {
 }

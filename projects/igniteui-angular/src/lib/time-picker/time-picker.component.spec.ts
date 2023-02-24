@@ -6,11 +6,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+    IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
-import { IgxIconModule } from '../icon/public_api';
 import { PlatformUtil } from '../core/utils';
 import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
@@ -477,14 +476,9 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTimePickerTestComponent
-                    ],
                     imports: [IgxTimePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule],
+                        NoopAnimationsModule, IgxTimePickerTestComponent],
                     providers: [PlatformUtil]
                 }).compileComponents();
             }));
@@ -1084,13 +1078,8 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTimePickerTestComponent
-                    ],
                     imports: [IgxTimePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1449,13 +1438,8 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTimePickerTestComponent
-                    ],
                     imports: [IgxTimePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule, IgxTimePickerTestComponent]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1532,13 +1516,8 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTimePickerWithProjectionsComponent
-                    ],
                     imports: [IgxTimePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule, IgxTimePickerWithProjectionsComponent]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1639,11 +1618,8 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxTimePickerInFormComponent,
-                        IgxTimePickerReactiveFormComponent
-                    ],
-                    imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule, ReactiveFormsModule]
+                    imports: [IgxTimePickerModule, FormsModule, NoopAnimationsModule, ReactiveFormsModule, IgxTimePickerInFormComponent,
+                        IgxTimePickerReactiveFormComponent]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1736,7 +1712,9 @@ describe('IgxTimePicker', () => {
     template: `
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
         <label igxLabel>Select time</label>
-        </igx-time-picker>`
+        </igx-time-picker>`,
+    standalone: true,
+    imports: [IgxTimePickerModule, FormsModule]
 })
 export class IgxTimePickerTestComponent {
     @ViewChild('picker', { read: IgxTimePickerComponent, static: true })
@@ -1757,7 +1735,9 @@ export class IgxTimePickerTestComponent {
             <igx-suffix>Suffix</igx-suffix>
             <igx-hint>Hint</igx-hint>
         </igx-time-picker>
-`
+`,
+    standalone: true,
+    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxTimePickerWithProjectionsComponent {
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
@@ -1773,7 +1753,9 @@ export class IgxTimePickerWithProjectionsComponent {
     <form #form="ngForm">
         <igx-time-picker name="timePicker" [minValue]="minValue" [(ngModel)]="date" [required]="true"></igx-time-picker>
     </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTimePickerComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxTimePickerInFormComponent {
     @ViewChild('form')
@@ -1795,7 +1777,9 @@ export class IgxTimePickerInFormComponent {
         </igx-time-picker>
     </div>
 </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTimePickerComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxTimePickerReactiveFormComponent {
     @ViewChild(IgxTimePickerComponent)

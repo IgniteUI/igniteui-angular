@@ -9,11 +9,9 @@ describe('IgxHighlight', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTextHighlightDirective,
-                HighlightLoremIpsumComponent
-            ]
-        });
+    imports: [IgxTextHighlightDirective,
+        HighlightLoremIpsumComponent]
+});
     }));
 
     it('Highlight inputs should have the proper values', () => {
@@ -302,11 +300,12 @@ describe('IgxHighlight', () => {
 });
 
 @Component({
-    template:
+    template: 
     // eslint-disable-next-line max-len
     `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [containerClass]="'test'">
         {{html}}
-    </div>`
+    </div>`,
+    standalone: true
 })
 class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective, static: true })

@@ -25,20 +25,31 @@ import { Subscription } from 'rxjs';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { IgxFilterItem } from '../../../data-operations/filtering-strategy';
-import { formatNumber, formatPercent, getLocaleCurrencyCode } from '@angular/common';
+import { formatNumber, formatPercent, getLocaleCurrencyCode, NgIf, NgClass } from '@angular/common';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem, generateExpressionsList } from './common';
 import { ColumnType, GridType, IGX_GRID_BASE } from '../../common/grid.interface';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { SortingDirection } from '../../../data-operations/sorting-strategy';
+import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
+import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
+import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
+import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.component';
+import { IgxExcelStyleHidingComponent } from './excel-style-hiding.component';
+import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
+import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
+import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
+import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
 
 @Directive({
-    selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
+    selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]',
+    standalone: true
 })
 export class IgxExcelStyleColumnOperationsTemplateDirective { }
 
 @Directive({
-    selector: 'igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]'
+    selector: 'igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]',
+    standalone: true
 })
 export class IgxExcelStyleFilterOperationsTemplateDirective { }
 
@@ -55,9 +66,11 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent)}],
+    providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
-    templateUrl: './grid.excel-style-filtering.component.html'
+    templateUrl: './grid.excel-style-filtering.component.html',
+    standalone: true,
+    imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements OnDestroy {
 

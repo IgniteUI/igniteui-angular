@@ -15,10 +15,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
-import {
-    IgxCalendarHeaderTemplateDirective,
-    IgxCalendarSubheaderTemplateDirective
-} from './calendar.directives';
+import { IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarScrollMonthDirective } from './calendar.directives';
 import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxCalendarView, IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
@@ -28,6 +25,9 @@ import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
+import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgIf, NgTemplateOutlet, NgStyle, NgFor, DatePipe } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -83,7 +83,9 @@ let NEXT_ID = 0;
         ])
     ],
     selector: 'igx-calendar',
-    templateUrl: 'calendar.component.html'
+    templateUrl: 'calendar.component.html',
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, IgxCalendarScrollMonthDirective, NgStyle, IgxIconComponent, NgFor, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, DatePipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
 })
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
     /**

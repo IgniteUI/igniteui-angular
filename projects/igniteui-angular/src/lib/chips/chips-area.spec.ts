@@ -20,7 +20,9 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
 })
 class TestChipComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -50,7 +52,9 @@ class TestChipComponent {
                 <span #label [class]="'igx-chip__text'">third chip</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
 })
 class TestChipSelectComponent extends TestChipComponent {
 }
@@ -64,7 +68,9 @@ class TestChipSelectComponent extends TestChipComponent {
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
 })
 class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -110,13 +116,10 @@ describe('IgxChipsArea ', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestChipComponent,
-                TestChipReorderComponent,
-                TestChipSelectComponent
-            ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
-        }).compileComponents();
+    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule, TestChipComponent,
+        TestChipReorderComponent,
+        TestChipSelectComponent]
+}).compileComponents();
     }));
 
     describe('Basic', () => {

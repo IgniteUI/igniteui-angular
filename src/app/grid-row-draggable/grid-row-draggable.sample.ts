@@ -2,6 +2,16 @@ import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular
 import { Observable } from 'rxjs';
 import { DisplayDensity, IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
+import { AsyncPipe } from '@angular/common';
+import { IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxRowDragDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from '../../../projects/igniteui-angular/src/lib/grids/row-drag.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 enum DragIcon {
     DEFAULT = 'drag_indicator',
@@ -12,7 +22,9 @@ enum DragIcon {
 @Component({
     selector: 'app-grid-row-draggable-sample',
     templateUrl: 'grid-row-draggable.sample.html',
-    styleUrls: ['grid-row-draggable.sample.css']
+    styleUrls: ['grid-row-draggable.sample.css'],
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent_1, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 

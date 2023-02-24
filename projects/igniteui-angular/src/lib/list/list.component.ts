@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ContentChild,
@@ -8,7 +8,6 @@ import {
     forwardRef,
     HostBinding,
     Input,
-    NgModule,
     Output,
     QueryList,
     TemplateRef,
@@ -17,7 +16,7 @@ import {
     Inject, Directive
 } from '@angular/core';
 
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+
 
 import { IgxListItemComponent } from './list-item.component';
 import {
@@ -68,7 +67,8 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListThumbnail]'
+    selector: '[igxListThumbnail]',
+    standalone: true
 })
 export class IgxListThumbnailDirective {}
 
@@ -78,7 +78,8 @@ export class IgxListThumbnailDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListAction]'
+    selector: '[igxListAction]',
+    standalone: true
 })
 export class IgxListActionDirective {}
 
@@ -88,7 +89,8 @@ export class IgxListActionDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLine]'
+    selector: '[igxListLine]',
+    standalone: true
 })
 export class IgxListLineDirective {}
 
@@ -98,7 +100,8 @@ export class IgxListLineDirective {}
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLineTitle]'
+    selector: '[igxListLineTitle]',
+    standalone: true
 })
 export class IgxListLineTitleDirective {
     @HostBinding('class.igx-list__item-line-title')
@@ -111,7 +114,8 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[igxListLineSubTitle]'
+    selector: '[igxListLineSubTitle]',
+    standalone: true
 })
 export class IgxListLineSubTitleDirective {
     @HostBinding('class.igx-list__item-line-subtitle')
@@ -147,7 +151,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
-    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }]
+    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**
@@ -609,38 +615,4 @@ export class IgxListComponent extends IgxListBaseDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxListBaseDirective,
-        IgxListComponent,
-        IgxListItemComponent,
-        IgxListThumbnailDirective,
-        IgxListActionDirective,
-        IgxListLineDirective,
-        IgxListLineTitleDirective,
-        IgxListLineSubTitleDirective,
-        IgxDataLoadingTemplateDirective,
-        IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective,
-        IgxListItemRightPanningTemplateDirective
-    ],
-    exports: [
-        IgxListComponent,
-        IgxListItemComponent,
-        IgxListThumbnailDirective,
-        IgxListActionDirective,
-        IgxListLineDirective,
-        IgxListLineTitleDirective,
-        IgxListLineSubTitleDirective,
-        IgxDataLoadingTemplateDirective,
-        IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective,
-        IgxListItemRightPanningTemplateDirective
-    ],
-    imports: [
-        CommonModule,
-        IgxRippleModule
-    ]
-})
-export class IgxListModule {
-}
+

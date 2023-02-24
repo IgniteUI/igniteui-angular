@@ -6,7 +6,8 @@ import { PlatformUtil } from '../../core/utils';
 
 @Component({
     selector: 'igx-virtual-helper',
-    template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>'
+    template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>',
+    standalone: true
 })
 export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnInit, OnDestroy  {
     @HostBinding('scrollTop')

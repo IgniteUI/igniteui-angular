@@ -8,7 +8,7 @@ import { ElementRef, EventEmitter } from '@angular/core';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeService } from './tree.service';
-import { IgxTreeComponent, IgxTreeModule } from './tree.component';
+import { IgxTreeComponent } from './tree.component';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
@@ -20,11 +20,9 @@ describe('IgxTree - Navigation #treeView', () => {
         let tree: IgxTreeComponent;
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    IgxTreeNavigationComponent,
-                    IgxTreeScrollComponent
-                ],
-                imports: [IgxTreeModule, NoopAnimationsModule]
+                declarations: [IgxTreeNavigationComponent,
+                    IgxTreeScrollComponent],
+                imports: [NoopAnimationsModule]
             }).compileComponents();
         }));
 

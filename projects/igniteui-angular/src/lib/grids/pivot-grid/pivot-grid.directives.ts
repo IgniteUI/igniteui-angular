@@ -4,7 +4,8 @@ import { IgxPivotGridValueTemplateContext } from './pivot-grid.interface';
  * @hidden
  */
 @Directive({
-    selector: '[igxPivotValueChip]'
+    selector: '[igxPivotValueChip]',
+    standalone: true
 })
 export class IgxPivotValueChipTemplateDirective {
     constructor(public template: TemplateRef<IgxPivotGridValueTemplateContext>) { }

@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
+import { Directive, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
@@ -15,7 +15,8 @@ const cellActiveClass = 'igx-grid__td--active';
  * @hidden
  */
 @Directive({
-    selector: '[igxRowDrag]'
+    selector: '[igxRowDrag]',
+    standalone: true
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
@@ -168,7 +169,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
  * @hidden
  */
 @Directive({
-    selector: '[igxDragIndicatorIcon]'
+    selector: '[igxDragIndicatorIcon]',
+    standalone: true
 })
 
 export class IgxDragIndicatorIconDirective {
@@ -182,19 +184,16 @@ export class IgxDragIndicatorIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxRowDragGhost]'
+    selector: '[igxRowDragGhost]',
+    standalone: true
 })
 
 export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
     public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
-        context: unknown): context is IgxGridRowDragGhostContext { 
+        context: unknown): context is IgxGridRowDragGhostContext {
         return true;
     };
 }
 
-@NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-})
-export class IgxRowDragModule { }
+

@@ -3,7 +3,8 @@ import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateCon
 
 
 @Directive({
-    selector: '[igxFilterCellTemplate]'
+    selector: '[igxFilterCellTemplate]',
+    standalone: true
 })
 export class IgxFilterCellTemplateDirective {
     constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
@@ -15,7 +16,8 @@ export class IgxFilterCellTemplateDirective {
 }
 
 @Directive({
-    selector: '[igxCell]'
+    selector: '[igxCell]',
+    standalone: true
 })
 export class IgxCellTemplateDirective {
     constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
@@ -27,7 +29,8 @@ export class IgxCellTemplateDirective {
 }
 
 @Directive({
-    selector: '[igxCellValidationError]'
+    selector: '[igxCellValidationError]',
+    standalone: true
 })
 export class IgxCellValidationErrorDirective {
     constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
@@ -39,7 +42,8 @@ export class IgxCellValidationErrorDirective {
 }
 
 @Directive({
-    selector: '[igxHeader]'
+    selector: '[igxHeader]',
+    standalone: true
 })
 export class IgxCellHeaderTemplateDirective {
     constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
@@ -54,14 +58,16 @@ export class IgxCellHeaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxFooter]'
+    selector: '[igxFooter]',
+    standalone: true
 })
 export class IgxCellFooterTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
-    selector: '[igxCellEditor]'
+    selector: '[igxCellEditor]',
+    standalone: true
 })
 export class IgxCellEditorTemplateDirective {
     constructor(public template: TemplateRef<IgxCellTemplateContext>) { }
@@ -73,7 +79,8 @@ export class IgxCellEditorTemplateDirective {
 }
 
 @Directive({
-    selector: '[igxCollapsibleIndicator]'
+    selector: '[igxCollapsibleIndicator]',
+    standalone: true
 })
 export class IgxCollapsibleIndicatorTemplateDirective {
     constructor(public template: TemplateRef<IgxColumnTemplateContext>) { }
@@ -85,7 +92,8 @@ export class IgxCollapsibleIndicatorTemplateDirective {
 }
 
 @Directive({
-    selector: '[igxSummary]'
+    selector: '[igxSummary]',
+    standalone: true
 })
 export class IgxSummaryTemplateDirective {
     constructor(public template: TemplateRef<IgxSummaryTemplateContext>) { }

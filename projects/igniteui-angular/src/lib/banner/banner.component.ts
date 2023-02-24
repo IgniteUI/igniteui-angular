@@ -5,20 +5,20 @@ import {
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     Output,
     ViewChild
 } from '@angular/core';
-import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
-import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
-import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
+
+import { IgxIconComponent } from '../icon/icon.component';
 import { IToggleView } from '../core/navigation';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
+import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
@@ -50,7 +50,9 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  */
 @Component({
     selector: 'igx-banner',
-    templateUrl: 'banner.component.html'
+    templateUrl: 'banner.component.html',
+    standalone: true,
+    imports: [ IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, NgIf, IgxButtonDirective, IgxRippleDirective ]
 })
 export class IgxBannerComponent implements IToggleView {
     /**
@@ -279,9 +281,4 @@ export class IgxBannerComponent implements IToggleView {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxBannerComponent, IgxBannerActionsDirective],
-    exports: [IgxBannerComponent, IgxBannerActionsDirective],
-    imports: [CommonModule, IgxExpansionPanelModule, IgxIconModule, IgxButtonModule, IgxRippleModule]
-})
-export class IgxBannerModule { }
+

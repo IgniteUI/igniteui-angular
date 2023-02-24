@@ -9,9 +9,8 @@ describe('IgxLayoutDirective', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TestFlexLayoutComponent],
-            imports: [IgxLayoutModule]
-        }).compileComponents();
+    imports: [IgxLayoutModule, TestFlexLayoutComponent]
+}).compileComponents();
     }));
 
     it('should initialize with flex defaults', () => {
@@ -142,7 +141,9 @@ describe('IgxLayoutDirective', () => {
         <div #instance igxLayout>
             <div #inner igxFlex></div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxLayoutModule]
 })
 class TestFlexLayoutComponent {
     @ViewChild(IgxLayoutDirective, { static: true }) public instance: IgxLayoutDirective;

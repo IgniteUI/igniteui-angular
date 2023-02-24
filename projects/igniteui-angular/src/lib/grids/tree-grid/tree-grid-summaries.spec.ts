@@ -24,18 +24,17 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSummariesComponent,
-                IgxTreeGridSummariesKeyComponent,
-                IgxTreeGridCustomSummariesComponent,
-                IgxTreeGridSummariesTransactionsComponent,
-                IgxTreeGridSummariesScrollingComponent,
-                IgxTreeGridSummariesKeyScroliingComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
-        }).compileComponents();
+    declarations: [IgxTreeGridSummariesComponent,
+        IgxTreeGridSummariesKeyComponent,
+        IgxTreeGridCustomSummariesComponent,
+        IgxTreeGridSummariesTransactionsComponent,
+        IgxTreeGridSummariesScrollingComponent,
+        IgxTreeGridSummariesKeyScroliingComponent],
+    imports: [
+        BrowserAnimationsModule,
+        IgxTreeGridModule
+    ]
+}).compileComponents();
     }));
 
     describe('', () => {

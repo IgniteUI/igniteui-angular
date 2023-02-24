@@ -25,15 +25,13 @@ describe('IgxButton', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                InitButtonComponent,
-                ButtonWithAttribsComponent,
-                ButtonsWithDisplayDensityComponent,
-                IgxButtonDirective,
-                IgxIconComponent
-            ],
-            providers: [IgxIconService]
-        })
+    imports: [InitButtonComponent,
+        ButtonWithAttribsComponent,
+        ButtonsWithDisplayDensityComponent,
+        IgxButtonDirective,
+        IgxIconComponent],
+    providers: [IgxIconService]
+})
             .compileComponents();
     }));
 
@@ -151,10 +149,10 @@ describe('IgxButton', () => {
 });
 
 @Component({
-    template:
-        `<span igxButton="flat" igx-ripple="white">
+    template: `<span igxButton="flat" igx-ripple="white">
         <i class="material-icons">add</i>
-    </span>`
+    </span>`,
+    standalone: true
 })
 class InitButtonComponent {
     @ViewChild(IgxButtonDirective, { read: IgxButtonDirective, static: true })
@@ -162,11 +160,11 @@ class InitButtonComponent {
 }
 
 @Component({
-    template:
-        `<span igxButton="raised"
+    template: `<span igxButton="raised"
         [igxButtonColor]="foreground"
         [igxButtonBackground]="background"
-        [disabled]="disabled">Test</span>`
+        [disabled]="disabled">Test</span>`,
+    standalone: true
 })
 class ButtonWithAttribsComponent {
     public disabled = true;
@@ -175,8 +173,7 @@ class ButtonWithAttribsComponent {
 }
 
 @Component({
-    template:
-        `
+    template: `
     <button #flat class="flatBtn" igxButton="flat" [displayDensity]="density">Flat</button>
     <button #raised class="raisedBtn" igxButton="raised" [displayDensity]="density">Raised</button>
     <button #outlined class="outlinedBtn" igxButton="outlined" [displayDensity]="density">Outlined</button>
@@ -186,7 +183,8 @@ class ButtonWithAttribsComponent {
     <button #icon class="iconBtn" igxButton="icon" [displayDensity]="density">
         <igx-icon>search</igx-icon>
     </button>
-    `
+    `,
+    standalone: true
 })
 class ButtonsWithDisplayDensityComponent {
     @ViewChild('flat', { read: IgxButtonDirective, static: true })

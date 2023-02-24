@@ -25,11 +25,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                ColumnLayoutTestComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule],
-        }).compileComponents();
+    imports: [NoopAnimationsModule, IgxGridModule, ColumnLayoutTestComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {
@@ -2629,7 +2626,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

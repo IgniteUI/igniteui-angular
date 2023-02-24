@@ -19,6 +19,9 @@ import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { DisplayDensity } from '../../core/displayDensity';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { SortingIndexPipe } from './pipes';
+import { NgTemplateOutlet, NgIf, NgClass } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 /**
  * @hidden
@@ -26,7 +29,9 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header',
-    templateUrl: 'grid-header.component.html'
+    templateUrl: 'grid-header.component.html',
+    standalone: true,
+    imports: [IgxIconComponent, NgTemplateOutlet, NgIf, NgClass, SortingIndexPipe]
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 

@@ -21,12 +21,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestBaseComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
-        });
+    imports: [
+        NoopAnimationsModule, IgxHierarchicalGridModule,
+        IgxHierarchicalGridTestBaseComponent
+    ]
+});
     }));
 
     beforeEach(() => {
@@ -402,14 +401,12 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridNoScrollTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule
-            ]
-        });
+    imports: [
+        NoopAnimationsModule, IgxHierarchicalGridModule,
+        IgxHierarchicalGridTestBaseComponent,
+        IgxHierarchicalGridNoScrollTestComponent
+    ]
+});
     }));
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async () => {
@@ -450,7 +447,9 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridModule]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -488,7 +487,9 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridModule]
 })
 export class IgxHierarchicalGridNoScrollTestComponent extends IgxHierarchicalGridTestBaseComponent {
     constructor() {

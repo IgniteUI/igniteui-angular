@@ -22,12 +22,10 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
-        }).compileComponents();
+    declarations: [IgxTreeGridSimpleComponent,
+        IgxTreeGridPrimaryForeignKeyComponent],
+    imports: [IgxTreeGridModule, NoopAnimationsModule]
+}).compileComponents();
     }));
 
     describe('Create', () => {

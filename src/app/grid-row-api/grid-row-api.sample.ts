@@ -10,11 +10,30 @@ import {
     GridSummaryPosition
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { IgxPaginatorDirective } from '../../../projects/igniteui-angular/src/lib/paginator/paginator-interfaces';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxHierarchicalGridComponent as IgxHierarchicalGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
+import { IgxTreeGridComponent as IgxTreeGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxRowDragGhostDirective } from '../../../projects/igniteui-angular/src/lib/grids/row-drag.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor } from '@angular/common';
+import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-grid-row-api-sample',
     styleUrls: ['grid-row-api.sample.css'],
-    templateUrl: 'grid-row-api.sample.html'
+    templateUrl: 'grid-row-api.sample.html',
+    standalone: true,
+    imports: [FormsModule, IgxGridComponent_1, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent_1, IgxHierarchicalGridComponent_1, IgxRowIslandComponent, IgxPaginatorDirective]
 })
 
 export class GridRowAPISampleComponent implements OnInit {

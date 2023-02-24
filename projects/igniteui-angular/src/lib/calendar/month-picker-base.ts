@@ -24,7 +24,8 @@ export enum CalendarView {
 export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarView] | CalendarView;
 
 @Directive({
-    selector: '[igxMonthPickerBase]'
+    selector: '[igxMonthPickerBase]',
+    standalone: true
 })
 export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**

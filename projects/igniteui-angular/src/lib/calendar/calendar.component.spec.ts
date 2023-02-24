@@ -174,10 +174,9 @@ describe('IgxCalendar - ', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
-                IgxCalendarValueComponent],
-                imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-            }).compileComponents();
+    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule, IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
+        IgxCalendarValueComponent]
+}).compileComponents();
         }));
 
         describe('Rendered Component - ', () => {
@@ -2255,7 +2254,9 @@ describe('IgxCalendar - ', () => {
 @Component({
     template: `
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarModule, FormsModule]
 })
 export class IgxCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2266,7 +2267,9 @@ export class IgxCalendarSampleComponent {
 @Component({
     template: `
         <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarModule, FormsModule]
 })
 export class IgxCalendarRangeComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2277,7 +2280,9 @@ export class IgxCalendarRangeComponent {
     template: `
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model" [disabledDates]="disabledDates" [specialDates]="specialDates">
         </igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarModule, FormsModule]
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2290,7 +2295,9 @@ export class IgxCalendarDisabledSpecialDatesComponent {
 @Component({
     template: `
         <igx-calendar [value]="value"></igx-calendar>
-    `
+    `,
+    standalone: true,
+    imports: [IgxCalendarModule, FormsModule]
 })
 export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;

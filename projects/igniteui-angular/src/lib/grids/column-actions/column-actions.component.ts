@@ -1,23 +1,15 @@
-import {
-    Component,
-    DoCheck,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Input,
-    IterableDiffer,
-    IterableDiffers,
-    Output,
-    Pipe,
-    PipeTransform,
-    QueryList,
-    ViewChildren
-} from '@angular/core';
+import { Component, DoCheck, EventEmitter, HostBinding, Inject, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, forwardRef } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { ColumnType, GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxInputDirective } from '../../directives/input/input.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { NgIf, NgFor } from '@angular/common';
 
 let NEXT_ID = 0;
 /**
@@ -28,7 +20,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-column-actions',
-    templateUrl: './column-actions.component.html'
+    templateUrl: './column-actions.component.html',
+    standalone: true,
+    imports: [NgIf, IgxInputGroupComponent, FormsModule, IgxInputDirective, NgFor, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {
 
@@ -393,7 +387,10 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
 }
 
-@Pipe({ name: 'columnActionEnabled' })
+@Pipe({
+    name: 'columnActionEnabled',
+    standalone: true
+})
 export class IgxColumnActionEnabledPipe implements PipeTransform {
 
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
@@ -419,7 +416,10 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'filterActionColumns' })
+@Pipe({
+    name: 'filterActionColumns',
+    standalone: true
+})
 export class IgxFilterActionColumnsPipe implements PipeTransform {
 
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
@@ -446,7 +446,10 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
     }
 }
 
-@Pipe({ name: 'sortActionColumns' })
+@Pipe({
+    name: 'sortActionColumns',
+    standalone: true
+})
 export class IgxSortActionColumnsPipe implements PipeTransform {
 
     public transform(collection: ColumnType[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): ColumnType[] {

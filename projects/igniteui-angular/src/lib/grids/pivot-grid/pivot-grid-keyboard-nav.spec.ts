@@ -21,12 +21,11 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     let pivotGrid: IgxPivotGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxPivotGridMultipleRowComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxPivotGridModule]
-        });
+    declarations: [IgxPivotGridMultipleRowComponent],
+    imports: [
+        NoopAnimationsModule, IgxPivotGridModule
+    ]
+});
     }));
 
     beforeEach(fakeAsync(() => {

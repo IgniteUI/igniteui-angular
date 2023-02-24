@@ -14,6 +14,8 @@ import { IgxMonthPickerBaseDirective, IgxCalendarView } from '../month-picker-ba
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
 import { ScrollMonth } from '../calendar-base';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgIf, NgStyle } from '@angular/common';
 
 let NEXT_ID = 0;
 @Component({
@@ -48,7 +50,9 @@ let NEXT_ID = 0;
         ])
     ],
     selector: 'igx-month-picker',
-    templateUrl: 'month-picker.component.html'
+    templateUrl: 'month-picker.component.html',
+    standalone: true,
+    imports: [NgIf, NgStyle, IgxIconComponent, IgxMonthsViewComponent, IgxYearsViewComponent]
 })
 export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**

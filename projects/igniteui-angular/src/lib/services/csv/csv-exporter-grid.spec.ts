@@ -31,15 +31,13 @@ describe('CSV Grid Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                ReorderedColumnsComponent,
-                GridIDNameJobTitleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent,
-                ProductsComponent,
-                ColumnsAddedOnInitComponent
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
-        }).compileComponents();
+    declarations: [ReorderedColumnsComponent,
+        GridIDNameJobTitleComponent,
+        IgxTreeGridPrimaryForeignKeyComponent,
+        ProductsComponent,
+        ColumnsAddedOnInitComponent],
+    imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
+}).compileComponents();
     }));
 
     beforeEach(() => {

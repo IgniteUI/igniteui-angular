@@ -23,15 +23,13 @@ describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridValidationTestBaseComponent,
-                IgxGridValidationTestCustomErrorComponent,
-                IgxGridCustomEditorsComponent,
-                IgxTreeGridValidationTestComponent,
-                ForbiddenValidatorDirective
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule, ReactiveFormsModule]
-        });
+    declarations: [IgxGridValidationTestBaseComponent,
+        IgxGridValidationTestCustomErrorComponent,
+        IgxGridCustomEditorsComponent,
+        IgxTreeGridValidationTestComponent,
+        ForbiddenValidatorDirective],
+    imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule, ReactiveFormsModule]
+});
     }));
 
     describe('Basic Validation - ', () => {

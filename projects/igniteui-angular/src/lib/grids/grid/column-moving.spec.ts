@@ -28,18 +28,16 @@ describe('IgxGrid - Column Moving #grid', () => {
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                MovableColumnsComponent,
-                MovableTemplatedColumnsComponent,
-                MovableColumnsLargeComponent,
-                MultiColumnHeadersComponent
-            ],
-            imports: [
-                FormsModule,
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        });
+    declarations: [MovableColumnsComponent,
+        MovableTemplatedColumnsComponent,
+        MovableColumnsLargeComponent,
+        MultiColumnHeadersComponent],
+    imports: [
+        FormsModule,
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     describe('', () => {

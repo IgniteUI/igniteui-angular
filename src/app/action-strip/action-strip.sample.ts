@@ -1,5 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { DisplayDensity, IDataCloneStrategy } from 'igniteui-angular';
+import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
+import { NgIf, NgFor } from '@angular/common';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -44,7 +54,9 @@ class User {
 @Component({
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
-    templateUrl: `action-strip.sample.html`
+    templateUrl: `action-strip.sample.html`,
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, NgIf, IgxActionStripComponent, IgxIconComponent, IgxGridComponent, IgxColumnComponent, IgxGridPinningActionsComponent, NgFor, IgxCellTemplateDirective, IgxGridEditingActionsComponent, IgxActionStripMenuItemDirective]
 })
 export class ActionStripSampleComponent implements OnInit {
     public result: string;

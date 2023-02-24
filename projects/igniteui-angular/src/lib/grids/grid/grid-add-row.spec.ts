@@ -41,18 +41,17 @@ describe('IgxGrid - Row Adding #grid', () => {
     };
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxAddRowComponent,
-                ColumnLayoutTestComponent,
-                DefaultGridMasterDetailComponent,
-                IgxGridRowEditingTransactionComponent,
-                IgxGridRowEditingDefinedColumnsComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxGridModule]
-        });
+    declarations: [IgxAddRowComponent,
+        IgxGridRowEditingTransactionComponent,
+        IgxGridRowEditingDefinedColumnsComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxActionStripModule,
+        IgxGridModule,
+        ColumnLayoutTestComponent,
+        DefaultGridMasterDetailComponent
+    ]
+});
     }));
 
     describe('General tests', () => {

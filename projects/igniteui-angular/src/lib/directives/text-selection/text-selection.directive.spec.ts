@@ -9,14 +9,11 @@ describe('IgxSelection', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TriggerTextSelectionComponent,
-                TriggerTextSelectionOnClickComponent,
-                TextSelectionWithMultipleFocusHandlersComponent,
-                IgxTestFocusDirective
-            ],
-            imports: [IgxTextSelectionModule]
-        });
+    imports: [IgxTextSelectionModule, TriggerTextSelectionComponent,
+        TriggerTextSelectionOnClickComponent,
+        TextSelectionWithMultipleFocusHandlersComponent,
+        IgxTestFocusDirective]
+});
     }));
 
 
@@ -144,18 +141,20 @@ describe('IgxSelection', () => {
 });
 
 @Component({
-    template:
-        `
+    template: `
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
-        `
+        `,
+    standalone: true,
+    imports: [IgxTextSelectionModule]
 })
 class TriggerTextSelectionComponent { }
 
 @Component({
-    template:
-        `
+    template: `
             <input #input [type]="inputType" [igxTextSelection]="selectValue" #select="igxTextSelection" (click)="select.trigger()" [value]="inputValue" />
-        `
+        `,
+    standalone: true,
+    imports: [IgxTextSelectionModule]
 })
 class TriggerTextSelectionOnClickComponent {
     public selectValue = true;
@@ -174,13 +173,18 @@ class TriggerTextSelectionOnClickComponent {
  }
 
  @Component({
-    template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`
- })
+    template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`,
+    standalone: true,
+    imports: [IgxTextSelectionModule]
+})
  class TextSelectionWithMultipleFocusHandlersComponent {
     public inputValue: any = "12-34-56";
  }
 
-@Directive({selector: '[igxTestFocusDirective]'})
+@Directive({
+    selector: '[igxTestFocusDirective]',
+    standalone: true
+})
 class IgxTestFocusDirective {
     constructor(private element: ElementRef) { }
 

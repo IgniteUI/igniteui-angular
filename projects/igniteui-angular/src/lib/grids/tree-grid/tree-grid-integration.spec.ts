@@ -36,23 +36,21 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent,
-                IgxTreeGridStringTreeColumnComponent,
-                IgxTreeGridDateTreeColumnComponent,
-                IgxTreeGridBooleanTreeColumnComponent,
-                IgxTreeGridRowEditingComponent,
-                IgxTreeGridRowPinningComponent,
-                IgxTreeGridMultiColHeadersComponent,
-                IgxTreeGridRowEditingTransactionComponent,
-                IgxTreeGridRowEditingHierarchicalDSTransactionComponent
-            ],
-            imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule],
-            providers: [
-                { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
-            ]
-        }).compileComponents();
+    declarations: [IgxTreeGridSimpleComponent,
+        IgxTreeGridPrimaryForeignKeyComponent,
+        IgxTreeGridStringTreeColumnComponent,
+        IgxTreeGridDateTreeColumnComponent,
+        IgxTreeGridBooleanTreeColumnComponent,
+        IgxTreeGridRowEditingComponent,
+        IgxTreeGridRowPinningComponent,
+        IgxTreeGridMultiColHeadersComponent,
+        IgxTreeGridRowEditingTransactionComponent,
+        IgxTreeGridRowEditingHierarchicalDSTransactionComponent],
+    imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule],
+    providers: [
+        { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
+    ]
+}).compileComponents();
     }));
 
     it('should have tree-column with a \'string\' dataType', () => {

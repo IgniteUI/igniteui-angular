@@ -1,12 +1,21 @@
 import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
 import { IgxRowDirective } from '../row.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
+import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
+import { IgxGridCellComponent } from '../cell.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxRowDragDirective } from '../row-drag.directive';
+import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid-row',
     templateUrl: 'tree-grid-row.component.html',
-    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxTreeGridRowComponent) }],
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf, IgxRowDragDirective, IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxTreeGridCellComponent, IgxCheckboxComponent, NgFor, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe]
 })
 export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {
     @ViewChildren('treeCell')

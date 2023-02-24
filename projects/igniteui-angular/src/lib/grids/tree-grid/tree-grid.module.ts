@@ -16,39 +16,37 @@ import { IgxTooltipModule } from '../../directives/tooltip';
  * @hidden
  */
 @NgModule({
-  declarations: [
-    IgxTreeGridComponent,
-    IgxTreeGridRowComponent,
-    IgxTreeGridCellComponent,
-    IgxTreeGridHierarchizingPipe,
-    IgxTreeGridFlatteningPipe,
-    IgxTreeGridSortingPipe,
-    IgxTreeGridFilteringPipe,
-    IgxTreeGridPagingPipe,
-    IgxTreeGridTransactionPipe,
-    IgxTreeGridSummaryPipe,
-    IgxRowLoadingIndicatorTemplateDirective,
-    IgxTreeGridNormalizeRecordsPipe,
-    IgxTreeGridGroupingPipe,
-    IgxTreeGridGroupByAreaComponent,
-    IgxTreeGridAddRowPipe
-  ],
-  exports: [
-    IgxTreeGridComponent,
-    IgxTreeGridRowComponent,
-    IgxTreeGridCellComponent,
-    IgxRowLoadingIndicatorTemplateDirective,
-    IgxGridCommonModule,
-    IgxTreeGridGroupingPipe,
-    IgxTreeGridGroupByAreaComponent,
-    IgxTreeGridAddRowPipe
-  ],
-  imports: [
-    IgxGridCommonModule,
-    IgxTooltipModule,
-    ReactiveFormsModule
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    exports: [
+        IgxTreeGridComponent,
+        IgxTreeGridRowComponent,
+        IgxTreeGridCellComponent,
+        IgxRowLoadingIndicatorTemplateDirective,
+        IgxGridCommonModule,
+        IgxTreeGridGroupingPipe,
+        IgxTreeGridGroupByAreaComponent,
+        IgxTreeGridAddRowPipe
+    ],
+    imports: [
+        IgxGridCommonModule,
+        IgxTooltipModule,
+        ReactiveFormsModule,
+        IgxTreeGridComponent,
+        IgxTreeGridRowComponent,
+        IgxTreeGridCellComponent,
+        IgxTreeGridHierarchizingPipe,
+        IgxTreeGridFlatteningPipe,
+        IgxTreeGridSortingPipe,
+        IgxTreeGridFilteringPipe,
+        IgxTreeGridPagingPipe,
+        IgxTreeGridTransactionPipe,
+        IgxTreeGridSummaryPipe,
+        IgxRowLoadingIndicatorTemplateDirective,
+        IgxTreeGridNormalizeRecordsPipe,
+        IgxTreeGridGroupingPipe,
+        IgxTreeGridGroupByAreaComponent,
+        IgxTreeGridAddRowPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxTreeGridModule {
 }

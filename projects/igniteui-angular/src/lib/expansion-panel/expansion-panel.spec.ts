@@ -35,22 +35,20 @@ describe('igxExpansionPanel', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxExpansionPanelGridComponent,
-                IgxExpansionPanelListComponent,
-                IgxExpansionPanelSampleComponent,
-                IgxExpansionPanelImageComponent
-            ],
-            imports: [
-                IgxExpansionPanelModule,
-                NoopAnimationsModule,
-                IgxToggleModule,
-                IgxRippleModule,
-                IgxButtonModule,
-                IgxListModule,
-                IgxGridModule
-            ]
-        }).compileComponents();
+    imports: [
+        IgxExpansionPanelModule,
+        NoopAnimationsModule,
+        IgxToggleModule,
+        IgxRippleModule,
+        IgxButtonModule,
+        IgxListModule,
+        IgxGridModule,
+        IgxExpansionPanelGridComponent,
+        IgxExpansionPanelListComponent,
+        IgxExpansionPanelSampleComponent,
+        IgxExpansionPanelImageComponent
+    ]
+}).compileComponents();
     }));
 
 
@@ -1274,7 +1272,14 @@ describe('igxExpansionPanel', () => {
         </igx-grid>
        </igx-expansion-panel-body>
 </igx-expansion-panel>
-`
+`,
+    standalone: true,
+    imports: [IgxExpansionPanelModule,
+        IgxToggleModule,
+        IgxRippleModule,
+        IgxButtonModule,
+        IgxListModule,
+        IgxGridModule]
 })
 export class IgxExpansionPanelGridComponent {
 
@@ -1321,7 +1326,14 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel-body>
         </igx-expansion-panel>
     </div>
-`
+`,
+    standalone: true,
+    imports: [IgxExpansionPanelModule,
+        IgxToggleModule,
+        IgxRippleModule,
+        IgxButtonModule,
+        IgxListModule,
+        IgxGridModule]
 })
 export class IgxExpansionPanelListComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1347,7 +1359,14 @@ export class IgxExpansionPanelListComponent {
     Example body
     </igx-expansion-panel-body>
 </igx-expansion-panel>
-`
+`,
+    standalone: true,
+    imports: [IgxExpansionPanelModule,
+        IgxToggleModule,
+        IgxRippleModule,
+        IgxButtonModule,
+        IgxListModule,
+        IgxGridModule]
 })
 export class IgxExpansionPanelSampleComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
@@ -1384,7 +1403,14 @@ export class IgxExpansionPanelSampleComponent {
     </p>
     </igx-expansion-panel-body>
 </igx-expansion-panel>
-`
+`,
+    standalone: true,
+    imports: [IgxExpansionPanelModule,
+        IgxToggleModule,
+        IgxRippleModule,
+        IgxButtonModule,
+        IgxListModule,
+        IgxGridModule]
 })
 export class IgxExpansionPanelImageComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })

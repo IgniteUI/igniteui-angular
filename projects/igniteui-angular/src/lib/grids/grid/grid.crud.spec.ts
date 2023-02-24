@@ -17,11 +17,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                DefaultCRUDGridComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    imports: [IgxGridModule, NoopAnimationsModule, DefaultCRUDGridComponent]
+});
     }));
 
     beforeEach(fakeAsync(() => {
@@ -351,7 +348,9 @@ describe('IgxGrid - CRUD operations #grid', () => {
             [autoGenerate]="true"
             [primaryKey]="'index'">
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class DefaultCRUDGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

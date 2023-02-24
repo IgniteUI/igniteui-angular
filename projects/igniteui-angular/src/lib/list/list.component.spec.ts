@@ -41,21 +41,19 @@ const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 describe('List', () => {
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                CustomEmptyListComponent,
-                EmptyListComponent,
-                ListCustomLoadingComponent,
-                ListLoadingComponent,
-                ListWithHeaderComponent,
-                ListWithPanningComponent,
-                TwoHeadersListComponent,
-                TwoHeadersListNoPanningComponent,
-                ListWithPanningTemplatesComponent,
-                ListWithIgxForAndScrollingComponent,
-                ListDirectivesComponent
-            ],
-            imports: [IgxListModule, IgxForOfModule, IgxIconModule]
-        });
+    declarations: [CustomEmptyListComponent,
+        EmptyListComponent,
+        ListCustomLoadingComponent,
+        ListLoadingComponent,
+        ListWithHeaderComponent,
+        ListWithPanningComponent,
+        TwoHeadersListComponent,
+        TwoHeadersListNoPanningComponent,
+        ListWithPanningTemplatesComponent,
+        ListWithIgxForAndScrollingComponent,
+        ListDirectivesComponent],
+    imports: [IgxListModule, IgxForOfModule, IgxIconModule]
+});
     });
 
     it('should initialize igx-list with item and header', () => {

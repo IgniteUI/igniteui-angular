@@ -40,7 +40,9 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxIconModule, IgxChipsModule]
 })
 class TestChipComponent {
 
@@ -73,7 +75,9 @@ class TestChipComponent {
                 <span igxSuffix>suf</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxIconModule, IgxChipsModule]
 })
 class TestChipsLabelAndSuffixComponent {
 
@@ -106,13 +110,10 @@ describe('IgxChip', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestChipComponent,
-                TestChipsLabelAndSuffixComponent,
-                IgxLabelDirective
-            ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule]
-        }).compileComponents();
+    imports: [FormsModule, IgxIconModule, IgxChipsModule, TestChipComponent,
+        TestChipsLabelAndSuffixComponent,
+        IgxLabelDirective]
+}).compileComponents();
     }));
 
     describe('Rendering Tests: ', () => {

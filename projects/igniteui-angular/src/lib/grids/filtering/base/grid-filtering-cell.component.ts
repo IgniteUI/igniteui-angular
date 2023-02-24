@@ -18,6 +18,10 @@ import { ExpressionUI } from '../excel-style/common';
 import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';
 import { ColumnType } from '../../common/grid.interface';
+import { IgxBadgeComponent } from '../../../badge/badge.component';
+import { NgFor, NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
+import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../../../icon/icon.component';
 
 /**
  * @hidden
@@ -25,7 +29,9 @@ import { ColumnType } from '../../common/grid.interface';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-filtering-cell',
-    templateUrl: './grid-filtering-cell.component.html'
+    templateUrl: './grid-filtering-cell.component.html',
+    standalone: true,
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor, NgIf, NgClass, IgxBadgeComponent, NgTemplateOutlet]
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     @Input()

@@ -11,21 +11,19 @@ describe('IgxRadioGroupDirective', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                RadioGroupComponent,
-                RadioGroupSimpleComponent,
-                RadioGroupWithModelComponent,
-                RadioGroupRequiredComponent,
-                RadioGroupReactiveFormsComponent,
-                RadioGroupDeepProjectionComponent
-            ],
-            imports: [
-                IgxRadioModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule
-            ]
-        })
+    imports: [
+        IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+        RadioGroupComponent,
+        RadioGroupSimpleComponent,
+        RadioGroupWithModelComponent,
+        RadioGroupRequiredComponent,
+        RadioGroupReactiveFormsComponent,
+        RadioGroupDeepProjectionComponent
+    ]
+})
         .compileComponents();
     }));
 
@@ -262,7 +260,11 @@ describe('IgxRadioGroupDirective', () => {
         <igx-radio [checked]="true">Option 1</igx-radio>
         <igx-radio>Option 2</igx-radio>
     </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupSimpleComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -274,7 +276,11 @@ class RadioGroupSimpleComponent {
         {{item}}
     </igx-radio>
 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -286,7 +292,11 @@ class RadioGroupComponent {
         {{item}}
     </igx-radio>
 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupRequiredComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -303,7 +313,11 @@ interface Person {
                         {{item}}
                     </igx-radio>
                 </igx-radio-group>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -327,7 +341,11 @@ class RadioGroupWithModelComponent {
         </igx-radio>
     </igx-radio-group>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
     public seasons = [
@@ -378,7 +396,11 @@ class RadioGroupReactiveFormsComponent {
                 </div>
             </igx-radio-group>
         </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxRadioModule,
+        FormsModule,
+        ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
 

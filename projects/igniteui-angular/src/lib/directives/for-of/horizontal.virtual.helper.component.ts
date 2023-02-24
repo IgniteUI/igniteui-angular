@@ -8,7 +8,8 @@ import { PlatformUtil } from '../../core/utils';
  */
 @Component({
     selector: 'igx-horizontal-virtual-helper',
-    template: '<div #horizontal_container class="igx-vhelper__placeholder-content" [style.width.px]="size"></div>'
+    template: '<div #horizontal_container class="igx-vhelper__placeholder-content" [style.width.px]="size"></div>',
+    standalone: true
 })
 export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
     @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr;

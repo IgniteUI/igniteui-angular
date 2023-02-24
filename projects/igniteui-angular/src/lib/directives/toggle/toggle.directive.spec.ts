@@ -18,17 +18,14 @@ describe('IgxToggle', () => {
     const TOGGLER_CLASS = 'igx-toggle';
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxToggleActionTestComponent,
-                IgxToggleOutletComponent,
-                IgxToggleServiceInjectComponent,
-                IgxOverlayServiceComponent,
-                IgxToggleTestComponent,
-                TestWithOnPushComponent,
-                TestWithThreeToggleActionsComponent
-            ],
-            imports: [NoopAnimationsModule, IgxToggleModule]
-        })
+    imports: [NoopAnimationsModule, IgxToggleModule, IgxToggleActionTestComponent,
+        IgxToggleOutletComponent,
+        IgxToggleServiceInjectComponent,
+        IgxOverlayServiceComponent,
+        IgxToggleTestComponent,
+        TestWithOnPushComponent,
+        TestWithThreeToggleActionsComponent]
+})
             .compileComponents();
     }));
 
@@ -626,7 +623,9 @@ describe('IgxToggle', () => {
         <li>4</li>
       </ul>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class IgxToggleTestComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
@@ -645,7 +644,9 @@ export class IgxToggleTestComponent {
         <li>4</li>
       </ul>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class IgxToggleActionTestComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
@@ -661,7 +662,9 @@ export class IgxToggleActionTestComponent {
     <button [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
     <div igxToggle #toggleRef="toggle"></div>
     <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
 
@@ -671,7 +674,9 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
         <div igxToggle id="toggleID">
             <span>Some content</span>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class IgxToggleServiceInjectComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
@@ -687,7 +692,9 @@ export class IgxToggleServiceInjectComponent {
             <span>Some more content</span>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class IgxOverlayServiceComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
@@ -705,7 +712,9 @@ export class IgxOverlayServiceComponent {
             <span>Some content</span>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class TestWithOnPushComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
@@ -733,7 +742,9 @@ export class TestWithOnPushComponent {
         <div id="toggle3" igxToggle style="width: 100px; height: 100px;">
             <span>Toggle 3</span>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxToggleModule]
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {
     @ViewChild('button1', { static: true }) public button1: ElementRef;

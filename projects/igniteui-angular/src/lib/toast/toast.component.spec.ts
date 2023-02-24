@@ -33,9 +33,8 @@ describe('IgxToast', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxToastComponent],
-            imports: [NoopAnimationsModule]
-        }).compileComponents();
+    imports: [NoopAnimationsModule, IgxToastComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {

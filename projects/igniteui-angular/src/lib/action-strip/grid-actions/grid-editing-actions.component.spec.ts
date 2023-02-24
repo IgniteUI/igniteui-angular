@@ -24,24 +24,22 @@ describe('igxGridEditingActions #grid ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxActionStripTestingComponent,
-                IgxActionStripPinEditComponent,
-                IgxActionStripEditMenuComponent,
-                IgxHierarchicalGridActionStripComponent,
-                IgxTreeGridEditActionsComponent,
-                IgxActionStripOneRowComponent,
-                IgxActionStripMenuOneRowComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxGridModule,
-                IgxHierarchicalGridModule,
-                IgxIconModule,
-                IgxTreeGridModule
-            ]
-        }).compileComponents();
+    declarations: [IgxHierarchicalGridActionStripComponent,
+        IgxTreeGridEditActionsComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule,
+        IgxActionStripTestingComponent,
+        IgxActionStripPinEditComponent,
+        IgxActionStripEditMenuComponent,
+        IgxActionStripOneRowComponent,
+        IgxActionStripMenuOneRowComponent
+    ]
+}).compileComponents();
     }));
 
     describe('Base ', () => {
@@ -360,7 +358,13 @@ describe('igxGridEditingActions #grid ', () => {
         <igx-grid-editing-actions></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule]
 })
 class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -439,7 +443,13 @@ class IgxActionStripTestingComponent implements OnInit {
         <igx-grid-editing-actions></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 }
@@ -456,7 +466,13 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
         <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule]
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 }
@@ -474,7 +490,13 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
         <igx-grid-editing-actions></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule]
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
 }
@@ -491,7 +513,13 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
         <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxTreeGridModule]
 })
 class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {
 }

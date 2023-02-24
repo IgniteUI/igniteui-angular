@@ -22,15 +22,12 @@ describe('Avatar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                InitAvatarComponent,
-                AvatarWithAttribsComponent,
-                IgxAvatarComponent,
-                InitIconAvatarComponent,
-                InitImageAvatarComponent
-            ],
-            imports: [IgxIconModule]
-        })
+    imports: [IgxIconModule, InitAvatarComponent,
+        AvatarWithAttribsComponent,
+        IgxAvatarComponent,
+        InitIconAvatarComponent,
+        InitImageAvatarComponent]
+})
             .compileComponents();
     }));
 
@@ -176,7 +173,9 @@ describe('Avatar', () => {
 });
 
 @Component({
-    template: `<igx-avatar>TEST</igx-avatar>`
+    template: `<igx-avatar>TEST</igx-avatar>`,
+    standalone: true,
+    imports: [IgxIconModule]
 })
 class InitAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
@@ -189,7 +188,9 @@ class InitAvatarComponent {
         [color]="color"
         size="small"
         [roundShape]="roundShape">
-    </igx-avatar>`
+    </igx-avatar>`,
+    standalone: true,
+    imports: [IgxIconModule]
 })
 class AvatarWithAttribsComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
@@ -201,14 +202,18 @@ class AvatarWithAttribsComponent {
 }
 
 @Component({
-    template: `<igx-avatar icon="person"></igx-avatar>`
+    template: `<igx-avatar icon="person"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxIconModule]
 })
 class InitIconAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 }
 
 @Component({
-    template: `<igx-avatar [src]="source"></igx-avatar>`
+    template: `<igx-avatar [src]="source"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxIconModule]
 })
 class InitImageAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;

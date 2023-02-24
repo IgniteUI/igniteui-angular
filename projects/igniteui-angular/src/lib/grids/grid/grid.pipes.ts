@@ -14,7 +14,10 @@ import { IGridSortingStrategy, IGridGroupingStrategy } from '../common/strategy'
 /**
  * @hidden
  */
-@Pipe({ name: 'gridSort' })
+@Pipe({
+    name: 'gridSort',
+    standalone: true
+})
 export class IgxGridSortingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -37,7 +40,10 @@ export class IgxGridSortingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridGroupBy' })
+@Pipe({
+    name: 'gridGroupBy',
+    standalone: true
+})
 export class IgxGridGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -74,7 +80,10 @@ export class IgxGridGroupingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridPaging' })
+@Pipe({
+    name: 'gridPaging',
+    standalone: true
+})
 export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -105,7 +114,10 @@ export class IgxGridPagingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridFiltering' })
+@Pipe({
+    name: 'gridFiltering',
+    standalone: true
+})
 export class IgxGridFilteringPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }

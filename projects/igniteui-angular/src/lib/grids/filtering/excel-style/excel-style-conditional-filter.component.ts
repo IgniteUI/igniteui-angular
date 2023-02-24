@@ -11,6 +11,11 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../services/overlay/utilities';
+import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
+import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../drop-down/drop-down.component';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
+import { NgIf, NgFor } from '@angular/common';
 
 
 /**
@@ -18,7 +23,9 @@ import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../.
  */
 @Component({
     selector: 'igx-excel-style-conditional-filter',
-    templateUrl: './excel-style-conditional-filter.component.html'
+    templateUrl: './excel-style-conditional-filter.component.html',
+    standalone: true,
+    imports: [NgIf, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent_1, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**

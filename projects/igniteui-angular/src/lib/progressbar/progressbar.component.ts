@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     Output,
     Renderer2,
     ViewChild,
@@ -325,7 +324,9 @@ let NEXT_CIRCULAR_ID = 0;
 let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
-    templateUrl: 'templates/linear-bar.component.html'
+    templateUrl: 'templates/linear-bar.component.html',
+    standalone: true,
+    imports: [NgClass]
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
     @HostBinding('attr.aria-valuemin')
@@ -497,7 +498,9 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
 @Component({
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html'
+    templateUrl: 'templates/circular-bar.component.html',
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf]
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
 
@@ -642,20 +645,5 @@ export const toValue = (value: number, max: number) => max * value / 100;
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [
-        IgxLinearProgressBarComponent,
-        IgxCircularProgressBarComponent,
-        IgxProcessBarTextTemplateDirective,
-        IgxProgressBarGradientDirective,
-    ],
-    exports: [
-        IgxLinearProgressBarComponent,
-        IgxCircularProgressBarComponent,
-        IgxProcessBarTextTemplateDirective,
-        IgxProgressBarGradientDirective,
-    ],
-    imports: [CommonModule]
-})
-export class IgxProgressBarModule { }
+
 

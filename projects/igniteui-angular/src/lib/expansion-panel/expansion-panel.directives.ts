@@ -5,7 +5,8 @@ import { Directive, HostBinding } from '@angular/core';
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-expansion-panel-title'
+    selector: 'igx-expansion-panel-title',
+    standalone: true
 })
 export class IgxExpansionPanelTitleDirective {
     @HostBinding('class.igx-expansion-panel__header-title')
@@ -17,7 +18,8 @@ export class IgxExpansionPanelTitleDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-expansion-panel-description'
+    selector: 'igx-expansion-panel-description',
+    standalone: true
 })
 export class IgxExpansionPanelDescriptionDirective {
     @HostBinding('class.igx-expansion-panel__header-description')
@@ -29,6 +31,7 @@ export class IgxExpansionPanelDescriptionDirective {
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-expansion-panel-icon'
+    selector: 'igx-expansion-panel-icon',
+    standalone: true
 })
 export class IgxExpansionPanelIconDirective { }

@@ -58,7 +58,8 @@ import { IgxGridValidationService } from '../grid/grid-validation.service';
         IgxRowIslandAPIService,
         IgxFilteringService,
         IgxGridSelectionService
-    ]
+    ],
+    standalone: true
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {

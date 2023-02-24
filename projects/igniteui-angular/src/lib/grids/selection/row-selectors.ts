@@ -6,7 +6,8 @@ import { IgxHeadSelectorTemplateContext, IgxGroupByRowSelectorTemplateContext, I
  * @internal
  */
 @Directive({
-    selector: '[igxRowSelector]'
+    selector: '[igxRowSelector]',
+    standalone: true
 })
 export class IgxRowSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxRowSelectorTemplateContext>) { }
@@ -22,7 +23,8 @@ export class IgxRowSelectorDirective {
  * @internal
  */
 @Directive({
-    selector: '[igxGroupByRowSelector]'
+    selector: '[igxGroupByRowSelector]',
+    standalone: true
 })
 export class IgxGroupByRowSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxGroupByRowSelectorTemplateContext>) { }
@@ -38,7 +40,8 @@ export class IgxGroupByRowSelectorDirective {
  * @internal
  */
 @Directive({
-    selector: '[igxHeadSelector]'
+    selector: '[igxHeadSelector]',
+    standalone: true
 })
 export class IgxHeadSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxHeadSelectorTemplateContext>) { }

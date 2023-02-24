@@ -15,7 +15,8 @@ import {
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs  } from './expansion-panel.common';
 import { mkenum } from '../core/utils';
-import { IgxIconComponent } from '../icon/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgIf } from '@angular/common';
 
 /**
  * @hidden
@@ -30,7 +31,9 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
 
 @Component({
     selector: 'igx-expansion-panel-header',
-    templateUrl: 'expansion-panel-header.component.html'
+    templateUrl: 'expansion-panel-header.component.html',
+    standalone: true,
+    imports: [NgIf, IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
     /**

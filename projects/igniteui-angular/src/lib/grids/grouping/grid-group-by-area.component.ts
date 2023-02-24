@@ -8,7 +8,14 @@ import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { FlatGridType } from '../common/grid.interface';
-import { IgxGroupByAreaDirective } from './group-by-area.directive';
+import { IgxGroupByAreaDirective, IgxGroupByMetaPipe } from './group-by-area.directive';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { IgxGroupAreaDropDirective } from '../grid/grid.directives';
+import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxChipComponent } from '../../chips/chip.component';
+import { NgFor, NgTemplateOutlet } from '@angular/common';
+import { IgxChipsAreaComponent } from '../../chips/chips-area.component';
 
 /**
  * An internal component representing the group-by drop area for the igx-grid component.
@@ -18,7 +25,9 @@ import { IgxGroupByAreaDirective } from './group-by-area.directive';
 @Component({
     selector: 'igx-grid-group-by-area',
     templateUrl: 'group-by-area.component.html',
-    providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }]
+    providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }],
+    standalone: true,
+    imports: [IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
     @Input()

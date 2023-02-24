@@ -14,18 +14,14 @@
     Optional
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
-import {
-    IgxDragDirective,
-    IDragBaseEventArgs,
-    IDragStartEventArgs,
-    IDropBaseEventArgs,
-    IDropDroppedEventArgs
-} from '../directives/drag-drop/drag-drop.directive';
+import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { fromEvent } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -77,7 +73,9 @@ let CHIP_ID = 0;
  */
 @Component({
     selector: 'igx-chip',
-    templateUrl: 'chip.component.html'
+    templateUrl: 'chip.component.html',
+    standalone: true,
+    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
 export class IgxChipComponent extends DisplayDensityBase {
     /**

@@ -10,12 +10,11 @@ describe('Filter', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
-            imports: [IgxFilterModule, IgxListModule],
-            providers: [
-                { provide: ComponentFixtureAutoDetect, useValue: true }
-            ]
-        })
+    imports: [IgxFilterModule, IgxListModule, DeclarativeListTestComponent, DynamicListTestComponent],
+    providers: [
+        { provide: ComponentFixtureAutoDetect, useValue: true }
+    ]
+})
             .compileComponents();
     }));
 
@@ -179,7 +178,9 @@ describe('Filter', () => {
                     <igx-list-item>Item 2</igx-list-item>
                     <igx-list-item>Item 3</igx-list-item>
                 </igx-list>
-                <input #logInput />`
+                <input #logInput />`,
+    standalone: true,
+    imports: [IgxFilterModule, IgxListModule]
 })
 class DeclarativeListTestComponent {
     @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
@@ -215,7 +216,9 @@ class DeclarativeListTestComponent {
                  <igx-list-item *ngFor="let item of dataSourceItems | igxFilter: fo">
                     {{item.text}}
                  </igx-list-item>
-              </igx-list>`
+              </igx-list>`,
+    standalone: true,
+    imports: [IgxFilterModule, IgxListModule]
 })
 class DynamicListTestComponent {
     @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;

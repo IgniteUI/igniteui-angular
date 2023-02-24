@@ -23,11 +23,18 @@ import {
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from 'igniteui-angular';
 import { AbsolutePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
+import { IgxDialogComponent as IgxDialogComponent_1 } from '../../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { IgxRippleDirective } from '../../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxListItemComponent } from '../../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { NgFor } from '@angular/common';
+import { IgxListComponent } from '../../../../projects/igniteui-angular/src/lib/list/list.component';
 
 @Component({
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
-    templateUrl: 'animations.sample.html'
+    templateUrl: 'animations.sample.html',
+    standalone: true,
+    imports: [IgxListComponent, NgFor, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent_1]
 })
 export class AnimationsSampleComponent {
     @ViewChild('dialog', { static: true, read: IgxDialogComponent })

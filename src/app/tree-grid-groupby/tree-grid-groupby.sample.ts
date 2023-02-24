@@ -3,12 +3,22 @@ import { IgxTreeGridComponent, IGroupingExpression,  GridSelectionMode,
         DisplayDensity, DefaultSortingStrategy, ITreeGridRecord, TreeGridFilteringStrategy } from 'igniteui-angular';
 import { IgxGroupedTreeGridSorting, ITreeGridAggregation } from 'projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
 import { SAMPLE_DATA } from '../shared/sample-data';
+import { IgxTreeGridGroupingPipe } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxTreeGridGroupByAreaComponent } from '../../../projects/igniteui-angular/src/lib/grids/grouping/tree-grid-group-by-area.component';
+import { IgxTreeGridComponent as IgxTreeGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { NgIf, NgFor } from '@angular/common';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 @Component({
     providers: [],
     selector: 'app-tree-grid-groupby-sample',
     styleUrls: ['tree-grid-groupby.sample.css'],
-    templateUrl: 'tree-grid-groupby.sample.html'
+    templateUrl: 'tree-grid-groupby.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, NgIf, IgxSwitchComponent, FormsModule, IgxTreeGridComponent_1, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, NgFor, IgxTreeGridGroupingPipe]
 })
 
 export class TreeGridGroupBySampleComponent implements OnInit {

@@ -2,10 +2,21 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { GridPagingMode, IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { Observable } from 'rxjs';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { FormsModule } from '@angular/forms';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
-    templateUrl: 'grid-remote-paging.sample.html'
+    templateUrl: 'grid-remote-paging.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent_1, IgxColumnComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;

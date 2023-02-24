@@ -2,7 +2,6 @@ export * from './api.service';
 export * from './columns/column.component';
 export * from './common/shared.module';
 export * from './columns/interfaces';
-export * from './columns/column.module';
 export * from './headers/headers.module';
 export * from './common/events';
 export * from './common/strategy';
@@ -31,8 +30,6 @@ export * from './grid/grid-validation.service';
 export { IgxGridCellComponent as ϴIgxGridCellComponent } from './cell.component';
 
 export * from './grid-footer/grid-footer.component';
-export * from './moving/moving.module';
-export * from './selection/selection.module';
 export * from './resizing/resize.module';
 export * from './summaries/summary.module';
 export * from './grouping/tree-grid-group-by-area.component';

@@ -1,6 +1,13 @@
 import { Component, ViewChild, AfterContentInit } from '@angular/core';
 import { IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
-import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { NgFor, JsonPipe } from '@angular/common';
+import { IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
+import { IgxRadioGroupDirective as IgxRadioGroupDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/radio/radio-group.directive';
 
 class Person {
     public favoriteSeason: string;
@@ -15,7 +22,9 @@ class Person {
 @Component({
     selector: 'app-radio-sample',
     styleUrls: ['radio.sample.css'],
-    templateUrl: 'radio.sample.html'
+    templateUrl: 'radio.sample.html',
+    standalone: true,
+    imports: [IgxRadioGroupDirective_1, FormsModule, IgxLayoutDirective, NgFor, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]
 })
 export class RadioSampleComponent implements AfterContentInit {
     @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true })

@@ -23,42 +23,40 @@ import { ReactiveFormsModule } from '@angular/forms';
  * @hidden
  */
 @NgModule({
-  declarations: [
-    IgxGridComponent,
-    IgxGridRowComponent,
-    IgxGridGroupByRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridGroupingPipe,
-    IgxGridPagingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridSummaryPipe,
-    IgxGridDetailsPipe,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByAreaComponent,
-  ],
-  exports: [
-    IgxGridComponent,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByRowComponent,
-    IgxGridRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridGroupingPipe,
-    IgxGridPagingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridSummaryPipe,
-    IgxGridDetailsPipe,
-    IgxGridGroupByAreaComponent,
-    IgxGridCommonModule
-  ],
-  imports: [
-    IgxGridCommonModule,
-    IgxTooltipModule,
-    ReactiveFormsModule
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    exports: [
+        IgxGridComponent,
+        IgxGridExpandableCellComponent,
+        IgxGridGroupByRowComponent,
+        IgxGridRowComponent,
+        IgxGroupByRowTemplateDirective,
+        IgxGridDetailTemplateDirective,
+        IgxGridGroupingPipe,
+        IgxGridPagingPipe,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridSummaryPipe,
+        IgxGridDetailsPipe,
+        IgxGridGroupByAreaComponent,
+        IgxGridCommonModule
+    ],
+    imports: [
+        IgxGridCommonModule,
+        IgxTooltipModule,
+        ReactiveFormsModule,
+        IgxGridComponent,
+        IgxGridRowComponent,
+        IgxGridGroupByRowComponent,
+        IgxGroupByRowTemplateDirective,
+        IgxGridDetailTemplateDirective,
+        IgxGridGroupingPipe,
+        IgxGridPagingPipe,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridSummaryPipe,
+        IgxGridDetailsPipe,
+        IgxGridExpandableCellComponent,
+        IgxGridGroupByAreaComponent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridModule {}

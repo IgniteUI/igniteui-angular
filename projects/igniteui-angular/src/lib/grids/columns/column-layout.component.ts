@@ -13,7 +13,8 @@ import { IgxColumnGroupComponent } from './column-group.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnLayoutComponent) }],
     selector: 'igx-column-layout',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     public childrenVisibleIndexes = [];

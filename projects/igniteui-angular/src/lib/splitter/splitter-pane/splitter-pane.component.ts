@@ -16,7 +16,8 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
  */
 @Component({
     selector: 'igx-splitter-pane',
-    templateUrl: './splitter-pane.component.html'
+    templateUrl: './splitter-pane.component.html',
+    standalone: true
 })
 export class IgxSplitterPaneComponent {
     private _minSize: string;

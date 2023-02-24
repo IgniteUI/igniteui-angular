@@ -22,12 +22,10 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridEditActionsComponent,
-                IgxTreeGridEditActionsPinningComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxActionStripModule]
-        }).compileComponents();
+    declarations: [IgxTreeGridEditActionsComponent,
+        IgxTreeGridEditActionsPinningComponent],
+    imports: [IgxTreeGridModule, NoopAnimationsModule, IgxActionStripModule]
+}).compileComponents();
     }));
 
     describe('Basic', () => {

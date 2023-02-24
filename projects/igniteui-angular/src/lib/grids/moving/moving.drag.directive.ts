@@ -9,7 +9,10 @@ import { ColumnType } from '../common/grid.interface';
  * @hidden
  * @internal
  */
-@Directive({ selector: '[igxColumnMovingDrag]' })
+@Directive({
+    selector: '[igxColumnMovingDrag]',
+    standalone: true
+})
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')

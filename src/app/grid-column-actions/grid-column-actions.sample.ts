@@ -1,11 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { IColumnToggledEventArgs } from 'igniteui-angular';
+import { IgxColumnGroupingDirective } from './custom-action-directive';
+import { IgxColumnPinningDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-pinning.directive';
+import { IgxColumnHidingDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-hiding.directive';
+import { IgxColumnActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-actions.component';
+import { NgFor } from '@angular/common';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-actions-sample',
     styleUrls: ['grid-column-actions.sample.css'],
-    templateUrl: 'grid-column-actions.sample.html'
+    templateUrl: 'grid-column-actions.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxColumnGroupingDirective]
 })
 
 export class GridColumnActionsSampleComponent implements OnInit {

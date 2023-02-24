@@ -15,6 +15,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
 import { noop } from 'rxjs';
+import { NgFor } from '@angular/common';
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
@@ -36,7 +37,9 @@ export class CalendarHammerConfig extends HammerGestureConfig {
         }
     ],
     selector: 'igx-years-view',
-    templateUrl: 'years-view.component.html'
+    templateUrl: 'years-view.component.html',
+    standalone: true,
+    imports: [NgFor, IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent implements ControlValueAccessor {
     /**

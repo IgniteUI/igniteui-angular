@@ -8,4 +8,3 @@ export {
     IgxExpansionPanelTitleDirective
 } from './expansion-panel.directives';
 export { ExpansionPanelHeaderIconPosition } from './expansion-panel-header.component';
-export * from './expansion-panel.module';

@@ -187,7 +187,10 @@ export abstract class IgxGroupByAreaDirective {
  *
  * @hidden @internal
  */
-@Pipe({ name: 'igxGroupByMeta' })
+@Pipe({
+    name: 'igxGroupByMeta',
+    standalone: true
+})
 export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: GridType) {

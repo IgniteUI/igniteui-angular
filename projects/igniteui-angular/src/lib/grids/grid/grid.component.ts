@@ -1,7 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren
+    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -11,7 +11,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -31,6 +31,27 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { IgxGridDetailsPipe } from './grid.details.pipe';
+import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxGridRowComponent } from './grid-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -76,7 +97,10 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    standalone: true,
+    imports: [NgIf, IgxGridGroupByAreaComponent, IgxGridHeaderRowComponent, IgxGridBodyDirective, IgxGridDragSelectDirective, IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, NgFor, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxGridRowComponent, NgStyle, IgxGridGroupByRowComponent, IgxSummaryRowComponent, IgxOverlayOutletDirective, IgxToggleDirective, IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxRowEditTabStopDirective, IgxGridColumnResizerComponent, IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxSummaryDataPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridSummaryPipe, IgxGridDetailsPipe],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     /**

@@ -13,12 +13,20 @@ import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxPivotGridCellStyleClassesPipe } from './pivot-grid.pipes';
+import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { NgClass, NgStyle } from '@angular/common';
+import { IgxGridCellComponent } from '../cell.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row',
     templateUrl: './pivot-row.component.html',
-    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }],
+    standalone: true,
+    imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
     /**

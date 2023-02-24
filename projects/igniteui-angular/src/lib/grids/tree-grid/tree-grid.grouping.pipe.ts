@@ -43,7 +43,8 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
 
 /** @hidden */
 @Pipe({
-    name: 'treeGridGrouping'
+    name: 'treeGridGrouping',
+    standalone: true
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
     private grid: GridType;

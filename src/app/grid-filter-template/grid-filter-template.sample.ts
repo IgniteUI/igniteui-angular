@@ -8,12 +8,23 @@ import {
     ColumnType,
     GridSelectionMode
 } from 'igniteui-angular';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxFilterCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     providers: [],
     selector: 'app-grid-filter-template-sample',
     styleUrls: ['grid-filter-template.sample.css'],
-    templateUrl: 'grid-filter-template.sample.html'
+    templateUrl: 'grid-filter-template.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent_1, NgFor, IgxColumnComponent, IgxFilterCellTemplateDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, NgIf, IgxSuffixDirective]
 })
 
 export class GridFilterTemplateSampleComponent implements OnInit {

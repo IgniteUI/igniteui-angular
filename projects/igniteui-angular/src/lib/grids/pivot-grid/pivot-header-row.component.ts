@@ -24,6 +24,18 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { DropPosition } from '../moving/moving.service';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxGridTopLevelColumns } from '../common/pipes';
+import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
+import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
+import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
+import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';
+import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxPrefixDirective } from '../../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { NgIf, NgFor, NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 /**
  *
@@ -36,7 +48,9 @@ import { PivotUtil } from './pivot-util';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-header-row',
-    templateUrl: './pivot-header-row.component.html'
+    templateUrl: './pivot-header-row.component.html',
+    standalone: true,
+    imports: [NgIf, IgxDropDirective, IgxChipsAreaComponent, NgFor, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxBadgeComponent, IgxSuffixDirective, IgxDropDownItemNavigationDirective, NgTemplateOutlet, IgxGridHeaderGroupComponent, NgClass, NgStyle, IgxGridForOfDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe, IgxGridTopLevelColumns]
 })
 export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implements OnChanges {
     public aggregateList: IPivotAggregator[] = [];

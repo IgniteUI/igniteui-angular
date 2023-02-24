@@ -2,11 +2,24 @@ import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular
 import { Observable } from 'rxjs';
 import { IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
+import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 
 @Component({
     selector: 'app-grid-selection-sample',
     templateUrl: 'grid-selection.sample.html',
-    styleUrls: ['grid-selection.sample.css']
+    styleUrls: ['grid-selection.sample.css'],
+    standalone: true,
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxGridComponent_1, IgxColumnComponent, NgIf, IgxRippleDirective, AsyncPipe]
 })
 export class GridSelectionComponent implements AfterViewInit {
     @ViewChild('grid1', { static: true })

@@ -27,20 +27,18 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridExpandingComponent,
-                IgxTreeGridPrimaryForeignKeyComponent,
-                IgxTreeGridLoadOnDemandComponent,
-                IgxTreeGridLoadOnDemandHasChildrenComponent,
-                IgxTreeGridLoadOnDemandChildDataComponent,
-                IgxTreeGridCustomExpandersTemplateComponent,
-                IgxTreeGridRowEditingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule
-            ]
-        }).compileComponents();
+    declarations: [IgxTreeGridExpandingComponent,
+        IgxTreeGridPrimaryForeignKeyComponent,
+        IgxTreeGridLoadOnDemandComponent,
+        IgxTreeGridLoadOnDemandHasChildrenComponent,
+        IgxTreeGridLoadOnDemandChildDataComponent,
+        IgxTreeGridCustomExpandersTemplateComponent,
+        IgxTreeGridRowEditingComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxTreeGridModule
+    ]
+}).compileComponents();
     }));
 
     describe('Child Collection', () => {

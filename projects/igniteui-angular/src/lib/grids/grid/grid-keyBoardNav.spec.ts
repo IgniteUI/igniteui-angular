@@ -28,11 +28,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let gridContent: DebugElement;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    NoScrollsComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [NoScrollsComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         beforeEach(() => {
@@ -212,11 +210,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let gridContent: DebugElement;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    VirtualGridComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [VirtualGridComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         beforeEach(() => {
@@ -693,11 +689,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     describe('Group By navigation ', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    IgxGridGroupByComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-            });
+    declarations: [IgxGridGroupByComponent],
+    imports: [NoopAnimationsModule, IgxGridModule]
+});
         }));
 
         let fix;

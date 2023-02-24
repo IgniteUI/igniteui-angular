@@ -19,15 +19,13 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnLayoutTestComponent,
-                ColumnLayoutAndGroupsTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        });
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule,
+        ColumnLayoutTestComponent,
+        ColumnLayoutAndGroupsTestComponent
+    ]
+});
     }));
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {
@@ -1144,7 +1142,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1180,7 +1180,9 @@ export class ColumnLayoutTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 

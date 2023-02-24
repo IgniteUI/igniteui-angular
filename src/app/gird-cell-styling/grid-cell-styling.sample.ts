@@ -1,12 +1,25 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, IPinningConfig, RowPinningPosition, RowType } from 'igniteui-angular';
 import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
+import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor, JsonPipe } from '@angular/common';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     providers: [],
     selector: 'app-grid-cell-styling.sample',
     styleUrls: ['grid-cell-styling.sample.scss'],
     templateUrl: 'grid-cell-styling.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxHintDirective, IgxGridComponent_1, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, JsonPipe]
 })
 
 export class GridCellStylingSampleComponent implements OnInit {

@@ -27,15 +27,13 @@ describe('Column Hiding UI #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnHidingTestComponent,
-                ColumnGroupsHidingTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        });
+    declarations: [ColumnHidingTestComponent,
+        ColumnGroupsHidingTestComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     describe('Basic', () => {

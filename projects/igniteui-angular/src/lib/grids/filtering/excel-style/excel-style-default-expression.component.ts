@@ -21,6 +21,13 @@ import { ColumnType } from '../../common/grid.interface';
 import { OverlaySettings } from '../../../services/overlay/utilities';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { IgxInputDirective as IgxInputDirective_1 } from '../../../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
+import { IgxSelectItemComponent } from '../../../select/select-item.component';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { NgIf, NgFor } from '@angular/common';
+import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
 
 /**
  * @hidden
@@ -35,7 +42,9 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
  */
 @Component({
     selector: 'igx-excel-style-default-expression',
-    templateUrl: './excel-style-default-expression.component.html'
+    templateUrl: './excel-style-default-expression.component.html',
+    standalone: true,
+    imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective_1, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective]
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()

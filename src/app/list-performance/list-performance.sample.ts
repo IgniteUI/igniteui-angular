@@ -1,10 +1,27 @@
 import { Component } from '@angular/core';
 import { IgxFilterOptions } from 'igniteui-angular';
+import { IgxFilterPipe } from '../../../projects/igniteui-angular/src/lib/directives/filter/filter.directive';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxForOfDirective } from '../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { IgxListComponent, IgxListThumbnailDirective, IgxListLineDirective, IgxListLineTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { NgIf } from '@angular/common';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 
 @Component({
     selector: 'app-list-performance-sample',
     styleUrls: ['list-performance.sample.css'],
-    templateUrl: 'list-performance.sample.html'
+    templateUrl: 'list-performance.sample.html',
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, FormsModule, IgxInputDirective, NgIf, IgxSuffixDirective, IgxButtonDirective, IgxCardComponent, IgxListComponent, IgxListItemComponent, IgxForOfDirective, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineDirective, IgxListLineTitleDirective, IgxListActionDirective, IgxFilterPipe]
 })
 export class ListPerformanceSampleComponent {
     public search1: string;

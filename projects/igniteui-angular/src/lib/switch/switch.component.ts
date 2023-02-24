@@ -5,7 +5,6 @@ import {
     forwardRef,
     HostBinding,
     Input,
-    NgModule,
     Output,
     Provider,
     ViewChild,
@@ -13,7 +12,7 @@ import {
     HostListener
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
@@ -56,7 +55,9 @@ let nextId = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSwitchComponent, multi: true }],
     selector: 'igx-switch',
-    templateUrl: 'switch.component.html'
+    templateUrl: 'switch.component.html',
+    standalone: true,
+    imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
     private static ngAcceptInputType_required: boolean | '';
@@ -392,16 +393,12 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
     selector: `igx-switch[required][formControlName],
     igx-switch[required][formControl],
     igx-switch[required][ngModel]`,
-    providers: [IGX_SWITCH_REQUIRED_VALIDATOR]
+    providers: [IGX_SWITCH_REQUIRED_VALIDATOR],
+    standalone: true
 })
 export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
 
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
-    exports: [IgxSwitchComponent, IgxSwitchRequiredDirective],
-    imports: [IgxRippleModule]
-})
-export class IgxSwitchModule { }
+

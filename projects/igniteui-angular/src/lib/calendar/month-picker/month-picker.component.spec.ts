@@ -13,9 +13,8 @@ describe('IgxMonthPicker', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxMonthPickerSampleComponent],
-            imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule]
-        }).compileComponents();
+    imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule, IgxMonthPickerSampleComponent]
+}).compileComponents();
     });
 
     it('should initialize a month picker component', () => {
@@ -463,7 +462,9 @@ describe('IgxMonthPicker', () => {
                           [viewDate]="viewDate"
                           [formatOptions]="formatOptions"
                           [locale]="locale">
-                </igx-month-picker>`
+                </igx-month-picker>`,
+    standalone: true,
+    imports: [FormsModule, IgxCalendarModule]
 })
 export class IgxMonthPickerSampleComponent {
     @ViewChild(IgxMonthPickerComponent, { static: true }) public monthPicker: IgxMonthPickerComponent;

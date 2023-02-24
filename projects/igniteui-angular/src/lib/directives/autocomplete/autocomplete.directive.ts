@@ -76,7 +76,8 @@ export interface AutocompleteOverlaySettings {
  */
 @Directive({
     selector: '[igxAutocomplete]',
-    exportAs: 'igxAutocomplete'
+    exportAs: 'igxAutocomplete',
+    standalone: true
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit, OnInit {
     /**
@@ -400,8 +401,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
 /** @hidden */
 @NgModule({
-    imports: [IgxDropDownModule, CommonModule],
-    declarations: [IgxAutocompleteDirective],
+    imports: [IgxDropDownModule, CommonModule, IgxAutocompleteDirective],
     exports: [IgxAutocompleteDirective]
 })
 export class IgxAutocompleteModule { }

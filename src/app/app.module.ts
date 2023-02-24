@@ -4,18 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {
-    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
-    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
-    IgxListModule,
-    IgxTextSelectionModule,
-    IgxPivotGridModule,
-    IgxQueryBuilderModule,
-    IgcFormsModule
-} from 'igniteui-angular';
-import { SharedModule } from './shared/shared.module';
+import { IgxGridModule, IgxOverlayService, IgxTreeGridModule, IgxHierarchicalGridModule, IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateRangePickerModule, IgxActionStripModule, GridBaseAPIService, IgxPivotGridModule, IgxQueryBuilderModule } from 'igniteui-angular';
+
 
 import { routing } from './routing';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
@@ -147,7 +137,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
-import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-common/picker-icons.common';
+
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
@@ -318,38 +308,25 @@ const components = [
 ];
 
 @NgModule({
-    declarations: components,
     imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HammerModule,
-        FormsModule,
-        CommonModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        IgxBottomNavModule,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxActionStripModule,
-        IgxGridModule,
-        IgxTreeGridModule,
-        IgxHierarchicalGridModule,
-        IgxDragDropModule,
-        IgxDateRangePickerModule,
-        IgxPickersCommonModule,
-        IgxDividerModule,
-        IgxButtonGroupModule,
-        IgxListModule,
-        IgxTextSelectionModule,
-        SharedModule,
-        routing,
-        HammerModule,
-        IgxDateTimeEditorModule,
-        IgxButtonModule,
-        IgxPivotGridModule,
-        IgxQueryBuilderModule,
-        IgcFormsModule
-    ],
+    BrowserModule,
+    BrowserAnimationsModule,
+    HammerModule,
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    IgxActionStripModule,
+    IgxGridModule,
+    IgxTreeGridModule,
+    IgxHierarchicalGridModule,
+    IgxDateRangePickerModule,
+    routing,
+    HammerModule,
+    IgxPivotGridModule,
+    IgxQueryBuilderModule,
+    ...components
+],
     providers: [
         LocalService,
         RemoteService,

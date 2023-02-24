@@ -27,19 +27,17 @@ describe('Row Pinning #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                GridRowPinningComponent,
-                GridRowPinningWithMRLComponent,
-                GridRowPinningWithMDVComponent,
-                GridRowPinningWithTransactionsComponent,
-                GridRowPinningWithInitialPinningComponent,
-                GridRowConditionalStylingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
-            ]
-        });
+    declarations: [GridRowConditionalStylingComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule,
+        GridRowPinningComponent,
+        GridRowPinningWithMRLComponent,
+        GridRowPinningWithMDVComponent,
+        GridRowPinningWithTransactionsComponent,
+        GridRowPinningWithInitialPinningComponent
+    ]
+});
     }));
 
     describe('', () => {
@@ -1369,7 +1367,9 @@ describe('Row Pinning #grid', () => {
             [autoGenerate]="true">
             <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridRowPinningComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1394,7 +1394,9 @@ export class GridRowPinningComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
     public cols: Array<any> = [
@@ -1426,7 +1428,9 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
                 <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
             </div>
         </ng-template>
-</igx-grid>`
+</igx-grid>`,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
 
@@ -1442,7 +1446,9 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
 
@@ -1457,7 +1463,9 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
             [data]="data"
             [autoGenerate]="true">
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

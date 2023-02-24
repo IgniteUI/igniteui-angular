@@ -792,23 +792,21 @@ describe('igxCombo', () => {
     describe('Combo feature tests: ', () => {
         configureTestSuite(() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    IgxComboSampleComponent,
-                    IgxComboInContainerTestComponent,
-                    IgxComboRemoteDataComponent,
-                    ComboModelBindingComponent,
-                    IgxComboBindingDataAfterInitComponent,
-                    IgxComboFormComponent,
-                    IgxComboInTemplatedFormComponent
-                ],
-                imports: [
-                    IgxComboModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule,
-                    ReactiveFormsModule,
-                    FormsModule
-                ]
-            });
+    imports: [
+        IgxComboModule,
+        NoopAnimationsModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule,
+        IgxComboSampleComponent,
+        IgxComboInContainerTestComponent,
+        IgxComboRemoteDataComponent,
+        ComboModelBindingComponent,
+        IgxComboBindingDataAfterInitComponent,
+        IgxComboFormComponent,
+        IgxComboInTemplatedFormComponent
+    ]
+});
         });
 
         describe('Initialization and rendering tests: ', () => {
@@ -3139,7 +3137,12 @@ describe('igxCombo', () => {
 <div class="footer-class">This is a footer</div>
 </ng-template>
 </igx-combo>
-`
+`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 class IgxComboSampleComponent {
     /**
@@ -3212,7 +3215,12 @@ class="input-container" [filterable]="true" placeholder="Location(s)"
 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
 </p>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 
 @Component({
@@ -3305,7 +3313,12 @@ class IgxComboFormComponent {
             <label igxLabel>Combo Label</label>
         </igx-combo>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
     @ViewChild('testCombo', { read: IgxComboComponent, static: true })
@@ -3399,7 +3412,12 @@ export class IgxComboBindingTestComponent {
 >
 </igx-combo>
 </div>
-`
+`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 class IgxComboInContainerTestComponent {
     @ViewChild('combo', { read: IgxComboComponent, static: true })
@@ -3468,7 +3486,12 @@ export class RemoteDataService {
     [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
     [ariaLabelledBy]="'mockID'">
     </igx-combo>
-    `
+    `,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('combo', { read: IgxComboComponent, static: true })
@@ -3497,7 +3520,12 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
     }
 }
 @Component({
-    template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`
+    template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
     @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
@@ -3513,7 +3541,12 @@ export class ComboModelBindingComponent implements OnInit {
 
 @Component({
     template: `
-        <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`
+        <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
+    standalone: true,
+    imports: [IgxComboModule,
+        IgxToggleModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
     public items: any[] = [];

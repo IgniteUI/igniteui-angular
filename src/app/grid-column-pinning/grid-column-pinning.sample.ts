@@ -5,12 +5,23 @@ import { IgxGridComponent,
     GridSelectionMode,
     IPinningConfig,
     RowType } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { NgIf, NgFor } from '@angular/common';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-pinning-sample',
     styleUrls: ['grid-column-pinning.sample.css'],
-    templateUrl: 'grid-column-pinning.sample.html'
+    templateUrl: 'grid-column-pinning.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxGridComponent_1, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule]
 })
 
 export class GridColumnPinningSampleComponent implements OnInit {

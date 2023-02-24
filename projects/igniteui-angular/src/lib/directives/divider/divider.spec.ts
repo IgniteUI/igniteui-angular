@@ -19,9 +19,8 @@ describe('Divider', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TestDividerComponent],
-            imports: [IgxDividerModule]
-        }).compileComponents();
+    imports: [IgxDividerModule, TestDividerComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {
@@ -126,7 +125,9 @@ describe('Divider', () => {
         [middle]="middle"
         [inset]="inset"
         [role]="role">
-    </igx-divider>`
+    </igx-divider>`,
+    standalone: true,
+    imports: [IgxDividerModule]
 })
 class TestDividerComponent {
     public type: string;

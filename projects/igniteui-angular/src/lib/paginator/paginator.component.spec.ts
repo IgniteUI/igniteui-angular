@@ -12,11 +12,8 @@ describe('IgxPaginator with default settings', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                DefaultPaginatorComponent
-            ],
-            imports: [IgxPaginatorModule, NoopAnimationsModule]
-        }).compileComponents();
+    imports: [IgxPaginatorModule, NoopAnimationsModule, DefaultPaginatorComponent]
+}).compileComponents();
     }));
     it('should calculate number of pages correctly', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
@@ -241,11 +238,8 @@ describe('IgxPaginator with custom settings', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                CustomizedPaginatorComponent
-            ],
-            imports: [IgxPaginatorModule, NoopAnimationsModule]
-        }).compileComponents();
+    imports: [IgxPaginatorModule, NoopAnimationsModule, CustomizedPaginatorComponent]
+}).compileComponents();
     }));
 
     it('should calculate correctly pages when custom select options are given', () => {
@@ -300,7 +294,9 @@ describe('IgxPaginator with custom settings', () => {
                     </button>
                 </div>
             </igx-paginator-content>
-        </igx-paginator>`
+        </igx-paginator>`,
+    standalone: true,
+    imports: [IgxPaginatorModule]
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
@@ -316,7 +312,9 @@ export class DefaultPaginatorComponent {
         [selectOptions]="[3,10,25,40]"
         [perPage]="7"
         >
-        </igx-paginator>`
+        </igx-paginator>`,
+    standalone: true,
+    imports: [IgxPaginatorModule]
 })
 export class CustomizedPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;

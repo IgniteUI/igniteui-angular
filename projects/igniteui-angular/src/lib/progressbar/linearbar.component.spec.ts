@@ -17,8 +17,8 @@ describe('IgxLinearBar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxLinearProgressBarComponent]
-        })
+    imports: [IgxLinearProgressBarComponent]
+})
         .compileComponents();
     }));
 

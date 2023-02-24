@@ -7,7 +7,7 @@ import { DIR_DOCUMENT, IgxDirectionality } from '../services/direction/direction
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxSliderType, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
-import { IgxSliderComponent, IgxSliderModule } from './slider.component';
+import { IgxSliderComponent } from './slider.component';
 
 declare let Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
@@ -35,7 +35,8 @@ describe('IgxSlider', () => {
         fakeDoc = { body: {}, documentElement: {} };
 
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
                 SliderTestComponent,
@@ -47,9 +48,6 @@ describe('IgxSlider', () => {
                 SliderTemplateFormComponent,
                 SliderReactiveFormComponent,
                 SliderWithValueAdjustmentComponent
-            ],
-            imports: [
-                IgxSliderModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule
             ],
             providers: [
                 { provide: DIR_DOCUMENT, useFactory: () => fakeDoc }
@@ -1789,7 +1787,9 @@ describe('IgxSlider', () => {
     selector: 'igx-slider-rtl',
     template: `
         <igx-slider [type]="type" [value]="value"></igx-slider>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
     @ViewChild(IgxSliderComponent)
@@ -1816,7 +1816,9 @@ export class SliderRtlComponent {
             [primaryTickLabels]="primaryTickLabels"
             [secondaryTickLabels]="secondaryTickLabels"
             [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 export class SliderTicksComponent {
 
@@ -1834,7 +1836,9 @@ export class SliderTicksComponent {
 @Component({
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
-    </igx-slider>`
+    </igx-slider>`,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 class SliderInitializeTestComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1843,7 +1847,9 @@ class SliderInitializeTestComponent {
 @Component({
     template: `
         <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 export class SliderMinMaxComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1859,7 +1865,9 @@ export class SliderMinMaxComponent {
                                         [maxValue]="maxValue"
                                         [type]="type">
                     </igx-slider>
-                </div>`
+                </div>`,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 class SliderTestComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1880,7 +1888,9 @@ class SliderTestComponent {
 @Component({
     template: `
     <igx-slider [labels]="['Winter', 'Spring', 'Summer', 'Autumn']">
-    </igx-slider> `
+    </igx-slider> `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 class SliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1891,7 +1901,9 @@ class SliderWithLabelsComponent {
     <igx-slider
     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
     [type]="type">
-    </igx-slider> `
+    </igx-slider> `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 class RangeSliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true })
@@ -1911,8 +1923,9 @@ class RangeSliderWithLabelsComponent {
             <span class="custom"> Upper {{ labels[value.upper] }}</span>
         </ng-template>
     </igx-slider>
-    `
-
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1924,7 +1937,9 @@ class RangeSliderWithCustomTemplateComponent {
         <form #form="ngForm">
             <igx-slider [(ngModel)]="value" name="amount"></igx-slider>
         </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent, FormsModule ]
 })
 export class SliderTemplateFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1937,7 +1952,9 @@ export class SliderTemplateFormComponent {
         <form #form="ngForm">
             <igx-slider [formControl]="formControl"></igx-slider>
         </form>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent, FormsModule, ReactiveFormsModule]
 })
 export class SliderReactiveFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1948,7 +1965,9 @@ export class SliderReactiveFormComponent {
 @Component({
     template: `
         <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
-    `
+    `,
+    standalone: true,
+    imports: [IgxSliderComponent]
 })
 export class SliderWithValueAdjustmentComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;

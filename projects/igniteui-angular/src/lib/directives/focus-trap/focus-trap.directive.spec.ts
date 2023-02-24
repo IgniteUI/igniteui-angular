@@ -13,11 +13,8 @@ describe('igxFocusTrap', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TrapFocusTestComponent
-            ],
-            imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule]
-        }).compileComponents();
+    imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule, TrapFocusTestComponent]
+}).compileComponents();
     }));
 
     afterEach(() => {
@@ -178,7 +175,10 @@ describe('igxFocusTrap', () => {
                 <label for="psw"><b>Password</b></label><br>
                 <input type="password" *ngIf="showInput" placeholder="Enter Password" name="psw"><br>
                 <button *ngIf="showButton">SIGN IN</button>
-            </div>` })
+            </div>`,
+    standalone: true,
+    imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule]
+})
 class TrapFocusTestComponent {
     public showInput = true;
     public showButton = true;

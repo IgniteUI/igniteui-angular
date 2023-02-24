@@ -21,14 +21,13 @@ describe('Rendering Tests', () => {
     beforeAll(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    IgxAccordionSampleTestComponent,],
-                imports: [
-                    NoopAnimationsModule,
-                    IgxAccordionModule,
-                    IgxExpansionPanelModule
-                ]
-            }).compileComponents();
+    imports: [
+        NoopAnimationsModule,
+        IgxAccordionModule,
+        IgxExpansionPanelModule,
+        IgxAccordionSampleTestComponent
+    ]
+}).compileComponents();
         })
     );
     beforeEach(() => {
@@ -407,7 +406,10 @@ describe('Rendering Tests', () => {
     <div *ngIf="divChild"></div>
 </igx-accordion>
 
-`
+`,
+    standalone: true,
+    imports: [IgxAccordionModule,
+        IgxExpansionPanelModule]
 })
 export class IgxAccordionSampleTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;

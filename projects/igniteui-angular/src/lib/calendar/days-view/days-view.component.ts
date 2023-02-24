@@ -19,6 +19,7 @@ import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
 import { isEqual, PlatformUtil } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';
+import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -32,7 +33,9 @@ let NEXT_ID = 0;
         { provide: IgxDaysViewNavigationService, useClass: IgxDaysViewNavigationService }
     ],
     selector: 'igx-days-view',
-    templateUrl: 'days-view.component.html'
+    templateUrl: 'days-view.component.html',
+    standalone: true,
+    imports: [NgIf, NgFor, IgxDayItemComponent, TitleCasePipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements DoCheck, OnInit {
     /**

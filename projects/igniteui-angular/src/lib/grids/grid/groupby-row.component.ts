@@ -21,11 +21,17 @@ import { Subject } from 'rxjs';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridSelectionMode } from '../common/enums';
 import { ISelectionNode } from '../common/types';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgIf, NgTemplateOutlet, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-groupby-row',
-    templateUrl: './groupby-row.component.html'
+    templateUrl: './groupby-row.component.html',
+    standalone: true,
+    imports: [NgIf, IgxIconComponent, NgTemplateOutlet, IgxBadgeComponent, IgxCheckboxComponent, DecimalPipe, DatePipe]
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
     /**

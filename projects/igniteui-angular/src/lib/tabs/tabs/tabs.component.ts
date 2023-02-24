@@ -5,6 +5,9 @@ import { AnimationService } from '../../services/animation/animation';
 import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
+import { NgClass, NgFor, NgTemplateOutlet, NgIf } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
 
 export const IgxTabsAlignment = mkenum({
     start: 'start',
@@ -58,7 +61,9 @@ let NEXT_TAB_ID = 0;
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
-    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
+    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
+    standalone: true,
+    imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgFor, NgTemplateOutlet, NgIf]
 })
 
 export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {

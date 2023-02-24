@@ -21,13 +21,10 @@ import { CustomFilter } from '../test-utils/grid-samples.spec';
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridStateComponent,
-                IgxGridStateWithOptionsComponent,
-                IgxGridStateWithDetailsComponent
-            ],
-            imports: [ NoopAnimationsModule, IgxGridModule ]
-        });
+    imports: [NoopAnimationsModule, IgxGridModule, IgxGridStateComponent,
+        IgxGridStateWithOptionsComponent,
+        IgxGridStateWithDetailsComponent]
+});
     }));
 
     it('should initialize an IgxGridState with default options object', () => {
@@ -772,7 +769,9 @@ class HelperFunctions {
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class IgxGridStateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -798,7 +797,9 @@ export class IgxGridStateComponent {
         <igx-grid #grid [data]="data" [autoGenerate]="true" [igxGridState]="options">
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class IgxGridStateWithOptionsComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -826,7 +827,9 @@ export class IgxGridStateWithOptionsComponent {
             </ng-template>
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class IgxGridStateWithDetailsComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })

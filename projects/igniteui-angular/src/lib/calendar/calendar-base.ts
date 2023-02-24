@@ -34,6 +34,7 @@ export interface IViewDateChangeEventArgs {
 /** @hidden @internal */
 @Directive({
     selector: '[igxCalendarBase]',
+    standalone: true
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**

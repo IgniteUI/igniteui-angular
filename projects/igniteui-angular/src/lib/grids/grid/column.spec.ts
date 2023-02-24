@@ -31,23 +31,20 @@ describe('IgxGrid - Column properties #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnsFromIterableComponent,
-                TemplatedColumnsComponent,
-                TemplatedInputColumnsComponent,
-                TemplatedContextInputColumnsComponent,
-                ColumnCellFormatterComponent,
-                ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent,
-                DynamicColumnsComponent,
-                GridAddColumnComponent,
-                IgxGridCurrencyColumnComponent,
-                IgxGridPercentColumnComponent,
-                IgxGridDateTimeColumnComponent,
-                ResizableColumnsComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
-        });
+    declarations: [ColumnCellFormatterComponent,
+        ColumnHiddenFromMarkupComponent,
+        DynamicColumnsComponent,
+        GridAddColumnComponent,
+        IgxGridCurrencyColumnComponent,
+        IgxGridPercentColumnComponent,
+        IgxGridDateTimeColumnComponent],
+    imports: [IgxGridModule, NoopAnimationsModule, ColumnsFromIterableComponent,
+        TemplatedColumnsComponent,
+        TemplatedInputColumnsComponent,
+        TemplatedContextInputColumnsComponent,
+        ColumnHaederClassesComponent,
+        ResizableColumnsComponent]
+});
     }));
 
     it('should correctly initialize column templates', () => {
@@ -1402,7 +1399,9 @@ describe('IgxGrid - Column properties #grid', () => {
 });
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnsFromIterableComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1423,11 +1422,13 @@ interface IColumnConfig {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px" width="400px"`, ``, ColumnDefinitions.resizableColsComponent) +
-    `
+        `
     <ng-template #customTemplate let-value>
     <button igxButton="raised">{{value}}</button>
     </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1455,7 +1456,9 @@ export class ResizableColumnsComponent {
 
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
-        </ng-template>`
+        </ng-template>`,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class TemplatedColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1497,7 +1500,9 @@ export class TemplatedColumnsComponent {
         <ng-template #summary igxSummary let-summaryResults>
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1522,7 +1527,9 @@ export class TemplatedInputColumnsComponent {
                 </ng-template>
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class TemplatedContextInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1545,7 +1552,9 @@ export class TemplatedContextInputColumnsComponent {
             <igx-column field="Number7" dataType="number" width="100px"></igx-column>
         </igx-grid>
     `,
-    styles: [`.headerAlignSyle {text-align: right !important;}`]
+    styles: [`.headerAlignSyle {text-align: right !important;}`],
+    standalone: true,
+    imports: [IgxGridModule]
 })
 export class ColumnHaederClassesComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

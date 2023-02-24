@@ -23,15 +23,14 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridFilteringComponent,
-                IgxTreeGridFilteringRowEditingComponent,
-                IgxTreeGridFilteringESFTemplatesComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
-        }).compileComponents();
+    declarations: [IgxTreeGridFilteringComponent,
+        IgxTreeGridFilteringRowEditingComponent,
+        IgxTreeGridFilteringESFTemplatesComponent],
+    imports: [
+        BrowserAnimationsModule,
+        IgxTreeGridModule
+    ]
+}).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {

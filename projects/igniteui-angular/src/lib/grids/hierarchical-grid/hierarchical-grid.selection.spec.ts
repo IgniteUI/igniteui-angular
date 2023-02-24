@@ -32,19 +32,18 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridRowSelectionComponent,
-                IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
-                IgxHierarchicalGridCustomSelectorsComponent,
-                IgxHierarchicalGridRowSelectionNoTransactionsComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxHierarchicalGridModule,
-                IgxIconModule,
-                IgxGridSelectionModule]
-        }).compileComponents();
+    declarations: [IgxHierarchicalGridTestBaseComponent,
+        IgxHierarchicalGridRowSelectionComponent,
+        IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
+        IgxHierarchicalGridCustomSelectorsComponent,
+        IgxHierarchicalGridRowSelectionNoTransactionsComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxHierarchicalGridModule,
+        IgxIconModule,
+        IgxGridSelectionModule
+    ]
+}).compileComponents();
     }))
 
     describe('Cell selection', () => {

@@ -11,11 +11,24 @@ import {
     DragDirection,
     IDropDroppedEventArgs
 } from 'igniteui-angular';
+import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxToggleDirective as IgxToggleDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+import { IgxDragDirective as IgxDragDirective_1, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
 
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.css']
+    styleUrls: ['drag-drop.sample.css'],
+    standalone: true,
+    imports: [IgxDragDirective_1, NgIf, IgxIconComponent, IgxDragIgnoreDirective, NgClass, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective_1, IgxDragHandleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective, NgFor, IgxDropDirective, NgStyle, ShadowGridSampleComponent]
 })
 export class DragDropSampleComponent {
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })

@@ -24,13 +24,12 @@ import { ExpressionUI } from '../filtering/excel-style/common';
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule]
-        });
+    declarations: [IgxGridFilteringComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     let fix; let grid;
@@ -1152,13 +1151,12 @@ describe('IgxGrid - Filtering actions #grid', () => {
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringBindingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule]
-        });
+    declarations: [IgxGridFilteringBindingComponent],
+    imports: [
+        NoopAnimationsModule,
+        IgxGridModule
+    ]
+});
     }));
 
     let fix; let grid: IgxGridComponent;

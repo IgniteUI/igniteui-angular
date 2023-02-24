@@ -369,13 +369,10 @@ describe('IgxDateTimeEditor', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDateTimeEditorSampleComponent,
-                        IgxDateTimeEditorBaseTestComponent,
-                        IgxDateTimeEditorShadowDomComponent
-                    ],
-                    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule, NoopAnimationsModule]
-                })
+    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule, NoopAnimationsModule, IgxDateTimeEditorSampleComponent,
+        IgxDateTimeEditorBaseTestComponent,
+        IgxDateTimeEditorShadowDomComponent]
+})
                     .compileComponents();
             }));
             beforeEach(async () => {
@@ -1117,17 +1114,15 @@ describe('IgxDateTimeEditor', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDateTimeEditorFormComponent
-                    ],
-                    imports: [
-                        IgxInputGroupModule,
-                        IgxDateTimeEditorModule,
-                        NoopAnimationsModule,
-                        ReactiveFormsModule,
-                        FormsModule
-                    ]
-                }).compileComponents();
+    imports: [
+        IgxInputGroupModule,
+        IgxDateTimeEditorModule,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        IgxDateTimeEditorFormComponent
+    ]
+}).compileComponents();
             }));
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorFormComponent);
@@ -1211,7 +1206,9 @@ describe('IgxDateTimeEditor', () => {
     <igx-input-group>
         <input igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [value]="date"/>
     </igx-input-group>
-    `
+    `,
+    standalone: true,
+    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule]
 })
 export class IgxDateTimeEditorBaseTestComponent {
     @ViewChild(IgxDateTimeEditorDirective)
@@ -1228,7 +1225,9 @@ export class IgxDateTimeEditorBaseTestComponent {
     </igx-input-group>
 
     <input [(ngModel)]="placeholder" />
-`
+`,
+    standalone: true,
+    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule]
 })
 export class IgxDateTimeEditorSampleComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -1251,7 +1250,12 @@ export class IgxDateTimeEditorSampleComponent {
         igxInput [igxDateTimeEditor]="dateTimeFormat" [minValue]="minDate" [maxValue]="maxDate"/>
     </igx-input-group>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxInputGroupModule,
+        IgxDateTimeEditorModule,
+        ReactiveFormsModule,
+        FormsModule]
 })
 class IgxDateTimeEditorFormComponent {
     @ViewChild('dateEditor', { read: IgxInputDirective, static: true })
@@ -1282,7 +1286,9 @@ class IgxDateTimeEditorFormComponent {
         	<label igxLabel>Choose Date</label>
         	<input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
         </igx-input-group>`,
-    encapsulation: ViewEncapsulation.ShadowDom
+    encapsulation: ViewEncapsulation.ShadowDom,
+    standalone: true,
+    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule]
 })
 export class IgxDateTimeEditorShadowDomComponent {
     public dateTimeFormat = 'dd/MM/yyyy hh:mm:ss';

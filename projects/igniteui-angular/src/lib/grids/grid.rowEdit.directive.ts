@@ -3,7 +3,8 @@ import { GridType, IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateCon
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEdit]'
+    selector: '[igxRowEdit]',
+    standalone: true
 })
 export class IgxRowEditTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
@@ -14,7 +15,8 @@ export class IgxRowEditTemplateDirective {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEditText]'
+    selector: '[igxRowEditText]',
+    standalone: true
 })
 export class IgxRowEditTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
@@ -25,7 +27,8 @@ export class IgxRowEditTextDirective {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowAddText]'
+    selector: '[igxRowAddText]',
+    standalone: true
 })
 export class IgxRowAddTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
@@ -36,7 +39,8 @@ export class IgxRowAddTextDirective {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEditActions]'
+    selector: '[igxRowEditActions]',
+    standalone: true
 })
 export class IgxRowEditActionsDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
@@ -49,7 +53,8 @@ export class IgxRowEditActionsDirective {
 // TODO: Refactor circular ref, deps and logic
 /** @hidden @internal */
 @Directive({
-    selector: `[igxRowEditTabStop]`
+    selector: `[igxRowEditTabStop]`,
+    standalone: true
 })
 export class IgxRowEditTabStopDirective {
     private currentCellIndex: number;

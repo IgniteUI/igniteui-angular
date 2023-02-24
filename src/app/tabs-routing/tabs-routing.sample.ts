@@ -1,11 +1,19 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
+import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav.directives';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxTabHeaderComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tab-header.component';
+import { IgxTabItemComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tab-item.component';
+import { IgxTabsComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tabs.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 @Component({
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.css'],
-    templateUrl: 'tabs-routing.sample.html'
+    templateUrl: 'tabs-routing.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
 })
 export class TabsRoutingSampleComponent {
     public contacts: any[] = [{

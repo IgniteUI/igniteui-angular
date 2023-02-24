@@ -19,19 +19,16 @@ describe('Dialog', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                AlertComponent,
-                DialogComponent,
-                CustomDialogComponent,
-                NestedDialogsComponent,
-                CustomTemplates1DialogComponent,
-                CustomTemplates2DialogComponent,
-                DialogSampleComponent,
-                PositionSettingsDialogComponent,
-                DialogTwoWayDataBindingComponent
-            ],
-            imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
-        }).compileComponents();
+    imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule, AlertComponent,
+        DialogComponent,
+        CustomDialogComponent,
+        NestedDialogsComponent,
+        CustomTemplates1DialogComponent,
+        CustomTemplates2DialogComponent,
+        DialogSampleComponent,
+        PositionSettingsDialogComponent,
+        DialogTwoWayDataBindingComponent]
+}).compileComponents();
     }));
 
     afterEach(() => {
@@ -527,7 +524,10 @@ describe('Dialog', () => {
                                 leftButtonLabel="OK"
                                 [isModal]="isModal">
                             </igx-dialog>
-                        </div>` })
+                        </div>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class AlertComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
     public isModal = false;
@@ -548,7 +548,10 @@ class AlertComponent {
                                 rightButtonBackgroundColor="lightblue"
                                 rightButtonRipple="white">
                             </igx-dialog>
-                        </div>` })
+                        </div>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class DialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
@@ -568,7 +571,10 @@ class DialogComponent {
                                 rightButtonBackgroundColor="lightblue"
                                 rightButtonRipple="white">
                             </igx-dialog>
-                        </div>` })
+                        </div>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class DialogTwoWayDataBindingComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
     public myDialog = false;
@@ -592,7 +598,10 @@ class DialogTwoWayDataBindingComponent {
                                     <h2>Custom Sample</h2>
                                 </div>
                             </igx-dialog>
-                        </div>` })
+                        </div>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class DialogSampleComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
@@ -603,7 +612,10 @@ class DialogSampleComponent {
                                     <input class="custom-dialog__content-input" type="text" />
                                 </div>
                             </igx-dialog>
-                        <div>` })
+                        <div>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class CustomDialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
@@ -621,7 +633,10 @@ class CustomDialogComponent {
                                 rightButtonLabel="Sign In"
                                 [closeOnOutsideSelect]="true">
                             </igx-dialog>
-                        </igx-dialog>` })
+                        </igx-dialog>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class NestedDialogsComponent {
     @ViewChild('child', { static: true }) public child: IgxDialogComponent;
     @ViewChild('main', { static: true }) public main: IgxDialogComponent;
@@ -635,7 +650,10 @@ class NestedDialogsComponent {
                 <igx-dialog-actions>
                     <div>BUTTONS 1</div>
                 </igx-dialog-actions>
-            </igx-dialog>` })
+            </igx-dialog>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class CustomTemplates1DialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
@@ -644,7 +662,10 @@ class CustomTemplates1DialogComponent {
     template: `<igx-dialog #dialog>
                     <div igxDialogTitle>TITLE 2</div>
                     <div igxDialogActions>BUTTONS 2</div>
-            </igx-dialog>` })
+            </igx-dialog>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class CustomTemplates2DialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
@@ -653,7 +674,10 @@ class CustomTemplates2DialogComponent {
 @Component({
     template: `<igx-dialog #dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
         [positionSettings]="positionSettings" >
-    </igx-dialog>` })
+    </igx-dialog>`,
+    standalone: true,
+    imports: [IgxDialogModule]
+})
 class PositionSettingsDialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 

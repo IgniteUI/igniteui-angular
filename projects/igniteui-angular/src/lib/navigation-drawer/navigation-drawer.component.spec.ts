@@ -18,16 +18,13 @@ describe('Navigation Drawer', () => {
     beforeEach(waitForAsync(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
-            declarations: [
-                IgxNavigationCloseDirective,
-                IgxNavigationToggleDirective,
-                TestComponent,
-                TestComponentDIComponent,
-                TestComponentPin,
-                TestComponentMini
-            ],
-            imports: [IgxNavigationDrawerModule]
-        });
+    declarations: [TestComponentPin,
+        TestComponentMini],
+    imports: [IgxNavigationDrawerModule, IgxNavigationCloseDirective,
+        IgxNavigationToggleDirective,
+        TestComponent,
+        TestComponentDIComponent]
+});
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
@@ -604,7 +601,9 @@ describe('Navigation Drawer', () => {
 
 @Component({
     selector: 'igx-test-cmp',
-    template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>'
+    template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerModule]
 })
 class TestComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
@@ -613,7 +612,9 @@ class TestComponent {
 @Component({
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp',
-    template: '<igx-nav-drawer></igx-nav-drawer>'
+    template: '<igx-nav-drawer></igx-nav-drawer>',
+    standalone: true,
+    imports: [IgxNavigationDrawerModule]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;

@@ -17,17 +17,15 @@ describe('igxGridPinningActions #grid ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxActionStripTestingComponent,
-                IgxActionStripPinMenuComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxGridModule,
-                IgxIconModule
-            ]
-        }).compileComponents();
+    imports: [
+        NoopAnimationsModule,
+        IgxActionStripModule,
+        IgxGridModule,
+        IgxIconModule,
+        IgxActionStripTestingComponent,
+        IgxActionStripPinMenuComponent
+    ]
+}).compileComponents();
     }));
 
     describe('Base ', () => {
@@ -115,7 +113,11 @@ describe('igxGridPinningActions #grid ', () => {
         <igx-grid-pinning-actions></igx-grid-pinning-actions>
     </igx-action-strip>
 </igx-grid>
-`
+`,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxIconModule]
 })
 class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -188,7 +190,11 @@ class IgxActionStripTestingComponent implements OnInit {
         <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
     </igx-action-strip>
 </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripModule,
+        IgxGridModule,
+        IgxIconModule]
 })
 class IgxActionStripPinMenuComponent extends IgxActionStripTestingComponent {
 }

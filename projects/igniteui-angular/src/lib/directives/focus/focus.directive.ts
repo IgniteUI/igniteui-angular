@@ -1,10 +1,11 @@
-import { Directive, ElementRef, Input, NgModule, Optional, Inject, Self } from '@angular/core';
+import { Directive, ElementRef, Input, Optional, Inject, Self } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../../core/edit-provider';
 
 @Directive({
     exportAs: 'igxFocus',
-    selector: '[igxFocus]'
+    selector: '[igxFocus]',
+    standalone: true
 })
 export class IgxFocusDirective {
 
@@ -75,8 +76,4 @@ export class IgxFocusDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxFocusDirective],
-    exports: [IgxFocusDirective]
-})
-export class IgxFocusModule { }
+

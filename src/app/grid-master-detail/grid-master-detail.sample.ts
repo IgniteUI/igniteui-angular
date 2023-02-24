@@ -3,12 +3,21 @@ import { Component, ViewChild, OnInit, Inject, TemplateRef } from '@angular/core
 
 import { IgxGridComponent, IgxGridStateDirective } from 'igniteui-angular';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
+import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxGridStateDirective as IgxGridStateDirective_1 } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-master-detail.sample.css'],
-    templateUrl: 'grid-master-detail.sample.html'
+    templateUrl: 'grid-master-detail.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxGridComponent_1, IgxGridStateDirective_1, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
