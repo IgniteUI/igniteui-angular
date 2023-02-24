@@ -309,7 +309,7 @@ describe('igxOverlay', () => {
             mockAnimationService = new IgxAngularAnimationService(mockAnimationBuilder);
 
             overlay = new IgxOverlayService(
-                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockDocument, mockNgZone, mockPlatformUtil, mockAnimationService);
         });
 
         it('Should set cursor to pointer on iOS', () => {
@@ -383,7 +383,9 @@ describe('igxOverlay', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: DIRECTIVE_COMPONENTS
+                declarations: [
+                    SimpleDynamicWithDirectiveComponent
+                ]
             }).compileComponents();
         }));
 
@@ -1217,7 +1219,9 @@ describe('igxOverlay', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: DIRECTIVE_COMPONENTS
+                declarations: [
+                    SimpleDynamicWithDirectiveComponent
+                ]
             });
         }));
         afterAll(() => {
@@ -1396,7 +1400,9 @@ describe('igxOverlay', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: DIRECTIVE_COMPONENTS
+                declarations: [
+                    SimpleDynamicWithDirectiveComponent
+                ]
             }).compileComponents();
         }));
 
@@ -3384,7 +3390,9 @@ describe('igxOverlay', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-                declarations: DIRECTIVE_COMPONENTS
+                declarations: [
+                    SimpleDynamicWithDirectiveComponent
+                ]
             });
         }));
         // If adding a component near the visible window borders(left,right,up,down)
@@ -4249,7 +4257,9 @@ describe('igxOverlay', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
-                declarations: DIRECTIVE_COMPONENTS
+                declarations: [
+                    SimpleDynamicWithDirectiveComponent
+                ]
             }).compileComponents();
         }));
         it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {
@@ -4624,10 +4634,6 @@ const DYNAMIC_COMPONENTS = [
     WidthTestOverlayComponent,
     ScrollableComponent,
     FlexContainerComponent
-];
-
-const DIRECTIVE_COMPONENTS = [
-    SimpleDynamicWithDirectiveComponent
 ];
 
 @NgModule({
