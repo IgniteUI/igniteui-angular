@@ -154,7 +154,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (this.grid.pinnedRecords.length > 0) {
                 const cellRow = this.grid.getRowByIndex(cell.rowIndex);
                 if (this.grid.pinnedRecords.find(r => r == cellRow.data)) {
-                    cellRow.pinned = true;
+                    setTimeout(() => {
+                        cellRow.pinned = true;
+                    });
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
