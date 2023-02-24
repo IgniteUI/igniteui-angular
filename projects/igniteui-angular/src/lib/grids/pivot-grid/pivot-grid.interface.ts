@@ -24,6 +24,14 @@ export interface IDimensionsChange {
 }
 
 /**
+ * Event emitted when pivot configuration is changed.
+ */
+export interface IPivotConfigurationChange {
+    /** The new configuration. */
+    configuration: IPivotConfiguration
+}
+
+/**
 * Event emitted when values list is changed.
 */
 export interface IValuesChange {
@@ -73,6 +81,7 @@ export interface IPivotAggregator {
     aggregator?: (members: any[], data?: any[]) => any;
 }
 
+/* marshalByValue */
 /**
 * Configuration of the pivot grid.
 */

@@ -33,7 +33,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChange, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -151,6 +151,21 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Output()
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
 
+    /* blazorInclude */
+    /**
+     * Emitted when the the pivot configuration is changed.
+     *
+     * @internal
+     * @remarks
+     * Returns the new dimension collection and its type:
+     * @example
+     * ```html
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
+     *              (dimensionsChange)="dimensionsChange($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public configurationChange = new EventEmitter<IPivotConfigurationChange>();
 
     /**
      * Emitted when the dimension is initialized.
@@ -242,6 +257,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      public valueChipTemplate: TemplateRef<IgxPivotGridValueTemplateContext>;
 
     /* mustSetInCodePlatforms: WebComponents;Blazor */
+    /* @tsTwoWayProperty (true, "ConfigurationChange", "Detail.Configuration", false) */
+    /* blazorAlwaysWriteback */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
      *
@@ -1603,6 +1620,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.dimensionDataColumns = this.generateDimensionColumns();
             this.reflow();
         }
+        this.configurationChange.emit({ configuration: this.pivotConfiguration });
     }
 
     /**
@@ -1681,6 +1699,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (dimType === PivotDimensionType.Filter) {
             this.reflow();
         }
+        this.configurationChange.emit({ configuration: this.pivotConfiguration });
     }
 
     /**
@@ -1708,6 +1727,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
         this.cdr.detectChanges();
         this.valuesChange.emit({ values });
+        this.configurationChange.emit({ configuration: this.pivotConfiguration });
     }
 
     /**
@@ -1748,6 +1768,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             this.pipeTrigger++;
             this.valuesChange.emit({ values });
+            this.configurationChange.emit({ configuration: this.pivotConfiguration });
         }
     }
 
@@ -1768,6 +1789,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
         this.valuesChange.emit({ values: this.pivotConfiguration.values });
         this.reflow();
+        this.configurationChange.emit({ configuration: this.pivotConfiguration });
     }
 
     /**
@@ -1793,6 +1815,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
         }
         this.cdr.detectChanges();
+        this.configurationChange.emit({ configuration: this.pivotConfiguration });
     }
 
     /**
