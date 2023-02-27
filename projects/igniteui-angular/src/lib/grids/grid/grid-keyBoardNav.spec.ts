@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -28,9 +27,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let gridContent: DebugElement;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [NoScrollsComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [NoScrollsComponent, NoopAnimationsModule]
+            });
         }));
 
         beforeEach(() => {
@@ -210,9 +208,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let gridContent: DebugElement;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [VirtualGridComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [NoopAnimationsModule, VirtualGridComponent]
+            });
         }));
 
         beforeEach(() => {

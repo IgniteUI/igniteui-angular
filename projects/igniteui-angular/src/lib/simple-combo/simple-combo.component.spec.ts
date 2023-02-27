@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -10,13 +11,13 @@ import { IComboSelectionChangingEventArgs } from '../combo/public_api';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxIconComponent, IgxIconModule, IgxIconService } from '../icon/public_api';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxIconService } from '../icon/icon.service';
 import { IgxInputState } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxSimpleComboComponent, IgxSimpleComboModule, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
 
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -432,16 +433,14 @@ describe('IgxSimpleCombo', () => {
     describe('Initialization and rendering tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboSampleComponent,
-        IgxSimpleComboEmptyComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxSimpleComboSampleComponent,
+                    IgxSimpleComboEmptyComponent
+                ]
+            }).compileComponents();
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
@@ -641,18 +640,16 @@ describe('IgxSimpleCombo', () => {
     describe('Binding tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboSampleComponent,
-        IgxComboInContainerTestComponent,
-        IgxComboRemoteDataComponent,
-        ComboModelBindingComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxSimpleComboSampleComponent,
+                    IgxComboInContainerTestComponent,
+                    IgxComboRemoteDataComponent,
+                    ComboModelBindingComponent
+                ]
+            }).compileComponents();
         }));
         it('should bind combo data to array of primitive data', () => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
@@ -804,18 +801,15 @@ describe('IgxSimpleCombo', () => {
         let dropdown: IgxComboDropDownComponent;
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        IgxIconModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboSampleComponent,
-        IgxComboInContainerTestComponent,
-        IgxSimpleComboIconTemplatesComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxSimpleComboSampleComponent,
+                    IgxComboInContainerTestComponent,
+                    IgxSimpleComboIconTemplatesComponent
+                ]
+            }).compileComponents();
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
@@ -1373,15 +1367,13 @@ describe('IgxSimpleCombo', () => {
     describe('Display density', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboSampleComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxSimpleComboSampleComponent
+                ]
+            }).compileComponents();
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
@@ -1434,15 +1426,13 @@ describe('IgxSimpleCombo', () => {
             let inputGroupRequired: DebugElement;
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboInTemplatedFormComponent
-    ]
-}).compileComponents();
+                    imports: [
+                        NoopAnimationsModule,
+                        ReactiveFormsModule,
+                        FormsModule,
+                        IgxSimpleComboInTemplatedFormComponent
+                    ]
+                }).compileComponents();
             }));
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInTemplatedFormComponent);
@@ -1645,15 +1635,13 @@ describe('IgxSimpleCombo', () => {
         describe('Reactive form tests: ', () => {
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxSimpleComboInReactiveFormComponent
-    ]
-}).compileComponents();
+                    imports: [
+                        NoopAnimationsModule,
+                        ReactiveFormsModule,
+                        FormsModule,
+                        IgxSimpleComboInReactiveFormComponent
+                    ]
+                }).compileComponents();
             }));
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
@@ -1824,16 +1812,14 @@ describe('IgxSimpleCombo', () => {
     describe('Selection tests: ', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxSimpleComboModule,
-        NoopAnimationsModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule,
-        IgxComboRemoteDataComponent,
-        IgxSimpleComboBindingDataAfterInitComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    ReactiveFormsModule,
+                    FormsModule,
+                    IgxComboRemoteDataComponent,
+                    IgxSimpleComboBindingDataAfterInitComponent
+                ]
+            }).compileComponents();
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
@@ -1895,26 +1881,23 @@ describe('IgxSimpleCombo', () => {
 <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
 [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
 [allowCustomValues]="allowCustomValues">
-<ng-template igxComboItem let-display let-key="valueKey">
-<div class="state-card--simple">
-<span class="small-red-circle"></span>
-<div class="display-value--main">State: {{display[key]}}</div>
-<div class="display-value--sub">Region: {{display.region}}</div>
-</div>
-</ng-template>
-<ng-template igxComboHeader>
-<div class="header-class">This is a header</div>
-</ng-template>
-<ng-template igxComboFooter>
-<div class="footer-class">This is a footer</div>
-</ng-template>
+    <ng-template igxComboItem let-display let-key="valueKey">
+    <div class="state-card--simple">
+    <span class="small-red-circle"></span>
+    <div class="display-value--main">State: {{display[key]}}</div>
+    <div class="display-value--sub">Region: {{display.region}}</div>
+    </div>
+    </ng-template>
+    <ng-template igxComboHeader>
+    <div class="header-class">This is a header</div>
+    </ng-template>
+    <ng-template igxComboFooter>
+    <div class="footer-class">This is a footer</div>
+    </ng-template>
 </igx-simple-combo>
 `,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule, FormsModule]
 })
 class IgxSimpleComboSampleComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1965,10 +1948,7 @@ class IgxSimpleComboSampleComponent {
 @Component({
     template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboEmptyComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1983,11 +1963,7 @@ export class IgxSimpleComboEmptyComponent {
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
                 </igx-simple-combo>`,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        IgxIconModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, IgxIconComponent, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2003,10 +1979,7 @@ export class IgxSimpleComboIconTemplatesComponent {
 @Component({
     template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
     @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
@@ -2031,10 +2004,7 @@ export class ComboModelBindingComponent implements OnInit {
 </div>
 `,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent]
 })
 class IgxComboInContainerTestComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2070,10 +2040,7 @@ class IgxComboInContainerTestComponent {
     </igx-simple-combo>
     `,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2114,10 +2081,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 </form>
 `,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
     @ViewChild('testCombo', { read: IgxSimpleComboComponent, static: true })
@@ -2167,10 +2131,7 @@ class IgxSimpleComboInTemplatedFormComponent {
     </form>
 `,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboInReactiveFormComponent {
     @ViewChild('reactiveCombo', { read: IgxSimpleComboComponent, static: true })
@@ -2198,10 +2159,7 @@ export class IgxSimpleComboInReactiveFormComponent {
     template: `
         <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`,
     standalone: true,
-    imports: [IgxSimpleComboModule,
-        IgxToggleModule,
-        ReactiveFormsModule,
-        FormsModule]
+    imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
     public items: any[];

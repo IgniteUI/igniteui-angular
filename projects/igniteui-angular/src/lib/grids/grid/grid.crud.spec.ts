@@ -3,7 +3,6 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs } from '../common/events';
-import { IgxGridModule } from './public_api';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,8 +16,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    imports: [IgxGridModule, NoopAnimationsModule, DefaultCRUDGridComponent]
-});
+            imports: [NoopAnimationsModule, DefaultCRUDGridComponent]
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -350,7 +349,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent]
 })
 export class DefaultCRUDGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

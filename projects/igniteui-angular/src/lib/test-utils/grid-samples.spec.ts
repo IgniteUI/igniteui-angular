@@ -21,6 +21,8 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { ColumnType } from '../grids/common/grid.interface';
+import { NgFor } from '@angular/common';
+import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -133,7 +135,9 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
                 [dataType]="c.type">
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
     public columns: Array<any>;
@@ -257,7 +261,9 @@ export class ScrollsComponent extends BasicGridComponent {
           [width]="'900px'"
           [height]="'900px'"
           [columnWidth]="'200px'"`,
-        '', ColumnDefinitions.idNameJobTitleCompany)
+        '', ColumnDefinitions.idNameJobTitleCompany),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class NoScrollsComponent extends GridWithSizeComponent {
     public data = SampleTestData.personIDNameJobCompany();
@@ -485,7 +491,9 @@ export class Grid150x200WithSummariesComponent extends NxMWithSummaryComponent {
     <div style="width: 800px; height: 600px;">
         <igx-grid #grid [data]="data" [autoGenerate]="true" [height]="width" [width]="height">
         </igx-grid>
-    </div>`
+    </div>`,
+    standalone: true,
+    imports: [IgxGridComponent]
 })
 export class WidthAndHeightComponent extends BasicGridComponent {
     public width: string;
@@ -499,7 +507,9 @@ export class WidthAndHeightComponent extends BasicGridComponent {
     <div style="height: 200px; overflow: auto;">
         <igx-grid #grid [data]="data" [autoGenerate]="true" [height]="null">
         </igx-grid>
-    </div>`
+    </div>`,
+    standalone: true,
+    imports: [IgxGridComponent]
 })
 export class NullHeightComponent extends BasicGridComponent {
     public data = SampleTestData.generateData(20, 5);
@@ -609,11 +619,13 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
             [autoGenerate]="false">
             <igx-column-layout *ngFor='let group of colGroups' [pinned]='group.pinned'>
                 <igx-column *ngFor='let col of group.columns'
-                [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                [rowStart]="col.rowStart" [colStart]="col.colStart"
                 [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
             </igx-column-layout>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
     public colGroups = [
@@ -930,7 +942,9 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
-        `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth)
+        `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class VirtualGridComponent extends BasicGridComponent {
     public gridWidth = '800px';

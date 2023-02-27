@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../test-utils/grid-samples.spec';
@@ -25,12 +25,12 @@ describe('IgxGrid - search API #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [BasicGridSearchComponent,
-        GridWithAvatarComponent,
-        GroupableGridSearchComponent,
-        ScrollableGridSearchComponent],
-    imports: [IgxGridModule, NoopAnimationsModule]
-}).compileComponents();
+            declarations: [BasicGridSearchComponent,
+                GridWithAvatarComponent,
+                GroupableGridSearchComponent,
+                ScrollableGridSearchComponent],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }))
 
     describe('BasicGrid - ', () => {

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCircularProgressBarComponent, IgxProgressBarModule, toPercent } from './progressbar.component';
+import { IgxCircularProgressBarComponent, toPercent } from './progressbar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -16,14 +16,6 @@ describe('IgxCircularBar', () => {
     describe('Unit Tests', () => {
         let progress: IgxCircularProgressBarComponent;
         let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
-
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    IgxProgressBarModule
-                ]
-            }).compileComponents();
-        }));
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxCircularProgressBarComponent);
@@ -279,12 +271,11 @@ describe('IgxCircularBar', () => {
     describe('UI Tests', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        IgxProgressBarModule,
-        CircularBarTemplateComponent,
-        CircularBarTemplateGradientComponent
-    ]
-}).compileComponents();
+                imports: [
+                    CircularBarTemplateComponent,
+                    CircularBarTemplateGradientComponent
+                ]
+            }).compileComponents();
         }));
 
         it('should apply its template correctly', () => {
@@ -346,7 +337,7 @@ describe('IgxCircularBar', () => {
             </ng-template>
         </igx-circular-bar>`,
     standalone: true,
-    imports: [IgxProgressBarModule]
+    imports: [IgxCircularProgressBarComponent]
 })
 class CircularBarTemplateComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
@@ -364,7 +355,7 @@ class CircularBarTemplateComponent {
             </ng-template>
         </igx-circular-bar>`,
     standalone: true,
-    imports: [IgxProgressBarModule]
+    imports: [IgxCircularProgressBarComponent]
 })
 class CircularBarTemplateGradientComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;

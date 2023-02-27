@@ -1,7 +1,6 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
@@ -37,13 +36,15 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [PinningComponent,
-        PinOnInitAndSelectionComponent,
-        GridFeaturesComponent,
-        MultiColumnHeadersWithGroupingComponent,
-        GridPinningMRLComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-}).compileComponents();
+            declarations: [
+                PinningComponent,
+                PinOnInitAndSelectionComponent,
+                GridFeaturesComponent,
+                MultiColumnHeadersWithGroupingComponent,
+                GridPinningMRLComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }))
 
     describe('To Start', () => {

@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,11 +33,11 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [PagingComponent,
-        GridWithUndefinedDataComponent,
-        RemotePagingComponent],
-    imports: [IgxGridModule, NoopAnimationsModule]
-});
+            declarations: [PagingComponent,
+                GridWithUndefinedDataComponent,
+                RemotePagingComponent],
+            imports: [NoopAnimationsModule]
+        });
     }));
 
     let fix;

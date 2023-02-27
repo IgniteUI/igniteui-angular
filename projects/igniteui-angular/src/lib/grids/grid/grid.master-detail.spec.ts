@@ -4,7 +4,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { CellType, IgxGridModule } from './public_api';
+import { CellType, IgxColumnComponent } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -16,6 +16,9 @@ import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } fr
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { NgFor } from '@angular/common';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -32,10 +35,13 @@ describe('IgxGrid Master Detail #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    imports: [IgxGridModule, NoopAnimationsModule, DefaultGridMasterDetailComponent,
-        AllExpandedGridMasterDetailComponent,
-        MRLMasterDetailComponent]
-});
+            imports: [
+                NoopAnimationsModule,
+                DefaultGridMasterDetailComponent,
+                AllExpandedGridMasterDetailComponent,
+                MRLMasterDetailComponent
+            ]
+        });
     }));
 
     describe('Basic', () => {
@@ -1276,7 +1282,7 @@ describe('IgxGrid Master Detail #grid', () => {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent]
 })
 export class DefaultGridMasterDetailComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1317,7 +1323,7 @@ export class DefaultGridMasterDetailComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1360,7 +1366,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxCheckboxComponent, NgFor]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 

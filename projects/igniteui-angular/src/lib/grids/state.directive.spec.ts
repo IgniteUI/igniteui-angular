@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { IgxGridModule, IgxGridComponent } from './grid/public_api';
+import { IgxColumnComponent, IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
@@ -16,15 +16,19 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    imports: [NoopAnimationsModule, IgxGridModule, IgxGridStateComponent,
-        IgxGridStateWithOptionsComponent,
-        IgxGridStateWithDetailsComponent]
-});
+            imports: [
+                NoopAnimationsModule,
+                IgxGridStateComponent,
+                IgxGridStateWithOptionsComponent,
+                IgxGridStateWithDetailsComponent
+            ]
+        });
     }));
 
     it('should initialize an IgxGridState with default options object', () => {
@@ -771,7 +775,7 @@ class HelperFunctions {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -799,7 +803,7 @@ export class IgxGridStateComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateWithOptionsComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -829,7 +833,7 @@ export class IgxGridStateWithOptionsComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxGridStateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })

@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './grid.module';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
@@ -11,6 +10,12 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
+import { IgxGridToolbarActionsComponent } from '../toolbar/common';
+import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { NgFor } from '@angular/common';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -27,15 +32,15 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        ColumnLayoutPinningTestComponent,
-        ColumnLayoutFilteringTestComponent,
-        ColumnLayouHidingTestComponent,
-        ColumnLayoutGroupingTestComponent,
-        ColumnLayoutResizingTestComponent
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                ColumnLayoutPinningTestComponent,
+                ColumnLayoutFilteringTestComponent,
+                ColumnLayouHidingTestComponent,
+                ColumnLayoutGroupingTestComponent,
+                ColumnLayoutResizingTestComponent
+            ]
+        });
     }));
 
     describe('Hiding ', () => {
@@ -1205,7 +1210,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnLayouHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1254,7 +1259,7 @@ export class ColumnLayouHidingTestComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor]
 })
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1298,7 +1303,7 @@ export class ColumnLayoutPinningTestComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
 }
@@ -1314,7 +1319,7 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
     public showToolbar = false;
@@ -1342,7 +1347,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutResizingTestComponent {
 

@@ -9,7 +9,6 @@ import {
     IgxListLineDirective,
     IgxListLineSubTitleDirective,
     IgxListLineTitleDirective,
-    IgxListModule,
     IgxListThumbnailDirective,
     IListItemClickEventArgs
 } from './list.component';
@@ -29,8 +28,6 @@ import {
 } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxIconModule } from '../icon/public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
@@ -41,19 +38,20 @@ const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 describe('List', () => {
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-    declarations: [CustomEmptyListComponent,
-        EmptyListComponent,
-        ListCustomLoadingComponent,
-        ListLoadingComponent,
-        ListWithHeaderComponent,
-        ListWithPanningComponent,
-        TwoHeadersListComponent,
-        TwoHeadersListNoPanningComponent,
-        ListWithPanningTemplatesComponent,
-        ListWithIgxForAndScrollingComponent,
-        ListDirectivesComponent],
-    imports: [IgxListModule, IgxForOfModule, IgxIconModule]
-});
+            declarations: [
+                CustomEmptyListComponent,
+                EmptyListComponent,
+                ListCustomLoadingComponent,
+                ListLoadingComponent,
+                ListWithHeaderComponent,
+                ListWithPanningComponent,
+                TwoHeadersListComponent,
+                TwoHeadersListNoPanningComponent,
+                ListWithPanningTemplatesComponent,
+                ListWithIgxForAndScrollingComponent,
+                ListDirectivesComponent
+            ]
+        });
     });
 
     it('should initialize igx-list with item and header', () => {

@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridModule, RowType } from './public_api';
+import { RowType } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
@@ -40,18 +40,18 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxGridRowEditingComponent,
-        IgxGridRowEditingTransactionComponent,
-        IgxGridWithEditingAndFeaturesComponent,
-        IgxGridRowEditingWithoutEditableColumnsComponent,
-        IgxGridCustomOverlayComponent,
-        IgxGridEmptyRowEditTemplateComponent,
-        IgxGridCustomRowEditTemplateComponent,
-        VirtualGridComponent],
-    imports: [
-        NoopAnimationsModule, IgxGridModule
-    ]
-});
+            declarations: [IgxGridRowEditingComponent,
+                IgxGridRowEditingTransactionComponent,
+                IgxGridWithEditingAndFeaturesComponent,
+                IgxGridRowEditingWithoutEditableColumnsComponent,
+                IgxGridCustomOverlayComponent,
+                IgxGridEmptyRowEditTemplateComponent,
+                IgxGridCustomRowEditTemplateComponent,
+                VirtualGridComponent],
+            imports: [
+                NoopAnimationsModule
+            ]
+        });
     }));
 
     describe('General tests', () => {

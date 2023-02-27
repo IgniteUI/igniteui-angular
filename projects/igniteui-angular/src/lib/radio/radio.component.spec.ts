@@ -2,27 +2,30 @@ import { Component, ViewChild, ViewChildren } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxRadioComponent } from './radio.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NgFor } from '@angular/common';
 
 describe('IgxRadio', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule, IgxRadioComponent,
-        InitRadioComponent,
-        DisabledRadioComponent,
-        RequiredRadioComponent,
-        RadioFormComponent,
-        RadioWithModelComponent,
-        ReactiveFormComponent,
-        RadioExternalLabelComponent,
-        RadioInvisibleLabelComponent]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                IgxRadioComponent,
+                InitRadioComponent,
+                DisabledRadioComponent,
+                RequiredRadioComponent,
+                RadioFormComponent,
+                RadioWithModelComponent,
+                ReactiveFormComponent,
+                RadioExternalLabelComponent,
+                RadioInvisibleLabelComponent
+            ]
+        }).compileComponents();
     }));
 
     it('Init a radio', () => {
@@ -188,7 +191,7 @@ describe('IgxRadio', () => {
         dispatchRadioEvent('keyup', domRadio, fixture);
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
         dispatchRadioEvent('blur', domRadio, fixture);
-        
+
         expect(radioInstance.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
 
@@ -243,7 +246,7 @@ describe('IgxRadio', () => {
 
         fixture.debugElement.componentInstance.markAsTouched();
         fixture.detectChanges();
-        
+
         const invalidRadio = fixture.debugElement.nativeElement.querySelectorAll(`.igx-radio--invalid`);
         expect(invalidRadio.length).toBe(1);
         expect(radio.invalid).toBe(true);
@@ -266,7 +269,7 @@ describe('IgxRadio', () => {
 @Component({
     template: `<igx-radio #radio>Radio</igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
@@ -278,7 +281,7 @@ class InitRadioComponent {
                     value="{{item}}"
                     name="group" [(ngModel)]="selected">{{item}}</igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class RadioWithModelComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -295,7 +298,7 @@ class RadioWithModelComponent {
         {{item.value}}
     </igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class DisabledRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -320,7 +323,7 @@ class DisabledRadioComponent {
         {{item}}
     </igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [FormsModule, IgxRadioComponent, NgFor]
 })
 class RequiredRadioComponent {
     @ViewChildren(IgxRadioComponent) public radios;
@@ -330,7 +333,7 @@ class RequiredRadioComponent {
     template: `<p id="my-label">{{label}}</p>
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
@@ -340,7 +343,7 @@ class RadioExternalLabelComponent {
 @Component({
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
@@ -355,7 +358,7 @@ class RadioInvisibleLabelComponent {
     </form>
 `,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [FormsModule, IgxRadioComponent]
 })
 class RadioFormComponent {
     @ViewChild('radioInForm', { read: IgxRadioComponent, static: true })
@@ -372,7 +375,7 @@ class RadioFormComponent {
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
     </form>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {
     @ViewChild('radio', { read: IgxRadioComponent, static: true })

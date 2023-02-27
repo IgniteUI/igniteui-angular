@@ -1,7 +1,7 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -23,14 +23,15 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridFilteringComponent,
-        IgxTreeGridFilteringRowEditingComponent,
-        IgxTreeGridFilteringESFTemplatesComponent],
-    imports: [
-        BrowserAnimationsModule,
-        IgxTreeGridModule
-    ]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridFilteringComponent,
+                IgxTreeGridFilteringRowEditingComponent,
+                IgxTreeGridFilteringESFTemplatesComponent
+            ],
+            imports: [
+                NoopAnimationsModule
+            ]
+        }).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {

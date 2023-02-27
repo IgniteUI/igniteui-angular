@@ -15,7 +15,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxPivotDateAggregate, IgxPivotNumericAggregate } from './pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType } from './pivot-grid.interface';
-import { IgxPivotGridModule } from './pivot-grid.module';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
@@ -28,12 +27,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxPivotGridTestBaseComponent,
-        IgxPivotGridTestComplexHierarchyComponent],
-    imports: [
-        NoopAnimationsModule, IgxPivotGridModule
-    ]
-}).compileComponents();
+            declarations: [IgxPivotGridTestBaseComponent,
+                IgxPivotGridTestComplexHierarchyComponent],
+            imports: [
+                NoopAnimationsModule
+            ]
+        }).compileComponents();
     }));
 
     describe('Basic IgxPivotGrid #pivotGrid', () => {

@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridAPIService, IgxTreeGridModule } from './public_api';
+import { IgxTreeGridAPIService } from './public_api';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
@@ -27,18 +27,19 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridExpandingComponent,
-        IgxTreeGridPrimaryForeignKeyComponent,
-        IgxTreeGridLoadOnDemandComponent,
-        IgxTreeGridLoadOnDemandHasChildrenComponent,
-        IgxTreeGridLoadOnDemandChildDataComponent,
-        IgxTreeGridCustomExpandersTemplateComponent,
-        IgxTreeGridRowEditingComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxTreeGridModule
-    ]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridExpandingComponent,
+                IgxTreeGridPrimaryForeignKeyComponent,
+                IgxTreeGridLoadOnDemandComponent,
+                IgxTreeGridLoadOnDemandHasChildrenComponent,
+                IgxTreeGridLoadOnDemandChildDataComponent,
+                IgxTreeGridCustomExpandersTemplateComponent,
+                IgxTreeGridRowEditingComponent
+            ],
+            imports: [
+                NoopAnimationsModule
+            ]
+        }).compileComponents();
     }));
 
     describe('Child Collection', () => {

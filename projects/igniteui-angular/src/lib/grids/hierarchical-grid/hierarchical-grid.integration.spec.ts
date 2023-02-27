@@ -2,7 +2,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -10,7 +9,6 @@ import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
-import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent,
@@ -36,13 +34,15 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxHierarchicalGridTestBaseComponent,
-        IgxHierarchicalGridTestCustomToolbarComponent,
-        IgxHierarchicalGridWithTransactionProviderComponent],
-    imports: [
-        NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule
-    ]
-}).compileComponents();
+            declarations: [
+                IgxHierarchicalGridTestBaseComponent,
+                IgxHierarchicalGridTestCustomToolbarComponent,
+                IgxHierarchicalGridWithTransactionProviderComponent
+            ],
+            imports: [
+                NoopAnimationsModule
+            ]
+        }).compileComponents();
     }))
 
     beforeEach(waitForAsync(() => {

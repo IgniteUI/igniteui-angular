@@ -1,11 +1,11 @@
 
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
+import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
@@ -22,10 +22,12 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridEditActionsComponent,
-        IgxTreeGridEditActionsPinningComponent],
-    imports: [IgxTreeGridModule, NoopAnimationsModule, IgxActionStripModule]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridEditActionsComponent,
+                IgxTreeGridEditActionsPinningComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     describe('Basic', () => {

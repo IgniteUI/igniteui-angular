@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,11 +17,11 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [GridDeclaredColumnsComponent,
-        SortByParityComponent,
-        GridWithPrimaryKeyComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+            declarations: [GridDeclaredColumnsComponent,
+                SortByParityComponent,
+                GridWithPrimaryKeyComponent],
+            imports: [NoopAnimationsModule]
+        });
     }));
 
     beforeEach(() => {

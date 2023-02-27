@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { CellType, IgxGridModule, IPinRowEventArgs } from './public_api';
+import { CellType, IgxColumnComponent, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -16,6 +16,8 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -27,17 +29,16 @@ describe('Row Pinning #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [GridRowConditionalStylingComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule,
-        GridRowPinningComponent,
-        GridRowPinningWithMRLComponent,
-        GridRowPinningWithMDVComponent,
-        GridRowPinningWithTransactionsComponent,
-        GridRowPinningWithInitialPinningComponent
-    ]
-});
+            declarations: [GridRowConditionalStylingComponent],
+            imports: [
+                NoopAnimationsModule,
+                GridRowPinningComponent,
+                GridRowPinningWithMRLComponent,
+                GridRowPinningWithMDVComponent,
+                GridRowPinningWithTransactionsComponent,
+                GridRowPinningWithInitialPinningComponent
+            ]
+        });
     }));
 
     describe('', () => {
@@ -1369,7 +1370,7 @@ describe('Row Pinning #grid', () => {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class GridRowPinningComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1396,7 +1397,7 @@ export class GridRowPinningComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
     public cols: Array<any> = [
@@ -1430,7 +1431,7 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
 </igx-grid>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
 
@@ -1448,7 +1449,7 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
 
@@ -1465,7 +1466,7 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

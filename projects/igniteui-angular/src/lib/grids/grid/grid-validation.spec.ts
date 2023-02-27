@@ -2,9 +2,10 @@ import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
+import { IgxInputDirective } from '../../directives/input/input.directive';
+import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-target.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
@@ -16,20 +17,22 @@ import {
 } from '../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IGridFormGroupCreatedEventArgs } from '../common/grid.interface';
+import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './grid.module';
 
 describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxGridValidationTestBaseComponent,
-        IgxGridValidationTestCustomErrorComponent,
-        IgxGridCustomEditorsComponent,
-        IgxTreeGridValidationTestComponent,
-        ForbiddenValidatorDirective],
-    imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule, ReactiveFormsModule]
-});
+            declarations: [
+                IgxGridValidationTestBaseComponent,
+                IgxGridValidationTestCustomErrorComponent,
+                IgxGridCustomEditorsComponent,
+                IgxTreeGridValidationTestComponent,
+                ForbiddenValidatorDirective
+            ],
+            imports: [NoopAnimationsModule, ReactiveFormsModule]
+        });
     }));
 
     describe('Basic Validation - ', () => {

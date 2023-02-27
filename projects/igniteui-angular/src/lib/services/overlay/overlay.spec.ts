@@ -18,7 +18,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationService } from '../animation/animation';
-import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from './../../directives/toggle/toggle.directive';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
@@ -65,7 +65,7 @@ const css = (element) => {
     for (const key in sheets) {
         if (sheets.hasOwnProperty(key)) {
             const sheet = sheets[key];
-            const rules: any = sheet.rules || sheet.cssRules;
+            const rules: any = sheet.cssRules;
 
             for (const r in rules) {
                 if (element.matches(rules[r].selectorText)) {
@@ -380,8 +380,8 @@ describe('igxOverlay', () => {
         configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
-}).compileComponents();
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+            }).compileComponents();
         }));
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
@@ -1213,8 +1213,8 @@ describe('igxOverlay', () => {
     describe('Unit Tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
-});
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+            });
         }));
         afterAll(() => {
             TestBed.resetTestingModule();
@@ -1391,8 +1391,8 @@ describe('igxOverlay', () => {
         configureTestSuite();
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
-}).compileComponents();
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+            }).compileComponents();
         }));
 
         // 1. Positioning Strategies
@@ -3378,8 +3378,8 @@ describe('igxOverlay', () => {
     describe('Integration tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
-});
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+            });
         }));
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
@@ -4242,8 +4242,8 @@ describe('igxOverlay', () => {
     describe('Integration tests p3 (IgniteUI components): ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxToggleModule, NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
-}).compileComponents();
+                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+            }).compileComponents();
         }));
         it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleRefComponent);
@@ -4359,7 +4359,7 @@ export class SimpleBigSizeComponent {
                 </div>
             </div>`,
     standalone: true,
-    imports: [IgxToggleModule]
+    imports: [NgIf, IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
     @ViewChild(IgxToggleDirective, { static: true })
@@ -4618,17 +4618,3 @@ export class FlexContainerComponent {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);
     }
 }
-
-const DYNAMIC_COMPONENTS = [
-    EmptyPageComponent,
-    SimpleRefComponent,
-    EmptyPageInShadowDomComponent,
-    SimpleDynamicComponent,
-    SimpleBigSizeComponent,
-    DownRightButtonComponent,
-    TopLeftOffsetComponent,
-    TwoButtonsComponent,
-    WidthTestOverlayComponent,
-    ScrollableComponent,
-    FlexContainerComponent
-];

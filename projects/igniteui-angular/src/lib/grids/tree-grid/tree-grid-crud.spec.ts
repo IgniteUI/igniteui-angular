@@ -1,7 +1,7 @@
 
 import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
@@ -22,10 +22,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridSimpleComponent,
-        IgxTreeGridPrimaryForeignKeyComponent],
-    imports: [IgxTreeGridModule, NoopAnimationsModule]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridSimpleComponent,
+                IgxTreeGridPrimaryForeignKeyComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     describe('Create', () => {
@@ -961,7 +963,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
                 expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
-                
+
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);
 

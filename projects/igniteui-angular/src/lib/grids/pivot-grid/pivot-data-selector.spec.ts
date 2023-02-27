@@ -18,7 +18,6 @@ import {
     IPivotValue,
     PivotDimensionType
 } from "./pivot-grid.interface";
-import { IgxPivotGridModule } from "./pivot-grid.module";
 
 describe("Pivot data selector", () => {
     let fixture;
@@ -28,9 +27,9 @@ describe("Pivot data selector", () => {
 
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxPivotGridTestBaseComponent],
-    imports: [NoopAnimationsModule, IgxPivotGridModule]
-});
+            declarations: [IgxPivotGridTestBaseComponent],
+            imports: [NoopAnimationsModule]
+        });
     });
 
     beforeEach(fakeAsync(() => {

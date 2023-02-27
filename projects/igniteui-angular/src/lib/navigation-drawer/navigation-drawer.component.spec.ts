@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
-import { IgxNavigationDrawerModule } from './navigation-drawer.module';
-import { IgxNavigationToggleDirective, IgxNavigationCloseDirective } from '../core/navigation/directives';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
@@ -18,13 +16,15 @@ describe('Navigation Drawer', () => {
     beforeEach(waitForAsync(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
-    declarations: [TestComponentPin,
-        TestComponentMini],
-    imports: [IgxNavigationDrawerModule, IgxNavigationCloseDirective,
-        IgxNavigationToggleDirective,
-        TestComponent,
-        TestComponentDIComponent]
-});
+            declarations: [
+                TestComponentPin,
+                TestComponentMini
+            ],
+            imports: [
+                TestComponent,
+                TestComponentDIComponent
+            ]
+        }).compileComponents();
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
@@ -603,7 +603,7 @@ describe('Navigation Drawer', () => {
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerModule]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
@@ -614,7 +614,7 @@ class TestComponent {
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerModule]
+    imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;

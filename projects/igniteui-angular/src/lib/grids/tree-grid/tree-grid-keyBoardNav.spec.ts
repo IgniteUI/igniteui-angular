@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, CellType } from './public_api';
+import { IgxTreeGridComponent, CellType } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -15,10 +15,12 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridWithNoScrollsComponent,
-        IgxTreeGridWithScrollsComponent],
-    imports: [IgxTreeGridModule, NoopAnimationsModule]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridWithNoScrollsComponent,
+                IgxTreeGridWithScrollsComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     describe('Navigation with no scroll', () => {

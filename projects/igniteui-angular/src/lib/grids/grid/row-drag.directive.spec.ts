@@ -9,20 +9,21 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { Point } from '../../services/public_api';
 
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
-import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
+import { IgxTreeGridComponent } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { CellType, GridType, RowType } from '../common/grid.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxRowDirective } from '../row.directive';
+import { NgStyle } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
@@ -61,13 +62,11 @@ describe('Row Drag Tests', () => {
                 let rowToDrag: IgxRowDirective;
                 configureTestSuite((() => {
                     return TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxGridRowDraggableComponent
-    ]
-});
+                        imports: [
+                            NoopAnimationsModule,
+                            IgxGridRowDraggableComponent
+                        ]
+                    });
                 }));
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
@@ -410,13 +409,11 @@ describe('Row Drag Tests', () => {
                 let dragRows: DebugElement[];
                 configureTestSuite((() => {
                     return TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxGridRowCustomGhostDraggableComponent
-    ]
-});
+                        imports: [
+                            NoopAnimationsModule,
+                            IgxGridRowCustomGhostDraggableComponent
+                        ]
+                    });
                 }));
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
@@ -497,13 +494,11 @@ describe('Row Drag Tests', () => {
             let dragRows: DebugElement[];
             configureTestSuite((() => {
                 return TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxGridFeaturesRowDragComponent
-    ]
-});
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxGridFeaturesRowDragComponent
+                    ]
+                });
             }));
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
@@ -951,15 +946,12 @@ describe('Row Drag Tests', () => {
         let pointerMoveToDropEvent: PointerEvent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxHierarchicalGridModule,
-        IgxHierarchicalGridTestComponent,
-        IgxHierarchicalGridCustomGhostTestComponent
-    ]
-});
+                imports: [
+                    NoopAnimationsModule,
+                    IgxHierarchicalGridTestComponent,
+                    IgxHierarchicalGridCustomGhostTestComponent
+                ]
+            });
         }));
         it('should be able to drag row on every hierarchical level', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
@@ -1103,14 +1095,11 @@ describe('Row Drag Tests', () => {
         let pointerMoveToDropEvent: PointerEvent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxTreeGridModule,
-        IgxTreeGridTestComponent
-    ]
-});
+                imports: [
+                    NoopAnimationsModule,
+                    IgxTreeGridTestComponent
+                ]
+            });
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
@@ -1202,8 +1191,7 @@ describe('Row Drag Tests', () => {
         </div>
     `,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, NgStyle]
 })
 export class IgxGridRowDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1273,8 +1261,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
         </ng-template>
     `,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxIconComponent, NgStyle]
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1338,8 +1325,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
         </igx-grid></div>
     `,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
     @ViewChild('dragGrid', { read: IgxGridComponent, static: true })
@@ -1380,9 +1366,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
         </igx-hierarchical-grid>
         </div>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule,
-        IgxHierarchicalGridModule]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestComponent {
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
@@ -1423,9 +1407,7 @@ export class IgxHierarchicalGridTestComponent {
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule,
-        IgxHierarchicalGridModule]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
@@ -1458,9 +1440,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
     </igx-grid></div>
     `,
     standalone: true,
-    imports: [FormsModule,
-        IgxGridModule,
-        IgxTreeGridModule]
+    imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

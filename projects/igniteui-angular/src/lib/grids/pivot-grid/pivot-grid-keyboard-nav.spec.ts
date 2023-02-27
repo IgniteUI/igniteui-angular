@@ -1,11 +1,11 @@
 import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPivotGridComponent, IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 const DEBOUNCE_TIME = 250;
@@ -21,11 +21,11 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     let pivotGrid: IgxPivotGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxPivotGridMultipleRowComponent],
-    imports: [
-        NoopAnimationsModule, IgxPivotGridModule
-    ]
-});
+            declarations: [IgxPivotGridMultipleRowComponent],
+            imports: [
+                NoopAnimationsModule
+            ]
+        });
     }));
 
     beforeEach(fakeAsync(() => {

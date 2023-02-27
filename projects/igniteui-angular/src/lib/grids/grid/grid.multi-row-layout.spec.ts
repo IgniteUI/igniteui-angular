@@ -1,5 +1,4 @@
 ﻿import { TestBed, fakeAsync } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,6 +10,9 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
+import { NgFor } from '@angular/common';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
@@ -19,13 +21,12 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule,
-        ColumnLayoutTestComponent,
-        ColumnLayoutAndGroupsTestComponent
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                ColumnLayoutTestComponent,
+                ColumnLayoutAndGroupsTestComponent
+            ]
+        });
     }));
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {
@@ -1144,7 +1145,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1182,7 +1183,7 @@ export class ColumnLayoutTestComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 

@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxBottomNavComponent } from '../tabs/bottom-nav/public_api';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from '../tabs/bottom-nav/public_api';
+import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from '../tabs/tabs/tabs.directives';
 
 @Component({
     template: `
@@ -48,7 +50,9 @@ import { IgxBottomNavComponent } from '../tabs/bottom-nav/public_api';
                     </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
-        </div>`
+        </div>`,
+        standalone: true,
+        imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
@@ -102,7 +106,9 @@ export class TabBarTestComponent {
                     </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
-        </div>`
+        </div>`,
+        standalone: true,
+        imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomTabBarTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
@@ -167,7 +173,9 @@ export class BottomTabBarTestComponent {
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterTestingModule]
 })
 export class TabBarRoutingTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })
@@ -201,7 +209,9 @@ export class TabBarRoutingTestComponent {
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTabsOnlyModeTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })
@@ -229,7 +239,9 @@ export class TabBarTabsOnlyModeTestComponent {
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterTestingModule]
 })
 export class BottomNavRoutingGuardTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })
@@ -296,7 +308,9 @@ export class BottomNavRoutingGuardTestComponent {
                 </igx-bottom-nav>
             </div>
         </div>
-        `
+    `,
+    standalone: true,
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomNavTestHtmlAttributesComponent {
     @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;

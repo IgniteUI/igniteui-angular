@@ -4,14 +4,14 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxDateSummaryOperand,
-    IgxGridModule,
     IgxNumberSummaryOperand,
     IgxSummaryOperand,
     IgxSummaryResult,
     IgxGroupByRow,
     IgxSummaryRow,
     IgxGridRow,
-    IColumnPipeArgs
+    IColumnPipeArgs,
+    IgxColumnComponent
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -44,13 +44,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [ProductsComponent,
-        SummaryColumnComponent,
-        FilteringComponent,
-        SummariesGroupByComponent,
-        SummariesGroupByTransactionsComponent],
-    imports: [IgxGridModule, NoopAnimationsModule, CustomSummariesComponent]
-});
+            declarations: [ProductsComponent,
+                SummaryColumnComponent,
+                FilteringComponent,
+                SummariesGroupByComponent,
+                SummariesGroupByTransactionsComponent],
+            imports: [NoopAnimationsModule, CustomSummariesComponent]
+        });
     }));
 
     describe('Base tests: ', () => {
@@ -2624,7 +2624,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 
 export class CustomSummariesComponent {

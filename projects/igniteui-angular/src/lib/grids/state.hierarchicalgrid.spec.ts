@@ -8,12 +8,13 @@ import { IPagingState } from '../data-operations/paging-state.interface';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
-import { IgxHierarchicalGridModule } from './hierarchical-grid/public_api';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
+import { IgxColumnComponent } from './public_api';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
@@ -23,8 +24,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [NoopAnimationsModule, IgxHierarchicalGridModule, IgxHierarchicalGridTestExpandedBaseComponent]
-}).compileComponents();
+            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
+        }).compileComponents();
     }))
 
     beforeEach(() => {
@@ -684,7 +685,7 @@ class HelperFunctions {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridModule]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

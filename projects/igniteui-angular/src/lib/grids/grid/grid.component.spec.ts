@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from './public_api';
+import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -21,10 +21,12 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
-import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -39,15 +41,15 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - input properties', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridTestComponent,
-        IgxGridMarkupDeclarationComponent,
-        IgxGridRemoteVirtualizationComponent,
-        IgxGridRemoteOnDemandComponent,
-        IgxGridEmptyMessage100PercentComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridTestComponent,
+                    IgxGridMarkupDeclarationComponent,
+                    IgxGridRemoteVirtualizationComponent,
+                    IgxGridRemoteOnDemandComponent,
+                    IgxGridEmptyMessage100PercentComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -645,11 +647,11 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - virtualization tests', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridTestComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridTestComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -778,15 +780,15 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - default rendering for rows and columns', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridDefaultRenderingComponent,
-        IgxGridColumnPercentageWidthComponent,
-        IgxGridWrappedInContComponent,
-        IgxGridFormattingComponent,
-        IgxGridFixedContainerHeightComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridDefaultRenderingComponent,
+                    IgxGridColumnPercentageWidthComponent,
+                    IgxGridWrappedInContComponent,
+                    IgxGridFormattingComponent,
+                    IgxGridFixedContainerHeightComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -1825,12 +1827,12 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - API methods', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridDefaultRenderingComponent,
-        IgxGridWrappedInContComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridDefaultRenderingComponent,
+                    IgxGridWrappedInContComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2239,11 +2241,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule, IgxTabsModule,
-        IgxGridInsideIgxTabsComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridInsideIgxTabsComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2401,11 +2403,11 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('IgxGrid - footer section', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridWithCustomFooterComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridWithCustomFooterComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2428,11 +2430,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridWithCustomPaginationTemplateComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridWithCustomPaginationTemplateComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2464,13 +2466,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxTabsModule,
-        IgxGridPerformanceComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridPerformanceComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2656,12 +2656,12 @@ describe('IgxGrid Component Tests #grid', () => {
     describe('Setting null data', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule, IgxGridModule,
-        IgxGridNoDataComponent,
-        IgxGridTestComponent
-    ]
-})
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridNoDataComponent,
+                    IgxGridTestComponent
+                ]
+            })
             .compileComponents();
         }));
 
@@ -2695,7 +2695,7 @@ describe('IgxGrid Component Tests #grid', () => {
         </igx-grid>
     </div>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridTestComponent {
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
@@ -2767,7 +2767,7 @@ export class IgxGridTestComponent {
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgFor, NgIf]
 })
 export class IgxGridDefaultRenderingComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -2832,7 +2832,7 @@ export class IgxGridDefaultRenderingComponent {
         </igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
     public initColumns(column) {
@@ -2854,7 +2854,7 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         </igx-grid>
         </div>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxGridFooterComponent]
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -2867,7 +2867,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
             </igx-grid>
         </div>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public data = [];
@@ -2921,7 +2921,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
             </igx-grid>
         </div>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent]
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public paging = false;
@@ -2937,7 +2937,7 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -2958,7 +2958,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
         </div>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3010,7 +3010,7 @@ export class LocalService {
     `,
     providers: [LocalService],
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, AsyncPipe]
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3050,7 +3050,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     `,
     providers: [LocalService],
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, AsyncPipe]
 })
 export class IgxGridRemoteOnDemandComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3088,7 +3088,7 @@ export class IgxGridRemoteOnDemandComponent {
         </igx-column><igx-column field="UnitsInStock" [formatter]="formatNum" [dataType]="'number'" [hasSummary]="true">
         </igx-column>`),
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -3136,7 +3136,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                         *ngFor="let column of columns"
                         [field]="column.field"
                         [header]="column.field"
-                        [width]="column.width"
+                        [width]="column.width + 'px'"
                     >
                     </igx-column>
                 </igx-grid>
@@ -3196,7 +3196,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
   </div>
     `,
     standalone: true,
-    imports: [IgxGridModule, IgxTabsModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxTabsComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabItemComponent, IgxPaginatorComponent, NgFor]
 })
 export class IgxGridInsideIgxTabsComponent {
     @ViewChild('grid2', { read: IgxGridComponent, static: true })
@@ -3247,7 +3247,7 @@ export class IgxGridInsideIgxTabsComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, AsyncPipe]
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -3261,8 +3261,7 @@ export class IgxGridWithCustomPaginationTemplateComponent {
         <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridModule,
-        IgxTabsModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
 
@@ -3315,7 +3314,7 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IgxGridNoDataComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;

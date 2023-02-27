@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './public_api';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import {
     IgxTreeGridSearchComponent,
@@ -23,11 +22,13 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridSearchComponent,
-        IgxTreeGridPrimaryForeignKeyComponent,
-        IgxTreeGridSummariesScrollingComponent],
-    imports: [IgxTreeGridModule, NoopAnimationsModule]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridSearchComponent,
+                IgxTreeGridPrimaryForeignKeyComponent,
+                IgxTreeGridSummariesScrollingComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     describe('Child Collection', () => {

@@ -8,18 +8,17 @@ import { IgxPivotGridPersistanceComponent } from '../test-utils/pivot-grid-sampl
 import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';
-import { IgxPivotGridModule } from './pivot-grid/pivot-grid.module';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-grid/pivot-row-dimension-header.component';
-import { IgxGridStateModule } from './state.directive';
+
 describe('IgxPivotGridState #pivotGrid :', () => {
     configureTestSuite();
     let fixture;
     let pivotGrid;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxPivotGridPersistanceComponent],
-    imports: [NoopAnimationsModule, IgxPivotGridModule, IgxGridStateModule]
-}).compileComponents();
+            declarations: [IgxPivotGridPersistanceComponent],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {

@@ -17,7 +17,7 @@ import { NgIf, NgFor } from '@angular/common';
     selector: '[igxPaginatorContent],igx-paginator-content',
     standalone: true
 })
-export class IgxPaginatorTemplateDirective {
+export class IgxPaginatorContentDirective {
     /**
      * @internal
      * @hidden
@@ -37,8 +37,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @ContentChild(IgxPaginatorTemplateDirective)
-    public customContent: IgxPaginatorTemplateDirective;
+    @ContentChild(IgxPaginatorContentDirective)
+    public customContent: IgxPaginatorContentDirective;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.

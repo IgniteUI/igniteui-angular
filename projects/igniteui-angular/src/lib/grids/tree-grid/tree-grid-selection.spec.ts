@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxGridCell, IgxTreeGridModule } from './public_api';
+import { IgxGridCell } from './public_api';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
@@ -22,8 +22,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxGridSelectionModule } from '../selection/selection.module';
-import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
+import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
@@ -45,17 +44,19 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [IgxTreeGridSimpleComponent,
-        IgxTreeGridCellSelectionComponent,
-        IgxTreeGridSelectionRowEditingComponent,
-        IgxTreeGridSelectionWithTransactionComponent,
-        IgxTreeGridRowEditingTransactionComponent,
-        IgxTreeGridCustomRowSelectorsComponent,
-        IgxTreeGridCascadingSelectionComponent,
-        IgxTreeGridCascadingSelectionTransactionComponent,
-        IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent],
-    imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
-}).compileComponents();
+            declarations: [
+                IgxTreeGridSimpleComponent,
+                IgxTreeGridCellSelectionComponent,
+                IgxTreeGridSelectionRowEditingComponent,
+                IgxTreeGridSelectionWithTransactionComponent,
+                IgxTreeGridRowEditingTransactionComponent,
+                IgxTreeGridCustomRowSelectorsComponent,
+                IgxTreeGridCascadingSelectionComponent,
+                IgxTreeGridCascadingSelectionTransactionComponent,
+                IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
+            ],
+            imports: [NoopAnimationsModule]
+        }).compileComponents();
     }));
 
     describe('API Row Selection', () => {
