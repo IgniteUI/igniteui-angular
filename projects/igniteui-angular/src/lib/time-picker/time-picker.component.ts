@@ -1,11 +1,10 @@
-import { CommonModule, NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     OnDestroy,
     OnInit,
     Output,
@@ -35,7 +34,6 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import {
     IgxItemListDirective,
     IgxTimeItemDirective,
-    IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
@@ -47,7 +45,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from '../core/utils';
@@ -1277,27 +1275,3 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    exports: [
-    IgxTimePickerComponent,
-    IgxTimePickerTemplateDirective,
-    IgxTimePickerActionsDirective
-],
-    imports: [
-    CommonModule,
-    IgxToggleModule,
-    IgxTimePickerComponent,
-    IgxItemListDirective,
-    IgxTimeItemDirective,
-    IgxTimePickerTemplateDirective,
-    IgxTimePickerActionsDirective,
-    TimeFormatPipe,
-    TimeItemPipe
-],
-    providers: []
-})
-export class IgxTimePickerModule { }

@@ -1,8 +1,8 @@
 import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
-import { CommonModule, getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
 import { Inject } from '@angular/core';
 import {
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { editor } from '@igniteui/material-icons-extended';
@@ -23,16 +23,15 @@ import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
 
-import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType } from '../grids/common/grid.interface';
 import { IActiveNode } from '../grids/grid-navigation.service';
 import { IgxIconService } from '../icon/icon.service';
 
 import { IgxSelectComponent } from '../select/select.component';
-import { IgxSelectModule } from '../select/select.module';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
+import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -1267,20 +1266,4 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxTimePickerModule,
-        IgxSelectModule,
-        IgxToggleModule,
-        IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxFieldFormatterPipe
-    ]
-})
-export class IgxQueryBuilderModule { }
 

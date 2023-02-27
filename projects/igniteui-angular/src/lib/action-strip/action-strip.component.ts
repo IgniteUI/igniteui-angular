@@ -18,7 +18,7 @@ import {
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IgxDropDownComponent } from '../drop-down/public_api';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
@@ -147,7 +147,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Hide or not the Action Strip based on if it is a menu.
-     * 
+     *
      * @hidden
      * @internal
      */

@@ -34,7 +34,6 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/d
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
-import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
@@ -46,7 +45,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
-import { IgxInputDirective as IgxInputDirective_1 } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -101,7 +100,7 @@ export class IgxSelectFooterDirective {
         }
     `],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective_1, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, NgIf, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {

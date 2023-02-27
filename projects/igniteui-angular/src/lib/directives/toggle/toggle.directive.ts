@@ -518,13 +518,3 @@ export class IgxOverlayOutletDirective {
         return this.element.nativeElement;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    imports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
-    exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
-    providers: [IgxNavigationService]
-})
-export class IgxToggleModule { }

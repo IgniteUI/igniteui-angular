@@ -1,19 +1,10 @@
-import { CommonModule, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter
 } from '@angular/core';
-import {
-    IgxComboItemDirective,
-    IgxComboEmptyDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboHeaderDirective,
-    IgxComboFooterDirective,
-    IgxComboAddItemDirective,
-    IgxComboToggleIconDirective,
-    IgxComboClearIconDirective
-} from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
@@ -22,9 +13,7 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -111,7 +100,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, ReactiveFormsModule, FormsModule, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, FormsModule, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, EditorProvider {
@@ -444,47 +433,3 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return value;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    exports: [
-    IgxComboAddItemComponent,
-    IgxComboAddItemDirective,
-    IgxComboClearIconDirective,
-    IgxComboComponent,
-    IgxComboDropDownComponent,
-    IgxComboEmptyDirective,
-    IgxComboFilteringPipe,
-    IgxComboFooterDirective,
-    IgxComboGroupingPipe,
-    IgxComboHeaderDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboItemComponent,
-    IgxComboItemDirective,
-    IgxComboToggleIconDirective
-],
-    imports: [
-    CommonModule,
-    FormsModule,
-    IgxDropDownModule,
-    IgxToggleModule,
-    ReactiveFormsModule,
-    IgxComboAddItemComponent,
-    IgxComboAddItemDirective,
-    IgxComboClearIconDirective,
-    IgxComboComponent,
-    IgxComboDropDownComponent,
-    IgxComboEmptyDirective,
-    IgxComboFilteringPipe,
-    IgxComboFooterDirective,
-    IgxComboGroupingPipe,
-    IgxComboHeaderDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboItemComponent,
-    IgxComboItemDirective,
-    IgxComboToggleIconDirective
-]
-})
-export class IgxComboModule { }

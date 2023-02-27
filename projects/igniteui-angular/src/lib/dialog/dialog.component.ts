@@ -1,11 +1,10 @@
-import { CommonModule, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     OnDestroy,
     OnInit,
     Optional,
@@ -18,8 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { IgxButtonType, IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
-import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
 import {fadeIn, fadeOut} from '../animations/fade/index';
 import { IgxFocusDirective } from '../directives/focus/focus.directive';
@@ -625,14 +623,3 @@ export interface IDialogEventArgs extends IBaseEventArgs {
 }
 
 export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs { }
-
-/**
- * @hidden
- */
-@NgModule({
-    exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
-})
-export class IgxDialogModule { }
-
-export * from './dialog.directives';

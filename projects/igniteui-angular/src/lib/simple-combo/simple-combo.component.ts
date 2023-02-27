@@ -1,9 +1,9 @@
-import { CommonModule, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    NgModule, Optional, Output, ViewChild
+    Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
@@ -18,8 +18,6 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconService } from '../icon/icon.service';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from '../combo/combo.pipes';
@@ -546,15 +544,3 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         : value !== undefined;
     }
 }
-
-@NgModule({
-    imports: [
-        CommonModule,
-        FormsModule, ReactiveFormsModule,
-        IgxToggleModule,
-        IgxDropDownModule,
-        IgxSimpleComboComponent
-    ],
-    exports: [IgxSimpleComboComponent]
-})
-export class IgxSimpleComboModule { }

@@ -1,10 +1,10 @@
 export * from '../public_api';
 export * from './grid.component';
 export * from './grid.directives';
-export * from './grid.module';
+// export * from './grid.module';
 export * from './grid-api.service';
 export * from './grid.pipes';
-export { IgxGridRowComponent as ϴIgxGridRowComponent} from './grid-row.component';
+export * from './grid-row.component';
 export * from './grid.summary.pipe';
 export * from './grid.details.pipe';
 export * from './groupby-row.component';

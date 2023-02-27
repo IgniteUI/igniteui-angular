@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { GridColumnDataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -12,10 +11,11 @@ import { AutoPositionStrategy } from '../../../services/overlay/position/auto-po
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
 import { HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../services/overlay/utilities';
 import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../drop-down/drop-down.component';
+import { IgxDropDownComponent } from '../../../drop-down/drop-down.component';
 import { IgxIconComponent } from '../../../icon/icon.component';
 import { IgxDropDownItemNavigationDirective } from '../../../drop-down/drop-down-navigation.directive';
 import { NgIf, NgFor } from '@angular/common';
+import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 
 
 /**
@@ -25,7 +25,7 @@ import { NgIf, NgFor } from '@angular/common';
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
     standalone: true,
-    imports: [NgIf, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent_1, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
+    imports: [NgIf, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**

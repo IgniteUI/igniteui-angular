@@ -7,7 +7,6 @@ import {
     HostListener,
     Inject,
     Input,
-    NgModule,
     OnDestroy,
     Optional,
     Output,
@@ -16,7 +15,6 @@ import {
     OnInit
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
@@ -28,13 +26,12 @@ import {
     OverlaySettings
 } from '../../services/public_api';
 import {
-    IgxDropDownComponent,
-    IgxDropDownItemNavigationDirective,
-    IgxDropDownModule,
-    ISelectionEventArgs
-} from '../../drop-down/public_api';
+    IgxDropDownComponent
+} from '../../drop-down/drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
+import { ISelectionEventArgs } from '../../drop-down/drop-down.common';
 
 /**
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
@@ -398,10 +395,3 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.cdr.detectChanges();
     };
 }
-
-/** @hidden */
-@NgModule({
-    imports: [IgxDropDownModule, CommonModule, IgxAutocompleteDirective],
-    exports: [IgxAutocompleteDirective]
-})
-export class IgxAutocompleteModule { }
