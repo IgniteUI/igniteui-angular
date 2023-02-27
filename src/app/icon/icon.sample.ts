@@ -12,7 +12,7 @@ import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/ico
     imports: [IgxIconComponent, IgxButtonDirective]
 })
 export class IconSampleComponent implements OnInit {
-    constructor(public router: Router, private _iconService: IgxIconService) {}
+    constructor(private _iconService: IgxIconService, public router: Router) {}
 
     public ngOnInit(): void {
         // register custom svg icons

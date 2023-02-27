@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    ISelectionEventArgs, CancelableEventArgs,
+    CancelableEventArgs,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
     IgxSelectComponent,
-    IButtonGroupEventArgs
+    IButtonGroupEventArgs,
+    IgxSelectHeaderDirective,
+    IgxSelectFooterDirective,
+    ISelectionEventArgs
 } from 'igniteui-angular';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxSelectGroupComponent } from '../../../projects/igniteui-angular/src/lib/select/select-group.component';
@@ -17,7 +20,6 @@ import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/l
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
 import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxSelectComponent as IgxSelectComponent_1, IgxSelectHeaderDirective, IgxSelectFooterDirective } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
@@ -26,7 +28,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxSelectComponent_1, FormsModule, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, NgFor, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, ReactiveFormsModule, IgxSwitchComponent]
+    imports: [IgxButtonDirective, IgxSelectComponent, FormsModule, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, NgFor, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, ReactiveFormsModule, IgxSwitchComponent]
 })
 export class SelectSampleComponent implements OnInit {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })

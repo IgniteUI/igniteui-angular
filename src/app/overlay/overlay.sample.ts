@@ -12,19 +12,17 @@ import {
     ElasticPositionStrategy,
     IgxDragDirective,
     ContainerPositionStrategy,
-    IAnimationParams
+    IAnimationParams,
+    IgxRadioComponent,
+    IgxSwitchComponent,
+    IgxInputGroupComponent,
+    IgxInputDirective,
+    IgxLabelDirective,
+    IgxButtonDirective,
+    IgxRippleDirective,
+    IgxDropDownItemComponent
 } from 'igniteui-angular';
-import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxDragDirective as IgxDragDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { FormsModule } from '@angular/forms';
-import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
 import { NgFor } from '@angular/common';
 
 @Component({
@@ -33,7 +31,7 @@ import { NgFor } from '@angular/common';
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
     standalone: true,
-    imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective_1, IgxDropDownComponent_1, IgxDropDownItemComponent]
+    imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

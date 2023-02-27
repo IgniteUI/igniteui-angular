@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxGridModule, IgxOverlayService, IgxTreeGridModule, IgxHierarchicalGridModule, IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateRangePickerModule, IgxActionStripModule, GridBaseAPIService, IgxPivotGridModule, IgxQueryBuilderModule } from 'igniteui-angular';
+import { IgxOverlayService, IgxIconService, DisplayDensityToken, DisplayDensity, GridBaseAPIService, IgxGridHierarchicalPipe, IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxIconComponent } from 'igniteui-angular';
 
 
 import { routing } from './routing';
@@ -123,7 +123,6 @@ import {
     HierarchicalGridRemoteVirtualizationComponent
 } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
-import { IgxGridHierarchicalPipe } from 'igniteui-angular';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
@@ -162,7 +161,6 @@ import { GridExportComponent } from './grid-export/grid-export.sample';
 const components = [
     AccordionSampleComponent,
     ActionStripSampleComponent,
-    AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
     AutocompleteSampleComponent,
@@ -308,25 +306,22 @@ const components = [
 ];
 
 @NgModule({
+    declarations: [AppComponent],
     imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HammerModule,
-    FormsModule,
-    CommonModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    IgxActionStripModule,
-    IgxGridModule,
-    IgxTreeGridModule,
-    IgxHierarchicalGridModule,
-    IgxDateRangePickerModule,
-    routing,
-    HammerModule,
-    IgxPivotGridModule,
-    IgxQueryBuilderModule,
-    ...components
-],
+        BrowserModule,
+        BrowserAnimationsModule,
+        HammerModule,
+        FormsModule,
+        CommonModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerItemDirective,
+        IgxIconComponent,
+        routing,
+        HammerModule,
+        ...components
+    ],
     providers: [
         LocalService,
         RemoteService,
