@@ -25,10 +25,11 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
 /// @param {Color} $focus-outline-color [null] - The focus outlined color.
+/// @param {Color} $error-color [null] - The border and fill colors in invalid state.
+/// @param {Color} $error-color-hover [null] - The border and fill colors in invalid state on hover.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $light-schema
-///
 ///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
@@ -46,7 +47,9 @@
     $disabled-indeterminate-color: null,
     $disabled-color-label: null,
     $border-radius-ripple: null,
-    $focus-outline-color: null
+    $focus-outline-color: null,
+    $error-color: null,
+    $error-color-hover: null,
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: ();
@@ -78,7 +81,9 @@
         disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple,
-        focus-outline-color: $focus-outline-color
+        focus-outline-color: $focus-outline-color,
+        error-color: $error-color,
+        error-color-hover: $error-color-hover,
     ));
 }
 
@@ -87,7 +92,10 @@
 /// @requires ripple-theme
 @mixin checkbox($theme) {
     @include css-vars($theme);
-    $variant: map.get($theme, 'variant');
+    $type: map.get($theme, type);
+    $variant: map.get($theme, variant);
+    $material-theme: $variant == 'material';
+    $bootstrap-theme: $variant == 'bootstrap';
 
     @include scale-in-out($start-scale: .9);
 
@@ -96,9 +104,6 @@
     $size: rem(20px);
     $size-bs: rem(16px);
     $checkbox-radius: math.div($size, 2);
-
-    $variant: map.get($theme, variant);
-    $bootstrap-theme: $variant == 'bootstrap';
 
     $size: map.get((
         material: $size,
@@ -121,7 +126,12 @@
         indigo-design: none,
     ), $variant);
 
-    $label-margin: rem(8px);
+    $label-margin: map.get((
+        material: rem(2px),
+        fluent: rem(6px),
+        bootstrap: rem(8px),
+        indigo-design: rem(8px),
+    ), $variant);
 
     $mark-stroke: map.get((
         material: 3,
@@ -140,7 +150,7 @@
     $mark-length: 24;
     $mark-x-factor: math.div($mark-stroke, $mark-length);
 
-    $ripple-size: rem(48px);
+    $ripple-size: rem(40px);
     $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: ripple-theme(
@@ -175,6 +185,11 @@
         position: relative;
         width: $size;
         height: $size;
+
+        @if $material-theme {
+            width: $ripple-size;
+            height: $ripple-size;
+        }
     }
 
     %cbx-composite {
@@ -206,6 +221,19 @@
 
         &::after {
             background: var-get($theme, 'fill-color');
+        }
+    }
+
+    %cbx-composite--invalid {
+        border-color: var-get($theme, 'error-color');
+    }
+
+    %cbx-composite--x--invalid {
+        border-color: var-get($theme, 'error-color');
+        background: var-get($theme, 'error-color');
+
+        &::after {
+            background: var-get($theme, 'error-color');
         }
     }
 
@@ -340,6 +368,10 @@
         order: -1;
     }
 
+    %cbx-label--invalid {
+        color: var-get($theme, 'error-color');
+    }
+
     %cbx-label--disabled {
         color: var-get($theme, 'disabled-color-label');
     }
@@ -350,13 +382,30 @@
         display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
-        inset-inline-end: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
         width: $ripple-size;
         height: $ripple-size;
         border-radius: var-get($theme, 'border-radius-ripple');
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+    }
+
+    %cbx-ripple--hover {
+        background: var-get($theme, 'empty-color');
+        transition: background .2s $ease-out-quad;
+        opacity: .06;
+
+        @if $type == 'dark' {
+            opacity: .12;
+        }
+    }
+
+    %cbx-ripple--hover-checked {
+        background: var-get($theme, 'fill-color');
+    }
+
+    %cbx-ripple--hover-invalid {
+        background: var-get($theme, 'error-color');
     }
 
     %igx-checkbox--focused {
@@ -400,40 +449,43 @@
         }
     }
 
+    %igx-checkbox--focused-invalid {
+        @if $variant == 'bootstrap' {
+            %cbx-composite {
+                box-shadow: 0 0 0 rem(2px) var-get($theme, 'error-color-hover');
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            %cbx-composite {
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'error-color-hover');
+            }
+        }
+    }
+
     %cbx-ripple--focused {
         background: var-get($theme, 'empty-color');
         transition: background .2s $ease-out-quad;
         opacity: .12;
+
+        @if $type == 'dark' {
+            opacity: .24;
+        }
     }
 
     %cbx-ripple--focused-checked {
         background: var-get($theme, 'fill-color');
     }
 
-    %cbx-ripple--hover {
-        &::after {
-            position: absolute;
-            content: '';
-            opacity: .06;
-            inset: 0;
-        }
-    }
-
-    %cbx-ripple--hover-unchecked {
-        &::after {
-            background: var-get($theme, 'empty-color');
-        }
-    }
-
-    %cbx-ripple--hover-checked {
-        &::after {
-            background: var-get($theme, 'fill-color');
-        }
+    %cbx-ripple--focused-invalid {
+        background: var-get($theme, 'error-color');
     }
 
     %cbx-ripple--pressed {
-        &::after {
-            opacity: .12;
+        opacity: .12;
+
+        @if $type == 'dark' {
+            opacity: .24;
         }
     }
 

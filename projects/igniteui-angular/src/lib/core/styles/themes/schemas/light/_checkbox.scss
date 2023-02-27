@@ -8,18 +8,22 @@
 
 /// Generates a light checkbox schema.
 /// @type {Map}
-/// @prop {Color} tick-color [color: ('gray', 50)] - The checked mark color.
-/// @prop {Color} label-color [color: ('gray', 900)]- The text color used for the label text.
-/// @prop {Color} empty-color [color: ('gray', 600)] - The unchecked border color.
-/// @prop {Color} fill-color [color: ('secondary', 500)] - The checked border and fill colors.
-/// @prop {Color} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
-/// @prop {Color} disabled-indeterminate-color [color: ('secondary', 200)] - The disabled border and fill colors in indeterminate state.
-/// @prop {Color} disabled-color-label [color: ('gray', 400)] - The disabled color of the label.
+/// @prop {Map} tick-color [color: ('gray', 50)] - The checked mark color.
+/// @prop {Map} label-color [color: ('gray', 900)]- The text color used for the label text.
+/// @prop {Map} empty-color [color: ('gray', 600)] - The unchecked border color.
+/// @prop {Map} fill-color [color: ('secondary', 500)] - The checked border and fill colors.
+/// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
+/// @prop {Map} disabled-indeterminate-color [color: ('secondary', 200)] - The disabled border and fill colors in indeterminate state.
+/// @prop {Map} disabled-color-label [color: ('gray', 400)] - The disabled color of the label.
+/// @prop {Map} error-color [color: ('error', 500)] - The border and fill colors in invalid state.
+/// @prop {Map} error-color-hover [color: ('error', 500)] - The border and fill colors in invalid state on hover.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [24px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $light-checkbox: extend(
     (
         variant: 'material',
+
+        type: 'light',
 
         tick-color: (
             color: ('gray', 50)
@@ -49,6 +53,14 @@ $light-checkbox: extend(
             color: ('gray', 400)
         ),
 
+        error-color: (
+            color: ('error', 500)
+        ),
+
+        error-color-hover: (
+            color: ('error', 500)
+        ),
+
         border-radius: rem(2px),
 
         border-radius-ripple: rem(24px)
@@ -60,9 +72,10 @@ $light-checkbox: extend(
 /// @prop {Map} empty-color [color: ('gray', 900)] - The unchecked border color.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
+/// @prop {Map} focus-outline-color [color: ('gray', 800)] - The focus outlined color.
+/// @prop {Map} error-color-hover [color: ('error', 700)] - The border and fill colors in invalid state on hover.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Map} focus-outline-color [color: ('gray', 800)] - The focus outlined color.
 /// @requires {Map} $light-checkbox
 $fluent-checkbox: extend(
     $light-checkbox,
@@ -85,6 +98,10 @@ $fluent-checkbox: extend(
             color: ('gray', 400)
         ),
 
+        error-color-hover: (
+            color: ('error', 700)
+        ),
+
         border-radius: rem(2px),
 
         border-radius-ripple: rem(2px)
@@ -96,9 +113,10 @@ $fluent-checkbox: extend(
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and fill colors.
+/// @prop {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
+/// @prop {Map} error-color-hover [color: ('error', 100)] - The focus outlined color in invalid state.
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
 /// @requires {Map} $light-checkbox
 $bootstrap-checkbox: extend(
     $light-checkbox,
@@ -121,6 +139,10 @@ $bootstrap-checkbox: extend(
             color: ('primary', 200)
         ),
 
+        error-color-hover: (
+            color: ('error', 100)
+        ),
+
         border-radius: rem(4px),
 
         border-radius-ripple: rem(4px)
@@ -133,11 +155,12 @@ $bootstrap-checkbox: extend(
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [color: ('gray', 300)] - The disabled border and fill colors.
-/// @prop {Color} disabled-color-label [color: ('gray', 300)] - The disabled label color.
-/// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} disabled-color-label [color: ('gray', 300)] - The disabled label color.
 /// @prop {Map} focus-outline-color [color: ('gray', 300)] - The focus outlined color.
 /// @prop {Map} focus-outline-color-focused [color: ('primary', 200)] - The focus outlined color for focused state.
+/// @prop {Map} error-color-hover [color: ('error', 200)] - The focus outlined color in invalid state.
+/// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $light-checkbox
 $indigo-checkbox: extend(
     $light-checkbox,
@@ -170,6 +193,10 @@ $indigo-checkbox: extend(
 
         disabled-color-label: (
             color: ('gray', 300),
+        ),
+
+        error-color-hover: (
+            color: ('error', 200)
         ),
 
         border-radius: rem(3px),
