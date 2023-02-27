@@ -2188,9 +2188,9 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
 
 @Component({
     template: `
-        <div style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
+        <div style="display: flex; flex-direction: column; height: 100vh; justify-content: flex-end;">
             <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'" 
-            style="margin-bottom: 40px;">
+            style="margin-bottom: 60px;">
             </igx-simple-combo>
         </div>`
 })
