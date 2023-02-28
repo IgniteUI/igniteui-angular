@@ -572,10 +572,10 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      */
     protected updateValidityState() {
         if (this.ngControl) {
-            if (!this.disabled && !this.indeterminate && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
+            if (!this.disabled && !this.indeterminate && !this.readonly &&
+                (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                 // the control is not disabled and is touched or dirty
                 if (this.checked) {
-                    console.log('indeterminate');
                     this._invalid = this.ngControl.invalid;
                 } else {
                     this._invalid = this.required ? true : false;
@@ -598,9 +598,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
      * @internal
      */
     private checkNativeValidity() {
-        console.log('here');
-        if (!this.disabled && this._required && !this.checked && !this.indeterminate) {
-            // this._invalid = !this.focused;
+        if (!this.disabled && this._required && !this.checked && !this.indeterminate && !this.readonly) {
             this._invalid = true;
         } else {
             this._invalid = false;
