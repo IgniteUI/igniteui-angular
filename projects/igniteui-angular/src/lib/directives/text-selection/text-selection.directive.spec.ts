@@ -1,19 +1,21 @@
 import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTextSelectionModule } from './text-selection.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxTextSelectionDirective } from './text-selection.directive';
 
 describe('IgxSelection', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxTextSelectionModule, TriggerTextSelectionComponent,
-        TriggerTextSelectionOnClickComponent,
-        TextSelectionWithMultipleFocusHandlersComponent,
-        IgxTestFocusDirective]
-});
+            imports: [
+                TriggerTextSelectionComponent,
+                TriggerTextSelectionOnClickComponent,
+                TextSelectionWithMultipleFocusHandlersComponent,
+                IgxTestFocusDirective
+            ]
+        });
     }));
 
 
@@ -140,12 +142,25 @@ describe('IgxSelection', () => {
     }));
 });
 
+@Directive({
+    selector: '[igxTestFocusDirective]',
+    standalone: true
+})
+class IgxTestFocusDirective {
+    constructor(private element: ElementRef) { }
+
+    @HostListener('focus')
+    public onFocus() {
+        this.element.nativeElement.value = `$${this.element.nativeElement.value}`;
+    }
+}
+
 @Component({
     template: `
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
         `,
     standalone: true,
-    imports: [IgxTextSelectionModule]
+    imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionComponent { }
 
@@ -154,7 +169,7 @@ class TriggerTextSelectionComponent { }
             <input #input [type]="inputType" [igxTextSelection]="selectValue" #select="igxTextSelection" (click)="select.trigger()" [value]="inputValue" />
         `,
     standalone: true,
-    imports: [IgxTextSelectionModule]
+    imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionOnClickComponent {
     public selectValue = true;
@@ -169,30 +184,17 @@ class TriggerTextSelectionOnClickComponent {
             resolve("I promise to return after one second!");
           }, 1000);
         });
-      }
- }
+    }
+}
 
- @Component({
+@Component({
     template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`,
     standalone: true,
-    imports: [IgxTextSelectionModule]
+    imports: [IgxTextSelectionDirective, IgxTestFocusDirective]
 })
  class TextSelectionWithMultipleFocusHandlersComponent {
     public inputValue: any = "12-34-56";
  }
-
-@Directive({
-    selector: '[igxTestFocusDirective]',
-    standalone: true
-})
-class IgxTestFocusDirective {
-    constructor(private element: ElementRef) { }
-
-    @HostListener('focus')
-    public onFocus() {
-        this.element.nativeElement.value = `$${this.element.nativeElement.value}`;
-    }
-}
 
 interface Types {
     [key: string]: any;

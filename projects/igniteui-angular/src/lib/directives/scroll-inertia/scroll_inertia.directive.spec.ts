@@ -7,7 +7,7 @@ import {
     ElementRef
 } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_inertia.directive';
+import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
@@ -18,9 +18,9 @@ describe('Scroll Inertia Directive - Rendering', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxScrollInertiaModule, IgxTestScrollInertiaDirective,
-        ScrollInertiaComponent]
-}).compileComponents().then(() => {
+            imports: [IgxTestScrollInertiaDirective,
+                ScrollInertiaComponent]
+        }).compileComponents().then(() => {
             fix = TestBed.createComponent(ScrollInertiaComponent);
             fix.detectChanges();
         });
@@ -299,7 +299,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 });
 
-    /** igxScroll inertia for testing */
+/** igxScroll inertia for testing */
 @Directive({
     selector: '[igxTestScrollInertia]',
     standalone: true
@@ -339,7 +339,7 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
         </div>
     `,
     standalone: true,
-    imports: [IgxScrollInertiaModule]
+    imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {
     @ViewChild('container', { static: true }) public container: ElementRef;

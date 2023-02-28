@@ -1,29 +1,30 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxRadioModule, IgxRadioGroupDirective } from './radio-group.directive';
+import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { IgxRadioComponent } from '../../radio/radio.component';
+import { NgFor } from '@angular/common';
 
 describe('IgxRadioGroupDirective', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [
-        IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NoopAnimationsModule,
-        RadioGroupComponent,
-        RadioGroupSimpleComponent,
-        RadioGroupWithModelComponent,
-        RadioGroupRequiredComponent,
-        RadioGroupReactiveFormsComponent,
-        RadioGroupDeepProjectionComponent
-    ]
-})
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                NoopAnimationsModule,
+                RadioGroupComponent,
+                RadioGroupSimpleComponent,
+                RadioGroupWithModelComponent,
+                RadioGroupRequiredComponent,
+                RadioGroupReactiveFormsComponent,
+                RadioGroupDeepProjectionComponent
+            ]
+        })
         .compileComponents();
     }));
 
@@ -236,7 +237,7 @@ describe('IgxRadioGroupDirective', () => {
         dispatchRadioEvent('blur', domRadio, fixture);
         fixture.detectChanges();
         tick();
-        
+
         //expect(radioGroup.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
 
@@ -262,9 +263,7 @@ describe('IgxRadioGroupDirective', () => {
     </igx-radio-group>
 `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -278,9 +277,7 @@ class RadioGroupSimpleComponent {
 </igx-radio-group>
 `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
 })
 class RadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -294,9 +291,7 @@ class RadioGroupComponent {
 </igx-radio-group>
 `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor]
 })
 class RadioGroupRequiredComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -315,9 +310,7 @@ interface Person {
                 </igx-radio-group>
 `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, FormsModule]
 })
 class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
@@ -343,9 +336,7 @@ class RadioGroupWithModelComponent {
 </form>
 `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
     public seasons = [
@@ -398,9 +389,7 @@ class RadioGroupReactiveFormsComponent {
         </form>
     `,
     standalone: true,
-    imports: [IgxRadioModule,
-        FormsModule,
-        ReactiveFormsModule]
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, NgFor, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
 
