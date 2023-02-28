@@ -111,16 +111,7 @@ export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2,
     }
 });
 
-/**
- * Creates deep clone of provided value.
- * Supports primitive values, dates and objects.
- * If passed value is array returns shallow copy of the array.
- *
- * @param value value to clone
- * @returns Deep copy of provided value
- * @hidden
- */
-export const cloneValue = (value: any): any => {
+const cloneValueHelper = (value: any, seen: Map<any, any>) => {
     if (isDate(value)) {
         return new Date(value.getTime());
     }
@@ -133,14 +124,31 @@ export const cloneValue = (value: any): any => {
     }
 
     if (isObject(value)) {
+        if (seen.has(value)) {
+            return seen.get(value);
+        }
         const result = {};
-
+        seen.set(value, result);
+        
         for (const key of Object.keys(value)) {
-            result[key] = cloneValue(value[key]);
+            result[key] = cloneValueHelper(value[key], seen);
         }
         return result;
     }
     return value;
+};
+
+/**
+ * Creates deep clone of provided value.
+ * Supports primitive values, dates and objects.
+ * If passed value is array returns shallow copy of the array.
+ *
+ * @param value value to clone
+ * @returns Deep copy of provided value
+ * @hidden
+ */
+export const cloneValue = (value: any): any => {
+    return cloneValueHelper(value, new Map<any, any>);
 };
 
 /**
