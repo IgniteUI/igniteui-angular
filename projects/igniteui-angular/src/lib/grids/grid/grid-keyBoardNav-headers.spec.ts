@@ -1,8 +1,6 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxGridModule
-} from './public_api';
+
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
@@ -28,9 +26,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [SelectionWithScrollsComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [SelectionWithScrollsComponent, NoopAnimationsModule]
+            });
         }));
 
         beforeEach(() => {
@@ -732,9 +729,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [MRLTestComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [MRLTestComponent, NoopAnimationsModule]
+            });
         }));
 
         beforeEach(() => {
@@ -935,9 +931,8 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [ColumnGroupsNavigationTestComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [ColumnGroupsNavigationTestComponent, NoopAnimationsModule]
+            });
         }));
 
         beforeEach(() => {

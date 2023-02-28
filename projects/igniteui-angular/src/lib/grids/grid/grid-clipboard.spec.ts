@@ -1,9 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxGridModule, IgxGridComponent
-} from './public_api';
+import { IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
@@ -18,9 +16,8 @@ describe('IgxGrid - Clipboard #grid', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxGridClipboardComponent],
-    imports: [IgxGridModule, NoopAnimationsModule]
-});
+            imports: [IgxGridClipboardComponent, NoopAnimationsModule]
+        });
     }));
 
     beforeEach(() => {

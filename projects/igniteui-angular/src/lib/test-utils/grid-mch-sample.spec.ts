@@ -3,6 +3,7 @@ import { SampleTestData } from './sample-test-data.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     template: `
@@ -13,7 +14,9 @@ import { IgxColumnGroupComponent } from '../grids/columns/column-group.component
             </igx-column-group>
         </igx-grid>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupOneColGridComponent {
     @ViewChild('grid', { static: true })
@@ -35,7 +38,9 @@ export class OneGroupOneColGridComponent {
             </igx-column-group>
         </igx-grid>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupThreeColsGridComponent {
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
@@ -72,7 +77,9 @@ export class OneGroupThreeColsGridComponent {
         <igx-column-group #emptyColGroup header="Empty Header">
         </igx-column-group>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -115,7 +122,9 @@ export class ColumnGroupTestComponent {
             </igx-column-group>
         </igx-column-group>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupFourLevelTestComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -176,38 +185,6 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
     }
 }
 
-
-@Component({
-    template: `
-    <igx-grid #grid [data]="data" height="600px" width="800px">
-        <igx-column field="ID"></igx-column>
-        <igx-column-group header="General Information">
-            <igx-column  field="CompanyName"></igx-column>
-            <igx-column-group header="Person Details">
-                <igx-column field="ContactName"></igx-column>
-                <igx-column field="ContactTitle"></igx-column>
-            </igx-column-group>
-        </igx-column-group>
-        <igx-column-group header="Address Information">
-            <igx-column field="Region"></igx-column>
-            <igx-column-group header="Location">
-                <igx-column field="Country"></igx-column>
-                <igx-column-group header="Location City">
-                    <igx-column field="City"></igx-column>
-                    <igx-column field="Address"></igx-column>
-                </igx-column-group>
-            </igx-column-group>
-        </igx-column-group>
-    </igx-grid>
-       `
-})
-export class ColumnGroupTwoGroupsTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-
-    public data = SampleTestData.contactInfoDataFull();
-}
-
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="600px" width="1000px">
@@ -227,7 +204,9 @@ export class ColumnGroupTwoGroupsTestComponent {
             <igx-column #postalCodeCol field="PostalCode"></igx-column>
         </igx-column-group>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ThreeGroupsThreeColumnsGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -278,7 +257,9 @@ export class ThreeGroupsThreeColumnsGridComponent {
         </igx-column-group>
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColGroupsGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -312,7 +293,9 @@ export class NestedColGroupsGridComponent {
                     [filterable]="true"></igx-column>
             </igx-column-group>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor]
 })
 export class DynamicColGroupsGridComponent {
 
@@ -380,7 +363,9 @@ export class DynamicColGroupsGridComponent {
             <igx-column #faxCol field="Fax" header="Fax"></igx-column>
         </igx-column-group>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class StegosaurusGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -496,7 +481,9 @@ export class StegosaurusGridComponent implements OnInit {
                 </igx-column-group>
             </igx-column-group>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgIf]
 })
 export class BlueWhaleGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -537,7 +524,9 @@ export class BlueWhaleGridComponent {
                 <igx-column headerClasses="faxCol" field="Fax" [header]="faxColTitle" [width]="faxColWidth"></igx-column>
             </igx-column-group>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneColPerGroupGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -576,7 +565,9 @@ export class OneColPerGroupGridComponent {
                 </igx-column-group>
             </igx-column-group>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColumnGroupsGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -606,7 +597,9 @@ export class NestedColumnGroupsGridComponent {
                 <igx-column field="City"></igx-column>
             </igx-column-group>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor]
 })
 export class DynamicGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -636,7 +629,9 @@ export class DynamicGridComponent {
         </igx-column-group>
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColGroupsWithTemplatesGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

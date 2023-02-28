@@ -1,5 +1,4 @@
 import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,24 +33,23 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [OneGroupOneColGridComponent,
-        OneGroupThreeColsGridComponent,
-        BlueWhaleGridComponent,
-        ColumnGroupTestComponent,
-        ColumnGroupFourLevelTestComponent,
-        ThreeGroupsThreeColumnsGridComponent,
-        NestedColGroupsGridComponent,
-        StegosaurusGridComponent,
-        OneColPerGroupGridComponent,
-        NestedColumnGroupsGridComponent,
-        DynamicGridComponent,
-        NestedColGroupsWithTemplatesGridComponent,
-        DynamicColGroupsGridComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule
-    ]
-})
+            imports: [
+                NoopAnimationsModule,
+                OneGroupOneColGridComponent,
+                OneGroupThreeColsGridComponent,
+                BlueWhaleGridComponent,
+                ColumnGroupTestComponent,
+                ColumnGroupFourLevelTestComponent,
+                ThreeGroupsThreeColumnsGridComponent,
+                NestedColGroupsGridComponent,
+                StegosaurusGridComponent,
+                OneColPerGroupGridComponent,
+                NestedColumnGroupsGridComponent,
+                DynamicGridComponent,
+                NestedColGroupsWithTemplatesGridComponent,
+                DynamicColGroupsGridComponent
+            ]
+        })
         .compileComponents();
     }));
 

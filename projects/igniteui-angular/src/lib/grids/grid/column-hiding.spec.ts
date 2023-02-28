@@ -2,7 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -15,7 +14,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('Column Hiding UI #grid', () => {
 
-
     let fix: ComponentFixture<ColumnHidingTestComponent>;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnActionsComponent;
@@ -27,13 +25,12 @@ describe('Column Hiding UI #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [ColumnHidingTestComponent,
-        ColumnGroupsHidingTestComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                ColumnHidingTestComponent,
+                ColumnGroupsHidingTestComponent
+            ]
+        });
     }));
 
     describe('Basic', () => {

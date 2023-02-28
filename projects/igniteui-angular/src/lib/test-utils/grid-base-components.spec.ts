@@ -12,6 +12,7 @@ import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridToolbarPinningComponent } from '../grids/toolbar/grid-toolbar-pinning.component';
 import { NgFor } from '@angular/common';
+import { IgxCellTemplateDirective } from '../grids/columns/templates.directive';
 
 @Component({
     template: `
@@ -278,7 +279,7 @@ export class ColumnPinningTestComponent extends GridWithSizeComponent implements
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestComponent {
 }
@@ -290,7 +291,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
         '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent]
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public data = SampleTestData.contactInfoDataFull();

@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import {
@@ -28,16 +27,15 @@ describe('IgxGrid - Column Moving #grid', () => {
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [MovableColumnsComponent,
-        MovableTemplatedColumnsComponent,
-        MovableColumnsLargeComponent,
-        MultiColumnHeadersComponent],
-    imports: [
-        FormsModule,
-        NoopAnimationsModule,
-        IgxGridModule
-    ]
-});
+            imports: [
+                FormsModule,
+                NoopAnimationsModule,
+                MovableColumnsComponent,
+                MovableTemplatedColumnsComponent,
+                MovableColumnsLargeComponent,
+                MultiColumnHeadersComponent
+            ]
+        });
     }));
 
     describe('', () => {

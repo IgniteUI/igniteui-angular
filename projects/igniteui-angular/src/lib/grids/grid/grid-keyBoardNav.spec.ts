@@ -686,9 +686,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     describe('Group By navigation ', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-    declarations: [IgxGridGroupByComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+                imports: [IgxGridGroupByComponent, NoopAnimationsModule]
+            });
         }));
 
         let fix;

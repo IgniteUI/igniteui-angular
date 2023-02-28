@@ -3,7 +3,6 @@ import { DebugElement } from '@angular/core';
 import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import {
     ColumnPinningTestComponent,
     ColumnGroupsPinningTestComponent,
@@ -28,14 +27,13 @@ describe('Column Pinning UI #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [ColumnPinningTestComponent,
-        ColumnGroupsPinningTestComponent,
-        ColumnPinningWithTemplateTestComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule
-    ]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                ColumnPinningTestComponent,
+                ColumnGroupsPinningTestComponent,
+                ColumnPinningWithTemplateTestComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('Base', () => {

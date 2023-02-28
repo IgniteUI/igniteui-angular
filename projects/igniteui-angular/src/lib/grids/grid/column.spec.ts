@@ -2,7 +2,6 @@ import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
@@ -18,11 +17,14 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { getLocaleCurrencySymbol } from '@angular/common';
+import { getLocaleCurrencySymbol, NgFor } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridColumnDataType } from '../../data-operations/data-util';
+import { IgxColumnComponent } from '../public_api';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -31,20 +33,23 @@ describe('IgxGrid - Column properties #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [ColumnCellFormatterComponent,
-        ColumnHiddenFromMarkupComponent,
-        DynamicColumnsComponent,
-        GridAddColumnComponent,
-        IgxGridCurrencyColumnComponent,
-        IgxGridPercentColumnComponent,
-        IgxGridDateTimeColumnComponent],
-    imports: [IgxGridModule, NoopAnimationsModule, ColumnsFromIterableComponent,
-        TemplatedColumnsComponent,
-        TemplatedInputColumnsComponent,
-        TemplatedContextInputColumnsComponent,
-        ColumnHaederClassesComponent,
-        ResizableColumnsComponent]
-});
+            imports: [
+                ColumnCellFormatterComponent,
+                ColumnHiddenFromMarkupComponent,
+                DynamicColumnsComponent,
+                GridAddColumnComponent,
+                IgxGridCurrencyColumnComponent,
+                IgxGridPercentColumnComponent,
+                IgxGridDateTimeColumnComponent,
+                NoopAnimationsModule,
+                ColumnsFromIterableComponent,
+                TemplatedColumnsComponent,
+                TemplatedInputColumnsComponent,
+                TemplatedContextInputColumnsComponent,
+                ColumnHaederClassesComponent,
+                ResizableColumnsComponent
+            ]
+        });
     }));
 
     it('should correctly initialize column templates', () => {
@@ -1401,7 +1406,7 @@ describe('IgxGrid - Column properties #grid', () => {
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnsFromIterableComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1428,7 +1433,7 @@ interface IColumnConfig {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1458,7 +1463,7 @@ export class ResizableColumnsComponent {
             <span class="new-summary">New summary text</span>
         </ng-template>`,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class TemplatedColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1502,7 +1507,7 @@ export class TemplatedColumnsComponent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1529,7 +1534,7 @@ export class TemplatedInputColumnsComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1554,7 +1559,7 @@ export class TemplatedContextInputColumnsComponent {
     `,
     styles: [`.headerAlignSyle {text-align: right !important;}`],
     standalone: true,
-    imports: [IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

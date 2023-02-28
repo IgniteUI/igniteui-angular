@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
+import { IgxColumnComponent, IgxGridComponent, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -25,12 +25,14 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [CellEditingTestComponent,
-        CellEditingScrollTestComponent,
-        ColumnEditablePropertyTestComponent,
-        SelectionWithTransactionsComponent],
-    imports: [NoopAnimationsModule, IgxGridModule]
-});
+            imports: [
+                NoopAnimationsModule,
+                CellEditingTestComponent,
+                CellEditingScrollTestComponent,
+                ColumnEditablePropertyTestComponent,
+                SelectionWithTransactionsComponent
+            ]
+        });
     }));
 
     describe('Base Tests', () => {
@@ -307,12 +309,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
         });
-    
+
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
             expect(document.activeElement.nodeName).toEqual('BODY')
-            
+
             // Enter cell edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();

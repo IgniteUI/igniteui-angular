@@ -2,16 +2,17 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxAvatarModule } from '../../avatar/avatar.component';
 import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, IColumnResizeEventArgs } from './public_api';
+import { IColumnResizeEventArgs, IgxColumnComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxCellTemplateDirective } from '../columns/templates.directive';
+import { NgFor } from '@angular/common';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -19,19 +20,17 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [MultiColumnHeadersComponent],
-    imports: [
-        IgxAvatarModule,
-        NoopAnimationsModule,
-        IgxGridModule,
-        ResizableColumnsComponent,
-        GridFeaturesComponent,
-        LargePinnedColGridComponent,
-        NullColumnsComponent,
-        ColGridComponent,
-        ColPercentageGridComponent
-    ]
-});
+            imports: [
+                MultiColumnHeadersComponent,
+                NoopAnimationsModule,
+                ResizableColumnsComponent,
+                GridFeaturesComponent,
+                LargePinnedColGridComponent,
+                NullColumnsComponent,
+                ColGridComponent,
+                ColPercentageGridComponent
+            ]
+        });
     }));
 
     describe('Base tests: ', () => {
@@ -870,8 +869,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 @Component({
     template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -894,8 +892,7 @@ export class ResizableColumnsComponent {
         <igx-column [field]="'Downloads'" width="100px" dataType="number" [resizable]="true"></igx-column>
         <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class LargePinnedColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -917,8 +914,7 @@ export class LargePinnedColGridComponent implements OnInit {
 @Component({
     template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class GridFeaturesComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -932,8 +928,7 @@ export class GridFeaturesComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class NullColumnsComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -967,8 +962,7 @@ export class NullColumnsComponent implements OnInit {
          <igx-column [field]="'Downloads'" width="300px" dataType="number" [resizable]="true"></igx-column>
          <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -986,8 +980,7 @@ export class ColGridComponent implements OnInit {
          <igx-column [field]="'ProductName'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`),
     standalone: true,
-    imports: [IgxAvatarModule,
-        IgxGridModule]
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColPercentageGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;

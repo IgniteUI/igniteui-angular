@@ -33,10 +33,9 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [PagingComponent,
+            imports: [NoopAnimationsModule, PagingComponent,
                 GridWithUndefinedDataComponent,
-                RemotePagingComponent],
-            imports: [NoopAnimationsModule]
+                RemotePagingComponent]
         });
     }));
 
@@ -450,7 +449,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(errorMessage).toBe('');
         grid = fix.componentInstance.grid;
         expect(grid.rowList.length).toBe(0);
-        tick(305);
+        tick(16);
         fix.detectChanges();
 
         expect(grid.rowList.length).toBe(5);

@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -28,7 +27,6 @@ import { DatePipe } from '@angular/common';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { IgxGridExcelStyleFilteringModule } from '../filtering/excel-style/grid.excel-style-filtering.module';
 import { DisplayDensity } from '../../core/density';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import {
@@ -60,17 +58,15 @@ const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxGridFilteringComponent,
-        IgxGridFilteringScrollComponent,
-        IgxGridFilteringMCHComponent,
-        IgxGridFilteringTemplateComponent,
-        IgxGridDatesFilteringComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxGridExcelStyleFilteringModule
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                IgxGridFilteringComponent,
+                IgxGridFilteringScrollComponent,
+                IgxGridFilteringMCHComponent,
+                IgxGridFilteringTemplateComponent,
+                IgxGridDatesFilteringComponent
+            ]
+        });
     }));
 
     describe(null, () => {
@@ -2968,19 +2964,17 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [IgxGridFilteringComponent,
-        IgxGridFilteringESFEmptyTemplatesComponent,
-        IgxGridFilteringESFTemplatesComponent,
-        IgxGridFilteringESFLoadOnDemandComponent,
-        IgxGridFilteringMCHComponent,
-        IgxGridExternalESFComponent,
-        IgxGridExternalESFTemplateComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule,
-        IgxGridExcelStyleFilteringModule
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                IgxGridFilteringComponent,
+                IgxGridFilteringESFEmptyTemplatesComponent,
+                IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFLoadOnDemandComponent,
+                IgxGridFilteringMCHComponent,
+                IgxGridExternalESFComponent,
+                IgxGridExternalESFTemplateComponent
+            ]
+        });
     }));
 
     describe(null, () => {
@@ -6355,12 +6349,11 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-    declarations: [CustomFilteringStrategyComponent],
-    imports: [
-        NoopAnimationsModule,
-        IgxGridModule
-    ]
-});
+            imports: [
+                NoopAnimationsModule,
+                CustomFilteringStrategyComponent
+            ]
+        });
     }));
 
     beforeEach(fakeAsync(() => {
