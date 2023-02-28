@@ -275,10 +275,11 @@ export class IgxCellCrudState {
         if (!this.cell) {
             return;
         }
-        const newValue = this.cell.castToNumber(this.cell.editValue);
+
+        const newValue = this.cell.value;
+
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
-        this.cell.value = newValue;
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
@@ -693,7 +694,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return args.cancel;
             }
         } else {
-            // needede because this.cell is null after exitCellEdit
+            // needed because this.cell is null after exitCellEdit
             // thus the next if is always false
             const cell = this.cell;
             this.exitCellEdit(event);
