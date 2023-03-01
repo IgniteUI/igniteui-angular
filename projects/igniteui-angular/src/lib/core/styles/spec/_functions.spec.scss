@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use 'sass:list';
 @use 'node_modules/sass-true' as *;
 @use '../base' as *;
 
@@ -11,10 +13,28 @@
         )
     ) !global;
 
+    @include it('should register a component') {
+        $result: (
+            'deps': (igx-drop-down),
+            'usedBy': ()
+        );
+
+        @include register-component($name: igx-test, $deps: (igx-drop-down));
+        @include assert-equal(map.get($components, igx-test), $result);
+    }
+
+    @include it('should build a dependency tree and register dependencies by extension') {
+        @include register-component($name: igx-drop-down, $deps: (igx-overlay));
+        @include dependecy-tree($components);
+
+        $usedBy: map.get($components, igx-overlay, 'usedBy');
+        @include assert-equal(list.index($usedBy, igx-test) != null, true);
+    }
+
     @include it('should include theme if other themes depend on it') {
         $excluded: (igx-checkbox, igx-combo);
         $test: is-used(
-            $name: 'igx-checkbox',
+            $component: 'igx-checkbox',
             $checklist: $excluded,
         );
         @include assert-equal($test, true);
@@ -23,7 +43,7 @@
     @include it('should exclude theme if no themes depend on it') {
         $excluded: (igx-checkbox, igx-grid, igx-combo);
         $test: is-used(
-            $name: 'igx-checkbox',
+            $component: 'igx-checkbox',
             $checklist: $excluded,
         );
 
