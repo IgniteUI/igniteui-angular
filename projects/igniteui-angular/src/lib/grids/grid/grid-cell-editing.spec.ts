@@ -969,7 +969,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        fit(`Should properly emit 'cellEditExit' event`, () => {
+        it(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = {...cell.row.data};
