@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, ContentChildren, QueryList
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentChecked
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -113,7 +113,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider, AfterContentChecked {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
@@ -223,8 +223,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.comboAPI.register(this);
     }
 
-    public ngAfterViewInit() {
-        super.ngAfterViewInit()
+    /** @hidden @internal */
+    public ngAfterContentChecked() {
         if (this.inputGroup && this.prefixes?.length > 0) {
             this.inputGroup.prefixes = this.prefixes;
         }

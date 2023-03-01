@@ -1,4 +1,5 @@
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     ChangeDetectorRef,
@@ -93,7 +94,7 @@ export class IgxSelectFooterDirective {
     `]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
-    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
+    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider, AfterContentChecked {
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
@@ -519,7 +520,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngAfterViewInit() {
-        super.ngAfterViewInit()
+        super.ngAfterViewInit();
+
+        if (this.ngControl) {
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
+            this.manageRequiredAsterisk();
+        }
+        this.cdr.detectChanges();
+    }
+
+    /** @hidden @internal */
+    public ngAfterContentChecked() {
         if (this.inputGroup && this.prefixes?.length > 0) {
             this.inputGroup.prefixes = this.prefixes;
         }
@@ -527,12 +538,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
-
-        if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
-            this.manageRequiredAsterisk();
-        }
-        this.cdr.detectChanges();
     }
 
     /**

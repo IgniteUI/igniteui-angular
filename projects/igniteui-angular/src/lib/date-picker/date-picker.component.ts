@@ -2,7 +2,7 @@ import {
     Component, ContentChild, EventEmitter, HostBinding, Input,
     OnDestroy, Output, ViewChild, ElementRef, Inject, HostListener,
     NgModuleRef, OnInit, AfterViewInit, Injector, AfterViewChecked, ContentChildren,
-    QueryList, LOCALE_ID, Renderer2, Optional, PipeTransform, ChangeDetectorRef
+    QueryList, LOCALE_ID, Renderer2, Optional, PipeTransform, ChangeDetectorRef, AfterContentChecked
 } from '@angular/core';
 import {
     ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl,
@@ -63,7 +63,7 @@ let NEXT_ID = 0;
     styles: [':host { display: block; }']
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
-    OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -734,14 +734,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
 
-        if (this.inputGroup && this.prefixes?.length > 0) {
-            this.inputGroup.prefixes = this.prefixes;
-        }
-
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
-        }
-
         this.subToIconsClicked(this.clearComponents, () => this.clear());
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
@@ -764,6 +756,17 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                     this.inputGroup.isRequired = this.required;
                     this.cdr.detectChanges();
                 }
+        }
+    }
+
+    /** @hidden @internal */
+    public ngAfterContentChecked() {
+        if (this.inputGroup && this.prefixes?.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if (this.inputGroup && this.suffixes?.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
         }
     }
 
