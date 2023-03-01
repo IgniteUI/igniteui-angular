@@ -369,7 +369,7 @@
         align-items: center;
 
         igx-icon {
-            font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
             width: auto;
             height: auto;
         }
@@ -395,7 +395,7 @@
         igx-icon[igxSuffix] {
             width: auto;
             height: auto;
-            font-size: sizable(rem(16px), rem(20px), rem(24px)) !important;
+            font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
         }
     }
 
@@ -962,10 +962,6 @@
         %textarea-group-notch--focused {
             border-block-start-width: rem(2px);
         }
-    }
-
-    %form-group-label--fixed {
-        transition: color $transition-timing;
     }
 
     %form-group-label--focus {

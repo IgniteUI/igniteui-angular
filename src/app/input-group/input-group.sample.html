@@ -20,6 +20,7 @@
             <div>
                 <strong class="no-bm">Select Input type</strong>
                 <small class="attention">Works only for material theme!</small>
+                <small class="attention">Line do not work for the web component!</small>
             </div>
             <igx-buttongroup
                 [alignment]="alignment"
@@ -34,6 +35,8 @@
         </div>
 
         <div class="form__fields">
+            <igc-icon name="github" slot="prefix"></igc-icon>
+
             <!-- No label -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <igx-prefix>
@@ -72,10 +75,9 @@
             <!-- With placeholder -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Web address</label>
-                <igx-icon igxPrefix>link</igx-icon>
+                <igx-icon igxPrefix>face</igx-icon>
 
                 <input
-                        placeholder="Placeholder"
                         name="inputValidityTest"
                         [required]="isRequired"
                         [disabled]="isDisabled"
@@ -86,9 +88,25 @@
                 />
                 <igx-hint>Type your web address</igx-hint>
                 <igx-suffix>
-                    <igx-icon>info</igx-icon>
+                    <igx-icon>face</igx-icon>
                 </igx-suffix>
             </igx-input-group>
+
+            <igc-input #igcInput
+               label="Web component"
+               [required]="isRequired"
+               [disabled]="isDisabled"
+               size="{{getSize()}}"
+               [outlined]="isOutlined()">
+                <span slot="prefix"><igx-icon>face</igx-icon></span>
+                <span slot="suffix"><igx-icon>face</igx-icon></span>
+                <span slot="helper-text">
+                    Web component
+                    <strong *ngIf="inputType === 'line'" style="color: hsla(var(--ig-error-500))">
+                        don't have {{inputType}} type!
+                    </strong>
+                </span>
+            </igc-input>
 
             <!-- input type file -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
