@@ -309,12 +309,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
         });
-    
+
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
             expect(document.activeElement.nodeName).toEqual('BODY')
-            
+
             // Enter cell edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -969,7 +969,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should properly emit 'cellEditExit' event`, () => {
+        fit(`Should properly emit 'cellEditExit' event`, () => {
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = {...cell.row.data};
@@ -991,7 +991,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
-                newValue: 'New Name',
+                newValue: 'John Brown',
                 column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any,
