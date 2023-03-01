@@ -3,6 +3,8 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+@use '../base';
+
 // Used to configure color accessibility for charts
 @use 'igniteui-theming/sass/color/functions' as color;
 
@@ -168,6 +170,9 @@
     @include time-picker.component();
     @include tree.component();
     @include watermark.component();
+
+    // Build the component dependecy-tree
+    @include base.dependecy-tree(base.$components);
 
     @if $print-layout == true {
         @include print.layout();
