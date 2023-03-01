@@ -411,9 +411,9 @@ export class IgxGridNavigationService {
                 }
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
+                    // when esc is pressed and editing is canceled, new value is reverted to the old value
                     const editCellEsc = this.grid.crudService.cell;
                     editCellEsc.editValue = editCellEsc.value;
-                    // console.log ("grid-nav", editCellEsc);
                     this.grid.crudService.endEdit(false, event);
                     if (this.platform.isEdge) {
                         this.grid.cdr.detectChanges();
