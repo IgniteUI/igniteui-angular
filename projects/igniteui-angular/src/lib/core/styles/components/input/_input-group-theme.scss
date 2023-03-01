@@ -1345,6 +1345,10 @@
         }
     }
 
+    %indigo-label--focused {
+        color: var-get($theme, 'focused-secondary-color');
+    }
+
     %form-group-bundle--indigo-start {
         min-width: rem(12px);
     }

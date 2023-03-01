@@ -770,6 +770,10 @@
             @include e(bundle) {
                 @extend %indigo--box-focused !optional;
             }
+
+            @include e(label) {
+                @extend %indigo-label--focused !optional;
+            }
         }
 
         @include mx(indigo, disabled) {

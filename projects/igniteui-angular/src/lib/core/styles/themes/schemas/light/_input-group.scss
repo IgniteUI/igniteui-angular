@@ -478,6 +478,8 @@ $bootstrap-input-group: extend(
 
 /// Generates an indigo input-group schema.
 /// @type {Map}
+/// @prop {Map} input-prefix-color [color: ('gray', 600)] - The text color of an input prefix of type line, box and border.
+/// @prop {Map} input-suffix-color [color: ('gray', 600)] - The text color of an input suffix of type line, box and border.
 /// @prop {Map} helper-text-color [color: ('gray', 600)] - The helper text color.
 /// @prop {Map} border-color [color: ('gray', 400)] - The border color for input groups of type border and fluent.
 /// @prop {Color} box-background [transparent] - The background color of an input group of type box.
@@ -511,6 +513,14 @@ $indigo-input-group: extend(
     $indigo-elevation-input-group,
     (
         variant: 'indigo-design',
+
+        input-prefix-color: (
+            color: ('gray', 600)
+        ),
+
+        input-suffix-color: (
+            color: ('gray', 600)
+        ),
 
         input-prefix-color--filled: (
             color: ('gray', 600)
