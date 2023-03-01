@@ -237,7 +237,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     public get required(): boolean {
         return this._required || this.nativeElement.hasAttribute('required');
     }
-    public set required(value: boolean) {
+    public set required (value: boolean) {
         this._required = (value as any === '') || value;
     }
 
@@ -524,6 +524,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     }
 
     /** @hidden @internal */
+    @HostListener('blur')
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();

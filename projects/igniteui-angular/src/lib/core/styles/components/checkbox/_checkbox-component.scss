@@ -17,6 +17,10 @@
             @include e(ripple) {
                 @extend %cbx-ripple--hover !optional;
             }
+
+            @include e(composite-mark) {
+                @extend %cbx-composite-mark--fluent !optional;
+            }
         }
 
         &:active {
@@ -70,6 +74,10 @@
                     @extend %cbx-ripple--hover !optional;
                     @extend %cbx-ripple--hover-invalid !optional;
                 }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--invalid--fluent !optional;
+                }
             }
 
             &:active {
@@ -80,13 +88,13 @@
         }
 
         @include mx(invalid, checked) {
-            @include  e(composite) {
+            @include e(composite) {
                 @extend %cbx-composite--x--invalid !optional;
             }
         }
 
         @include m(focused) {
-            @extend  %igx-checkbox--focused !optional;
+            @extend %igx-checkbox--focused !optional;
 
             @include e(ripple) {
                 @extend %cbx-ripple--focused !optional;
@@ -100,21 +108,21 @@
         }
 
         @include mx(focused, checked) {
-            @extend  %igx-checkbox--focused-checked !optional;
+            @extend %igx-checkbox--focused-checked !optional;
         }
 
         @include mx(focused, invalid) {
-            @extend  %igx-checkbox--focused-invalid !optional;
+            @extend %igx-checkbox--focused-invalid !optional;
 
             @include e(ripple) {
-                @extend  %cbx-ripple--focused-invalid !optional;
+                @extend %cbx-ripple--focused-invalid !optional;
             }
         }
 
         @include m(indeterminate) {
             @extend %igx-checkbox--indeterminate !optional;
 
-            @include  e(composite) {
+            @include e(composite) {
                 @extend %cbx-composite--x !optional;
             }
 
@@ -126,6 +134,10 @@
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;
                     @extend %cbx-ripple--hover-checked !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--in--fluent !optional;
                 }
             }
 
@@ -139,7 +151,7 @@
         }
 
         @include mx(focused, indeterminate) {
-            @extend  %igx-checkbox--focused-checked !optional;
+            @extend %igx-checkbox--focused-checked !optional;
         }
 
         @include m(checked) {
@@ -155,6 +167,14 @@
                 @include e(ripple) {
                     @extend %cbx-ripple--hover !optional;
                     @extend %cbx-ripple--hover-checked !optional;
+                }
+
+                @include e(composite) {
+                    @extend %cbx-composite--x--fluent !optional;
+                }
+
+                @include e(composite-mark) {
+                    @extend %cbx-composite-mark--x--fluent !optional;
                 }
             }
 

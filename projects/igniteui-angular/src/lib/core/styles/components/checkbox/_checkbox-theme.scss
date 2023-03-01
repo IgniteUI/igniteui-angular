@@ -18,6 +18,7 @@
 /// @param {Color} $label-color [null]- The text color used for the label text.
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
+/// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
 /// @param {Color} $tick-color [null] - The checked mark color.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
@@ -42,6 +43,7 @@
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
+    $fill-color-hover: null,
     $tick-color: null,
     $disabled-color: null,
     $disabled-indeterminate-color: null,
@@ -75,6 +77,7 @@
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
+        fill-color-hover: $fill-color-hover,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
         disabled-indeterminate-color: $disabled-indeterminate-color,
@@ -237,6 +240,17 @@
         }
     }
 
+    %cbx-composite--x--fluent {
+        @if $variant == 'fluent' {
+            border-color: var-get($theme, 'fill-color-hover');
+            background: var-get($theme, 'fill-color-hover');
+
+            &::after {
+                background: var-get($theme, 'fill-color-hover');
+            }
+        }
+    }
+
     %cbx-composite--disabled {
         border-color: var-get($theme, 'disabled-color');
         background: transparent;
@@ -313,6 +327,16 @@
                 }
             }
 
+            &:hover {
+                %cbx-composite {
+                    border-color: var-get($theme, 'fill-color-hover');
+
+                    &::before {
+                        border-color: var-get($theme, 'fill-color-hover');
+                    }
+                }
+            }
+
             %cbx-composite--x--disabled {
                 background: transparent;
 
@@ -338,6 +362,32 @@
         stroke-dashoffset: 41; /* length of path - adjacent line length */
         opacity: 1;
         transform: rotate(45deg) translateX(-#{$mark-x-factor}em);
+    }
+
+    %cbx-composite-mark--fluent {
+        @if $variant == 'fluent' {
+            @extend %cbx-composite-mark;
+            @extend %cbx-composite-mark--x;
+            stroke: var-get($theme, 'empty-color');
+        }
+    }
+
+    %cbx-composite-mark--x--fluent {
+        @if $variant == 'fluent' {
+            stroke: var-get($theme, 'tick-color');
+        }
+    }
+
+    %cbx-composite-mark--invalid--fluent {
+        @if $variant == 'fluent' {
+            stroke: var-get($theme, 'error-color');
+        }
+    }
+
+    %cbx-composite-mark--in--fluent {
+        @if $variant == 'fluent' {
+            stroke: transparent;
+        }
     }
 
     %cbx-label {
