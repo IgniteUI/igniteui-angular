@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent } from '../action-strip.component';
-import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxColumnComponent, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
@@ -14,6 +14,7 @@ import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-comp
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { NgFor } from '@angular/common';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../action-strip.component';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -362,9 +363,9 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    private data: any[];
-    private dataOneRow: any[];
-    private columns: any[];
+    public data: any[];
+    public dataOneRow: any[];
+    public columns: any[];
 
     public ngOnInit() {
 
@@ -460,18 +461,18 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 
 @Component({
     template: `
-<igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="dataOneRow" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-pinning-actions></igx-grid-pinning-actions>
-        <igx-grid-editing-actions></igx-grid-editing-actions>
-    </igx-action-strip>
-</igx-grid>
-`,
+        <igx-action-strip #actionStrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, NgFor]
 })

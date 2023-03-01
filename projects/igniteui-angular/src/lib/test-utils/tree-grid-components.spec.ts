@@ -4,9 +4,11 @@ import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent } from '../action-strip/public_api';
-import { DefaultSortingStrategy, RowPinningPosition } from 'igniteui-angular';
+import { DefaultSortingStrategy, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridExcelStyleFilteringComponent, IgxIconComponent, RowPinningPosition } from 'igniteui-angular';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     template: `
@@ -16,7 +18,9 @@ import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-gro
         <igx-column [field]="'HireDate'" dataType="date" [sortable]="true"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridSortingComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -25,13 +29,15 @@ export class IgxTreeGridSortingComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="1200px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="1200px">
         <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridFilteringComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -40,7 +46,7 @@ export class IgxTreeGridFilteringComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="1200px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="1200px">
         <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
@@ -59,7 +65,18 @@ export class IgxTreeGridFilteringComponent {
             </igx-excel-style-filter-operations>
         </igx-grid-excel-style-filtering>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [
+        IgxTreeGridComponent,
+        IgxColumnComponent,
+        IgxIconComponent,
+        IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStyleFilterOperationsTemplateDirective,
+        IgxExcelStyleSearchComponent
+    ]
 })
 export class IgxTreeGridFilteringESFTemplatesComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -76,7 +93,9 @@ export class IgxTreeGridFilteringESFTemplatesComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -95,7 +114,9 @@ export class IgxTreeGridSimpleComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridWithScrollsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -111,7 +132,9 @@ export class IgxTreeGridWithScrollsComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
 })
 export class IgxTreeGridWithNoScrollsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -128,7 +151,9 @@ export class IgxTreeGridWithNoScrollsComponent {
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxTreeGridPrimaryForeignKeyComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

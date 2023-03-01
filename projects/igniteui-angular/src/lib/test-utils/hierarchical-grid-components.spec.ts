@@ -180,7 +180,9 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -211,7 +213,9 @@ export class IgxHierarchicalGridRowSelectionComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -429,12 +433,12 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
             <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
             <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
-        <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
+            <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
                 <igx-column field="Number" header="No."></igx-column>
                 <igx-column field="Title"></igx-column>
                 <igx-column field="Released" dataType="date"></igx-column>
                 <igx-column field="Genre"></igx-column>
-        </igx-row-island>
+            </igx-row-island>
         </igx-row-island>
 
         <igx-row-island [key]="'Tours'" [autoGenerate]="false">
@@ -449,7 +453,9 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
         </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -503,7 +509,9 @@ export class IgxHierarchicalGridExportComponent {
             </igx-column-group>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -537,7 +545,9 @@ export class IgxHierarchicalGridMultiColumnHeadersExportComponent {
             </igx-column-group>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
@@ -550,24 +560,26 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
         [height]="'1500px'" [width]="'100%'" #hierarchicalGrid>
 
         <igx-column field="Artist" [hasSummary]='true'></igx-column>
-        <igx-column field="Debut" [hasSummary]='true' [formatter]="formatter"></igx-column>
+        <igx-column field="Debut" [hasSummary]='true'></igx-column>
         <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
         <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]='true' [summaries]="mySummary" dataType="number"></igx-column>
 
         <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false">
-                <igx-column field="Album"></igx-column>
-                <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
-                <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
-                <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
             <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
-                    <igx-column field="Number" header="No."></igx-column>
-                    <igx-column field="Title" [hasSummary]='true' [summaries]="myChildSummary"></igx-column>
-                    <igx-column field="Released" dataType="date"></igx-column>
-                    <igx-column field="Genre"></igx-column>
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title" [hasSummary]='true' [summaries]="myChildSummary"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSummariesExportComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;

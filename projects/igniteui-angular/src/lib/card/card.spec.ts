@@ -15,6 +15,7 @@ import {
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxIconComponent } from '../icon/icon.component';
 
 describe('Card', () => {
     configureTestSuite();
@@ -312,7 +313,8 @@ class CardWithHeaderComponent { }
         IgxCardHeaderSubtitleDirective,
         IgxCardContentDirective,
         IgxCardActionsComponent,
-        IgxButtonDirective
+        IgxButtonDirective,
+        IgxIconComponent
     ]
 })
 class VerticalCardComponent {
@@ -320,7 +322,8 @@ class VerticalCardComponent {
 }
 
 @Component({
-    template: `<igx-card [horizontal]="true">
+    template: `
+    <igx-card [horizontal]="true">
         <igx-card-actions>
             <button igxButton>Test</button>
             <button igxButton="icon">
