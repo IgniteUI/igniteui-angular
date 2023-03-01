@@ -1,40 +1,38 @@
 import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2 } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { IgxInputGroupModule } from '../../input-group/input-group.component';
-import { IgxMaskModule, IgxMaskDirective } from './mask.directive';
+import { IgxMaskDirective } from './mask.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
 import { PlatformUtil } from '../../core/utils';
+import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 
 describe('igxMask', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule,
-        AlphanumSpaceMaskComponent,
-        AnyCharMaskComponent,
-        DefMaskComponent,
-        DigitPlusMinusMaskComponent,
-        DigitSpaceMaskComponent,
-        EventFiringComponent,
-        IncludeLiteralsComponent,
-        LetterSpaceMaskComponent,
-        MaskComponent,
-        OneWayBindComponent,
-        PipesMaskComponent,
-        PlaceholderMaskComponent,
-        MaskTestComponent,
-        ReadonlyMaskTestComponent
-    ],
-    providers: [PlatformUtil]
-}).compileComponents();
+            imports: [
+                FormsModule,
+                AlphanumSpaceMaskComponent,
+                AnyCharMaskComponent,
+                DefMaskComponent,
+                DigitPlusMinusMaskComponent,
+                DigitSpaceMaskComponent,
+                EventFiringComponent,
+                IncludeLiteralsComponent,
+                LetterSpaceMaskComponent,
+                MaskComponent,
+                OneWayBindComponent,
+                PipesMaskComponent,
+                PlaceholderMaskComponent,
+                MaskTestComponent,
+                ReadonlyMaskTestComponent
+            ],
+            providers: [PlatformUtil]
+        }).compileComponents();
     }));
 
     it('Initializes an input with default mask', () => {
@@ -578,9 +576,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class DefMaskComponent {
     @ViewChild('input', { static: true })
@@ -595,12 +591,10 @@ class DefMaskComponent {
 
 @Component({
     template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+                    <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class MaskComponent {
 
@@ -612,15 +606,13 @@ class MaskComponent {
 
 @Component({
     template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask" [includeLiterals]="true"/>
-                        </igx-input-group>
-                        <igx-input-group>
-                            <input #input1 igxInput [ngModel]="value"/>
-                        </igx-input-group>`,
+                    <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask" [includeLiterals]="true"/>
+                </igx-input-group>
+                <igx-input-group>
+                    <input #input1 igxInput [ngModel]="value"/>
+                </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class IncludeLiteralsComponent {
     @Input() public value = '55555';
@@ -635,12 +627,10 @@ class IncludeLiteralsComponent {
 
 @Component({
     template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+                    <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class DigitSpaceMaskComponent {
     @ViewChild('input', { static: true })
@@ -652,12 +642,10 @@ class DigitSpaceMaskComponent {
 
 @Component({
     template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+                    <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class DigitPlusMinusMaskComponent {
     @ViewChild('input', { static: true })
@@ -669,12 +657,10 @@ class DigitPlusMinusMaskComponent {
 
 @Component({
     template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+                    <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+                </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule,
-        IgxInputGroupModule,
-        IgxMaskModule]
+    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
 })
 class LetterSpaceMaskComponent {
     @ViewChild('input', { static: true })
