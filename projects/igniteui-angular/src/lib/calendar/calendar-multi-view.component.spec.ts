@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxCalendarComponent, IgxCalendarModule } from './public_api';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/public_api';
+import { IgxCalendarComponent } from './public_api';
+import { IgxDatePickerComponent } from '../date-picker/public_api';
 import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
@@ -15,8 +15,13 @@ describe('Multi-View Calendar - ', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule, MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                MultiViewCalendarSampleComponent,
+                MultiViewDatePickerSampleComponent,
+                MultiViewNgModelSampleComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('Base Tests - ', () => {
@@ -1358,7 +1363,7 @@ describe('Multi-View Calendar - ', () => {
         <igx-calendar [monthsViewNumber]="monthViews"></igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule]
+    imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -1370,7 +1375,7 @@ export class MultiViewCalendarSampleComponent {
         <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule]
+    imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
@@ -1383,7 +1388,7 @@ export class MultiViewDatePickerSampleComponent {
         <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule]
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;

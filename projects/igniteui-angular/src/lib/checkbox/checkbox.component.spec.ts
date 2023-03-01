@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -12,17 +11,20 @@ describe('IgxCheckbox', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule, NoopAnimationsModule, InitCheckboxComponent,
-        CheckboxSimpleComponent,
-        CheckboxReadonlyComponent,
-        CheckboxIndeterminateComponent,
-        CheckboxRequiredComponent,
-        CheckboxExternalLabelComponent,
-        CheckboxInvisibleLabelComponent,
-        CheckboxDisabledTransitionsComponent,
-        CheckboxFormGroupComponent,
-        IgxCheckboxComponent]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                InitCheckboxComponent,
+                CheckboxSimpleComponent,
+                CheckboxReadonlyComponent,
+                CheckboxIndeterminateComponent,
+                CheckboxRequiredComponent,
+                CheckboxExternalLabelComponent,
+                CheckboxInvisibleLabelComponent,
+                CheckboxDisabledTransitionsComponent,
+                CheckboxFormGroupComponent,
+                IgxCheckboxComponent
+            ]
+        }).compileComponents();
     }));
 
     it('Initializes a checkbox', () => {
@@ -329,7 +331,7 @@ describe('IgxCheckbox', () => {
 @Component({
     template: `<igx-checkbox #cb>Init</igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -339,7 +341,7 @@ class InitCheckboxComponent {
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
                             [(ngModel)]="subscribed">Simple</igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -359,7 +361,7 @@ class CheckboxSimpleComponent {
                                 [indeterminate]="true"
                                 >Indeterminate</igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -370,7 +372,7 @@ class CheckboxIndeterminateComponent {
 @Component({
     template: `<igx-checkbox #cb required>Required</igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -383,7 +385,7 @@ class CheckboxRequiredComponent {
                                 [indeterminate]="true"
                                 [readonly]="true">Readonly</igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -395,7 +397,7 @@ class CheckboxReadonlyComponent {
     template: `<p id="my-label">{{label}}</p>
     <igx-checkbox #cb aria-labelledby="my-label"></igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -405,7 +407,7 @@ class CheckboxExternalLabelComponent {
 @Component({
     template: `<igx-checkbox #cb [aria-label]="label"></igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -415,7 +417,7 @@ class CheckboxInvisibleLabelComponent {
 @Component({
     template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -424,7 +426,7 @@ class CheckboxDisabledTransitionsComponent {
 @Component({
     template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="checkbox">Form Group</igx-checkbox></form>`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxRippleModule]
+    imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;

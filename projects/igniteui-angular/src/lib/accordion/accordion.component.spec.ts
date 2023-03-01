@@ -1,14 +1,14 @@
 import { useAnimation } from '@angular/animations';
+import { NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { slideInLeft, slideOutRight } from '../animations/slide';
-import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
+import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../expansion-panel/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
-import { IgxAccordionModule } from './accordion.module';
 
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
@@ -21,13 +21,11 @@ describe('Rendering Tests', () => {
     beforeAll(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
-        IgxAccordionModule,
-        IgxExpansionPanelModule,
-        IgxAccordionSampleTestComponent
-    ]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    IgxAccordionSampleTestComponent
+                ]
+            }).compileComponents();
         })
     );
     beforeEach(() => {
@@ -339,77 +337,75 @@ describe('Rendering Tests', () => {
 
 @Component({
     template: `
-<igx-accordion>
-    <igx-expansion-panel id="html5" [collapsed]="true">
-        <igx-expansion-panel-header [disabled]="false">
-            <igx-expansion-panel-title>HTML5</igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <igx-accordion>
-                <igx-expansion-panel>
-                    <igx-expansion-panel-header [disabled]="false">
-                        <igx-expansion-panel-title>First</igx-expansion-panel-title>
-                    </igx-expansion-panel-header>
-                    <igx-expansion-panel-body>
-                        <div>
-                            Content1
-                        </div>
-                    </igx-expansion-panel-body>
-                </igx-expansion-panel>
-                <igx-expansion-panel>
-                    <igx-expansion-panel-header [disabled]="false">
-                        <igx-expansion-panel-title>Second</igx-expansion-panel-title>
-                    </igx-expansion-panel-header>
-                    <igx-expansion-panel-body>
-                        <div>
-                            Content2
-                        </div>
-                    </igx-expansion-panel-body>
-                </igx-expansion-panel>
-            </igx-accordion>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel id="css" [collapsed]="true">
-        <igx-expansion-panel-header [disabled]="false">
-            <igx-expansion-panel-title>CSS3</igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <div>
-                Cascading Style Sheets (CSS) is a style sheet language used for
-                describing the presentation of a document written in a markup language
-                like HTML
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel id="scss" [collapsed]="false">
-        <igx-expansion-panel-header [disabled]="false">
-            <igx-expansion-panel-title>SASS/SCSS</igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <div>
-                Sass is a preprocessor scripting language that is interpreted or
-                compiled into Cascading Style Sheets (CSS).
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel id="js" [collapsed]="false">
-        <igx-expansion-panel-header [disabled]="true">
-            <igx-expansion-panel-title>Javascript</igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <div>
-                JavaScript is the world's most popular programming language.
-                JavaScript is the programming language of the Web.
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <div *ngIf="divChild"></div>
-</igx-accordion>
-
-`,
+    <igx-accordion>
+        <igx-expansion-panel id="html5" [collapsed]="true">
+            <igx-expansion-panel-header [disabled]="false">
+                <igx-expansion-panel-title>HTML5</igx-expansion-panel-title>
+            </igx-expansion-panel-header>
+            <igx-expansion-panel-body>
+                <igx-accordion>
+                    <igx-expansion-panel>
+                        <igx-expansion-panel-header [disabled]="false">
+                            <igx-expansion-panel-title>First</igx-expansion-panel-title>
+                        </igx-expansion-panel-header>
+                        <igx-expansion-panel-body>
+                            <div>
+                                Content1
+                            </div>
+                        </igx-expansion-panel-body>
+                    </igx-expansion-panel>
+                    <igx-expansion-panel>
+                        <igx-expansion-panel-header [disabled]="false">
+                            <igx-expansion-panel-title>Second</igx-expansion-panel-title>
+                        </igx-expansion-panel-header>
+                        <igx-expansion-panel-body>
+                            <div>
+                                Content2
+                            </div>
+                        </igx-expansion-panel-body>
+                    </igx-expansion-panel>
+                </igx-accordion>
+            </igx-expansion-panel-body>
+        </igx-expansion-panel>
+        <igx-expansion-panel id="css" [collapsed]="true">
+            <igx-expansion-panel-header [disabled]="false">
+                <igx-expansion-panel-title>CSS3</igx-expansion-panel-title>
+            </igx-expansion-panel-header>
+            <igx-expansion-panel-body>
+                <div>
+                    Cascading Style Sheets (CSS) is a style sheet language used for
+                    describing the presentation of a document written in a markup language
+                    like HTML
+                </div>
+            </igx-expansion-panel-body>
+        </igx-expansion-panel>
+        <igx-expansion-panel id="scss" [collapsed]="false">
+            <igx-expansion-panel-header [disabled]="false">
+                <igx-expansion-panel-title>SASS/SCSS</igx-expansion-panel-title>
+            </igx-expansion-panel-header>
+            <igx-expansion-panel-body>
+                <div>
+                    Sass is a preprocessor scripting language that is interpreted or
+                    compiled into Cascading Style Sheets (CSS).
+                </div>
+            </igx-expansion-panel-body>
+        </igx-expansion-panel>
+        <igx-expansion-panel id="js" [collapsed]="false">
+            <igx-expansion-panel-header [disabled]="true">
+                <igx-expansion-panel-title>Javascript</igx-expansion-panel-title>
+            </igx-expansion-panel-header>
+            <igx-expansion-panel-body>
+                <div>
+                    JavaScript is the world's most popular programming language.
+                    JavaScript is the programming language of the Web.
+                </div>
+            </igx-expansion-panel-body>
+        </igx-expansion-panel>
+        <div *ngIf="divChild"></div>
+    </igx-accordion>
+    `,
     standalone: true,
-    imports: [IgxAccordionModule,
-        IgxExpansionPanelModule]
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, NgIf]
 })
 export class IgxAccordionSampleTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;

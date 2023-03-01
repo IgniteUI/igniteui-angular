@@ -1,13 +1,20 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
+import { IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
-import { IgxActionStripComponent } from '../action-strip/public_api';
+import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
+import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     template: `
@@ -41,7 +48,17 @@ import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxColumnGroupComponent,
+        IgxRowIslandComponent,
+        IgxPaginatorComponent,
+        IgxGridToolbarComponent,
+        IgxIconComponent
+    ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -104,7 +121,18 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    providers: [IgxHierarchicalTransactionServiceFactory]
+    providers: [IgxHierarchicalTransactionServiceFactory],
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxColumnGroupComponent,
+        IgxRowIslandComponent,
+        IgxPaginatorComponent,
+        IgxGridToolbarComponent,
+        IgxIconComponent,
+        NgIf
+    ]
 })
 export class IgxHierarchicalGridWithTransactionProviderComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -216,6 +244,8 @@ export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -231,7 +261,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [data]="data" [cellSelection]="false" [height]="'600px'"
+    <igx-hierarchical-grid [data]="data" [cellSelection]="'none'" [height]="'600px'"
         [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
         [rowSelection]="'multiple'">
         <igx-column field="ChildLevels"></igx-column>
@@ -264,7 +294,9 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
             <igx-checkbox [readonly]="true" (click)="handleRowSelectorClick(rowContext)" [checked]="rowContext.selected">
             </igx-checkbox>
         </ng-template>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxCheckboxComponent, IgxPaginatorComponent]
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
@@ -310,11 +342,13 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
             </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
-        <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
+            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child2 Button</button>
             </igx-grid-toolbar>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 
@@ -334,7 +368,15 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
                 <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
+        IgxRowIslandComponent
+    ]
 })
 export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('actionStrip1', { read: IgxActionStripComponent, static: true })
@@ -362,7 +404,9 @@ export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGrid
         </igx-row-island>
     </igx-hierarchical-grid>
     <igx-advanced-filtering-dialog [grid]="grid1">
-    </igx-advanced-filtering-dialog>`
+    </igx-advanced-filtering-dialog>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxAdvancedFilteringDialogComponent]
 })
 export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchicalGridTestBaseComponent {
     // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })

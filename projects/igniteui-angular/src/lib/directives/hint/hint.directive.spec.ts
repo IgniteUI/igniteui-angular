@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupModule } from '../../input-group/input-group.component';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxHintDirective } from './hint.directive';
 
 describe('IgxHint', () => {
     configureTestSuite();
@@ -12,13 +12,12 @@ describe('IgxHint', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [
-        IgxInputGroupModule,
-        HintComponent,
-        StartHintComponent,
-        EndHintComponent
-    ]
-})
+            imports: [
+                HintComponent,
+                StartHintComponent,
+                EndHintComponent
+            ]
+        })
         .compileComponents();
     }));
 
@@ -44,7 +43,7 @@ describe('IgxHint', () => {
 @Component({
     template: `<igx-hint>regular hint</igx-hint>`,
     standalone: true,
-    imports: [IgxInputGroupModule]
+    imports: [IgxHintDirective]
 })
 class HintComponent {
 }
@@ -52,7 +51,7 @@ class HintComponent {
 @Component({
     template: `<igx-hint position="start">hin with position start</igx-hint>`,
     standalone: true,
-    imports: [IgxInputGroupModule]
+    imports: [IgxHintDirective]
 })
 class StartHintComponent {
 }
@@ -60,7 +59,7 @@ class StartHintComponent {
 @Component({
     template: `<igx-hint position="end">hint with position end</igx-hint>`,
     standalone: true,
-    imports: [IgxInputGroupModule]
+    imports: [IgxHintDirective]
 })
 class EndHintComponent {
 }

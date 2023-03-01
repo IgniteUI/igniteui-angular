@@ -3,16 +3,12 @@ import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveForm
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+    IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from '../calendar/public_api';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IFormattingViews, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
+import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
-import { IgxDatePickerModule } from './date-picker.module';
 import {
     IgxOverlayService,
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
@@ -26,7 +22,7 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { registerLocaleData } from "@angular/common";
+import { NgIf, registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
@@ -44,17 +40,16 @@ describe('IgxDatePicker', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule, IgxDatePickerTestKbrdComponent,
-        IgxDatePickerTestComponent,
-        IgxDatePickerNgModelComponent,
-        IgxDatePickerWithProjectionsComponent,
-        IgxDatePickerInFormComponent,
-        IgxDatePickerReactiveFormComponent]
-})
-                .compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerTestKbrdComponent,
+                    IgxDatePickerTestComponent,
+                    IgxDatePickerNgModelComponent,
+                    IgxDatePickerWithProjectionsComponent,
+                    IgxDatePickerInFormComponent,
+                    IgxDatePickerReactiveFormComponent
+                ]
+            }).compileComponents();
         }));
 
         describe('Rendering', () => {
@@ -1287,13 +1282,10 @@ describe('IgxDatePicker', () => {
 });
 @Component({
     template: `
-        <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
-        </igx-date-picker>`,
+    <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
+    </igx-date-picker>`,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1308,10 +1300,7 @@ export class IgxDatePickerTestComponent {
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
         </igx-date-picker>`,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1329,10 +1318,7 @@ export class IgxDatePickerNgModelComponent {
         </igx-date-picker>
     `,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1342,20 +1328,16 @@ export class IgxDatePickerTestKbrdComponent {
 
 @Component({
     template: `
-        <igx-date-picker [mode]="mode">
-            <label igxLabel>Label</label>
-            <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
-            <igx-prefix>Prefix</igx-prefix>
-            <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
-            <igx-suffix>Suffix</igx-suffix>
-            <igx-hint>Hint</igx-hint>
-        </igx-date-picker>
-`,
+    <igx-date-picker [mode]="mode">
+        <label igxLabel>Label</label>
+        <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+        <igx-prefix>Prefix</igx-prefix>
+        <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+        <igx-suffix>Suffix</igx-suffix>
+        <igx-hint>Hint</igx-hint>
+    </igx-date-picker>`,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxDatePickerWithProjectionsComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
@@ -1373,10 +1355,7 @@ export class IgxDatePickerWithProjectionsComponent {
     </form>
     `,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
     @ViewChild('form')
@@ -1390,19 +1369,16 @@ export class IgxDatePickerInFormComponent {
 
 @Component({
     template: `
-   <form [formGroup]="form">
-    <div class="date-picker-wrapper">
-        <igx-date-picker formControlName="date" [value]="date">
-            <label igxLabel>Date </label>
-        </igx-date-picker>
-    </div>
-</form>
+    <form [formGroup]="form">
+        <div class="date-picker-wrapper">
+            <igx-date-picker formControlName="date" [value]="date">
+                <label igxLabel>Date </label>
+            </igx-date-picker>
+        </div>
+    </form>
     `,
     standalone: true,
-    imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
-        IgxInputGroupModule, IgxCalendarModule,
-        IgxButtonModule, IgxTextSelectionModule, IgxIconModule,
-        IgxCalendarContainerModule]
+    imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {
     @ViewChild(IgxDatePickerComponent)

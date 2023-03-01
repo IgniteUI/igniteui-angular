@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxFlexDirective, IgxLayoutDirective, IgxLayoutModule } from './layout.directive';
+import { IgxFlexDirective, IgxLayoutDirective } from './layout.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -9,8 +9,8 @@ describe('IgxLayoutDirective', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxLayoutModule, TestFlexLayoutComponent]
-}).compileComponents();
+            imports: [TestFlexLayoutComponent]
+        }).compileComponents();
     }));
 
     it('should initialize with flex defaults', () => {
@@ -143,7 +143,7 @@ describe('IgxLayoutDirective', () => {
         </div>
     `,
     standalone: true,
-    imports: [IgxLayoutModule]
+    imports: [IgxLayoutDirective, IgxFlexDirective]
 })
 class TestFlexLayoutComponent {
     @ViewChild(IgxLayoutDirective, { static: true }) public instance: IgxLayoutDirective;

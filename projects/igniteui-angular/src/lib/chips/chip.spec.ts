@@ -1,9 +1,6 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxChipsModule } from './chips.module';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
@@ -13,6 +10,8 @@ import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgFor } from '@angular/common';
 
 @Component({
     template: `
@@ -42,7 +41,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [FormsModule, IgxIconModule, IgxChipsModule]
+    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent]
 })
 class TestChipComponent {
 
@@ -77,7 +76,7 @@ class TestChipComponent {
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [FormsModule, IgxIconModule, IgxChipsModule]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective, NgFor]
 })
 class TestChipsLabelAndSuffixComponent {
 
@@ -110,10 +109,8 @@ describe('IgxChip', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [FormsModule, IgxIconModule, IgxChipsModule, TestChipComponent,
-        TestChipsLabelAndSuffixComponent,
-        IgxLabelDirective]
-}).compileComponents();
+            imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
+        }).compileComponents();
     }));
 
     describe('Rendering Tests: ', () => {

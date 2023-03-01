@@ -1,9 +1,9 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig } from '../grids/public_api';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
 import { DisplayDensity } from '../core/displayDensity';
-import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IgxActionStripComponent, IgxGridEditingActionsComponent } from '../action-strip/public_api';
 import { DefaultSortingStrategy, RowPinningPosition } from 'igniteui-angular';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
@@ -915,10 +915,12 @@ export class IgxTreeGridCustomExpandersTemplateComponent {
         <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
-    </igx-action-strip>
+            <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 export class IgxTreeGridEditActionsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

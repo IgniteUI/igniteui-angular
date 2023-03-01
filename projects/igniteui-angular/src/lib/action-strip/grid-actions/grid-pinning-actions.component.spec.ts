@@ -2,12 +2,12 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxIconModule } from '../../icon/public_api';
-import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
+import { IgxColumnComponent, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { IgxActionStripModule } from '../action-strip.module';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
+import { NgFor } from '@angular/common';
 
 
 describe('igxGridPinningActions #grid ', () => {
@@ -17,15 +17,12 @@ describe('igxGridPinningActions #grid ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
-        IgxActionStripModule,
-        IgxGridModule,
-        IgxIconModule,
-        IgxActionStripTestingComponent,
-        IgxActionStripPinMenuComponent
-    ]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                IgxActionStripTestingComponent,
+                IgxActionStripPinMenuComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('Base ', () => {
@@ -103,21 +100,19 @@ describe('igxGridPinningActions #grid ', () => {
 
 @Component({
     template: `
-<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-pinning-actions></igx-grid-pinning-actions>
-    </igx-action-strip>
-</igx-grid>
-`,
+        <igx-action-strip #actionStrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
     standalone: true,
-    imports: [IgxActionStripModule,
-        IgxGridModule,
-        IgxIconModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -181,20 +176,18 @@ class IgxActionStripTestingComponent implements OnInit {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-    </igx-column>
+        [rowEditable]="true" [primaryKey]="'ID'">
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+            [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+        </igx-column>
 
-    <igx-action-strip #actionStrip>
-        <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
-    </igx-action-strip>
-</igx-grid>
+        <igx-action-strip #actionStrip>
+            <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
+        </igx-action-strip>
+    </igx-grid>
     `,
     standalone: true,
-    imports: [IgxActionStripModule,
-        IgxGridModule,
-        IgxIconModule]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, NgFor]
 })
 class IgxActionStripPinMenuComponent extends IgxActionStripTestingComponent {
 }

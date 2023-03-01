@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap,
+    Calendar, IgxCalendarComponent, isLeap,
     monthRange, weekDay, WEEKDAYS
 } from './public_api';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -174,9 +174,14 @@ describe('IgxCalendar - ', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule, IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
-        IgxCalendarValueComponent]
-}).compileComponents();
+                imports: [
+                    NoopAnimationsModule,
+                    IgxCalendarSampleComponent,
+                    IgxCalendarRangeComponent,
+                    IgxCalendarDisabledSpecialDatesComponent,
+                    IgxCalendarValueComponent
+                ]
+            }).compileComponents();
         }));
 
         describe('Rendered Component - ', () => {
@@ -2256,7 +2261,7 @@ describe('IgxCalendar - ', () => {
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, FormsModule]
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2269,7 +2274,7 @@ export class IgxCalendarSampleComponent {
         <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, FormsModule]
+    imports: [IgxCalendarComponent]
 })
 export class IgxCalendarRangeComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2282,7 +2287,7 @@ export class IgxCalendarRangeComponent {
         </igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, FormsModule]
+    imports: [IgxCalendarComponent, FormsModule]
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
@@ -2297,7 +2302,7 @@ export class IgxCalendarDisabledSpecialDatesComponent {
         <igx-calendar [value]="value"></igx-calendar>
     `,
     standalone: true,
-    imports: [IgxCalendarModule, FormsModule]
+    imports: [IgxCalendarComponent]
 })
 export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;

@@ -4,8 +4,9 @@ import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxIconComponent, IgxIconService } from '../../icon/public_api';
 import { DisplayDensity } from '../../core/density';
+import { IgxRippleDirective } from '../ripple/ripple.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 const BUTTON_COSY = 'igx-button--cosy';
@@ -25,14 +26,12 @@ describe('IgxButton', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [InitButtonComponent,
-        ButtonWithAttribsComponent,
-        ButtonsWithDisplayDensityComponent,
-        IgxButtonDirective,
-        IgxIconComponent],
-    providers: [IgxIconService]
-})
-            .compileComponents();
+            imports: [
+                InitButtonComponent,
+                ButtonWithAttribsComponent,
+                ButtonsWithDisplayDensityComponent
+            ]
+        }).compileComponents();
     }));
 
     it('Initializes a button', () => {
@@ -149,10 +148,11 @@ describe('IgxButton', () => {
 });
 
 @Component({
-    template: `<span igxButton="flat" igx-ripple="white">
+    template: `<span igxButton="flat" igxRipple="white">
         <i class="material-icons">add</i>
     </span>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective]
 })
 class InitButtonComponent {
     @ViewChild(IgxButtonDirective, { read: IgxButtonDirective, static: true })
@@ -164,7 +164,8 @@ class InitButtonComponent {
         [igxButtonColor]="foreground"
         [igxButtonBackground]="background"
         [disabled]="disabled">Test</span>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {
     public disabled = true;
@@ -184,7 +185,8 @@ class ButtonWithAttribsComponent {
         <igx-icon>search</igx-icon>
     </button>
     `,
-    standalone: true
+    standalone: true,
+    imports: [IgxButtonDirective, IgxIconComponent]
 })
 class ButtonsWithDisplayDensityComponent {
     @ViewChild('flat', { read: IgxButtonDirective, static: true })

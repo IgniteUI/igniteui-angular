@@ -1,15 +1,13 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxChipsModule } from './chips.module';
-import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
-import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxPrefixDirective } from './public_api';
+import { NgFor } from '@angular/common';
 
 @Component({
     template: `
@@ -22,7 +20,7 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -54,7 +52,7 @@ class TestChipComponent {
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
+    imports: [IgxChipsAreaComponent, IgxChipComponent]
 })
 class TestChipSelectComponent extends TestChipComponent {
 }
@@ -70,7 +68,7 @@ class TestChipSelectComponent extends TestChipComponent {
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent]
 })
 class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
@@ -116,10 +114,12 @@ describe('IgxChipsArea ', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule, TestChipComponent,
-        TestChipReorderComponent,
-        TestChipSelectComponent]
-}).compileComponents();
+            imports: [
+                TestChipComponent,
+                TestChipReorderComponent,
+                TestChipSelectComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('Basic', () => {

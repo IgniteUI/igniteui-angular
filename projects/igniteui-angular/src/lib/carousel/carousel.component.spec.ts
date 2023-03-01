@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
-    IgxCarouselModule,
     ISlideEventArgs,
     CarouselIndicatorsOrientation
 } from './carousel.component';
@@ -12,6 +11,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { HorizontalAnimationType } from './carousel-base';
+import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
+import { NgFor, NgIf } from '@angular/common';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -20,13 +21,15 @@ describe('Carousel', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxCarouselModule, NoopAnimationsModule, CarouselTestComponent,
-        CarouselTemplateSetInMarkupTestComponent,
-        CarouselTemplateSetInTypescriptTestComponent,
-        CarouselAnimationsComponent,
-        CarouselDynamicSlidesComponent]
-})
-            .compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                CarouselTestComponent,
+                CarouselTemplateSetInMarkupTestComponent,
+                CarouselTemplateSetInTypescriptTestComponent,
+                CarouselAnimationsComponent,
+                CarouselDynamicSlidesComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('Base Tests: ', () => {
@@ -938,7 +941,7 @@ class HelperTestFunctions {
         </igx-carousel>
     `,
     standalone: true,
-    imports: [IgxCarouselModule]
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -958,7 +961,7 @@ class CarouselTestComponent {
         </igx-carousel>
     `,
     standalone: true,
-    imports: [IgxCarouselModule]
+    imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -987,7 +990,7 @@ class CarouselAnimationsComponent {
         </igx-carousel>
     `,
     standalone: true,
-    imports: [IgxCarouselModule]
+    imports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective]
 })
 class CarouselTemplateSetInMarkupTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1020,7 +1023,7 @@ class CarouselTemplateSetInMarkupTestComponent {
         </igx-carousel>
     `,
     standalone: true,
-    imports: [IgxCarouselModule]
+    imports: [IgxCarouselComponent, IgxSlideComponent, NgIf]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
@@ -1037,13 +1040,13 @@ class CarouselTemplateSetInTypescriptTestComponent {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
-            <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+            <igx-slide *ngFor="let slide of slides" [active]="slide.active">
                <igx-slide><h3>{{slide.text}}</h3></igx-slide>
             </igx-slide>
         </igx-carousel>
     `,
     standalone: true,
-    imports: [IgxCarouselModule]
+    imports: [IgxCarouselComponent, IgxSlideComponent, NgFor]
 })
 class CarouselDynamicSlidesComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
