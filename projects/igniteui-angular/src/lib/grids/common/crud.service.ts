@@ -275,11 +275,11 @@ export class IgxCellCrudState {
         if (!this.cell) {
             return;
         }
-
-        const newValue = this.cell.value;
+        const newValue = this.cell.castToNumber(this.cell.editValue);
 
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
 
+        this.cell.value = newValue;
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
         return args;
