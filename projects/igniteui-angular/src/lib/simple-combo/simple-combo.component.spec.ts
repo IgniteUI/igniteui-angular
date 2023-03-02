@@ -113,7 +113,7 @@ describe('IgxSimpleCombo', () => {
             combo.dropdown = dropdown;
             const defaultSettings = (combo as any)._overlaySettings;
             combo.toggle();
-            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings || {});
             const newSettings = {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: new AbsoluteScrollStrategy()
@@ -1994,7 +1994,7 @@ export class IgxSimpleComboIconTemplatesComponent {
     public data: any[] =  [
         { name: 'Sofia', id: '1' },
         { name: 'London', id: '2' },
-    ];;
+    ];
     public name!: string;
 }
 
