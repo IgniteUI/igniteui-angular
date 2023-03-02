@@ -16,7 +16,7 @@
 /// @prop {Map} fill-color-hover [color: ('secondary', 500)] - The checked border and fill colors on hover.
 /// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
 /// @prop {Map} disabled-indeterminate-color [color: ('secondary', 200)] - The disabled border and fill colors in indeterminate state.
-/// @prop {Map} disabled-color-label [color: ('gray', 400)] - The disabled color of the label.
+/// @prop {Map} disabled-color-label [color: ('gray', 500)] - The disabled color of the label.
 /// @prop {Map} error-color [color: ('error', 500)] - The border and fill colors in invalid state.
 /// @prop {Map} error-color-hover [color: ('error', 500)] - The border and fill colors in invalid state on hover.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
@@ -60,7 +60,7 @@ $light-checkbox: extend(
         ),
 
         disabled-color-label: (
-            color: ('gray', 400)
+            color: ('gray', 500)
         ),
 
         error-color: (
@@ -133,6 +133,7 @@ $fluent-checkbox: extend(
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [color: ('primary', 200)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color-label [color: ('gray', 400)] - The disabled color of the label.
 /// @prop {Map} focus-outline-color [color: ('primary', 200)] - The focus outlined color.
 /// @prop {Map} error-color-hover [color: ('error', 100)] - The focus outlined color in invalid state.
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
@@ -157,6 +158,10 @@ $bootstrap-checkbox: extend(
 
         disabled-color: (
             color: ('primary', 200)
+        ),
+
+        disabled-color-label: (
+            color: ('gray', 400)
         ),
 
         error-color-hover: (

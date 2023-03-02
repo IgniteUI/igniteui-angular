@@ -235,7 +235,9 @@
     }
 
     %cbx-composite--invalid--fluent {
-        border-color: var-get($theme, 'error-color-hover');
+        @if $variant == 'fluent' {
+            border-color: var-get($theme, 'error-color-hover');
+        }
     }
 
     %cbx-composite--x--invalid {

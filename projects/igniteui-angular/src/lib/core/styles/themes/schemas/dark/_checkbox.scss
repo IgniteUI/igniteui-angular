@@ -9,9 +9,14 @@
 
 /// Generates a dark checkbox schema.
 /// @type {Map}
+/// @prop {Map} tick-color [color: ('gray', 900)] - The checked mark color.
 /// @requires $light-checkbox
 $dark-checkbox: extend($light-checkbox, (
-    type: 'dark'
+    type: 'dark',
+
+    tick-color: (
+        color: ('gray', 900)
+    ),
 ));
 
 /// Generates a dark fluent checkbox schema.
