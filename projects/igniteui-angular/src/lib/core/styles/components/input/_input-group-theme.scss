@@ -1349,6 +1349,14 @@
         color: var-get($theme, 'focused-secondary-color');
     }
 
+    %indigo-label--invalid {
+        color: var-get($theme, 'error-secondary-color');
+    }
+
+    %indigo-label--success {
+        color: var-get($theme, 'success-secondary-color');
+    }
+
     %form-group-bundle--indigo-start {
         min-width: rem(12px);
     }
