@@ -1,10 +1,11 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NgFor } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxColumnComponent, IgxGridComponent } from '../../grids/grid/public_api';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
@@ -12,7 +13,6 @@ import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hiera
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
-import { NgFor } from '@angular/common';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../action-strip.component';
 

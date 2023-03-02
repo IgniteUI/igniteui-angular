@@ -1,4 +1,6 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, DoCheck, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, forwardRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -37,7 +39,6 @@ import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.c
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
-import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
@@ -247,7 +248,41 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxRowIslandAPIService
     ],
     standalone: true,
-    imports: [IgxGridHeaderRowComponent, IgxGridBodyDirective, IgxGridDragSelectDirective, NgIf, IgxColumnMovingDropDirective, NgClass, NgFor, NgTemplateOutlet, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxHierarchicalRowComponent, NgStyle, IgxChildGridRowComponent, IgxOverlayOutletDirective, IgxToggleDirective, IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxSummaryRowComponent, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxRowEditTabStopDirective, IgxGridColumnResizerComponent, IgxGridSortingPipe, IgxGridFilteringPipe, IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxSummaryDataPipe, IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe],
+    imports: [
+        NgIf,
+        NgClass,
+        NgFor,
+        NgTemplateOutlet,
+        NgStyle,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxHierarchicalRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxSummaryRowComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxRowEditTabStopDirective,
+        IgxGridColumnResizerComponent,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridTransactionPipe,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridAddRowPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxGridHierarchicalPipe,
+        IgxGridHierarchicalPagingPipe
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective

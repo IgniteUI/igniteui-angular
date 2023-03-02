@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
@@ -14,7 +15,6 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgIf } from '@angular/common';
 
 @Component({
     template: `
