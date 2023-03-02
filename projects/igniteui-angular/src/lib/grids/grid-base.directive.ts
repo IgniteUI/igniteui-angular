@@ -3733,9 +3733,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
         this._unpinnedVisible.length = 0;
-        if (this.hasColumnLayouts) {
-            this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
-        }
     }
 
     /**
