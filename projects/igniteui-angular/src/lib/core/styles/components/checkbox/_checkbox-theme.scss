@@ -20,6 +20,7 @@
 /// @param {Color} $fill-color [null] - The checked border and fill colors.
 /// @param {Color} $fill-color-hover [null] - The checked border and fill colors on hover.
 /// @param {Color} $tick-color [null] - The checked mark color.
+/// @param {Color} tick-color-hover [null] - The checked mark color on hover.
 /// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// @param {Color} $disabled-indeterminate-color [null] - The disabled border and fill colors in indeterminate state.
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
@@ -45,6 +46,7 @@
     $fill-color: null,
     $fill-color-hover: null,
     $tick-color: null,
+    $tick-color-hover: null,
     $disabled-color: null,
     $disabled-indeterminate-color: null,
     $disabled-color-label: null,
@@ -79,6 +81,7 @@
         fill-color: $fill-color,
         fill-color-hover: $fill-color-hover,
         tick-color: $tick-color,
+        tick-color-hover: $tick-color-hover,
         disabled-color: $disabled-color,
         disabled-indeterminate-color: $disabled-indeterminate-color,
         disabled-color-label: $disabled-color-label,
@@ -231,6 +234,10 @@
         border-color: var-get($theme, 'error-color');
     }
 
+    %cbx-composite--invalid--fluent {
+        border-color: var-get($theme, 'error-color-hover');
+    }
+
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
         background: var-get($theme, 'error-color');
@@ -368,7 +375,7 @@
         @if $variant == 'fluent' {
             @extend %cbx-composite-mark;
             @extend %cbx-composite-mark--x;
-            stroke: var-get($theme, 'empty-color');
+            stroke: var-get($theme, 'tick-color-hover');
         }
     }
 

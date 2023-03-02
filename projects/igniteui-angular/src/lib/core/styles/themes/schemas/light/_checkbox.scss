@@ -9,6 +9,7 @@
 /// Generates a light checkbox schema.
 /// @type {Map}
 /// @prop {Map} tick-color [color: ('gray', 50)] - The checked mark color.
+/// @prop {Map} tick-color-hover [color: ('gray', 50)] - The checked mark color on hover.
 /// @prop {Map} label-color [color: ('gray', 900)]- The text color used for the label text.
 /// @prop {Map} empty-color [color: ('gray', 600)] - The unchecked border color.
 /// @prop {Map} fill-color [color: ('secondary', 500)] - The checked border and fill colors.
@@ -27,6 +28,10 @@ $light-checkbox: extend(
         type: 'light',
 
         tick-color: (
+            color: ('gray', 50)
+        ),
+
+        tick-color-hover: (
             color: ('gray', 50)
         ),
 
@@ -74,12 +79,13 @@ $light-checkbox: extend(
 
 /// Generates a fluent checkbox schema.
 /// @type {Map}
+/// @prop {Map} tick-color-hover [color: ('gray', 700)] - The checked mark color on hover when the control in unchecked.
 /// @prop {Map} empty-color [color: ('gray', 900)] - The unchecked border color.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} fill-color-hover [color: ('primary', 900)] - The checked border and fill colors on hover.
 /// @prop {Map} disabled-color [color: ('gray', 400)] - The disabled border and fill colors.
 /// @prop {Map} focus-outline-color [color: ('gray', 800)] - The focus outlined color.
-/// @prop {Map} error-color-hover [color: ('error', 700)] - The border and fill colors in invalid state on hover.
+/// @prop {Map} error-color-hover [color: ('error', 900)] - The border and fill colors in invalid state on hover.
 /// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $light-checkbox
@@ -87,6 +93,10 @@ $fluent-checkbox: extend(
     $light-checkbox,
     (
         variant: 'fluent',
+
+        tick-color-hover: (
+            color: ('gray', 700)
+        ),
 
         focus-outline-color: (
             color: ('gray', 800)
@@ -109,7 +119,7 @@ $fluent-checkbox: extend(
         ),
 
         error-color-hover: (
-            color: ('error', 700)
+            color: ('error', 900)
         ),
 
         border-radius: rem(2px),
@@ -162,6 +172,7 @@ $bootstrap-checkbox: extend(
 /// Generates an indigo checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [color: 'surface'] - The checked mark color.
+/// @prop {Color} tick-color-hover [color: 'surface'] - The checked mark color on hover.
 /// @prop {Map} fill-color [color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [color: ('gray', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [color: ('gray', 300)] - The disabled border and fill colors.
@@ -186,6 +197,10 @@ $indigo-checkbox: extend(
         ),
 
         tick-color: (
+            color: 'surface'
+        ),
+
+        tick-color-hover: (
             color: 'surface'
         ),
 

@@ -75,6 +75,10 @@
                     @extend %cbx-ripple--hover-invalid !optional;
                 }
 
+                @include e(composite) {
+                    @extend %cbx-composite--invalid--fluent !optional;
+                }
+
                 @include e(composite-mark) {
                     @extend %cbx-composite-mark--invalid--fluent !optional;
                 }
