@@ -3,7 +3,7 @@
 
 <!-- Group-by area -->
 <ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
-    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth'
+    <igx-grid-group-by-area #groupArea [style.flex-basis.px]="outerWidth"
         [grid]="this"
         [expressions]="groupingExpressions"
         [sortingExpressions]="sortingExpressions"
@@ -34,9 +34,9 @@
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? null : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
-        (dragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
+        (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody [attr.aria-activedescendant]="activeDescendant">
+        [style.height.px]="totalHeight" [style.width.px]="calcWidth || null" #tbody [attr.aria-activedescendant]="activeDescendant">
         <span *ngIf="moving && columnInDrag && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
@@ -46,19 +46,19 @@
     <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
     </ng-container>
     <ng-template #pinnedRecordsTemplate>
-        <ng-container *ngIf='data
+        <ng-container *ngIf="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridAddRow:true:pipeTrigger
         | gridRowPinning:id:true:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-        | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
-            <div #pinContainer *ngIf='pinnedData.length > 0'
+        | gridSort:sortingExpressions:groupingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
+            <div #pinContainer *ngIf="pinnedData.length > 0"
                 [ngClass]="{
                     'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
                     'igx-grid__tr--pinned-top': isRowPinningToTop
                 }"
-                class='igx-grid__tr--pinned' [style.width.px]='calcWidth'>
+                class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
                 <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
                     <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                     </ng-container>
@@ -77,17 +77,17 @@
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger"
-            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
-            [igxForContainerSize]='calcHeight'
+            let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]="verticalScroll"
+            [igxForContainerSize]="calcHeight"
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
-            [igxForTrackBy]='trackChanges'
+            [igxForTrackBy]="trackChanges"
             #verticalScrollContainer (chunkPreload)="dataLoading($event)" (dataChanging)="dataRebinding($event)" (dataChanged)="dataRebound($event)">
             <ng-template
-                [igxTemplateOutlet]='getRowTemplate(rowData)'
-                [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (cachedViewLoaded)='cachedViewLoaded($event)'
-                (viewCreated)='viewCreatedHandler($event)'
-                (viewMoved)='viewMovedHandler($event)'>
+                [igxTemplateOutlet]="getRowTemplate(rowData)"
+                [igxTemplateOutletContext]="getContext(rowData, rowIndex)"
+                (cachedViewLoaded)="cachedViewLoaded($event)"
+                (viewCreated)="viewCreatedHandler($event)"
+                (viewMoved)="viewMovedHandler($event)">
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
@@ -114,18 +114,18 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail='true' style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer [attr.data-rowindex]='rowIndex'
+            <div detail="true" style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)="detailsViewFocused(detailsContainer, rowIndex)" #detailsContainer [attr.data-rowindex]="rowIndex"
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
-                <div class="igx-grid__hierarchical-indent" style='display: flex;'>
+                <div class="igx-grid__hierarchical-indent" style="display: flex">
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
                         <ng-template
-                    [ngTemplateOutlet]='detailTemplate'
-                    [ngTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
+                    [ngTemplateOutlet]="detailTemplate"
+                    [ngTemplateOutletContext]="getDetailsContext(rowData, rowIndex)">
                     </ng-template>
                 </div>
             </div>
@@ -136,21 +136,21 @@
         <igc-trial-watermark></igc-trial-watermark>
     </div>
     <div igxToggle #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
+        <igx-circular-bar [indeterminate]="true" *ngIf="shouldOverlayLoading">
         </igx-circular-bar>
     </div>
     <span *ngIf="moving && columnInDrag" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
-        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
-        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
-            <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+    <div [hidden]="!hasVerticalScroll()" class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize" (pointerdown)="$event.preventDefault()">
+        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]="isRowPinningToTop ? pinnedRowHeight : 0"></div>
+        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]="calcHeight">
+            <ng-template igxGridFor [igxGridForOf]="[]" #verticalScrollHolder></ng-template>
         </div>
-        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]="!isRowPinningToTop ? pinnedRowHeight : 0"></div>
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
 
     <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
@@ -158,25 +158,25 @@
 </div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summaryRowHeight' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
     <div tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
-        <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summaryRowHeight'
+        <igx-grid-summary-row [style.width.px]="calcWidth"  [style.height.px]="summaryRowHeight"
             *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
             [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
             class="igx-grid__summaries" #summaryRow>
         </igx-grid-summary-row>
-        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summaryRowHeight'
+        <div class="igx-grid__tfoot-thumb" [hidden]="!hasVerticalScroll()" [style.height.px]="summaryRowHeight"
             [style.width.px]="scrollSize"></div>
     </div>
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
-    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
-        <ng-template igxGridFor [igxGridForOf]='EMPTY_DATA' #scrollContainer>
+    <div class="igx-grid__scroll-start" [style.width.px]="isPinningToStart ? pinnedWidth : headerFeaturesWidth" [style.min-width.px]="isPinningToStart ? pinnedWidth : headerFeaturesWidth"></div>
+    <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
+        <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
     </div>
-    <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+    <div class="igx-grid__scroll-end" [style.float]="'right'" [style.width.px]="pinnedWidth" [style.min-width.px]="pinnedWidth" [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
@@ -187,8 +187,8 @@
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyFilteredGridMessage}}</span>
-        <span *ngIf='showAddButton'>
-            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+        <span *ngIf="showAddButton">
+            <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
         </span>
     </span>
 </ng-template>
@@ -197,7 +197,7 @@
     <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyGridMessage}}</span>
         <span *ngIf='showAddButton'>
-            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+            <ng-container *ngTemplateOutlet="addRowEmptyTemplate || defaultAddRowEmptyTemplate"></ng-container>
         </span>
     </span>
 </ng-template>

@@ -521,7 +521,7 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanging: EventEmitter<IColumnVisibilityChangingEventArgs>;
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
-    onDensityChanged: EventEmitter<IDensityChangedEventArgs>;
+    densityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IGridEditEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     rowAddedNotifier: Subject<IRowDataEventArgs>;
@@ -775,7 +775,7 @@ export interface IgxCellTemplateContext {
     additionalTemplateContext: any,
     formControl?: FormControl<any>,
     defaultErrorTemplate?: TemplateRef<any>,
-    cell?: CellType
+    cell: CellType
 }
 
 export interface IgxRowSelectorTemplateContext {

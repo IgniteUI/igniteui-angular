@@ -39,6 +39,10 @@
             @extend %igx-badge--error !optional;
         }
 
+        @include m(square) {
+            @extend %igx-badge--square !optional;
+        }
+
         @include m(hidden) {
             @extend %igx-badge--hidden !optional;
         }
