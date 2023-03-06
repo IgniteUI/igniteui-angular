@@ -156,8 +156,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 if (this.grid.pinnedRecords.find(r => r == cellRow.data)) {
                     const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cellRow.data);
                     const reviousRowId = cell.value;
-                    this.unpin_row(reviousRowId, null, true);
-                    this.pin_row(cellRow.key, pinnedRowIndex, null, true);
+                    this.unpin_row(reviousRowId);
+                    this.pin_row(cellRow.key, pinnedRowIndex);
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -551,56 +551,47 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return DataUtil.sort(cloneArray(data), expressions, this.grid.sortStrategy, this.grid);
     }
 
-    public pin_row(rowID: any, index?: number, row?: RowType, endEdit: boolean = false): IPinRowEventArgs {
+    public pin_row(rowID: any, index?: number, row?: RowType): void {
         const grid = (this.grid as any);
         if (grid._pinnedRecordIDs.indexOf(rowID) !== -1) {
-            return null;
+            return;
         }
+        const eventArgs = this.get_pin_row_event_args(rowID, index, row);
+
+        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
+        grid._pinnedRecordIDs.splice(insertIndex, 0, rowID);
+    }
+
+    public unpin_row(rowID: any): void {
+        const grid = (this.grid as any);
+        const index = grid._pinnedRecordIDs.indexOf(rowID);
+        if (index === -1) {
+            return;
+        }
+
+        grid._pinnedRecordIDs.splice(index, 1);
+    }
+
+    public get_pin_row_event_args(rowID: any, index?: number, row?: RowType) {
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
             rowID,
             row,
             cancel: false
-        };
-        grid.rowPinning.emit(eventArgs);
-
-        if (eventArgs.cancel) {
-            return eventArgs;
         }
 
-        if (!endEdit) {
-            this.crudService.endEdit(false);
-        }
-
-        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
-        grid._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         return eventArgs;
     }
 
-    public unpin_row(rowID: any, row?: RowType, endEdit: boolean = false): IPinRowEventArgs {
-        const grid = (this.grid as any);
-        const index = grid._pinnedRecordIDs.indexOf(rowID);
-        if (index === -1) {
-            return null;
-        }
+    public get_unpin_row_event_args(rowID: any, row?: RowType) {
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
             row,
             cancel: false
         };
-        grid.rowPinning.emit(eventArgs);
 
-        if (eventArgs.cancel) {
-            return eventArgs;
-        }
-
-        if (!endEdit) {
-            this.crudService.endEdit(false);
-        }
-
-        grid._pinnedRecordIDs.splice(index, 1);
         return eventArgs;
     }
 
