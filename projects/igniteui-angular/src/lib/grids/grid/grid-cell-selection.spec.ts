@@ -225,6 +225,34 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0, 2, 3);
         });
 
+        it('Should be able to select cells correctly when focus is returned to the grid', async() => {
+            const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
+            const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
+
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            UIInteractions.simulateClickAndSelectEvent(firstCell, false, true);
+            fix.detectChanges();
+
+            expect(grid.selectedCells.length).toBe(0);
+            
+            grid.navigation.lastActiveNode = grid.navigation.activeNode;
+            grid.navigation.activeNode = null;
+            fix.detectChanges();
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+            
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyCellSelected(firstCell, false);
+            GridSelectionFunctions.verifyCellSelected(secondCell, true);
+            expect(grid.selectedCells.length).toBe(1);
+        });
+
         it('Should be able to select range when click on a cell and hold Shift key and click on another Cell', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(3, 'HireDate');
             const secondCell = grid.gridAPI.get_cell_by_index(1, 'ID');
