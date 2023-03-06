@@ -2326,7 +2326,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 - grid.theadRow.nativeElement.offsetHeight
                 - grid.tfoot.nativeElement.offsetHeight
                 - grid.footer.nativeElement.offsetHeight
-                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);;
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });

@@ -39,7 +39,7 @@ export class IgxCalendarContainerComponent {
     public vertical = false;
     public closeButtonLabel: string;
     public todayButtonLabel: string;
-    public mode = PickerInteractionMode.DropDown;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
 
     @HostListener('keydown.alt.arrowup', ['$event'])
