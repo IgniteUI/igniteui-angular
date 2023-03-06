@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { IColumnToggledEventArgs } from 'igniteui-angular';
 import { IgxColumnGroupingDirective } from './custom-action-directive';
 import { IgxColumnPinningDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-pinning.directive';
 import { IgxColumnHidingDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-hiding.directive';
@@ -12,6 +11,7 @@ import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angul
 import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IColumnToggledEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     providers: [],
