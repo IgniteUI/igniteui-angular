@@ -125,6 +125,10 @@
         }
     }
 
+    %igx-badge--square {
+        border-radius: 0;
+    }
+
     %igx-badge-value {
         white-space: nowrap;
         padding: $badge-value-padding;
