@@ -6,7 +6,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
-import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
+import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
@@ -156,10 +156,8 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 if (this.grid.pinnedRecords.find(r => r == cellRow.data)) {
                     const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cellRow.data);
                     const reviousRowId = cell.value;
-                    setTimeout(() => {
-                        this.grid.unpinRow(reviousRowId);
-                        this.grid.pinRow(cellRow.key, pinnedRowIndex);
-                    });
+                    this.unpin_row(reviousRowId, null, true);
+                    this.pin_row(cellRow.key, pinnedRowIndex, null, true);
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -551,6 +549,59 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
     public sortDataByExpressions(data: any[], expressions: ISortingExpression[]) {
         return DataUtil.sort(cloneArray(data), expressions, this.grid.sortStrategy, this.grid);
+    }
+
+    public pin_row(rowID: any, index?: number, row?: RowType, endEdit: boolean = false): IPinRowEventArgs {
+        const grid = (this.grid as any);
+        if (grid._pinnedRecordIDs.indexOf(rowID) !== -1) {
+            return null;
+        }
+        const eventArgs: IPinRowEventArgs = {
+            insertAtIndex: index,
+            isPinned: true,
+            rowID,
+            row,
+            cancel: false
+        };
+        grid.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return eventArgs;
+        }
+
+        if (!endEdit) {
+            this.crudService.endEdit(false);
+        }
+
+        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
+        grid._pinnedRecordIDs.splice(insertIndex, 0, rowID);
+        return eventArgs;
+    }
+
+    public unpin_row(rowID: any, row?: RowType, endEdit: boolean = false): IPinRowEventArgs {
+        const grid = (this.grid as any);
+        const index = grid._pinnedRecordIDs.indexOf(rowID);
+        if (index === -1) {
+            return null;
+        }
+        const eventArgs: IPinRowEventArgs = {
+            isPinned: false,
+            rowID,
+            row,
+            cancel: false
+        };
+        grid.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return eventArgs;
+        }
+
+        if (!endEdit) {
+            this.crudService.endEdit(false);
+        }
+
+        grid._pinnedRecordIDs.splice(index, 1);
+        return eventArgs;
     }
 
     /**

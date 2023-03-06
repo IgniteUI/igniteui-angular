@@ -5116,27 +5116,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID: any, index?: number, row?: RowType): boolean {
-        if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
+        const eventArgs: IPinRowEventArgs = this.gridAPI.pin_row(rowID, index, row);
+        if (!eventArgs) {
             return false;
         }
-
-        const eventArgs: IPinRowEventArgs = {
-            insertAtIndex: index,
-            isPinned: true,
-            rowID,
-            row,
-            cancel: false
-        };
-        this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
             return;
         }
 
-        this.crudService.endEdit(false);
-
-        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
-        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
@@ -5158,24 +5146,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public unpinRow(rowID: any, row?: RowType): boolean {
-        const index = this._pinnedRecordIDs.indexOf(rowID);
-        if (index === -1) {
+        const eventArgs: IPinRowEventArgs = this.gridAPI.unpin_row(rowID, row);
+        if (!eventArgs) {
             return false;
         }
-        const eventArgs: IPinRowEventArgs = {
-            isPinned: false,
-            rowID,
-            row,
-            cancel: false
-        };
-        this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
             return;
         }
 
-        this.crudService.endEdit(false);
-        this._pinnedRecordIDs.splice(index, 1);
         this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
