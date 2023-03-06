@@ -1,12 +1,22 @@
 import {
-    AfterContentInit,
-    ContentChildren, Directive, EventEmitter, HostBinding, Input, NgModule, OnDestroy, Output, QueryList
+    AfterContentInit, 
+    ContentChildren,
+    Directive,
+    EventEmitter,
+    HostBinding, 
+    HostListener, 
+    Input, 
+    NgModule, 
+    OnDestroy, 
+    Output, 
+    QueryList
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
 import { IChangeRadioEventArgs, IgxRadioComponent } from '../../radio/radio.component';
+import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxRippleModule } from '../ripple/ripple.directive';
 
 /**
@@ -173,6 +183,51 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     @HostBinding('class.igx-radio-group--vertical')
     private vertical = false;
 
+    @HostListener('click', ['$event'])
+    protected handleClick(event: MouseEvent) {
+        event.stopPropagation();
+        this.selected.nativeElement.focus();
+    }
+
+    @HostListener('keydown', ['$event'])
+    protected handleKeyDown(event: KeyboardEvent) {
+        const { key } = event;
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            const buttons = this.radioButtons.filter(radio => !radio.disabled);
+            const checked = buttons.find((radio) => radio.checked);
+            let index = checked ? buttons.indexOf(checked!) : -1;
+            const ltr = this._directionality.value === 'ltr';
+
+            switch (key) {
+                case 'ArrowUp':
+                    index += -1;
+                    break;
+                case 'ArrowLeft':
+                    index += ltr ? -1 : 1;
+                    break;
+                case 'ArrowRight':
+                    index += ltr ? 1 : -1;
+                    break;
+                default:
+                    index += 1;
+            }
+
+            if (index < 0) index = buttons.length - 1;
+            if (index > buttons.length - 1) index = 0;
+
+            buttons.forEach((radio) => {
+                radio.deselect();
+                radio.nativeElement.blur();
+            });
+
+            buttons[index].focused = true;
+            buttons[index].nativeElement.focus();
+            buttons[index].select();
+            event.preventDefault();
+        }
+    }
+
     /**
      * Returns the alignment of the `igx-radio-group`.
      * ```typescript
@@ -306,6 +361,8 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         this.destroy$.next(true);
         this.destroy$.complete();
     }
+
+    constructor(private _directionality: IgxDirectionality) {}
 
     /**
      * @hidden
