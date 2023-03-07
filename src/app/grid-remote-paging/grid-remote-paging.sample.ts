@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
+    styleUrls: ['grid-remote-paging.sample.scss'],
     templateUrl: 'grid-remote-paging.sample.html'
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -62,6 +62,7 @@ class HGridChildSummary {
 
 @Component({
     selector: 'app-grid-export-sample',
+    styleUrls: ['grid-export.sample.scss'],
     templateUrl: 'grid-export.sample.html'
 })
 export class GridExportComponent {

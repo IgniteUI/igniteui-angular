@@ -7,7 +7,7 @@ import { AfterViewInit,
 
 @Component({
     selector: 'app-bottomnav-sample',
-    styleUrls: ['bottomnav.sample.css'],
+    styleUrls: ['bottomnav.sample.scss'],
     templateUrl: 'bottomnav.sample.html'
 })
 export class BottomNavSampleComponent implements AfterViewInit {
