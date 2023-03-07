@@ -46,7 +46,7 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
  *
  * @example
  * ```html
- * <igx-avatar initials="MS" [roundShape]="true" size="large">
+ * <igx-avatar initials="MS" shape="square" size="large">
  * </igx-avatar>
  * ```
  */
@@ -116,18 +116,22 @@ export class IgxAvatarComponent implements OnInit {
     public id = `igx-avatar-${NEXT_ID++}`;
 
     /**
-     * Sets a round shape to the avatar, if `[roundShape]` is set to `true`.
-     * By default the shape of the avatar is a square.
+     * Sets a square shape to the avatar, if `shape` is set to `square`.
+     * By default the shape of the avatar is rounded.
      *
      * @example
      * ```html
-     * <igx-avatar [roundShape]="true" ></igx-avatar>
+     * <igx-avatar shape="square"></igx-avatar>
      * ```
      */
-
-    @HostBinding('class.igx-avatar--rounded')
     @Input()
-    public roundShape = false;
+    public shape: 'rounded' | 'square' = 'rounded';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--square')
+    public get _squareShape(): boolean {
+        return this.shape === 'square';
+    }
 
     /**
      * Sets the color of the avatar's initials or icon.
