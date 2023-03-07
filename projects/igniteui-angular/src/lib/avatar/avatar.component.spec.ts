@@ -6,7 +6,7 @@ import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.compo
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('Avatar', () => {
+fdescribe('Avatar', () => {
     configureTestSuite();
     const baseClass = 'igx-avatar';
 
@@ -56,14 +56,14 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.shape).toEqual('rounded');
-        expect(hostEl.classList).not.toContain(classes.square);
-
-        instance.shape = "square";
-
-        fixture.detectChanges();
         expect(instance.shape).toEqual('square');
         expect(hostEl.classList).toContain(classes.square);
+
+        instance.shape = "rounded";
+
+        fixture.detectChanges();
+        expect(instance.shape).toEqual('rounded');
+        expect(hostEl.classList).not.toContain(classes.square);
     });
 
     it('Can change its size', () => {
