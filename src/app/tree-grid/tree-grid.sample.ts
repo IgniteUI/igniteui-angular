@@ -6,7 +6,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['tree-grid.sample.css'],
+    styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html'
 })
 

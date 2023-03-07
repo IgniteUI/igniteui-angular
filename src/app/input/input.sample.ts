@@ -5,11 +5,12 @@ import { IChangeRadioEventArgs } from 'igniteui-angular';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-sample',
-    styleUrls: ['input.sample.css'],
+    styleUrls: ['input.sample.scss'],
     templateUrl: 'input.sample.html'
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
+    public placeholderDate = new Date();
     public selected = 'option1';
     public airplaneMode = false;
 

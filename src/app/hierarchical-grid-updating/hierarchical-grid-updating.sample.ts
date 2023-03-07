@@ -9,6 +9,7 @@ import { RemoteService } from '../shared/remote.service';
 
 @Component({
     selector: 'app-hierarchical-grid-updating-sample',
+    styleUrls: ['hierarchical-grid-updating.sample.scss'],
     templateUrl: 'hierarchical-grid-updating.sample.html',
     providers: [ RemoteService ]
 })

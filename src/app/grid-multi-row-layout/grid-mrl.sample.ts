@@ -3,6 +3,7 @@ import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-an
 
 @Component({
     selector: 'app-grid-mrl-sample',
+    styleUrls: ['grid-mrl.sample.scss'],
     templateUrl: 'grid-mrl.sample.html'
 })
 export class GridMRLSampleComponent {
