@@ -15,8 +15,8 @@ interface ColumnConfig {
 
 @Component({
     selector: 'app-grid-mrl-config-sample',
-    templateUrl: 'grid-mrl-config.sample.html',
-    styleUrls: ['grid-mrl-config.sample.css']
+    styleUrls: ['grid-mrl-config.sample.scss'],
+    templateUrl: 'grid-mrl-config.sample.html'
 })
 export class GridMRLConfigSampleComponent {
 

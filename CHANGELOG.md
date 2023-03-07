@@ -3,6 +3,11 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 15.1.0
+
+### New Features
+- `IgxColumnComponent`
+    - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
+
 ### General
  - `IgxPivotGrid`
     - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.

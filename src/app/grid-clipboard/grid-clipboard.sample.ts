@@ -3,6 +3,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     selector: 'app-grid-clipboard-sample',
+    styleUrls: ['grid-clipboard.sample.scss'],
     templateUrl: './grid-clipboard.sample.html'
 })
 export class GridClipboardSampleComponent {

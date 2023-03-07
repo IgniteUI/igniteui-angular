@@ -12,7 +12,7 @@ import {
 @Component({
     providers: [],
     selector: 'app-grid-filter-template-sample',
-    styleUrls: ['grid-filter-template.sample.css'],
+    styleUrls: ['grid-filter-template.sample.scss'],
     templateUrl: 'grid-filter-template.sample.html'
 })
 

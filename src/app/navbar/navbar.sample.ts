@@ -6,7 +6,7 @@ const CURRENT_VIEW = 'Ignite UI for Angular Samples';
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'app-navbar-sample',
-    styleUrls: ['navbar.sample.css'],
+    styleUrls: ['navbar.sample.scss'],
     templateUrl: 'navbar.sample.html'
 })
 export class NavbarSampleComponent implements OnInit {
