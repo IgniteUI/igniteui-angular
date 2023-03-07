@@ -4,7 +4,7 @@ import {
     Tree
 } from '@angular-devkit/schematics';
 import { Options } from '../../schematics/interfaces/options';
-import { BoundPropertyObject, UpdateChanges } from '../common/UpdateChanges';
+import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
 
 const version = '15.1.0';
 
@@ -14,6 +14,8 @@ export default (options: Options): Rule => async (host: Tree, context: Schematic
     const update = new UpdateChanges(__dirname, host, context);
     update.shouldInvokeLS = options['shouldInvokeLS'];
     update.addValueTransform('roundShape_is_deprecated', (args: BoundPropertyObject): void => {
+        args.bindingType = InputPropertyType.STRING;
+
         switch (args.value) {
             case 'true':
                 args.value = 'rounded';
