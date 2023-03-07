@@ -283,46 +283,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             states.set(transaction.id, state);
         }
 
-        //  should not clean pending state. This will happen automatically on endPending call
-        if (!this._isPending) {
-            this.cleanState(transaction.id, states);
-        }
-    }
-
-    /**
-     * Compares the state with recordRef and clears all duplicated values. If any state ends as
-     * empty object removes it from states.
-     *
-     * @param state State to clean
-     */
-    protected cleanState(id: any, states: Map<any, S>): void {
-        const state = states.get(id);
-        //  do nothing if
-        //  there is no state, or
-        //  there is no state value (e.g. DELETED transaction), or
-        //  there is no recordRef (e.g. ADDED transaction)
-        if (state && state.value && state.recordRef) {
-            //  if state's value is object compare each key with the ones in recordRef
-            //  if values in any key are the same delete it from state's value
-            //  if state's value is not object, simply compare with recordRef and remove
-            //  the state if they are equal
-            if (isObject(state.recordRef)) {
-                for (const key of Object.keys(state.value)) {
-                    if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
-                        delete state.value[key];
-                    }
-                }
-
-                //  if state's value is empty remove the state from the states, only if state is not DELETE type
-                if (state.type !== TransactionType.DELETE && Object.keys(state.value).length === 0) {
-                    states.delete(id);
-                }
-            } else {
-                if (state.recordRef === state.value) {
-                    states.delete(id);
-                }
-            }
-        }
+        this.cleanState(transaction.id, states);
     }
 
     /**
