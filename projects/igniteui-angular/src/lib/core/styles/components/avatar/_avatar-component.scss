@@ -20,8 +20,8 @@
             @extend %igx-avatar-image !optional;
         }
 
-        @include m(square) {
-            @extend %igx-avatar--square !optional;
+        @include m(rounded) {
+            @extend %igx-avatar--rounded !optional;
         }
 
         @include m(small) {

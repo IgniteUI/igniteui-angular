@@ -126,7 +126,14 @@ export class IgxAvatarComponent implements OnInit {
      * ```
      */
     @Input()
-    public roundShape = false;
+    @HostBinding('class.igx-avatar--rounded')
+    public get roundShape() {
+        return this.shape === 'rounded';
+    }
+
+    public set roundShape(value: boolean) {
+        this.shape = value === true ? 'rounded' : 'square';
+    }  
 
     /**
      * Sets a rounded shape to the avatar, if `shape` is set to `rounded`.
@@ -139,12 +146,6 @@ export class IgxAvatarComponent implements OnInit {
      */
     @Input()
     public shape: 'square' | 'rounded' = 'square';
-
-    /** @hidden @internal */
-    @HostBinding('class.igx-avatar--square')
-    public get _squareShape(): boolean {
-        return this.shape === 'square';
-    }
 
     /**
      * Sets the color of the avatar's initials or icon.

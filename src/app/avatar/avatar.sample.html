@@ -3,7 +3,7 @@
     <section class="sample-column">
         <h4 class="sample-title">Circular Avatars</h4>
         <article class="avatars">
-            <igx-avatar class="avatar-theme" icon="tag_faces" shape="rounded"></igx-avatar>
+            <igx-avatar class="avatar-theme" icon="tag_faces" [roundShape]="true"></igx-avatar>
 
             <igx-avatar igxDrag icon="tag_faces" size="medium" shape="rounded"></igx-avatar>
 
@@ -27,9 +27,9 @@
     <section class="sample-column">
         <h4 class="sample-title">Square Icons</h4>
         <article class="avatars">
-            <igx-avatar icon="tag_faces"></igx-avatar>
+            <igx-avatar icon="tag_faces" [roundShape]="false"></igx-avatar>
 
-            <igx-avatar icon="tag_faces" size="medium"></igx-avatar>
+            <igx-avatar icon="tag_faces" size="medium" shape="square"></igx-avatar>
 
             <igx-avatar icon="tag_faces" size="large"></igx-avatar>
 

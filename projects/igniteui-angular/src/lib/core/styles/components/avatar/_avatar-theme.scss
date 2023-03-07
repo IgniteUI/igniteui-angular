@@ -94,7 +94,7 @@
         color: var-get($theme, 'color');
         background: var-get($theme, 'background');
         vertical-align: middle;
-        border-radius: rem(44px);
+        border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
 
@@ -120,8 +120,8 @@
         background-position: center;
     }
 
-    %igx-avatar--square {
-        border-radius: var-get($theme, 'border-radius');
+    %igx-avatar--rounded {
+        --igx-avatar-border-radius: #{rem(44px)};
     }
 
     %igx-avatar--initials {
