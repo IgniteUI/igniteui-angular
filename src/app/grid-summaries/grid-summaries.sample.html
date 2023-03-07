@@ -88,13 +88,16 @@
 <igx-switch [(ngModel)]="hasHidden">hasHidden</igx-switch>
 <igx-switch [(ngModel)]="rowSelection">Row Selection</igx-switch>
 
-<button (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
-<button (click)="toggleSummary()">Toggle Custom Summary</button>
-<button (click)="updateData()">Update Data</button>
-<button (click)="addRow()">Add Row</button>
-<button (click)="deleteRow()">Delete Row</button>
-<button (click)="updateCell()">Update Cell</button>
-<button (click)="updateRow()">Update Row</button>
-<button (click)="pin()">Pin</button>
-<button (click)="hide()">Hide</button>
-<div><input type='number' #input /><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+<button igxButton="raised" (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
+<button igxButton="raised" (click)="toggleSummary()">Toggle Custom Summary</button>
+<button igxButton="raised" (click)="updateData()">Update Data</button>
+<button igxButton="raised" (click)="addRow()">Add Row</button>
+<button igxButton="raised" (click)="deleteRow()">Delete Row</button>
+<button igxButton="raised" (click)="updateCell()">Update Cell</button>
+<button igxButton="raised" (click)="updateRow()">Update Row</button>
+<button igxButton="raised" (click)="pin()">Pin</button>
+<button igxButton="raised" (click)="hide()">Hide</button>
+<div>
+    <input type='number' #input />
+    <button igxButton="raised" (click)='scrScrollTo(input.value)'>Go To Index</button>
+</div>
