@@ -1,5 +1,8 @@
 import {
-    ChangeDetectorRef, Component, ElementRef, EventEmitter,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
     HostBinding,
     HostListener,
     Input,
@@ -79,6 +82,18 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      */
     @ViewChild('nativeLabel', { static: true })
     public nativeLabel: ElementRef;
+
+    /**
+     * Gets the `nativeElement` of the igx-radio.
+     *
+     * @example
+     * ```typescript
+     * let igxRadioNativeElement = this.igxRadio.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this.nativeRadio.nativeElement;
+    }
 
     /**
      * Returns reference to the label placeholder element.
@@ -355,7 +370,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider, 
      * @internal
      */
       @HostListener('change', ['$event'])
-      public _changed(){
+      public _changed(event: Event){
           if(event instanceof Event){
             event.preventDefault();
           }
