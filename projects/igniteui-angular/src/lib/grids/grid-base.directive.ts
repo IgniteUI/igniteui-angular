@@ -4774,8 +4774,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.rowAddedNotifier.next({ data: data, owner: this });
         this.pipeTrigger++;
+        this.rowAddedNotifier.next({ data: data, owner: this });
         this.notifyChanges();
     }
 
@@ -5081,6 +5081,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
+        this.summaryPipeTrigger++;
         this.cdr.detectChanges();
     }
 

@@ -3,7 +3,7 @@ import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, Dis
 
 @Component({
     selector: 'app-grid-toolbar-sample',
-    styleUrls: ['grid-toolbar.sample.css'],
+    styleUrls: ['grid-toolbar.sample.scss'],
     templateUrl: 'grid-toolbar.sample.html'
 })
 export class GridToolbarSampleComponent {

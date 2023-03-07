@@ -16,7 +16,7 @@
             </igx-input-group>
 
             <igx-input-group>
-                <input igxInput name="dateOfBirth" type="date" [(ngModel)]="user.dateOfBirth" required />
+                <input igxInput name="dateOfBirth" type="date" [(ngModel)]="user.dateOfBirth" placeholder="{{placeholderDate}}"required />
                 <label igxLabel for="dateOfBirth">Date of Birth</label>
             </igx-input-group>
 
@@ -129,8 +129,8 @@
                         <igx-checkbox formControlName="checkbox">Form Group Checkbox</igx-checkbox>
                         <igx-switch formControlName="switch">Form Group Switch</igx-switch>
                     </form>
-                    <button igxButton (click)="myForm.reset()">Reset Form Group</button>
                 </igx-list-item>
+                <button igxButton="raised" (click)="myForm.reset()">Reset Form Group</button>
             </igx-list>
         </div>
     </article>
@@ -141,7 +141,6 @@
         <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option1">Option 1</igx-radio>
         <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option2">Option 2</igx-radio>
         <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option3" disabled>Option 3</igx-radio>
-        <br>
         <button igxButton="raised" (click)="selectSecond()">Select second</button>
     </article>
 </section>
