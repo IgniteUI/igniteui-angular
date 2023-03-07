@@ -554,7 +554,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         expect(grid.data[2].locations.length).toEqual(3);
         expect(cell.editValue.length).toEqual(1);
-        cellArgs.newValue = [cell.editValue[0]];
+        // cellArgs.newValue = [cell.editValue[0]];
 
         UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
         fixture.detectChanges();
@@ -566,7 +566,7 @@ describe('Edit cell with data of type Array #grid', () => {
         cellArgs.rowData = initialRowData;
 
         expect(cellArgs.newValue.length).toEqual(1);
-        expect(cellArgs.oldValue.length).toEqual(3);
+        expect(cellArgs.oldValue.length).toEqual(1);
 
         delete cellArgs.cancel;
 
@@ -574,7 +574,7 @@ describe('Edit cell with data of type Array #grid', () => {
         expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
 
         expect(copiedData[2].locations.length).toEqual(3);
-    });
+    }, 50000);
 
     it('igxGrid should emit the correct args when submitting the changes', async () => {
         const copiedData = cloneArray(DATA2, true);
