@@ -19,7 +19,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxRadio`, `IgxRadioGroup`
     - Added component validation along with styles for invalid state
 - `IgxAvatar`
-    - **Breaking Change** The `roundShape` property has been replaced with `shape` property that can be either `square` or `rounded`. The default shape of the avatar from now on is rounded. 
+    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be either `square` or `rounded`. The default shape of the avatar is `square`. 
 
 ## 15.0.1
 

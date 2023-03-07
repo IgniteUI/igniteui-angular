@@ -122,4 +122,22 @@ describe(`Update to ${version}`, () => {
             <igx-query-builder (densityChanged)="onDensityChanged($event)"></igx-query-builder>
             <igx-tree (densityChanged)="onDensityChanged($event)"></igx-tree>`);
     });
+
+    it('should replace avatar roundShape property with shape', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+            <igx-avatar initials="MS" [roundShape]="true" size="large">
+            </igx-avatar>
+            `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-avatar initials="MS" shape="rounded" size="large">
+        `
+        );
+    });
 });
