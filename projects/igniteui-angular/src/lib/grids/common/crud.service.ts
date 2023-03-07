@@ -693,7 +693,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return args.cancel;
             }
         } else {
-            // needede because this.cell is null after exitCellEdit
+            // needed because this.cell is null after exitCellEdit
             // thus the next if is always false
             const cell = this.cell;
             this.exitCellEdit(event);
