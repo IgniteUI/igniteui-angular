@@ -17,7 +17,7 @@ All notable changes for each version of this project will be documented in this 
  - `IgxCarousel`
     - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
 - `IgxRadio`, `IgxRadioGroup`
-    - Added component validation along with styles for invalid 
+    - Added component validation along with styles for invalid state
 - `IgxBadge`
     - Added `shape` property that controls the shape of the badge and can be either `square` or `rounded`. The default shape of the badge is rounded. 
 
