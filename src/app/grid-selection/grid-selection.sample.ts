@@ -5,8 +5,8 @@ import { RemoteService } from '../shared/remote.service';
 
 @Component({
     selector: 'app-grid-selection-sample',
-    templateUrl: 'grid-selection.sample.html',
-    styleUrls: ['grid-selection.sample.css']
+    styleUrls: ['grid-selection.sample.scss'],
+    templateUrl: 'grid-selection.sample.html'
 })
 export class GridSelectionComponent implements AfterViewInit {
     @ViewChild('grid1', { static: true })
