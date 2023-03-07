@@ -15,7 +15,7 @@ import {
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.css']
+    styleUrls: ['drag-drop.sample.scss']
 })
 export class DragDropSampleComponent {
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })

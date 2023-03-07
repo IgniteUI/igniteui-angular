@@ -4,7 +4,7 @@ import { IgxColumnComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-custom-sample',
-    styleUrls: ['grid-toolbar-custom.sample.css'],
+    styleUrls: ['grid-toolbar-custom.sample.scss'],
     templateUrl: 'grid-toolbar-custom.sample.html'
 })
 export class GridToolbarCustomSampleComponent {

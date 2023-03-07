@@ -6,8 +6,8 @@ import { DATA } from './nwindData';
 
 @Component({
     selector: 'app-grid-row-reorder-sample',
-    templateUrl: 'grid-row-reorder.sample.html',
-    styleUrls: ['grid-row-reorder.sample.css']
+    styleUrls: ['grid-row-reorder.sample.scss'],
+    templateUrl: 'grid-row-reorder.sample.html'
 })
 export class GridRowReorderComponent {
 
