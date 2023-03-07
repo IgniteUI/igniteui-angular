@@ -11,7 +11,7 @@ describe('Avatar', () => {
     const baseClass = 'igx-avatar';
 
     const classes = {
-        round: `${baseClass}--rounded`,
+        square: `${baseClass}--square`,
         small: `${baseClass}--small`,
         medium: `${baseClass}--medium`,
         large: `${baseClass}--large`,
@@ -56,14 +56,14 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.roundShape).toBeTruthy();
-        expect(hostEl.classList).toContain(classes.round);
+        expect(instance.shape).toEqual('rounded');
+        expect(hostEl.classList).not.toContain(classes.square);
 
-        instance.roundShape = false;
+        instance.shape = "square";
 
         fixture.detectChanges();
-        expect(instance.roundShape).toBeFalsy();
-        expect(hostEl.classList).not.toContain(classes.round);
+        expect(instance.shape).toEqual('square');
+        expect(hostEl.classList).toContain(classes.square);
     });
 
     it('Can change its size', () => {
@@ -187,8 +187,7 @@ class InitAvatarComponent {
         [initials]="initials"
         [bgColor]="bgColor"
         [color]="color"
-        size="small"
-        [roundShape]="roundShape">
+        size="small">
     </igx-avatar>`
 })
 class AvatarWithAttribsComponent {
@@ -197,7 +196,6 @@ class AvatarWithAttribsComponent {
     public initials = 'ZK';
     public color = 'orange';
     public bgColor = 'royalblue';
-    public roundShape = 'true';
 }
 
 @Component({
