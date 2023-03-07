@@ -132,12 +132,7 @@
         indigo-design: none,
     ), $variant);
 
-    $label-margin: map.get((
-        material: rem(2px),
-        fluent: rem(6px),
-        bootstrap: rem(8px),
-        indigo-design: rem(8px),
-    ), $variant);
+    $label-margin: rem(8px);
 
     $mark-stroke: map.get((
         material: 3,
@@ -191,11 +186,6 @@
         position: relative;
         width: $size;
         height: $size;
-
-        @if $material-theme {
-            width: $ripple-size;
-            height: $ripple-size;
-        }
     }
 
     %cbx-composite {
