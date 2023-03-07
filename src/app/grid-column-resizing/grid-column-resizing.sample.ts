@@ -4,7 +4,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 @Component({
     providers: [],
     selector: 'app-grid-column-resizing-sample',
-    styleUrls: ['grid-column-resizing.sample.css'],
+    styleUrls: ['grid-column-resizing.sample.scss'],
     templateUrl: 'grid-column-resizing.sample.html'
 })
 

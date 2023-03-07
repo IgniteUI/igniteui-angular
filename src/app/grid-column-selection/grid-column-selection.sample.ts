@@ -17,7 +17,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-grid-column-selection-sample',
-    styleUrls: ['grid-column-selection.sample.css'],
+    styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html'
 })
 
@@ -73,7 +73,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
-    
+
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },

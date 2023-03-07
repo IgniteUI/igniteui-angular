@@ -3,7 +3,7 @@ import { IgxGridBaseDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-search-box',
-    styleUrls: ['./grid-search-box.component.css'],
+    styleUrls: ['./grid-search-box.component.scss'],
     templateUrl: './grid-search-box.component.html'
 })
 export class GridSearchBoxComponent {

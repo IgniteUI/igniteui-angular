@@ -1,8 +1,8 @@
 <div class="wrapper">
-    <button (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
-    <button (click)="exportButtonHandler()">Export</button>
+    <button igxButton="raised" (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
+    <button igxButton="raised"(click)="exportButtonHandler()">Export</button>
     <div class="sample-column">
-        <div>igxGrid</div>
+        <h4 class="sample-title">igxGrid</h4>
         <div>
             <input igxButton="raised" type="button" name="Density" (click)="toggleDensity()" value="Density" />
             <span> Current: {{displayDensityOptions.displayDensity}}</span>
@@ -51,9 +51,8 @@
             <igx-paginator></igx-paginator>
         </igx-grid>
     </div>
-    <br />
     <div class="sample-column">
-        <div>igxHierarchicalGrid</div>
+        <h4 class="sample-title">igxHierarchicalGrid</h4>
         <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [primaryKey]='"ID"' [allowFiltering]="true"
             [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" rowSelection="multiple">
             <igx-grid-toolbar [displayDensity]="hGrid.displayDensity">
@@ -88,7 +87,7 @@
     </div>
 
     <div class="sample-column">
-        <div>igxTreeGrid</div>
+        <h4 class="sample-title">igxTreeGrid</h4>
         <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]="true" [data]="treeData"
             primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode" [width]="'900px'"
             [height]="'800px'">
