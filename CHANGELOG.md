@@ -24,6 +24,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGrid`
     - Added new auto-sizing API `recalculateAutoSizes` that recalculates widths of columns that have size set to `auto`. Can be used in scenarios where you want to auto-size the columns again post initialization.
+    - Clicking with the Left Mouse key while holding `Ctrl` on selected cell will deselect the cell.
 - `igxPivotGrid`
     - Adding `aggregatorName` for pivot value configuration as an alternative to setting `aggregator` function. If both are set `aggregatorName` takes precedent. If none are set an error is thrown.
 - `IgxSimpleCombo`
