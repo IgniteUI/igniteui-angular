@@ -1,5 +1,5 @@
 .sample-column {
-    max-width: 900px;
+    max-width: 85%;
 }
 
 .density-chooser{
@@ -10,8 +10,12 @@ igx-buttongroup {
     display: block;
 }
 
-.topMargin {
-    margin-top: 20px;
+.sample-buttons igx-switch{
+    margin: 8px;
+}
+
+.sample-buttons button{
+    margin: 8px 4px;
 }
 
 .toggle-group {
@@ -25,7 +29,7 @@ igx-buttongroup {
     justify-content: space-between;
 }
 
-.sample-buttons button{
-    margin: 8px 4px;
+.topMargin,
+h4 {
+    margin: 16px 0;
 }
-

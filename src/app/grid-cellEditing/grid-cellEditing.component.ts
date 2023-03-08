@@ -4,12 +4,9 @@ import { data, dataWithoutPK } from '../shared/data';
 import {
     IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity} from 'igniteui-angular';
 
-
-
-
-
 @Component({
     selector: 'app-grid-cellediting',
+    styleUrls: ['grid-cellEditing.component.scss'],
     templateUrl: 'grid-cellEditing.component.html'
 })
 export class GridCellEditingComponent {
