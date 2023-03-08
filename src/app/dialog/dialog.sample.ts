@@ -5,7 +5,7 @@ import { useAnimation } from '@angular/animations';
 
 @Component({
     selector: 'app-dialog-sample',
-    styleUrls: ['dialog.sample.css'],
+    styleUrls: ['dialog.sample.scss'],
     templateUrl: 'dialog.sample.html'
 })
 export class DialogSampleComponent implements OnInit {

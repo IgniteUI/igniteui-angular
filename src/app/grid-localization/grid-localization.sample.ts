@@ -24,7 +24,7 @@ import {
 
 @Component({
     selector: 'app-grid-localization',
-    styleUrls: ['./grid-localization.sample.css'],
+    styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html'
 })
 
