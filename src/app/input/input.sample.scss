@@ -21,3 +21,8 @@ igx-input-group + igx-input-group {
     width: 100%;
     justify-content: space-between;
 }
+
+:host button {
+    align-self: flex-start;
+    margin-top: 1.5rem;
+}

@@ -1,5 +1,5 @@
-<section style="height: 800px" class="sample-content">
-    <div style="width: 100%; margin-bottom: 15px; text-align:center;"><h4>Multi-row layout configurator:</h4></div>
+<section class="sample-content">
+    <h4 class="sample-title">Multi-row layout configurator:</h4>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex; justify-content: center;">
         <div style="margin-right: 5px; text-align: start">
             <br/>
@@ -27,7 +27,7 @@
                 [style.visibility]="col.hide ? 'hidden' : 'visible'"
                 [igxDrag]="{ key: col.key }">
                 <div style="margin: 6px;">
-                        {{col.key}}
+                      {{col.key}}
                 </div>
             </div>
         </div>
@@ -67,8 +67,8 @@
         </div>
     </div>
     <div style="width: 100%; text-align: center; margin: 10px;">
-        <span igxButton="raised" (click)="rerenderGrid()">Render Grid.</span>
-        <span igxButton="raised" (click)="renderJson()">Get JSON!</span>
+        <button igxButton="raised" (click)="rerenderGrid()">Render Grid</button>
+        <button igxButton="raised" (click)="renderJson()">Get JSON!</button>
     </div>
 
      <div style="width: 100%; text-align: center; margin: 10px;">

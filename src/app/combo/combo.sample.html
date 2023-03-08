@@ -188,5 +188,44 @@
                 <div class="display-value--sub">In Region {{display.region}}</div>
             </div>
         </ng-template>
+        <h4 class="sample-title">Search Input</h4>
+        <div class="switch-settings">
+            <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch>
+            <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
+            <igx-switch [(ngModel)]="autoFocusSearch">Automatic Search Focus</igx-switch>
+        </div>
+        <h4>Overlay Settings</h4>
+        <div>
+            <igx-buttongroup [alignment]="alignment">
+                <button igxButton (click)="changeOverlaySettings(1)">Elastic Top</button>
+                <button igxButton (click)="changeOverlaySettings(2)">Global with Animations</button>
+                <button igxButton (click)="changeOverlaySettings(3)">Connected</button>
+                <button igxButton (click)="changeOverlaySettings(0)">Default (Auto)</button>
+            </igx-buttongroup>
+        </div>
+        <h4>Display Density</h4>
+        <div>
+            <igx-buttongroup>
+                <button igxButton [disabled]="igxCombo.displayDensity === compact"
+                    (click)="setDensity('compact')">Compact</button>
+                <button igxButton [disabled]="igxCombo.displayDensity === cosy"
+                    (click)="setDensity('cosy')">Cosy</button>
+                <button igxButton [disabled]="igxCombo.displayDensity === comfortable"
+                    (click)="setDensity('comfortable')">Comfortable</button>
+            </igx-buttongroup>
+        </div>
+        <h4>Item Height</h4>
+        <div>
+            <igx-buttongroup>
+                <button igxButton [disabled]="playgroundCombo.itemHeight === 56"
+                    (click)="playgroundCombo.itemHeight = 56">
+                    Set ItemHeight to 56
+                </button>
+                <button igxButton [disabled]="playgroundCombo.itemHeight === null"
+                    (click)="playgroundCombo.itemHeight = null">
+                    Reset ItemHeight
+                </button>
+            </igx-buttongroup>
+        </div>
     </section>
 </div>

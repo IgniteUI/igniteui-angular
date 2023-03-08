@@ -5,7 +5,7 @@ import { useAnimation } from '@angular/animations';
 @Component({
     selector: 'app-banner-sample',
     templateUrl: `banner.sample.html`,
-    styleUrls: [`banner.sample.css`]
+    styleUrls: [`banner.sample.scss`]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })

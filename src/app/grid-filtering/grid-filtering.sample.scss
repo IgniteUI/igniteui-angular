@@ -7,6 +7,10 @@
     margin-top: 24px;
     display: flex;
     flex-wrap: wrap;
+
+    &:nth-child(2) {
+        margin-bottom: 3rem;
+    }
 }
 
 igx-checkbox {
