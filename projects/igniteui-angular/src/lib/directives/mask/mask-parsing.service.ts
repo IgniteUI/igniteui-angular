@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 const FLAGS = new Set('aACL09#&?');
 const REGEX = new Map([
     ['C', /(?!^$)/u], // Non-empty
-    ['&', /[^\p{Separator}]/u], // Whitespace
+    ['&', /[^\p{Separator}]/u], // Non-whitespace
     ['a', /[\p{Letter}\d\p{Separator}]/u], // Alphanumeric & whitespace
     ['A', /[\p{Letter}\d]/u], // Alphanumeric
     ['?', /[\p{Letter}\p{Separator}]/u], // Alpha & whitespace
@@ -12,7 +12,7 @@ const REGEX = new Map([
     ['0', /\d/], // Numeric
     ['9', /[\d\p{Separator}]/u], // Numeric & whitespace
     ['#', /[\d\-+]/], // Numeric and sign
-  ]);
+]);
 
 /** @hidden */
 export interface MaskOptions {
@@ -40,17 +40,17 @@ export function parseMask(format: string): ParsedMask {
     let mask = format;
 
     for (let i = 0, j = 0; i < format.length; i++, j++) {
-      const [current, next] = [format.charAt(i), format.charAt(i + 1)];
+        const [current, next] = [format.charAt(i), format.charAt(i + 1)];
 
-      if (current === '\\' && FLAGS.has(next)) {
-        mask = replaceCharAt(mask, j, '');
-        literals.set(j, next);
-        i++;
-      } else {
-        if (!FLAGS.has(current)) {
-          literals.set(j, current);
+        if (current === '\\' && FLAGS.has(next)) {
+            mask = replaceCharAt(mask, j, '');
+            literals.set(j, next);
+            i++;
+        } else {
+            if (!FLAGS.has(current)) {
+                literals.set(j, current);
+            }
         }
-      }
     }
 
     return { literals, mask };
@@ -61,7 +61,6 @@ export function parseMask(format: string): ParsedMask {
     providedIn: 'root'
 })
 export class MaskParsingService {
-
 
     public applyMask(inputVal: string, maskOptions: MaskOptions, pos: number = 0): string {
         let outputVal = '';
@@ -80,7 +79,7 @@ export class MaskParsingService {
         }
 
         literals.forEach((val: string, key: number) => {
-            outputVal = this.replaceCharAt(outputVal, key, val);
+            outputVal = replaceCharAt(outputVal, key, val);
         });
 
         if (!value) {
@@ -104,7 +103,7 @@ export class MaskParsingService {
 
         for (const nonLiteralValue of nonLiteralValues) {
             const char = nonLiteralValue;
-            outputVal = this.replaceCharAt(outputVal, nonLiteralIndices[pos++], char);
+            outputVal = replaceCharAt(outputVal, nonLiteralIndices[pos++], char);
         }
 
         return outputVal;
@@ -112,8 +111,7 @@ export class MaskParsingService {
 
     public parseValueFromMask(maskedValue: string, maskOptions: MaskOptions): string {
         let outputVal = '';
-        const literals: Map<number, string> = this.getMaskLiterals(maskOptions.format);
-        const literalValues: string[] = Array.from(literals.values());
+        const literalValues: string[] = Array.from(parseMask(maskOptions.format).literals.values());
 
         for (const val of maskedValue) {
             if (literalValues.indexOf(val) === -1) {
@@ -154,7 +152,7 @@ export class MaskParsingService {
                 cursor = i + 1;
                 char = chars.shift();
             }
-            maskedValue = this.replaceCharAt(maskedValue, i, char);
+            maskedValue = replaceCharAt(maskedValue, i, char);
         }
 
         if (value.length <= 1) {
@@ -174,18 +172,7 @@ export class MaskParsingService {
             }
         }
 
-        return { value: maskedValue, end: cursor};
-    }
-
-    public replaceCharAt(strValue: string, index: number, char: string): string {
-        if (strValue !== undefined) {
-            return strValue.substring(0, index) + char + strValue.substring(index + 1);
-        }
-    }
-
-    public getMaskLiterals(mask: string): Map<number, string> {
-        return parseMask(mask).literals;
-
+        return { value: maskedValue, end: cursor };
     }
 
     /** Validates only non literal positions. */

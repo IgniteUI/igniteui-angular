@@ -63,7 +63,7 @@ describe('igxMask', () => {
         fixture.detectChanges();
 
         const { input, maskDirective } = fixture.componentInstance;
-;
+
         maskDirective.mask = '+\\9 000 000';
         fixture.detectChanges();
 
@@ -71,7 +71,27 @@ describe('igxMask', () => {
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('+9 ___ ___');
-    })
+    });
+
+    it('Escaped mask - advanced escaped patterns with input', () => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.detectChanges();
+
+        const { input, maskDirective } = fixture.componentInstance;
+        maskDirective.mask = '\\C\\C CCCC - \\0\\00 - X\\9\\9';
+        fixture.detectChanges();
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('CC ____ - 00_ - X99');
+
+        input.nativeElement.value = 'abcdefgh';
+        input.nativeElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('CC abcd - 00_ - X99');
+    });
 
     it('Mask rules - digit (0-9) or a space', fakeAsync(() => {
         const fixture = TestBed.createComponent(DigitSpaceMaskComponent);
