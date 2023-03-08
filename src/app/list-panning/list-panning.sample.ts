@@ -3,7 +3,7 @@ import { IgxToastComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-list-panning-sample',
-    styleUrls: ['list-panning.sample.css'],
+    styleUrls: ['list-panning.sample.scss'],
     templateUrl: 'list-panning.sample.html',
     encapsulation: ViewEncapsulation.None
 })

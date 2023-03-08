@@ -24,7 +24,7 @@ import { LocalService } from '../shared/local.service';
 
 @Component({
     selector: 'app-grid-sample',
-    styleUrls: [ 'grid.sample.css'],
+    styleUrls: [ 'grid.sample.scss'],
     templateUrl: 'grid.sample.html'
 })
 export class GridSampleComponent implements OnInit, AfterViewInit {

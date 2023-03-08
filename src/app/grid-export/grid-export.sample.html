@@ -1,5 +1,5 @@
 <div class="grid__wrapper">
-    <h3>Grid Export</h3>
+    <h4 class="sample-title">Grid Export</h4>
 
     <igx-grid #grid igxPreventDocumentScroll [data]="gridData" [autoGenerate]="false" height="700px" width="100%" (toolbarExporting)="configureExport($event)">
         <igx-grid-toolbar>
@@ -51,7 +51,7 @@
         </igx-column>
     </igx-grid>
 
-    <h3>Tree Grid Export</h3>
+    <h4 class="sample-title">Tree Grid Export</h4>
 
     <igx-tree-grid igxPreventDocumentScroll #tGrid [data]="tGridData" [autoGenerate]="false" height="700px" width="100%"
     primaryKey="ID" foreignKey="ParentID" (toolbarExporting)="configureExport($event)">
@@ -97,7 +97,7 @@
         </igx-column>
     </igx-tree-grid>
 
-    <h3>Hierarchical Grid Export</h3>
+    <h4 class="sample-title">Hierarchical Grid Export</h4>
 
     <igx-hierarchical-grid #hGrid igxPreventDocumentScroll class="hgrid" [data]="hGridData" [autoGenerate]="false"
     [height]="'700px'" [width]="'100%'" [rowHeight]="'65px'" (toolbarExporting)="configureExport($event)">

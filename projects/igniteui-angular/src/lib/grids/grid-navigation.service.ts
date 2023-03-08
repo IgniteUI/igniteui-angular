@@ -148,6 +148,9 @@ export class IgxGridNavigationService {
                     this.grid.cdr.detectChanges();
                 });
             } else {
+                if (hasLastActiveNode && !this.grid.selectionService.selected(this.lastActiveNode)) {
+                    return;
+                }
                 const range = {
                     rowStart: this.activeNode.row, rowEnd: this.activeNode.row,
                     columnStart: this.activeNode.column, columnEnd: this.activeNode.column

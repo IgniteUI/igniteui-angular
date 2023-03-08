@@ -1,10 +1,10 @@
 <div class="switches">
-    <igx-switch (change)='this.$sorting = !this.$sorting' style="padding-left: 20px">cancel sorting</igx-switch>
-    <igx-switch (change)='this.$filtering = !this.$filtering' style="padding-left: 20px">cancel filtering</igx-switch>
-    <igx-switch (change)='this.$pinning = !this.$pinning' style="padding-left: 20px">cancel pinning</igx-switch>
-    <igx-switch (change)='this.$resizing = !this.$resizing' style="padding-left: 20px">cancel resizing</igx-switch>
-    <igx-switch (change)='this.$columnSelectionChanging = !this.$columnSelectionChanging' style="padding-left: 20px">cancel columnSelectionChanging</igx-switch>
-    <igx-switch (change)='this.$hiding = !this.$hiding' style="padding-left: 20px">cancel hiding</igx-switch>
+    <igx-switch (change)='this.$sorting = !this.$sorting'>cancel sorting</igx-switch>
+    <igx-switch (change)='this.$filtering = !this.$filtering'>cancel filtering</igx-switch>
+    <igx-switch (change)='this.$pinning = !this.$pinning'>cancel pinning</igx-switch>
+    <igx-switch (change)='this.$resizing = !this.$resizing'>cancel resizing</igx-switch>
+    <igx-switch (change)='this.$columnSelectionChanging = !this.$columnSelectionChanging'>cancel columnSelectionChanging</igx-switch>
+    <igx-switch (change)='this.$hiding = !this.$hiding'>cancel hiding</igx-switch>
 </div>
 <igx-input-group>
     <input igxInput #productName type="text" placeholder="Filter by product name" (input)="filter(productName.value)">
@@ -19,7 +19,7 @@
             <!-- <button (click)="changeFormatOptions()">Change formatting</button>
             <button (click)="addFormatter()">Use formatter function for OrderDate col</button> -->
             <igx-grid #grid1
-                width="900px" height="550px"
+                width="650px" height="550px"
                 [data]="localData"
                 displayDensity="compact"
                 [primaryKey]="'ProductID'"

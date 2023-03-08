@@ -4,7 +4,7 @@ import { IColumnToggledEventArgs } from 'igniteui-angular';
 @Component({
     providers: [],
     selector: 'app-grid-column-actions-sample',
-    styleUrls: ['grid-column-actions.sample.css'],
+    styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html'
 })
 
