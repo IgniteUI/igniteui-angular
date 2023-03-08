@@ -1112,7 +1112,7 @@ describe('igxOverlay', () => {
                 destroy: () => { }
             };
             spyOn(viewContainerRef, 'createComponent').and.returnValue(mockComponent as any);
-            const id = overlay.attach(SimpleDynamicComponent, {}, viewContainerRef);
+            const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
             expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
 

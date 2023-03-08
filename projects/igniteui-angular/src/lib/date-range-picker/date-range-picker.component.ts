@@ -465,7 +465,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             , overlaySettings);
 
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, settings, this.viewContainerRef);
+            .attach(IgxCalendarContainerComponent, this.viewContainerRef, settings);
         this.subscribeToOverlayEvents();
         this._overlayService.show(this._overlayId);
     }

@@ -629,7 +629,7 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
@@ -891,19 +891,19 @@ describe('IgxDatePicker', () => {
                 const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
                 isDropdownSpy.and.returnValue(false);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDialogSettings, viewsContainerRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDialogSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDropdownSettings, viewsContainerRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 const mockOutlet = {} as any;
                 datePicker.outlet = mockOutlet;
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
-                    viewsContainerRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
@@ -915,8 +915,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, mockSettings),
-                    viewsContainerRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(false);
@@ -928,8 +928,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDialogSettings, mockSettings),
-                    viewsContainerRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
@@ -942,8 +942,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { modal: true }),
-                    viewsContainerRef
                 );
             });
 

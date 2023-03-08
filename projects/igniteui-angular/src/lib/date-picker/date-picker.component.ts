@@ -41,8 +41,8 @@ import {
     IgxCalendarComponent,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges,
-    WEEKDAYS } from '../calendar/public_api';
+    isDateInRanges
+} from '../calendar/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
@@ -578,7 +578,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             overlaySettings.outlet = this.outlet;
         }
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, overlaySettings, this.viewContainerRef);
+            .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
     }
 

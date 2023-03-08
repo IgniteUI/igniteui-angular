@@ -54,7 +54,6 @@ describe('IgxDateRangePicker', () => {
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
         let mockInjector;
-        let ngModuleRef: any;
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
@@ -77,13 +76,6 @@ describe('IgxDateRangePicker', () => {
                     })
                 })
             };
-            ngModuleRef = ({
-                injector: (...args: any[]) => { },
-                componentFactoryResolver: mockFactoryResolver,
-                instance: () => { },
-                destroy: () => { },
-                onDestroy: (fn: any) => { }
-            });
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
                 classList: { add: () => { }, remove: () => { } },
@@ -1039,12 +1031,12 @@ describe('IgxDateRangePicker', () => {
                     const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                     fix.detectChanges();
                     const dateRangePicker = fix.componentInstance.dateRangeWithTwoInputs;
-    
+
                     fix.componentInstance.markAsTouched();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
                     expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
-    
+
                     fix.componentInstance.disableForm();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);

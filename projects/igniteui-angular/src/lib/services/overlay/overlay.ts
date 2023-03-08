@@ -565,8 +565,8 @@ export class IgxOverlayService implements OnDestroy {
         if (!(viewContainerRefOrSettings instanceof ViewContainerRef)) {
             result = viewContainerRefOrSettings;
         }
-        if (!('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
-            result = moduleRefOrSettings;
+        if (!(moduleRefOrSettings && 'injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
+            result = moduleRefOrSettings as OverlaySettings;
         }
         return result;
     }
@@ -580,7 +580,7 @@ export class IgxOverlayService implements OnDestroy {
           if (viewContainerRefOrSettings instanceof ViewContainerRef) {
               result = viewContainerRefOrSettings;
           }
-          if ('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings) {
+          if (moduleRefOrSettings && 'injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings) {
               result = moduleRefOrSettings;
           }
           return result;

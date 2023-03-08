@@ -6273,8 +6273,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                settings,
-                this.viewRef);
+                this.viewRef,
+                settings);
             this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
