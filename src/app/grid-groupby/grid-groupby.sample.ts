@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions, ISortingStrategy, GroupSortingStrategy
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions, GroupSortingStrategy
 } from 'igniteui-angular';
 
 @Component({
