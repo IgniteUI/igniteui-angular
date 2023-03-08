@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
     - Added component validation along with styles for invalid state
 - `IgxAvatar`
     - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be either `square` or `rounded`. The default shape of the avatar is `square`. 
+- `IgxOverlayService`
+    - `attache` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) is now deprecated in line with API deprecated in Angular 13. New overload is added accepting `ViewComponentRef` that should be used instead.
 
 ## 15.0.1
 
@@ -261,9 +263,6 @@ All notable changes for each version of this project will be documented in this 
 - Updating dependency to Angular 14
 - `Migrations`
     - Migrations now support Yarn berry (version 2+)
-
-- `IgxOverlayService`
-    - `attache` method accepting `moduleRef` is deprecated due to deprecated Angular API. New overload is added accepting `viewComponentRef`.
 
 - `IgxGridEditingActions`
     - Added new inputs to show/hide the edit and delete buttons - `editRow`, `deleteRow`.
