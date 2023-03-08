@@ -409,6 +409,20 @@
 
     %igx-radio--focused {
         @if $variant == 'fluent' {
+            position: relative;
+            $focus-outline-offset-top: rem(2px);
+            $focus-outline-offset-left: rem(2px);
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: -$focus-outline-offset-top;
+                inset-inline-start: -$focus-outline-offset-left;
+                box-shadow: 0 0 0 rem(1px) var-get($theme, 'focus-outline-color');
+                width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+            }
+
             %radio-composite {
                 &::before {
                     background: var-get($theme, 'hover-color');
@@ -436,11 +450,11 @@
         @if $variant == 'fluent' {
             %radio-composite--x {
                 &::before {
-                    background: var-get($theme, 'fill-color-hover');
+                    background: var-get($theme, 'fill-color');
                 }
         
                 &::after {
-                    border: $border-width $border-style var-get($theme, 'fill-color-hover');
+                    border: $border-width $border-style var-get($theme, 'fill-color');
                 }
             }
         }
