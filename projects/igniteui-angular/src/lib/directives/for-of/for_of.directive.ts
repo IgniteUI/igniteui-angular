@@ -893,6 +893,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
+        if (!this.scrollComponent.nativeElement.isConnected) return;
         const scrollable = this.isScrollable();
         this.recalcUpdateSizes();
         this._applyChanges();
@@ -950,13 +951,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
             const embView = this._embeddedViews.shift();
-            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
-                || embView.rootNodes[0].nextElementSibling);
-            const view = container.detach(0);
+            if (!embView.destroyed) {
+                this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                    || embView.rootNodes[0].nextElementSibling);
+                const view = container.detach(0);
 
-            this.updateTemplateContext(embView.context, i);
-            container.insert(view);
-            this._embeddedViews.push(embView);
+                this.updateTemplateContext(embView.context, i);
+                container.insert(view);
+                this._embeddedViews.push(embView);
+            }
         }
     }
 
@@ -968,13 +971,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const container = this.dc.instance._vcr as ViewContainerRef;
         for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
             const embView = this._embeddedViews.pop();
-            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
-                || embView.rootNodes[0].nextElementSibling);
-            const view = container.detach(container.length - 1);
-
-            this.updateTemplateContext(embView.context, i);
-            container.insert(view, 0);
-            this._embeddedViews.unshift(embView);
+            if (!embView.destroyed) {
+                this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                    || embView.rootNodes[0].nextElementSibling);
+                const view = container.detach(container.length - 1);
+    
+                this.updateTemplateContext(embView.context, i);
+                container.insert(view, 0);
+                this._embeddedViews.unshift(embView);
+            }
         }
     }
 
@@ -1281,7 +1286,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         const scrollable = this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
-            const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
+            const totalWidth = parseInt(this.igxForContainerSize, 10) > 0 ? this.initSizesCache(this.igxForOf) : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
             this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {

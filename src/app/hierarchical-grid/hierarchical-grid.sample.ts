@@ -14,12 +14,13 @@ import {
     templateUrl: 'hierarchical-grid.sample.html'
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
+    public columnsReady = false;
+    public layoutsReady = false;
     @ViewChild('layout1', { static: true })
     private layout1: IgxRowIslandComponent;
 
     @ViewChild('hGrid2', { static: true })
     private hGrid2: IgxHierarchicalGridComponent;
-
     public localData = [];
     public localData1 = [];
     public data1 = [];

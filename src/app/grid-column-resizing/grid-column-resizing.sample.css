@@ -1,7 +1,0 @@
-.wrapper {
-    margin: 24px;
-}
-
-[igxButton]+[igxButton] {
-    margin: 4px;
-}

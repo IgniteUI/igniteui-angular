@@ -36,11 +36,10 @@ describe('igxMask', () => {
                 IgxMaskModule
             ],
             providers: [PlatformUtil]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    it('Initializes an input with default mask', fakeAsync(() => {
+    it('Initializes an input with default mask', () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
         const input = fixture.componentInstance.input;
@@ -49,18 +48,15 @@ describe('igxMask', () => {
         expect(input.nativeElement.getAttribute('placeholder')).toEqual('CCCCCCCCCC');
 
         input.nativeElement.dispatchEvent(new Event('click'));
-        tick();
 
         input.nativeElement.value = '@#$YUA123';
         fixture.detectChanges();
         input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
 
         expect(input.nativeElement.value).toEqual('@#$YUA123_');
-    }));
+    });
 
     it('Mask rules - digit (0-9) or a space', fakeAsync(() => {
         const fixture = TestBed.createComponent(DigitSpaceMaskComponent);
@@ -391,7 +387,7 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(new DragEvent('dragleave'));
         expect(input.nativeElement.value).toEqual('');
 
-        // should preserve state on dragenter        
+        // should preserve state on dragenter
         input.nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePaste('76', fixture.debugElement.query(By.css('.igx-input-group__input')), 3, 3);
         fixture.detectChanges();
@@ -505,7 +501,7 @@ describe('igxMask', () => {
         UIInteractions.simulatePaste('1234567890', inputElement, 1, 1);
         fixture.detectChanges();
         expect(inputElement.nativeElement.value).toEqual('(123) 4567-890');
-        
+
         const inputHTMLElement = inputElement.nativeElement as HTMLInputElement;
         inputHTMLElement.setSelectionRange(6, 8);
         fixture.detectChanges();
@@ -513,11 +509,11 @@ describe('igxMask', () => {
         expect(inputElement.nativeElement.selectionEnd).toEqual(8);
 
         UIInteractions.triggerEventHandlerKeyDown('Delete', inputElement);
-        inputElement.triggerEventHandler('input', { inputType: 'test' });
+        inputElement.nativeElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
         expect(inputElement.nativeElement.selectionStart).toEqual(8);
         expect(inputElement.nativeElement.selectionEnd).toEqual(8);
-        expect(inputHTMLElement.value).toEqual('(123) __67-890'); 
+        expect(inputHTMLElement.value).toEqual('(123) __67-890');
     });
 });
 

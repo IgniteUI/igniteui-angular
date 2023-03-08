@@ -23,6 +23,7 @@ import { IgxRowDirective } from '../grids/row.directive';
 import { CellType, GridType, RowType } from '../grids/common/grid.interface';
 import { IgxTreeNodeComponent } from '../tree/tree-node/tree-node.component';
 import { IgxColumnComponent } from '../grids/columns/column.component';
+import { IgxPivotGridComponent } from '../grids/pivot-grid/pivot-grid.component';
 
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -149,7 +150,7 @@ export class GridFunctions {
         return row.query(By.css(DISPLAY_CONTAINER));
     }
 
-    public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
+    public static getColGroup(grid: IgxGridComponent | IgxPivotGridComponent, headerName: string): IgxColumnGroupComponent {
         const colGroups = grid.columns.filter(c => c.columnGroup && c.header === headerName);
         if (colGroups.length === 0) {
             return null;
@@ -2030,7 +2031,7 @@ export class GridFunctions {
             const groupBlock = mrlBlocks[index] as any;
             const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
             expect(groupBlock).not.toBeNull();
-            groupSetting.columns.forEach((col, colIndex) => {
+            groupSetting.columns.forEach((col) => {
                 const cell = cellsFromBlock.find(x => x.column.field == col.field) as any;
                 const cellElem = cell.nativeElement;
                 // check correct attributes are applied

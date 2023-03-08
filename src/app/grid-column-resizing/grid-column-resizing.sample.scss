@@ -1,0 +1,8 @@
+.wrapper {
+    margin: 24px;
+    transform: scale(0.6);
+}
+
+[igxButton]+[igxButton] {
+    margin: 4px;
+}

@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
@@ -21,17 +21,16 @@ describe('TreeGrid Grouping Pipe', () => {
                 IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    beforeEach(() => {
         groupPipe = new IgxTreeGridGroupingPipe();
         data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
         data.forEach(element => {
             element['HireDate'] = null;
         });
-    }));
+    });
 
     it('doesn\'t change the data when no groupingExpressions are passed.', () => {
         const result = groupPipe.transform(data, [], 'Employees', 'CK', null);
@@ -127,10 +126,9 @@ describe('TreeGrid Grouping Pipe', () => {
     });
 
     describe('By Date', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             const fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
-            tick(16);
             grid = fix.componentInstance.treeGrid;
             groupPipe = new IgxTreeGridGroupingPipe();
             data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
@@ -139,27 +137,26 @@ describe('TreeGrid Grouping Pipe', () => {
                     return this.toDateString();
                 };
             });
-        }));
+        });
 
         it('groups the data properly by a single date field', () => {
             const groupingExpressions =
                 [groupingExpression('HireDate')];
             transformAndVerify(data, groupedByHireDate, groupingExpressions, 'Employees', 'CK', grid);
         });
-});
+    });
 
     describe('By String', () => {
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             const fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
-            tick(16);
             grid = fix.componentInstance.treeGrid;
             groupPipe = new IgxTreeGridGroupingPipe();
             data = SampleTestData.employeeTreeDataCaseSensitive();
             data.forEach(element => {
                 element['HireDate'] = null;
             });
-        }));
+        });
 
         it('groups the data properly by a single string field with lower case value', () => {
             const groupingExpressions =

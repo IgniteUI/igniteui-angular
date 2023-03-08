@@ -291,7 +291,8 @@ export class PlatformUtil {
         }
 
         range.selectNodeContents(node);
-        const width = range.getBoundingClientRect().width;
+        const scale = node.getBoundingClientRect().width / node.offsetWidth;
+        const width = range.getBoundingClientRect().width / scale;
 
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
@@ -346,7 +347,7 @@ export class PlatformUtil {
         return [
             this.KEYMAP.HOME, this.KEYMAP.END, this.KEYMAP.SPACE,
             this.KEYMAP.ARROW_DOWN, this.KEYMAP.ARROW_LEFT, this.KEYMAP.ARROW_RIGHT, this.KEYMAP.ARROW_UP
-        ].includes(key);
+        ].includes(key as any);
     }
 }
 
@@ -787,3 +788,9 @@ export const formatDate = (value: string | number | Date, format: string, locale
 };
 
 export const formatCurrency = new CurrencyPipe(undefined).transform;
+
+/** Converts pixel values to their rem counterparts for a base value */
+export const rem = (value: number | string) => {
+    const base = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
+    return Number(value) / base;
+}

@@ -34,7 +34,7 @@
                             <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                                 <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                                                *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar" [roundShape]="true"></igx-avatar>
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
                                     <p igxListLineTitle>{{contact.text}}</p>
                                     <span igxListLineSubTitle>{{contact.phone}}</span>
                                     <igx-icon igxListAction>phone</igx-icon>
@@ -245,7 +245,7 @@
             >
                 <igx-tab-item *ngFor="let contact of contacts; index as i">
                     <igx-tab-header>
-                        <igx-avatar igxPrefix [initials]="contact.text" size="small" [roundShape]="true">person</igx-avatar>
+                        <igx-avatar igxPrefix [initials]="contact.text" size="small">person</igx-avatar>
                         <span igxTabHeaderLabel>{{contact.text}}</span>
                         <button
                             igxButton="icon"
@@ -281,6 +281,34 @@
                     </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
+        </div>
+
+        
+        <div >
+            <h3 class="sample-title">Tab with grid</h3>
+            <igx-tabs>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>library_music</igx-icon>
+                        <span igxTabHeaderLabel>Albums</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        <igx-grid #grid1 [data]="localData" [autoGenerate]="true" width="100%" height="100%" >
+                        </igx-grid>
+                    </igx-tab-content>
+                </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>favorite</igx-icon>
+                        <span igxTabHeaderLabel>Favorite</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                       <div style="height: 80vh;">
+                        Test
+                       </div>
+                    </igx-tab-content>
+                </igx-tab-item>
+                </igx-tabs>
         </div>
     </div>
 </div>

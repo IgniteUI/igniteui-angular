@@ -1,3 +1,4 @@
+import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { cloneValue } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -16,14 +17,13 @@ export class PivotUtil {
             // process existing children
             if (rec.children && rec.children.size > 0) {
                 // process hierarchy in dept
-                rec.children.forEach((values, key) => {
+                rec.children.forEach((values) => {
                     this.processGroups(values, dimension, pivotKeys);
                 });
             }
             // add children for current dimension
             const hierarchyFields = PivotUtil
                 .getFieldsHierarchy(rec.records, [dimension], PivotDimensionType.Row, pivotKeys);
-            const values = Array.from(hierarchyFields.values()).find(x => x.dimension.memberName === dimension.memberName);
             const siblingData = PivotUtil
                 .processHierarchy(hierarchyFields, pivotKeys, 0);
             rec.children.set(dimension.memberName, siblingData);
@@ -106,7 +106,7 @@ export class PivotUtil {
             const vals = dimensionType === PivotDimensionType.Column ?
                 this.extractValuesForColumn(dimensions, rec, pivotKeys) :
                 this.extractValuesForRow(dimensions, rec, pivotKeys);
-            for (const [key, val] of vals) { // this should go in depth also vals.children
+            for (const [_key, val] of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 } else {
@@ -233,10 +233,28 @@ export class PivotUtil {
     public static aggregate(records, values: IPivotValue[]) {
         const result = {};
         for (const pivotValue of values) {
-            result[pivotValue.member] = pivotValue.aggregate.aggregator(records.map(r => r[pivotValue.member]), records);
+            const aggregator = PivotUtil.getAggregatorForType(pivotValue.aggregate, pivotValue.dataType);
+            if (!aggregator) {
+                throw CurrentResourceStrings.GridResStrings.igx_grid_pivot_no_aggregator.replace("{0}", pivotValue.member);
+            }
+            result[pivotValue.member] = aggregator(records.map(r => r[pivotValue.member]), records);
         }
 
         return result;
+    }
+
+    public static getAggregatorForType(aggregate: IPivotAggregator, dataType: GridColumnDataType) {
+        let aggregator = aggregate.aggregator;
+        if (aggregate.aggregatorName) {
+            let aggregators = IgxPivotNumericAggregate.aggregators();
+            if (!dataType || dataType === 'date' || dataType === 'dateTime') {
+                aggregators = aggregators.concat(IgxPivotDateAggregate.aggregators())
+            } else if (dataType === 'time') {
+                aggregators = aggregators.concat(IgxPivotTimeAggregate.aggregators());
+            }
+            aggregator = aggregators.find(x => x.key === aggregate.aggregatorName)?.aggregator;
+        }
+        return aggregator;
     }
 
     public static processHierarchy(hierarchies, pivotKeys, level = 0, rootData = false): IPivotGridRecord[] {
@@ -331,7 +349,7 @@ export class PivotUtil {
             }
         } else {
             const hierarchyChild = hierarchyValue[childKey];
-            for (const [key, child] of childCollection) {
+            for (const [_key, child] of childCollection) {
                 let hierarchyChildValue = hierarchyChild.get(child.value);
                 if (!hierarchyChildValue) {
                     hierarchyChild.set(child.value, child);

@@ -2,7 +2,7 @@
     <article class="column">
         <h4 class="sample-title">Simple tooltip</h4>
         <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [tooltip]="'Infragistics Inc. HQ'" [overlaySettings]="settings"
-                    src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
+                    src="assets/images/avatar/10.jpg" size="medium"
                     (onTooltipShow)="showing()"
                     (onTooltipHide)="hiding()"
                     aria-describedby="myid">
@@ -16,7 +16,7 @@
     <article class="column">
         <h4 class="sample-title">Tooltip input</h4>
         <div class="sample-tooltip-input">
-            <igx-avatar class="bottomMargin" src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true" igxTooltipTarget [tooltip]="'Her name is Toola Tipa'">
+            <igx-avatar class="bottomMargin" src="assets/images/avatar/10.jpg" size="medium" igxTooltipTarget [tooltip]="'Her name is Toola Tipa'">
             </igx-avatar>
 
             <igx-icon igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
@@ -57,7 +57,7 @@
                         <div class="locationTooltip" #locationTooltip="tooltip" igxTooltip>
                             <div class="locationTooltipContent">
                                 <igx-avatar class="locationIcon" src="assets/images/card/avatars/igLogo.png" size="medium"
-                                    [roundShape]="false"></igx-avatar>
+                                    shape="square"></igx-avatar>
                                 <div>
                                     <div>Infragistics Inc. HQ</div>
                                     <div>2 Commerce Dr, Cranbury, NJ 08512, USA</div>

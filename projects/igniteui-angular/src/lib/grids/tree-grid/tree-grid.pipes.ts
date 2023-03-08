@@ -27,11 +27,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             return collection;
         }
 
-        if (primaryKey && foreignKey) {
-            hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
-        } else if (childDataKey) {
+        if (childDataKey) {
             hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
+        } else if (primaryKey) {
+            hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         }
 
         this.grid.flatData = this.grid.transactions.enabled ?
@@ -254,17 +254,9 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     return collection;
                 }
 
-                const foreignKey = this.grid.foreignKey;
                 const childDataKey = this.grid.childDataKey;
 
-                if (foreignKey) {
-                    const flatDataClone = cloneArray(collection);
-                    return DataUtil.mergeTransactions(
-                        flatDataClone,
-                        aggregatedChanges,
-                        this.grid.primaryKey,
-                        this.grid.dataCloneStrategy);
-                } else if (childDataKey) {
+                if (childDataKey) {
                     const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
                     return DataUtil.mergeHierarchicalTransactions(
                         hierarchicalDataClone,
@@ -272,7 +264,14 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                         childDataKey,
                         this.grid.primaryKey,
                         this.grid.dataCloneStrategy
-                        );
+                    );
+                } else {
+                    const flatDataClone = cloneArray(collection);
+                    return DataUtil.mergeTransactions(
+                        flatDataClone,
+                        aggregatedChanges,
+                        this.grid.primaryKey,
+                        this.grid.dataCloneStrategy);
                 }
             }
         }
@@ -315,7 +314,12 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
         }
         const copy = collection.slice(0);
         const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
-        copy.splice(this.grid.crudService.row.index, 0, rec);
+        if (this.grid.crudService.addRowParent.isPinned) {
+            const parentRowIndex = copy.findIndex(record => record.rowID === this.grid.crudService.addRowParent.rowID);
+            copy.splice(parentRowIndex + 1, 0, rec);
+        } else {
+            copy.splice(this.grid.crudService.row.index, 0, rec);            
+        }
         this.grid.records.set(rec.key, rec);
         return copy;
     }

@@ -1,5 +1,3 @@
-import { IFilteringState } from './filtering-state.interface';
-
 import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
@@ -7,7 +5,6 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { FilteringStrategy } from './filtering-strategy';
 import { mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';

@@ -3,7 +3,7 @@ import { AppComponent } from './../app.component';
 
 @Component({
     selector: 'app-navbar-sample',
-    styleUrls: ['navdrawer.sample.css'],
+    styleUrls: ['navdrawer.sample.scss'],
     templateUrl: 'navdrawer.sample.html'
 })
 export class NavdrawerSampleComponent {

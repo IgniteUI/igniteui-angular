@@ -14,13 +14,13 @@
         [attr.aria-expanded]="!this.dropdown.collapsed" [attr.aria-controls]="this.dropdown.listId"
         [attr.aria-labelledby]="this.ariaLabelledBy || this.label?.id || this.placeholder"
         [attr.placeholder]="placeholder" [disabled]="disabled" [igxTextSelection]="!composing"
-        (focus)="onFocus()" (input)="handleInputChange($event)"
+        (focus)="onFocus()" (input)="handleInputChange($event)" (click)="handleInputClick()"
         (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (blur)="onBlur()"/>
 
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="comboInput.value.length" aria-label="Clear Selection" class="igx-combo__clear-button"
+    <igx-suffix *ngIf="selection.length" aria-label="Clear Selection" class="igx-combo__clear-button"
         (click)="handleClear($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
@@ -34,11 +34,11 @@
             (click)="toggleCaseSensitive()">
         </igx-icon>
     </igx-suffix>
-    <igx-suffix class="igx-combo__toggle-button">
+    <igx-suffix class="igx-combo__toggle-button" (click)="onClick($event)">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: collapsed}"></ng-container>
         </ng-container>
-        <igx-icon (click)="onClick($event)" *ngIf="!toggleIconTemplate">
+        <igx-icon *ngIf="!toggleIconTemplate">
             {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}
         </igx-icon>
     </igx-suffix>
@@ -51,7 +51,7 @@
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
-        [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown"
+        [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown"
         [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
         [attr.aria-activedescendant]="this.activeDescendant"
         (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">

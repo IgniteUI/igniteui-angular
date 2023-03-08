@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, getTestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
@@ -8,9 +8,8 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  * @hidden
  */
 
-export const configureTestSuite = (configureAction?: () => void) => {
-
-    const testBed: any = getTestBed();
+export const configureTestSuite = (configureAction?: () => TestBed) => {
+    const testBed = getTestBed();
     const originReset = testBed.resetTestingModule;
 
     const clearStyles = () => {
@@ -21,36 +20,38 @@ export const configureTestSuite = (configureAction?: () => void) => {
         document.querySelectorAll('svg').forEach(tag => tag.remove());
     };
 
+    let _resizerSub: jasmine.Spy<OnErrorEventHandlerNonNull>;
+
     beforeAll(() => {
         testBed.resetTestingModule();
-        testBed.resetTestingModule = () => TestBed;
-        resizeObserverIgnoreError();
+        testBed.resetTestingModule = () => testBed;
+        _resizerSub = resizeObserverIgnoreError();
     });
 
     if (configureAction) {
-        beforeAll(async () => {
-            configureAction();
-            await TestBed.compileComponents();
-        });
+        beforeAll(waitForAsync(() => {
+            configureAction().compileComponents();
+        }));
     }
 
     afterEach(() => {
         clearStyles();
         clearSVGContainer();
-        testBed._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
+        (testBed as any)._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
             const element = fixture.debugElement.nativeElement as HTMLElement;
             fixture.destroy();
             // If the fixture element ID changes, then it's not properly disposed
             element?.remove();
         });
         // reset ViewEngine TestBed
-        testBed._instantiated = false;
+        (testBed as any)._instantiated = false;
         // reset Ivy TestBed
-        testBed._testModuleRef = null;
+        (testBed as any)._testModuleRef = null;
     });
 
     afterAll(() => {
         testBed.resetTestingModule = originReset;
         testBed.resetTestingModule();
+        _resizerSub = null;
     });
 };

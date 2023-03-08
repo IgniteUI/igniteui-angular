@@ -6,7 +6,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['tree-grid.sample.css'],
+    styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html'
 })
 
@@ -20,12 +20,13 @@ export class TreeGridSampleComponent implements OnInit {
     public displayDensities;
     public selectionModes: GridSelectionMode[] = ['none', 'single', 'multiple', 'multipleCascade'];
     public filterStrategy = new TreeGridFilteringStrategy(['ID']);
+    public paging = false;
 
     private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
         private csvExporterService: IgxCsvExporterService) { }
-    
+
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
         this.displayDensities = [

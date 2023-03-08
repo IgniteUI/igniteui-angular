@@ -1,6 +1,5 @@
-import { Directive, forwardRef } from '@angular/core';
-import { RequiredValidator, NG_VALIDATORS, Validators, ValidationErrors, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
-import { IgxColumnComponent } from './column.component';
+import { Directive } from '@angular/core';
+import { RequiredValidator, NG_VALIDATORS, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
 
 
 @Directive({

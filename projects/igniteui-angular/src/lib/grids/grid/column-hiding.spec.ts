@@ -26,7 +26,7 @@ describe('Column Hiding UI #grid', () => {
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,
                 ColumnGroupsHidingTestComponent
@@ -38,14 +38,14 @@ describe('Column Hiding UI #grid', () => {
         });
     }));
 
-    describe('', () => {
-        beforeEach(fakeAsync(() => {
+    describe('Basic', () => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = GridFunctions.getColumnHidingElement(fix);
-        }));
+        });
 
         it('title is initially empty.', () => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);
@@ -691,17 +691,15 @@ describe('Column Hiding UI #grid', () => {
         });
     });
 
-    describe('', () => {
-        beforeEach(fakeAsync(() => {
+    describe('Column Groups', () => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnGroupsHidingTestComponent);
-            fix.detectChanges();
             (fix.componentInstance as ColumnGroupsHidingTestComponent).hasGroupColumns = true;
+            fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
-            fix.detectChanges();
-
             columnChooserElement = GridFunctions.getColumnHidingElement(fix);
-         }));
+         });
 
         it('indents columns according to their level.', () => {
             const items = GridFunctions.getColumnChooserItems(columnChooserElement);

@@ -32,7 +32,7 @@ const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
@@ -966,7 +966,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             grid.openAdvancedFilteringDialog();
             fix.detectChanges();
-            
+
             GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();

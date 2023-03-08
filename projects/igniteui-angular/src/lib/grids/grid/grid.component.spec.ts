@@ -2323,7 +2323,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 - grid.theadRow.nativeElement.offsetHeight
                 - grid.tfoot.nativeElement.offsetHeight
                 - grid.footer.nativeElement.offsetHeight
-                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);;
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2376,8 +2376,13 @@ describe('IgxGrid Component Tests #grid', () => {
             tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
 
-            grid.navigateTo(grid.data.length - 1, grid.columnList.length - 1);
+            grid.navigateTo(0,  grid.columnList.length - 1);
+            await wait(100);
+            fix.detectChanges();
+            grid.navigateTo(grid.data.length - 1);
             await wait(100);
             fix.detectChanges();
 

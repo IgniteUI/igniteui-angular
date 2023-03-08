@@ -11,7 +11,7 @@ import {
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
+import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';

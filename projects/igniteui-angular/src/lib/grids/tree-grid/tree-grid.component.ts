@@ -5,7 +5,6 @@ import {
     Input,
     OnInit,
     TemplateRef,
-    QueryList,
     ContentChild,
     AfterContentInit,
     ViewChild,
@@ -1029,7 +1028,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // deselect them as well, hence using 'records' map instead of getRowByKey() method which will
         // return only row components (i.e. records in view).
         const rowToDeselect = this.records.get(recordID);
-        this.selectionService.deselectRow(recordID);
+        this.selectionService.deselectRowsWithNoEvent([recordID]);
         this.gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
@@ -1072,7 +1071,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             parentData[this.childDataKey] = children;
         }
         this.selectionService.clearHeaderCBState();
-        this.pipeTrigger++; 
+        this.pipeTrigger++;
         if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();

@@ -276,7 +276,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const gridTop = this._getMaxTop(this.grid);
         const diffTop = rowElem.getBoundingClientRect().bottom -
         rowElem.offsetHeight - gridTop;
-        const isInView = isNext ? diffBottom <= 0 : diffTop >= 0;
+        // Adding Math.Round because Chrome has some inconsistencies when the page is zoomed
+        const isInView = isNext ? Math.round(diffBottom) <= 0 : Math.round(diffTop) >= 0;
         const calcOffset =  isNext ? diffBottom : diffTop;
 
         return { inView: isInView, offset: calcOffset };

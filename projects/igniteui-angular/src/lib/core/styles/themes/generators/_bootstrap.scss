@@ -2,11 +2,16 @@
 @use '../schemas' as *;
 @use 'igniteui-theming/sass/color' as *;
 
+////
 /// @group themes
 /// @access public
-/// Creates a global bootstrap-like theme that can be used with light backgrounds.
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// A wrapper around the theme mixin. Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin bootstrap-light-theme(
     $palette,
     $exclude: (),
@@ -16,13 +21,21 @@
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
     $surface: color($palette, 'surface');
+    $info: color($palette, 'info');
+    $success: color($palette, 'success');
+    $warn: color($palette, 'warn');
+    $error: color($palette, 'error');
 
     @include theme(
         $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
-            $gray: #212529
+            $gray: #212529,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
         ),
         $schema: $light-bootstrap-schema,
         $exclude: $exclude,
@@ -31,11 +44,10 @@
     );
 }
 
-/// @group themes
-/// @access public
-/// Creates a global bootstrap-like theme that can be used with dark backgrounds.
+/// A wrapper around the theme mixin. Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin bootstrap-dark-theme(
     $palette,
     $exclude: (),
@@ -45,13 +57,21 @@
     $primary: color($palette, 'primary');
     $secondary: color($palette, 'secondary');
     $surface: color($palette, 'surface');
+    $info: color($palette, 'info');
+    $success: color($palette, 'success');
+    $warn: color($palette, 'warn');
+    $error: color($palette, 'error');
 
     @include theme(
         $palette: palette(
             $primary,
             $secondary,
             $surface: if($surface != white, $surface, #222),
-            $gray: #fff
+            $gray: #fff,
+            $info: $info,
+            $success: $success,
+            $warn: $warn,
+            $error: $error
         ),
         $schema: $dark-bootstrap-schema,
         $exclude: $exclude,

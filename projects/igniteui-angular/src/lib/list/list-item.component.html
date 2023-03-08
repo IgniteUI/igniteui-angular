@@ -1,12 +1,12 @@
-   
+
 <div *ngIf="!isHeader && list.listItemLeftPanningTemplate" #leftPanningTmpl class="igx-list__item-right"
-    [style.width.px]="this.element.offsetWidth" [style.height.px]="this.element.offsetHeight">
+    [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
     <ng-container *ngTemplateOutlet="list.listItemLeftPanningTemplate.template; context: context">
     </ng-container>
 </div>
 
 <div *ngIf="!isHeader && list.listItemRightPanningTemplate" #rightPanningTmpl class="igx-list__item-left"
-    [style.width.px]="this.element.offsetWidth" [style.height.px]="this.element.offsetHeight">
+    [style.width.rem]="offsetWidthInRem" [style.height.rem]="offsetHeightInRem">
     <ng-container *ngTemplateOutlet="list.listItemRightPanningTemplate.template; context: context">
     </ng-container>
 </div>
@@ -33,7 +33,6 @@
     </div>
 </ng-template>
 
-    
 <ng-container *ngIf="isHeader">
     <ng-container *ngTemplateOutlet="itemsContent"></ng-container>
 </ng-container>

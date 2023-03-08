@@ -5,7 +5,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { CellType } from '../common/grid.interface';
@@ -17,27 +17,27 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
-                GridWithPrimaryKeyComponent
+                GridWithPrimaryKeyComponent,
+                SortByAnotherColumnComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         });
     }));
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
-        fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         grid.width = '800px';
-    }));
+        fixture.detectChanges();
+    });
 
     describe('API tests', () => {
 
-        it('Should sort grid ascending by column name', fakeAsync (() => {
+        it('Should sort grid ascending by column name', fakeAsync(() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
             spyOn(grid.sortingDone, 'emit').and.callThrough();
             const currentColumn = 'Name';
@@ -164,6 +164,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             });
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            const hireDateCol = grid.columns.findIndex(col => col.field === "HireDate");
+            grid.columns[hireDateCol].dataType = 'dateTime';
+            fixture.detectChanges();
 
             const currentColumn = 'HireDate';
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
@@ -353,6 +356,37 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
             expect(isFirstHalfOdd).toEqual(true);
             expect(isSecondHalfEven).toEqual(true);
+        });
+
+        it(`Should allow sorting using a custom Sorting Strategy in multiple mode`, () => {
+            fixture = TestBed.createComponent(SortByAnotherColumnComponent);
+            grid = fixture.componentInstance.grid;
+            fixture.detectChanges();
+
+            grid.primaryKey = 'ID';
+            const column = grid.getColumnByName('ID');
+            fixture.detectChanges();
+
+            column.groupingComparer = (a: any, b: any, currRec: any, groupRec: any) => {
+                return currRec.Name === groupRec.Name ? 0 : -1;
+            }
+
+            fixture.detectChanges();
+            grid.sortingExpressions = [
+                {
+                  dir: SortingDirection.Asc,
+                  fieldName: 'ID',
+                  strategy: new SortByAnotherColumnComponent,
+                },
+                {
+                  dir: SortingDirection.Asc,
+                  fieldName: 'LastName',
+                  strategy: DefaultSortingStrategy.instance(),
+                },
+              ];
+            fixture.detectChanges();
+            expect(grid.getCellByKey(6, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(7, 'LastName').row.index);
+            expect(grid.getCellByKey(4, 'LastName').row.index).toBeGreaterThan(grid.getCellByKey(5, 'LastName').row.index);
         });
     });
 
