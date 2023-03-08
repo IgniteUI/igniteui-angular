@@ -18,7 +18,7 @@ import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
-    styleUrls: ['grid-row-pinning.sample.css'],
+    styleUrls: ['grid-row-pinning.sample.scss'],
     templateUrl: 'grid-row-pinning.sample.html',
     providers: [
         { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} },
