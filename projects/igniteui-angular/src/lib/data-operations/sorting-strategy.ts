@@ -88,3 +88,40 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return data.sort(compareFn);
     }
 }
+
+export class GroupSortingStrategy implements ISortingStrategy {
+    protected static _instance: GroupSortingStrategy = null;
+
+    protected constructor() { }
+
+    public static instance(): GroupSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+
+    public sort(data: any[], fieldName: string, dir: SortingDirection) {
+        const groupedArray = this.groupBy(data, fieldName);
+
+        const cmpFunc = (a, b) => {
+            return this.compareObjects(a, b, dir, groupedArray, fieldName);
+        };
+
+        return data.sort(cmpFunc);
+    }
+
+    public groupBy(data, key) {
+        return data.reduce((acc, curr) => {
+            (acc[curr[key]] = acc[curr[key]] || []).push(curr);
+            return acc;
+        }, {})
+    }
+
+    protected compareObjects(obj1: any, obj2: any, dir: SortingDirection, data: any[], fieldName: string) {
+        let firstItemValuesLength = data[obj1[fieldName]].length;
+        let secondItemValuesLength = data[obj2[fieldName]].length;
+
+        if (dir === SortingDirection.Asc) {
+            return secondItemValuesLength > firstItemValuesLength ? -1 : (secondItemValuesLength < firstItemValuesLength ? 1 : 0);
+        }
+        return firstItemValuesLength > secondItemValuesLength ? -1 : (firstItemValuesLength < secondItemValuesLength ? 1 : 0);
+    }
+}
