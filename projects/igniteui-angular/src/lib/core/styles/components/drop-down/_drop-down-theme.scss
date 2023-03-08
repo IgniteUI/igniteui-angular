@@ -191,9 +191,9 @@
     $variant: map.get($theme, variant);
 
     $item-height: (
-        comfortable: rem(40px),
-        cosy: rem(32px),
-        compact: rem(28px)
+        comfortable: #{rem(40px)},
+        cosy: #{rem(32px)},
+        compact: #{rem(28px)}
     );
 
     $item-padding-inline: (
@@ -225,22 +225,12 @@
     }
 
     %igx-drop-down__list {
-        --component-size: var(--ig-size, var(--ig-size-large));
-        --item-size: #{sizable(map.get($item-height, 'compact'), map.get($item-height, 'cosy'), map.get($item-height, 'comfortable'))};
         overflow: hidden;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'background-color');
         box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
         border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
-    }
-
-    %igx-drop-down__list--cosy {
-        --component-size: var(--ig-size, var(--ig-size-medium));
-    }
-
-    %igx-drop-down__list--compact {
-        --component-size: var(--ig-size, var(--ig-size-small));
     }
 
     %igx-drop-down__list-scroll {
@@ -254,15 +244,34 @@
         }
     }
 
+    %igx-drop-down__content {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+
+    %igx-drop-down__inner {
+        display: block;
+        @include ellipsis();
+        margin-inline-end: auto;
+    }
+
+    // TODO use this after density classes are applied on the scroll container
+    //%item-size {
+    //    height: sizable(map.get($item-height, 'compact'), map.get($item-height, 'cosy'), map.get($item-height, 'comfortable'));
+    //}
+
     %igx-drop-down__header,
     %igx-drop-down__item {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         justify-content: flex-start;
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: var(--item-size);
         position: relative;
+        height: map.get($item-height, 'comfortable');
 
         igx-prefix,
         [igxPrefix] {
@@ -302,19 +311,12 @@
         }
     }
 
-    %igx-drop-down__content {
-        display: flex;
-        width: 100%;
-        align-items: center;
-    }
+    %igx-drop-down__item--cosy,
+    %igx-drop-down__header--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
 
-    %igx-drop-down__inner {
-        display: block;
-        @include ellipsis();
-        margin-inline-end: auto;
-    }
+        height: map.get($item-height, 'cosy');
 
-    %igx-drop-down__item--cosy {
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--cosy;
@@ -326,7 +328,12 @@
         }
     }
 
-    %igx-drop-down__item--compact {
+    %igx-drop-down__item--compact,
+    %igx-drop-down__header--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
+
+        height: map.get($item-height, 'compact');
+
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--compact;
@@ -376,30 +383,6 @@
         pointer-events: none;
         padding-inline: pad-inline(map.get($header-item-padding-inline, 'compact'), map.get($header-item-padding-inline, 'cosy'), map.get($header-item-padding-inline, 'comfortable'));
         padding-block: 0;
-    }
-
-    %igx-drop-down__header--cosy {
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--cosy;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--cosy;
-        }
-    }
-
-    %igx-drop-down__header--compact {
-        igx-prefix,
-        [igxPrefix] {
-            @extend %igx-drop-down__prefix--compact;
-        }
-
-        igx-suffix,
-        [igxSuffix] {
-            @extend %igx-drop-down__suffix--compact;
-        }
     }
 
     %igx-drop-down__group {
