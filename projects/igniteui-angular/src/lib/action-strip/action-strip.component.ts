@@ -110,15 +110,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Host `class.igx-action-strip` binding.
-     *
-     * @hidden
-     * @internal
-     */
-    @Input('class')
-    public hostClass: string;
-
-    /**
      * Gets/Sets the resource strings.
      *
      * @remarks
@@ -200,18 +191,14 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * @hidden
      * @internal
      */
-    @HostBinding('attr.class')
+    @HostBinding('class')
     public get hostClasses(): string {
-        const classes = this.hostClass?.split(' ').filter(x => x) || [];
-        // The custom classes should be at the end.
-        const densityClass = this.getComponentDensityClass('igx-action-strip');
-        if (!classes.includes(densityClass)) {
-            classes.unshift(densityClass);
+        let hostClass = this.getComponentDensityClass('igx-action-strip');
+        if (hostClass !== 'igx-action-strip') {
+            // action strip requires the base class to be always present:
+            hostClass = `igx-action-strip ${hostClass}`;
         }
-        if (!classes.includes('igx-action-strip')) {
-            classes.unshift('igx-action-strip');
-        }
-        return classes.join(' ');
+        return hostClass;
     }
 
     /**
