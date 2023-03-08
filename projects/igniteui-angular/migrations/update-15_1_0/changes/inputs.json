@@ -1,0 +1,14 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "roundShape",
+            "replaceWith": "shape",
+            "valueTransform": "roundShape_is_deprecated",
+            "owner": {
+                "selector": "igx-avatar",
+                "type": "component"
+            }
+        }
+    ]
+}

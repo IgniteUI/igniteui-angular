@@ -59,7 +59,7 @@
 
         <div class="toggles-container">
             <div class="toggle-group" *ngFor="let col of grid1.columns">
-                <h4>{{ col.field }}</h4>
+                <h4 class="sample-title">{{ col.field }}</h4>
                 <div class="switch-group">
                     <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
                 </div>
@@ -95,7 +95,7 @@
                     </igx-column-actions>
                 </div>
                 <div class="toggle-group" *ngFor="let col of grid2.columns">
-                    <h4>{{ col.field }}</h4>
+                    <h4 h4 class="sample-title">{{ col.field }}</h4>
                     <div class="switch-group">
                         <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
                     </div>
@@ -191,7 +191,7 @@
             <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
             <igx-column [field]="'Discontinued'" [sortable]="true" [hidden]="true">
                 <ng-template igxHeader let-column="column">
-                    <p style="color: crimson">{{column.field</p>
+                    <p>{{column.field}}</p>
                 </ng-template>
                 <ng-template igxCell let-item let-cell="cell">
                     <igx-checkbox [checked]="item" (change)="grid3.updateCell($event.checkbox.checked, cell.row.key, cell.column.field)"></igx-checkbox>
@@ -199,9 +199,8 @@
             </igx-column>
             <igx-paginator [perPage]="10"></igx-paginator>
         </igx-grid>
-        <button (click)="updateRow11()">Update Row With primaryKey</button>
+        <button igxButton="outlined" (click)="updateRow11()">Update Row With primary Key</button>
     </article>
-
 </section>
 
 <igx-toast #toast></igx-toast>

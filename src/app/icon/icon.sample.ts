@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-icon-sample',
-    styleUrls: ['./icon.sample.css'],
+    styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html'
 })
 export class IconSampleComponent implements OnInit {

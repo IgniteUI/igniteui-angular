@@ -5,7 +5,7 @@ import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
 @Component({
     providers: [],
     selector: 'app-grid-external-filtering-sample',
-    styleUrls: ['grid-external-filtering.sample.css'],
+    styleUrls: ['grid-external-filtering.sample.scss'],
     templateUrl: 'grid-external-filtering.sample.html'
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
