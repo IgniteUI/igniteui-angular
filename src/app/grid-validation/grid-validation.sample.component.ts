@@ -29,7 +29,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 
 @Component({
     selector: 'app-grid-row-edit',
-    styleUrls: [`grid-validation.sample.component.css`],
+    styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
 })
 export class GridValidationSampleComponent {
