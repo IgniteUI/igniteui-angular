@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions, GroupSortingStrategy
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions, GroupMemberCountSortingStrategy
 } from 'igniteui-angular';
 
 @Component({
@@ -116,7 +116,7 @@ export class GridGroupBySampleComponent implements OnInit {
         if (this.grid1.groupingExpressions.length) {
             const fieldName = this.grid1.groupingExpressions[0].fieldName;
             const dir = this.grid1.groupingExpressions[0].dir === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
-            this.grid1.groupBy({ fieldName, dir, ignoreCase: false, strategy: GroupSortingStrategy.instance() });
+            this.grid1.groupBy({ fieldName, dir, ignoreCase: false, strategy: GroupMemberCountSortingStrategy.instance() });
         }
     }
 

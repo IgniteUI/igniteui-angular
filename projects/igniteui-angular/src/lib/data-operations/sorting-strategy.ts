@@ -89,12 +89,12 @@ export class DefaultSortingStrategy implements ISortingStrategy {
     }
 }
 
-export class GroupSortingStrategy implements ISortingStrategy {
-    protected static _instance: GroupSortingStrategy = null;
+export class GroupMemberCountSortingStrategy implements ISortingStrategy {
+    protected static _instance: GroupMemberCountSortingStrategy = null;
 
     protected constructor() { }
 
-    public static instance(): GroupSortingStrategy {
+    public static instance(): GroupMemberCountSortingStrategy {
         return this._instance || (this._instance = new this());
     }
 
