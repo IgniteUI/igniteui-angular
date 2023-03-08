@@ -5,7 +5,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
-    styleUrls: ['grid-auto-size.sample.css'],
+    styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html'
 })
 

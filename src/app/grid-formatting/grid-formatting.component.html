@@ -1,6 +1,6 @@
-<h3>Grid with local data</h3>
-<button (click)="changeFormatOptions()">Change formatting</button>
-<button (click)="addFormatter()">Use formatter function for OrderDate col</button>
+<h4 class="sample-title">Grid with local data</h4>
+<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
+<button igxButton="raised" (click)="addFormatter()">Use formatter function for OrderDate col</button>
 <igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="localData" [primaryKey]="'ProductID'"
     [allowFiltering]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px"
     height="550px">
@@ -28,9 +28,9 @@
     <igx-paginator></igx-paginator>
 </igx-grid>
 
-<h3>Grid with remote data</h3>
-<button (click)="changeFormatOptions()">Change formatting</button>
-<button (click)="addFormatter()">Use formatter function for OrderDate col</button>
+<h4 class="sample-title">Grid with remote data</h4>
+<button igxButton="raised" (click)="changeFormatOptions()">Change formatting</button>
+<button igxButton="raised" (click)="addFormatter()">Use formatter function for OrderDate col</button>
 <igx-grid #grid2 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="remoteData | async" [primaryKey]="'OrderID'"
     [allowFiltering]="true" [moving]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px"
     height="550px">
@@ -50,7 +50,7 @@
     </igx-column>
 </igx-grid>
 
-<h3>Tree Grid</h3>
+<h4 class="sample-title">Tree Grid</h4>
 <igx-tree-grid #treeGrid [data]="treeData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
     [width]="'900px'" [height]="'500px'" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
     <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"

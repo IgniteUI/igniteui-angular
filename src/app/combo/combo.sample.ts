@@ -29,7 +29,7 @@ import { RemoteNWindService } from './remote-nwind.service';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
-    styleUrls: ['combo.sample.css']
+    styleUrls: ['combo.sample.scss']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })

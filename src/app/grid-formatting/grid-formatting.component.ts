@@ -12,6 +12,7 @@ const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders
 
 @Component({
     selector: 'app-grid-formatting',
+    styleUrls: ['grid-formatting.component.scss'],
     templateUrl: 'grid-formatting.component.html'
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {
