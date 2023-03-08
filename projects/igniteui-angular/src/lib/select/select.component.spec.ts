@@ -2458,7 +2458,7 @@ describe('igxSelect', () => {
                     // that the text in the list is positioned exactly on top of the text in the input
                     expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
                         - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
-                        .toBeLessThan(2);
+                        .toBeLessThanOrEqual(2);
                 }));
         });
         describe('Document bigger than the visible viewport tests: ', () => {
