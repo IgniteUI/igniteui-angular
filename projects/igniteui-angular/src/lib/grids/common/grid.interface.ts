@@ -286,7 +286,6 @@ export interface GridServiceType {
     clear_sort(fieldName: string): void;
 
     get_pin_row_event_args(rowID: any, index?: number, row?: RowType): IPinRowEventArgs;
-    get_unpin_row_event_args(rowID: any, row?: RowType): IPinRowEventArgs;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];

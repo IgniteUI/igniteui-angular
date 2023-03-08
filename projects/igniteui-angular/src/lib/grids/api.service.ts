@@ -152,12 +152,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.pinnedRecords.length > 0) {
-                const cellRow = this.grid.getRowByIndex(cell.rowIndex);
-                if (this.grid.pinnedRecords.find(r => r == cellRow.data)) {
-                    const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cellRow.data);
+                if (this.grid.pinnedRecords.find(r => r == cell.rowData)) {
+                    const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cell.rowData);
                     const reviousRowId = cell.value;
                     this.unpin_row(reviousRowId);
-                    this.pin_row(cellRow.key, pinnedRowIndex);
+                    this.pin_row(cell.editValue, pinnedRowIndex);
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -557,6 +556,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             return;
         }
         const eventArgs = this.get_pin_row_event_args(rowID, index, row);
+        grid.rowPinning.emit(eventArgs);
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
         grid._pinnedRecordIDs.splice(insertIndex, 0, rowID);
@@ -568,30 +568,21 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (index === -1) {
             return;
         }
-
+        const eventArgs = this.get_pin_row_event_args(rowID);
+        grid.rowPinning.emit(eventArgs);
         grid._pinnedRecordIDs.splice(index, 1);
     }
 
     public get_pin_row_event_args(rowID: any, index?: number, row?: RowType) {
         const eventArgs: IPinRowEventArgs = {
-            insertAtIndex: index,
             isPinned: true,
             rowID,
             row,
             cancel: false
         }
-
-        return eventArgs;
-    }
-
-    public get_unpin_row_event_args(rowID: any, row?: RowType) {
-        const eventArgs: IPinRowEventArgs = {
-            isPinned: false,
-            rowID,
-            row,
-            cancel: false
-        };
-
+        if (typeof index === 'number') {
+            eventArgs.insertAtIndex = index;
+        }
         return eventArgs;
     }
 

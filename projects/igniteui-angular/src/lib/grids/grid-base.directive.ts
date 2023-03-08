@@ -5155,7 +5155,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return false;
         }
 
-        const eventArgs = this.gridAPI.get_unpin_row_event_args(rowID, row);
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, null, row);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
