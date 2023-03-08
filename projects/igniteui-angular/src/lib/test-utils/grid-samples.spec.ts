@@ -2367,6 +2367,30 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
 }
 
 @Component({
+    template: GridTemplateStrings.declareGrid(
+        '',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        '')
+})
+export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+
+    public sort(data: any[]) {
+        const key = 'Name';
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key);
+        return data.sort(cmpFunc);
+    }
+
+    protected compareObjects(obj1, obj2, key: string) {
+        const a = obj1[key].toLowerCase();
+        const b = obj2[key].toLowerCase();
+        return a > b ? 1 : a < b ? -1 : 0;
+    }
+}
+
+@Component({
     template: `
     <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>

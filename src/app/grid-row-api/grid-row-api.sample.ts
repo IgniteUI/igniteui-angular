@@ -13,7 +13,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     selector: 'app-grid-row-api-sample',
-    styleUrls: ['grid-row-api.sample.css'],
+    styleUrls: ['grid-row-api.sample.scss'],
     templateUrl: 'grid-row-api.sample.html'
 })
 

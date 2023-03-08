@@ -7,7 +7,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 @Component({
     providers: [],
     selector: 'app-tree-grid-groupby-sample',
-    styleUrls: ['tree-grid-groupby.sample.css'],
+    styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html'
 })
 

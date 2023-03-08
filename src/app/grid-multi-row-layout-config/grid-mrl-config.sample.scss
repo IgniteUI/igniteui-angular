@@ -1,0 +1,99 @@
+.sample-content {
+    height: 800px;
+}
+
+
+.colsWrapper {
+    display: flex;
+    justify-content: center;
+    flex-flow: row;
+    width: 50%;
+    height: 50px;
+    margin: auto;
+    border: 1px black dotted;
+}
+
+textarea {
+    max-width: 100%;
+    padding: 8px;
+}
+
+.columnOut {
+    display: flex;
+    height: 32px;
+    margin-right: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-family: 'Titillium Web', sans-serif;
+    line-height: 1.25rem;
+    font-weight: 600;
+    background-color: rgb(104, 104, 104);
+    user-select: none;
+}
+
+.columnOut:hover {
+    background-color: rgb(60, 60, 60) !important;
+}
+
+.columnOut:active {
+    background-color: rgb(70, 70, 70) !important;
+}
+
+
+.columnIn {
+    display: flex;
+    font-family: 'Titillium Web', sans-serif;
+    line-height: 1.25rem;
+    font-weight: 600;
+    background-color: #bababa;
+    border: 1px solid #43434314;
+    position: relative;
+    user-select: none;
+}
+
+.columnInHovered {
+    background-color: #797979 !important;
+}
+
+.textWrapper {
+    margin: 6px;
+    align-self: flex-end;
+}
+
+.resizerLeft {
+    position: absolute;
+    width: 5px;
+    top: 0;
+    left: 1px;
+    height: 100%;
+    z-index: 2;
+    cursor: col-resize;
+}
+
+.resizerRight {
+    position: absolute;
+    width: 5px;
+    top: 0;
+    right: 1px;
+    height: 100%;
+    z-index: 2;
+    cursor: col-resize;
+}
+
+.resizerBottom {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    bottom: 1px;
+    z-index: 2;
+    cursor: row-resize;
+}
+
+.rowLayoutView {
+    display: grid;
+    margin: auto;
+}
+
+button {
+    margin: 0 0.5rem;
+}

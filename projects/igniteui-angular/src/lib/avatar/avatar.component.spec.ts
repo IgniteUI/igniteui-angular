@@ -57,12 +57,14 @@ describe('Avatar', () => {
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.roundShape).toBeTruthy();
+        expect(instance.shape).toEqual('rounded');
         expect(hostEl.classList).toContain(classes.round);
 
-        instance.roundShape = false;
+        instance.shape = "square";
 
         fixture.detectChanges();
         expect(instance.roundShape).toBeFalsy();
+        expect(instance.shape).toEqual('square');
         expect(hostEl.classList).not.toContain(classes.round);
     });
 
@@ -188,7 +190,7 @@ class InitAvatarComponent {
         [bgColor]="bgColor"
         [color]="color"
         size="small"
-        [roundShape]="roundShape">
+        [roundShape]="true">
     </igx-avatar>`
 })
 class AvatarWithAttribsComponent {
@@ -197,7 +199,6 @@ class AvatarWithAttribsComponent {
     public initials = 'ZK';
     public color = 'orange';
     public bgColor = 'royalblue';
-    public roundShape = 'true';
 }
 
 @Component({

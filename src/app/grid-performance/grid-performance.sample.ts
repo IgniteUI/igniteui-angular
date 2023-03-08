@@ -3,6 +3,7 @@ import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-performance-sample',
+    styleUrls: ['grid-performance.sample.scss'],
     templateUrl: 'grid-performance.sample.html'
 })
 
