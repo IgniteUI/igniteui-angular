@@ -1312,6 +1312,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract set filteredData(val: any[] | null);
 
     public abstract handleOpened();
+    public abstract onArrowDown(event: Event);
     public abstract focusSearchInput(opening?: boolean);
 
     public abstract select(newItem: any): void;
