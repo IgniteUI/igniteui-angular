@@ -7302,9 +7302,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray = this.getSelectableColumnsAt(each);
                 columnsArray.forEach((col) => {
                     if (col) {
-                        const key = headers ? col.header || col.field : col.field;
+                        const key = !this.isPivot && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
-                        const value = resolveNestedPath(rowData, col.field);
+                        const value = this.isPivot ? rowData.aggregationValues.get(col.field)
+                        : resolveNestedPath(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {
