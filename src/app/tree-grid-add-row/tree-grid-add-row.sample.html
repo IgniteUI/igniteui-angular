@@ -12,10 +12,13 @@
             </igx-grid-editing-actions>
         </igx-action-strip>
     </igx-tree-grid>
+
+
     <div class="three-columns">
         <div class="column">
             <button igxButton="raised" (click)="beginAddRowStart()">Add Row At Start</button>
         </div>
+
         <div class="column">
             <igx-input-group>
                 <input igxInput name="index" type="number" #indexInput />
@@ -23,6 +26,7 @@
             </igx-input-group>
             <button igxButton="raised" (click)="beginAddRowAtIndex(indexInput.value)">Add Row At Index</button>
         </div>
+
         <div class="column">
             <igx-input-group>
                 <input igxInput name="string" type="number" #idInput value="10" />
@@ -30,4 +34,5 @@
             </igx-input-group>
             <button igxButton="raised" (click)="beginAddRowById(idInput.value)">Add Row For ID</button>
         </div>
+
     </div>

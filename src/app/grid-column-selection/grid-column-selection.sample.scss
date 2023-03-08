@@ -10,3 +10,9 @@
     margin-bottom: 16px;
     max-width: 900px;
 }
+
+igx-grid {
+    &:first-of-type {
+        margin-bottom: 3rem;
+    }
+}

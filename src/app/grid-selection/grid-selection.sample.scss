@@ -9,6 +9,13 @@
     margin: 15px 0;
 }
 
-button {
-    margin: 8px;
+// button {
+//     margin: 8px;
+// }
+
+button,
+.igx-button--flat {
+    color: #FBB13C;
+    background-color: #340068;
+    margin: 0.3rem;
 }

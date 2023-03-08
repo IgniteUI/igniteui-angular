@@ -1,6 +1,6 @@
 .grid-row-edit-wrapper {
     flex-flow: row wrap;
-    padding: 50px;
+    padding: 2rem;
 }
 .dialog__header {
     font-weight: 800;
@@ -51,4 +51,16 @@
 
 .blue {
     color: #2222aa;
+}
+
+[igxButton="raised"] {
+    margin: 1rem 0.5rem 2rem 0;
+}
+
+.grid-cancel-edit-events {
+    padding-top: 2rem;
+}
+
+igx-grid {
+    margin-top: 1.5rem;
 }
