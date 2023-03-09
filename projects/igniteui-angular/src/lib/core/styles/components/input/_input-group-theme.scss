@@ -705,11 +705,11 @@
                 };
 
                 start: {
-                    start-radius: rem(4px);
+                    start-radius: var-get($theme, 'border-border-radius');
                 };
 
                 end: {
-                    start-radius: rem(4px);
+                    start-radius: var-get($theme, 'border-border-radius');
                 };
             }
         }
@@ -758,11 +758,11 @@
                 };
 
                 start: {
-                    end-radius: rem(4px);
+                    end-radius: var-get($theme, 'border-border-radius');
                 };
 
                 end: {
-                    end-radius: rem(4px);
+                    end-radius: var-get($theme, 'border-border-radius');
                 };
             }
         }
