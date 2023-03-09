@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentChecked
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, QueryList, ContentChildren, AfterContentChecked
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -232,6 +232,14 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
+    }
+
+    @HostListener('keydown.ArrowDown', ['$event'])
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    public onArrowDown(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.open();
     }
 
     /** @hidden @internal */

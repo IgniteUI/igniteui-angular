@@ -9,7 +9,6 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    HostListener,
     Inject,
     InjectionToken,
     Injector,
@@ -952,15 +951,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
         super(_displayDensityOptions);
     }
 
-    /** @hidden @internal */
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    public onArrowDown(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.open();
-    }
-
     public ngAfterViewChecked() {
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
 
@@ -1327,6 +1317,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract set filteredData(val: any[] | null);
 
     public abstract handleOpened();
+    public abstract onArrowDown(event: Event);
     public abstract focusSearchInput(opening?: boolean);
 
     public abstract select(newItem: any): void;
