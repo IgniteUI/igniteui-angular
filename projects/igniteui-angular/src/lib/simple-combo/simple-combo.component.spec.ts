@@ -1040,11 +1040,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
-            expect(document.activeElement).toHaveClass('igx-combo__content');
-
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
             expect(input.nativeElement.value).toEqual('Wisconsin');
+        });
+
+        it('should navigate to next filtered item on ArrowDown', () => {
+            combo.allowCustomValues = true;
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            // filtered data -> Wisconsin, Connecticut
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(input.nativeElement.value).toEqual('Connecticut');
         });
 
         it('should clear selection when all text in input is removed by Backspace and Delete', () => {

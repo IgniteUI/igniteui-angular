@@ -336,7 +336,7 @@ export class IgxGridSelectionService {
             return true;
         }
 
-        if (this.pointerEventInGridBody) {
+        if (this.pointerEventInGridBody && this.isActiveNode(node)) {
             this.add(node);
         }
         return false;

@@ -140,7 +140,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.open();
         } else {
             if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
-                this.dropdown.navigateFirst();
+                this.dropdown.navigateNext();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
                 this.addItem?.element.nativeElement.focus();

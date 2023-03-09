@@ -1,7 +1,7 @@
 <div class="wrapper">
     <div class="sample-content">
         <div class="sample-column">
-            <div style="margin-bottom: 1rem">
+            <div class="sample-buttons">
                 <igx-input-group type="box">
                     <label igxLabel>Change copy separator</label>
                     <input type="text" igxInput [(ngModel)]="options.separator" />
@@ -11,7 +11,7 @@
                         Click the clear icon to reset it back to tabulation.
                     </igx-hint>
                 </igx-input-group>
-                <div style="margin: 0 0.5rem" igxLayout igxLayoutJustify="space-between">
+                <div igxLayout igxLayoutJustify="space-between">
                     <igx-switch [(ngModel)]="options.enabled">Toggle grid copy behavior</igx-switch>
                     <igx-switch [(ngModel)]="options.copyHeaders">Toggle copying of header labels</igx-switch>
                     <igx-switch [(ngModel)]="options.copyFormatters">Toggle copying column formatters</igx-switch>
@@ -20,7 +20,7 @@
             </div>
 
 
-            <div style="width: 50wh; height: 50vh">
+            <div class="sample-content">
                 <igx-grid #grid [data]="data" primaryKey="ID"
                     [rowEditable]="true"
                     (columnInit)="initColumn($event)"
@@ -28,8 +28,7 @@
                     [autoGenerate]="true">
                 </igx-grid>
             </div>
-
-            <div style="margin-top: 0.5rem">
+            <div>
                 <igx-input-group type="box">
                     <label igxLabel>Paste your data here (or in Excel)</label>
                     <textarea igxInput cols="30" rows="10"></textarea>
