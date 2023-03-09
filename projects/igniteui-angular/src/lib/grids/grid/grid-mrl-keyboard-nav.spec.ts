@@ -13,6 +13,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
+import { NgFor } from '@angular/common';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -2629,7 +2630,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent, NgFor]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

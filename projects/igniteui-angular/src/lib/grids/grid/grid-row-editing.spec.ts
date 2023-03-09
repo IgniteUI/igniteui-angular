@@ -40,16 +40,16 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [IgxGridRowEditingComponent,
+            imports: [
+                NoopAnimationsModule,
+                IgxGridRowEditingComponent,
                 IgxGridRowEditingTransactionComponent,
                 IgxGridWithEditingAndFeaturesComponent,
                 IgxGridRowEditingWithoutEditableColumnsComponent,
                 IgxGridCustomOverlayComponent,
                 IgxGridEmptyRowEditTemplateComponent,
                 IgxGridCustomRowEditTemplateComponent,
-                VirtualGridComponent],
-            imports: [
-                NoopAnimationsModule
+                VirtualGridComponent
             ]
         });
     }));
