@@ -369,10 +369,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input()
     public addRowEmptyTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public autoGenerateExclude: string[] = [];
 
     /**
      * @hidden @internal
@@ -2040,7 +2046,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         let columns = [];
         if (fields.size === 0) {
-            this.values.filter((value) => !this.autoGenerateExclude.includes(value.member)).forEach((value) => {
+            this.values.forEach((value) => {
                 const ref = factoryColumn.create(this.viewRef.injector);
                 ref.instance.header = value.displayName;
                 ref.instance.field = value.member;
@@ -2067,7 +2073,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     columns = columns.concat(measureChildren);
                 }
 
-            } else if (shouldGenerate && !this.autoGenerateExclude.includes(value)) {
+            } else if (shouldGenerate) {
                 const col = this.createColumnForDimension(value, data, parent, true);
                 if (value.expandable) {
                     col.headerTemplate = this.headerTemplate;
