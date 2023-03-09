@@ -1,34 +1,29 @@
 /* eslint-disable max-len */
 import { Component, ViewChild, OnInit, Inject } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {
-    IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions
-} from 'igniteui-angular';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { NgFor } from '@angular/common';
 import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { FormsModule } from '@angular/forms';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { IRowSelectionEventArgs, ISortingOptions } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
-<<<<<<< HEAD
     styleUrls: ['grid-groupby.sample.css'],
     templateUrl: 'grid-groupby.sample.html',
     standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent_1, IgxColumnComponent]
-=======
-    styleUrls: ['grid-groupby.sample.scss'],
-    templateUrl: 'grid-groupby.sample.html'
->>>>>>> 0b248ce0f804051d94d55a78b039eebae9fc96c7
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })

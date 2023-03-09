@@ -88,8 +88,6 @@ describe('igxSelect', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                FormsModule,
-                ReactiveFormsModule,
                 NoopAnimationsModule,
                 IgxSelectSimpleComponent,
                 IgxSelectGroupsComponent,
