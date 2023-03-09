@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
     - Added component validation along with styles for invalid state
 - `igxMask` directive
     - Added the capability to escape mask pattern literals.
+- `IgxBadge`
+    - Added `shape` property that controls the shape of the badge and can be either `square` or `rounded`. The default shape of the badge is rounded. 
 - `IgxAvatar`
     - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`. 
 
