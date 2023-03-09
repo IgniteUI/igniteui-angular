@@ -154,9 +154,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (this.grid.pinnedRecords.length > 0) {
                 if (this.grid.pinnedRecords.find(r => r == cell.rowData)) {
                     const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cell.rowData);
-                    const reviousRowId = cell.value;
-                    this.unpin_row(reviousRowId);
-                    this.pin_row(cell.editValue, pinnedRowIndex);
+                    const previousRowId = cell.value;
+                    this.unpin_row(previousRowId);
+                    this.pin_row(args.newValue, pinnedRowIndex);
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -558,6 +558,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const eventArgs = this.get_pin_row_event_args(rowID, index, row, true);
         grid.rowPinning.emit(eventArgs);
 
+        if (eventArgs.cancel) {
+            return;
+        }
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
         grid._pinnedRecordIDs.splice(insertIndex, 0, rowID);
     }
@@ -570,6 +573,10 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         const eventArgs = this.get_pin_row_event_args(rowID, null , null, false);
         grid.rowPinning.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
         grid._pinnedRecordIDs.splice(index, 1);
     }
 
