@@ -792,7 +792,6 @@
     }
 
     %form-group-bundle--search {
-        padding-inline: pad-inline(rem(16px, map.get($base-scale-size, 'compact')), rem(16px, map.get($base-scale-size, 'cosy')), rem(16px, map.get($base-scale-size, 'comfortable')));
         border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
@@ -1086,7 +1085,6 @@
         }
     }
 
-    %form-group-input--search,
     %form-group-file-input-indigo {
         padding-block: 0;
     }
