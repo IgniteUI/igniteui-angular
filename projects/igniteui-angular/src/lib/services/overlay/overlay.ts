@@ -346,8 +346,8 @@ export class IgxOverlayService implements OnDestroy {
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        moduleRefOrSettings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, moduleRefOrSettings));
-        info.settings = moduleRefOrSettings;
+        var settings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, moduleRefOrSettings));
+        info.settings = settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
@@ -564,6 +564,7 @@ export class IgxOverlayService implements OnDestroy {
         let result: OverlaySettings | undefined;
         if (!(viewContainerRefOrSettings instanceof ViewContainerRef)) {
             result = viewContainerRefOrSettings;
+            return result;
         }
         if (!(moduleRefOrSettings && 'injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
             result = moduleRefOrSettings as OverlaySettings;
