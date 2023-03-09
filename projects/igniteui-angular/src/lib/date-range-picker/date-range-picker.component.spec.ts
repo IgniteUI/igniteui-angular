@@ -115,7 +115,14 @@ describe('IgxDateRangePicker', () => {
                         getPosition: () => 0,
                         parentPlayer: {},
                         totalTime: 0,
-                        beforeDestroy: () => { }
+                        beforeDestroy: () => { },
+                        _renderer: {
+                            engine: {
+                                players: [
+                                    {}
+                                ]
+                            }
+                        }
                     })
                 })
             };

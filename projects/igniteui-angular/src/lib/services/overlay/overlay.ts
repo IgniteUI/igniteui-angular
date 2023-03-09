@@ -562,12 +562,12 @@ export class IgxOverlayService implements OnDestroy {
       viewContainerRefOrSettings: ViewContainerRef | OverlaySettings | undefined,
       moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): OverlaySettings | undefined {
         let result: OverlaySettings | undefined;
-        if (!(viewContainerRefOrSettings instanceof ViewContainerRef)) {
+        if (viewContainerRefOrSettings && !(viewContainerRefOrSettings instanceof ViewContainerRef)) {
             result = viewContainerRefOrSettings;
             return result;
         }
-        if (!(moduleRefOrSettings && 'injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
-            result = moduleRefOrSettings as OverlaySettings;
+        if (moduleRefOrSettings && !('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
+            result = moduleRefOrSettings;
         }
         return result;
     }
