@@ -285,7 +285,7 @@ export interface GridServiceType {
     sort_multiple(expressions: ISortingExpression[]): void;
     clear_sort(fieldName: string): void;
 
-    get_pin_row_event_args(rowID: any, index?: number, row?: RowType): IPinRowEventArgs;
+    get_pin_row_event_args(rowID: any, index?: number, row?: RowType , pinned?: boolean): IPinRowEventArgs;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];

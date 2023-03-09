@@ -555,7 +555,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (grid._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return;
         }
-        const eventArgs = this.get_pin_row_event_args(rowID, index, row);
+        const eventArgs = this.get_pin_row_event_args(rowID, index, row, true);
         grid.rowPinning.emit(eventArgs);
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : grid._pinnedRecordIDs.length;
@@ -568,14 +568,14 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (index === -1) {
             return;
         }
-        const eventArgs = this.get_pin_row_event_args(rowID);
+        const eventArgs = this.get_pin_row_event_args(rowID, null , null, false);
         grid.rowPinning.emit(eventArgs);
         grid._pinnedRecordIDs.splice(index, 1);
     }
 
-    public get_pin_row_event_args(rowID: any, index?: number, row?: RowType) {
+    public get_pin_row_event_args(rowID: any, index?: number, row?: RowType, pinned?: boolean) {
         const eventArgs: IPinRowEventArgs = {
-            isPinned: true,
+            isPinned: pinned ? true : false,
             rowID,
             row,
             cancel: false

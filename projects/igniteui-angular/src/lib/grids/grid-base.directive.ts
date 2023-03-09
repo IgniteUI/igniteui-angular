@@ -5119,7 +5119,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
-        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, index, row);
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, index, row, true);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -5155,7 +5155,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return false;
         }
 
-        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, null, row);
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, null, row, false);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
