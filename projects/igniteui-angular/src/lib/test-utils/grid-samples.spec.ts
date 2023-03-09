@@ -1886,7 +1886,7 @@ export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
@@ -1919,7 +1919,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 }
@@ -1931,7 +1931,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
             [height]='height'
             [data]="data"
             [columnWidth] = "'100px'"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
@@ -1964,7 +1964,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 
@@ -2363,6 +2363,30 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
         const a = obj1[key];
         const b = obj2[key];
         return reverse * this.sortByParity(a, b);
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        '')
+})
+export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+
+    public sort(data: any[]) {
+        const key = 'Name';
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key);
+        return data.sort(cmpFunc);
+    }
+
+    protected compareObjects(obj1, obj2, key: string) {
+        const a = obj1[key].toLowerCase();
+        const b = obj2[key].toLowerCase();
+        return a > b ? 1 : a < b ? -1 : 0;
     }
 }
 

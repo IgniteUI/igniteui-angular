@@ -1,7 +1,7 @@
-<ng-container *ngTemplateOutlet='addRowUI ? addTemp : defaultTemp'></ng-container>
+<ng-container *ngTemplateOutlet="addRowUI ? addTemp : defaultTemp"></ng-container>
 
 <ng-template #addTemp>
-    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='triggerAddAnimationClass' (animationend)='animationEndHandler()'>
+    <div class="igx-grid__tr--inner" [class.igx-grid__tr--add-animate]="triggerAddAnimationClass" (animationend)="animationEndHandler()">
         <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
     </div>
 </ng-template>
@@ -30,7 +30,7 @@
                     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             </ng-template>
         </ng-container>
-        <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+        <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
         <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
@@ -44,7 +44,7 @@
         <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
             <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
         </ng-container>
-        <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
+        <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
             <div class="igx-grid__mrl-block" [ngStyle]="{
                 'grid-template-rows':col.getGridTemplate(true),
                 'grid-template-columns':col.getGridTemplate(false)
@@ -92,7 +92,7 @@
 </ng-template>
 
 <ng-template #cellTemplate let-col>
-        <igx-grid-cell
+    <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
         [class.igx-grid__td--pinned]="col.pinned"

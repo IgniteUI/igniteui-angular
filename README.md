@@ -41,9 +41,9 @@ There are many ways in which you can [participate](https://github.com/IgniteUI/i
  
 ## Browser Support
 
-![chrome_48x48](https://user-images.githubusercontent.com/2188411/168109445-fbd7b217-35f9-44d1-8002-1eb97e39cdc6.png) | ![firefox_48x48](https://user-images.githubusercontent.com/2188411/168109465-e46305ee-f69f-4fa5-8f4a-14876f7fd3ca.png) | ![edge_48x48](https://user-images.githubusercontent.com/2188411/168109472-a730f8c0-3822-4ae6-9f54-785a66695245.png) | ![opera_48x48](https://user-images.githubusercontent.com/2188411/168109520-b6865a6c-b69f-44a4-9948-748d8afd687c.png) | ![safari_48x48](https://user-images.githubusercontent.com/2188411/168109527-6c58f2cf-7386-4b97-98b1-cfe0ab4e8626.png) | ![ie_48x48](https://user-images.githubusercontent.com/2188411/168135931-ce5259bb-5b26-4003-8b89-dbee3d4f247c.png)
---- | --- | --- | --- | --- |:---:|
-Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11* |
+| ![chrome][] | ![firefox][] | ![edge][] | ![opera][] | ![safari][] | ![ie][] |
+|:-----------:|:------------:|:---------:|:----------:|:-----------:|:-------:|
+|  Latest ✔   |   Latest ✔   | Latest ✔  |  Latest ✔  |  Latest ✔   |   11*   |
 
 \* *IE 11 is only supported in Ignite UI for Angular < 13.0.0*
 
@@ -290,6 +290,16 @@ To acquire a license for commercial usage, please [register for trial](https://I
 © Copyright 2020 INFRAGISTICS. All Rights Reserved.
 The Infragistics Ultimate license & copyright applies to this distribution.
 For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
+
+
+
+<!-- browser logos -->
+[chrome]: https://user-images.githubusercontent.com/2188411/168109445-fbd7b217-35f9-44d1-8002-1eb97e39cdc6.png "Google Chrome"
+[firefox]: https://user-images.githubusercontent.com/2188411/168109465-e46305ee-f69f-4fa5-8f4a-14876f7fd3ca.png "Mozilla Firefox"
+[edge]: https://user-images.githubusercontent.com/2188411/168109472-a730f8c0-3822-4ae6-9f54-785a66695245.png "Microsoft Edge"
+[opera]: https://user-images.githubusercontent.com/2188411/168109520-b6865a6c-b69f-44a4-9948-748d8afd687c.png "Opera"
+[safari]: https://user-images.githubusercontent.com/2188411/168109527-6c58f2cf-7386-4b97-98b1-cfe0ab4e8626.png "Safari"
+[ie]: https://user-images.githubusercontent.com/2188411/168135931-ce5259bb-5b26-4003-8b89-dbee3d4f247c.png "Internet Explorer"
 
 
 

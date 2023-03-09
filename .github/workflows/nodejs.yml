@@ -54,6 +54,6 @@ jobs:
             npm run test:i18n:dist
       - name: Publish to coveralls.io
         if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '16.x'
-        uses: coverallsapp/github-action@v1.1.2
+        uses: coverallsapp/github-action@v1.2.1
         with:
             github-token: ${{ github.token }}

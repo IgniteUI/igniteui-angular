@@ -1,0 +1,27 @@
+.sample-content {
+    flex-flow: column nowrap;
+}
+
+.promotion {
+    opacity: .75;
+    margin: .5rem;
+}
+
+.promotion-selected {
+    opacity: 1;
+    animation: promo-selected 500ms cubic-bezier(.19, 1, .22, 1);
+}
+
+.radio-sample__radio {
+    margin-top: 20px;
+}
+
+@keyframes promo-selected {
+    50% {
+        transform: translateY(5%) scale(1.05, 1.05);
+    }
+
+    100% {
+        transform: none;
+    }
+}

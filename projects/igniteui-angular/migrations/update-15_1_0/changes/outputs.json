@@ -1,0 +1,205 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onSlideChanged",
+            "replaceWith": "slideChanged",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSlideAdded",
+            "replaceWith": "slideAdded",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSlideRemoved",
+            "replaceWith": "slideRemoved",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCarouselPaused",
+            "replaceWith": "carouselPaused",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCarouselPlaying",
+            "replaceWith": "carouselPlaying",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-action-strip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igxButton",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGroupingDone",
+            "replaceWith": "groupingDone",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-grid-toolbar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-pivot-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-input-group",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-query-builder",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDensityChanged",
+            "replaceWith": "densityChanged",
+            "owner": {
+                "selector": "igx-tree",
+                "type": "component"
+            }
+        }
+    ]
+}

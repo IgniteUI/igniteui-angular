@@ -851,6 +851,40 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 2 changes in this row and 1 hidden columns');
         }));
 
+        it(`Should show no row changes when changing the cell value to the original one`, () => {
+            targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
+            fix.detectChanges();
+
+            const originalValue = targetCell.value;
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+
+            // change first editable cell value
+            targetCell.editValue = '500';
+            fix.detectChanges();
+
+            // go to next cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row and 0 hidden columns');
+
+            // return to first editable cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            fix.detectChanges();
+
+            // change cell value to the original one
+            targetCell.editValue = originalValue;
+            fix.detectChanges();
+
+            // go to next cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 0 changes in this row and 0 hidden columns');
+        });
+
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
@@ -1715,11 +1749,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             // On button click
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.click();
+            fix.detectChanges();
 
             const rowData = Object.assign({}, cell.row.data, { ProductName: 'New Name' });
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.data).not.toEqual(rowData);
+            expect(cell.row.data.ProductName).toEqual('New Name');
+            expect(grid.dataView[0]).not.toEqual(rowData);
         });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {

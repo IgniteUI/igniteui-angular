@@ -64,7 +64,7 @@
                         <igx-list-item [isHeader]="true">Thumbnail | Title | Subtitle | Action icon   </igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
-                                <igx-avatar [roundShape]="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <p igxListLineSubTitle>{{employee.description}}</p>
@@ -94,7 +94,7 @@
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
-                                <igx-avatar [roundShape]="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
@@ -112,7 +112,7 @@
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
-                                <igx-avatar [roundShape]="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <igx-icon igxListAction>more_horiz</igx-icon>
@@ -130,7 +130,7 @@
                         <igx-list-item [isHeader]="true">Job positions</igx-list-item>
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
-                                <igx-avatar [roundShape]="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <p igxListLineSubTitle>{{employee.description}}</p>
@@ -165,7 +165,7 @@
                     <igx-list [displayDensity]="density">
                         <ng-template ngFor let-last="last" [ngForOf]="employeeItems" let-employee>
                             <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" >
-                                <igx-avatar [roundShape]="true" [src]="employee.imageURL" igxListThumbnail></igx-avatar>
+                                <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                                 <h4 igxListLineTitle>{{employee.name}}</h4>
                                 <p igxListLineSubTitle>{{employee.position}}</p>
                                 <p igxListLineSubTitle>{{employee.description}}</p>
@@ -217,7 +217,7 @@
                     <igx-list #contactsList [displayDensity]="density">
                         <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                         <igx-list-item igxRipple igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
-                            <!-- <igx-avatar igxListThumbnail [src]="item.avatar" [roundShape]="true"></igx-avatar>-->
+                            <!-- <igx-avatar igxListThumbnail [src]="item.avatar"></igx-avatar>-->
                             <span igxListLine>{{item.text}}</span>
                             <igx-icon igxListAction [style.color]="item.favorite ? 'orange' : 'lightgray'" (click)="toggleFavorite(item)">star</igx-icon>
                         </igx-list-item>
@@ -233,7 +233,7 @@
                     <igx-list [displayDensity]="density" [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                         <igx-list-item *ngFor="let navItem of navItems; let index = index">
-                            <igx-avatar igxListThumbnail [src]="navItem.avatar" [roundShape]="true"></igx-avatar>
+                            <igx-avatar igxListThumbnail [src]="navItem.avatar"></igx-avatar>
                             <p  igxListLineTitle>{{navItem.text}}</p>
                             <span igxListLineSubTitle>{{navItem.phone}}</span>
                             <igx-icon igxListAction>chevron_right</igx-icon>

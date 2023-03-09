@@ -857,6 +857,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.close).toHaveBeenCalledTimes(2);
         }));
 
+        it('should not close the dropdown on ArrowUp key if the active item is the first one in the list', fakeAsync(() => {
+            combo.open();
+            tick();
+            fixture.detectChanges();
+
+            const list = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', list);
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+        }));
+
         it('should select an item from the dropdown list with the Space key without closing it', () => {
             combo.open();
             fixture.detectChanges();
@@ -1021,11 +1039,24 @@ describe('IgxSimpleCombo', () => {
             expect(combo.comboInput.value).toEqual('con');
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
-            expect(document.activeElement).toHaveClass('igx-combo__content');
-
             UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
             expect(input.nativeElement.value).toEqual('Wisconsin');
+        });
+
+        it('should navigate to next filtered item on ArrowDown', () => {
+            combo.allowCustomValues = true;
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('con', input);
+            expect(combo.comboInput.value).toEqual('con');
+            fixture.detectChanges();
+
+            // filtered data -> Wisconsin, Connecticut
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            expect(input.nativeElement.value).toEqual('Connecticut');
         });
 
         it('should clear selection when all text in input is removed by Backspace and Delete', () => {
@@ -1119,6 +1150,37 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.value).toEqual('');
             expect(combo.selection.length).toEqual(0);
+        });
+
+        it('should open the combo when input is focused', () => {
+            spyOn(combo, 'open').and.callThrough();
+            spyOn(combo, 'close').and.callThrough();
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.close).toHaveBeenCalledTimes(1);
+
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.open).toHaveBeenCalledTimes(1);
         });
 
         it('should empty any invalid item values', () => {
