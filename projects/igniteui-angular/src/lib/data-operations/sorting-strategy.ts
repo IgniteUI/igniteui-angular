@@ -99,8 +99,6 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
     }
 
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
-        data.sort((a, b) => a[fieldName].localeCompare(b[fieldName]));
-
         const groupedArray = this.groupBy(data, fieldName);
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
 
@@ -108,7 +106,9 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
             return this.compareObjects(a, b, groupedArray, fieldName, reverse);
         };
 
-        return data.sort(cmpFunc);
+        return data
+            .sort((a, b) => a[fieldName].localeCompare(b[fieldName]))
+            .sort(cmpFunc);
     }
 
     public groupBy(data, key) {
