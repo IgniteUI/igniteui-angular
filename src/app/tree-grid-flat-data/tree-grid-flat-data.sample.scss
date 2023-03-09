@@ -1,0 +1,35 @@
+.sample-column {
+    max-width: 85%;
+}
+
+.density-chooser{
+    margin-bottom: 16px;
+}
+
+igx-buttongroup {
+    display: block;
+}
+
+.topMargin {
+    margin-top: 20px;
+}
+
+.toggle-group {
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.switch-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.sample-buttons button{
+    margin: 8px 4px;
+}
+
+[igxButton="raised"] {
+    margin: 1rem auto;
+    width: 10rem;
+}
