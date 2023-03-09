@@ -18,13 +18,13 @@ export default (options: Options): Rule => async (host: Tree, context: Schematic
 
         switch (args.value) {
             case 'true':
-                args.value = 'rounded';
+                args.value = 'circle';
                 break;
             case 'false':
                 args.value = 'square';
                 break;
             default:
-                args.value += ` ? 'rounded' : 'square' `;
+                args.value += ` ? 'circle' : 'square' `;
         }
     });
     update.applyChanges();
