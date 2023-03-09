@@ -1147,8 +1147,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Click the add icon to display the adding buttons.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [9]);
-            tick(50);
             fix.detectChanges();
+            tick(50);
 
             // Verify the adding buttons are in view.
             const addingButtons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
