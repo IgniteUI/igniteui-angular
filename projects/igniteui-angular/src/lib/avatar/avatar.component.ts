@@ -117,7 +117,7 @@ export class IgxAvatarComponent implements OnInit {
 
     /**
      * @deprecated in version 15.1.0.
-     * Sets a round shape to the avatar, if `[roundShape]` is set to `true`.
+     * Sets a circular shape to the avatar, if `[roundShape]` is set to `true`.
      * By default the shape of the avatar is a square.
      * 
      * @example
@@ -125,18 +125,19 @@ export class IgxAvatarComponent implements OnInit {
      * <igx-avatar [roundShape]="true" ></igx-avatar>
      * ```
      */
+    /** @hidden @internal */
     @Input()
-    @HostBinding('class.igx-avatar--rounded')
+    @HostBinding('class.igx-avatar--circle')
     public get roundShape() {
-        return this.shape === 'rounded';
+        return this.shape === 'circle';
     }
 
     public set roundShape(value: boolean) {
-        this.shape = value === true ? 'rounded' : 'square';
+        this.shape = value === true ? 'circle' : 'square';
     }  
 
     /**
-     * Sets a rounded shape to the avatar, if `shape` is set to `rounded`.
+     * Sets square, rounded or circular shape to the avatar.
      * By default the shape of the avatar is square.
      *
      * @example
@@ -145,7 +146,13 @@ export class IgxAvatarComponent implements OnInit {
      * ```
      */
     @Input()
-    public shape: 'square' | 'rounded' = 'square';
+    public shape: 'square' | 'rounded' | 'circle' = 'square';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--rounded')
+    public get isRounded(): boolean {
+        return this.shape === 'rounded';
+    }
 
     /**
      * Sets the color of the avatar's initials or icon.
