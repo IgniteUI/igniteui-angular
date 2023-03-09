@@ -402,13 +402,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public perPageChange = new EventEmitter<number>();
 
     /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    public class = '';
-
-    /**
      * @deprecated in version 12.2.0. We suggest using `rowClasses` property instead
      *
      * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
@@ -1717,6 +1710,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren(IgxRowDirective, { read: IgxRowDirective })
     private _dataRowList: QueryList<IgxRowDirective>;
 
+    @HostBinding('class')
+    private get hostClass(): string {
+        return this.getComponentDensityClass('igx-grid');
+    }
+
     /**
      * Gets/Sets the resource strings.
      *
@@ -2718,24 +2716,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass(): string {
-        // TODO: This blocks further updates to the class (dynamic custom, different density)
-        if (this._class === '') {
-            const classes = [this.getComponentDensityClass('igx-grid')];
-            // The custom classes should be at the end.
-            if (this.class !== '') {
-                classes.push(this.class);
-            }
-            this._class = classes.join(' ');
-
-        }
-        return this._class;
-    }
-
     public get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
         return `${this.getComponentDensityClass('igx-banner')} ${position}`;
@@ -3716,7 +3696,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges(true);
         });
 
-        this.onDensityChanged.pipe(destructor).subscribe(() => {
+        this.densityChanged.pipe(destructor).subscribe(() => {
             this._autoSize = this.isPercentHeight && this.calcHeight !== this.getDataBasedBodyHeight();
             this.crudService.endEdit(false);
             if (this._summaryRowHeight === 0) {
@@ -3794,6 +3774,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public resetColumnCollections() {
+        if (this.hasColumnLayouts) {
+            this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+        }
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
         this._unpinnedVisible.length = 0;
@@ -3819,8 +3802,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this.resetColumnsCaches();
         this.resetColumnCollections();
-        this.resetCachedWidths();
         this.resetForOfCache();
+        this.resetCachedWidths();
         this.hasVisibleColumns = undefined;
         this._columnGroups = this._columns.some(col => col.columnGroup);
     }
@@ -4844,8 +4827,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.rowAddedNotifier.next({ data: data, owner: this });
         this.pipeTrigger++;
+        this.rowAddedNotifier.next({ data: data, owner: this });
         this.notifyChanges();
     }
 
@@ -5154,6 +5137,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
+        this.summaryPipeTrigger++;
         this.cdr.detectChanges();
     }
 
@@ -7679,9 +7663,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     private _columnsReordered(column: IgxColumnComponent) {
         this.notifyChanges();
-        if (this.hasColumnLayouts) {
-            this._columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
-        }
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();
         column.resetCaches();

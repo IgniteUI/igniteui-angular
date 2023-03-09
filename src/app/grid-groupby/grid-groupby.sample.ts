@@ -9,7 +9,7 @@ import {
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
-    styleUrls: ['grid-groupby.sample.css'],
+    styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html'
 })
 export class GridGroupBySampleComponent implements OnInit {
@@ -138,8 +138,8 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log(JSON.stringify(this.groupingExpressions));
     }
 
-    public onGroupingDoneHandler(event) {
-        console.log('onGroupingDone: ');
+    public groupingDoneHandler(event) {
+        console.log('groupingDone: ');
         console.log(event);
     }
     public getData(item) {

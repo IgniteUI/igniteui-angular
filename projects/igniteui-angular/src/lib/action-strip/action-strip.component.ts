@@ -119,15 +119,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Host `class.igx-action-strip` binding.
-     *
-     * @hidden
-     * @internal
-     */
-    @Input('class')
-    public hostClass: string;
-
-    /**
      * Gets/Sets the resource strings.
      *
      * @remarks
@@ -147,7 +138,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Hide or not the Action Strip based on if it is a menu.
-     * 
+     *
      * @hidden
      * @internal
      */
@@ -190,7 +181,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
-        this._originalParent = this._viewContainer.element.nativeElement?.parentElement;
     }
 
     /**
@@ -210,18 +200,14 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * @hidden
      * @internal
      */
-    @HostBinding('attr.class')
+    @HostBinding('class')
     public get hostClasses(): string {
-        const classes = this.hostClass?.split(' ').filter(x => x) || [];
-        // The custom classes should be at the end.
-        const densityClass = this.getComponentDensityClass('igx-action-strip');
-        if (!classes.includes(densityClass)) {
-            classes.unshift(densityClass);
+        let hostClass = this.getComponentDensityClass('igx-action-strip');
+        if (hostClass !== 'igx-action-strip') {
+            // action strip requires the base class to be always present:
+            hostClass = `igx-action-strip ${hostClass}`;
         }
-        if (!classes.includes('igx-action-strip')) {
-            classes.unshift('igx-action-strip');
-        }
-        return classes.join(' ');
+        return hostClass;
     }
 
     /**
@@ -276,6 +262,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
                 button.actionClick.emit();
             }
         });
+        this._originalParent = this._viewContainer.element.nativeElement?.parentElement;
     }
 
     /**
@@ -314,9 +301,11 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public hide(): void {
         this.hidden = true;
         this.closeMenu();
-        if (this.context && this.context.element) {
+        if (this._originalParent) {
             // D.P. fix(elements) don't detach native DOM, instead move back. Might not matter for Angular, but Elements will destroy
             this.renderer.appendChild(this._originalParent, this._viewContainer.element.nativeElement);
+        } else if (this.context && this.context.element) {
+            this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
     }
 

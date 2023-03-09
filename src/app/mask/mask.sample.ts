@@ -9,7 +9,7 @@ interface IPerson {
 
 @Component({
     selector: 'app-mask-sample',
-    styleUrls: ['mask.sample.css'],
+    styleUrls: ['mask.sample.scss'],
     templateUrl: './mask.sample.html'
 })
 export class MaskSampleComponent {

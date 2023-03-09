@@ -1,0 +1,22 @@
+.sample-buttons,
+.sample-switches {
+    margin-top: 24px;
+}
+
+[igxButton] + [igxButton] {
+    margin-left: 8px;
+}
+
+.pin-icon {
+    cursor: pointer;
+    opacity: .8;
+    transition: opacity 240ms ease-in-out;
+}
+
+.pin-icon:hover {
+    opacity: 1;
+}
+
+.sample-column {
+    padding-bottom: 2rem;
+}

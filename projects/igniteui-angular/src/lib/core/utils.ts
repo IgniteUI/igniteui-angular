@@ -347,7 +347,7 @@ export class PlatformUtil {
         return [
             this.KEYMAP.HOME, this.KEYMAP.END, this.KEYMAP.SPACE,
             this.KEYMAP.ARROW_DOWN, this.KEYMAP.ARROW_LEFT, this.KEYMAP.ARROW_RIGHT, this.KEYMAP.ARROW_UP
-        ].includes(key);
+        ].includes(key as any);
     }
 }
 

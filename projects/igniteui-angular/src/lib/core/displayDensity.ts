@@ -40,7 +40,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
     @Output()
-    public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
+    public densityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
      * Returns the theme of the component.
@@ -69,7 +69,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
                 newDensity: this._displayDensity
             };
 
-            this.onDensityChanged.emit(densityChangedArgs);
+            this.densityChanged.emit(densityChangedArgs);
         }
     }
 
@@ -101,7 +101,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
                 newDensity: this.displayDensityOptions.displayDensity
             };
 
-            this.onDensityChanged.emit(densityChangedArgs);
+            this.densityChanged.emit(densityChangedArgs);
             this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
         }
     }
