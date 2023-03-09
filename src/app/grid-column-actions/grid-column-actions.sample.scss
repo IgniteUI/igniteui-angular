@@ -1,0 +1,16 @@
+.sample-buttons{
+    margin-top: 24px;
+}
+
+.actions-container {
+    display: flex;
+}
+
+.actions-container  > article {
+    width: 30%;
+    margin: 0 0.7rem 3rem;
+}
+
+igx-grid {
+    margin-bottom: 3rem;
+}

@@ -27,7 +27,7 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
 @Component({
   providers: [],
   selector: 'app-tree-grid-sample',
-  styleUrls: ['pivot-grid-noop.sample.css'],
+  styleUrls: ['pivot-grid-noop.sample.scss'],
   templateUrl: 'pivot-grid-noop.sample.html'
 })
 

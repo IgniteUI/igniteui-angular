@@ -1113,19 +1113,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get groupingComparer(): (a: any, b: any) => number {
+    public get groupingComparer(): (a: any, b: any, currRec?: any, groupRec?: any) => number {
         return this._groupingComparer;
     }
     /**
      * Sets a custom function to compare values for grouping.
      * Subsequent values in the sorted data that the function returns 0 for are grouped.
      * ```typescript
-     * this.column.groupingComparer = (a: any, b: any) => { return a === b ? 0 : -1; }
+     * this.column.groupingComparer = (a: any, b: any, currRec?: any, groupRec?: any) => { return a === b ? 0 : -1; }
      * ```
      *
      * @memberof IgxColumnComponent
      */
-    public set groupingComparer(funcRef: (a: any, b: any) => number) {
+    public set groupingComparer(funcRef: (a: any, b: any, currRec?: any, groupRec?: any) => number) {
         this._groupingComparer = funcRef;
     }
     /**
@@ -1701,7 +1701,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _groupingComparer: (a: any, b: any) => number;
+    protected _groupingComparer: (a: any, b: any, currRec?: any, groupRec?: any) => number;
     /**
      * @hidden
      */

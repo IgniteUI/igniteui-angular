@@ -4,7 +4,7 @@ import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-an
 @Component({
     providers: [],
     selector: 'app-grid-search-sample',
-    styleUrls: ['grid-search.sample.css'],
+    styleUrls: ['grid-search.sample.scss'],
     templateUrl: 'grid-search.sample.html'
 })
 

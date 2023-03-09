@@ -4,7 +4,7 @@ import { ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-routing-sample',
-    styleUrls: ['tabs-routing.sample.css'],
+    styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html'
 })
 export class TabsRoutingSampleComponent {
