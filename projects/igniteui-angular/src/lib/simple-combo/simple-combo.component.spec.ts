@@ -1059,6 +1059,19 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection.length).toEqual(0);
         });
 
+        it('should display all list items when clearing the input by Space', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(1);
+
+            UIInteractions.simulateTyping(' ', input, 0, 9);
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toEqual(0);
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+        });
+
         it('should close the dropdown (if opened) when tabbing outside of the input', () => {
             combo.open();
             fixture.detectChanges();
