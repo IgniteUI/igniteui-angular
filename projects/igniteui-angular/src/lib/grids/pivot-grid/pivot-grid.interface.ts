@@ -57,6 +57,7 @@ export interface IPivotDimensionStrategy {
 */
 export type PivotAggregation = (members: any[], data: any[]) => any;
 
+/* marshalByValue */
 /**
 * Interface describing a IPivotAggregator class.
 * Used for specifying custom aggregator lists.
@@ -145,6 +146,7 @@ export interface IPivotDimension {
     level?: number;
 }
 
+/* marshalByValue */
 /**
 * Configuration of a pivot value aggregation.
 */
@@ -189,6 +191,7 @@ export interface IPivotGridColumn {
         value: IPivotValue
 }
 
+/* marshalByValue */
 /** Interface describing the Pivot data keys used for data generation.
 *  Can be used for custom remote scenarios where the data is pre-populated.
 */

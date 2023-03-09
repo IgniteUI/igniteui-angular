@@ -258,7 +258,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /* mustSetInCodePlatforms: WebComponents;Blazor */
     /* @tsTwoWayProperty (true, "ConfigurationChange", "Detail.Configuration", false) */
-    /* blazorAlwaysWriteback */
     /**
      * Gets/Sets the pivot configuration with all related dimensions and values.
      *
