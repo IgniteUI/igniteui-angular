@@ -213,6 +213,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public autoGenerate = false;
 
     /**
+     * Gets/Sets a list of property keys to be excluded from the generated column collection
+     * 
+     * @example
+     * ```html
+     * <igx-grid [autoGenerate]="true" [autoGenerateExclude]="['prop1', 'prop2']"></igx-grid>
+     * ```
+     */
+    @Input()
+    public autoGenerateExclude: string[] = [];
+
+    /**
      * Controls whether columns moving is enabled in the grid.
      *
      */
@@ -7154,7 +7165,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const fields = this.generateDataFields(data);
         const columns = [];
 
-        fields.forEach((field) => {
+        fields.filter((field) => !this.autoGenerateExclude.includes(field)).forEach((field) => {
             const ref = factory.create(this.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);

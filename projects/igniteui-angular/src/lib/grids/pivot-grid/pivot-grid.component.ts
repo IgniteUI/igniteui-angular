@@ -2040,7 +2040,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         let columns = [];
         if (fields.size === 0) {
-            this.values.forEach((value) => {
+            this.values.filter((value) => !this.autoGenerateExclude.includes(value.member)).forEach((value) => {
                 const ref = factoryColumn.create(this.viewRef.injector);
                 ref.instance.header = value.displayName;
                 ref.instance.field = value.member;
@@ -2067,7 +2067,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                     columns = columns.concat(measureChildren);
                 }
 
-            } else if (shouldGenerate) {
+            } else if (shouldGenerate && !this.autoGenerateExclude.includes(value)) {
                 const col = this.createColumnForDimension(value, data, parent, true);
                 if (value.expandable) {
                     col.headerTemplate = this.headerTemplate;
