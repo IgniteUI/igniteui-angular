@@ -49,7 +49,7 @@ class User {
 export class ActionStripSampleComponent implements OnInit {
     public result: string;
     public isVisible = false;
-    public customItem = true;
+    public customItem = false;
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;

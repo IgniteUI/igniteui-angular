@@ -5,7 +5,7 @@ import { IgxGridComponent, IgxToggleDirective, GridSelectionMode, IRowDataEventA
 
 @Component({
     selector: 'app-grid-row-edit',
-    styleUrls: [`grid-row-edit-sample.component.css`],
+    styleUrls: [`grid-row-edit-sample.component.scss`],
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {

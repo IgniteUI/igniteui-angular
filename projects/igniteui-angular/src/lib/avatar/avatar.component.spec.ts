@@ -12,6 +12,7 @@ describe('Avatar', () => {
 
     const classes = {
         round: `${baseClass}--rounded`,
+        circle: `${baseClass}--circle`,
         small: `${baseClass}--small`,
         medium: `${baseClass}--medium`,
         large: `${baseClass}--large`,
@@ -57,13 +58,25 @@ describe('Avatar', () => {
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.roundShape).toBeTruthy();
-        expect(hostEl.classList).toContain(classes.round);
+        expect(instance.shape).toEqual('circle');
+        expect(hostEl.classList).toContain(classes.circle);
+        expect(hostEl.classList).not.toContain(classes.round);
 
-        instance.roundShape = false;
+        instance.shape = "square";
 
         fixture.detectChanges();
         expect(instance.roundShape).toBeFalsy();
+        expect(instance.shape).toEqual('square');
         expect(hostEl.classList).not.toContain(classes.round);
+        expect(hostEl.classList).not.toContain(classes.circle);
+
+        instance.shape = "rounded";
+
+        fixture.detectChanges();
+        expect(instance.roundShape).toBeFalsy();
+        expect(instance.shape).toEqual('rounded');
+        expect(hostEl.classList).toContain(classes.round);
+        expect(hostEl.classList).not.toContain(classes.circle);
     });
 
     it('Can change its size', () => {
@@ -101,6 +114,7 @@ describe('Avatar', () => {
         expect(instance.initials).toBeUndefined();
         expect(instance.src).toBeUndefined();
         expect(instance.icon).toBeUndefined();
+        expect(instance.shape).toEqual('square');
 
         expect(hostEl.textContent).toEqual('TEST');
     });
@@ -188,7 +202,7 @@ class InitAvatarComponent {
         [bgColor]="bgColor"
         [color]="color"
         size="small"
-        [roundShape]="roundShape">
+        [roundShape]="true">
     </igx-avatar>`
 })
 class AvatarWithAttribsComponent {
@@ -197,7 +211,6 @@ class AvatarWithAttribsComponent {
     public initials = 'ZK';
     public color = 'orange';
     public bgColor = 'royalblue';
-    public roundShape = 'true';
 }
 
 @Component({

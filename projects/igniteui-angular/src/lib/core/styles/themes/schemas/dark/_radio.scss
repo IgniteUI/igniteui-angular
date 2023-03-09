@@ -16,22 +16,42 @@ $dark-radio: extend($light-radio, (
 
 /// Generates a dark fluent radio schema.
 /// @type {Map}
-/// @prop {Map} fill-hover-border-color [color: ('primary', 200)] - The text color used for the label text.
-/// @prop {Map} fill-color-hover [color: ('primary', 200)] - The checked border and dot colors on hover.
+/// @prop {Map} hover-color [color: ('gray', 400)] - The border and dot colors on hover.
+/// @prop {Map} fill-color [color: ('primary', 300)] - The checked border and dot colors.
+/// @prop {Map} fill-hover-border-color [color: ('primary', 100)] - The text color used for the label text.
+/// @prop {Map} fill-color-hover [color: ('primary', 100)] - The checked border and dot colors on hover.
 /// @prop {Map} error-color-hover [color: ('error', 200)] - The border and dot color in invalid state on hover.
+/// @prop {Map} disabled-color [color: ('gray', 100)] - The disabled border and dot colors.
+/// @prop {Map} disabled-label-color [color: ('gray', 300)] - The disabled label color.
 /// @requires $fluent-radio
 $dark-fluent-radio: extend($fluent-radio, (
+    hover-color: (
+        color: ('gray', 400)
+    ),
+
+    fill-color: (
+        color: ('primary', 300)
+    ),
+
     fill-hover-border-color: (
-        color: ('primary', 200)
+        color: ('primary', 100)
     ),
 
     fill-color-hover: (
-        color: ('primary', 200)
+        color: ('primary', 100)
     ),
 
     error-color-hover: (
         color: ('error', 200)
-    )
+    ),
+
+    disabled-color: (
+        color: ('gray', 100)
+    ),
+
+    disabled-label-color: (
+        color: ('gray', 300)
+    ),
 ));
 
 /// Generates a dark bootstrap radio schema.

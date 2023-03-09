@@ -1,7 +1,6 @@
 <div class="wrapper">
     <div class="sample-content">
         <div class="sample-column">
-
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="moveColumn()">Move Column API</button>
                 <igx-input-group>
@@ -12,8 +11,10 @@
             <div class="density-chooser">
                 <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
-            <button (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
-            <button (click)='reverseColumn()'>Reverse</button>
+            <div class="sample-buttons">
+                <button igxButton="raised" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
+                <button igxButton="raised" (click)='reverseColumn()'>Reverse</button>
+            </div>
             <igx-grid #grid1 [columnSelection]="'single'" [data]="data" [displayDensity]="density"
                 [allowFiltering]="true" (columnMovingStart)="columnMovingStart()" (columnMoving)="columnMoving()"
                 (columnMovingEnd)="columnMovingEnd()" [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'"
@@ -32,27 +33,26 @@
                     [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
                     <ng-template igxCell let-cell="cell">
                         <div *ngIf='show'>{{ cell.value}}</div>
-                        
+
                     </ng-template>
                 </igx-column>
                 <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
             </igx-grid>
-            Drag mode: {{ grid1.selectionService.dragMode }}
+            <span>Drag mode: {{ grid1.selectionService.dragMode }}</span>
+
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton
+                <button igxButton="raised"
                     (click)="grid1.selectRange({rowStart: 0, rowEnd: 10, columnStart: 'CompanyName', columnEnd: 'Region'})">Select
-                    💯 cells</button>
+                    10 cells</button>
                 <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
                 <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
                 <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
             </div>
-
-            <span>Grid with MCH</span>
+            <h4 class="sample-title">Grid with MCH</h4>
             <div class="sample-wrapper">
-                <app-page-header title="Grid Column Groups"></app-page-header>
-                <section style="height: 800px" class="sample-content">
+                <section class="sample-content">
                     <div class="sample-buttons">
                         <button igxButton="raised" (click)="moveColumnMCH()">Move Column API</button>
                         <igx-input-group>
