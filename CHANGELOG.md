@@ -26,7 +26,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxMask` directive
     - Added the capability to escape mask pattern literals.
 - `IgxAvatar`
-    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be either `square` or `rounded`. The default shape of the avatar is `square`. 
+    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`. 
 
 
 ## 15.0.1
