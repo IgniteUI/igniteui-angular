@@ -21,6 +21,10 @@
             @extend %igx-avatar-image !optional;
         }
 
+        @include m(circle) {
+            @extend %igx-avatar--circle !optional;
+        }
+
         @include m(rounded) {
             @extend %igx-avatar--rounded !optional;
         }

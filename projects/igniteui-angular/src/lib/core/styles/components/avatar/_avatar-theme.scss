@@ -116,8 +116,16 @@
         background-position: center;
     }
 
-    %igx-avatar--rounded {
+    %igx-avatar--circle {
         --igx-avatar-border-radius: #{rem(44px)};
+    }
+
+    %igx-avatar--rounded {
+        --igx-avatar-border-radius: #{rem(8px)};
+
+        @if $variant == 'bootstrap' {
+            --igx-avatar-border-radius: #{rem(4px)};
+        }
     }
 
     %igx-avatar--initials {
