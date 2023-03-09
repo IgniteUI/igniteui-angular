@@ -115,6 +115,12 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
                 label: 'Border',
                 togglable: true,
             },
+            {
+                selected: this.inputType === 'search',
+                type: 'search',
+                label: 'Search',
+                togglable: true,
+            },
         ];
     }
 
