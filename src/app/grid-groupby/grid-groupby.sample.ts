@@ -113,9 +113,10 @@ export class GridGroupBySampleComponent implements OnInit {
     }
 
     public sortByGroup() {
-        if (this.grid1.groupingExpressions.length) {
-            const fieldName = this.grid1.groupingExpressions[0].fieldName;
-            const dir = this.grid1.groupingExpressions[0].dir === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
+        const expressions = this.grid1.groupingExpressions;
+        if (expressions.length) {
+            const fieldName = expressions[0].fieldName;
+            const dir = expressions[0].dir === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
             this.grid1.groupBy({ fieldName, dir, ignoreCase: false, strategy: GroupMemberCountSortingStrategy.instance() });
         }
     }

@@ -99,10 +99,13 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
     }
 
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
+        data.sort((a, b) => a[fieldName].localeCompare(b[fieldName]));
+
         const groupedArray = this.groupBy(data, fieldName);
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
 
         const cmpFunc = (a, b) => {
-            return this.compareObjects(a, b, dir, groupedArray, fieldName);
+            return this.compareObjects(a, b, groupedArray, fieldName, reverse);
         };
 
         return data.sort(cmpFunc);
@@ -115,13 +118,10 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
         }, {})
     }
 
-    protected compareObjects(obj1: any, obj2: any, dir: SortingDirection, data: any[], fieldName: string) {
+    protected compareObjects(obj1: any, obj2: any, data: any[], fieldName: string, reverse: number) {
         let firstItemValuesLength = data[obj1[fieldName]].length;
         let secondItemValuesLength = data[obj2[fieldName]].length;
 
-        if (dir === SortingDirection.Asc) {
-            return secondItemValuesLength > firstItemValuesLength ? -1 : (secondItemValuesLength < firstItemValuesLength ? 1 : 0);
-        }
-        return firstItemValuesLength > secondItemValuesLength ? -1 : (firstItemValuesLength < secondItemValuesLength ? 1 : 0);
+        return reverse * (firstItemValuesLength - secondItemValuesLength);
     }
 }
