@@ -134,7 +134,7 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
-        <igx-avatar initials="MS" shape="rounded" size="large"></igx-avatar>
+        <igx-avatar initials="MS" shape="circle" size="large"></igx-avatar>
         `
         );
     });
