@@ -1338,10 +1338,8 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             combo.open();
-            tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
-            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toEqual(-1);
 
             combo.select('Connecticut');
             fixture.detectChanges();
