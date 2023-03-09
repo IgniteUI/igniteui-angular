@@ -37,7 +37,7 @@ const Z_INDEX = 9999;
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html',
     standalone: true,
-    imports: [NgIf, NgClass, NgStyle, NgFor, forwardRef(() => IgxGridHeaderGroupComponent), IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
+    imports: [NgIf, NgClass, NgStyle, NgFor, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
