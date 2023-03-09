@@ -158,6 +158,18 @@
         @include mx(focused, checked) {
             @extend %igx-radio--focused-checked !optional;
 
+            &:hover {
+                @include e(composite) {
+                    @extend %igx-radio--checked-active__composite !optional;
+                }
+            }
+
+            &:active {
+                @include e(composite) {
+                    @extend %igx-radio--checked-active__composite !optional;
+                }
+            }
+
             @include e(ripple) {
                 @extend %radio-ripple--focused !optional;
                 @extend %radio-ripple--focused-checked !optional;
