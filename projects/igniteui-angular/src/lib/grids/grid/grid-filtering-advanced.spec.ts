@@ -193,6 +193,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Discard the new group and verify that the initial buttons are visible.
             GridFunctions.clickAdvancedFilteringExpressionCloseButton(fix);
+            fix.detectChanges();
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
 
             // Click the initial 'Add Or Group' button.
@@ -287,6 +288,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
+            tick();
+            fix.detectChanges();
             verifyEditModeExpressionInputStates(fix, true, true, true, true);
 
             // Commit the populated expression.
@@ -1140,10 +1143,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
+            fix.detectChanges();
 
             // Click the add icon to display the adding buttons.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [9]);
             tick(50);
+            fix.detectChanges();
 
             // Verify the adding buttons are in view.
             const addingButtons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
@@ -1176,6 +1181,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[8];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
+            fix.detectChanges();
 
             // Click the add icon to display the adding buttons.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [8]);
@@ -1214,6 +1220,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const expressionItem = fix.nativeElement.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`)[9];
             expressionItem.dispatchEvent(new MouseEvent('mouseenter'));
             tick();
+            fix.detectChanges();
 
             // Click the edit icon to enter edit mode of the expression.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [9]);
@@ -2621,6 +2628,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const keyboardEvent = new KeyboardEvent('keydown', { key: 'Enter' });
                 rootOperatorLine.dispatchEvent(keyboardEvent);
                 tick();
+                fix.detectChanges();
 
                 // Simulate end of chip selection animation
                 const chipSelect = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
@@ -2741,6 +2749,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
             tick(200);
+            fix.detectChanges();
 
             // Simulate end of chip selection animation
             const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
