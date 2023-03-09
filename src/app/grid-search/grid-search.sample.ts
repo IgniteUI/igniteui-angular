@@ -1,8 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { NgFor } from '@angular/common';
 import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
 import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
@@ -10,8 +10,10 @@ import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angul
 import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     providers: [],
@@ -19,7 +21,7 @@ import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/
     styleUrls: ['grid-search.sample.css'],
     templateUrl: 'grid-search.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent_1, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxButtonDirective]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxButtonDirective]
 })
 
 export class GridSearchComponent implements OnInit {

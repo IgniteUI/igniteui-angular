@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { registerLocaleData, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import localeBG from '@angular/common/locales/bg';
 import localeEN from '@angular/common/locales/en';
 import localeDE from '@angular/common/locales/de';
@@ -16,23 +18,22 @@ import localeHant from '@angular/common/locales/zh-Hant';
 import localeHI from '@angular/common/locales/hi';
 import { DATA } from '../shared/financialData';
 
-import { IgxGridComponent, IResourceStrings, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
 import {
     IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
 import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
-import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { getCurrentResourceStrings, IResourceStrings } from '../../../projects/igniteui-angular/src/lib/core/i18n/resources';
 
 @Component({
     selector: 'app-grid-localization',
     styleUrls: ['./grid-localization.sample.css'],
     templateUrl: 'grid-localization.sample.html',
     standalone: true,
-    imports: [IgxGridComponent_1, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]
 })
 
 export class GridLocalizationSampleComponent implements OnInit, OnDestroy {

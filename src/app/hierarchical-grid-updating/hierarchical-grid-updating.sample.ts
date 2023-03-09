@@ -11,6 +11,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 
 @Component({
     selector: 'app-hierarchical-grid-updating-sample',
+    styleUrls: ['hierarchical-grid-updating.sample.scss'],
     templateUrl: 'hierarchical-grid-updating.sample.html',
     providers: [RemoteService],
     standalone: true,

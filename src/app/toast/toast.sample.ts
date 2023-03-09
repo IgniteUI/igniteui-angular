@@ -7,7 +7,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 
 @Component({
     selector: 'app-toast-sample',
-    styleUrls: ['toast.sample.css'],
+    styleUrls: ['toast.sample.scss'],
     templateUrl: 'toast.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxOverlayOutletDirective, IgxToastComponent_1]

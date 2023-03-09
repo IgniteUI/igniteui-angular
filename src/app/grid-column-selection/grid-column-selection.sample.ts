@@ -1,23 +1,12 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, forwardRef } from '@angular/core';
-import {
-    IgxGridComponent,
-    OverlaySettings,
-    ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy,
-    PositionSettings,
-    HorizontalAlignment,
-    VerticalAlignment,
-    IgxDropDownComponent,
-    IgxButtonDirective,
-    FilterMode,
-    DisplayDensity
-} from 'igniteui-angular';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { SAMPLE_DATA } from '../shared/sample-data';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { FormsModule } from '@angular/forms';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
@@ -25,14 +14,38 @@ import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angula
 import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
 import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { NgFor } from '@angular/common';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
-import { IgxButtonDirective as IgxButtonDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
+import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/density';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, PositionSettings, VerticalAlignment } from 'projects/igniteui-angular/src/lib/services/public_api';
+
+@Pipe({
+    name: 'filterColumns',
+    standalone: true
+})
+export class GridColumnSelectionFilterPipe implements PipeTransform {
+  public transform(items: any[], searchText: string): any[] {
+        if (!items || !items.length) {
+            return [];
+        }
+
+        if (!searchText) {
+            return items;
+        }
+
+        searchText = searchText.toLowerCase();
+        const result = items.filter((it) =>
+            it.field.toLowerCase().indexOf(searchText) > -1 );
+
+        return  result;
+    }
+}
 
 @Component({
     providers: [],
@@ -40,7 +53,7 @@ import { IgxButtonDirective as IgxButtonDirective_1 } from '../../../projects/ig
     styleUrls: ['grid-column-selection.sample.css'],
     templateUrl: 'grid-column-selection.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective_1, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent_1, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, forwardRef(() => GridColumnSelectionFilterPipe)]
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]
 })
 
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
@@ -95,7 +108,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
-    
+
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
@@ -168,29 +181,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
         if (filterMode !== this.grid1.filterMode) {
             this.grid1.filterMode = filterMode;
         }
-    }
-}
-
-
-@Pipe({
-    name: 'filterColumns',
-    standalone: true
-})
-export class GridColumnSelectionFilterPipe implements PipeTransform {
-  public transform(items: any[], searchText: string): any[] {
-        if (!items || !items.length) {
-            return [];
-        }
-
-        if (!searchText) {
-            return items;
-        }
-
-        searchText = searchText.toLowerCase();
-        const result = items.filter((it) =>
-            it.field.toLowerCase().indexOf(searchText) > -1 );
-
-        return  result;
     }
 }
 

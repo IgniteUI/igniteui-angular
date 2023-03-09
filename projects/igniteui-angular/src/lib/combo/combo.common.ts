@@ -8,7 +8,6 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    HostListener,
     Inject,
     InjectionToken,
     Injector,
@@ -952,15 +951,6 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    public onArrowDown(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.open();
-    }
-
-    /** @hidden @internal */
     public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         const targetElement = this.elementRef.nativeElement;
@@ -1322,6 +1312,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     public abstract set filteredData(val: any[] | null);
 
     public abstract handleOpened();
+    public abstract onArrowDown(event: Event);
     public abstract focusSearchInput(opening?: boolean);
 
     public abstract select(newItem: any): void;

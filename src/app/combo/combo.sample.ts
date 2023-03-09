@@ -1,44 +1,29 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-    ButtonGroupAlignment,
-    ConnectedPositioningStrategy,
-    DisplayDensity,
-    ElasticPositionStrategy,
-    GlobalPositionStrategy,
-    HorizontalAlignment,
-    IChangeSwitchEventArgs,
-    IComboSearchInputEventArgs,
-    IComboSelectionChangingEventArgs,
-    ISimpleComboSelectionChangingEventArgs,
-    IForOfState,
-    IgxComboComponent,
-    IgxSimpleComboComponent,
-    IgxToastComponent,
-    OverlaySettings,
-    scaleInCenter,
-    scaleOutCenter,
-    VerticalAlignment
-} from 'igniteui-angular';
+import { NgIf, AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
-import { IComboFilteringOptions } from 'projects/igniteui-angular/src/lib/combo/combo.common';
 import { take } from 'rxjs/operators';
+
+import { IComboFilteringOptions } from '../../../projects/igniteui-angular/src/lib/combo/combo.common';
 import { RemoteNWindService } from './remote-nwind.service';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { ButtonGroupAlignment, IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { IChangeSwitchEventArgs, IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective } from '../../../projects/igniteui-angular/src/lib/combo/combo.directives';
-import { NgIf, AsyncPipe } from '@angular/common';
-import { IgxToastComponent as IgxToastComponent_1 } from '../../../projects/igniteui-angular/src/lib/toast/toast.component';
+import { IgxToastComponent } from '../../../projects/igniteui-angular/src/lib/toast/toast.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxComboComponent as IgxComboComponent_1 } from '../../../projects/igniteui-angular/src/lib/combo/combo.component';
+import { IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent } from '../../../projects/igniteui-angular/src/lib/combo/combo.component';
 import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
 import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxSimpleComboComponent as IgxSimpleComboComponent_1 } from '../../../projects/igniteui-angular/src/lib/simple-combo/simple-combo.component';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from '../../../projects/igniteui-angular/src/lib/simple-combo/simple-combo.component';
 import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IForOfState } from '../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { ConnectedPositioningStrategy, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
+import { scaleInCenter, scaleOutCenter } from '../../../projects/igniteui-angular/src/lib/animations/scale';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -46,7 +31,7 @@ import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/l
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css'],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective, FormsModule, IgxSimpleComboComponent_1, IgxLabelDirective, IgxHintDirective, IgxComboComponent_1, IgxButtonDirective, ReactiveFormsModule, IgxToastComponent_1, NgIf, IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective, IgxRippleDirective, IgxPrefixDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonGroupComponent, AsyncPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, FormsModule, IgxSimpleComboComponent, IgxLabelDirective, IgxHintDirective, IgxComboComponent, IgxButtonDirective, ReactiveFormsModule, IgxToastComponent, NgIf, IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective, IgxRippleDirective, IgxPrefixDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonGroupComponent, AsyncPipe]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })

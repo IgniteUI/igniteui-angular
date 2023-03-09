@@ -550,8 +550,7 @@ export class IgxBannerSampleComponent {
                 <igx-card>
                     <igx-card-header class="compact">
                         <igx-avatar
-                            src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg"
-                            [roundShape]="true">
+                            src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
                         <div class="igx-card-header__tgroup">
                             <h3 class="igx-card-header__title--small">Brad Stanley</h3>

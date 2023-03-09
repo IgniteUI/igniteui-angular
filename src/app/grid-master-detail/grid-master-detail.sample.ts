@@ -1,14 +1,13 @@
 /* eslint-disable max-len */
 import { Component, ViewChild, OnInit, Inject, TemplateRef } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 
-import { IgxGridComponent, IgxGridStateDirective } from 'igniteui-angular';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
 import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
 import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { NgFor, NgIf } from '@angular/common';
-import { IgxGridStateDirective as IgxGridStateDirective_1 } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridStateDirective } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
@@ -17,7 +16,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
     styleUrls: ['grid-master-detail.sample.css'],
     templateUrl: 'grid-master-detail.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxGridComponent_1, IgxGridStateDirective_1, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
+    imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -86,7 +85,7 @@ export class GridMasterDetailSampleComponent implements OnInit {
         const state = this.state.getState() as string;
         window.sessionStorage.setItem('grid-state', state);
       }
-    
+
       public restoreState() {
         const state = window.sessionStorage.getItem('grid-state');
         this.state.setState(state as string);

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, DisplayDensity } from 'igniteui-angular';
+import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
@@ -8,8 +9,10 @@ import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angula
 import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
 import { IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { NgIf } from '@angular/common';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { IgxCsvExporterService, IgxExcelExporterService } from '../../../projects/igniteui-angular/src/lib/services/public_api';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     selector: 'app-grid-toolbar-sample',

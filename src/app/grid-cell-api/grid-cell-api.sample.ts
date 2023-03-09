@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-grid-cell-api-sample',
-    styleUrls: ['grid-cell-api.sample.css'],
+    styleUrls: ['grid-cell-api.sample.scss'],
     templateUrl: 'grid-cell-api.sample.html',
     standalone: true,
     imports: [FormsModule, IgxGridComponent_1, IgxPaginatorComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxButtonDirective, IgxIconComponent, IgxTreeGridComponent_1, IgxHierarchicalGridComponent_1, IgxRowIslandComponent]

@@ -1,6 +1,6 @@
 import {
     AfterViewInit,
-    ChangeDetectorRef, 
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -318,7 +318,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     public set disabled(value: boolean) {
         this._disabled = (value as any === '') || value;
     }
-    
+
     /**
      * Sets/gets whether the radio button is invalid.
      * Default value is `false`.
@@ -388,7 +388,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         private cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
         @Optional() @Self() public ngControl: NgControl,
-    ) { 
+    ) {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
@@ -403,8 +403,8 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         this.destroy$.complete();
     }
 
-    /** 
-     * @hidden 
+    /**
+     * @hidden
      * @internal
     */
     public ngAfterViewInit() {
@@ -431,7 +431,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
      * @internal
      */
       @HostListener('change', ['$event'])
-      public _changed(){
+      public _changed(event: Event){
           if(event instanceof Event){
             event.preventDefault();
           }
@@ -444,7 +444,10 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
-        this.focused = true;
+
+        if (!this.focused) {
+            this.focused = true;
+        }
     }
 
     /**

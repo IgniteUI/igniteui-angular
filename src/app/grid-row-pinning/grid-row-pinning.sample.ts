@@ -37,7 +37,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
-    styleUrls: ['grid-row-pinning.sample.css'],
+    styleUrls: ['grid-row-pinning.sample.scss'],
     templateUrl: 'grid-row-pinning.sample.html',
     providers: [
         { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable } },

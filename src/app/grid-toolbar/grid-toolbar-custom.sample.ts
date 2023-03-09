@@ -1,7 +1,8 @@
 
 import { Component } from '@angular/core';
-import { IgxColumnComponent } from 'igniteui-angular';
+import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
@@ -12,7 +13,6 @@ import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/ico
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { NgIf } from '@angular/common';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({

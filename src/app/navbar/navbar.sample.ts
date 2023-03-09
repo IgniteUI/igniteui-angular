@@ -1,5 +1,6 @@
-import { Location } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Location } from '@angular/common';
+
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective } from '../../../projects/igniteui-angular/src/lib/navbar/navbar.component';

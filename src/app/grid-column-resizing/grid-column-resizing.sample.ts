@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { NgFor } from '@angular/common';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     providers: [],
@@ -11,7 +11,7 @@ import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/ignite
     styleUrls: ['grid-column-resizing.sample.css'],
     templateUrl: 'grid-column-resizing.sample.html',
     standalone: true,
-    imports: [IgxGridComponent_1, NgFor, IgxColumnComponent, IgxButtonDirective]
+    imports: [IgxGridComponent, NgFor, IgxColumnComponent, IgxButtonDirective]
 })
 
 export class GridColumnResizingSampleComponent implements OnInit {

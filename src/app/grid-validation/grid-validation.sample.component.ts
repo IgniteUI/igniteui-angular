@@ -42,7 +42,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 
 @Component({
     selector: 'app-grid-row-edit',
-    styleUrls: [`grid-validation.sample.component.css`],
+    styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
     standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxGridComponent_1, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, ForbiddenValidatorDirective, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective, NgTemplateOutlet, NgIf, IgxColumnMinValidatorDirective, IgxColumnMaxValidatorDirective, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, NgFor, IgxHierarchicalGridComponent, IgxRowIslandComponent]

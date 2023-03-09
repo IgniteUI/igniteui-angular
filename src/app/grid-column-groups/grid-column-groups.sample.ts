@@ -1,23 +1,24 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPinningPosition } from 'igniteui-angular';
+
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxColumnGroupComponent as IgxColumnGroupComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
+import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
 import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
 import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
 import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxCollapsibleIndicatorTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { ColumnPinningPosition, GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.css'],
     templateUrl: 'grid-column-groups.sample.html',
     standalone: true,
-    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent_1, IgxButtonDirective]
+    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective]
 })
 export class GridColumnGroupsSampleComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })

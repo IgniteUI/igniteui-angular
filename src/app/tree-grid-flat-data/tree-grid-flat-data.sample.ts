@@ -1,10 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
-         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult,
-         GridSelectionMode,
-         GridSummaryCalculationMode,
-         DisplayDensity} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
@@ -14,10 +11,13 @@ import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirect
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { NgFor } from '@angular/common';
-import { IgxTreeGridComponent as IgxTreeGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { IgxSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { GridSelectionMode, GridSummaryCalculationMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../../projects/igniteui-angular/src/lib/services/public_api';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = []): IgxSummaryResult[] {
@@ -38,7 +38,7 @@ export class MySummaryOperand extends IgxSummaryOperand {
     styleUrls: ['tree-grid-flat-data.sample.css'],
     templateUrl: 'tree-grid-flat-data.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent_1, NgFor, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, NgFor, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
 })
 export class TreeGridFlatDataSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;

@@ -20,10 +20,15 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
+<<<<<<< HEAD
     styleUrls: ['grid-groupby.sample.css'],
     templateUrl: 'grid-groupby.sample.html',
     standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent_1, IgxColumnComponent]
+=======
+    styleUrls: ['grid-groupby.sample.scss'],
+    templateUrl: 'grid-groupby.sample.html'
+>>>>>>> 0b248ce0f804051d94d55a78b039eebae9fc96c7
 })
 export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })

@@ -1,25 +1,22 @@
 import { Component, ViewChild } from '@angular/core';
-import { data, dataWithoutPK } from '../shared/data';
-
-import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity} from 'igniteui-angular';
 import { FormsModule } from '@angular/forms';
+
+import { data, dataWithoutPK } from '../shared/data';
 import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
 import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-
-
-
-
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
+import { GridSelectionMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
+import { IgxDateSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
 
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxGridComponent_1, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent, IgxColumnRequiredValidatorDirective, IgxCellTemplateDirective, IgxPaginatorComponent, FormsModule, IgxCellEditorTemplateDirective]
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })

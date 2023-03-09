@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { NgFor } from '@angular/common';
+
 import { IgxColumnGroupingDirective } from './custom-action-directive';
 import { IgxColumnPinningDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-pinning.directive';
 import { IgxColumnHidingDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-hiding.directive';
 import { IgxColumnActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-actions.component';
-import { NgFor } from '@angular/common';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';

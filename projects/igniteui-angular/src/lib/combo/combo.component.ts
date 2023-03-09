@@ -1,7 +1,7 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -195,6 +195,15 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         @Optional() protected _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
+    }
+
+    /** @hidden @internal */
+    @HostListener('keydown.ArrowDown', ['$event'])
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    public onArrowDown(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.open();
     }
 
     /** @hidden @internal */

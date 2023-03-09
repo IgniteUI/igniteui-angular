@@ -1,17 +1,19 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { DisplayDensity, IgxGridComponent } from 'igniteui-angular';
-import { RemoteService } from '../shared/remote.service';
 import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { Observable } from 'rxjs';
+
+import { RemoteService } from '../shared/remote.service';
 import { IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
 import { IgxRowDragDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from '../../../projects/igniteui-angular/src/lib/grids/row-drag.directive';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { FormsModule } from '@angular/forms';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 
 enum DragIcon {
     DEFAULT = 'drag_indicator',
@@ -24,7 +26,7 @@ enum DragIcon {
     templateUrl: 'grid-row-draggable.sample.html',
     styleUrls: ['grid-row-draggable.sample.css'],
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent_1, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, AsyncPipe]
+    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 

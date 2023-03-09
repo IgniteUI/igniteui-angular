@@ -108,7 +108,7 @@
         color: var-get($theme, 'text-color');
         line-height: 1;
         background: var-get($theme, 'background-color');
-        border-radius: var-get($theme, 'border-radius');
+        border-radius: 50%;
         box-shadow: var-get($theme, 'shadow');
         border-width: var-get($theme, 'border-width');
         border-color: var-get($theme, 'border-color');
@@ -125,6 +125,10 @@
             font-weight: $badge-font-weight;
             color: var-get($theme, 'icon-color');
         }
+    }
+
+    %igx-badge--square {
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-badge-value {

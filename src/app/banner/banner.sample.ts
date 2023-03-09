@@ -1,19 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxBannerComponent, growVerIn, growVerOut } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
 import { IgxLayoutDirective, IgxFlexDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxBannerActionsDirective } from '../../../projects/igniteui-angular/src/lib/banner/banner.directives';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxBannerComponent as IgxBannerComponent_1 } from '../../../projects/igniteui-angular/src/lib/banner/banner.component';
+import { IgxBannerComponent } from '../../../projects/igniteui-angular/src/lib/banner/banner.component';
+import { growVerIn, growVerOut } from '../../../projects/igniteui-angular/src/lib/animations/grow';
 
 @Component({
     selector: 'app-banner-sample',
     templateUrl: `banner.sample.html`,
     styleUrls: [`banner.sample.css`],
     standalone: true,
-    imports: [IgxBannerComponent_1, IgxIconComponent, IgxBannerActionsDirective, IgxButtonDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective]
+    imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxButtonDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })

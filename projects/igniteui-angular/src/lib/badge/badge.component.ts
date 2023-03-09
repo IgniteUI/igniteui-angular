@@ -137,6 +137,24 @@ export class IgxBadgeComponent {
     public cssClass = 'igx-badge';
 
     /**
+     * Sets a square shape to the badge, if `shape` is set to `square`.
+     * By default the shape of the badge is rounded.
+     *
+     * @example
+     * ```html
+     * <igx-badge shape="square"></igx-badge>
+     * ```
+     */
+    @Input()
+    public shape: 'rounded' | 'square' = 'rounded';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-badge--square')
+    public get _squareShape(): boolean {
+        return this.shape === 'square';
+    }
+
+    /**
      * Sets/gets the aria-label attribute value.
      *
      * @example

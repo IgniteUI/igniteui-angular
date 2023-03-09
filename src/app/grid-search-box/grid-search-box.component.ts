@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IgxGridBaseDirective } from 'igniteui-angular';
+
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxChipComponent } from '../../../projects/igniteui-angular/src/lib/chips/chip.component';
 import { IgxChipsAreaComponent } from '../../../projects/igniteui-angular/src/lib/chips/chips-area.component';
@@ -10,6 +10,7 @@ import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/ico
 import { NgIf } from '@angular/common';
 import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxGridBaseDirective } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     selector: 'app-grid-search-box',
