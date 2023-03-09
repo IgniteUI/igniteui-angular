@@ -1,5 +1,7 @@
 :host {
+    display: block;
     width: 100%;
+    min-height: 90vh;
 }
 
 .sample-wrapper {
@@ -39,3 +41,6 @@
     margin-bottom: 0.4rem;
 }
 
+igx-switch {
+    padding-left: 1.25rem;
+}

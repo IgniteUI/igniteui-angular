@@ -4,7 +4,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 @Component({
     providers: [],
     selector: 'app-grid-flex-sample',
-    styleUrls: ['grid-flex.sample.css'],
+    styleUrls: ['grid-flex.sample.scss'],
     templateUrl: 'grid-flex.sample.html'
 })
 

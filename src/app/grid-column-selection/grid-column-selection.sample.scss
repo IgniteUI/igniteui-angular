@@ -1,0 +1,18 @@
+.sample-buttons {
+    margin-top: 24px;
+}
+
+[igxButton] {
+    margin: 8px 8px 8px 0;
+}
+
+.density-chooser {
+    margin-bottom: 16px;
+    max-width: 900px;
+}
+
+igx-grid {
+    &:first-of-type {
+        margin-bottom: 3rem;
+    }
+}

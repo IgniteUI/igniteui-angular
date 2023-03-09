@@ -38,3 +38,4 @@ export * from './summaries/summary.module';
 export * from './grouping/tree-grid-group-by-area.component';
 export * from './grouping/grid-group-by-area.component';
 export * from './grouping/group-by-area.directive';
+export { DropPosition } from './moving/moving.service';
