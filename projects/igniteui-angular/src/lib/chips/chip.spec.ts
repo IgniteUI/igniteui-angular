@@ -41,7 +41,7 @@ import { NgFor } from '@angular/common';
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent]
+    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, NgFor]
 })
 class TestChipComponent {
 

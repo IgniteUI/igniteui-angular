@@ -1,9 +1,11 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { NgFor, NgIf } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 import { IgxGridComponent } from './grid.component';
-import { CellType, IgxColumnComponent, IPinRowEventArgs } from './public_api';
+import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IPinRowEventArgs } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
@@ -16,7 +18,6 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 
 describe('Row Pinning #grid', () => {
@@ -29,9 +30,9 @@ describe('Row Pinning #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [GridRowConditionalStylingComponent],
             imports: [
                 NoopAnimationsModule,
+                GridRowConditionalStylingComponent,
                 GridRowPinningComponent,
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
@@ -42,13 +43,11 @@ describe('Row Pinning #grid', () => {
     }));
 
     describe('', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('should pin rows to top.', () => {
             // pin 2nd data row
@@ -527,13 +526,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe('Row pinning with Master Detail View', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('should be in view when expanded and pinning row to bottom of the grid.', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
@@ -633,20 +630,17 @@ describe('Row Pinning #grid', () => {
     describe('Paging', () => {
         let paginator: IgxPaginatorComponent;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.componentInstance.createSimpleData(12);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 5;
-
-            fix.detectChanges();
-            tick();
 
             paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
-        }));
+            paginator.perPage = 5;
+            fix.detectChanges();
+        });
 
         it('should correctly apply paging state for grid and paginator when there are pinned rows.', () => {
             // pin the first row
@@ -685,13 +679,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe(' Editing ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('should allow pinning edited row.', () => {
             grid.updateCell('New value', 'ANTON', 'CompanyName');
@@ -764,13 +756,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe('Row pinning with MRL', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('should pin/unpin correctly to top', () => {
             // pin
@@ -908,13 +898,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe(' Hiding', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.instance;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('should hide columns in pinned and unpinned area', () => {
             // pin 2nd data row
@@ -976,13 +964,13 @@ describe('Row Pinning #grid', () => {
 
     describe(' Cell Editing', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             // enable cell editing for column
             grid = fix.componentInstance.instance;
             grid.getColumnByName('CompanyName').editable = true;
-        }));
+        });
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
             const  gridContent = GridFunctions.getGridContent(fix);
@@ -1061,13 +1049,13 @@ describe('Row Pinning #grid', () => {
     describe(' Navigation', () => {
         let gridContent: DebugElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.instance;
             setupGridScrollDetection(fix, grid);
             gridContent = GridFunctions.getGridContent(fix);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -1300,11 +1288,11 @@ describe('Row Pinning #grid', () => {
     });
 
     describe(' Initial pinning', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid1;
-        }));
+        });
 
         it('should pin rows on OnInit.', () => {
             fix.detectChanges();
@@ -1314,13 +1302,11 @@ describe('Row Pinning #grid', () => {
 
     describe('Conditional row styling', () => {
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridRowConditionalStylingComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.grid;
-            tick();
             fix.detectChanges();
-        }));
+        });
 
         it('Shoud be able to conditionally style rows. Check is the class present in the row native element class list', () => {
             fix.detectChanges();
@@ -1429,9 +1415,10 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
                 <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
             </div>
         </ng-template>
-</igx-grid>`,
+    </igx-grid>
+    `,
     standalone: true,
-    imports: [IgxGridComponent]
+    imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
 

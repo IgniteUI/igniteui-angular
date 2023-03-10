@@ -1043,6 +1043,8 @@ class AutocompleteInputComponent extends AutocompleteComponent {
     imports: [
         ReactiveFormsModule,
         IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxLabelDirective,
         IgxPrefixDirective,
         IgxRippleDirective,
         IgxDropDownComponent,

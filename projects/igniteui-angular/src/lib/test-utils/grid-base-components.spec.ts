@@ -11,7 +11,7 @@ import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridToolbarPinningComponent } from '../grids/toolbar/grid-toolbar-pinning.component';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { IgxCellTemplateDirective } from '../grids/columns/templates.directive';
 
 @Component({
@@ -97,7 +97,7 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '',
             '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class BasicGridSearchComponent extends GridWithSizeComponent {
     public highlightClass = 'igx-highlight';
@@ -109,7 +109,7 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
     template: GridTemplateStrings.declareGrid(``,
         '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator *ngIf="paging" [perPage]="perPage"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
@@ -183,7 +183,7 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
         '</igx-grid-toolbar-actions></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, IgxPaginatorComponent, NgIf]
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxColumnActionsComponent)
@@ -217,7 +217,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, NgIf]
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -238,7 +238,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
             '</igx-grid-toolbar>')}
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgIf]
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
@@ -291,7 +291,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
         '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, NgIf]
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public data = SampleTestData.contactInfoDataFull();

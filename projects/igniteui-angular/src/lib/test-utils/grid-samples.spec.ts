@@ -1,4 +1,6 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
+
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs } from '../grids/common/events';
 import {
@@ -13,14 +15,13 @@ import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operatio
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
 import { CellType, IgxAdvancedFilteringDialogComponent, IgxGridComponent } from '../grids/grid/public_api';
-import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
+import { IgxRowAddTextDirective, IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { ColumnType } from '../grids/common/grid.interface';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../grids/columns/column-layout.component';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
@@ -660,7 +661,7 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
     template: GridTemplateStrings.declareGrid(`height="300px"  width="600px" primaryKey="ID"`, '',
         ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class SelectionWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
@@ -1506,10 +1507,10 @@ export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'number'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
-        <igx-paginator *ngIf='paging' [perPage]="7"></igx-paginator>
+        <igx-paginator *ngIf="paging" [perPage]="7"></igx-paginator>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
@@ -2122,7 +2123,7 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class MRLTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -2175,7 +2176,7 @@ export class MRLTestComponent {
 </igx-grid>
 `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, NgFor, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxRowAddTextDirective, NgFor, NgIf]
 })
 export class IgxAddRowComponent implements OnInit {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })

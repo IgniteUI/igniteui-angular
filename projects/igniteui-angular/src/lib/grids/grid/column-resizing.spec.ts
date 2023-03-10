@@ -11,8 +11,9 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxCellTemplateDirective } from '../columns/templates.directive';
+import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { NgFor } from '@angular/common';
+import { IgxAvatarComponent } from '../../avatar/avatar.component';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -914,7 +915,7 @@ export class LargePinnedColGridComponent implements OnInit {
 @Component({
     template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxAvatarComponent]
 })
 export class GridFeaturesComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
