@@ -11,7 +11,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRadioComponent } from '../../radio/radio.component';
 import { IgxRadioModule } from '../radio/radio-group.directive';
 
-fdescribe('igxFocus', () => {
+describe('igxFocus', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
