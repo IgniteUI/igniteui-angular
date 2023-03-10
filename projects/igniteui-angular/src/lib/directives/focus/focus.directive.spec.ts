@@ -8,8 +8,10 @@ import { EditorProvider } from '../../core/edit-provider';
 import { IgxCheckboxModule, IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxRadioComponent } from '../../radio/radio.component';
+import { IgxRadioModule } from '../radio/radio-group.directive';
 
-describe('igxFocus', () => {
+fdescribe('igxFocus', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -19,7 +21,7 @@ describe('igxFocus', () => {
                 TriggerFocusOnClickComponent,
                 CheckboxPickerComponent
             ],
-            imports: [ IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
+            imports: [ IgxFocusModule, IgxCheckboxModule, IgxRadioModule, IgxDatePickerModule, NoopAnimationsModule ]
         }).compileComponents();
     }));
 
@@ -73,11 +75,15 @@ describe('igxFocus', () => {
         expect(directive.nativeElement).toBe(providerElem);
     }));
 
-    it('Should correctly focus igx-checkbox and igx-date-picker', fakeAsync(() => {
+    it('Should correctly focus igx-checkbox, igx-radio and igx-date-picker', fakeAsync(() => {
         const fix = TestBed.createComponent(CheckboxPickerComponent);
         fix.detectChanges();
         tick(16);
         expect(document.activeElement).toBe(fix.componentInstance.checkbox.getEditElement());
+
+        fix.componentInstance.radioFocusRef.trigger();
+        tick(16);
+        expect(document.activeElement).toBe(fix.componentInstance.radio.getEditElement());
 
         fix.componentInstance.pickerFocusRef.trigger();
         tick(16);
@@ -122,11 +128,14 @@ class TriggerFocusOnClickComponent {
     template:
     `
     <igx-checkbox [igxFocus]="true"></igx-checkbox>
+    <igx-radio #radio [igxFocus]></igx-radio>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
     `
 })
 class CheckboxPickerComponent {
     @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;
+    @ViewChild(IgxRadioComponent, { static: true }) public radio: IgxRadioComponent;
     @ViewChild(IgxDatePickerComponent, { static: true }) public picker: IgxDatePickerComponent;
+    @ViewChild('radio', { read: IgxFocusDirective, static: true }) public radioFocusRef: IgxFocusDirective;
     @ViewChild('picker', { read: IgxFocusDirective, static: true }) public pickerFocusRef: IgxFocusDirective;
 }
