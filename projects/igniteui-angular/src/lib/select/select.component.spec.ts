@@ -1,20 +1,21 @@
-import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownItemComponent, IgxDropDownItemBaseDirective, ISelectionEventArgs } from '../drop-down/public_api';
-import { IgxHintDirective, IgxLabelDirective } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent } from './select.component';
+
+import { IgxDropDownItemComponent, IgxDropDownItemBaseDirective, ISelectionEventArgs } from '../drop-down/public_api';
+import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
+import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { addScrollDivToElement } from '../services/overlay/overlay.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
+import { IgxInputState } from './../directives/input/input.directive';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -48,7 +49,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
-fdescribe('igxSelect', () => {
+describe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -2826,9 +2827,9 @@ class IgxSelectGroupsComponent {
     template: `
     <div style="width: 2500px; height: 400px;"></div>
         <igx-select #select [(ngModel)]="value" >
-        <igx-select-item *ngFor="let item of items" [value]="item">
-            {{ item }}
-        </igx-select-item>
+            <igx-select-item *ngFor="let item of items" [value]="item">
+                {{ item }}
+            </igx-select-item>
         </igx-select>
     <div style="width: 2500px; height: 400px;"></div>
 `,
@@ -2847,12 +2848,12 @@ class IgxSelectMiddleComponent {
 }
 @Component({
     template: `
-    <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
-    <igx-select-item *ngFor="let item of items" [value]="item">
-        {{ item }}
-    </igx-select-item>
-    </igx-select>
-`,
+        <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
+            <igx-select-item *ngFor="let item of items" [value]="item">
+                {{ item }}
+            </igx-select-item>
+        </igx-select>
+    `,
     standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
@@ -2874,11 +2875,11 @@ class IgxSelectTopComponent {
 @Component({
     template: `
     <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', bottom:'20px', left: '30px'}">
-    <igx-select-item *ngFor="let item of items" [value]="item">
-        {{ item }}
-    </igx-select-item>
+        <igx-select-item *ngFor="let item of items" [value]="item">
+            {{ item }}
+        </igx-select-item>
     </igx-select>
-`,
+    `,
     standalone: true,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, NgStyle]
 })
@@ -2901,21 +2902,21 @@ class IgxSelectBottomComponent {
     template: `
     <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
         <igx-prefix igxPrefix>
-                <igx-icon>favorite</igx-icon>
-                <igx-icon>home</igx-icon>
-                <igx-icon>search</igx-icon>
-            </igx-prefix>
-            <igx-suffix>
-                <igx-icon>alarm</igx-icon>
-            </igx-suffix>
+            <igx-icon>favorite</igx-icon>
+            <igx-icon>home</igx-icon>
+            <igx-icon>search</igx-icon>
+        </igx-prefix>
+        <igx-suffix>
+            <igx-icon>alarm</igx-icon>
+        </igx-suffix>
         <igx-hint>I am a Hint</igx-hint>
         <igx-select-item *ngFor="let item of items" [value]="item">
             {{ item }}
         </igx-select-item>
     </igx-select>
-`,
+    `,
     standalone: true,
-    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, NgFor, NgStyle]
+    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgFor, NgStyle]
 })
 class IgxSelectAffixComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
@@ -2932,33 +2933,33 @@ class IgxSelectAffixComponent {
 
 @Component({
     template: `
-    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
-    <p>
-    <label>First Name:</label>
-    <input type="text" formControlName="firstName">
-    </p>
-    <p>
-    <label>Password:</label>
-    <input type="password" formControlName="password">
-    </p>
-    <p>
-    <igx-select formControlName="optionsSelect" #selectReactive>
-        <label igxLabel>Sample Label</label>
-        <igx-prefix igxPrefix>
-            <igx-icon>alarm</igx-icon>
-        </igx-prefix>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
-            {{ item }}
-        </igx-select-item>
-    </igx-select>
-    </p>
-    <p>
-    <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
-    </p>
-</form>
-`,
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+        <p>
+        <label>First Name:</label>
+        <input type="text" formControlName="firstName">
+        </p>
+        <p>
+        <label>Password:</label>
+        <input type="password" formControlName="password">
+        </p>
+        <p>
+        <igx-select formControlName="optionsSelect" #selectReactive>
+            <label igxLabel>Sample Label</label>
+            <igx-prefix igxPrefix>
+                <igx-icon>alarm</igx-icon>
+            </igx-prefix>
+            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+                {{ item }}
+            </igx-select-item>
+        </igx-select>
+        </p>
+        <p>
+        <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+        </p>
+    </form>
+    `,
     standalone: true,
-    imports: [ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent]
+    imports: [ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent, NgFor]
 })
 class IgxSelectReactiveFormComponent {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
@@ -3019,26 +3020,26 @@ class IgxSelectReactiveFormComponent {
 
 @Component({
     template: `
-    <form #form="ngForm" (ngSubmit)="onSubmit()">
-    <p>
+        <form #form="ngForm" (ngSubmit)="onSubmit()">
+        <p>
 
-    <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
-        <label igxLabel>Sample Label</label>
-        <igx-prefix igxPrefix>
-            <igx-icon>alarm</igx-icon>
-        </igx-prefix>
-        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
-            {{ item }}
-        </igx-select-item>
-    </igx-select>
-    </p>
-    <p>
-    <button type="submit" [disabled]="!form.valid">Submit</button>
-    </p>
-</form>
-`,
+        <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
+            <label igxLabel>Sample Label</label>
+            <igx-prefix igxPrefix>
+                <igx-icon>alarm</igx-icon>
+            </igx-prefix>
+            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+                {{ item }}
+            </igx-select-item>
+        </igx-select>
+        </p>
+        <p>
+        <button type="submit" [disabled]="!form.valid">Submit</button>
+        </p>
+    </form>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent]
+    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent, NgFor]
 })
 class IgxSelectTemplateFormComponent {
     @ViewChild('selectInForm', { read: IgxSelectComponent, static: true })
@@ -3099,7 +3100,7 @@ class IgxSelectTemplateFormComponent {
             }
         `],
     standalone: true,
-    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, IgxButtonDirective]
+    imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgFor, IgxButtonDirective, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
 })
 class IgxSelectHeaderFooterComponent implements OnInit {
     @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })
@@ -3127,7 +3128,7 @@ class IgxSelectHeaderFooterComponent implements OnInit {
         </div>
     `,
     standalone: true,
-    imports: [NgIf, IgxSelectComponent, IgxSelectItemComponent]
+    imports: [NgIf, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, NgFor]
 })
 class IgxSelectCDRComponent {
     @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
