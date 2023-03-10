@@ -3,14 +3,31 @@
 @use 'sass:list';
 @use 'sass:string';
 
+/// Get the difference between two lists.
+/// @access private
+/// @param {List} $list1 - The source list.
+/// @param {List} $list2 - The list to check against the source list.
+/// @return {List} - A list containing the diff items.
+@function list-diff($list1, $list2) {
+    $result: ();
+
+    @each $item in $list1 {
+        @if not list.index($list2, $item) {
+            $result: list.append($result, $item, comma);
+        }
+    }
+
+    @return $result;
+}
+
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @access private
-@function is-used($name, $checklist) {
+@function is-used($component, $checklist) {
     $used: true;
 
-    @if list.index($checklist, $name) {
-        $deps: map.get($components, $name, 'usedBy');
+    @if list.index($checklist, $component) {
+        $deps: map.get($components, $component, 'usedBy');
         $excluded: ();
 
         @each $item in $checklist {
@@ -22,9 +39,11 @@
         $used: list.length($deps) != list.length($excluded);
 
         @if not($used) {
-            $dropped-themes: list.append($dropped-themes, $name) !global;
+            $dropped-themes: list.append($dropped-themes, $component) !global;
         } @else {
-            @warn string.unquote('You\'ve opted to exclude the "#{$name}" theme but it was held back as the following themes depend on it: "#{$deps}".');
+            $remaining: list-diff($deps, $excluded);
+
+            @warn string.unquote('You\'ve opted to exclude the "#{$component}" theme but it was held back as the following components depend on it: "#{$remaining}".');
         }
     }
 
