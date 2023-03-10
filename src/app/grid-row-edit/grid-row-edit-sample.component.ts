@@ -5,17 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { data } from '../shared/data';
 import { IgxToggleDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid.rowEdit.directive';
-import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
 import { IgxFocusDirective } from '../../../projects/igniteui-angular/src/lib/directives/focus/focus.directive';
-import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
-import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/public_api';
+import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
+import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -112,6 +111,10 @@ export class GridRowEditSampleComponent {
         event.stopPropagation();
         this.getGridById(gridID).deleteRow(rowID);
         this.refreshAll();
+    }
+
+    public rowDeleted(event: IRowDataEventArgs) {
+        console.log("Row ID is: " + event.primaryKey);
     }
 
     public undo(gridID) {
