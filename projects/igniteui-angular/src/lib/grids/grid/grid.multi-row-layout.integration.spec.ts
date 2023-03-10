@@ -15,7 +15,7 @@ import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { IgxGridToolbarActionsComponent } from '../toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
 import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -796,11 +796,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Filtering ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should enforce excel style filtering.', () => {
             const filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
@@ -834,11 +834,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('GroupBy ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
             grid.height = '600px';
@@ -903,11 +903,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
         const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async () => {
             grid.width = '1500px';
@@ -1159,11 +1159,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Selection ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should return correct selected data via getSelectedData API.', () => {
             const selectedData1 = [{
@@ -1210,7 +1210,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, NgIf, NgFor]
 })
 export class ColumnLayouHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1259,7 +1259,7 @@ export class ColumnLayouHidingTestComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor, NgIf]
 })
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

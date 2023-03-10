@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { IgxColumnComponent, IgxGridComponent } from './grid/public_api';
+import { IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
@@ -17,6 +17,7 @@ import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '..
 import { GridSelectionRange } from './common/types';
 import { CustomFilter } from '../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { NgFor } from '@angular/common';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
@@ -775,7 +776,7 @@ class HelperFunctions {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxGridStateComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -833,7 +834,7 @@ export class IgxGridStateWithOptionsComponent {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxGridStateDirective, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxGridStateDirective, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })

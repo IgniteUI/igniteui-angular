@@ -115,7 +115,7 @@ export class FilteringComponent extends BasicGridComponent {
         ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
         '', ColumnDefinitions.productBasicNumberID, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class RowSelectionComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductDataExtended();
@@ -336,7 +336,7 @@ export class GridFeaturesComponent extends BasicGridComponent {
         ` columnWidth="200" `,
         '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
     public data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
@@ -348,7 +348,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
         ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
     public data = SampleTestData.personIDNameJobCompany();
@@ -532,7 +532,7 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
     template: GridTemplateStrings.declareGrid(`height="1000px"  width="900px" primaryKey="ID"`, '',
         ColumnDefinitions.summariesGroupByColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class SummariesGroupByComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();

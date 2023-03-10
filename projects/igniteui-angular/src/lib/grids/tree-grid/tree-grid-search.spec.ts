@@ -22,12 +22,12 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSearchComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridSummariesScrollingComponent
-            ],
-            imports: [NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

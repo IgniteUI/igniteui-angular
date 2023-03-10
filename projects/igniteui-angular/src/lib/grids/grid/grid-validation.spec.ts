@@ -1,5 +1,5 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -24,14 +24,14 @@ describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
                 IgxGridCustomEditorsComponent,
                 IgxTreeGridValidationTestComponent,
                 ForbiddenValidatorDirective
-            ],
-            imports: [NoopAnimationsModule, ReactiveFormsModule]
+            ]
         });
     }));
 

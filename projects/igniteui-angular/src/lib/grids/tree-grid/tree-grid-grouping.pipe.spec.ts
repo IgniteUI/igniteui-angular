@@ -16,8 +16,7 @@ describe('TreeGrid Grouping Pipe', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent],
-            imports: [NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
         }).compileComponents();
     }));
 

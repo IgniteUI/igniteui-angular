@@ -23,16 +23,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxTreeGridCustomSummariesComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridSummariesScrollingComponent,
                 IgxTreeGridSummariesKeyScroliingComponent
-            ],
-            imports: [
-                NoopAnimationsModule
             ]
         }).compileComponents();
     }));

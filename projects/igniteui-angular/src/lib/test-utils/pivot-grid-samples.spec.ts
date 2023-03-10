@@ -9,7 +9,7 @@ import { IgxGridStateDirective } from '../grids/state.directive';
     template: `
     <div style="display:flex;">
         <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
-            [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
+            [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]="defaultExpand">
         </igx-pivot-grid>
         <igx-pivot-data-selector #selector [grid]="grid"
             [(filtersExpanded)]="filterExpandState" [(rowsExpanded)]="rowExpandState"
@@ -228,7 +228,7 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     </igx-pivot-grid>
     `,
     standalone: true,
-    imports: [IgxPivotGridComponent]
+    imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;

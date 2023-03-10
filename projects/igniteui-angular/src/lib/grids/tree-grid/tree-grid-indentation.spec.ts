@@ -19,9 +19,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent],
-            imports: [NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
         }).compileComponents();
     }));
 

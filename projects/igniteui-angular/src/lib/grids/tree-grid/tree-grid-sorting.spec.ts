@@ -14,8 +14,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeGridSortingComponent],
-            imports: [NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSortingComponent]
         }).compileComponents();
     }));
 

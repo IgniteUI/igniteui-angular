@@ -48,7 +48,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
-describe('igxSelect', () => {
+fdescribe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;

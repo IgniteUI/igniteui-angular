@@ -30,12 +30,14 @@ describe('CSV Grid Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ReorderedColumnsComponent,
+            imports: [
+                NoopAnimationsModule,
+                ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                ColumnsAddedOnInitComponent],
-            imports: [NoopAnimationsModule]
+                ColumnsAddedOnInitComponent
+            ]
         }).compileComponents();
     }));
 

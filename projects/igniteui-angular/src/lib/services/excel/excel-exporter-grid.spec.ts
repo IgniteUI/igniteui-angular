@@ -52,7 +52,9 @@ describe('Excel Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ReorderedColumnsComponent,
+            imports: [
+                NoopAnimationsModule,
+                ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
@@ -71,8 +73,8 @@ describe('Excel Exporter', () => {
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
-                GridCurrencySummariesComponent],
-            imports: [NoopAnimationsModule]
+                GridCurrencySummariesComponent
+            ]
         }).compileComponents();
     }));
 

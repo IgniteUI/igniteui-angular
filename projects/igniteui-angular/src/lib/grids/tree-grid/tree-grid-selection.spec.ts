@@ -44,7 +44,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
@@ -54,8 +55,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCascadingSelectionComponent,
                 IgxTreeGridCascadingSelectionTransactionComponent,
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-            ],
-            imports: [NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

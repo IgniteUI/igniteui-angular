@@ -1246,13 +1246,12 @@ describe('IgxDropDown ', () => {
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
     [displayDensity]="density" [allowItemsFocus]="true">
-        <igx-drop-down-item *ngFor="let item of items"
-        [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
+        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
             {{item.field}}
         </igx-drop-down-item>
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class IgxDropDownTestComponent {
 
@@ -1418,7 +1417,7 @@ class InputWithDropDownDirectiveComponent {
         </igx-drop-down-item-group>
     </igx-drop-down>`,
     standalone: true,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent]
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, NgFor]
 })
 class GroupDropDownComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })

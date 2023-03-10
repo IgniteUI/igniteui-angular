@@ -34,7 +34,6 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [MultiColumnHeadersWithGroupingComponent],
             imports: [
                 NoopAnimationsModule,
                 DefaultGridComponent,
@@ -44,7 +43,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupByEmptyColumnFieldComponent,
                 GridGroupByRowCustomSelectorsComponent,
                 GridGroupByCaseSensitiveComponent,
-                GridGroupByTestDateTimeDataComponent
+                GridGroupByTestDateTimeDataComponent,
+                MultiColumnHeadersWithGroupingComponent
             ]
         });
     }));

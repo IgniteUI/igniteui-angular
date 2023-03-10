@@ -228,7 +228,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',

@@ -44,12 +44,15 @@ describe('IgxGrid - Summaries #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [ProductsComponent,
+            imports: [
+                NoopAnimationsModule,
+                CustomSummariesComponent,
+                ProductsComponent,
                 SummaryColumnComponent,
                 FilteringComponent,
                 SummariesGroupByComponent,
-                SummariesGroupByTransactionsComponent],
-            imports: [NoopAnimationsModule, CustomSummariesComponent]
+                SummariesGroupByTransactionsComponent
+            ]
         });
     }));
 
@@ -57,11 +60,11 @@ describe('IgxGrid - Summaries #grid', () => {
         describe('in grid with no summaries defined: ', () => {
             let fixture: ComponentFixture<ProductsComponent>;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(ProductsComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
-            }));
+            });
 
             it('should not have summary if no summary is active ', () => {
                 expect(fixture.debugElement.query(By.css(SUMMARY_CLASS))).toBeNull();
@@ -147,11 +150,11 @@ describe('IgxGrid - Summaries #grid', () => {
             let fixture: ComponentFixture<CustomSummariesComponent>;
             let grid: IgxGridComponent;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(CustomSummariesComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid1;
-            }));
+            });
 
             it('should properly render custom summaries', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
@@ -596,11 +599,11 @@ describe('IgxGrid - Summaries #grid', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(fakeAsync(() => {
+            beforeEach(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            }));
+            });
 
             it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
@@ -853,16 +856,14 @@ describe('IgxGrid - Summaries #grid', () => {
     describe('Keyboard Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
-            fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             grid.width = '800px';
             grid.height = '800px';
             fix.detectChanges();
-            tick(100);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

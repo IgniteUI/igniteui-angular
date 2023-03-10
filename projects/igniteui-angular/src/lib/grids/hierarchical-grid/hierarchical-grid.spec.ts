@@ -26,7 +26,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxHierarchicalGridTestBaseComponent,
+            imports: [
+                NoopAnimationsModule,
+                IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSizingComponent,
                 IgxHGridRemoteOnDemandComponent,
@@ -37,7 +39,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridAutoSizeColumnsComponent,
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
-                IgxHierarchicalGridToggleRIAndColsComponent]
+                IgxHierarchicalGridToggleRIAndColsComponent
+            ]
         }).compileComponents();
     }))
 

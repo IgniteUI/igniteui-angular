@@ -26,16 +26,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridNoDataComponent,
                 IgxTreeGridWithNoForeignKeyComponent
-            ],
-            imports: [
-                NoopAnimationsModule
             ]
         }).compileComponents();
     }));

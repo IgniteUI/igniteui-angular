@@ -34,13 +34,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
                 IgxHierarchicalGridWithTransactionProviderComponent
-            ],
-            imports: [
-                NoopAnimationsModule
             ]
         }).compileComponents();
     }))

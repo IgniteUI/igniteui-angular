@@ -15,11 +15,11 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridWithNoScrollsComponent,
                 IgxTreeGridWithScrollsComponent
-            ],
-            imports: [NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

@@ -21,9 +21,12 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -42,7 +45,6 @@ import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../in
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxIconComponent } from '../icon/icon.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';

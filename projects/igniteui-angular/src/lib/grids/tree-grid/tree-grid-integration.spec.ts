@@ -35,7 +35,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridStringTreeColumnComponent,
@@ -47,7 +48,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridRowEditingHierarchicalDSTransactionComponent
             ],
-            imports: [NoopAnimationsModule],
             providers: [
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]

@@ -29,13 +29,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxHierarchicalGridTestBaseComponent,
+            imports: [
+                NoopAnimationsModule,
+                IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
-                IgxHierarchicalGridRowSelectionNoTransactionsComponent],
-            imports: [
-                NoopAnimationsModule
+                IgxHierarchicalGridRowSelectionNoTransactionsComponent
             ]
         }).compileComponents();
     }))

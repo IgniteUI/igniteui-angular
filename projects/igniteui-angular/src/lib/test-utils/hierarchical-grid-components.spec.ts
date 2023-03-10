@@ -15,6 +15,8 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxIconComponent } from '../icon/icon.component';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
+import { IgxGridToolbarDirective } from '../grids/toolbar/common';
 
 @Component({
     template: `
@@ -57,7 +59,8 @@ import { IgxIconComponent } from '../icon/icon.component';
         IgxRowIslandComponent,
         IgxPaginatorComponent,
         IgxGridToolbarComponent,
-        IgxIconComponent
+        IgxIconComponent,
+        NgIf
     ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
@@ -300,7 +303,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxCheckboxComponent, IgxPaginatorComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxRowSelectorDirective, IgxHeadSelectorDirective]
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
@@ -352,7 +355,7 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxRowIslandComponent, IgxButtonDirective]
+    imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxRowIslandComponent, IgxButtonDirective]
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 
