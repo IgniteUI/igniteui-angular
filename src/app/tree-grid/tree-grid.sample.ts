@@ -27,7 +27,7 @@ import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExp
 @Component({
     providers: [],
     selector: 'app-tree-grid-sample',
-    styleUrls: ['tree-grid.sample.css'],
+    styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgIf, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent]

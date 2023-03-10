@@ -6,7 +6,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 
 @Component({
     selector: 'app-icon-sample',
-    styleUrls: ['./icon.sample.css'],
+    styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html',
     standalone: true,
     imports: [IgxIconComponent, IgxButtonDirective]

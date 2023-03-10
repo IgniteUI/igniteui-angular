@@ -15,7 +15,7 @@ import { ColumnPinningPosition, GridSelectionMode, RowPinningPosition } from '..
 @Component({
     providers: [],
     selector: 'app-grid-column-pinning-sample',
-    styleUrls: ['grid-column-pinning.sample.css'],
+    styleUrls: ['grid-column-pinning.sample.scss'],
     templateUrl: 'grid-column-pinning.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule]

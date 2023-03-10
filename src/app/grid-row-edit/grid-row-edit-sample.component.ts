@@ -19,7 +19,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
 
 @Component({
     selector: 'app-grid-row-edit',
-    styleUrls: [`grid-row-edit-sample.component.css`],
+    styleUrls: [`grid-row-edit-sample.component.scss`],
     templateUrl: 'grid-row-edit-sample.component.html',
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, NgFor, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, NgIf, IgxRowEditTemplateDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]

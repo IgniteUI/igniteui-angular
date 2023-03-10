@@ -35,7 +35,7 @@ export class MySummaryOperand extends IgxSummaryOperand {
 
 @Component({
     selector: 'app-tree-grid-flat-data-sample',
-    styleUrls: ['tree-grid-flat-data.sample.css'],
+    styleUrls: ['tree-grid-flat-data.sample.scss'],
     templateUrl: 'tree-grid-flat-data.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, NgFor, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]

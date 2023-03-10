@@ -17,7 +17,7 @@ import { GlobalPositionStrategy, NoOpScrollStrategy, OverlaySettings } from '../
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.css'],
+    styleUrls: ['drag-drop.sample.scss'],
     standalone: true,
     imports: [IgxDragDirective, NgIf, IgxIconComponent, IgxDragIgnoreDirective, NgClass, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective, IgxDragHandleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective, NgFor, IgxDropDirective, NgStyle, ShadowGridSampleComponent]
 })

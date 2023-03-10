@@ -10,7 +10,7 @@ import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/gri
 @Component({
     selector: 'app-grid-row-reorder-sample',
     templateUrl: 'grid-row-reorder.sample.html',
-    styleUrls: ['grid-row-reorder.sample.css'],
+    styleUrls: ['grid-row-reorder.sample.scss'],
     standalone: true,
     imports: [IgxGridComponent, IgxDropDirective, IgxColumnComponent]
 })

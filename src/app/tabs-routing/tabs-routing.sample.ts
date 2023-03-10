@@ -9,7 +9,7 @@ import { IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '..
 
 @Component({
     selector: 'app-tabs-routing-sample',
-    styleUrls: ['tabs-routing.sample.css'],
+    styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]

@@ -35,7 +35,7 @@ import { IgxStringFilteringOperand } from '../../../projects/igniteui-angular/sr
 @Component({
     providers: [],
     selector: 'app-grid-filtering-sample',
-    styleUrls: ['grid-filtering.sample.css'],
+    styleUrls: ['grid-filtering.sample.scss'],
     templateUrl: 'grid-filtering.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgIf, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective, IgxExcelStyleHeaderIconDirective, IgxIconComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent]

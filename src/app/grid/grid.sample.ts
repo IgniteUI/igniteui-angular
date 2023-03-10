@@ -29,7 +29,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
 
 @Component({
     selector: 'app-grid-sample',
-    styleUrls: ['grid.sample.css'],
+    styleUrls: ['grid.sample.scss'],
     templateUrl: 'grid.sample.html',
     standalone: true,
     imports: [IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxCardActionsComponent, IgxButtonDirective, IgxRippleDirective, IgxColumnActionsComponent, IgxColumnHidingDirective, NgFor, IgxSwitchComponent, IgxGridComponent, IgxColumnComponent, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxToastComponent, IgxSnackbarComponent, AsyncPipe]

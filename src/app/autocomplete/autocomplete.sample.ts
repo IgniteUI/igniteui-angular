@@ -18,7 +18,7 @@ import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/l
 const ATTRACTIONS_CUSTOM_WIDTH = '300px';
 @Component({
     selector: 'app-autocomplete-sample',
-    styleUrls: ['autocomplete.sample.css'],
+    styleUrls: ['autocomplete.sample.scss'],
     templateUrl: `autocomplete.sample.html`,
     standalone: true,
     imports: [FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxAutocompleteDirective, IgxDropDownComponent, NgFor, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxDialogComponent_1, IgxButtonDirective, IgxSwitchComponent, forwardRef(() => AutocompletePipeContains), forwardRef(() => AutocompleteGroupPipeContains)]

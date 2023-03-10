@@ -29,7 +29,7 @@ import { scaleInCenter, scaleOutCenter } from '../../../projects/igniteui-angula
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
-    styleUrls: ['combo.sample.css'],
+    styleUrls: ['combo.sample.scss'],
     standalone: true,
     imports: [IgxInputGroupComponent, IgxInputDirective, FormsModule, IgxSimpleComboComponent, IgxLabelDirective, IgxHintDirective, IgxComboComponent, IgxButtonDirective, ReactiveFormsModule, IgxToastComponent, NgIf, IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective, IgxRippleDirective, IgxPrefixDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonGroupComponent, AsyncPipe]
 })

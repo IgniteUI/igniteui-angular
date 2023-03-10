@@ -16,7 +16,7 @@ import { IgxLayoutDirective, IgxFlexDirective } from '../../../projects/igniteui
 @Component({
     providers: [],
     selector: 'app-grid-flex-sample',
-    styleUrls: ['grid-flex.sample.css'],
+    styleUrls: ['grid-flex.sample.scss'],
     templateUrl: 'grid-flex.sample.html',
     standalone: true,
     imports: [IgxLayoutDirective, IgxFlexDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent]

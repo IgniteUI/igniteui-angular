@@ -23,7 +23,7 @@ import { GridSummaryCalculationMode, GridSummaryPosition, RowPinningPosition } f
 
 @Component({
     selector: 'app-grid-row-api-sample',
-    styleUrls: ['grid-row-api.sample.css'],
+    styleUrls: ['grid-row-api.sample.scss'],
     templateUrl: 'grid-row-api.sample.html',
     standalone: true,
     imports: [FormsModule, IgxGridComponent, IgxGridDetailTemplateDirective, NgFor, IgxColumnComponent, IgxRowDragGhostDirective, IgxIconComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxButtonDirective, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxPaginatorDirective]

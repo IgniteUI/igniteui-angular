@@ -3,7 +3,7 @@ import { IgxLayoutDirective, IgxFlexDirective } from '../../../projects/igniteui
 
 @Component({
     selector: 'app-layout-sample',
-    styleUrls: ['layout.sample.css'],
+    styleUrls: ['layout.sample.scss'],
     templateUrl: 'layout.sample.html',
     standalone: true,
     imports: [IgxLayoutDirective, IgxFlexDirective]

@@ -18,7 +18,7 @@ import { IgxBottomNavComponent } from '../../../projects/igniteui-angular/src/li
 
 @Component({
     selector: 'app-bottomnav-sample',
-    styleUrls: ['bottomnav.sample.css'],
+    styleUrls: ['bottomnav.sample.scss'],
     templateUrl: 'bottomnav.sample.html',
     standalone: true,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavContentComponent, IgxListComponent, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective]

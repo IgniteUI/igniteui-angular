@@ -14,7 +14,7 @@ import { IgxGridBaseDirective } from '../../../projects/igniteui-angular/src/lib
 
 @Component({
     selector: 'app-grid-search-box',
-    styleUrls: ['./grid-search-box.component.css'],
+    styleUrls: ['./grid-search-box.component.scss'],
     templateUrl: './grid-search-box.component.html',
     standalone: true,
     imports: [IgxInputGroupComponent, IgxPrefixDirective, NgIf, IgxIconComponent, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxChipsAreaComponent, IgxChipComponent, IgxRippleDirective]

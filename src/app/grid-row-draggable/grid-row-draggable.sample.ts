@@ -24,7 +24,7 @@ enum DragIcon {
 @Component({
     selector: 'app-grid-row-draggable-sample',
     templateUrl: 'grid-row-draggable.sample.html',
-    styleUrls: ['grid-row-draggable.sample.css'],
+    styleUrls: ['grid-row-draggable.sample.scss'],
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, AsyncPipe]
 })

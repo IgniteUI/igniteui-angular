@@ -4,7 +4,7 @@ import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/a
 
 @Component({
     selector: 'app-badge-sample',
-    styleUrls: ['badge.sample.css'],
+    styleUrls: ['badge.sample.scss'],
     templateUrl: 'badge.sample.html',
     standalone: true,
     imports: [IgxAvatarComponent, IgxBadgeComponent]

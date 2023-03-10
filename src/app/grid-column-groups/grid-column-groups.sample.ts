@@ -15,7 +15,7 @@ import { ColumnPinningPosition, GridSelectionMode } from '../../../projects/igni
 
 @Component({
     selector: 'app-grid-column-groups-sample',
-    styleUrls: ['grid-column-groups.sample.css'],
+    styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
     standalone: true,
     imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective]

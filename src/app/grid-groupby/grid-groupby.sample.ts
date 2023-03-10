@@ -20,7 +20,7 @@ import { IRowSelectionEventArgs, ISortingOptions } from '../../../projects/ignit
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
-    styleUrls: ['grid-groupby.sample.css'],
+    styleUrls: ['grid-groupby.sample.scss'],
     templateUrl: 'grid-groupby.sample.html',
     standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxColumnComponent]

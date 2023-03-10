@@ -11,7 +11,7 @@ import { growVerIn, growVerOut } from '../../../projects/igniteui-angular/src/li
 @Component({
     selector: 'app-banner-sample',
     templateUrl: `banner.sample.html`,
-    styleUrls: [`banner.sample.css`],
+    styleUrls: [`banner.sample.scss`],
     standalone: true,
     imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxButtonDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective]
 })

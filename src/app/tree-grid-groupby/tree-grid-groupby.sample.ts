@@ -19,7 +19,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
 @Component({
     providers: [],
     selector: 'app-tree-grid-groupby-sample',
-    styleUrls: ['tree-grid-groupby.sample.css'],
+    styleUrls: ['tree-grid-groupby.sample.scss'],
     templateUrl: 'tree-grid-groupby.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, NgIf, IgxSwitchComponent, FormsModule, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxColumnComponent, NgFor, IgxTreeGridGroupingPipe]

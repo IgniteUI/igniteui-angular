@@ -16,7 +16,7 @@ import { slideInTop, slideOutBottom } from '../../../projects/igniteui-angular/s
 
 @Component({
     selector: 'app-dialog-sample',
-    styleUrls: ['dialog.sample.css'],
+    styleUrls: ['dialog.sample.scss'],
     templateUrl: 'dialog.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]

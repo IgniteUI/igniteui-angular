@@ -24,7 +24,7 @@ interface ColumnConfig {
 @Component({
     selector: 'app-grid-mrl-config-sample',
     templateUrl: 'grid-mrl-config.sample.html',
-    styleUrls: ['grid-mrl-config.sample.css'],
+    styleUrls: ['grid-mrl-config.sample.scss'],
     standalone: true,
     imports: [NgFor, IgxDragDirective, NgStyle, IgxDropDirective, NgIf, IgxButtonDirective, IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxDialogComponent]
 })

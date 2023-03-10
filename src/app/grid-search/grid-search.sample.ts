@@ -18,7 +18,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
 @Component({
     providers: [],
     selector: 'app-grid-search-sample',
-    styleUrls: ['grid-search.sample.css'],
+    styleUrls: ['grid-search.sample.scss'],
     templateUrl: 'grid-search.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxButtonDirective]

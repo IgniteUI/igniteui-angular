@@ -17,7 +17,7 @@ import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/l
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-sample',
-    styleUrls: ['input.sample.css'],
+    styleUrls: ['input.sample.scss'],
     templateUrl: 'input.sample.html',
     standalone: true,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, NgFor, IgxRadioComponent, IgxListComponent, IgxListItemComponent, IgxIconComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListActionDirective, IgxSwitchComponent, IgxAvatarComponent, IgxCheckboxComponent, ReactiveFormsModule, IgxButtonDirective]

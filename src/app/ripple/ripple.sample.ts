@@ -3,7 +3,7 @@ import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/d
 
 @Component({
     selector: 'app-ripple-sample',
-    styleUrls: ['ripple.sample.css'],
+    styleUrls: ['ripple.sample.scss'],
     templateUrl: 'ripple.sample.html',
     standalone: true,
     imports: [IgxRippleDirective]

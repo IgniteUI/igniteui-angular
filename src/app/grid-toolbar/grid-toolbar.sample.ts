@@ -16,7 +16,7 @@ import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/g
 
 @Component({
     selector: 'app-grid-toolbar-sample',
-    styleUrls: ['grid-toolbar.sample.css'],
+    styleUrls: ['grid-toolbar.sample.scss'],
     templateUrl: 'grid-toolbar.sample.html',
     standalone: true,
     imports: [IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]

@@ -17,7 +17,7 @@ import { IColumnToggledEventArgs } from '../../../projects/igniteui-angular/src/
 @Component({
     providers: [],
     selector: 'app-grid-column-actions-sample',
-    styleUrls: ['grid-column-actions.sample.css'],
+    styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html',
     standalone: true,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxColumnGroupingDirective]

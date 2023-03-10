@@ -50,7 +50,7 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
 @Component({
     providers: [],
     selector: 'app-grid-column-selection-sample',
-    styleUrls: ['grid-column-selection.sample.css'],
+    styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]

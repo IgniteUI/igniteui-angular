@@ -4,7 +4,7 @@ import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/a
 
 @Component({
     selector: 'app-avatar-sample',
-    styleUrls: ['avatar.sample.css'],
+    styleUrls: ['avatar.sample.scss'],
     templateUrl: `avatar.sample.html`,
     standalone: true,
     imports: [IgxAvatarComponent, IgxDragDirective]

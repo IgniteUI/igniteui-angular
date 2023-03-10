@@ -10,7 +10,7 @@ import { IBaseChipEventArgs, IgxChipComponent } from '../../../projects/igniteui
 
 @Component({
     selector: 'app-chips-sample',
-    styleUrls: ['chips.sample.scss', '../app.component.css'],
+    styleUrls: ['chips.sample.scss', '../app.component.scss'],
     templateUrl: 'chips.sample.html',
     standalone: true,
     imports: [IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxChipsAreaComponent, NgFor, NgIf, IgxAvatarComponent, IgxDropDirective]

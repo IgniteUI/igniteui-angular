@@ -30,7 +30,7 @@ import { changei18n, getCurrentResourceStrings, IResourceStrings } from '../../.
 
 @Component({
     selector: 'app-grid-localization',
-    styleUrls: ['./grid-localization.sample.css'],
+    styleUrls: ['./grid-localization.sample.scss'],
     templateUrl: 'grid-localization.sample.html',
     standalone: true,
     imports: [IgxGridComponent, IgxColumnComponent, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent]

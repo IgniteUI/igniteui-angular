@@ -8,7 +8,7 @@ import { RouterOutlet, RouterLinkActive, RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-bottomnav-routing-sample',
-    styleUrls: ['bottomnav-routing.sample.css'],
+    styleUrls: ['bottomnav-routing.sample.scss'],
     templateUrl: 'bottomnav-routing.sample.html',
     standalone: true,
     imports: [RouterOutlet, IgxBottomNavComponent, IgxBottomNavItemComponent, RouterLinkActive, IgxBottomNavHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective]

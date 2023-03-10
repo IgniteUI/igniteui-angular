@@ -16,7 +16,7 @@ import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/gr
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
-    styleUrls: ['grid-auto-size.sample.css'],
+    styleUrls: ['grid-auto-size.sample.scss'],
     templateUrl: 'grid-auto-size.sample.html',
     standalone: true,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, NgFor, IgxColumnComponent]

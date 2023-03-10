@@ -27,7 +27,7 @@ import { FilterMode, GridSelectionMode } from '../../../projects/igniteui-angula
 @Component({
     providers: [],
     selector: 'app-grid-external-filtering-sample',
-    styleUrls: ['grid-external-filtering.sample.css'],
+    styleUrls: ['grid-external-filtering.sample.scss'],
     templateUrl: 'grid-external-filtering.sample.html',
     standalone: true,
     imports: [IgxFlexDirective, IgxLayoutDirective, IgxButtonGroupComponent, IgxSelectComponent, IgxLabelDirective, NgFor, IgxSelectItemComponent, IgxGridExcelStyleFilteringComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxAdvancedFilteringDialogComponent, IgxCheckboxComponent, FormsModule, IgxButtonDirective]

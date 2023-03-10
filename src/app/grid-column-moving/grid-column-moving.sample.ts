@@ -25,7 +25,7 @@ import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
-    styleUrls: ['grid-column-moving.sample.css'],
+    styleUrls: ['grid-column-moving.sample.scss'],
     templateUrl: 'grid-column-moving.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxLabelDirective, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxPaginatorComponent, PageHeaderComponent, IgxColumnGroupComponent, IgxCellHeaderTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent]

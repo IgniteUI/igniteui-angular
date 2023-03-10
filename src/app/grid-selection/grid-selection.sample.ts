@@ -18,7 +18,7 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
 @Component({
     selector: 'app-grid-selection-sample',
     templateUrl: 'grid-selection.sample.html',
-    styleUrls: ['grid-selection.sample.css'],
+    styleUrls: ['grid-selection.sample.scss'],
     standalone: true,
     imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxGridComponent, IgxColumnComponent, NgIf, IgxRippleDirective, AsyncPipe]
 })

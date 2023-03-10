@@ -13,7 +13,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
-    styleUrls: ['grid-master-detail.sample.css'],
+    styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html',
     standalone: true,
     imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, NgFor, IgxColumnComponent, IgxCellTemplateDirective, NgIf, IgxGridDetailTemplateDirective]

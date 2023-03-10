@@ -14,10 +14,11 @@ import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/d
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     selector: 'app-grid-toolbar-custom-sample',
-    styleUrls: ['grid-toolbar-custom.sample.css'],
+    styleUrls: ['grid-toolbar-custom.sample.scss'],
     templateUrl: 'grid-toolbar-custom.sample.html',
     standalone: true,
     imports: [IgxGridComponent, NgIf, IgxGridToolbarComponent, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]

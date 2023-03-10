@@ -21,7 +21,7 @@ class Person {
 
 @Component({
     selector: 'app-radio-sample',
-    styleUrls: ['radio.sample.css'],
+    styleUrls: ['radio.sample.scss'],
     templateUrl: 'radio.sample.html',
     standalone: true,
     imports: [IgxRadioGroupDirective, FormsModule, IgxLayoutDirective, NgFor, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, ReactiveFormsModule, JsonPipe]

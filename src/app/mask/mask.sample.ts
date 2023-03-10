@@ -18,7 +18,7 @@ interface IPerson {
 
 @Component({
     selector: 'app-mask-sample',
-    styleUrls: ['mask.sample.css'],
+    styleUrls: ['mask.sample.scss'],
     templateUrl: './mask.sample.html',
     standalone: true,
     imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent, IgxHintDirective]

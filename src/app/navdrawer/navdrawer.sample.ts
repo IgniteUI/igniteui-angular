@@ -8,7 +8,7 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
 
 @Component({
     selector: 'app-navbar-sample',
-    styleUrls: ['navdrawer.sample.css'],
+    styleUrls: ['navdrawer.sample.scss'],
     templateUrl: 'navdrawer.sample.html',
     standalone: true,
     imports: [IgxSwitchComponent, FormsModule, NgFor, IgxRadioComponent]
