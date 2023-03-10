@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxOverlayService, IgxIconService, DisplayDensityToken, DisplayDensity, GridBaseAPIService, IgxGridHierarchicalPipe, IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxIconComponent, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxToggleActionDirective } from 'igniteui-angular';
+import { IgxOverlayService, IgxIconService, DisplayDensityToken, DisplayDensity, GridBaseAPIService, IgxGridHierarchicalPipe, IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxIconComponent, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from 'igniteui-angular';
 
 
 import { routing } from './routing';

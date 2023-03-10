@@ -7,7 +7,6 @@ import {
     HostListener,
     Inject,
     Input,
-    NgModule,
     OnDestroy,
     OnInit,
     Optional,

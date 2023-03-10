@@ -20,7 +20,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "igx",
+            "prefix": ["igx", "igc"],
             "style": "kebab-case"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "igx",
+            "prefix": ["igx", "igc"],
             "style": "camelCase"
           }
         ],
