@@ -106,7 +106,7 @@ All notable changes for each version of this project will be documented in this 
     $secondary-color: #f96a88;
     $surface-color: #e1ebe4;
     // Additional colors
-    $error-color: color($light-fluent-palette, 'error');0
+    $error-color: color($light-fluent-palette, 'error');
     $warn-color: color($light-fluent-palette, 'warn');
     $info-color: color($light-fluent-palette, 'info');
     $success-color: color($light-fluent-palette, 'success');
