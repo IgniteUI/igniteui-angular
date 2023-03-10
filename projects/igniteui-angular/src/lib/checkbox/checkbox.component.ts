@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
-import { EditorProvider } from '../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -57,6 +57,11 @@ let nextId = 0;
  */
 @Component({
     selector: 'igx-checkbox',
+    providers: [{
+        provide: EDITOR_PROVIDER, 
+        useExisting: IgxCheckboxComponent, 
+        multi: true
+    }],
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html'
 })
@@ -360,7 +365,7 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     /**
      * Sets/gets whether the checkbox is invalid.
      * Default value is `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-checkbox invalid></igx-checkbox>
@@ -409,9 +414,9 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
     @Input()
     public disableTransitions = false;
 
-    /** 
+    /**
      * @hidden
-     * @internal 
+     * @internal
      */
     public inputId = `${this.id}-input`;
     /**
@@ -447,14 +452,14 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         private cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
         @Optional() @Self() public ngControl: NgControl,
-    ) { 
+    ) {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
     }
 
-    /** 
-     * @hidden 
+    /**
+     * @hidden
      * @internal
     */
     public ngAfterViewInit() {
