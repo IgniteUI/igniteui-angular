@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
     - `GroupMemberCountSortingStrategy` is added, which can be used to sort the grid by number of items in each group in ASC or DESC order, if grouping is applied.
-    - A new argument `primaryKey` has been introduced to `IRowDataEventArgs`, `IGridEditEventArgs` and `IGridEditDoneEventArgs`; the argument represents the id of the row in Grid editing events.
+    - A new argument `primaryKey` has been introduced to `IRowDataEventArgs` Interface and part of the event arguments that are emitted by the `rowAdded` and `rowDeleted` events. When the grid has a primary key attribute added, then the emitted `primaryKey` event argument represents the row ID, otherwise it defaults to undefined.
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
 
@@ -106,7 +106,7 @@ All notable changes for each version of this project will be documented in this 
     $secondary-color: #f96a88;
     $surface-color: #e1ebe4;
     // Additional colors
-    $error-color: color($light-fluent-palette, 'error');
+    $error-color: color($light-fluent-palette, 'error');0
     $warn-color: color($light-fluent-palette, 'warn');
     $info-color: color($light-fluent-palette, 'info');
     $success-color: color($light-fluent-palette, 'success');
