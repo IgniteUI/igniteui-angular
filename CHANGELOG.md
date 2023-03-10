@@ -3,6 +3,11 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 15.1.0
+
+### New Features
+- `IgxColumnComponent`
+    - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
+
 ### General
  - `IgxPivotGrid`
     - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.
@@ -18,6 +23,12 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `onSlideChanged`, `onSlideAdded`, `onSlideRemoved`, `onCarouselPaused` and `onCarouselPlaying` outputs have been renamed to `slideChanged`, `slideAdded`, `slideRemoved`, `carouselPaused` and `carouselPlaying` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
 - `IgxRadio`, `IgxRadioGroup`
     - Added component validation along with styles for invalid state
+- `igxMask` directive
+    - Added the capability to escape mask pattern literals.
+- `IgxBadge`
+    - Added `shape` property that controls the shape of the badge and can be either `square` or `rounded`. The default shape of the badge is rounded. 
+- `IgxAvatar`
+    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`. 
 
 
 ## 15.0.1
