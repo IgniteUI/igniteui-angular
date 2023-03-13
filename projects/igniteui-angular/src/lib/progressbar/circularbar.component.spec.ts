@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent, toPercent } from './progressbar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective } from './progressbar.common';
 
 const CIRCULAR_INNER_CLASS = 'igx-circular-bar__inner';
 const CIRCULAR_OUTER_CLASS = 'igx-circular-bar__outer';
@@ -331,13 +332,13 @@ describe('IgxCircularBar', () => {
 @Component({
     template: `
         <igx-circular-bar [value]="20" [animate]="false" [max]="100" [textVisibility]="true">
-            <ng-template igxProcessBarText let-process>
+            <ng-template igxProgressBarText let-process>
                 <svg:tspan>Value is:</svg:tspan>
                 <svg:tspan>{{process.value}}</svg:tspan>
             </ng-template>
         </igx-circular-bar>`,
     standalone: true,
-    imports: [IgxCircularProgressBarComponent]
+    imports: [IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective]
 })
 class CircularBarTemplateComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
@@ -355,7 +356,7 @@ class CircularBarTemplateComponent {
             </ng-template>
         </igx-circular-bar>`,
     standalone: true,
-    imports: [IgxCircularProgressBarComponent]
+    imports: [IgxCircularProgressBarComponent, IgxProgressBarGradientDirective]
 })
 class CircularBarTemplateGradientComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;

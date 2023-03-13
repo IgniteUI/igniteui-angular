@@ -14,7 +14,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
-import { CellType, IgxAdvancedFilteringDialogComponent, IgxGridComponent } from '../grids/grid/public_api';
+import { CellType, IgxAdvancedFilteringDialogComponent, IgxGridComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/grid/public_api';
 import { IgxRowAddTextDirective, IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -2060,7 +2060,7 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
         TemplateDefinitions.sortIconTemplates)
         +  ExternalTemplateDefinitions.sortIconTemplates,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxIconComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxIconComponent, IgxSortHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective]
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
      @ViewChild('sortIcon', {read: TemplateRef })

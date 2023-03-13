@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboState } from '../combo/combo.common';
 import { RemoteDataService } from '../combo/combo.component.spec';
-import { IComboSelectionChangingEventArgs } from '../combo/public_api';
+import { IComboSelectionChangingEventArgs, IgxComboToggleIconDirective } from '../combo/public_api';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
@@ -1976,7 +1976,7 @@ export class IgxSimpleComboEmptyComponent {
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
                 </igx-simple-combo>`,
     standalone: true,
-    imports: [IgxSimpleComboComponent, IgxIconComponent, FormsModule]
+    imports: [IgxSimpleComboComponent, IgxIconComponent, IgxComboToggleIconDirective, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })

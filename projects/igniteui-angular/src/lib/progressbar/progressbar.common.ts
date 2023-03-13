@@ -1,10 +1,10 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 @Directive({
-    selector: '[igxProcessBarText]',
+    selector: '[igxProgressBarText]',
     standalone: true
 })
-export class IgxProcessBarTextTemplateDirective {
+export class IgxProgressBarTextTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 

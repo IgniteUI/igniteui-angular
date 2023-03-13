@@ -372,7 +372,7 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [autoGenerate]="true">
             <igx-action-strip #actionStrip2>
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
-                <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+                <igx-grid-editing-actions [asMenuItems]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-row-island>
     </igx-hierarchical-grid>`,

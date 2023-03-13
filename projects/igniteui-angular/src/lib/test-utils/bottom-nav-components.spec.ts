@@ -115,37 +115,6 @@ export class BottomTabBarTestComponent {
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
-// @Component({
-//     template: `
-//         <div #wrapperDiv>
-
-//         <igx-bottom-nav>
-//             <igx-bottom-nav-content label="dede">
-//                 <ng-template igxTab>
-//                     <div>T1</div>
-//                  </ng-template>
-//                  <h1>Tab 1 Content</h1>
-//               </igx-bottom-nav-content>
-//             <igx-bottom-nav-content label="Tab 2">
-//                 <ng-template igxTab>
-//                     <div>T2</div>
-//                 </ng-template>
-//                 <h1>Tab 2 Content</h1>
-//             </igx-bottom-nav-content>
-//             <igx-bottom-nav-content label="Tab 3">
-//                 <ng-template igxTab>
-//                     <div>T3</div>
-//                 </ng-template>
-//                 <h1>Tab 3 Content</h1>
-//             </igx-bottom-nav-content>
-//         </igx-bottom-nav>
-//         </div>`
-// })
-// export class TemplatedTabBarTestComponent {
-//     @ViewChild(IgxBottomNavComponent, { static: true }) public bottomNav: IgxBottomNavComponent;
-//     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-// }
-
 @Component({
     template: `
         <div #wrapperDiv>

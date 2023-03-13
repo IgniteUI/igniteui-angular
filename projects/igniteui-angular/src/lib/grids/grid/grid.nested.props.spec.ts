@@ -11,6 +11,7 @@ import { IgxComboComponent } from '../../combo/public_api';
 import { IGridEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnComponent } from '../public_api';
+import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -153,10 +154,10 @@ class NestedPropertiesGrid2Component {
 }
 
 @Component({
-    template: `<igx-grid #grid [autoGenerate]='false'>
+    template: `<igx-grid #grid [autoGenerate]="false">
         <igx-column field='id' header='ID' dataType='number'></igx-column>
-        <igx-column field='productName' header='Product Name' editable='true' dataType='string'></igx-column>
-        <igx-column field='locations' header='Available At' [editable]='true' width='220px'>
+        <igx-column field='productName' header='Product Name' [editable]="true" dataType='string'></igx-column>
+        <igx-column field='locations' header='Available At' [editable]="true" width='220px'>
             <ng-template igxCell let-cell='cell'>
                 {{ parseArray(cell.value) }}
             </ng-template>
@@ -166,7 +167,7 @@ class NestedPropertiesGrid2Component {
         </igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxComboComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent]
 })
 class NestedPropertyGridComponent {
     @ViewChild('grid', { static: true, read: IgxGridComponent })

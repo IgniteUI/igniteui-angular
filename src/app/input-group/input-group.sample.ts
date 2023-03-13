@@ -10,7 +10,7 @@ import {
     DisplayDensity
 } from 'igniteui-angular';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxCheckboxComponent, IgxCheckboxRequiredDirective } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
 import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
 import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../../../projects/igniteui-angular/src/lib/date-common/picker-icons.common';
@@ -41,7 +41,7 @@ interface Selection {
     templateUrl: 'input-group.sample.html',
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
     standalone: true,
-    imports: [FormsModule, IgxButtonGroupComponent, IgxSwitchComponent, IgxInputGroupComponent, IgxLabelDirective, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxHintDirective, IgxMaskDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxSelectComponent, IgxSelectItemComponent, IgxCheckboxComponent, IgxCheckboxRequiredDirective, IgxButtonDirective, ReactiveFormsModule, NgFor]
+    imports: [FormsModule, IgxButtonGroupComponent, IgxSwitchComponent, IgxInputGroupComponent, IgxLabelDirective, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, NgIf, IgxSuffixDirective, IgxHintDirective, IgxMaskDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxSelectComponent, IgxSelectItemComponent, IgxCheckboxComponent, IgxButtonDirective, ReactiveFormsModule, NgFor]
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;

@@ -22,6 +22,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -3916,7 +3917,7 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
     @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })

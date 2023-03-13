@@ -14,7 +14,7 @@ import {
     Directive
 } from '@angular/core';
 import {
-    IgxProcessBarTextTemplateDirective,
+    IgxProgressBarTextTemplateDirective,
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs, mkenum } from '../core/utils';
@@ -548,8 +548,8 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     @Input()
     public text: string;
 
-    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
-    public textTemplate: IgxProcessBarTextTemplateDirective;
+    @ContentChild(IgxProgressBarTextTemplateDirective, { read: IgxProgressBarTextTemplateDirective })
+    public textTemplate: IgxProgressBarTextTemplateDirective;
 
     @ContentChild(IgxProgressBarGradientDirective, { read: IgxProgressBarGradientDirective })
     public gradientTemplate: IgxProgressBarGradientDirective;

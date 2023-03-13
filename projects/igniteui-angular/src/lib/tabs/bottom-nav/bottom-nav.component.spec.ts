@@ -33,10 +33,16 @@ describe('IgxBottomNav', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TabBarRoutingTestComponent,
-                TabBarTabsOnlyModeTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent],
-            imports: [NoopAnimationsModule,
-            RouterTestingModule.withRoutes(testRoutes)],
+            imports: [
+                NoopAnimationsModule,
+                RouterTestingModule.withRoutes(testRoutes),
+                TabBarTestComponent,
+                BottomTabBarTestComponent,
+                TabBarRoutingTestComponent,
+                TabBarTabsOnlyModeTestComponent,
+                BottomNavRoutingGuardTestComponent,
+                BottomNavTestHtmlAttributesComponent
+            ],
             providers: [RoutingTestGuard]
         }).compileComponents();
     }));
