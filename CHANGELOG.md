@@ -5,6 +5,8 @@ All notable changes for each version of this project will be documented in this 
 ## 15.1.0
 
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - `GroupMemberCountSortingStrategy` is added, which can be used to sort the grid by number of items in each group in ASC or DESC order, if grouping is applied.
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
 
