@@ -61,6 +61,7 @@
 @mixin avatar($theme) {
     @include css-vars($theme);
 
+    $variant: map.get($theme, variant);
     $size: map.get($theme, 'size');
     $small-size: rem(40px);
     $medium-size: rem(64px);
@@ -120,8 +121,16 @@
         background-position: center;
     }
 
-    %igx-avatar--rounded {
+    %igx-avatar--circle {
         --igx-avatar-border-radius: #{rem(44px)};
+    }
+
+    %igx-avatar--rounded {
+        --igx-avatar-border-radius: #{rem(8px)};
+
+        @if $variant == 'bootstrap' {
+            --igx-avatar-border-radius: #{rem(4px)};
+        }
     }
 
     %igx-avatar--initials {
