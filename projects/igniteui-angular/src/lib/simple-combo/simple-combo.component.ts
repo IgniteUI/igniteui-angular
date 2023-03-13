@@ -260,6 +260,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
+            this.filterValue = '';
         }
         if (this.selection.length) {
             this.selectionService.clear(this.id);
@@ -357,6 +358,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.clearSelection(true);
         if (this.collapsed) {
+            this.filterValue = '';
+            this.cdr.detectChanges();
             this.open();
             this.dropdown.navigateFirst();
         } else {
