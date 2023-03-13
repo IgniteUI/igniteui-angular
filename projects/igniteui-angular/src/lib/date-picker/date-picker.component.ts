@@ -412,7 +412,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ViewChild(IgxInputGroupComponent)
     private inputGroup: IgxInputGroupComponent;
 
-    @ViewChild(IgxInputGroupComponent, {read: ViewContainerRef})
+    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
     @ViewChild(IgxLabelDirective)
