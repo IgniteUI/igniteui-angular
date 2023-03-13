@@ -16,6 +16,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxInputState } from './../directives/input/input.directive';
+import { IgxSelectGroupComponent } from './select-group.component';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -2808,19 +2809,16 @@ class IgxSelectSimpleComponent {
     </igx-select>
 `,
     standalone: true,
-    imports: [FormsModule, IgxSelectComponent, IgxSelectGroupsComponent, IgxSelectItemComponent, NgFor]
+    imports: [FormsModule, IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxIconComponent, NgFor]
 })
 class IgxSelectGroupsComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
-    public locations: {
-        continent: string;
-        capitals: string[];
-    }[] = [
-            { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
-            { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
-            { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
-        ];
+    public locations: { continent: string, capitals: string[] } [] = [
+        { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
+        { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
+        { continent: 'North America', capitals: ['Washington', 'Ottawa', 'Mexico City'] }
+    ];
 }
 
 @Component({
@@ -2901,7 +2899,7 @@ class IgxSelectBottomComponent {
 @Component({
     template: `
     <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
-        <igx-prefix igxPrefix>
+        <igx-prefix>
             <igx-icon>favorite</igx-icon>
             <igx-icon>home</igx-icon>
             <igx-icon>search</igx-icon>
@@ -2945,10 +2943,10 @@ class IgxSelectAffixComponent {
         <p>
         <igx-select formControlName="optionsSelect" #selectReactive>
             <label igxLabel>Sample Label</label>
-            <igx-prefix igxPrefix>
+            <igx-prefix>
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
-            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
         </igx-select>
@@ -3025,10 +3023,10 @@ class IgxSelectReactiveFormComponent {
 
         <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
             <label igxLabel>Sample Label</label>
-            <igx-prefix igxPrefix>
+            <igx-prefix>
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
-            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            <igx-select-item *ngFor="let item of items" [value]="item">
                 {{ item }}
             </igx-select-item>
         </igx-select>
@@ -3072,11 +3070,11 @@ class IgxSelectTemplateFormComponent {
         [(ngModel)]="value"
         [displayDensity]="'cosy'">
             <label igxLabel>Sample Label</label>
-            <igx-prefix igxPrefix>
+            <igx-prefix>
                 <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
-            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+            <igx-select-item *ngFor="let item of items" [value]="item.field">
                 {{ item.field }}
             </igx-select-item>
             <ng-template igxSelectHeader>

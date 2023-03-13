@@ -7,6 +7,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
@@ -296,7 +298,7 @@ describe('IgxPaginator with custom settings', () => {
             </igx-paginator-content>
         </igx-paginator>`,
     standalone: true,
-    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective]
+    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
