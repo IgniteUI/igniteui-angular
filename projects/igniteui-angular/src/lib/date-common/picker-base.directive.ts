@@ -1,6 +1,7 @@
 import {
+    AfterContentChecked,
     AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
-    Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList
+    Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -10,7 +11,7 @@ import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { DateRange } from '../date-range-picker/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxPrefixDirective, IgxSuffixDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
 import { PickerInteractionMode } from './types';
@@ -18,7 +19,7 @@ import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { WEEKDAYS } from '../calendar/calendar';
 
 @Directive()
-export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, OnDestroy {
+export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
     protected _locale;
     protected _weekStart: WEEKDAYS | number;
 
@@ -238,6 +239,15 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     @ContentChildren(IgxPickerToggleComponent, { descendants: true })
     public toggleComponents: QueryList<IgxPickerToggleComponent>;
 
+    @ContentChildren(IgxPrefixDirective, { descendants: true })
+    protected prefixes: QueryList<IgxPrefixDirective>;
+
+    @ContentChildren(IgxSuffixDirective, { descendants: true })
+    protected suffixes: QueryList<IgxSuffixDirective>;
+
+    @ViewChild(IgxInputGroupComponent)
+    protected inputGroup: IgxInputGroupComponent;
+
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -279,6 +289,17 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         this.subToIconsClicked(this.toggleComponents, () => this.open());
         this.toggleComponents.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => this.subToIconsClicked(this.toggleComponents, () => this.open()));
+    }
+
+    /** @hidden @internal */
+    public ngAfterContentChecked(): void {
+        if (this.inputGroup && this.prefixes?.length > 0) {
+            this.inputGroup.prefixes = this.prefixes;
+        }
+
+        if (this.inputGroup && this.suffixes?.length > 0) {
+            this.inputGroup.suffixes = this.suffixes;
+        }
     }
 
     /** @hidden @internal */

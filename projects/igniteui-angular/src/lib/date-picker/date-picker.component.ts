@@ -13,9 +13,8 @@ import {
     isDateInRanges, IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
 import {
-    IgxInputDirective, IgxInputGroupComponent,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxPrefixDirective, IgxSuffixDirective
-} from '../input-group/public_api';
+    IgxInputDirective,
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState} from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -375,9 +374,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ViewChild(IgxDateTimeEditorDirective, { static: true })
     private dateTimeEditor: IgxDateTimeEditorDirective;
 
-    @ViewChild(IgxInputGroupComponent)
-    private inputGroup: IgxInputGroupComponent;
-
     @ViewChild(IgxLabelDirective)
     private labelDirective: IgxLabelDirective;
 
@@ -389,14 +385,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     @ContentChild(IgxPickerActionsDirective)
     private pickerActions: IgxPickerActionsDirective;
-
-    /** @hidden @internal */
-    @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes: QueryList<IgxPrefixDirective>;
-
-    /** @hidden @internal */
-    @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes: QueryList<IgxSuffixDirective>;
 
     private get dialogOverlaySettings(): OverlaySettings {
         return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
@@ -756,17 +744,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                     this.inputGroup.isRequired = this.required;
                     this.cdr.detectChanges();
                 }
-        }
-    }
-
-    /** @hidden @internal */
-    public ngAfterContentChecked() {
-        if (this.inputGroup && this.prefixes?.length > 0) {
-            this.inputGroup.prefixes = this.prefixes;
-        }
-
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
         }
     }
 
