@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { EditorProvider } from '../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 
@@ -48,6 +48,11 @@ let nextId = 0;
  */
 @Component({
     selector: 'igx-radio',
+    providers: [{
+        provide: EDITOR_PROVIDER,
+        useExisting: IgxRadioComponent,
+        multi: true
+    }],
     templateUrl: 'radio.component.html',
     standalone: true,
     imports: [IgxRippleDirective]

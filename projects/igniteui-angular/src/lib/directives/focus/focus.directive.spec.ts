@@ -8,6 +8,7 @@ import { EditorProvider } from '../../core/edit-provider';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxDatePickerComponent } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxRadioComponent } from '../../radio/radio.component';
 
 describe('igxFocus', () => {
     configureTestSuite();
@@ -73,11 +74,15 @@ describe('igxFocus', () => {
         expect(directive.nativeElement).toBe(providerElem);
     }));
 
-    it('Should correctly focus igx-checkbox and igx-date-picker', fakeAsync(() => {
+    it('Should correctly focus igx-checkbox, igx-radio and igx-date-picker', fakeAsync(() => {
         const fix = TestBed.createComponent(CheckboxPickerComponent);
         fix.detectChanges();
         tick(16);
         expect(document.activeElement).toBe(fix.componentInstance.checkbox.getEditElement());
+
+        fix.componentInstance.radioFocusRef.trigger();
+        tick(16);
+        expect(document.activeElement).toBe(fix.componentInstance.radio.getEditElement());
 
         fix.componentInstance.pickerFocusRef.trigger();
         tick(16);
@@ -125,13 +130,16 @@ class TriggerFocusOnClickComponent {
 @Component({
     template: `
     <igx-checkbox [igxFocus]="true"></igx-checkbox>
+    <igx-radio #radio [igxFocus]></igx-radio>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
     `,
     standalone: true,
-    imports: [IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent]
+    imports: [IgxFocusDirective, IgxCheckboxComponent, IgxRadioComponent, IgxDatePickerComponent]
 })
 class CheckboxPickerComponent {
     @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;
+    @ViewChild(IgxRadioComponent, { static: true }) public radio: IgxRadioComponent;
     @ViewChild(IgxDatePickerComponent, { static: true }) public picker: IgxDatePickerComponent;
+    @ViewChild('radio', { read: IgxFocusDirective, static: true }) public radioFocusRef: IgxFocusDirective;
     @ViewChild('picker', { read: IgxFocusDirective, static: true }) public pickerFocusRef: IgxFocusDirective;
 }

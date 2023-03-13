@@ -817,6 +817,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
 
         this.clearSelection();
+        this.commitOperandEdit();
     }
 
     /**
@@ -833,6 +834,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         }
 
         this.clearSelection();
+        this.commitOperandEdit();
     }
 
     /**
@@ -840,6 +842,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public selectFilteringLogic(event: IButtonGroupEventArgs) {
         this.contextualGroup.operator = event.index as FilteringLogic;
+        this.commitOperandEdit();
     }
 
     /**
