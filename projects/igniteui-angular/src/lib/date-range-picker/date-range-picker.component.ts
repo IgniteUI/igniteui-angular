@@ -275,7 +275,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ViewChild(IgxInputGroupComponent)
     public inputGroup: IgxInputGroupComponent;
 
-    @ViewChild(IgxInputGroupComponent, {read: ViewContainerRef})
+    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
     /** @hidden @internal */
