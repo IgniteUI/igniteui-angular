@@ -749,6 +749,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public columnInit = new EventEmitter<IgxColumnComponent>();
 
+    /* blazorInclude */
     /**
      * @internal
      */
