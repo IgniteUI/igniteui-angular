@@ -319,7 +319,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
      * that can resolve the component's factory
      * @returns Id of the created overlay. Valid until `detach` is called.
-     * @deprecated deprecated in 14.0.0. Use attache(component, settings, viewContainerRef) overload
+     * @deprecated deprecated in 14.0.0. Use the `attach(component, viewContainerRef, settings)` overload
      */
     public attach(
         component: Type<any>,
