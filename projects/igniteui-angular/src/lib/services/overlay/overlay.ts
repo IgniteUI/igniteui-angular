@@ -329,7 +329,7 @@ export class IgxOverlayService implements OnDestroy {
      * Generates an Id. Provide this Id when calling the `show(id)` method
      *
      * @param component Component Type to show in overlay
-     * @param viewContainerRef Reference
+     * @param viewContainerRef Reference to the container where created component's host view will be inserted
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
