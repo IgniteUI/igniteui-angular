@@ -326,7 +326,7 @@ export class IgxOverlayService implements OnDestroy {
         settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
     /**
-     * Generates Id. Provide this Id when call `show(id)` method
+     * Generates an Id. Provide this Id when calling the `show(id)` method
      *
      * @param component Component Type to show in overlay
      * @param viewContainerRef Reference
