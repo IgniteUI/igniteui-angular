@@ -38,6 +38,11 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
+    #{$scope} {
+        --ig-size-small: 1;
+        --ig-size-medium: 2;
+        --ig-size-large: 3;
+    }
 
     @if not(list.index($exclude, 'palette')) {
         @include palette($palette);
