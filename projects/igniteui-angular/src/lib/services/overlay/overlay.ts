@@ -335,7 +335,7 @@ export class IgxOverlayService implements OnDestroy {
     public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
     public attach(
         componentOrElement: ElementRef | Type<any>,
-        viewContainerRefOrSettings: ViewContainerRef | OverlaySettings | undefined,
+        viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
         moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): string {
         const info: OverlayInfo = this.getOverlayInfo(componentOrElement, this.getUserViewContainerOrModuleRef(viewContainerRefOrSettings, moduleRefOrSettings));
 
