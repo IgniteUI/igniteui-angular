@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DisplayDensity, IDataCloneStrategy } from 'igniteui-angular';
+import { DisplayDensity, IDataCloneStrategy, IGridEditEventArgs, IRowDataEventArgs } from 'igniteui-angular';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -89,6 +89,22 @@ export class ActionStripSampleComponent implements OnInit {
 
     public setDensity(density: DisplayDensity) {
         this.displayDensity = density;
+    }
+
+    public rowAdd(event: IGridEditEventArgs) {
+        console.log("RowAdd is: " + event.primaryKey);
+    }
+
+    public rowAdded(event: IRowDataEventArgs) {
+        console.log("RowAdded is: " + event.primaryKey);
+    }
+
+    public rowDelete(event: IGridEditEventArgs) {
+        console.log("Row Delete is: " + event.primaryKey);
+    }
+
+    public rowDeleted(event: IRowDataEventArgs) {
+        console.log("Row deleted is: " + event.primaryKey);
     }
 
     public ngOnInit(): void {
