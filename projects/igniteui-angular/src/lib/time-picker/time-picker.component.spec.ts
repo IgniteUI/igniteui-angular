@@ -17,6 +17,7 @@ import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.direct
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 import { Subscription } from 'rxjs';
 import { HammerGesturesManager } from '../core/touch';
+import { NgIf } from '@angular/common';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -1736,7 +1737,7 @@ export class IgxTimePickerTestComponent {
         </igx-time-picker>
 `,
     standalone: true,
-    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
+    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxTimePickerWithProjectionsComponent {
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;

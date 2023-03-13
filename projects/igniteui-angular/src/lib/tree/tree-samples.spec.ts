@@ -1,6 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { IgxTreeComponent } from './public_api';
+import { IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     template: `
@@ -15,7 +16,9 @@ import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
             </igx-tree-node>
         </igx-tree-node>
     </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSimpleComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -35,7 +38,9 @@ export class IgxTreeSimpleComponent {
             </igx-tree-node>
         </igx-tree-node>
     </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeSelectionSampleComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -91,7 +96,9 @@ export class IgxTreeSelectionSampleComponent {
             <a [igxTreeNodeLink]="node" href="https://infragistics.com">Link to Infragistics</a>
         </ng-template>
     </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgFor, NgIf]
 })
 export class IgxTreeNavigationComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
@@ -112,7 +119,9 @@ export class IgxTreeNavigationComponent {
             </igx-tree-node>
         </igx-tree-node>
     </igx-tree>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent, NgFor]
 })
 export class IgxTreeScrollComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;

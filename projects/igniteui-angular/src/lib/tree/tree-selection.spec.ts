@@ -16,9 +16,11 @@ describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeSimpleComponent,
-                IgxTreeSelectionSampleComponent],
-            imports: [NoopAnimationsModule]
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeSimpleComponent,
+                IgxTreeSelectionSampleComponent
+            ]
         }).compileComponents();
     }));
 

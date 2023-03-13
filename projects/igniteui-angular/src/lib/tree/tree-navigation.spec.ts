@@ -20,9 +20,11 @@ describe('IgxTree - Navigation #treeView', () => {
         let tree: IgxTreeComponent;
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxTreeNavigationComponent,
-                    IgxTreeScrollComponent],
-                imports: [NoopAnimationsModule]
+                imports: [
+                    NoopAnimationsModule,
+                    IgxTreeNavigationComponent,
+                    IgxTreeScrollComponent
+                ]
             }).compileComponents();
         }));
 

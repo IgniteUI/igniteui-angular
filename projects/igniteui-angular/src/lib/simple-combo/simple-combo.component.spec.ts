@@ -7,13 +7,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboState } from '../combo/combo.common';
 import { RemoteDataService } from '../combo/combo.component.spec';
-import { IComboSelectionChangingEventArgs, IgxComboToggleIconDirective } from '../combo/public_api';
+import { IComboSelectionChangingEventArgs, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from '../combo/public_api';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxIconService } from '../icon/icon.service';
-import { IgxInputState } from '../input-group/public_api';
+import { IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
@@ -1910,7 +1910,7 @@ describe('IgxSimpleCombo', () => {
 </igx-simple-combo>
 `,
     standalone: true,
-    imports: [IgxSimpleComboComponent, ReactiveFormsModule, FormsModule]
+    imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective, ReactiveFormsModule, FormsModule]
 })
 class IgxSimpleComboSampleComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -2091,10 +2091,10 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
             [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
             <label igxLabel>Combo Label</label>
         </igx-simple-combo>
-</form>
-`,
+    </form>
+    `,
     standalone: true,
-    imports: [IgxSimpleComboComponent, FormsModule]
+    imports: [IgxSimpleComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
     @ViewChild('testCombo', { read: IgxSimpleComboComponent, static: true })
@@ -2142,7 +2142,7 @@ class IgxSimpleComboInTemplatedFormComponent {
             displayKey="field" valueKey="value" [data]="comboData">
         </igx-simple-combo>
     </form>
-`,
+    `,
     standalone: true,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
@@ -2170,7 +2170,8 @@ export class IgxSimpleComboInReactiveFormComponent {
 
 @Component({
     template: `
-        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>`,
+        <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
+    `,
     standalone: true,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
