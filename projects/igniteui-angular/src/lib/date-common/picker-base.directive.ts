@@ -20,9 +20,6 @@ import { WEEKDAYS } from '../calendar/calendar';
 
 @Directive()
 export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
-    protected _locale;
-    protected _weekStart: WEEKDAYS | number;
-
     /**
      * The editor's input mask.
      *
@@ -248,10 +245,12 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
+    protected _locale;
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
     protected _maxValue: Date | string;
+    protected _weekStart: WEEKDAYS | number;
 
     /**
      * Gets the picker's pop-up state.
