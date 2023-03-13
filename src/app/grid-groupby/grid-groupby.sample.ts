@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode, IRowSelectionEventArgs, ISortingOptions, GroupMemberCountSortingStrategy
 } from 'igniteui-angular';
 
 @Component({
@@ -22,12 +22,12 @@ export class GridGroupBySampleComponent implements OnInit {
     public expState = [];
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
-    public perfGrpExpr = [ { fieldName: 'FIELD', dir: SortingDirection.Asc } ];
+    public perfGrpExpr = [{ fieldName: 'FIELD', dir: SortingDirection.Asc }];
     public summaryMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootLevelOnly;
     public summaryModes = [];
     public selectionModes: any[];
     public position: GridSummaryPosition = GridSummaryPosition.top;
-    public sortingOp: ISortingOptions = {mode: 'multiple'};
+    public sortingOp: ISortingOptions = { mode: 'multiple' };
 
     private _density: DisplayDensity = DisplayDensity.cosy;
 
@@ -40,7 +40,7 @@ export class GridGroupBySampleComponent implements OnInit {
             this.data2.push(...Array(10).fill({ STATUS: 'C', FIELD: 'some text' }));
             this.data2.push(...Array(10).fill({ STATUS: 'D', FIELD: 'some text' }));
         }
-        this.data2 = this.data2.map((rec, index) => ({...rec, ID: index}));
+        this.data2 = this.data2.map((rec, index) => ({ ...rec, ID: index }));
         this.columns = [
             { dataType: 'string', field: 'ID', width: 100, hidden: true },
             { dataType: 'string', field: 'CompanyName', width: 300, groupable: true },
@@ -110,6 +110,15 @@ export class GridGroupBySampleComponent implements OnInit {
             }
         }
         this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+    }
+
+    public sortByGroup() {
+        const expressions = this.grid1.groupingExpressions;
+        if (expressions.length) {
+            const fieldName = expressions[0].fieldName;
+            const dir = expressions[0].dir === SortingDirection.Asc ? SortingDirection.Desc : SortingDirection.Asc;
+            this.grid1.groupBy({ fieldName, dir, ignoreCase: false, strategy: GroupMemberCountSortingStrategy.instance() });
+        }
     }
 
     public toggleGroupedVisibility(event) {
