@@ -589,7 +589,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayInfo(
         component: ElementRef | Type<any>,
-        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): OverlayInfo {
+        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): OverlayInfo | null {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;
