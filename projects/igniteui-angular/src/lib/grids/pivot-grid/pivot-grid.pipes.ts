@@ -82,7 +82,9 @@ export class IgxPivotAutoTransform implements PipeTransform {
     protected processCollectionToPivotRecord(config: IPivotConfiguration, collection: any[]): IPivotGridRecord[] {
         const pivotKeys: IPivotKeys = config.pivotKeys || DEFAULT_PIVOT_KEYS;
         const enabledRows = config.rows.filter(x => x.enabled);
-        const allFlat: IPivotDimension[] = PivotUtil.flatten(enabledRows);
+        const allFlat: IPivotDimension[] = cloneArray(
+            PivotUtil.flatten(enabledRows), true, new Set<string>(["externalObject"]));
+        
         const result: IPivotGridRecord[] = [];
         for (const rec of collection) {
             const pivotRec: IPivotGridRecord = {
