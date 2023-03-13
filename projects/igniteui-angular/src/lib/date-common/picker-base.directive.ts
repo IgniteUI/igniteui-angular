@@ -245,7 +245,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
-    protected _locale;
+    protected _locale: string;
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -308,7 +308,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     }
 
     /** Subscribes to the click events of toggle/clear icons in a query */
-    protected subToIconsClicked(components: QueryList<IgxPickerToggleComponent>, next: () => any) {
+    protected subToIconsClicked(components: QueryList<IgxPickerToggleComponent>, next: () => any): void {
         components.forEach(toggle => {
             toggle.clicked
                 .pipe(takeUntil(merge(components.changes, this._destroy$)))
