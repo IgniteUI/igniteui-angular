@@ -152,12 +152,12 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.pinnedRecords.length > 0) {
-                if (this.grid.pinnedRecords.find(r => r == cell.rowData)) {
-                    const pinnedRowIndex = this.grid.pinnedRecords.indexOf(cell.rowData);
+                const rowIndex = this.grid.pinnedRecords.indexOf(cell.rowData);
+                if (rowIndex !== -1) {
                     const previousRowId = cell.value;
                     const rowType = this.grid.getRowByIndex(cell.rowIndex);
                     this.unpin_row(previousRowId, rowType);
-                    this.pin_row(args.newValue, pinnedRowIndex, rowType);
+                    this.pin_row(args.newValue, rowIndex, rowType);
                 }
             }
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
