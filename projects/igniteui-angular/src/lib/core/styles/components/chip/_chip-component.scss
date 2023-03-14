@@ -27,6 +27,47 @@
             @extend %igx-chip__item--selected !optional;
         }
 
+        @include m(primary) {
+            @extend %igx-chip--primary !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--primary !optional;
+            }
+        }
+
+        @include m(info) {
+            @extend %igx-chip--info !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--info !optional;
+            }
+        }
+
+        @include m(success) {
+            @extend %igx-chip--success !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--success !optional;
+            }
+        }
+
+        @include m(warning) {
+            @extend %igx-chip--warning !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--warning !optional;
+            }
+        }
+
+        @include m(error) {
+            @extend %igx-chip--error !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--error !optional;
+            }
+        }
+
+
         @include e(content) {
             @extend %igx-chip__content !optional;
         }
@@ -82,6 +123,10 @@
 
         @include m(disabled) {
             @extend %igx-chip--disabled !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--disabled !optional;
+            }
         }
     }
 }
