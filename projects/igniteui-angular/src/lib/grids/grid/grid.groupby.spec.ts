@@ -1,4 +1,5 @@
 ﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
+import { formatNumber } from '@angular/common'
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -788,7 +789,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         grid.groupBy({
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
-        }); 
+        });
         fix.detectChanges();
         spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
@@ -1516,7 +1517,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
-    it('the group row selector state should be indeterminated if some of the records in the group but not all are selected',
+    it('the group row selector state should be undetermined if some of the records in the group but not all are selected',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -2086,6 +2087,33 @@ describe('IgxGrid - GroupBy #grid', () => {
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
         fix.detectChanges();
         expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
+    }));
+
+    // GroupBy Row Formatting
+    it('should properly apply formatters, both custom and default ones for the default row value template', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        tick();
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        let cellText = grid.groupsRowList.first.nativeElement.querySelector(".igx-group-label__text").innerText;
+        expect(cellText).toEqual(formatNumber(1000, grid.locale));
+        // apply custom formatter
+        grid.getColumnByName('Downloads').formatter = (value, row) => `\$${value}`;
+        grid.groupingExpressions = [];
+        tick();
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        tick();
+        fix.detectChanges();
+        cellText = grid.groupsRowList.first.nativeElement.querySelector(".igx-group-label__text").innerText;
+        expect(cellText).toEqual('$1000');
     }));
 
     // GroupBy + Resizing
@@ -3819,7 +3847,7 @@ export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild('template', {read: TemplateRef })
+    @ViewChild('template', { read: TemplateRef })
     public customGroupBy: TemplateRef<any>;
 }
 
