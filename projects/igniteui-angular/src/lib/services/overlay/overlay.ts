@@ -342,9 +342,10 @@ export class IgxOverlayService implements OnDestroy {
         info.visible = false;
         settings = Object.assign({}, this._defaultSettings, settings);
         // Emit the contentAppending event before appending the content
-        this.contentAppending.emit({ id: info.id, elementRef: info.elementRef, componentRef: info.componentRef, settings });
+        const eventArgs = { id: info.id, elementRef: info.elementRef, componentRef: info.componentRef, settings };
+        this.contentAppending.emit(eventArgs);
         // Append the content to the overlay
-        info.settings = settings;
+        info.settings = eventArgs.settings;
         this._overlayInfos.push(info);
         info.hook = this.placeElementHook(info.elementRef.nativeElement);
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
