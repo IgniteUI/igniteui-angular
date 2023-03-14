@@ -35,7 +35,19 @@
         </div>
 
         <div class="form__fields">
-            <igc-icon name="github" slot="prefix"></igc-icon>
+            <igx-input-group [displayDensity]="density" type="search">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input
+                        name="searchInput"
+                        [required]="isRequired"
+                        [disabled]="isDisabled"
+                        [(ngModel)]="inputValue"
+                        igxInput
+                        type="text"
+                />
+            </igx-input-group>
 
             <!-- No label -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
