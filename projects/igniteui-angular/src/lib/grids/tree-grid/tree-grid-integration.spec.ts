@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { CellType, IgxTreeGridModule } from './public_api';
@@ -593,6 +593,30 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
+
+        it('should select the text when the first cell (tree grid cell) enters edit mode', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.expandAll();
+            fix.detectChanges();
+
+            // move the 'string' column 'Name' to first position, so its cells are the tree grid cells
+            const colName = grid.getColumnByName('Name');
+            const colHireDate = grid.getColumnByName('HireDate');
+            grid.moveColumn(colName, colHireDate, DropPosition.BeforeDropTarget);
+            fix.detectChanges();
+            tick(100);
+
+            const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
+            cell.setEditMode(true);
+            fix.detectChanges();
+            tick(100);
+
+            expect(cell.editMode).toBe(true);
+            expect(document.activeElement.nodeName).toEqual('INPUT')
+            expect((document.activeElement as HTMLInputElement).value).toBe('John Winchester');
+            expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
+            expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(15);
+        }));
     });
 
     describe('Batch Editing', () => {
