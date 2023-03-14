@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { EditorProvider } from '../core/edit-provider';
+import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
@@ -47,6 +47,11 @@ let nextId = 0;
  */
 @Component({
     selector: 'igx-radio',
+    providers: [{
+        provide: EDITOR_PROVIDER, 
+        useExisting: IgxRadioComponent, 
+        multi: true
+    }],
     templateUrl: 'radio.component.html'
 })
 export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, EditorProvider, OnDestroy {
