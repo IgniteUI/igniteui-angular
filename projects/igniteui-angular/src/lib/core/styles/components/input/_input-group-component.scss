@@ -484,6 +484,8 @@
 
         // Type Search START
         @include m(search) {
+            @extend %form-group-display--search !optional;
+
             @extend %form-group-display--no-margin !optional;
 
             @include e(bundle) {
@@ -492,6 +494,14 @@
                 &:hover {
                     @extend %form-group-bundle-search--hover !optional;
                 }
+            }
+
+            @include e(notch) {
+                @extend %igx-input-group__notch--search !optional;
+            }
+
+            @include e(bundle-main) {
+                @extend %form-group-bundle-main--search !optional;
             }
 
             @include e(line) {
