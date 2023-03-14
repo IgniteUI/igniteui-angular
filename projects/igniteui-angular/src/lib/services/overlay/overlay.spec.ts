@@ -7,6 +7,7 @@ import {
     Inject,
     NgModule,
     ViewChild,
+    ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -1162,6 +1163,27 @@ describe('igxOverlay', () => {
 
             overlay.detachAll();
         }));
+
+        it('#3988 - Should use viewContainerRef to create component', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const viewContainerRef = fixture.componentInstance.viewContainerRef;
+            fixture.detectChanges();
+
+            const mockNativeElement = document.createElement('div');
+            const mockComponent = {
+                hostView: fixture.componentRef.hostView,
+                changeDetectorRef: { detectChanges: () => { } },
+                location: { nativeElement: mockNativeElement },
+                destroy: () => { }
+            };
+            spyOn(viewContainerRef, 'createComponent').and.returnValue(mockComponent as any);
+            const id = overlay.attach(SimpleDynamicComponent, viewContainerRef);
+            expect(viewContainerRef.createComponent).toHaveBeenCalledWith(SimpleDynamicComponent as any);
+            expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
+
+            overlay.detachAll();
+        });
 
         // it('##6474 - should calculate correctly position', () => {
         //     const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
@@ -4470,7 +4492,9 @@ export class EmptyPageComponent {
     @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     @ViewChild('div', { static: true }) public divElement: ElementRef;
 
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+    constructor(
+        @Inject(IgxOverlayService) public overlay: IgxOverlayService,
+        public viewContainerRef: ViewContainerRef) { }
 
     public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));

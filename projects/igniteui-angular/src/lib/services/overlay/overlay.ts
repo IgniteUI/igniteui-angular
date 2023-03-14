@@ -10,7 +10,10 @@ import {
     Inject,
     Injectable,
     Injector,
-    NgZone, OnDestroy, Type
+    NgZone,
+    OnDestroy,
+    Type,
+    ViewContainerRef
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -33,8 +36,8 @@ import {
 } from '../../animations/main';
 import { PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { AnimationService } from '../animation/animation';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
+import { AnimationService } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
@@ -326,12 +329,25 @@ export class IgxOverlayService implements OnDestroy {
      * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
      * that can resolve the component's factory
      * @returns Id of the created overlay. Valid until `detach` is called.
+     * @deprecated deprecated in 14.0.0. Use the `attach(component, viewContainerRef, settings)` overload
      */
-    public attach(component: Type<any>, settings?: OverlaySettings,
+    public attach(
+        component: Type<any>,
+        settings?: OverlaySettings,
         moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string;
-    public attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
-        moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): string {
-        const info: OverlayInfo = this.getOverlayInfo(component, moduleRef);
+    /**
+     * Generates an Id. Provide this Id when calling the `show(id)` method
+     *
+     * @param component Component Type to show in overlay
+     * @param viewContainerRef Reference to the container where created component's host view will be inserted
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     */
+    public attach(component: Type<any>, viewContainerRef: ViewContainerRef, settings?: OverlaySettings): string;
+    public attach(
+        componentOrElement: ElementRef | Type<any>,
+        viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
+        moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): string {
+        const info: OverlayInfo = this.getOverlayInfo(componentOrElement, this.getUserViewContainerOrModuleRef(viewContainerRefOrSettings, moduleRefOrSettings));
 
         if (!info) {
             console.warn('Overlay was not able to attach provided component!');
@@ -340,7 +356,7 @@ export class IgxOverlayService implements OnDestroy {
 
         info.id = (this._componentId++).toString();
         info.visible = false;
-        settings = Object.assign({}, this._defaultSettings, settings);
+        const settings = Object.assign({}, this._defaultSettings, this.getUserOverlaySettings(viewContainerRefOrSettings, moduleRefOrSettings));
         // Emit the contentAppending event before appending the content
         const eventArgs = { id: info.id, elementRef: info.elementRef, componentRef: info.componentRef, settings };
         this.contentAppending.emit(eventArgs);
@@ -556,21 +572,58 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayInfo(component: any, moduleRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver }): OverlayInfo {
+    private getUserOverlaySettings(
+      viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
+      moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings): OverlaySettings {
+        let result: OverlaySettings | undefined;
+        if (viewContainerRefOrSettings && !(viewContainerRefOrSettings instanceof ViewContainerRef)) {
+            result = viewContainerRefOrSettings;
+            return result;
+        }
+        if (moduleRefOrSettings && !('injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings)) {
+            result = moduleRefOrSettings;
+        }
+        return result;
+    }
+
+
+    private getUserViewContainerOrModuleRef(
+        viewContainerRefOrSettings?: ViewContainerRef | OverlaySettings,
+        moduleRefOrSettings?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | OverlaySettings
+        ): ViewContainerRef | { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | undefined {
+          let result: ViewContainerRef | { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | undefined;
+          if (viewContainerRefOrSettings instanceof ViewContainerRef) {
+              result = viewContainerRefOrSettings;
+          }
+          if (moduleRefOrSettings && 'injector' in moduleRefOrSettings && 'componentFactoryResolver' in moduleRefOrSettings) {
+              result = moduleRefOrSettings;
+          }
+          return result;
+      }
+
+    private getOverlayInfo(
+        component: ElementRef | Type<any>,
+        viewContainerRef?: { injector: Injector, componentFactoryResolver: ComponentFactoryResolver } | ViewContainerRef): OverlayInfo | null {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = component;
         } else {
-            let dynamicFactory: ComponentFactory<any>;
-            const factoryResolver = moduleRef ? moduleRef.componentFactoryResolver : this._factoryResolver;
-            try {
-                dynamicFactory = factoryResolver.resolveComponentFactory(component);
-            } catch (error) {
-                console.error(error);
-                return null;
+            let dynamicComponent: ComponentRef<any>;
+            if (viewContainerRef instanceof ViewContainerRef) {
+                dynamicComponent = viewContainerRef.createComponent(component);
+            } else {
+                let dynamicFactory: ComponentFactory<any>;
+                const factoryResolver = viewContainerRef ? viewContainerRef.componentFactoryResolver : this._factoryResolver;
+                try {
+                    dynamicFactory = factoryResolver.resolveComponentFactory(component);
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+                const injector = viewContainerRef ? viewContainerRef.injector : this._injector;
+                dynamicComponent = dynamicFactory.create(injector);
+                this._appRef.attachView(dynamicComponent.hostView);
             }
-            const injector = moduleRef ? moduleRef.injector : this._injector;
-            const dynamicComponent: ComponentRef<any> = dynamicFactory.create(injector);
             if (dynamicComponent.onDestroy) {
                 dynamicComponent.onDestroy(() => {
                     if (!info.detached && this._overlayInfos.indexOf(info) !== -1) {
@@ -578,7 +631,6 @@ export class IgxOverlayService implements OnDestroy {
                     }
                 })
             }
-            this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
             const element = dynamicComponent.location.nativeElement;
