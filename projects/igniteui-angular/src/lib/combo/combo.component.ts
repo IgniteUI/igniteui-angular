@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, QueryList, ContentChildren, AfterContentChecked
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, AfterContentChecked
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -36,9 +36,7 @@ import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import {
     IgxInputGroupType,
-    IGX_INPUT_GROUP_TYPE,
-    IgxPrefixDirective,
-    IgxSuffixDirective
+    IGX_INPUT_GROUP_TYPE
 } from '../input-group/public_api';
 
 /** Event emitted when an igx-combo's selection is changing */
@@ -175,22 +173,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return !this.value && !this.placeholder;
     }
 
-    @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes: QueryList<IgxPrefixDirective>;
-
-    @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes: QueryList<IgxSuffixDirective>;
-
-    /** @hidden @internal */
-    public get toggleIcon(): string {
-        return this.inputGroup.theme === 'material' ? this.dropdown.collapsed ? 'expand_more' : 'expand_less' : this.dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'
-    }
-
-    /** @hidden @internal */
-    public get clearIcon(): string {
-        return this.inputGroup.theme === 'material' ? 'cancel' : 'clear'
-    }
-
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this.filteringOptions.filterable ? this._filteredData : this.data;
@@ -221,17 +203,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         @Optional() protected _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
-    }
-
-    /** @hidden @internal */
-    public ngAfterContentChecked() {
-        if (this.inputGroup && this.prefixes?.length > 0) {
-            this.inputGroup.prefixes = this.prefixes;
-        }
-
-        if (this.inputGroup && this.suffixes?.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
-        }
     }
 
     @HostListener('keydown.ArrowDown', ['$event'])

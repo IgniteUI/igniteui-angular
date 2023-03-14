@@ -3,7 +3,6 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     ElementRef,
     EventEmitter,
     HostListener,
@@ -11,7 +10,7 @@ import {
     Injector,
     NgModule,
     Optional,
-    Output, QueryList,
+    Output,
     ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
@@ -36,9 +35,7 @@ import { IgxIconModule, IgxIconService } from '../icon/public_api';
 import {
     IgxInputGroupModule,
     IgxInputGroupType,
-    IGX_INPUT_GROUP_TYPE,
-    IgxPrefixDirective, IgxSuffixDirective
-} from '../input-group/public_api';
+    IGX_INPUT_GROUP_TYPE} from '../input-group/public_api';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -80,16 +77,6 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
     /** @hidden @internal */
-    public get toggleIcon(): string {
-        return this.inputGroup.theme === 'material' ? this.dropdown.collapsed ? 'expand_more' : 'expand_less' : this.dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'
-    }
-
-    /** @hidden @internal */
-    public get clearIcon(): string {
-        return this.inputGroup.theme === 'material' ? 'cancel' : 'clear'
-    }
-
-    /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
     public dropdown: IgxComboDropDownComponent;
 
@@ -109,14 +96,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     @ViewChild(IgxTextSelectionDirective, { static: true })
     private textSelection: IgxTextSelectionDirective;
-
-    /** @hidden @internal */
-    @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes: QueryList<IgxPrefixDirective>;
-
-    /** @hidden @internal */
-    @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     public composing = false;
@@ -220,14 +199,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
-        if (this.prefixes.length > 0) {
-            this.inputGroup.prefixes = this.prefixes;
-        }
-
-        if (this.suffixes.length > 0) {
-            this.inputGroup.suffixes = this.suffixes;
-        }
-
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
