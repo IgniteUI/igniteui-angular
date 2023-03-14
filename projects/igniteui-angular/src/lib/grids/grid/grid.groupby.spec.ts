@@ -2103,7 +2103,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         let cellText = grid.groupsRowList.first.nativeElement.querySelector(".igx-group-label__text").innerText;
         expect(cellText).toEqual(formatNumber(1000, grid.locale));
         // apply custom formatter
-        grid.getColumnByName('Downloads').formatter = (value, row) => `\$${value}`;
+        grid.getColumnByName('Downloads').formatter = (value, _row) => `\$${value}`;
         grid.groupingExpressions = [];
         tick();
         fix.detectChanges();
