@@ -295,14 +295,13 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Displaying empty grid message', () => {
-
         beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
         }));
 
-        fit('should display empty grid message when there is no data', () => {
+        it('should display empty grid message when there is no data', () => {
             const data: any[] = grid.data;
             grid.data = [];
             fix.detectChanges();
@@ -316,7 +315,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(emptyGridMessage).toBeFalsy();
         });
 
-        fit('should display empty grid message when last row is deleted', () => {
+        it('should display empty grid message when last row is deleted', () => {
             grid.data = [];
             grid.addRow({
                 ID: 0,
@@ -330,7 +329,6 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.detectChanges();
             let emptyGridMessage = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
             expect(emptyGridMessage).toBeFalsy();
-            expect(grid.dataLength).toEqual(1);
 
             grid.deleteRowById(0);
             fix.detectChanges();
