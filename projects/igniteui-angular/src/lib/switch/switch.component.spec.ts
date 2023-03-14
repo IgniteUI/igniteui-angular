@@ -33,15 +33,15 @@ describe('IgxSwitch', () => {
 
         const switchComp = fixture.componentInstance.switch;
         const domSwitch = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
-        const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
+        const nativeCheckbox = switchComp.nativeCheckbox.nativeElement;
         const nativeLabel = switchComp.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-switch__label')).nativeElement;
 
-        expect(domSwitch.id).toBe('igx-switch-0');
+        expect(domSwitch.id).toContain('igx-switch-');
         expect(nativeCheckbox).toBeTruthy();
-        expect(nativeCheckbox.id).toEqual('igx-switch-0-input');
+        expect(nativeCheckbox.id).toContain('igx-switch-');
         expect(nativeCheckbox.getAttribute('aria-label')).toEqual(null);
-        expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-switch-0-label');
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toContain('igx-switch-');
 
         expect(nativeLabel).toBeTruthy();
         // No longer have a for attribute to not propagate clicks to the native checkbox
@@ -49,7 +49,12 @@ describe('IgxSwitch', () => {
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-switch__label');
-        expect(placeholderLabel.getAttribute('id')).toEqual('igx-switch-0-label');
+        expect(placeholderLabel.getAttribute('id')).toContain('igx-switch-');
+
+        switchComp.id = 'customSwitch';
+        fixture.detectChanges();
+        expect(switchComp.id).toBe('customSwitch');
+        expect(domSwitch.id).toBe('customSwitch');
 
         // When aria-label is present, aria-labeledby shouldn't be
         switchComp.ariaLabel = 'New Label';
