@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
 
-/** @hidden */
-export const MASK_FLAGS = ['C', '&', 'a', 'A', '?', 'L', '9', '0', '#'];
+
+const FLAGS = new Set('aACL09#&?');
+const REGEX = new Map([
+    ['C', /(?!^$)/u], // Non-empty
+    ['&', /[^\p{Separator}]/u], // Non-whitespace
+    ['a', /[\p{Letter}\d\p{Separator}]/u], // Alphanumeric & whitespace
+    ['A', /[\p{Letter}\d]/u], // Alphanumeric
+    ['?', /[\p{Letter}\p{Separator}]/u], // Alpha & whitespace
+    ['L', /\p{Letter}/u], // Alpha
+    ['0', /\d/], // Numeric
+    ['9', /[\d\p{Separator}]/u], // Numeric & whitespace
+    ['#', /[\d\-+]/], // Numeric and sign
+]);
 
 /** @hidden */
 export interface MaskOptions {
@@ -15,16 +26,46 @@ export interface Replaced {
     end: number;
 }
 
+interface ParsedMask {
+    literals: Map<number, string>,
+    mask: string
+};
+
+const replaceCharAt = (string: string, idx: number, char: string) =>
+    `${string.substring(0, idx)}${char}${string.substring(idx + 1)}`;
+
+
+export function parseMask(format: string): ParsedMask {
+    const literals = new Map<number, string>();
+    let mask = format;
+
+    for (let i = 0, j = 0; i < format.length; i++, j++) {
+        const [current, next] = [format.charAt(i), format.charAt(i + 1)];
+
+        if (current === '\\' && FLAGS.has(next)) {
+            mask = replaceCharAt(mask, j, '');
+            literals.set(j, next);
+            i++;
+        } else {
+            if (!FLAGS.has(current)) {
+                literals.set(j, current);
+            }
+        }
+    }
+
+    return { literals, mask };
+}
+
 /** @hidden */
 @Injectable({
     providedIn: 'root'
 })
 export class MaskParsingService {
+
     public applyMask(inputVal: string, maskOptions: MaskOptions, pos: number = 0): string {
         let outputVal = '';
         let value = '';
-        const mask: string = maskOptions.format;
-        const literals: Map<number, string> = this.getMaskLiterals(mask);
+        const { literals, mask } = parseMask(maskOptions.format);
         const literalKeys: number[] = Array.from(literals.keys());
         const nonLiteralIndices: number[] = this.getNonLiteralIndices(mask, literalKeys);
         const literalValues: string[] = Array.from(literals.values());
@@ -38,7 +79,7 @@ export class MaskParsingService {
         }
 
         literals.forEach((val: string, key: number) => {
-            outputVal = this.replaceCharAt(outputVal, key, val);
+            outputVal = replaceCharAt(outputVal, key, val);
         });
 
         if (!value) {
@@ -62,7 +103,7 @@ export class MaskParsingService {
 
         for (const nonLiteralValue of nonLiteralValues) {
             const char = nonLiteralValue;
-            outputVal = this.replaceCharAt(outputVal, nonLiteralIndices[pos++], char);
+            outputVal = replaceCharAt(outputVal, nonLiteralIndices[pos++], char);
         }
 
         return outputVal;
@@ -70,9 +111,7 @@ export class MaskParsingService {
 
     public parseValueFromMask(maskedValue: string, maskOptions: MaskOptions): string {
         let outputVal = '';
-        const mask: string = maskOptions.format;
-        const literals: Map<number, string> = this.getMaskLiterals(mask);
-        const literalValues: string[] = Array.from(literals.values());
+        const literalValues: string[] = Array.from(parseMask(maskOptions.format).literals.values());
 
         for (const val of maskedValue) {
             if (literalValues.indexOf(val) === -1) {
@@ -86,7 +125,8 @@ export class MaskParsingService {
     }
 
     public replaceInMask(maskedValue: string, value: string, maskOptions: MaskOptions, start: number, end: number): Replaced {
-        const literalsPositions: number[] = Array.from(this.getMaskLiterals(maskOptions.format).keys());
+        const { literals, mask } = parseMask(maskOptions.format);
+        const literalsPositions = Array.from(literals.keys());
         value = this.replaceIMENumbers(value);
         const chars = Array.from(value);
         let cursor = start;
@@ -102,7 +142,7 @@ export class MaskParsingService {
                 continue;
             }
             if (chars[0]
-                && !this.validateCharOnPosition(chars[0], i, maskOptions.format)
+                && !this.validateCharOnPosition(chars[0], i, mask)
                 && chars[0] !== maskOptions.promptChar) {
                 break;
             }
@@ -112,7 +152,7 @@ export class MaskParsingService {
                 cursor = i + 1;
                 char = chars.shift();
             }
-            maskedValue = this.replaceCharAt(maskedValue, i, char);
+            maskedValue = replaceCharAt(maskedValue, i, char);
         }
 
         if (value.length <= 1) {
@@ -132,83 +172,15 @@ export class MaskParsingService {
             }
         }
 
-        return { value: maskedValue, end: cursor};
-    }
-
-    public replaceCharAt(strValue: string, index: number, char: string): string {
-        if (strValue !== undefined) {
-            return strValue.substring(0, index) + char + strValue.substring(index + 1);
-        }
-    }
-
-    public getMaskLiterals(mask: string): Map<number, string> {
-        const literals = new Map<number, string>();
-
-        for (let i = 0; i < mask.length; i++) {
-            const char = mask.charAt(i);
-            if (MASK_FLAGS.indexOf(char) === -1) {
-                literals.set(i, char);
-            }
-        }
-
-        return literals;
+        return { value: maskedValue, end: cursor };
     }
 
     /** Validates only non literal positions. */
     private validateCharOnPosition(inputChar: string, position: number, mask: string): boolean {
-        let regex: RegExp;
-        let isValid: boolean;
-        const letterOrDigitRegEx = '[\\d\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z]';
-        const letterDigitOrSpaceRegEx = '[\\d\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z\\u0020]';
-        const letterRegEx = '[\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z]';
-        const letterSpaceRegEx = '[\\u00C0-\\u1FFF\\u2C00-\\uD7FFa-zA-Z\\u0020]';
-        const digitRegEx = '[\\d]';
-        const digitSpaceRegEx = '[\\d\\u0020]';
-        const digitSpecialRegEx = '[\\d-\\+]';
-
-        switch (mask.charAt(position)) {
-            case 'C':
-                isValid = inputChar !== '';
-                break;
-            case '&':
-                regex = new RegExp('[\\u0020]');
-                isValid = !regex.test(inputChar);
-                break;
-            case 'a':
-                regex = new RegExp(letterDigitOrSpaceRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case 'A':
-                regex = new RegExp(letterOrDigitRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case '?':
-                regex = new RegExp(letterSpaceRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case 'L':
-                regex = new RegExp(letterRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case '0':
-                regex = new RegExp(digitRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case '9':
-                regex = new RegExp(digitSpaceRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            case '#':
-                regex = new RegExp(digitSpecialRegEx);
-                isValid = regex.test(inputChar);
-                break;
-            default: {
-                isValid = null;
-            }
-        }
-
-        return isValid;
+        const regex = REGEX.get(mask.charAt(position));
+        return regex ? regex.test(inputChar) : false;
     }
+
     private getNonLiteralIndices(mask: string, literalKeys: number[]): number[] {
         const nonLiteralsIndices: number[] = new Array();
 
