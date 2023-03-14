@@ -15,6 +15,10 @@
     igc-grid, igc-tree-grid {
         max-height: 550px;
     }
+    .range-wrapper {
+        width: 100%;
+        padding: 0 .5rem;
+    }
   </style>
 </head>
 <body class="ig-typography">
@@ -116,13 +120,13 @@
         grid1.dropAreaTemplate = () => html`<span> 👉 Drop here 👈 </span>`;
         grid1.querySelector('igc-column').bodyTemplate = (context) => html`PK: ${context.$implicit}`;
         grid1.querySelector('igc-column[field="InStock"]').inlineEditorTemplate = (context) =>
-            html`
+            html`<div class="range-wrapper">
                 <input autofocus id="range" type="range"
                     .value="${context.$implicit}"
                     @change=${e => context.cell.editValue = e.target.nextElementSibling.value = e.target.value}
                     />
                 <output .value="${context.$implicit}"></output>
-            `;
+            </div>`;
         grid1.detailTemplate = (ctx) => html`<div><span class="categoryStyle">Stock: ${ctx.$implicit.InStock}</span></div>`;
     });
 
