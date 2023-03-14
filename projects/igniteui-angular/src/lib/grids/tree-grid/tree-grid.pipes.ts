@@ -24,6 +24,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const flatData: any[] = [];
 
         if (!collection || !collection.length) {
+            this.grid.flatData = collection;
             return collection;
         }
 

@@ -16,7 +16,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
-        let data = grid && grid.flatData && grid.data.length > 0 ? grid.flatData : [];
+        let data = grid && grid.flatData ? grid.flatData : [];
         data = transactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
     }
