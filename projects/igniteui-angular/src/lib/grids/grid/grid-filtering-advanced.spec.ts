@@ -9,7 +9,7 @@ import {
     IgxStringFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
@@ -2298,6 +2298,71 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyOperatorLine(operatorLine, 'or');
             }));
 
+            it('Should apply changes in the group\'s operator made via its context menu buttons.', fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Verify current operator of inner group.
+                let operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+                verifyOperatorLine(operatorLine, 'or');
+
+                // Verify the advancedFilteringExpressionsTree inner group's filteringOperand's operator
+                expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(2);
+                expect((grid.advancedFilteringExpressionsTree.filteringOperands[1] as IFilteringExpressionsTree).operator).toEqual(1);
+
+                // Click the innner group's operator line.
+                operatorLine.click();
+                tick(400);
+                fix.detectChanges();
+
+                // Click the 'and' button of the button group in the context menu.
+                const buttonGroup = GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix);
+                const andOperatorButton: any = Array.from(buttonGroup.querySelectorAll('.igx-button-group__item'))
+                                                    .find((b: any) => b.textContent.toLowerCase() === 'and');
+                andOperatorButton.click();
+                fix.detectChanges();
+
+                // Verify new operator of inner group.
+                operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+                verifyOperatorLine(operatorLine, 'and');
+
+                // Apply new advanced filtering logic
+                GridFunctions.clickAdvancedFilteringApplyButton(fix);
+                tick(100);
+                fix.detectChanges();
+                
+                // Open the advanced filtering dialog
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Verify the operator of inner group should persist as "And"
+                operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+                verifyOperatorLine(operatorLine, 'and');
+
+                // Verify the advancedFilteringExpressionsTree inner group's filteringOperand's operator
+                expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(2);
+                expect((grid.advancedFilteringExpressionsTree.filteringOperands[1] as IFilteringExpressionsTree).operator).toEqual(0);
+            }));
+
             it('Should ungroup the group\'s children and append them to next parent group when click \'ungroup\' from context menu.',
             fakeAsync(() => {
                 // Apply advanced filter through API.
@@ -2351,6 +2416,25 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(3);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(3);
                 // Verify three expression in the root group are what remains.
+                for (let index = 0; index < 3; index++) {
+                    firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [index]); // expression
+                    expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
+                }
+
+                // Should apply this change to the advancedFilteringExpressionsTree
+                GridFunctions.clickAdvancedFilteringApplyButton(fix);
+                tick(100);
+                fix.detectChanges();
+                
+                // Open the advanced filtering dialog
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Verify the layout after as above
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(3);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(3);
+                // Verify three expression in the root group are what remains, no inner groups
                 for (let index = 0; index < 3; index++) {
                     firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [index]); // expression
                     expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
@@ -2437,6 +2521,26 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
                 expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
+
+                // Should apply this change to the advancedFilteringExpressionsTree
+                GridFunctions.clickAdvancedFilteringApplyButton(fix);
+                tick(100);
+                fix.detectChanges();
+                 
+                // Open the advanced filtering dialog
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Verify the layout after as above
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
+
+                firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
+                 
+                // Verify the advancedFilteringExpressionsTree filteringOperands operator
+                expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(1);
             }));
 
             it('Should close the context menu when clicking its close button.' , fakeAsync(() => {
