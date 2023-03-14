@@ -590,7 +590,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             cancel: false
         }
         if (typeof index === 'number') {
-            eventArgs.insertAtIndex = index;
+            eventArgs.insertAtIndex = index <= this.grid.pinnedRecords.length ? index : this.grid.pinnedRecords.length;
         }
         return eventArgs;
     }
