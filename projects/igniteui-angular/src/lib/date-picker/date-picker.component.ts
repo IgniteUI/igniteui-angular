@@ -1,50 +1,72 @@
 import {
-    Component, ContentChild, EventEmitter, HostBinding, Input,
-    OnDestroy, Output, ViewChild, ElementRef, Inject, HostListener,
-    NgModuleRef, OnInit, AfterViewInit, Injector, AfterViewChecked, ContentChildren,
-    QueryList, LOCALE_ID, Renderer2, Optional, PipeTransform, ChangeDetectorRef
+    AfterViewChecked,
+    AfterViewInit,
+    AfterContentChecked,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    Injector,
+    Input,
+    LOCALE_ID,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    PipeTransform,
+    QueryList,
+    Renderer2,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
+import { NgIf } from '@angular/common';
 import {
-    ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl,
-    NG_VALIDATORS, ValidationErrors, Validator
+    AbstractControl,
+    ControlValueAccessor,
+    NgControl,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
     isDateInRanges, IFormattingViews, IFormattingOptions
 } from '../calendar/public_api';
 import {
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { fadeIn, fadeOut } from '../animations/fade';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IBaseCancelableBrowserEventArgs, isDate, PlatformUtil } from '../core/utils';
+import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+import { PickerBaseDirective } from '../date-common/picker-base.directive';
+import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/public_api';
+import { PickerHeaderOrientation } from '../date-common/types';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-    OverlaySettings, IgxOverlayService, AbsoluteScrollStrategy,
-    AutoPositionStrategy,
-    OverlayCancelableEventArgs,
-    OverlayEventArgs
+  AbsoluteScrollStrategy,
+  AutoPositionStrategy,
+  IgxOverlayService,
+  OverlayCancelableEventArgs,
+  OverlayEventArgs,
+  OverlaySettings
 } from '../services/public_api';
-import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
-import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { IBaseCancelableBrowserEventArgs, PlatformUtil, isDate } from '../core/utils';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
-import { fadeIn, fadeOut } from '../animations/fade';
-import { PickerBaseDirective } from '../date-common/picker-base.directive';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
-import { IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxIconComponent } from '../icon/icon.component';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { NgIf } from '@angular/common';
-import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 
 let NEXT_ID = 0;
 
@@ -72,7 +94,7 @@ let NEXT_ID = 0;
     imports: [IgxInputGroupComponent, NgIf, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxSuffixDirective]
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
-    OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -385,7 +407,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private dateTimeEditor: IgxDateTimeEditorDirective;
 
     @ViewChild(IgxInputGroupComponent)
-    private inputGroup: IgxInputGroupComponent;
+    protected inputGroup: IgxInputGroupComponent;
+
+    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
+    private viewContainerRef: ViewContainerRef;
 
     @ViewChild(IgxLabelDirective)
     private labelDirective: IgxLabelDirective;
@@ -476,7 +501,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     constructor(public element: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        private _moduleRef: NgModuleRef<any>,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
@@ -550,9 +574,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this.outlet) {
             overlaySettings.outlet = this.outlet;
         }
-
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, overlaySettings, this._moduleRef);
+            .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
     }
 

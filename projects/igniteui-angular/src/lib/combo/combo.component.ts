@@ -197,7 +197,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.comboAPI.register(this);
     }
 
-    /** @hidden @internal */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public onArrowDown(event: Event) {

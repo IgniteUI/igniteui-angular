@@ -187,7 +187,7 @@ describe('igxCombo', () => {
             combo.dropdown = dropdown;
             const defaultSettings = (combo as any)._overlaySettings;
             combo.toggle();
-            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings || {});
             const newSettings = {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: new AbsoluteScrollStrategy()
@@ -2670,13 +2670,12 @@ describe('igxCombo', () => {
                 combo.toggle();
                 fixture.detectChanges();
 
-                const caseSensitiveIcon = fixture.debugElement.query(By.css('igx-icon[name=\'case-sensitive\']'));
                 const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
                 UIInteractions.triggerInputEvent(searchInput, 'M');
                 fixture.detectChanges();
                 expect([...combo.filteredData]).toEqual(combo.data.filter(e => e['field'].toLowerCase().includes('m')));
 
-                caseSensitiveIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                combo.toggleCaseSensitive();
                 fixture.detectChanges();
                 expect([...combo.filteredData]).toEqual(combo.data.filter(e => e['field'].includes('M')));
             });

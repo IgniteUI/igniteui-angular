@@ -12,8 +12,8 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
-const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
-const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
+const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
+const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
@@ -415,7 +415,7 @@ describe('Dialog', () => {
         overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
         overlayWrapper = overlaydiv.children[0];
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
-        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
+        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
 
     it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
