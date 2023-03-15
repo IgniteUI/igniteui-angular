@@ -215,7 +215,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public autoGenerate = true;
+    public autoGenerate = false;
 
     /**
      * Controls whether columns moving is enabled in the grid.
