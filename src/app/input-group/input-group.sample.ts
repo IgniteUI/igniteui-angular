@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
+import {Component, Inject, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IgxInputGroupType,
@@ -9,6 +9,10 @@ import {
     IGX_INPUT_GROUP_TYPE,
     DisplayDensity
 } from 'igniteui-angular';
+
+import { defineComponents, IgcInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
+
+defineComponents(IgcInputComponent, IgcIconComponent);
 
 interface Selection {
     selected: boolean;
@@ -25,11 +29,15 @@ interface Selection {
     providers: [{provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }]
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
+
+    @ViewChild('igcInput')
+    private igcInput: ElementRef;
     public inputValue: any;
-    public isRequired = true;
+    public isRequired = false;
     public isDisabled = false;
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
-    public density: DisplayDensity = 'comfortable';
+    public density: DisplayDensity = 'cosy';
+
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
@@ -41,6 +49,24 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
       mySelectField: []
     });
     public date = new Date();
+
+    public getSize() {
+        if(this.density === 'comfortable') {
+            return 'large'
+        }
+
+        if(this.density === 'cosy') {
+            return 'medium'
+        }
+
+        if(this.density === 'compact') {
+            return 'small'
+        }
+    }
+
+    public isOutlined() {
+        return this.inputType === 'border'
+    }
 
     constructor(
         @Inject(DisplayDensityToken)
@@ -71,7 +97,18 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
         ];
 
         this.inputTypes = [
-            { selected: true, type: 'line', label: 'Line', togglable: true },
+            {
+                selected: this.inputType === 'line',
+                type: 'line',
+                label: 'Line',
+                togglable: true
+            },
+            {
+                selected: true,
+                type: 'box',
+                label: 'Box',
+                togglable: true,
+            },
             {
                 selected: this.inputType === 'border',
                 type: 'border',
@@ -79,9 +116,9 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
                 togglable: true,
             },
             {
-                selected: this.inputType === 'box',
-                type: 'box',
-                label: 'Box',
+                selected: this.inputType === 'search',
+                type: 'search',
+                label: 'Search',
                 togglable: true,
             },
         ];
@@ -100,6 +137,10 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public selectInputType(event: IButtonGroupEventArgs) {
         const currentType = this.inputTypes[event.index].type;
         this.inputType = currentType;
+        this.igcInput.nativeElement.removeAttribute('outlined');
+        if(currentType === 'border') {
+            this.igcInput.nativeElement.setAttribute('outlined', 'true');
+        }
         console.log('New type set is = ', currentType);
     }
 
