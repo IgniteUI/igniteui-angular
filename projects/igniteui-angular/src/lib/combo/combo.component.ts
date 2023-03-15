@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
     Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
@@ -100,7 +100,25 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxInputDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, FormsModule, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        NgClass,
+        FormsModule,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxSuffixDirective,
+        IgxIconComponent,
+        IgxComboDropDownComponent,
+        IgxDropDownItemNavigationDirective,
+        IgxForOfDirective,
+        IgxComboItemComponent,
+        IgxComboAddItemComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxComboFilteringPipe,
+        IgxComboGroupingPipe
+    ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, EditorProvider {
