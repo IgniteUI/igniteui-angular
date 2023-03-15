@@ -358,6 +358,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.clearSelection(true);
         if (this.collapsed) {
+            this.filterValue = '';
+            this.cdr.detectChanges();
             this.open();
             this.dropdown.navigateFirst();
         } else {
