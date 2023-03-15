@@ -250,7 +250,7 @@ class NavbarCustomIgxIconTestComponent {
                     <igx-icon igxNavbarAction>arrow_back</igx-icon>
                </igx-navbar>`,
     standalone: true,
-    imports: [IgxNavbarComponent, IgxIconComponent]
+    imports: [IgxNavbarComponent, IgxIconComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
     @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;

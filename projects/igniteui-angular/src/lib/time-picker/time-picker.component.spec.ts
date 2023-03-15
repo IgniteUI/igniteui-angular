@@ -1717,7 +1717,7 @@ describe('IgxTimePicker', () => {
         <label igxLabel>Select time</label>
         </igx-time-picker>`,
     standalone: true,
-    imports: [IgxTimePickerComponent, FormsModule]
+    imports: [IgxTimePickerComponent, IgxLabelDirective]
 })
 export class IgxTimePickerTestComponent {
     @ViewChild('picker', { read: IgxTimePickerComponent, static: true })
@@ -1740,7 +1740,7 @@ export class IgxTimePickerTestComponent {
         </igx-time-picker>
 `,
     standalone: true,
-    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
+    imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxTimePickerWithProjectionsComponent {
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;

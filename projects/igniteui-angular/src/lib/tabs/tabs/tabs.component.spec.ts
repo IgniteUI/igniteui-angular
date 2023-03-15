@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -20,7 +20,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
-import { PlatformUtil } from '../../core/utils';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -46,12 +45,29 @@ describe('IgxTabs', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
-                TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
-                TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent, TabsContactsComponent, AddingSelectedTabComponent, TabsRtlComponent],
-            imports: [BrowserAnimationsModule, RouterTestingModule.withRoutes(testRoutes)],
-            providers: [RoutingTestGuard, PlatformUtil]
+            declarations: [],
+            imports: [
+                NoopAnimationsModule,
+                RouterTestingModule.withRoutes(testRoutes),
+                TabsTestHtmlAttributesComponent,
+                TabsTestComponent,
+                TabsTest2Component,
+                TemplatedTabsTestComponent,
+                TabsRoutingDisabledTestComponent,
+                TabsTestSelectedTabComponent,
+                TabsTestCustomStylesComponent,
+                TabsTestBug4420Component,
+                TabsRoutingTestComponent,
+                TabsTabsOnlyModeTest1Component,
+                TabsTabsOnlyModeTest2Component,
+                TabsDisabledTestComponent,
+                TabsRoutingGuardTestComponent,
+                TabsWithPrefixSuffixTestComponent,
+                TabsContactsComponent,
+                AddingSelectedTabComponent,
+                TabsRtlComponent
+            ],
+            providers: [RoutingTestGuard]
         }).compileComponents();
     }));
 

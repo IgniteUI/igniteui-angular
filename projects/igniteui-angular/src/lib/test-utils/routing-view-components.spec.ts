@@ -35,7 +35,3 @@ export class RoutingView4Component {
 export class RoutingView5Component {
 }
 
-/**
- * @hidden
- */
-

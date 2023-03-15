@@ -3,6 +3,8 @@ import {
     Component,
     Input
 } from '@angular/core';
+import { NgIf, NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+
 import { HammerGesturesManager } from '../../core/touch';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 import { IgxTreeGridRow } from '../grid-public-row';
@@ -20,11 +22,11 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxFocusDirective } from '../../directives/focus/focus.directive';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { IgxIconComponent } from '../../icon/icon.component';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { IgxChipComponent } from '../../chips/chip.component';
-import { NgIf, NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { IgxTextSelectionDirective } from '../../directives/text-selection/text-selection.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +34,36 @@ import { NgIf, NgClass, NgStyle, NgTemplateOutlet, DecimalPipe, PercentPipe, Cur
     templateUrl: 'tree-cell.component.html',
     providers: [HammerGesturesManager],
     standalone: true,
-    imports: [NgIf, IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgStyle, NgTemplateOutlet, IgxCircularProgressBarComponent, IgxTooltipTargetDirective, IgxTooltipDirective, IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe]
+    imports: [
+        NgIf,
+        NgClass,
+        NgStyle,
+        NgTemplateOutlet,
+        DecimalPipe,
+        PercentPipe,
+        CurrencyPipe,
+        DatePipe,
+        IgxChipComponent,
+        IgxTextHighlightDirective,
+        IgxIconComponent,
+        ReactiveFormsModule,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxFocusDirective,
+        IgxCheckboxComponent,
+        IgxDatePickerComponent,
+        IgxTimePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxCircularProgressBarComponent,
+        IgxTooltipTargetDirective,
+        IgxTooltipDirective,
+        IgxGridCellImageAltPipe,
+        IgxStringReplacePipe,
+        IgxColumnFormatterPipe,
+        IgxTextSelectionDirective
+    ]
 })
 export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
 

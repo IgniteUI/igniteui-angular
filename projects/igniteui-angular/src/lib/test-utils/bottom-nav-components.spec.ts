@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { RouterLinkActive, RouterOutlet } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { IgxIconComponent } from '../icon/icon.component';
 import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from '../tabs/bottom-nav/public_api';
 import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from '../tabs/tabs/tabs.directives';
 
@@ -145,7 +145,17 @@ export class BottomTabBarTestComponent {
         </div>
     `,
     standalone: true,
-    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterLinkActive, RouterOutlet]
+    imports: [
+        IgxBottomNavComponent,
+        IgxBottomNavItemComponent,
+        IgxBottomNavHeaderComponent,
+        IgxTabHeaderIconDirective,
+        IgxTabHeaderLabelDirective,
+        IgxIconComponent,
+        RouterLinkActive,
+        RouterLink,
+        RouterOutlet
+    ]
 })
 export class TabBarRoutingTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })
@@ -211,7 +221,7 @@ export class TabBarTabsOnlyModeTestComponent {
         </div>
     `,
     standalone: true,
-    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterTestingModule]
+    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class BottomNavRoutingGuardTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })

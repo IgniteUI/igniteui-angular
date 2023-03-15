@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
@@ -190,7 +190,7 @@ describe('IgxSnackbar with custom content', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserAnimationsModule,
+                NoopAnimationsModule,
                 SnackbarCustomContentComponent
             ]
         }).compileComponents();

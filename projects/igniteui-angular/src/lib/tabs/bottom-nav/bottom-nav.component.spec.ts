@@ -41,7 +41,12 @@ describe('IgxBottomNav', () => {
                 TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent,
                 BottomNavRoutingGuardTestComponent,
-                BottomNavTestHtmlAttributesComponent
+                BottomNavTestHtmlAttributesComponent,
+                RoutingView1Component,
+                RoutingView2Component,
+                RoutingView3Component,
+                RoutingView4Component,
+                RoutingView5Component
             ],
             providers: [RoutingTestGuard]
         }).compileComponents();
