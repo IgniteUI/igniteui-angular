@@ -1116,14 +1116,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const colLength = this.columnList.length;
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         if (topCols.length > 0) {
+            const columnsChanged = this.columns.length !== colLength;
             this.updateColumns(topCols);
-            if (recalcColSizes && this.columns.length !== colLength) {
-                this.calculateGridSizes(false);
-            }
-        } else if (colLength) {
-            // temp(D.P.): Without layouts (or not loaded), colsArray is empty, so init w/ gathered columns
-            this.updateColumns(this.columnList.toArray());
-            if (recalcColSizes && this.columns.length !== colLength) {
+            if (recalcColSizes && columnsChanged) {
                 this.calculateGridSizes(false);
             }
         }
