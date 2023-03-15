@@ -78,6 +78,7 @@
                 [attr.aria-describedby]="ariaDescribeBy"
                 [attr.aria-invalid]="isInvalid"
                 [igxFocus]="true"
+                [igxTextSelection]="true"
                 [formControl]="formControl"
                 (compositionstart)="grid.crudService.isInCompositionMode = true"
                 (compositionend)="grid.crudService.isInCompositionMode = false"
@@ -93,6 +94,7 @@
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [igxTextSelection]="true"
                 [formControl]="formControl"
             />
         </igx-input-group>
@@ -153,6 +155,7 @@
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [igxTextSelection]="true"
                 [formControl]="formControl"
             />
             <igx-suffix *ngIf="!grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-suffix>
@@ -167,6 +170,7 @@
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
+                [igxTextSelection]="true"
                 [formControl]="formControl"
             />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
