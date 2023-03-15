@@ -1,6 +1,7 @@
 import {
     AfterViewChecked,
     AfterViewInit,
+    AfterContentChecked,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -97,7 +98,7 @@ let NEXT_ID = 0;
     styles: [':host { display: block; }']
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
-    OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -410,7 +411,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private dateTimeEditor: IgxDateTimeEditorDirective;
 
     @ViewChild(IgxInputGroupComponent)
-    private inputGroup: IgxInputGroupComponent;
+    protected inputGroup: IgxInputGroupComponent;
 
     @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
