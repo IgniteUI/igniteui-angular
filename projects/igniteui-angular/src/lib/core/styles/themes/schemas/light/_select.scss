@@ -1,0 +1,138 @@
+@use '../../../base' as *;
+
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light select schema.
+/// @type {Map}
+/// @prop {Map} toggle-button-background [color: ('gray', 300)] - The select toggle button background color.
+/// @prop {Map} toggle-button-background-focus [color: ('gray', 400, .3)] - The select toggle button background color when the select is focused.
+/// @prop {Map} toggle-button-foreground [color: ('gray', 700)] - The select toggle button foreground color.
+/// @prop {Map} toggle-button-foreground-focus [color: ('gray', 700)] - The select toggle button foreground color when the select is focused.
+/// @prop {Map} toggle-button-foreground-filled [color: ('gray', 900)] - The select toggle button foreground color when the select is focused.
+/// @prop {Map} toggle-button-background-disabled [color: ('gray', 300] - The select toggle button background color when the select is disabled.
+/// @prop {Map} toggle-button-foreground-disabled [color: ('gray', 500)] - The select toggle button foreground color when the select is disabled.
+$light-select: (
+    variant:'material',
+
+    toggle-button-background: (
+        color: ('gray', 300),
+    ),
+
+    toggle-button-background-focus: (
+        color: ('gray', 400, .3),
+    ),
+
+    toggle-button-foreground: (
+        color: ('gray', 700),
+    ),
+
+    toggle-button-foreground-focus: (
+        color: ('gray', 700),
+    ),
+
+    toggle-button-foreground-filled: (
+        color: ('gray', 900),
+    ),
+
+    toggle-button-background-disabled: (
+        color: ('gray', 300),
+    ),
+
+    toggle-button-foreground-disabled: (
+        color: ('gray', 500),
+    ),
+);
+
+/// Generates a fluent select schema.
+/// @type {Map}
+/// @prop {Map} toggle-button-background [color: ('gray', 100)] - The select toggle button background color.
+/// @prop {Map} toggle-button-background-focus [color: ('gray', 100)] - The select toggle button background color when the select is focused.
+/// @prop {Map} toggle-button-foreground-filled [color: ('gray', 700)] - The select toggle button foreground color when the select is focused.
+/// @prop {Map} toggle-button-background-disabled [color: ('gray', 100] - The select toggle button background color when the select is disabled.
+/// @prop {Map} toggle-button-foreground-disabled [color: ('gray', 400)] - The select toggle button foreground color when the select is disabled.
+/// @requires {Map} $light-select
+$fluent-select: extend(
+    $light-select,
+    (
+        variant:'fluent',
+
+        toggle-button-background: (
+            color: ('gray', 100),
+        ),
+
+        toggle-button-background-focus: (
+            color: ('gray', 100),
+        ),
+
+        toggle-button-foreground-filled: (
+            color: ('gray', 700),
+        ),
+
+        toggle-button-background-disabled: (
+            color: ('gray', 100),
+        ),
+
+        toggle-button-foreground-disabled: (
+            color: ('gray', 400),
+        ),
+    )
+);
+
+/// Generates a bootstrap select schema.
+/// @type {Map}
+/// @prop {Map} toggle-button-background-disabled [color: ('gray', 300] - The select toggle button background color when the select is disabled.
+/// @prop {Map} toggle-button-foreground-disabled [color: ('gray', 400)] - The select toggle button foreground color when the select is disabled.
+/// @prop {Map} toggle-button-foreground [color: ('gray', 800)] - The select toggle button foreground color.
+/// @prop {Map} toggle-button-foreground-focus [color: ('gray', 800)] - The select toggle button foreground color when the select is focused.
+/// @prop {Map} toggle-button-foreground-filled [color: ('gray', 800)] - The select toggle button foreground color when the select is focused.
+/// @requires {Map} $light-select
+$bootstrap-select: extend(
+    $light-select,
+    (
+        variant:'bootstrap',
+
+        toggle-button-background-disabled: (
+            color: ('gray', 300),
+        ),
+
+        toggle-button-foreground-disabled: (
+            color: ('gray', 400),
+        ),
+
+        toggle-button-foreground: (
+            color: ('gray', 800),
+        ),
+
+        toggle-button-foreground--focus: (
+            color: ('gray', 800),
+        ),
+
+        toggle-button-foreground-filled: (
+            color: ('gray', 800),
+        ),
+    )
+);
+
+/// Generates an indigo select schema.
+/// @type {Map}
+/// @prop {Map} toggle-button-background-disabled [color: ('gray', 100] - The select toggle button background color when the select is disabled.
+/// @prop {Map} toggle-button-foreground-disabled [color: ('gray', 300)] - The select toggle button foreground color when the select is disabled.
+/// @requires {Map} $light-select
+$indigo-select: extend(
+    $light-select,
+    (
+        variant:'indigo-design',
+
+        toggle-button-background-disabled: (
+            color: ('gray', 100),
+        ),
+
+        toggle-button-foreground-disabled: (
+            color: ('gray', 300),
+        ),
+    )
+);

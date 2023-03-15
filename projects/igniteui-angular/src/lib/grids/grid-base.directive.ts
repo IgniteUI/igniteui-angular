@@ -3830,6 +3830,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private createComponentInstance(component: any) {
+        // TODO: create component instance view viewContainerRef.createComponent(Component, Settings) overload
         let dynamicFactory: ComponentFactory<any>;
         const factoryResolver = this.moduleRef
             ? this.moduleRef.componentFactoryResolver
@@ -6273,11 +6274,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                settings,
-                {
-                    injector: this.viewRef.injector,
-                    componentFactoryResolver: this.resolver
-                });
+                this.viewRef,
+                settings);
             this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
