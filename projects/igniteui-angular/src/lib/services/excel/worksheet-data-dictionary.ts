@@ -41,13 +41,16 @@ export class WorksheetDataDictionary {
         return this._columnWidths;
     }
 
-    public saveValue(value: any, isHeader: boolean): number {
+    public saveValue(value: any, isHeader: boolean, shouldSanitizeValue: boolean = true): number {
+        let sanitizedValue = '';
         const isDate = value instanceof Date;
         const isSavedAsString = isHeader || (typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value) && !isDate);
 
         if (isSavedAsString) {
-            if (this._dictionary[value] === undefined) {
-                this._dictionary[value] = this._counter++;
+            sanitizedValue = shouldSanitizeValue ? ExportUtilities.sanitizeValue(value) : value;
+
+            if (this._dictionary[sanitizedValue] === undefined) {
+                this._dictionary[sanitizedValue] = this._counter++;
                 this.dirtyKeyCollections();
             }
 
@@ -58,7 +61,7 @@ export class WorksheetDataDictionary {
             this.hasNumberValues = true;
         }
 
-        return isSavedAsString ? this.getSanitizedValue(value) : -1;
+        return isSavedAsString ? this.getSanitizedValue(sanitizedValue) : -1;
     }
 
     public getValue(value: string): number {
