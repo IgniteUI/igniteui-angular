@@ -258,24 +258,11 @@
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $chip-height-material: (
+    $chip-height: (
         comfortable: rem(32px),
         cosy: rem(24px),
-        compact: rem(18px)
+        compact: rem(20px)
     );
-
-    $chip-height-fluent: (
-        comfortable: rem(26px),
-        cosy: rem(24px),
-        compact: rem(18px)
-    );
-
-    $chip-height: map.get((
-        material: $chip-height-material,
-        fluent: $chip-height-fluent,
-        bootstrap: $chip-height-material,
-        indigo-design: $chip-height-material
-    ), $variant);
 
     $chip-padding: (
         comfortable: 0 rem(8px),

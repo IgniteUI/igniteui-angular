@@ -21,11 +21,19 @@ import {
     IDropBaseEventArgs,
     IDropDroppedEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
-import { IBaseEventArgs } from '../core/utils';
+import {IBaseEventArgs, mkenum} from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { fromEvent } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
+
+export const IgxChipTypeVariant = mkenum({
+    PRIMARY: 'primary',
+    INFO: 'info',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error'
+});
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -80,6 +88,22 @@ let CHIP_ID = 0;
     templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent extends DisplayDensityBase {
+
+    /**
+     * Sets/gets the variant of the chip.
+     *
+     * @remarks
+     * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
+     * Providing an invalid value won't change the chip.
+     *
+     * @example
+     * ```html
+     * <igx-chip [variant]="success"></igx-chip>
+     * ```
+     */
+    @Input()
+    public variant: string | typeof IgxChipTypeVariant;
+
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -218,6 +242,13 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @Input()
     public selectIcon: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
 
     /**
      * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
@@ -458,6 +489,31 @@ export class IgxChipComponent extends DisplayDensityBase {
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.class')
+    public get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-chip')];
+
+        // Add the base class first for each density
+        if (!classes.includes('igx-chip')) {
+            classes.unshift('igx-chip');
+        }
+
+        classes.push(this.disabled ? 'igx-chip--disabled' : '');
+        classes.push(this.variant === IgxChipTypeVariant.PRIMARY ? 'igx-chip--primary' : '');
+        classes.push(this.variant === IgxChipTypeVariant.INFO ? 'igx-chip--info' : '');
+        classes.push(this.variant === IgxChipTypeVariant.SUCCESS ? 'igx-chip--success' : '');
+        classes.push(this.variant === IgxChipTypeVariant.WARNING ? 'igx-chip--warning' : '');
+        classes.push(this.variant === IgxChipTypeVariant.ERROR ? 'igx-chip--error' : '');
+
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ').toString().trim();
+    }
+
+    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -506,7 +562,9 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public get removeButtonTemplate() {
-        return this.removeIcon || this.defaultRemoveIcon;
+        if(!this.disabled) {
+            return this.removeIcon || this.defaultRemoveIcon;
+        }
     }
 
     /**
@@ -545,20 +603,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
-    }
-
-    @HostBinding('class')
-    private get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-chip')];
-
-        // Add the base class first for each density
-        if (!classes.includes('igx-chip')) {
-            classes.unshift('igx-chip');
-        }
-
-        classes.push(this.disabled ? 'igx-chip--disabled' : '');
-
-        return classes.join(' ').toString().trim();
     }
 
     /**

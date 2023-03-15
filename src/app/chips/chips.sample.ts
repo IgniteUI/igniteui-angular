@@ -1,15 +1,29 @@
-import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
+import {Component, ViewChild, ChangeDetectorRef, ElementRef, Inject, OnInit} from '@angular/core';
 import {
-    IgxChipsAreaComponent, IgxChipComponent,
-    IChipsAreaReorderEventArgs, IBaseChipEventArgs, IChipsAreaSelectEventArgs
+    IgxChipsAreaComponent,
+    IgxChipComponent,
+    IChipsAreaReorderEventArgs,
+    IBaseChipEventArgs,
+    IChipsAreaSelectEventArgs,
+    DisplayDensity,
+    DisplayDensityToken,
+    IDisplayDensityOptions, IButtonGroupEventArgs, ButtonGroupAlignment
 } from 'igniteui-angular';
+
+import { defineComponents, IgcChipComponent } from 'igniteui-webcomponents';
+defineComponents(IgcChipComponent);
+
+interface Selection {
+    selected: boolean;
+    label: string | DisplayDensity;
+}
 
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
     templateUrl: 'chips.sample.html'
 })
-export class ChipsSampleComponent {
+export class ChipsSampleComponent implements OnInit {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     private chipsArea: IgxChipsAreaComponent;
 
@@ -44,6 +58,10 @@ export class ChipsSampleComponent {
         },
     ];
 
+    public chipTypes = ['default', 'primary', 'info', 'success', 'warning', 'error'];
+
+    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
+
     public chipListTo = [
         {
             id: '1',
@@ -72,7 +90,34 @@ export class ChipsSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
 
-    constructor(public cdr: ChangeDetectorRef) { }
+    public isDisabled = false;
+
+    public isRemovable = false;
+
+    public isSelectable = false;
+
+    public hasSuffix = false;
+
+    public hasPrefix = false;
+
+    public customIcons = false;
+
+    public isDraggable = false;
+
+    public selected: string;
+
+    public isSelected = false;
+
+    public density: DisplayDensity = 'comfortable';
+
+    public displayDensities: Selection[];
+
+    constructor(public cdr: ChangeDetectorRef, @Inject(DisplayDensityToken)
+    public displayDensityOptions: IDisplayDensityOptions,) { }
+
+    public selectDensity(event: IButtonGroupEventArgs) {
+        this.density = this.displayDensities[event.index].label as DisplayDensity;
+    }
 
     public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
@@ -96,9 +141,21 @@ export class ChipsSampleComponent {
         chip.nativeElement.remove();
     }
 
-    public selectChip(chipId) {
-        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => chip.id === chipId);
-        chipToSelect.selected = true;
+    public ngOnInit(): void {
+        this.displayDensities = [
+            {
+                label: 'comfortable',
+                selected: this.density === 'comfortable',
+            },
+            {
+                label: 'cosy',
+                selected: this.density === 'cosy',
+            },
+            {
+                label: 'compact',
+                selected: this.density === 'compact',
+            },
+        ];
     }
 
     public onChipsSelected(event: IChipsAreaSelectEventArgs) {
