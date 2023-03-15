@@ -18,6 +18,10 @@
                 @extend %switch-ripple--hover !optional;
                 @extend %switch-ripple--hover-unchecked !optional;
             }
+
+            @include e(composite) {
+                @extend %switch-composite--hover !optional;
+            }
         }
 
         &:active {
@@ -84,6 +88,10 @@
                     @extend %switch-ripple--hover !optional;
                     @extend %switch-ripple--hover-checked !optional;
                 }
+
+                @include e(composite) {
+                    @extend %switch-composite--x--hover !optional;
+                }
             }
 
             &:active {
@@ -92,6 +100,39 @@
                     @extend %switch-ripple--hover-checked !optional;
                     @extend %switch-ripple--pressed !optional;
                 }
+            }
+        }
+
+        @include m(invalid) {
+            @include e(composite) {
+                @extend %switch-composite--invalid !optional;
+            }
+
+            &:hover {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--hover-invalid !optional;
+                }
+
+                @include e(composite) {
+                    @extend %switch-composite--invalid--hover !optional;
+                }
+            }
+
+            &:active {
+                @include e(ripple) {
+                    @extend %switch-ripple--hover !optional;
+                    @extend %switch-ripple--hover-invalid !optional;
+                    @extend %switch-ripple--pressed !optional;
+                }
+            }
+
+            @include e(label) {
+                @extend %switch-label--invalid !optional;
+            }
+
+            @include e(composite-thumb) {
+                @extend %switch-composite-thumb--invalid !optional;
             }
         }
 
@@ -120,6 +161,15 @@
                 @extend %switch-ripple--focused !optional;
                 @extend %switch-ripple--focused-checked !optional;
             }
+        }
+
+        @include mx(focused, invalid) {
+            @include e(ripple) {
+                @extend %switch-ripple--focused !optional;
+                @extend %switch-ripple--focused-invalid !optional;
+            }
+
+            @extend %igx-switch--focused--invalid !optional;
         }
     }
 }
