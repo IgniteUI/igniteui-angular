@@ -1863,7 +1863,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `grid.paginator.page` property from `igx-paginator` component instance instead.
+     * @deprecated in version 12.1.0. Use `page` property from `igx-paginator` component instance instead.
      *
      * Gets/Sets the current page index.
      *
@@ -1893,7 +1893,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `grid.paginator.perPage` property from `igx-paginator` component instance instead
+     * @deprecated in version 12.1.0. Use `perPage` property from `igx-paginator` component instance instead
      *
      * Gets/Sets the number of visible items per page.
      *
@@ -4513,7 +4513,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method `grid.paginator.nextPage()` exposed by the `igx-paginator` instance.
+     * @deprecated in version 12.1.0. Use the corresponding method `nextPage()` exposed by the `igx-paginator` instance.
      *
      * Goes to the next page, if the grid is not already at the last page.
      *
@@ -4529,7 +4529,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method `grid.paginator.nextPage()` exposed by the `igx-paginator` instance.
+     * @deprecated in version 12.1.0. Use the corresponding method `nextPage()` exposed by the `igx-paginator` instance.
      *
      * Goes to the previous page, if the grid is not already at the first page.
      *
@@ -4710,7 +4710,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method `grid.paginator.paginate()` exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Use the corresponding method `paginate()` exposed by the `igx-paginator`
      *
      * Goes to the desired page index.
      *
@@ -4720,8 +4720,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * // old
      * this.grid1.paginate(1);
      * // new
-     * this.grid1.paginator.paginate(1);
-     * // or with cached paginator in paginator1
      * this.paginator1.paginate(1);
      * ```
      * @param val
