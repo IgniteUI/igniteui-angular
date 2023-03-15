@@ -49,15 +49,15 @@
             </span>
 
             <span class="igx-group-label__text">{{
-                groupRow.column.formatter
-                    ? (groupRow.value | columnFormatter:groupRow.column.formatter:groupRow.records[0]:null)
-                    : groupRow.column.dataType === "number"
+                formatter
+                    ? (groupRow.value | columnFormatter:formatter:groupRow.records[0]:null)
+                    : dataType === "number"
                     ? (groupRow.value | number:groupRow.column.pipeArgs.digitsInfo:grid.locale)
-                    : (groupRow.column.dataType === 'date' || groupRow.column.dataType === 'time' || groupRow.column.dataType === 'dateTime')
+                    : (dataType === 'date' || dataType === 'time' || dataType === 'dateTime')
                     ? (groupRow.value | date:groupRow.column.pipeArgs.format:groupRow.column.pipeArgs.timezone:grid.locale)
-                    : groupRow.column.dataType === 'currency'
+                    : dataType === 'currency'
                     ? (groupRow.value | currency:currencyCode:groupRow.column.pipeArgs.display:groupRow.column.pipeArgs.digitsInfo:grid.locale)
-                    : groupRow.column.dataType === 'percent'
+                    : dataType === 'percent'
                     ? (groupRow.value | percent:groupRow.column.pipeArgs.digitsInfo:grid.locale)
                     : groupRow.value
             }}</span>

@@ -256,11 +256,19 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || GridColumnDataType.String;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get formatter(): any {
+        const column = this.groupRow.column;
+        return (column && column.formatter) || null;
     }
 
     /**
