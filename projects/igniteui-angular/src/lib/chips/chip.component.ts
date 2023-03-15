@@ -1,4 +1,4 @@
-﻿import {
+import {
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -260,6 +260,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip [id]="chip.id" [disabled]="true"></igx-chip>
      * ```
      */
+    @HostBinding('class.igx-chip--disabled')
     @Input()
     public disabled = false;
 
@@ -488,29 +489,42 @@ export class IgxChipComponent extends DisplayDensityBase {
     @Output()
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-chip')];
+    @HostBinding('class.igx-chip')
+    protected defaultClass = 'igx-chip';
 
-        // Add the base class first for each density
-        if (!classes.includes('igx-chip')) {
-            classes.unshift('igx-chip');
-        }
+    @HostBinding('class.igx-chip--primary')
+    protected get isPrimary() {
+        return this.variant === IgxChipTypeVariant.PRIMARY;
+    }
 
-        classes.push(this.disabled ? 'igx-chip--disabled' : '');
-        classes.push(this.variant === IgxChipTypeVariant.PRIMARY ? 'igx-chip--primary' : '');
-        classes.push(this.variant === IgxChipTypeVariant.INFO ? 'igx-chip--info' : '');
-        classes.push(this.variant === IgxChipTypeVariant.SUCCESS ? 'igx-chip--success' : '');
-        classes.push(this.variant === IgxChipTypeVariant.WARNING ? 'igx-chip--warning' : '');
-        classes.push(this.variant === IgxChipTypeVariant.ERROR ? 'igx-chip--error' : '');
+    @HostBinding('class.igx-chip--info')
+    protected get isInfo() {
+        return this.variant === IgxChipTypeVariant.INFO;
+    }
 
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ').toString().trim();
+    @HostBinding('class.igx-chip--success')
+    protected get isSuccess() {
+        return this.variant === IgxChipTypeVariant.SUCCESS;
+    }
+
+    @HostBinding('class.igx-chip--warning')
+    protected get isWarning() {
+        return this.variant === IgxChipTypeVariant.WARNING;
+    }
+
+    @HostBinding('class.igx-chip--error')
+    protected get isError() {
+        return this.variant === IgxChipTypeVariant.ERROR;
+    }
+
+    @HostBinding('class.igx-chip--cosy')
+    protected get isCosy() {
+        return this.displayDensity === 'cosy';
+    }
+
+    @HostBinding('class.igx-chip--compact')
+    protected get isCompact() {
+        return this.displayDensity === 'compact';
     }
 
     /**
