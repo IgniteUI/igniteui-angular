@@ -297,6 +297,14 @@
             @extend %igx-grid__td--editing !optional;
         }
 
+        @include e(td, $mods: (editing, valid)) {
+            @extend %igx-grid__td--editing--valid !optional;
+        }
+
+        @include e(td, $mods: (editing, invalid)) {
+            @extend %igx-grid__td--editing--invalid !optional;
+        }
+
         @include e(tr, $m: disabled) {
             @extend %igx-grid__tr--disabled !optional;
         }

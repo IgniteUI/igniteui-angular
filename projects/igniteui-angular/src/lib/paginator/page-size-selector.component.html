@@ -2,7 +2,6 @@
 <div class="igx-page-size__select">
     <igx-select [overlaySettings]="paginator.overlaySettings" [(ngModel)]="paginator.perPage"
         [displayDensity]="paginator.paginatorSelectDisplayDensity" type="border">
-        <label igxLabel [hidden]="true">{{ paginator.resourceStrings.igx_paginator_label }}</label>
         <igx-select-item [value]="val" *ngFor="let val of paginator.selectOptions">
             {{ val }}
         </igx-select-item>

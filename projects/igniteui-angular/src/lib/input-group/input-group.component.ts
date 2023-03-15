@@ -22,8 +22,8 @@ import {
     IgxInputState
 } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
-import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective, IgxPrefixModule } from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupBase } from './input-group.common';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
@@ -121,6 +121,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
     protected hints: QueryList<IgxHintDirective>;
 
+    @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
+    protected _prefixes: QueryList<IgxPrefixDirective>;
+
+    @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
+    protected _suffixes: QueryList<IgxSuffixDirective>;
+
     /** @hidden */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
     protected input: IgxInputDirective;
@@ -166,6 +172,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @HostBinding('class.igx-input-group--compact')
     public get isDisplayDensityCompact() {
         return this.displayDensity === DisplayDensity.compact;
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--textarea-group')
+    public get textAreaClass(): boolean {
+        return this.input.isTextArea;
     }
 
     /**
@@ -282,6 +294,28 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     public get hasHints() {
         return this.hints.length > 0;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--prefixed')
+    public get hasPrefixes() {
+        return this._prefixes.length > 0 || this.isFileType;
+    }
+
+    /** @hidden @internal */
+    public set prefixes(items: QueryList<IgxPrefixDirective>) {
+        this._prefixes = items;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-input-group--suffixed')
+    public get hasSuffixes() {
+        return this._suffixes.length > 0 || this.isFileType && this.isFilled;
+    }
+
+    /** @hidden @internal */
+    public set suffixes(items: QueryList<IgxPrefixDirective>) {
+        this._suffixes = items;
     }
 
     /**
