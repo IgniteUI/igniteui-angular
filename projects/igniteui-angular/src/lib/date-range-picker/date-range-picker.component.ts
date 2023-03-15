@@ -1,13 +1,12 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
-    EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
-    NgModuleRef,
-    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
-    SimpleChanges, TemplateRef, ViewChild
+  AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef,
+  EventEmitter, HostBinding, HostListener, Inject, Injector, Input, LOCALE_ID,
+  OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
+  SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
 import {
-    AbstractControl, ControlValueAccessor, NgControl,
-    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
+  AbstractControl, ControlValueAccessor, NgControl,
+  NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -15,24 +14,25 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
-import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-    IgxInputDirective, IgxInputGroupType, IgxInputState,
-    IgxLabelDirective, IGX_INPUT_GROUP_TYPE} from '../input-group/public_api';
+  IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
+  IgxLabelDirective, IGX_INPUT_GROUP_TYPE
+} from '../input-group/public_api';
 import {
-    AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
-    OverlaySettings, PositionSettings
+  AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
+  OverlaySettings, PositionSettings
 } from '../services/public_api';
 import {
-    DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
-    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
+  DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
+  IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
 } from './date-range-picker-inputs.common';
 
 const SingleInputDatesConcatenationString = ' - ';
@@ -272,6 +272,13 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public cssClass = 'igx-date-range-picker';
 
     /** @hidden @internal */
+    @ViewChild(IgxInputGroupComponent)
+    public inputGroup: IgxInputGroupComponent;
+
+    @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
+    private viewContainerRef: ViewContainerRef;
+
+    /** @hidden @internal */
     @ViewChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
 
@@ -411,7 +418,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         @Inject(LOCALE_ID) protected _localeId: string,
         protected platform: PlatformUtil,
         private _injector: Injector,
-        private _moduleRef: NgModuleRef<any>,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
@@ -459,7 +465,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             , overlaySettings);
 
         this._overlayId = this._overlayService
-            .attach(IgxCalendarContainerComponent, settings, this._moduleRef);
+            .attach(IgxCalendarContainerComponent, this.viewContainerRef, settings);
         this.subscribeToOverlayEvents();
         this._overlayService.show(this._overlayId);
     }

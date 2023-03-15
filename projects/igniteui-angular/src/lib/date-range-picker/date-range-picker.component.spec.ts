@@ -56,7 +56,6 @@ describe('IgxDateRangePicker', () => {
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
         let mockInjector;
-        let ngModuleRef: any;
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
@@ -79,13 +78,6 @@ describe('IgxDateRangePicker', () => {
                     })
                 })
             };
-            ngModuleRef = ({
-                injector: (...args: any[]) => { },
-                componentFactoryResolver: mockFactoryResolver,
-                instance: () => { },
-                destroy: () => { },
-                onDestroy: (fn: any) => { }
-            });
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
                 classList: { add: () => { }, remove: () => { } },
@@ -125,7 +117,14 @@ describe('IgxDateRangePicker', () => {
                         getPosition: () => 0,
                         parentPlayer: {},
                         totalTime: 0,
-                        beforeDestroy: () => { }
+                        beforeDestroy: () => { },
+                        _renderer: {
+                            engine: {
+                                players: [
+                                    {}
+                                ]
+                            }
+                        }
                     })
                 })
             };
@@ -257,7 +256,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, null, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -777,6 +776,9 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
+
+                // clean up test
+                tick(350);
             }));
 
             it('should set initial validity state when the form group is disabled', () => {
@@ -1353,6 +1355,9 @@ describe('IgxDateRangePicker', () => {
                 dateRange.select(startDate, endDate);
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
+
+                // clean up test
+                tick(350);
             }));
 
             it('should render custom label', () => {
