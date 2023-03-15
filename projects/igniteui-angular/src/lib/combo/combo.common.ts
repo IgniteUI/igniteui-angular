@@ -1030,6 +1030,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     public toggle(): void {
+        if (this.collapsed && this._value.length !== 0) {
+            this.filterValue = '';
+            this.cdr.detectChanges();
+        }
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.toggle(overlaySettings);
         if (!this.collapsed){
@@ -1046,6 +1050,10 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
      * ```
      */
     public open(): void {
+        if (this.collapsed && this._value.length !== 0) {
+            this.filterValue = '';
+            this.cdr.detectChanges();
+        }
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
         this.dropdown.open(overlaySettings);
         this.setActiveDescendant();
