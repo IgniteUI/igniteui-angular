@@ -45,7 +45,6 @@ describe('Row Pinning #grid', () => {
     describe('', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
-            fix.componentInstance.createSimpleData(6);
             fix.detectChanges();
             grid = fix.componentInstance.instance;
             tick();
