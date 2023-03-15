@@ -10,10 +10,10 @@
 /// @type {Map}
 /// @property {Color} thumb-background [color: ('gray', 400)] - The background color used for the thumb.
 /// @property {Color} track-background [color: ('gray', 100)] - The background color used for the track.
-/// @property {String | Number} size [16px] - The size of the track.
+/// @property {String | Number} scrollbar-size [16px] - The size of the track.
 $light-scrollbar: extend(
     (
-        size: 16px,
+        scrollbar-size: 16px,
 
         thumb-background: (
             color: ('gray', 400)

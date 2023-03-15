@@ -38,6 +38,23 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
+    #{$scope} {
+        --ig-size-small: 1;
+        --ig-size-medium: 2;
+        --ig-size-large: 3;
+
+        --ig-spacing-small: 1;
+        --ig-spacing-medium: 1;
+        --ig-spacing-large: 1;
+
+        --ig-spacing-inline-small: 1;
+        --ig-spacing-inline-medium: 1;
+        --ig-spacing-inline-large: 1;
+
+        --ig-spacing-block-small: 1;
+        --ig-spacing-block-medium: 1;
+        --ig-spacing-block-large: 1;
+    }
 
     @if not(list.index($exclude, 'palette')) {
         @include palette($palette);
@@ -245,6 +262,12 @@
 
     @if is-used('igx-combo', $exclude) {
         @include combo(combo-theme(
+            $schema: $schema
+        ));
+    }
+
+    @if is-used('igx-select', $exclude) {
+        @include select(select-theme(
             $schema: $schema
         ));
     }

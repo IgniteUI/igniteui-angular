@@ -149,18 +149,4 @@ export class SelectSampleComponent implements OnInit {
     public headerFootedClick(event) {
         console.log('Header/Footer clicked', event);
     }
-
-    public btnAddBr() {
-        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
-        const br = document.createElement('br');
-        brContainer.prepend(br);
-    }
-
-    public btnRemoveBr() {
-        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
-        const firstEl =  brContainer.firstElementChild;
-        if (firstEl.tagName === 'BR') {
-            brContainer.removeChild(firstEl);
-        }
-    }
 }
