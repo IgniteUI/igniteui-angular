@@ -1618,8 +1618,11 @@ describe('IgxTimePicker', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    imports: [FormsModule, NoopAnimationsModule, ReactiveFormsModule, IgxTimePickerInFormComponent,
-                        IgxTimePickerReactiveFormComponent]
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxTimePickerInFormComponent,
+                        IgxTimePickerReactiveFormComponent
+                    ]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1755,7 +1758,7 @@ export class IgxTimePickerWithProjectionsComponent {
     </form>
     `,
     standalone: true,
-    imports: [IgxTimePickerComponent, FormsModule, ReactiveFormsModule]
+    imports: [IgxTimePickerComponent, FormsModule]
 })
 export class IgxTimePickerInFormComponent {
     @ViewChild('form')
@@ -1779,7 +1782,7 @@ export class IgxTimePickerInFormComponent {
 </form>
     `,
     standalone: true,
-    imports: [IgxTimePickerComponent, FormsModule, ReactiveFormsModule]
+    imports: [IgxTimePickerComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 export class IgxTimePickerReactiveFormComponent {
     @ViewChild(IgxTimePickerComponent)
