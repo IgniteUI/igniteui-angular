@@ -19,6 +19,7 @@
 @use './chip' as *;
 @use './column-actions' as *;
 @use './combo' as *;
+@use './select' as *;
 @use './dialog' as *;
 @use './data-chart' as *;
 @use './doughnut-chart' as *;
@@ -84,6 +85,7 @@
 /// @property {Map} igx-chip [$dark-chip]
 /// @property {Map} igx-column-actions [$dark-column-actions]
 /// @property {Map} igx-combo [$dark-combo]
+/// @property {Map} igx-select [$dark-select]
 /// @property {Map} igx-dialog [$dark-dialog]
 /// @property {Map} data-chart [$dark-data-chart]
 /// @property {Map} doughnut-chart [$dark-doughnut-chart]
@@ -147,6 +149,7 @@ $dark-schema: (
     igx-chip: $dark-chip,
     igx-column-actions: $dark-column-actions,
     igx-combo: $dark-combo,
+    igx-select: $dark-select,
     igx-dialog: $dark-dialog,
     data-chart: $dark-data-chart,
     doughnut-chart: $dark-doughnut-chart,
@@ -220,6 +223,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-chip [$dark-fluent-chip],
 /// @property {Map} igx-column-actions [$dark-fluent-column-actions],
 /// @property {Map} igx-combo [$dark-fluent-combo],
+/// @property {Map} igx-select [$dark-fluent-select],
 /// @property {Map} igx-dialog [$dark-fluent-dialog],
 /// @property {Map} data-chart [$dark-fluent-data-chart]
 /// @property {Map} doughnut-chart [$dark-fluent-doughnut-chart]
@@ -283,6 +287,7 @@ $dark-fluent-schema: (
     igx-chip: $dark-fluent-chip,
     igx-column-actions: $dark-fluent-column-actions,
     igx-combo: $dark-fluent-combo,
+    igx-select: $dark-fluent-select,
     igx-dialog: $dark-fluent-dialog,
     data-chart: $dark-fluent-data-chart,
     doughnut-chart: $dark-fluent-doughnut-chart,
@@ -351,6 +356,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-chip [$dark-bootstrap-chip],
 /// @property {Map} igx-column-actions [$dark-bootstrap-column-actions],
 /// @property {Map} igx-combo [$dark-bootstrap-combo],
+/// @property {Map} igx-select [$dark-bootstrap-select],
 /// @property {Map} igx-dialog [$dark-bootstrap-dialog],
 /// @property {Map} data-chart [$dark-bootstrap-data-chart]
 /// @property {Map} doughnut-chart [$dark-bootstrap-doughnut-chart]
@@ -414,6 +420,7 @@ $dark-bootstrap-schema: (
     igx-chip: $dark-bootstrap-chip,
     igx-column-actions: $dark-bootstrap-column-actions,
     igx-combo: $dark-bootstrap-combo,
+    igx-select: $dark-bootstrap-select,
     igx-dialog: $dark-bootstrap-dialog,
     data-chart: $dark-bootstrap-data-chart,
     doughnut-chart: $dark-bootstrap-doughnut-chart,
@@ -482,6 +489,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-chip [$dark-indigo-chip]
 /// @property {Map} igx-column-actions [$dark-bootstrap-column-actions]
 /// @property {Map} igx-combo [$dark-indigo-combo]
+/// @property {Map} igx-select [$dark-indigo-select]
 /// @property {Map} igx-dialog [$dark-indigo-dialog]
 /// @property {Map} data-chart [$dark-indigo-data-chart]
 /// @property {Map} doughnut-chart [$dark-indigo-doughnut-chart]
@@ -545,6 +553,7 @@ $dark-indigo-schema: (
     igx-chip: $dark-indigo-chip,
     igx-column-actions: $dark-bootstrap-column-actions,
     igx-combo: $dark-indigo-combo,
+    igx-select: $dark-indigo-select,
     igx-dialog: $dark-indigo-dialog,
     data-chart: $dark-indigo-data-chart,
     doughnut-chart: $dark-indigo-doughnut-chart,

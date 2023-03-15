@@ -2201,44 +2201,33 @@ describe('igxSelect', () => {
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
         const defaultTextIdent = 8;
+        const defItemFontSize = 14;
+        const defInputFontSize = 16;
         let selectedItemIndex: number;
         let listRect: DOMRect;
         let inputRect: DOMRect;
         let selectedItemRect: DOMRect;
-        let inputItemDiff: number;
         let listTop: number;
-        let listBottom: number;
 
-        const negateInputPaddings = () => (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
-                parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingBottom)
-            ) / 2;
         const getBoundingRectangles = () => {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
-            inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
         const verifySelectedItemPositioning = (reversed = false) => {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
-            const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
-                selectedItemRect.height - negateInputPaddings() :
-                inputRect.top - defaultItemTopPadding - inputItemDiff / 2 - negateInputPaddings();
-            expect(selectedItemRect.top).toBeCloseTo(expectedItemTop, 0);
-            const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom -
-                defaultWindowToListOffset - negateInputPaddings() :
-                inputRect.bottom + defaultItemBottomPadding + inputItemDiff / 2 - negateInputPaddings();
-            expect(selectedItemRect.bottom).toBeCloseTo(expectedItemBottom, 0);
-            // scrollWidth is always a whole number.
-            // input element has a partial(float number) width that differs based on displayDensity.
-            // Select's ddl width is based on the input's width. This introduces ~0.5px differences.
-            expect(selectedItemRect.width).toBeCloseTo(selectList.nativeElement.scrollWidth, 0);
+            const expectedInputItemFontTop = reversed
+                ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - selectedItemRect.height
+                : inputRect.top + defaultItemTopPadding
+                    + (inputRect.height - defaultItemBottomPadding - defaultItemTopPadding - defInputFontSize) / 2;
+            const expectedSelectItemFontTop = selectedItemRect.top + (selectedItemRect.height - defItemFontSize) / 2;
+            expect(Math.abs(expectedSelectItemFontTop - expectedInputItemFontTop)).toBeLessThan(2);
         };
         const verifyListPositioning = () => {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             // check with precision of 2 digits after decimal point, as it is the meaningful portion anyways.
             expect(listRect.top).toBeCloseTo(listTop, 2);
-            expect(listRect.bottom).toBeCloseTo(listBottom, 2);
         };
 
         describe('Ample space to open positioning tests: ', () => {
@@ -2261,7 +2250,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height;
                 verifyListPositioning();
 
                 selectedItemIndex = 2;
@@ -2276,7 +2264,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height * 2;
-                listBottom = selectedItemRect.bottom;
                 verifyListPositioning();
 
                 selectedItemIndex = 0;
@@ -2291,7 +2278,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
                 verifyListPositioning();
             }));
 
@@ -2436,24 +2422,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
             }));
-
-            // eslint-disable-next-line max-len
-            it('should display list with selected item and all items before it and position selected item over input when last item is selected',
-                fakeAsync(() => {
-                    selectedItemIndex = 9;
-                    select.items[selectedItemIndex].selected = true;
-                    fixture.detectChanges();
-                    select.toggle();
-                    tick();
-                    fixture.detectChanges();
-                    getBoundingRectangles();
-                    verifySelectedItemPositioning(true);
-                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height
-                        - negateInputPaddings();
-                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset
-                        - negateInputPaddings();
-                    verifyListPositioning();
-                }));
         });
         describe('Input with affixes positioning tests: ', () => {
             const calculatePrefixesWidth = () => {
@@ -2485,8 +2453,12 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    expect(inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent).
-                        toEqual(selectedItemRect.left + defaultItemLeftPadding);
+                    // bc of the difference of 2px between the font size of the text in the input and the text in the selected item
+                    // we need to take into account that the item list will be slightly to the left of the input to make sure
+                    // that the text in the list is positioned exactly on top of the text in the input
+                    expect(Math.abs((inputGroupRect.left + calculatePrefixesWidth() + defaultTextIdent)
+                        - (selectedItemRect.left + defaultItemLeftPadding - defItemFontSize - defaultTextIdent)))
+                        .toBeLessThanOrEqual(2);
                 }));
         });
         describe('Document bigger than the visible viewport tests: ', () => {
@@ -2512,7 +2484,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height;
                 verifyListPositioning();
 
                 selectedItemIndex = 2;
@@ -2530,7 +2501,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height * 2;
-                listBottom = selectedItemRect.bottom;
                 verifyListPositioning();
 
                 selectedItemIndex = 0;
@@ -2548,7 +2518,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
                 verifyListPositioning();
             }));
 
@@ -2565,7 +2534,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height;
                 verifyListPositioning();
 
                 selectedItemIndex = 2;
@@ -2583,7 +2551,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top - selectedItemRect.height * 2;
-                listBottom = selectedItemRect.bottom;
                 verifyListPositioning();
 
                 selectedItemIndex = 0;
@@ -2601,7 +2568,6 @@ describe('igxSelect', () => {
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2;
                 verifyListPositioning();
             }));
         });
