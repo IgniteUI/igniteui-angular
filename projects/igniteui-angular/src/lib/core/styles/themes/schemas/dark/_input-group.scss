@@ -13,9 +13,20 @@ $base-dark-input-group: $light-input-group;
 
 /// Generates a dark input-group schema based on a mix of $light-input-group and $base-dark-input-group..
 /// @type {Map}
-/// @requires $light-input-group
+/// @prop {Map} box-background-focus [color: ('gray', 100)] - The background color of an input group of type box on focus.
 /// @requires $base-dark-input-group
-$dark-input-group: $base-dark-input-group;
+$dark-input-group: extend(
+    $base-dark-input-group,
+    (
+        box-background-focus: (
+            color: ('gray', 100)
+        ),
+
+        hover-bottom-line-color: (
+            color: ('gray', 800)
+        ),
+    )
+);
 
 /// Generates a dark fluent input-group schema based on a mix of $fluent-input-group and $base-dark-input-group.
 /// @type {Map}
@@ -23,9 +34,9 @@ $dark-input-group: $base-dark-input-group;
 /// @prop {Map} input-suffix-background [color: ('gray', 100)] - The background color of an input sufix of type line, box and border.
 /// @prop {Map} box-background [color: ('gray', 100)] - The background color of an input group of type box.
 /// @prop {Map} border-color [color: ('gray', 500)] - The border color for input groups of type border and fluent.
-/// @prop {Map} hover-border-color [color: ('gray', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [color: ('gray', 700)] - The hover input border for input groups of type border and fluent.
 /// @prop {Map} focused-border-color [color: ('gray', 500)] - The focused input border color for input groups of type border and fluent.
-/// @prop {Map} disabled-border-color [color: ('gray', 500)] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [color: ('gray', 100)] - The disabled border color for input groups of type border and fluent.
 /// @requires $fluent-input-group
 /// @requires $base-dark-input-group
 $dark-fluent-input-group: extend(
@@ -45,11 +56,11 @@ $dark-fluent-input-group: extend(
         ),
 
         border-color: (
-            color: ('gray', 300)
+            color: ('gray', 500)
         ),
 
         hover-border-color: (
-            color: ('gray', 500)
+            color: ('gray', 700)
         ),
 
         focused-border-color: (
@@ -57,27 +68,7 @@ $dark-fluent-input-group: extend(
         ),
 
         disabled-border-color: (
-            color: ('gray', 300)
-        ),
-
-        idle-bottom-line-color: (
-            color: ('gray', 400)
-        ),
-
-        hover-bottom-line-color: (
-            color: ('gray', 600)
-        ),
-
-        focused-bottom-line-color: (
-            color: ('primary', 600)
-        ),
-
-        interim-bottom-line-color: (
-            color: ('primary', 500, .12),
-        ),
-
-        disabled-bottom-line-color: (
-            color: ('gray', 400)
+            color: ('gray', 100)
         ),
     )
 );
@@ -97,9 +88,10 @@ $dark-bootstrap-input-group: extend(
 /// @prop {Map} warning-secondary-color [color: ('warn', 500, .7)] - The warning color used in the warning state.
 /// @prop {Map} error-secondary-color [color: ('error', 500, .7)] - The error color used in the error state.
 /// @prop {Map} $idle-secondary-color [contrast-color: ('surface')] - The label color in the idle state.
-/// @prop {Map} $filled-secondary-color [contrast-color: ('surface')] - The label color in the filled state.
-/// @prop {Map} $focused-secondary-color [contrast-color: ('surface')] - The label color in the focused state.
-/// @prop {Map} focused-bottom-line-color [contrast-color: ('surface')] - The bottom line and border colors in the focused state.
+/// @prop {Map} $filled-secondary-color [color: ('gray', 900)] - The label color in the filled state.
+/// @prop {Map} $focused-secondary-color [color: ('gray', 900)] - The label color in the focused state.
+/// @prop {Map} placeholder-color [color: ('gray', 400)] - The placeholder color of an input group.
+/// @prop {Map} disabled-placeholder-color [color: ('gray', 400)] - The disabled placeholder color of an input group.
 /// @requires $indigo-input-group
 /// @see $default-palette
 $dark-indigo-input-group: extend(
@@ -124,15 +116,19 @@ $dark-indigo-input-group: extend(
         ),
 
         filled-secondary-color: (
-            contrast-color: ('surface')
+            color: ('gray', 900)
         ),
 
         focused-secondary-color: (
-            contrast-color: ('surface')
+            color: ('gray', 900)
         ),
 
-        focused-bottom-line-color: (
-            contrast-color: ('surface')
+        placeholder-color: (
+            color: ('gray', 400)
+        ),
+
+        disabled-placeholder-color: (
+            color: ('gray', 400)
         ),
     )
 );
