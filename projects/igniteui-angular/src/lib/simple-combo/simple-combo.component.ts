@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    NgModule, Optional, Output, ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Injector,
+    NgModule,
+    Optional,
+    Output,
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -22,7 +32,10 @@ import { IgxTextSelectionDirective, IgxTextSelectionModule } from '../directives
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import {
+    IgxInputGroupModule,
+    IgxInputGroupType,
+    IGX_INPUT_GROUP_TYPE} from '../input-group/public_api';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
