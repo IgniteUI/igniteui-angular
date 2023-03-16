@@ -6,7 +6,7 @@ import { IGridCellEventArgs, IgxColumnComponent } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -1784,20 +1784,21 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await waitForSelectionChange(fix.componentInstance.grid);
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await waitForSelectionChange(fix.componentInstance.grid);
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
@@ -2165,8 +2166,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // scroll right
                 grid.headerContainer.getScroll().scrollLeft = 800;
-                fix.detectChanges();
                 await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
 
                 // focus first pinned cell
                 const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
