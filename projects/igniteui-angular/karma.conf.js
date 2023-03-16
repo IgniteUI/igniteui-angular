@@ -26,12 +26,10 @@ module.exports = function (config) {
       shardStrategy: 'round-robin'
     },
     client: {
-      //clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
         random: false
-      },
-      tagPrefix: '#',
-      skipTags: 'perf'
+      }
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
@@ -42,6 +40,9 @@ module.exports = function (config) {
       ]
     },
     reporters: ['spec'],
+    specReporter: {
+        suppressSkipped: true
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
