@@ -1148,7 +1148,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (ghostDestroyArgs.cancel) {
                 return;
             }
-            this.ghostElement.parentNode.removeChild(this.ghostElement);
+            this.ghostElement.remove();
             this.ghostElement = null;
             if (this._dynamicGhostRef) {
                 this._dynamicGhostRef.destroy();
