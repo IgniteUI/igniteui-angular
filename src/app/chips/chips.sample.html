@@ -20,27 +20,6 @@
                 <igx-circular-bar *ngIf="hasProgressbar" igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
             </igx-chip>
 
-            <small *ngIf="customIcons" style="color: hsla(var(--ig-error-500))">Expected to affect only Angular</small>
-
-            <span class="preview__compare">Angular VS WebC </span>
-
-            <igc-chip
-                size="{{getSize()}}"
-                selected="{{isSelected ? true : null}}"
-                selectable="{{isSelectable ? true: null}}"
-                removable="{{isRemovable? true : null}}"
-                disabled="{{isDisabled ? true : null}}"
-                variant="{{selected}}"
-            >
-                <igx-avatar slot="prefix" *ngIf="hasAvatar" class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
-                <igx-icon *ngIf="hasPrefix" slot="prefix">face</igx-icon>
-                Chip component
-                <igx-icon *ngIf="hasSuffix" slot="suffix">face</igx-icon>
-                <igx-circular-bar *ngIf="hasProgressbar" slot="suffix" class="circular-sample" [indeterminate]="true"></igx-circular-bar>
-            </igc-chip>
-
-            <small *ngIf="isDraggable" style="color: hsla(var(--ig-error-500))">WebC has no draggable functionality yet!</small>
-
             <ng-template #mySelectIcon >
                 <igx-icon family="fa-solid" name="fa-check-circle"></igx-icon>
             </ng-template>

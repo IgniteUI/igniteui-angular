@@ -10,9 +10,6 @@ import {
     IDisplayDensityOptions, IButtonGroupEventArgs, ButtonGroupAlignment
 } from 'igniteui-angular';
 
-import { defineComponents, IgcChipComponent } from 'igniteui-webcomponents';
-defineComponents(IgcChipComponent);
-
 interface Selection {
     selected: boolean;
     label: string | DisplayDensity;
