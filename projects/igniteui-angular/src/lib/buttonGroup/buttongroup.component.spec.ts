@@ -4,6 +4,7 @@ import { ButtonGroupAlignment, IgxButtonGroupComponent } from './buttonGroup.com
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 
 interface IButton {
     type?: string;
@@ -299,9 +300,11 @@ class InitButtonGroupComponent implements OnInit {
 }
 
 @Component({
-    template: `<igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
-                            [values]="cities" [alignment]="alignment">
-                        </igx-buttongroup>`,
+    template: `
+    <igx-buttongroup multiSelection="true" itemContentCssClass="customContentStyle"
+        [values]="cities" [alignment]="alignment">
+    </igx-buttongroup>
+    `,
     standalone: true,
     imports: [ IgxButtonGroupComponent ]
 })
@@ -344,14 +347,16 @@ class InitButtonGroupWithValuesComponent implements OnInit {
 
 
 @Component({
-    template: `<igx-buttongroup [multiSelection]="multiselection" [alignment]="alignment">
-                            <button igxButton>Sofia</button>
-                            <button igxButton>London</button>
-                            <button igxButton>New York</button>
-                            <button igxButton [disabled]="'true'">Tokio</button>
-                        </igx-buttongroup>`,
+    template: `
+    <igx-buttongroup [multiSelection]="multiselection" [alignment]="alignment">
+        <button igxButton>Sofia</button>
+        <button igxButton>London</button>
+        <button igxButton>New York</button>
+        <button igxButton [disabled]="'true'">Tokio</button>
+    </igx-buttongroup>
+    `,
     standalone: true,
-    imports: [ IgxButtonGroupComponent ]
+    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
 })
 class TemplatedButtonGroupComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
@@ -361,12 +366,14 @@ class TemplatedButtonGroupComponent {
 }
 
 @Component({
-    template: `<igx-buttongroup [multiSelection]="multiselection" displayDensity="cosy">
-                            <button igxButton displayDensity="compact">Sofia</button>
-                            <button igxButton>London</button>
-                        </igx-buttongroup>`,
+    template: `
+    <igx-buttongroup [multiSelection]="multiselection" displayDensity="cosy">
+        <button igxButton displayDensity="compact">Sofia</button>
+        <button igxButton>London</button>
+    </igx-buttongroup>
+    `,
     standalone: true,
-    imports: [ IgxButtonGroupComponent ]
+    imports: [ IgxButtonGroupComponent, IgxButtonDirective ]
 })
 class TemplatedButtonGroupDesplayDensityComponent {
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;

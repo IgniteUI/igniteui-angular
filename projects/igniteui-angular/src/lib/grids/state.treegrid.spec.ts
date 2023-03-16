@@ -16,6 +16,7 @@ import { IgxColumnComponent, IgxTreeGridComponent } from './tree-grid/public_api
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { NgFor } from '@angular/common';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
@@ -373,7 +374,7 @@ class HelperFunctions {
     </igx-tree-grid>
     `,
     standalone: true,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgFor]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

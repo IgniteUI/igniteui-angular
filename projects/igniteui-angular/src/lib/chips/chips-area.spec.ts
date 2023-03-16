@@ -68,7 +68,7 @@ class TestChipSelectComponent extends TestChipComponent {
         </igx-chips-area>
     `,
     standalone: true,
-    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent]
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })

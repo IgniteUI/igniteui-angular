@@ -13,6 +13,7 @@ import { IgxColumnGroupComponent } from '../grids/columns/column-group.component
 import { IgxGridToolbarPinningComponent } from '../grids/toolbar/grid-toolbar-pinning.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 
 @Component({
     template: `
@@ -183,7 +184,17 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
         '</igx-grid-toolbar-actions></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, IgxPaginatorComponent, NgIf]
+    imports: [
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxColumnActionsComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarHidingComponent,
+        IgxGridToolbarActionsComponent,
+        IgxPaginatorComponent,
+        IgxColumnHidingDirective,
+        NgIf
+    ]
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxColumnActionsComponent)
@@ -217,7 +228,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, NgIf]
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;

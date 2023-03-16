@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent } from '../../list/list.component';
-import { IgxFilterDirective, IgxFilterOptions } from './filter.directive';
+import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NgFor } from '@angular/common';
@@ -220,7 +220,7 @@ class DeclarativeListTestComponent {
         </igx-list-item>
     </igx-list>`,
     standalone: true,
-    imports: [IgxListComponent, IgxListItemComponent, IgxFilterDirective, NgFor]
+    imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe, NgFor]
 })
 class DynamicListTestComponent {
     @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;

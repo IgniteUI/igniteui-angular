@@ -7,6 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DisplayDensity } from '../../core/density';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 const BUTTON_COSY = 'igx-button--cosy';
@@ -27,6 +28,7 @@ describe('IgxButton', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
+                NoopAnimationsModule,
                 InitButtonComponent,
                 ButtonWithAttribsComponent,
                 ButtonsWithDisplayDensityComponent

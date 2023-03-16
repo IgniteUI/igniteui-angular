@@ -7,8 +7,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Replaced } from './mask-parsing.service';
 import { By } from '@angular/platform-browser';
-import { PlatformUtil } from '../../core/utils';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputDirective } from '../input/input.directive';
 
 describe('igxMask', () => {
     configureTestSuite();
@@ -16,7 +16,6 @@ describe('igxMask', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                FormsModule,
                 AlphanumSpaceMaskComponent,
                 AnyCharMaskComponent,
                 DefMaskComponent,
@@ -31,8 +30,7 @@ describe('igxMask', () => {
                 PlaceholderMaskComponent,
                 MaskTestComponent,
                 ReadonlyMaskTestComponent
-            ],
-            providers: [PlatformUtil]
+            ]
         }).compileComponents();
     }));
 
@@ -607,12 +605,30 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
     });
 });
 
+
+@Pipe({ name: 'inputFormat', standalone: true })
+export class InputFormatPipe implements PipeTransform {
+    public transform(value: any): string {
+        return value.toUpperCase();
+    }
+}
+
+@Pipe({ name: 'displayFormat', standalone: true })
+export class DisplayFormatPipe implements PipeTransform {
+    public transform(value: any): string {
+        return value.toLowerCase();
+    }
+}
+
+
 @Component({
-    template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+    </igx-input-group>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DefMaskComponent {
     @ViewChild('input', { static: true })
@@ -630,7 +646,7 @@ class DefMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskComponent {
 
@@ -648,7 +664,7 @@ class MaskComponent {
                     <input #input1 igxInput [ngModel]="value"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class IncludeLiteralsComponent {
     @Input() public value = '55555';
@@ -666,7 +682,7 @@ class IncludeLiteralsComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitSpaceMaskComponent {
     @ViewChild('input', { static: true })
@@ -681,7 +697,7 @@ class DigitSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class DigitPlusMinusMaskComponent {
     @ViewChild('input', { static: true })
@@ -696,7 +712,7 @@ class DigitPlusMinusMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class LetterSpaceMaskComponent {
     @ViewChild('input', { static: true })
@@ -711,7 +727,7 @@ class LetterSpaceMaskComponent {
                     <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                 </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AlphanumSpaceMaskComponent {
     @ViewChild('input', { static: true })
@@ -722,11 +738,13 @@ class AlphanumSpaceMaskComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
+    </igx-input-group>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class AnyCharMaskComponent {
     @ViewChild('input', { static: true })
@@ -737,12 +755,14 @@ class AnyCharMaskComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                            <input #input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
-                            (valueChanged)="handleValueChanged($event)"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
+        (valueChanged)="handleValueChanged($event)"/>
+    </igx-input-group>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class EventFiringComponent {
 
@@ -760,15 +780,17 @@ class EventFiringComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                            <input type="text" #input igxInput
-                                   [value]="value"
-                                   [igxMask]="myMask"
-                                   [includeLiterals]="true"
-                                   [promptChar]="'* @#'"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input type="text" #input igxInput
+                [value]="value"
+                [igxMask]="myMask"
+                [includeLiterals]="true"
+                [promptChar]="'* @#'"/>
+    </igx-input-group>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class OneWayBindComponent {
     @ViewChild('input', { static: true })
@@ -779,14 +801,16 @@ class OneWayBindComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                            <input #input type="text" igxInput
-                                [placeholder]="'hello'"
-                                [(ngModel)]="value"
-                                [igxMask]="mask"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput
+            [placeholder]="'hello'"
+            [(ngModel)]="value"
+            [igxMask]="mask"/>
+    </igx-input-group>
+    `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class PlaceholderMaskComponent {
     @ViewChild('input', { static: true })
@@ -797,15 +821,16 @@ class PlaceholderMaskComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                            <input #input type="text" igxInput
-                                [displayValuePipe]="displayFormat"
-                                [focusedValuePipe]="inputFormat"
-                                [(ngModel)]="value"
-                                [igxMask]="mask"/>
-                        </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput
+            [displayValuePipe]="displayFormat"
+            [focusedValuePipe]="inputFormat"
+            [(ngModel)]="value"
+            [igxMask]="mask"/>
+    </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective, InputFormatPipe, DisplayFormatPipe]
 })
 class PipesMaskComponent {
 
@@ -821,12 +846,12 @@ class PipesMaskComponent {
 
 @Component({
     template: `
-        <igx-input-group>
-            <input #input type="text" igxInput igxMask/>
-        </igx-input-group>
+    <igx-input-group>
+        <input #input type="text" igxInput igxMask/>
+    </igx-input-group>
     `,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class MaskTestComponent {
     @ViewChild('input', { static: true })
@@ -834,27 +859,14 @@ class MaskTestComponent {
 }
 
 @Component({
-    template: `<igx-input-group>
-                    <input #input type="text" igxInput readonly [igxMask]="'00/00/0000'"/>
-                </igx-input-group>`,
+    template: `
+    <igx-input-group>
+        <input #input type="text" igxInput readonly [igxMask]="'00/00/0000'"/>
+    </igx-input-group>`,
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxMaskDirective]
+    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxMaskDirective]
 })
 class ReadonlyMaskTestComponent {
     @ViewChild(IgxMaskDirective)
     public mask: IgxMaskDirective;
-}
-
-@Pipe({ name: 'inputFormat' })
-export class InputFormatPipe implements PipeTransform {
-    public transform(value: any): string {
-        return value.toUpperCase();
-    }
-}
-
-@Pipe({ name: 'displayFormat' })
-export class DisplayFormatPipe implements PipeTransform {
-    public transform(value: any): string {
-        return value.toLowerCase();
-    }
 }

@@ -332,7 +332,7 @@ class VerticalCardComponent {
         </igx-card-actions>
     </igx-card>`,
     standalone: true,
-    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective]
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent]
 })
 class HorizontalCardComponent {
     @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;

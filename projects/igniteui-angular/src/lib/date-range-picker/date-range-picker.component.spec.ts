@@ -10,7 +10,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { CancelableEventArgs } from '../core/utils';
-import { DateRange, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
@@ -1460,9 +1460,20 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
             <input igxInput igxDateTimeEditor type="text">
         </igx-date-range-end>
     </igx-date-range-picker>
-`,
+    `,
     standalone: true,
-    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxPickerToggleComponent, IgxIconComponent, FormsModule]
+    imports: [
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxPickerToggleComponent,
+        IgxIconComponent,
+        IgxPrefixDirective,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxDateRangeSeparatorDirective,
+        FormsModule
+    ]
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     public range;
@@ -1482,7 +1493,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>`,
     standalone: true,
-    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, FormsModule]
+    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
     public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
@@ -1596,7 +1607,7 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
     </igx-date-range-picker>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, AsyncPipe]
+    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, AsyncPipe]
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
 

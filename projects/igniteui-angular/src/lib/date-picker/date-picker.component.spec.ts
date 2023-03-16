@@ -1342,7 +1342,7 @@ export class IgxDatePickerTestKbrdComponent {
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
     standalone: true,
-    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxSuffixDirective, IgxHintDirective, NgIf]
+    imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective, NgIf]
 })
 export class IgxDatePickerWithProjectionsComponent {
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
