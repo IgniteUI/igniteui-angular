@@ -608,7 +608,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
 
-        this.rowAddedNotifier.next({ data: data, owner: this });
+        this.rowAddedNotifier.next({ data: data, owner: this, primaryKey: data[this.primaryKey] });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -725,6 +725,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  us in case of delete action to delete all child rows as single undo action
         const args = {
             rowID: rowId,
+            primaryKey: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
             oldValue: null,
@@ -737,7 +738,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            this.rowDeleted.emit({ data: record, owner: this });
+            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this, primaryKey: record[this.primaryKey] };
+            this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
     }
@@ -1028,7 +1030,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // deselect them as well, hence using 'records' map instead of getRowByKey() method which will
         // return only row components (i.e. records in view).
         const rowToDeselect = this.records.get(recordID);
-        this.selectionService.deselectRow(recordID);
+        this.selectionService.deselectRowsWithNoEvent([recordID]);
         this.gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));

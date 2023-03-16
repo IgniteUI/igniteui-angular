@@ -6,7 +6,7 @@ import { IgxDialogComponent } from 'igniteui-angular';
 const ATTRACTIONS_CUSTOM_WIDTH = '300px';
 @Component({
     selector: 'app-autocomplete-sample',
-    styleUrls: ['autocomplete.sample.css'],
+    styleUrls: ['autocomplete.sample.scss'],
     templateUrl: `autocomplete.sample.html`
 })
 export class AutocompleteSampleComponent {

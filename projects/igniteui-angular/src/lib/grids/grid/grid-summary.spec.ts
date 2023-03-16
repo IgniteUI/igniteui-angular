@@ -2284,6 +2284,57 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
         });
 
+        it('CRUD: Adding grouped item via UI should update group summary accordingly', () => {
+            grid.rowEditable = true;
+            fix.detectChanges();
+            const newRow = {
+                ID: 777,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19,
+                OnPTO: true
+            };
+            const rows = grid.rowList.toArray();
+            rows[1].beginAddRow();
+
+            const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
+            const endEvent = new AnimationEvent('animationend');
+            animationElem.dispatchEvent(endEvent);
+
+            fix.detectChanges();
+
+            let addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeTrue();
+
+            let cell = grid.getCellByColumn(2, 'ParentID');
+            cell.update(newRow.ParentID);
+            cell = grid.getCellByColumn(2, 'Name');
+            cell.update(newRow.Name);
+            cell = grid.getCellByColumn(2, 'HireDate');
+            cell.update(newRow.HireDate);
+            cell = grid.getCellByColumn(2, 'Age');
+            cell.update(newRow.Age);
+            cell = grid.getCellByColumn(2, 'OnPTO');
+            cell.update(newRow.OnPTO);
+
+            fix.detectChanges();
+            grid.endEdit(true);
+
+            fix.detectChanges();
+
+            addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeFalse();
+
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '17', '17', '51', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['3', 'Dec 18, 2007', 'Apr 3, 2019']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
+        });
+
         it('CRUD: Add not grouped item', () => {
             const newRow = {
                 ID: 777,

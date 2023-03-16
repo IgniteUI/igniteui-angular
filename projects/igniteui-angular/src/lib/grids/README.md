@@ -245,7 +245,7 @@ A list of the events emitted by the **igx-grid**:
 |`contextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`doubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
 |`columnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
-|`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
+|`groupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
 |`toolbarExporting`| Emitted when an export process is initiated by the user.|
 | `rowDragStart` | Emitted when the user starts dragging a row. |
 | `rowDragEnd` | Emitted when the user drops a row or cancel the drag. |

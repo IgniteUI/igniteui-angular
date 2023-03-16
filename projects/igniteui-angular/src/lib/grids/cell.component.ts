@@ -743,7 +743,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
-    private _cellSelection = GridSelectionMode.multiple;
+    private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
     constructor(
@@ -973,6 +973,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.grid.crudService.updateCell(true, event);
             }
             return;
+        } else {
+            this.selectionService.primaryButton = true;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
@@ -1030,11 +1032,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        const shouldEmitSelection = !this.selectionService.isActiveNode(node);
-
+        let shouldEmitSelection = !this.selectionService.isActiveNode(node);
+        
         if (this.selectionService.primaryButton) {
             const currentActive = this.selectionService.activeElement;
-            this.selectionService.activeElement = node;
+            if (this.cellSelectionMode === GridSelectionMode.single && (event as any)?.ctrlKey && this.selected) {
+                this.selectionService.activeElement = null;
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.activeElement = node;
+            }
             const cancel = this._updateCRUDStatus(event);
             if (cancel) {
                 this.selectionService.activeElement = currentActive;
@@ -1066,8 +1073,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
-            this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
-            this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            if (this.selectionService.isInMap(this.selectionService.activeElement) && (event as any)?.ctrlKey && !(event as any)?.shiftKey) {
+                this.selectionService.remove(this.selectionService.activeElement);
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
+                this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            }
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));

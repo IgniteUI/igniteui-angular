@@ -114,13 +114,14 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 datePicker.close();
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.closing.emit).toHaveBeenCalled();
                 expect(datePicker.closed.emit).not.toHaveBeenCalled();
 
                 closingSub.unsubscribe();
+                (datePicker as any)._overlayService.detachAll();
             }));
         });
 
@@ -176,6 +177,9 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+
+                // wait datepicker to get destroyed and test to cleanup
+                tick(350);
             }));
 
             it('should close the calendar with ESC', fakeAsync(() => {
@@ -455,7 +459,7 @@ describe('IgxDatePicker', () => {
         let mockDateEditor: any;
         let mockCalendar: Partial<IgxCalendarComponent>;
         let mockInputDirective: any;
-        const mockModuleRef = {} as any;
+        const viewsContainerRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
         const elementRef = {
@@ -625,10 +629,11 @@ describe('IgxDatePicker', () => {
                 },
                 focus: () => { }
             };
-            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockModuleRef, mockInjector, renderer2, null, mockCdr);
+            datePicker = new IgxDatePickerComponent(elementRef, 'en-US', overlay, mockInjector, renderer2, null, mockCdr);
             (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
+            (datePicker as any).viewContainerRef = viewsContainerRef;
             // TODO: TEMP workaround for afterViewInit call in unit tests:
             datePicker.clearComponents = new QueryList<any>();
             datePicker.toggleComponents = new QueryList<any>();
@@ -686,12 +691,12 @@ describe('IgxDatePicker', () => {
                 { type: DateRangeType.Before, dateRange: [today] }];
                 datePicker.disabledDates = mockDisabledDates;
                 expect(datePicker.disabledDates).toEqual(mockDisabledDates);
-                spyOn(datePicker.onDensityChanged, 'emit').and.callThrough();
+                spyOn(datePicker.densityChanged, 'emit').and.callThrough();
                 datePicker.displayDensity = DisplayDensity.cosy;
                 expect(datePicker.displayDensity).toEqual(DisplayDensity.cosy);
                 // if no base token is provided, _displayDensity is undefined
                 // first emit of below event will always be w/ oldDensity === undefined
-                expect(datePicker.onDensityChanged.emit)
+                expect(datePicker.densityChanged.emit)
                     .toHaveBeenCalledWith({
                         oldDensity: undefined,
                         newDensity: DisplayDensity.cosy
@@ -886,19 +891,19 @@ describe('IgxDatePicker', () => {
                 const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
                 isDropdownSpy.and.returnValue(false);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDialogSettings, mockModuleRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDialogSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
                 datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDropdownSettings, mockModuleRef);
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, baseDropdownSettings);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 const mockOutlet = {} as any;
                 datePicker.outlet = mockOutlet;
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 let mockSettings: OverlaySettings = {
@@ -910,8 +915,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, mockSettings),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(false);
@@ -923,8 +928,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDialogSettings, mockSettings),
-                    mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
                 isDropdownSpy.and.returnValue(true);
@@ -937,8 +942,8 @@ describe('IgxDatePicker', () => {
                 datePicker.open(mockSettings);
                 expect(overlay.attach).toHaveBeenCalledWith(
                     IgxCalendarContainerComponent,
+                    viewsContainerRef,
                     Object.assign({}, baseDropdownSettings, { modal: true }),
-                    mockModuleRef
                 );
             });
 

@@ -305,7 +305,7 @@ export class IconTestComponent {
         ).toEqual(`<igx-list (panStateChange)="panStateChange($event)"></igx-list>`);
     });
 
-    xit('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
+    it('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/list.component.html`,
             `<igx-list (onItemClicked)="onItemClicked($event)"></igx-list>`
