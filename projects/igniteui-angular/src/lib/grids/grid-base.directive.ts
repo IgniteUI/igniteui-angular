@@ -7159,7 +7159,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const fields = this.generateDataFields(data);
         const columns = [];
 
-        fields.filter((field) => !this.autoGenerateExclude.includes(field)).forEach((field) => {
+        fields.forEach((field) => {
             const ref = factory.create(this.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
@@ -7175,7 +7175,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected generateDataFields(data: any[]): string[] {
-        return Object.keys(data && data.length !== 0 ? data[0] : []);
+        return Object.keys(data && data.length !== 0 ? data[0] : [])
+            .filter(key => !this.autoGenerateExclude.includes(key));
     }
 
     /**
