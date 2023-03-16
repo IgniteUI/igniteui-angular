@@ -1305,25 +1305,25 @@ export class DefaultGridMasterDetailComponent {
 
 @Component({
     template: `
-        <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
-            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
-            </igx-column>
+    <igx-grid [data]="data" [expansionStates]="expStates"
+        [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+        </igx-column>
 
-            <ng-template igxGridDetail let-dataItem>
-                <div>
-                    <div class="checkboxArea">
-                        <igx-checkbox [disableRipple]="true"></igx-checkbox>
-                        <span style="font-weight: 600">Available</span>
-                    </div>
-                    <div class="addressArea">{{dataItem.Address}}</div>
-                    <div class="inputArea"><input type="text" name="Comment"></div>
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div class="checkboxArea">
+                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                    <span style="font-weight: 600">Available</span>
                 </div>
-            </ng-template>
-        </igx-grid>
+                <div class="addressArea">{{dataItem.Address}}</div>
+                <div class="inputArea"><input type="text" name="Comment"></div>
+            </div>
+        </ng-template>
+    </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, NgFor]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();

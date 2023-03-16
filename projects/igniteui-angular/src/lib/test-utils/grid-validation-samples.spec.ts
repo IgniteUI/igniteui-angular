@@ -1,8 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component, Input, ViewChild, Directive, TemplateRef } from '@angular/core';
 import { AbstractControl, FormsModule, NG_VALIDATORS, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import {  GridColumnDataType, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective, IgxColumnComponent, IgxGridComponent, IgxTreeGridComponent } from 'igniteui-angular';
 import { data } from '../../../../../src/app/shared/data';
+import { GridColumnDataType } from '../data-operations/data-util';
+import { IgxColumnComponent } from '../grids/columns/column.component';
+import { IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective } from '../grids/columns/templates.directive';
+import { IgxGridComponent } from '../grids/grid/grid.component';
+import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {

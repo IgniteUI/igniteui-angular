@@ -70,6 +70,7 @@ export interface CellType {
     title?: any;
     width: string;
     visibleColumnIndex?: number;
+    defaultErrorTemplate?: TemplateRef<any>;
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;

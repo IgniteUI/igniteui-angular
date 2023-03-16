@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -3820,7 +3820,7 @@ export class GroupableGridComponent extends DataParent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

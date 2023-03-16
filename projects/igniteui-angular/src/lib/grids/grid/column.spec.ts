@@ -24,7 +24,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../public_api';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxSummaryTemplateDirective } from '../columns/templates.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -1463,7 +1463,7 @@ export class ResizableColumnsComponent {
             <span class="new-summary">New summary text</span>
         </ng-template>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

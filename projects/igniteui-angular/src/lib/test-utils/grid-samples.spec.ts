@@ -15,7 +15,7 @@ import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operatio
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
 import { CellType, IgxAdvancedFilteringDialogComponent, IgxGridComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/grid/public_api';
-import { IgxRowAddTextDirective, IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
+import { IgxRowAddTextDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
@@ -31,14 +31,15 @@ import { IgxExcelStylePinningComponent } from '../grids/filtering/excel-style/ex
 import { IgxExcelStyleSearchComponent } from '../grids/filtering/excel-style/excel-style-search.component';
 import { IgxExcelStyleSelectingComponent } from '../grids/filtering/excel-style/excel-style-selecting.component';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
+import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../input-group/public_api';
 import { IgxGridToolbarComponent } from '../grids/toolbar/grid-toolbar.component';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridToolbarActionsComponent } from '../grids/toolbar/common';
 import { IgxGridToolbarHidingComponent } from '../grids/toolbar/grid-toolbar-hiding.component';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridEditingActionsComponent } from '../action-strip/grid-actions/grid-editing-actions.component';
-import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxFilterCellTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '',
@@ -520,7 +521,7 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class GridWithAvatarComponent extends GridWithSizeComponent {
     public data = SampleTestData.personAvatarData();
@@ -1017,7 +1018,14 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
         </igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSelectingComponent]
+    imports: [
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleFilterOperationsTemplateDirective,
+        IgxExcelStyleSelectingComponent
+    ]
 })
 export class IgxGridExternalESFTemplateComponent extends BasicGridComponent implements OnInit {
     @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
@@ -1070,7 +1078,7 @@ export class IgxGridExternalESFTemplateComponent extends BasicGridComponent impl
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxInputDirective, IgxFilterCellTemplateDirective, IgxIconComponent]
 })
 export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
     public resizable = false;
@@ -1267,7 +1275,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxPaginatorComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxRowSelectorDirective, IgxHeadSelectorDirective, IgxGroupByRowSelectorDirective]
 })
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
     @ViewChild('gridCustomSelectors', { static: true })
@@ -1418,7 +1426,7 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTabStopDirective, IgxButtonDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxButtonDirective]
 })
 export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
@@ -1861,7 +1869,7 @@ export class ColumnSelectionGroupTestComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent, IgxCollapsibleIndicatorTemplateDirective]
 })
 export class CollapsibleGroupsTemplatesTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -2095,7 +2103,9 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
         ColumnDefinitions.idFirstLastNameSortable,
         '',
         '',
-        '')
+        ''),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
 

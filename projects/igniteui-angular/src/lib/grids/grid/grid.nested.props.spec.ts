@@ -12,6 +12,7 @@ import { IGridEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnComponent } from '../public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
+import { FormsModule } from '@angular/forms';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -167,7 +168,7 @@ class NestedPropertiesGrid2Component {
         </igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent, FormsModule]
 })
 class NestedPropertyGridComponent {
     @ViewChild('grid', { static: true, read: IgxGridComponent })

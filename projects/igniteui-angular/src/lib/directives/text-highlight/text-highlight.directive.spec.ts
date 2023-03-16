@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
@@ -9,9 +9,10 @@ describe('IgxHighlight', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [IgxTextHighlightDirective,
-        HighlightLoremIpsumComponent]
-});
+            imports: [
+                HighlightLoremIpsumComponent
+            ]
+        });
     }));
 
     it('Highlight inputs should have the proper values', () => {
@@ -300,15 +301,17 @@ describe('IgxHighlight', () => {
 });
 
 @Component({
-    template: 
     // eslint-disable-next-line max-len
-    `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [containerClass]="'test'">
+    template: `
+    <div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [containerClass]="'test'">
         {{html}}
-    </div>`,
-    standalone: true
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {
-    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective, static: true })
+    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective, static: true })
     public highlight: IgxTextHighlightDirective;
 
     public highlightClass = 'igx-highlight';

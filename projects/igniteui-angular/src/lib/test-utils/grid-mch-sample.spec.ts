@@ -4,6 +4,7 @@ import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { NgFor, NgIf } from '@angular/common';
+import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
 
 @Component({
     template: `
@@ -483,7 +484,7 @@ export class StegosaurusGridComponent implements OnInit {
         </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, NgIf, NgFor]
 })
 export class BlueWhaleGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -631,7 +632,7 @@ export class DynamicGridComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, IgxCellHeaderTemplateDirective]
 })
 export class NestedColGroupsWithTemplatesGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

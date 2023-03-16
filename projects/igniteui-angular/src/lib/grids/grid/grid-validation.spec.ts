@@ -9,7 +9,6 @@ import { IgxTooltipTargetDirective } from '../../directives/tooltip/tooltip-targ
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import {
-    ForbiddenValidatorDirective,
     IgxGridCustomEditorsComponent,
     IgxGridValidationTestBaseComponent,
     IgxGridValidationTestCustomErrorComponent,
@@ -29,8 +28,7 @@ describe('IgxGrid - Validation #grid', () => {
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
                 IgxGridCustomEditorsComponent,
-                IgxTreeGridValidationTestComponent,
-                ForbiddenValidatorDirective
+                IgxTreeGridValidationTestComponent
             ]
         });
     }));
