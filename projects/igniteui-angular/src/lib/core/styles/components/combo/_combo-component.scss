@@ -21,6 +21,14 @@
             @extend %igx-combo__drop-down !optional;
         }
 
+        @include e(case-icon) {
+            @extend %igx-combo__case-icon !optional;
+        }
+
+        @include e(case-icon, $m: active) {
+            @extend %igx-combo__case-icon--active !optional;
+        }
+
         @include e(search) {
             @extend %igx-combo__search !optional;
         }
@@ -37,12 +45,20 @@
             @extend %igx-combo__add !optional;
         }
 
+        @include e(add-item) {
+            @extend %igx-combo__add-item !optional;
+        }
+
         @include e(empty) {
             @extend %igx-combo__empty !optional;
         }
 
-        @include e(add-item) {
-            @extend %igx-combo__add-item !optional;
+        @include e(clear-button) {
+            @extend %igx-combo__clear-button !optional;
+        }
+
+        @include e(toggle-button) {
+            @extend %igx-combo__toggle-button !optional;
         }
     }
 }

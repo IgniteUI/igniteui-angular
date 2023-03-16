@@ -1,0 +1,24 @@
+@use '../../base' as *;
+@use 'sass:string';
+
+/// @access private
+@mixin component {
+    @include b(igx-select) {
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-checkbox,
+                igx-drop-down,
+                igx-input-group,
+                igx-icon
+            )
+        );
+
+        @extend %igx-select !optional;
+
+        @include e(toggle-button) {
+            @extend %igx-select__toggle-button !optional;
+        }
+    }
+}
