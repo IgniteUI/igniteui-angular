@@ -1,10 +1,9 @@
 <div class="igx-card-actions__icons">
-    <ng-content select="igx-icon, [igxButton='icon']"></ng-content>
+    <ng-content select="igx-icon, [igxButton='icon'], [igxEnd]"></ng-content>
 </div>
-
-<div #buttons class="igx-card-actions__buttons">
-    <ng-content select="[igxButton]"></ng-content>
-</div>
-
 
 <ng-content></ng-content>
+
+<div #buttons class="igx-card-actions__buttons">
+    <ng-content select="[igxButton],[igxStart]"></ng-content>
+</div>
