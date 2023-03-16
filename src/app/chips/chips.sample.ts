@@ -58,7 +58,7 @@ export class ChipsSampleComponent implements OnInit {
         },
     ];
 
-    public chipTypes = ['default', 'primary', 'info', 'success', 'warning', 'error'];
+    public chipTypes = ['default', 'primary', 'info', 'success', 'warning', 'danger'];
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
 
@@ -100,6 +100,10 @@ export class ChipsSampleComponent implements OnInit {
 
     public hasPrefix = false;
 
+    public hasAvatar = false;
+
+    public hasProgressbar = false;
+
     public customIcons = false;
 
     public isDraggable = false;
@@ -109,6 +113,20 @@ export class ChipsSampleComponent implements OnInit {
     public isSelected = false;
 
     public density: DisplayDensity = 'comfortable';
+
+    public getSize() {
+        if(this.density === 'comfortable') {
+            return 'large'
+        }
+
+        if(this.density === 'cosy') {
+            return 'medium'
+        }
+
+        if(this.density === 'compact') {
+            return 'small'
+        }
+    }
 
     public displayDensities: Selection[];
 

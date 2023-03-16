@@ -32,7 +32,7 @@ export const IgxChipTypeVariant = mkenum({
     INFO: 'info',
     SUCCESS: 'success',
     WARNING: 'warning',
-    ERROR: 'error'
+    DANGER: 'danger'
 });
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
@@ -93,7 +93,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * Sets/gets the variant of the chip.
      *
      * @remarks
-     * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
+     * Allowed values are `primary`, `info`, `success`, `warning`, `danger`.
      * Providing an invalid value won't change the chip.
      *
      * @example
@@ -512,9 +512,9 @@ export class IgxChipComponent extends DisplayDensityBase {
         return this.variant === IgxChipTypeVariant.WARNING;
     }
 
-    @HostBinding('class.igx-chip--error')
-    protected get isError() {
-        return this.variant === IgxChipTypeVariant.ERROR;
+    @HostBinding('class.igx-chip--danger')
+    protected get isDanger() {
+        return this.variant === IgxChipTypeVariant.DANGER;
     }
 
     @HostBinding('class.igx-chip--cosy')

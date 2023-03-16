@@ -2,7 +2,7 @@
     <div class="preview sample-min-width">
 
         <div class="preview__sample">
-            <igx-chip #me *ngIf="!customIcons"
+            <igx-chip #me
                 [variant]="selected"
                 [displayDensity]="density"
                 [disabled]="isDisabled"
@@ -10,28 +10,38 @@
                 [removable]="isRemovable"
                 [selected]="isSelected"
                 [draggable]="isDraggable"
+                [removeIcon]="customIcons ? myRemoveIcon : null"
+                [selectIcon]="customIcons ? mySelectIcon : null"
                 (remove)="removeChip(me)">
+                <igx-avatar igxPrefix *ngIf="hasAvatar" class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
                 <igx-icon *ngIf="hasPrefix" igxPrefix>face</igx-icon>
                 Chip component
                 <igx-icon *ngIf="hasSuffix" igxSuffix>face</igx-icon>
+                <igx-circular-bar *ngIf="hasProgressbar" igxSuffix class="circular-sample" [indeterminate]="true"></igx-circular-bar>
             </igx-chip>
 
-            <igx-chip *ngIf="customIcons"
-                [variant]="selected"
-                [displayDensity]="density"
-                [disabled]="isDisabled"
-                [selectable]="isSelectable"
-                [removable]="isRemovable"
-                [selected]="isSelected"
-                [draggable]="isDraggable"
-                [removeIcon]="myRemoveIcon"
-                [selectIcon]="mySelectIcon">
-                <igx-icon *ngIf="hasPrefix" igxPrefix>face</igx-icon>
+            <small *ngIf="customIcons" style="color: hsla(var(--ig-error-500))">Expected to affect only Angular</small>
+
+            <span class="preview__compare">Angular VS WebC </span>
+
+            <igc-chip
+                size="{{getSize()}}"
+                selected="{{isSelected ? true : null}}"
+                selectable="{{isSelectable ? true: null}}"
+                removable="{{isRemovable? true : null}}"
+                disabled="{{isDisabled ? true : null}}"
+                variant="{{selected}}"
+            >
+                <igx-avatar slot="prefix" *ngIf="hasAvatar" class="chip-area-avatar" [shape]="'circle'" initials="MP"></igx-avatar>
+                <igx-icon *ngIf="hasPrefix" slot="prefix">face</igx-icon>
                 Chip component
-                <igx-icon *ngIf="hasSuffix" igxSuffix>face</igx-icon>
-            </igx-chip>
+                <igx-icon *ngIf="hasSuffix" slot="suffix">face</igx-icon>
+                <igx-circular-bar *ngIf="hasProgressbar" slot="suffix" class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+            </igc-chip>
 
-            <ng-template #mySelectIcon>
+            <small *ngIf="isDraggable" style="color: hsla(var(--ig-error-500))">WebC has no draggable functionality yet!</small>
+
+            <ng-template #mySelectIcon >
                 <igx-icon family="fa-solid" name="fa-check-circle"></igx-icon>
             </ng-template>
 
@@ -73,7 +83,7 @@
                 <label for="removable">Removable</label>
             </igx-switch>
 
-            <igx-switch id="customIcons" [(ngModel)]="customIcons">
+            <igx-switch *ngIf="isRemovable" id="customIcons" [(ngModel)]="customIcons">
                 <label for="customIcons">Custom Icons</label>
             </igx-switch>
 
@@ -83,6 +93,14 @@
 
             <igx-switch id="addSuffix"  [(ngModel)]="hasSuffix">
                 <label for="addSuffix">Add suffix</label>
+            </igx-switch>
+
+            <igx-switch id="hasAvatar" [(ngModel)]="hasAvatar">
+                <label for="hasAvatar">Add avatar</label>
+            </igx-switch>
+
+            <igx-switch id="hasProgressbar" [(ngModel)]="hasProgressbar">
+                <label for="hasProgressbar">Add progressbar</label>
             </igx-switch>
 
             <igx-switch id="draggable" [(ngModel)]="isDraggable">
@@ -147,7 +165,7 @@
                               (moveStart)="onMoveStartCc()"
                               (moveEnd)="moveEndedCc()">
                         <igx-avatar igxPrefix class="chip-area-avatar" [shape]="'circle'"
-                                    [src]="chip.picture">
+                                [src]="chip.picture">
                         </igx-avatar>
                         <span>{{chip.text}}</span>
                     </igx-chip>

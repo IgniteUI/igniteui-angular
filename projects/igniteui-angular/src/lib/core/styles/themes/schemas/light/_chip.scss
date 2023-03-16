@@ -279,6 +279,7 @@ $bootstrap-chip: extend(
 /// @type {Map}
 /// @prop {Number} ghost-elevation [1] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {Number} border-radius [16px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} text-color [color: ('gray', 700)] - The chip text color.
 /// @prop {Map} background [color: ('surface')] - The chip background color.
 /// @prop {Map} ghost-background [color: ('surface')] - The chip ghost background color.
 /// @prop {Map} hover-background [color: ('gray', 200)] - The chip hover background color.
@@ -306,6 +307,10 @@ $indigo-chip: extend(
 
         focus-outline-color: (
             color: ('gray', 300)
+        ),
+
+        text-color: (
+            color: ('gray', 700)
         ),
 
         focus-selected-outline-color: (

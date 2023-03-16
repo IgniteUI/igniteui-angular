@@ -27,8 +27,10 @@ $padding: 32px;
 
     &__sample {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: $padding;
         gap: $padding;
         flex: 1;
     }
@@ -92,12 +94,6 @@ $padding: 32px;
 .chip-area-connector {
     color: currentColor;
     opacity: .54;
-}
-
-.chip-area-avatar {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
 }
 
 .wrapperAreaCc,
