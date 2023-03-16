@@ -725,7 +725,6 @@
     %igx-chip__select {
         display: inline-flex;
         align-items: center;
-        width: rem(18px);
         opacity: 1;
         z-index: 1;
         transition: opacity 120ms $out-quad, width 120ms $out-quad;
