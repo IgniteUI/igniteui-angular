@@ -41,13 +41,13 @@ export class WorksheetDataDictionary {
         return this._columnWidths;
     }
 
-    public saveValue(value: any, isHeader: boolean): number {
+    public saveValue(value: any, isHeader: boolean, shouldSanitizeValue: boolean = true): number {
         let sanitizedValue = '';
         const isDate = value instanceof Date;
         const isSavedAsString = isHeader || (typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value) && !isDate);
 
         if (isSavedAsString) {
-            sanitizedValue = this.sanitizeValue(value);
+            sanitizedValue = shouldSanitizeValue ? ExportUtilities.sanitizeValue(value) : value;
 
             if (this._dictionary[sanitizedValue] === undefined) {
                 this._dictionary[sanitizedValue] = this._counter++;
@@ -65,7 +65,7 @@ export class WorksheetDataDictionary {
     }
 
     public getValue(value: string): number {
-        return this.getSanitizedValue(this.sanitizeValue(value));
+        return this.getSanitizedValue(ExportUtilities.sanitizeValue(value));
     }
 
     public getSanitizedValue(sanitizedValue: string): number {
@@ -99,19 +99,6 @@ export class WorksheetDataDictionary {
         }
 
         return this._context;
-    }
-
-    private sanitizeValue(value: any): string {
-        if (ExportUtilities.hasValue(value) === false) {
-            return '';
-        } else {
-            const stringValue = String(value);
-            return stringValue.replace(/&/g, '&amp;')
-                            .replace(/</g, '&lt;')
-                            .replace(/>/g, '&gt;')
-                            .replace(/"/g, '&quot;')
-                            .replace(/'/g, '&apos;');
-        }
     }
 
     private dirtyKeyCollections(): void {
