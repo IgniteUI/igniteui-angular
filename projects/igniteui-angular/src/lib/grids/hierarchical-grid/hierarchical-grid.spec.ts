@@ -394,17 +394,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
             expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid']));
 
             hierarchicalGrid.displayDensity = DisplayDensity.cosy;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
 
             hierarchicalGrid.displayDensity = DisplayDensity.compact;
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+            expect(hierarchicalGrid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact']));
             expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
         });
 

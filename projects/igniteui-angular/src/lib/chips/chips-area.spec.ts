@@ -106,7 +106,7 @@ describe('IgxChipsArea ', () => {
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
     const CHIP_SELECT_ICON = 'igx-chip__select';
     const CHIP_SELECT_ICON_HIDDEN = 'igx-chip__select--hidden';
-    const TEST_CHIP_AREA_CLASS = 'igx-chip-area customClass';
+    const CHIP_AREA_CLASS = 'igx-chip-area';
 
     let fix;
     let chipArea: IgxChipsAreaComponent;
@@ -130,7 +130,7 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should add chips when adding data items ', () => {
-            expect(chipAreaElement.nativeElement.className).toEqual(TEST_CHIP_AREA_CLASS);
+            expect(chipAreaElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['customClass', CHIP_AREA_CLASS]));
             expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });

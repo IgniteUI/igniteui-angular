@@ -610,7 +610,7 @@ export class WorksheetFile implements IExcelFile {
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
 
-                const columnValue = dictionary.saveValue(currentCol.header, true);
+                const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
                     ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)

@@ -259,6 +259,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[1].hasSummary = true;
             grid.summaryRowHeight = 0;
+            // density with custom class #6931:
+            grid.nativeElement.classList.add('custom');
             fixture.detectChanges();
 
             const headerHight = fixture.debugElement.query(By.css(THEAD_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
@@ -268,6 +270,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaryRowHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement;
 
 
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid', 'custom']));
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
@@ -278,7 +281,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy', 'custom']));
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
@@ -289,7 +292,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact', 'custom']));
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
