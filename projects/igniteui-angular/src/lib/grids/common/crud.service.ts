@@ -20,6 +20,7 @@ export class IgxEditRow {
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
+            primaryKey: this.id,
             rowData: this.data,
             oldValue: this.data,
             cancel: false,
@@ -40,6 +41,7 @@ export class IgxEditRow {
         const rowData = updatedData ?? this.grid.gridAPI.getRowData(this.id);
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
+            primaryKey: this.id,
             rowData,
             oldValue: cachedRowData,
             newValue: updatedData,
@@ -136,6 +138,7 @@ export class IgxCell {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
+            primaryKey: this.id.rowID,
             cellID: this.id,
             rowData: this.rowData,
             oldValue: this.value,
@@ -158,6 +161,7 @@ export class IgxCell {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
+            primaryKey: this.id.rowID,
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
@@ -538,8 +542,11 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         if (isAddRow) {
             this.endAddRow();
             if (commit) {
-                this.grid.rowAddedNotifier.next({ data: args.newValue, owner: this.grid });
-                this.grid.rowAdded.emit({ data: args.newValue, owner: this.grid });
+                // this.grid.rowAddedNotifier.next({ data: args.newValue, owner: this.grid });
+                // this.grid.rowAdded.emit({ data: args.newValue, owner: this.grid });
+                const rowAddedEventArgs: IRowDataEventArgs = { data: args.newValue, owner: this.grid, primaryKey: args.newValue[this.grid.primaryKey] }
+                this.grid.rowAddedNotifier.next(rowAddedEventArgs);
+                this.grid.rowAdded.emit(rowAddedEventArgs);
             }
         }
 

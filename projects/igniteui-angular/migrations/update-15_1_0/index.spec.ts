@@ -134,8 +134,38 @@ describe(`Update to ${version}`, () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
-        <igx-avatar initials="MS" shape="rounded" size="large"></igx-avatar>
+        <igx-avatar initials="MS" shape="circle" size="large"></igx-avatar>
         `
+        );
+    });
+
+    it('should rename the $size property to the $scrollbar-size', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-scrollbar: scrollbar-theme($size: 10px);`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-scrollbar: scrollbar-theme($scrollbar-size: 10px);`
+        );
+    });
+
+    it('should remove the $label-floated-background amd $label-floated-disabled-background properties from the input-group-theme', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-input: input-group-theme($label-floated-background: transparent, $label-floated-disabled-background: transparent);`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-input: input-group-theme();`
         );
     });
 });
