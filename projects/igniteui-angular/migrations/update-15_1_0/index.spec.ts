@@ -122,4 +122,50 @@ describe(`Update to ${version}`, () => {
             <igx-query-builder (densityChanged)="onDensityChanged($event)"></igx-query-builder>
             <igx-tree (densityChanged)="onDensityChanged($event)"></igx-tree>`);
     });
+
+    it('should replace avatar roundShape property with shape', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-avatar initials="MS" [roundShape]="true" size="large"></igx-avatar>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-avatar initials="MS" shape="circle" size="large"></igx-avatar>
+        `
+        );
+    });
+
+    it('should rename the $size property to the $scrollbar-size', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-scrollbar: scrollbar-theme($size: 10px);`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-scrollbar: scrollbar-theme($scrollbar-size: 10px);`
+        );
+    });
+
+    it('should remove the $label-floated-background amd $label-floated-disabled-background properties from the input-group-theme', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$custom-input: input-group-theme($label-floated-background: transparent, $label-floated-disabled-background: transparent);`
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$custom-input: input-group-theme();`
+        );
+    });
 });

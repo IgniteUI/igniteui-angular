@@ -9,7 +9,7 @@ import { IgxGridComponent,
 @Component({
     providers: [],
     selector: 'app-grid-column-pinning-sample',
-    styleUrls: ['grid-column-pinning.sample.css'],
+    styleUrls: ['grid-column-pinning.sample.scss'],
     templateUrl: 'grid-column-pinning.sample.html'
 })
 

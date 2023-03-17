@@ -29,7 +29,7 @@ import { RemoteNWindService } from './remote-nwind.service';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
-    styleUrls: ['combo.sample.css']
+    styleUrls: ['combo.sample.scss']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })
@@ -40,6 +40,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     @ViewChild('remoteCombo')
     public remoteCombo: IgxComboComponent;
+
+    @ViewChild('densityCombo')
+    public densityCombo: IgxComboComponent;
 
     @ViewChild('remoteSimpleCombo')
     public remoteSimpleCombo: IgxSimpleComboComponent;
@@ -245,7 +248,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public setDensity(density: DisplayDensity) {
-        this.igxCombo.displayDensity = density;
+        this.densityCombo.displayDensity = density;
     }
 
     public handleSelectionChange(event: IComboSelectionChangingEventArgs) {

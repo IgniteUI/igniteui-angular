@@ -4,6 +4,7 @@ import { data, dataWithoutPK } from '../shared/data';
  @Component({
     providers: [],
     selector: 'app-grid-percantge-widths.sample',
+    styleUrls: ['grid-percantge-widths.sample.scss'],
     templateUrl: 'grid-percantge-widths.sample.html'
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {

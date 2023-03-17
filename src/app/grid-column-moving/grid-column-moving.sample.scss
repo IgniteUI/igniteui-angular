@@ -1,0 +1,45 @@
+.sample-buttons {
+    margin: 1rem 0;
+
+    &:first-child{
+        width: 10rem;
+    }
+}
+
+[igxButton] {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.density-chooser {
+    margin-bottom: 16px;
+    max-width: 900px;
+}
+
+.references {
+    font-size: .75em;
+}
+
+.references > p {
+    margin: 0;
+    letter-spacing: initial;
+    line-height: initial;
+    font-size: 1em;
+}
+
+section {
+    height: 800px;
+    padding: 0;
+    margin-bottom :2rem;
+}
+
+.igx-input-group__bundle {
+    width: 10rem;
+}
+
+// igx-grid {
+
+//     &:last-child {
+//         margin-bottom: 3rem;
+//     }
+// }

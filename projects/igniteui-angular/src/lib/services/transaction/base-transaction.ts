@@ -1,4 +1,4 @@
-import { TransactionService, Transaction, State, StateUpdateEvent } from './transaction';
+import { TransactionService, Transaction, State, StateUpdateEvent, TransactionType } from './transaction';
 import { EventEmitter } from '@angular/core';
 import { isObject, mergeObjects } from '../../core/utils';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
@@ -185,6 +185,8 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
             state = { value: this.cloneStrategy.clone(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
+
+        this.cleanState(transaction.id, states);
     }
 
     /**
@@ -209,6 +211,42 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
             return mergeObjects(this.cloneStrategy.clone(first), second);
         } else {
             return second ? second : first;
+        }
+    }
+
+    /**
+     * Compares the state with recordRef and clears all duplicated values. If any state ends as
+     * empty object removes it from states.
+     *
+     * @param state State to clean
+     */
+    protected cleanState(id: any, states: Map<any, S>): void {
+        const state = states.get(id);
+        //  do nothing if
+        //  there is no state, or
+        //  there is no state value (e.g. DELETED transaction), or
+        //  there is no recordRef (e.g. ADDED transaction)
+        if (state && state.value && state.recordRef) {
+            //  if state's value is object compare each key with the ones in recordRef
+            //  if values in any key are the same delete it from state's value
+            //  if state's value is not object, simply compare with recordRef and remove
+            //  the state if they are equal
+            if (isObject(state.recordRef)) {
+                for (const key of Object.keys(state.value)) {
+                    if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
+                        delete state.value[key];
+                    }
+                }
+
+                //  if state's value is empty remove the state from the states, only if state is not DELETE type
+                if (state.type !== TransactionType.DELETE && Object.keys(state.value).length === 0) {
+                    states.delete(id);
+                }
+            } else {
+                if (state.recordRef === state.value) {
+                    states.delete(id);
+                }
+            }
         }
     }
 }
