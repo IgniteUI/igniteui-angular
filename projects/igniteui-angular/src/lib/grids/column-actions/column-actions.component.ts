@@ -62,7 +62,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * this.columnHidingUI.cssClass = 'column-chooser';
      * ```
      */
-    @HostBinding('attr.class')
+    @HostBinding('class')
     public cssClass = 'igx-column-actions';
     /**
      * Gets/sets the max height of the columns area.
