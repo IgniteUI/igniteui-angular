@@ -740,6 +740,21 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
+
+        it('Should escape special chars in headers', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            grid.columnList.get(1).header = '&';
+            grid.columnList.get(2).header = '<>';
+            grid.columnList.get(3).header = '"';
+            grid.columnList.get(4).header = '\'';
+
+
+            await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
+        });
     });
 
     describe('', () => {

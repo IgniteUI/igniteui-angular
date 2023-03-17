@@ -398,7 +398,7 @@ export class WorksheetFile implements IExcelFile {
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
 
-                const columnValue = dictionary.saveValue(currentCol.header, true);
+                const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = ExcelStrings.getExcelColumn(column) + rowCoordinate;
                 rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
