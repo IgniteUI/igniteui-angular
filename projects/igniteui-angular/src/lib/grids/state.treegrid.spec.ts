@@ -374,7 +374,7 @@ class HelperFunctions {
     </igx-tree-grid>
     `,
     standalone: true,
-    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgFor]
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

@@ -23,13 +23,11 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridFilteringComponent,
                 IgxTreeGridFilteringRowEditingComponent,
                 IgxTreeGridFilteringESFTemplatesComponent
-            ],
-            imports: [
-                NoopAnimationsModule
             ]
         }).compileComponents();
     }));

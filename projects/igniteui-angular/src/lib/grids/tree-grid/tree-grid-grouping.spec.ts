@@ -13,8 +13,11 @@ describe('IgxTreeGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxTreeGridGroupingComponent, IgxTreeGridGroupByAreaTestComponent],
-            imports: [ NoopAnimationsModule ]
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeGridGroupingComponent,
+                IgxTreeGridGroupByAreaTestComponent
+            ]
         }).compileComponents();
     }));
 

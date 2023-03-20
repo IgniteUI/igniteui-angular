@@ -10,7 +10,7 @@ import { Point } from '../../services/public_api';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxRowDragDirective } from '../row-drag.directive';
+import { IgxDragIndicatorIconDirective, IgxRowDragDirective, IgxRowDragGhostDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -1190,7 +1190,7 @@ describe('Row Drag Tests', () => {
         </div>
     `,
     standalone: true,
-    imports: [IgxGridComponent, NgStyle]
+    imports: [IgxGridComponent, IgxDropDirective, NgStyle]
 })
 export class IgxGridRowDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1260,7 +1260,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxIconComponent, NgStyle]
+    imports: [IgxGridComponent, IgxIconComponent, IgxDropDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, NgStyle]
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1324,7 +1324,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
         </igx-grid></div>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
     @ViewChild('dragGrid', { read: IgxGridComponent, static: true })
@@ -1363,9 +1363,9 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             <igx-column [field]="'Col2'"></igx-column>
             <igx-column [field]="'Col3'"></igx-column>
         </igx-hierarchical-grid>
-        </div>`,
+    </div>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxDropDirective]
 })
 export class IgxHierarchicalGridTestComponent {
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
@@ -1406,7 +1406,7 @@ export class IgxHierarchicalGridTestComponent {
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxRowDragGhostDirective]
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
@@ -1439,7 +1439,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
     </igx-grid></div>
     `,
     standalone: true,
-    imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent]
+    imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxTreeGridTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
