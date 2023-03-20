@@ -1440,12 +1440,33 @@ describe('IgxSimpleCombo', () => {
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
+        }));
+
+        it('should not open when clearing the selection from the clear icon when the combo is collapsed', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSimpleComboSampleComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.combo;
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(false);
+
+            combo.select('Connecticut');
+            fixture.detectChanges();
+
+            expect(combo.selection.length).toBe(1);
+            expect(combo.selection[0]).toEqual('Connecticut');
+            fixture.detectChanges();
+
+            combo.dropdown.close();
+            tick();
+            fixture.detectChanges();
+            expect(combo.collapsed).toEqual(true);
 
             combo.handleClear(new MouseEvent('click'));
             fixture.detectChanges();
             expect(combo.value).toEqual('');
-            expect(combo.collapsed).toEqual(false);
-            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
+            expect(combo.collapsed).toEqual(true);
         }));
     });
 
