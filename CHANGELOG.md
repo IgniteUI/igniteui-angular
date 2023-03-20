@@ -43,7 +43,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`.
 - `IgxOverlayService`
     - `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) is now deprecated in line with API deprecated in Angular 13. New overload is added accepting `ViewComponentRef` that should be used instead.
-
+- `IgxSimpleCombo`
+    - **Breaking Change** The `IgxSimpleCombo` will not open its drop-down on clear.
 
 ## 15.0.1
 
