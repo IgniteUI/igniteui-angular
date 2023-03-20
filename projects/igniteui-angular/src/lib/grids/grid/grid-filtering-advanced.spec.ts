@@ -28,7 +28,6 @@ const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__li
 const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
-const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite((() => {
@@ -1255,13 +1254,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
             tick(200);
 
-            // Simulate end of chip selection animation
-            const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
-            const transitionEvent = new TransitionEvent('transitionend', {
-                propertyName: 'width'
-            });
-            chipSelectHidden.dispatchEvent(transitionEvent);
-
             // Scroll to the bottom.
             exprContainer.scrollTop = exprContainer.scrollHeight;
 
@@ -1993,13 +1985,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
                 tick(200);
 
-                 // Simulate end of chip selection animation
-                 const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
-                 const transitionEvent = new TransitionEvent('transitionend', {
-                     propertyName: 'width'
-                 });
-                 chipSelectHidden.dispatchEvent(transitionEvent);
-
                 // Verify context menu is visible.
                 verifyContextMenuVisibility(fix, true);
                 verifyContextMenuType(fix, false);
@@ -2007,10 +1992,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Unselect one of the two selected chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
                 tick(200);
-
-                // Simulate end of chip selection animation
-                const chipSelect = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
-                chipSelect.dispatchEvent(transitionEvent);
 
                 // Verify context menu is no longer visible.
                 verifyContextMenuVisibility(fix, false);
@@ -2232,13 +2213,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 operatorLine.click();
 
-                // Simulate end of chip selection animation
-                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
-                const transitionEvent = new TransitionEvent('transitionend', {
-                    propertyName: 'width'
-                });
-                chipSelectHidden.dispatchEvent(transitionEvent);
-
                 // Verify context menu is visible.
                 verifyContextMenuVisibility(fix, true);
                 verifyContextMenuType(fix, true);
@@ -2356,7 +2330,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 GridFunctions.clickAdvancedFilteringApplyButton(fix);
                 tick(100);
                 fix.detectChanges();
-                
+
                 // Open the advanced filtering dialog
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
@@ -2432,7 +2406,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 GridFunctions.clickAdvancedFilteringApplyButton(fix);
                 tick(100);
                 fix.detectChanges();
-                
+
                 // Open the advanced filtering dialog
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
@@ -2533,7 +2507,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 GridFunctions.clickAdvancedFilteringApplyButton(fix);
                 tick(100);
                 fix.detectChanges();
-                 
+
                 // Open the advanced filtering dialog
                 grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
@@ -2545,7 +2519,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
                 expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
-                 
+
                 // Verify the advancedFilteringExpressionsTree filteringOperands operator
                 expect(grid.advancedFilteringExpressionsTree.filteringOperands.length).toEqual(1);
             }));
@@ -2571,13 +2545,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-
-                // Simulate end of chip selection animation
-                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
-                const transitionEvent = new TransitionEvent('transitionend', {
-                    propertyName: 'width'
-                });
-                chipSelectHidden.dispatchEvent(transitionEvent);
 
                 // Verify context menu is opened.
                 verifyContextMenuVisibility(fix, true);
@@ -2614,13 +2581,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-
-                // Simulate end of chip selection animation
-                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
-                const transitionEvent = new TransitionEvent('transitionend', {
-                    propertyName: 'width'
-                });
-                chipSelectHidden.dispatchEvent(transitionEvent);
 
                 // Verify context menu is opened.
                 verifyContextMenuVisibility(fix, true);
@@ -2855,13 +2815,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
 
-            // Simulate end of chip selection animation
-            const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
-            const transitionEvent = new TransitionEvent('transitionend', {
-                propertyName: 'width'
-            });
-            chipSelectHidden.dispatchEvent(transitionEvent);
-
             expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
             expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].innerText).toBe('My create or group');
             expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].innerText).toBe('My delete filters');
@@ -3088,11 +3041,9 @@ const verifyExpressionChipSelectionByChip = (chip: HTMLElement, shouldBeSelected
     if (shouldBeSelected) {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
         expect(chipItem.querySelector(CHIP_SELECT_CLASS)).not.toBeNull();
-        expect(chipItem.querySelector(CHIP_SELECT_HIDDEN_CLASS)).toBeNull();
     } else {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
         expect(chipItem.querySelector(CHIP_SELECT_CLASS)).toBeNull();
-        expect(chipItem.querySelector(CHIP_SELECT_HIDDEN_CLASS)).not.toBeNull();
     }
 };
 
