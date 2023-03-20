@@ -145,7 +145,7 @@ describe('IgxChip', () => {
             expect(chipRemoveButton).toBeTruthy();
         });
 
-        fit('should change chip variant', () => {
+        it('should change chip variant', () => {
             const fixture = TestBed.createComponent(IgxChipComponent);
             const igxChip = fixture.componentInstance;
 
