@@ -88,18 +88,6 @@ export class IgxCardHeaderComponent {
     @HostBinding('class.igx-card-header--vertical')
     @Input()
     public vertical = false;
-
-    /**
-     * An @Input property that sets the value of the `role` attribute of the card header.
-     * By default the value is set to `header`.
-     *
-     * @example
-     * ```html
-     * <igx-card-header role="header"></igx-card-header>
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'header';
 }
 
 /**
