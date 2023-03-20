@@ -107,6 +107,43 @@
     </section>
 
     <section class="combo-sample__section">
+        <h1 class="combo-sample__title">Open simple combo on clear by handling the selectionChanging event</h1>
+        <!-- Simple combo with selectionChanging event -->
+        <igx-simple-combo  
+                    #openOnClearSimpleComboEvent
+                    [displayDensity]="'comfortable'"
+                    [(ngModel)]="selectedValueSimpleComboEvent"
+                    type="border"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''" 
+                    (selectionChanging)="openOnClearSelectionChanging($event)">
+                <label igxLabel>States</label>
+                <igx-hint>Click clear icon.</igx-hint>
+        </igx-simple-combo>
+        <h1 class="combo-sample__title">Open simple combo on clear with template for the clear icon</h1>
+        <!-- Simple combo with template for the clear icon -->
+        <igx-simple-combo  
+                    #openOnClearSimpleComboTemplate
+                    [displayDensity]="'comfortable'"
+                    [(ngModel)]="selectedValueSimpleComboTemplate"
+                    type="border"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''" >
+                <label igxLabel>States</label>
+                <igx-hint>Click clear icon.</igx-hint>
+                <ng-template igxComboClearIcon>
+                    <igx-icon (click)="openSimpleComboTemplate()">cancel</igx-icon>
+                </ng-template>
+        </igx-simple-combo>
+    </section>
+
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Template items</h1>
 
         <div class="combo-sample__row combo-sample__row--buttons">

@@ -56,6 +56,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
     private simpleCombo;
 
+    @ViewChild('openOnClearSimpleComboEvent', { read: IgxSimpleComboComponent, static: true })
+    public openOnClearSimpleComboEvent;
+
+    @ViewChild('openOnClearSimpleComboTemplate', { read: IgxSimpleComboComponent, static: true })
+    public openOnClearSimpleComboTemplate;
+
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
@@ -64,6 +70,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public items: any[] = [];
     public values1: Array<any> = ['Arizona'];
     public singleValue = 'Arizona';
+    public selectedValueSimpleComboEvent = 'Connecticut';
+    public selectedValueSimpleComboTemplate = 'Connecticut';
     public values2: Array<any>;
     public isDisabled = false;
 
@@ -409,5 +417,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                 this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
             }
         );
+    }
+
+    public openOnClearSelectionChanging(event: ISimpleComboSelectionChangingEventArgs){
+        if(!event.newSelection){
+            this.openOnClearSimpleComboEvent.open();
+        }   
+    }
+
+    public openSimpleComboTemplate(){
+        this.openOnClearSimpleComboTemplate.open();
     }
 }
