@@ -145,6 +145,18 @@ describe('IgxChip', () => {
             expect(chipRemoveButton).toBeTruthy();
         });
 
+        fit('should change chip variant', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+
+            igxChip.variant = 'danger';
+
+            fixture.detectChanges();
+
+            expect(igxChip.variant).toMatch('danger');
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+        });
+
         it('should set text in chips correctly', () => {
             const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
             const firstChipTextElement = chipElements[0].queryAllNodes(By.css(`.${CHIP_TEXT_CLASS}`));
