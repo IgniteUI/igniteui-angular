@@ -1,6 +1,8 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+// process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -12,12 +14,12 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
-        'karma-parallel',
-        'karma-jasmine',
-        'karma-coverage',
-        'karma-chrome-launcher',
-        'karma-spec-reporter',
-        '@angular-devkit/build-angular/plugins/karma'
+      'karma-parallel',
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-chrome-launcher',
+      'karma-spec-reporter',
+      '@angular-devkit/build-angular/plugins/karma'
     ],
     parallelOptions: {
       executors: 2,
@@ -27,9 +29,7 @@ module.exports = function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
         random: false
-      },
-      tagPrefix: '#',
-      skipTags: 'perf'
+      }
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
@@ -40,6 +40,9 @@ module.exports = function (config) {
       ]
     },
     reporters: ['spec'],
+    specReporter: {
+        suppressSkipped: true
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

@@ -356,6 +356,23 @@ export class IgxTreeGridSummariesKeyScroliingComponent {
 
 @Component({
     template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" width="400px" height="800px">
+        <igx-column [field]="'ID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" width="150px" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" width="150px" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" width="150px" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithNoForeignKeyComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
         width="900px" height="1000px" [summaryCalculationMode]="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
@@ -652,9 +669,7 @@ export class IgxTreeGridLoadOnDemandComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
-            done(this.allData.filter(r => r.ParentID === parentID));
-        }, 1000);
+        requestAnimationFrame(() => done(this.allData.filter(r => r.ParentID === parentID)));
     };
 }
 @Component({
@@ -696,9 +711,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
-            done(this.allData.filter(r => r.ParentID === parentID));
-        }, 1000);
+        requestAnimationFrame(() => done(this.allData.filter(r => r.ParentID === parentID)));
     };
 }
 
@@ -741,10 +754,10 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
     }
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const children = this.getChildren(parentID);
             done(children);
-        }, 1000);
+        });
     };
 
     private getChildren(parentID) {

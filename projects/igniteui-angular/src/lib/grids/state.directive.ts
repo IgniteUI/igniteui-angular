@@ -15,7 +15,6 @@ import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
-import { delay, take } from 'rxjs/operators';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridType, IGX_GRID_BASE } from './common/grid.interface';
@@ -422,7 +421,7 @@ export class IgxGridStateDirective {
                     return;
                 }
                 context.restoreValues(config, context.currGrid as IgxPivotGridComponent);
-                context.restoreDimensions(config, context.currGrid as IgxPivotGridComponent);
+                context.restoreDimensions(config);
                 (context.currGrid as IgxPivotGridComponent).pivotConfiguration = config;
             },
 
@@ -579,7 +578,7 @@ export class IgxGridStateDirective {
      * This method restores complex objects in the pivot dimensions
      * Like the IgxPivotDateDimension and filters.
      */
-    private restoreDimensions(config: IPivotConfiguration, grid: IgxPivotGridComponent) {
+    private restoreDimensions(config: IPivotConfiguration) {
         const collections = [config.rows, config.columns, config.filters];
         for (const collection of collections) {
             for (let index = 0; index < collection?.length; index++) {

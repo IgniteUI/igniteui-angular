@@ -27,7 +27,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     SelectionWithScrollsComponent
                 ],
@@ -35,15 +35,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-            tick();
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -601,7 +600,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Group by: Should be able group columns with keyboard', () => {
-            spyOn(grid.onGroupingDone, 'emit').and.callThrough();
+            spyOn(grid.groupingDone, 'emit').and.callThrough();
             grid.getColumnByName('ID').groupable = true;
             grid.getColumnByName('Name').groupable = true;
 
@@ -657,7 +656,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             expect(grid.groupingExpressions.length).toEqual(1);
             expect(grid.groupingExpressions[0].fieldName).toEqual('ID');
-            expect(grid.onGroupingDone.emit).toHaveBeenCalled();
+            expect(grid.groupingDone.emit).toHaveBeenCalled();
         });
 
         it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
@@ -734,7 +733,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     MRLTestComponent
                 ],
@@ -742,7 +741,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(MRLTestComponent);
             fix.detectChanges();
 
@@ -750,7 +749,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();
@@ -939,7 +938,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [
                     ColumnGroupsNavigationTestComponent
                 ],
@@ -947,7 +946,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             });
         }));
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(ColumnGroupsNavigationTestComponent);
             fix.detectChanges();
 
@@ -955,7 +954,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
             gridHeader = GridFunctions.getGridHeader(grid);
-        }));
+        });
 
         afterEach(() => {
             clearGridSubs();

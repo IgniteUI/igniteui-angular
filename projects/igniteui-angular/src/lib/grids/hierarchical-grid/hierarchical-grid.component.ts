@@ -612,7 +612,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (this.parent) {
             this._displayDensity = this.rootGrid.displayDensity;
             this.summaryService.summaryHeight = 0;
-            this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.rootGrid.densityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this._displayDensity = this.rootGrid.displayDensity;
                 this.summaryService.summaryHeight = 0;
                 this.notifyChanges(true);
@@ -1096,7 +1096,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+    protected onColumnsChanged() {
         Promise.resolve().then(() => {
             this.updateColumnList();
         });
@@ -1140,10 +1140,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
 
-    private hg_verticalScrollHandler(event) {
+    private hg_verticalScrollHandler() {
         this.scrollTop = this.verticalScrollContainer.scrollPosition;
     }
-    private hg_horizontalScrollHandler(event) {
+    private hg_horizontalScrollHandler() {
         this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }

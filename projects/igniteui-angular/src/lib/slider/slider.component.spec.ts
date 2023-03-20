@@ -1826,10 +1826,10 @@ export class SliderTicksComponent {
     public primaryTicks = 0;
     public secondaryTicks = 0;
     public showTicks = true;
-    public ticksOrientation = TicksOrientation.Bottom;
+    public ticksOrientation: TicksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
-    public tickLabelsOrientation = TickLabelsOrientation.Horizontal;
+    public tickLabelsOrientation: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
 }
 @Component({
     selector: 'igx-slider-test-component',
@@ -1866,7 +1866,7 @@ class SliderTestComponent {
 
     public minValue = 0;
     public maxValue = 10;
-    public type = IgxSliderType.SLIDER;
+    public type: IgxSliderType = IgxSliderType.SLIDER;
 
     public changeMinValue(val: number) {
         this.minValue = val;

@@ -3,7 +3,7 @@ import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPin
 
 @Component({
     selector: 'app-grid-column-groups-sample',
-    styleUrls: ['grid-column-groups.sample.css'],
+    styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html'
 })
 export class GridColumnGroupsSampleComponent {

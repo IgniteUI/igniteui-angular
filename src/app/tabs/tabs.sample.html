@@ -34,7 +34,7 @@
                             <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                                 <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                                                *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar" [roundShape]="true"></igx-avatar>
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar"></igx-avatar>
                                     <p igxListLineTitle>{{contact.text}}</p>
                                     <span igxListLineSubTitle>{{contact.phone}}</span>
                                     <igx-icon igxListAction>phone</igx-icon>
@@ -245,7 +245,7 @@
             >
                 <igx-tab-item *ngFor="let contact of contacts; index as i">
                     <igx-tab-header>
-                        <igx-avatar igxPrefix [initials]="contact.text" size="small" [roundShape]="true">person</igx-avatar>
+                        <igx-avatar igxPrefix [initials]="contact.text" size="small">person</igx-avatar>
                         <span igxTabHeaderLabel>{{contact.text}}</span>
                         <button
                             igxButton="icon"
@@ -283,7 +283,6 @@
             </igx-tabs>
         </div>
 
-        
         <div >
             <h3 class="sample-title">Tab with grid</h3>
             <igx-tabs>

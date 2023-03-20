@@ -26,7 +26,7 @@ describe('Row Pinning #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,
                 GridRowPinningWithMRLComponent,

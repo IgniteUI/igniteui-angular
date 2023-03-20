@@ -2,7 +2,7 @@ import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconModule } from '../icon/public_api';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,53 +19,53 @@ describe('igxActionStrip', () => {
     let parentContainer: ElementRef;
     let innerContainer: ViewContainerRef;
 
-    describe('Unit tests: ', () => {
-        const mockViewContainerRef = jasmine.createSpyObj('ViewContainerRef', ['element']);
-        const mockRenderer2 = jasmine.createSpyObj('Renderer2', ['appendChild', 'removeChild']);
-        const mockContext = jasmine.createSpyObj('context', ['element']);
-        const mockDisplayDensity = jasmine.createSpyObj('IDisplayDensityOptions', ['displayDensity']);
-        const cdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-
-        it('should properly get/set hidden', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockRenderer2, mockDisplayDensity, cdr);
-            expect(actionStrip.hidden).toBeFalsy();
-            actionStrip.hidden = true;
-            expect(actionStrip.hidden).toBeTruthy();
-        });
-
-        it('should properly show and hide using API', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockRenderer2, mockDisplayDensity, cdr);
-            actionStrip.show(mockContext);
-            expect(actionStrip.hidden).toBeFalsy();
-            expect(actionStrip.context).toBe(mockContext);
-            actionStrip.hide();
-            expect(actionStrip.hidden).toBeTruthy();
+    configureTestSuite(() => {
+        return TestBed.configureTestingModule({
+            declarations: [
+                IgxActionStripComponent,
+                IgxActionStripTestingComponent,
+                IgxActionStripMenuTestingComponent,
+                IgxActionStripCombinedMenuTestingComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxActionStripModule,
+                IgxIconModule,
+                IgxToggleModule
+            ]
         });
     });
 
+    describe('Unit tests: ', () => {
+
+        it('should properly show and hide using API', () => {
+            fixture = TestBed.createComponent(IgxActionStripComponent);
+            actionStrip = fixture.componentInstance as IgxActionStripComponent;
+            fixture.detectChanges();
+
+            const el = document.createElement('div');
+            fixture.debugElement.nativeElement.appendChild(el);
+            actionStrip.show(el);
+            expect(actionStrip.hidden).toBeFalsy();
+            expect(actionStrip.context).toBe(el);
+            actionStrip.hide();
+            expect(actionStrip.hidden).toBeTruthy();
+            fixture.debugElement.nativeElement.removeChild(el);
+        });
+
+    });
+
     describe('Initialization and rendering tests: ', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            }).compileComponents();
-        }));
-        beforeEach(fakeAsync(() => {
+
+        beforeEach(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             actionStripElement = fixture.componentInstance.actionStripElement;
             parentContainer = fixture.componentInstance.parentContainer;
             innerContainer = fixture.componentInstance.innerContainer;
-        }));
+        });
+
         it('should be overlapping its parent container when no context is applied', () => {
             const parentBoundingRect = parentContainer.nativeElement.getBoundingClientRect();
             const actionStripBoundingRect = actionStripElement.nativeElement.getBoundingClientRect();
@@ -99,24 +99,29 @@ describe('igxActionStrip', () => {
             const asQuery = fixture.debugElement.query(By.css('igx-action-strip'));
             expect(asQuery.nativeElement.style.display).toBe('none');
         });
+
+        it('should change displayDensity runtime correctly', () => {
+            // density with custom class applied
+            actionStripElement.nativeElement.classList.add('custom');
+            fixture.detectChanges();
+
+            expect(actionStripElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['custom', 'igx-action-strip']));
+
+            actionStrip.displayDensity = 'cosy';
+            fixture.detectChanges();
+            expect(actionStripElement.nativeElement.classList).toEqual(
+                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--cosy'])
+            );
+
+            actionStrip.displayDensity = 'compact';
+            fixture.detectChanges();
+            expect(actionStripElement.nativeElement.classList).toEqual(
+                jasmine.arrayWithExactContents(['custom', 'igx-action-strip', 'igx-action-strip--compact'])
+            );
+        });
     });
 
     describe('render content as menu', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxActionStripMenuTestingComponent,
-                    IgxActionStripCombinedMenuTestingComponent
-                ],
-                imports: [
-                    IgxActionStripModule,
-                    IgxIconModule,
-                    NoopAnimationsModule,
-                    IgxToggleModule
-                ]
-            }).compileComponents();
-        }));
 
         it('should render tree-dot button which toggles the content as menu', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);

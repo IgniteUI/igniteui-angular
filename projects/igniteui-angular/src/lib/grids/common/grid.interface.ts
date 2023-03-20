@@ -6,7 +6,7 @@ import {
     IGridEditDoneEventArgs, IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -315,6 +315,8 @@ export interface GridServiceType {
     sort_multiple(expressions: ISortingExpression[]): void;
     clear_sort(fieldName: string): void;
 
+    get_pin_row_event_args(rowID: any, index?: number, row?: RowType , pinned?: boolean): IPinRowEventArgs;
+
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
@@ -565,7 +567,7 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanging: EventEmitter<IColumnVisibilityChangingEventArgs>;
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
-    onDensityChanged: EventEmitter<IDensityChangedEventArgs>;
+    densityChanged: EventEmitter<IDensityChangedEventArgs>;
     rowAdd: EventEmitter<IGridEditEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     /* blazorSuppress */
@@ -832,7 +834,7 @@ export interface IgxCellTemplateContext {
     formControl?: FormControl<any>,
     /* blazorSuppress */
     defaultErrorTemplate?: TemplateRef<any>,
-    cell?: CellType
+    cell: CellType
 }
 
 export interface IgxRowSelectorTemplateDetails {

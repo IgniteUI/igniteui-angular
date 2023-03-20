@@ -200,19 +200,6 @@ export class RowSelectionComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [selectRowOnClick]="false" [rowSelection]="'multiple'"
-            [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
-        '', ColumnDefinitions.productBasicNumberID)
-})
-export class RowSelectionWithDisabledSelectRowOnClickComponent extends BasicGridComponent {
-    public data = SampleTestData.foodProductDataExtended();
-    public width = '800px';
-    public height = '600px';
-    public selectedRows = [];
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
         '', ColumnDefinitions.productBasicNumberID)
 })
@@ -1899,7 +1886,7 @@ export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
@@ -1932,7 +1919,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 }
@@ -1944,7 +1931,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
             [height]='height'
             [data]="data"
             [columnWidth] = "'100px'"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (groupingDone)="groupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
@@ -1977,7 +1964,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public groupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 
@@ -2142,7 +2129,7 @@ export class ColumnSelectionGroupTestComponent {
 
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
         <igx-column field="ID"></igx-column>
-        <igx-column-group header="General Information" [collapsible]="true" >
+        <igx-column-group header="General Information" [collapsible]="true">
             <igx-column  field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
             <igx-column-group header="Person Details" [visibleWhenCollapsed]="false">
                 <igx-column  field="ContactName"></igx-column>
@@ -2155,7 +2142,7 @@ export class ColumnSelectionGroupTestComponent {
         <igx-column-group header="Address Information" [collapsible]="true">
                 <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
                 <igx-column-group header="Region Information" [visibleWhenCollapsed]="true">
-                    <igx-column field="Region" ></igx-column>
+                    <igx-column field="Region"></igx-column>
                     <igx-column field="PostalCode"></igx-column>
                 </igx-column-group>
                 <igx-column-group header="City Information" [visibleWhenCollapsed]="false">
@@ -2376,6 +2363,30 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
         const a = obj1[key];
         const b = obj2[key];
         return reverse * this.sortByParity(a, b);
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '',
+        '',
+        ColumnDefinitions.idFirstLastNameSortable,
+        '',
+        '',
+        '')
+})
+export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+
+    public sort(data: any[]) {
+        const key = 'Name';
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key);
+        return data.sort(cmpFunc);
+    }
+
+    protected compareObjects(obj1, obj2, key: string) {
+        const a = obj1[key].toLowerCase();
+        const b = obj2[key].toLowerCase();
+        return a > b ? 1 : a < b ? -1 : 0;
     }
 }
 

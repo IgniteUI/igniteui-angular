@@ -388,6 +388,9 @@
             "styles": [
               "projects/igniteui-angular-elements/src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+                "includePaths": ["node_modules"]
+            },
             "scripts": []
           }
         }

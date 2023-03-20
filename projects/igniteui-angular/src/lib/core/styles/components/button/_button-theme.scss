@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:color';
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
@@ -114,11 +115,15 @@
         }
 
         @if not($hover-background) and $background {
-            $hover-background: color.scale($background, $lightness: 5%);
+            @if meta.type-of($background) == 'color' {
+                $hover-background: color.scale($background, $lightness: 5%);
+            }
         }
 
         @if not($hover-foreground) and $hover-background {
-            $hover-foreground: text-contrast($hover-background);
+            @if meta.type-of($hover-background) == 'color' {
+                $hover-foreground: text-contrast($hover-background);
+            }
         }
 
         @if not($focus-background) and $background {

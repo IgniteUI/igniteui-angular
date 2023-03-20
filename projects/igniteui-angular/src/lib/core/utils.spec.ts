@@ -1,4 +1,4 @@
-import { cloneValue, mergeObjects, isObject, isDate } from './utils';
+import { cloneValue, isObject, isDate } from './utils';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 describe('Utils', () => {

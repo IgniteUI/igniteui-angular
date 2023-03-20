@@ -2,8 +2,16 @@
     margin-top: 24px;
 }
 
-[igxButton] + [igxButton] {
-    margin-left: 8px;
+[igxButton] {
+    margin: 1rem 0.8rem 1.5rem 0;
+}
+
+textarea {
+    height: 9rem;
+}
+
+h4 {
+    margin: 0 0 1.5rem;
 }
 
 @keyframes popin {
@@ -48,4 +56,6 @@
         background: #3B3B3B;
         border: 2px solid #2874A6;
     }
+
 }
+

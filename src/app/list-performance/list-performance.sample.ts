@@ -3,7 +3,7 @@ import { IgxFilterOptions } from 'igniteui-angular';
 
 @Component({
     selector: 'app-list-performance-sample',
-    styleUrls: ['list-performance.sample.css'],
+    styleUrls: ['list-performance.sample.scss'],
     templateUrl: 'list-performance.sample.html'
 })
 export class ListPerformanceSampleComponent {

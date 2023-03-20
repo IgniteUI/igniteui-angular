@@ -10,8 +10,12 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/themes/charts' as *;
 
+////
 /// @group themes
 /// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
@@ -34,6 +38,23 @@
     $excluded: ();
     $scope: if(is-root(), ':root', '&');
 
+    #{$scope} {
+        --ig-size-small: 1;
+        --ig-size-medium: 2;
+        --ig-size-large: 3;
+
+        --ig-spacing-small: 1;
+        --ig-spacing-medium: 1;
+        --ig-spacing-large: 1;
+
+        --ig-spacing-inline-small: 1;
+        --ig-spacing-inline-medium: 1;
+        --ig-spacing-inline-large: 1;
+
+        --ig-spacing-block-small: 1;
+        --ig-spacing-block-medium: 1;
+        --ig-spacing-block-large: 1;
+    }
 
     @if not(list.index($exclude, 'palette')) {
         @include palette($palette);
@@ -223,6 +244,12 @@
 
     @if is-used('igx-combo', $exclude) {
         @include combo(combo-theme(
+            $schema: $schema
+        ));
+    }
+
+    @if is-used('igx-select', $exclude) {
+        @include select(select-theme(
             $schema: $schema
         ));
     }
@@ -442,11 +469,10 @@
     }
 }
 
-/// @group themes
-/// @access public
-/// Creates a global material theme that can be used with light backgrounds.
+/// A wrapper around the theme mixin. Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of ig components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin light-theme(
     $palette,
     $exclude: (),
@@ -476,11 +502,10 @@
     );
 }
 
-/// @group themes
-/// @access public
-/// Creates a global material theme that can be used with dark backgrounds.
+/// A wrapper around the theme mixin. Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @see {mixin} theme
 @mixin dark-theme(
     $palette,
     $exclude: (),

@@ -44,7 +44,7 @@ const ELEMENTS_STYLES = {
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
 const TYPEDOC_THEME = {
-    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'src')),
+    SRC: slash(path.join(__dirname, 'node_modules', 'ig-typedoc-theme', 'dist')),
     OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
 };
 

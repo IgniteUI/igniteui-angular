@@ -24,7 +24,7 @@ import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
-import { CellType, ColumnType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
+import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -211,24 +211,25 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      *
      * @memberof IgxGridCellComponent
      */
-    public get context(): any {
-        const ctx = {
+    public get context(): IgxCellTemplateContext {
+        const getCellType = () => this.getCellType(true);
+        const ctx: IgxCellTemplateContext = {
             $implicit: this.value,
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
+            get cell() {
+                /* Turns the `cell` property from the template context object into lazy-evaluated one.
+                 * Otherwise on each detection cycle the cell template is recreating N cell instances where
+                 * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+                 */
+                return getCellType();
+            }
         };
         if (this.editMode) {
-            ctx['formControl'] = this.formControl;
+            ctx.formControl = this.formControl;
         }
         if (this.isInvalid) {
-            ctx['defaultErrorTemplate'] = this.defaultErrorTemplate;
+            ctx.defaultErrorTemplate = this.defaultErrorTemplate;
         }
-        /* Turns the `cell` property from the template context object into lazy-evaluated one.
-         * Otherwise on each detection cycle the cell template is recreating N cell instances where
-         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
-         */
-        Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType(true)
-        });
         return ctx;
     }
 
@@ -743,7 +744,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
-    private _cellSelection = GridSelectionMode.multiple;
+    private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
     constructor(
@@ -873,11 +874,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.editMode && changes.editMode.currentValue && this.formControl) {
             // ensure when values change, form control is forced to be marked as touche.
-            this.formControl.valueChanges.pipe(takeWhile(x => this.editMode)).subscribe(value => {
-                this.formControl.markAsTouched();
-            });
+            this.formControl.valueChanges.pipe(takeWhile(() => this.editMode)).subscribe(() => this.formControl.markAsTouched());
             // while in edit mode subscribe to value changes on the current form control and set to editValue
-            this.formControl.statusChanges.pipe(takeWhile(x => this.editMode)).subscribe(status => {
+            this.formControl.statusChanges.pipe(takeWhile(() => this.editMode)).subscribe(status => {
                 if (status === 'INVALID' && this.errorTooltip.length > 0) {
                     this.cdr.detectChanges();
                     const tooltip = this.errorTooltip.first;
@@ -975,6 +974,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 this.grid.crudService.updateCell(true, event);
             }
             return;
+        } else {
+            this.selectionService.primaryButton = true;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
@@ -1034,11 +1035,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        const shouldEmitSelection = !this.selectionService.isActiveNode(node);
-
+        let shouldEmitSelection = !this.selectionService.isActiveNode(node);
+        
         if (this.selectionService.primaryButton) {
             const currentActive = this.selectionService.activeElement;
-            this.selectionService.activeElement = node;
+            if (this.cellSelectionMode === GridSelectionMode.single && (event as any)?.ctrlKey && this.selected) {
+                this.selectionService.activeElement = null;
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.activeElement = node;
+            }
             const cancel = this._updateCRUDStatus(event);
             if (cancel) {
                 this.selectionService.activeElement = currentActive;
@@ -1070,11 +1076,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
-            this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
-            this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            if (this.selectionService.isInMap(this.selectionService.activeElement) && (event as any)?.ctrlKey && !(event as any)?.shiftKey) {
+                this.selectionService.remove(this.selectionService.activeElement);
+                shouldEmitSelection = true;
+            } else {
+                this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
+                this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
+            }
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.selected.emit({ cell: this.getCellType(), event });
+            this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));
         }
     }
 

@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { cloneArray, cloneValue, formatCurrency, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
+import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
@@ -1119,7 +1119,7 @@ export abstract class IgxBaseExporter {
                 1;
 
             const columnInfo: IColumnInfo = {
-                header: columnHeader,
+                header: ExportUtilities.sanitizeValue(columnHeader),
                 dataType: column.dataType,
                 field: column.field,
                 skip: !exportColumn,
