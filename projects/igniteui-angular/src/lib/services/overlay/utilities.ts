@@ -116,6 +116,10 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<any>;
+    /** Will provide the elementRef of the markup that will be displayed in the overlay */
+    elementRef?: ElementRef<any>;
+    /** Will provide the overlay settings which will be used when the component is attached */
+    settings?: OverlaySettings;
     /* blazorSuppress */
     /** Will provide the original keyboard event if closed from ESC or click */
     event?: Event;

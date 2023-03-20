@@ -1449,6 +1449,24 @@ export class FileContentData {
         return this.createData();
     }
 
+    public get exportGridDataWithSpecialCharsInHeaders() {
+        this._sharedStringsData =
+            `count="18" uniqueCount="15"><si><t>ID</t></si><si><t>&amp;</t></si><si><t>&lt;&gt;</t></si><si><t>&quot;</t></si><si><t>&apos;</t></si><si><t>Performance</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>2017-06-19T11:43:07.714Z</t></si><si><t>[object Object],[object Object],[object Object],[object Object]</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>2015-12-18T11:23:17.714Z</t></si><si><t>Tanya Bennett</t></si><si><t>2005-11-18T11:23:17.714Z</t></si>`;
+
+        this._tableData =
+            `ref="A1:F4" totalsRowShown="0">
+            <autoFilter ref="A1:F4"/><tableColumns count="6"><tableColumn id="1" name="ID"/><tableColumn id="2" name="&amp;"/><tableColumn id="3" name="&lt;&gt;"/><tableColumn id="4" name="&quot;"/><tableColumn id="5" name="&apos;"/><tableColumn id="6" name="Performance"/></tableColumns>`;
+
+        this._worksheetData =
+            `<dimension ref="A1:F4"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/><col min="6" max="6" width="50" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c><c r="F1" t="s"><v>5</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>6</v></c><c r="C2" t="s"><v>7</v></c><c r="D2" s="1"><v>4</v></c><c r="E2" t="s"><v>8</v></c><c r="F2" t="s"><v>9</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>10</v></c><c r="C3" t="s"><v>11</v></c><c r="D3" s="1"><v>6</v></c><c r="E3" t="s"><v>12</v></c><c r="F3" t="s"><v>9</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>11</v></c><c r="D4" s="1"><v>8</v></c><c r="E4" t="s"><v>14</v></c><c r="F4" t="s"><v>9</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
     public get exportHierarchicalDataWithSkippedColumns() {
         this._sharedStringsData =
             `count="89" uniqueCount="47"><si><t>Artist</t></si><si><t>Grammy Nominations</t></si><si><t>Grammy Awards</t></si><si><t>Naomí Yepes</t></si><si><t>Launch Date</t></si><si><t>US Billboard 200</t></si><si><t>No.</t></si><si><t>Title</t></si><si><t>Genre</t></si><si><t>Wood Shavifdsafdsafsangs Forever</t></si><si><t>*fdasfsa</t></si><si><t>Wood Shavifdsafdsafsavngs Forever</t></si><si><t>*vxzvczx</t></si><si><t>Wfdsafsaings Forever</t></si><si><t>*fdsacewwwqwq</t></si><si><t>Wood Shavings Forever</t></si><si><t>*rewqrqcxz</t></si><si><t>Wood Shavings Forever - Remix</t></si><si><t>Punk</t></si><si><t>SANTORINI</t></si><si><t>Hip-Hop</t></si><si><t>HEARTBEAT</t></si><si><t>OVERSEAS</t></si><si><t>Zoom</t></si><si><t>Do You?</t></si><si><t>No Photos</t></si><si><t>Tour</t></si><si><t>Started on</t></si><si><t>Location</t></si><si><t>Headliner</t></si><si><t>Faithful Tour</t></si><si><t>Sep 12</t></si><si><t>Worldwide</t></si><si><t>NO</t></si><si><t>Country</t></si><si><t>Attendants</t></si><si><t>Belgium</t></si><si><t>USA</t></si><si><t>Babila Ebwélé</t></si><si><t>Show Out</t></si><si><t>Mood Swings</t></si><si><t>Scenario</t></si><si><t>Astroworld</t></si><si><t>Jul 21</t></si><si><t>Bulgaria</t></si><si><t>Romania</t></si><si><t>Chloe</t></si>`;
