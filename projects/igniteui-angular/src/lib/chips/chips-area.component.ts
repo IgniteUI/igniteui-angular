@@ -67,25 +67,6 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    public class = '';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass() {
-        const classes = ['igx-chip-area'];
-        classes.push(this.class);
-
-        return classes.join(' ');
-    }
-
-    /**
      * Returns the `role` attribute of the chips area.
      *
      * @example
@@ -203,6 +184,9 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public chipsList: QueryList<IgxChipComponent>;
 
     protected destroy$ = new Subject<boolean>();
+
+    @HostBinding('class')
+    private hostClass = 'igx-chip-area';
 
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
