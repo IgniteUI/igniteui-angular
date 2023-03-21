@@ -13,6 +13,7 @@ import {
 import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { first } from 'rxjs/operators';
 import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
@@ -558,6 +559,7 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.closed, 'emit');
             spyOn(overlayInstance.closing, 'emit');
             spyOn(overlayInstance.opened, 'emit');
+            spyOn(overlayInstance.contentAppending, 'emit');
             spyOn(overlayInstance.contentAppended, 'emit');
             spyOn(overlayInstance.opening, 'emit');
             spyOn(overlayInstance.animationStarting, 'emit');
@@ -571,6 +573,7 @@ describe('igxOverlay', () => {
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false });
             const args: OverlayEventArgs = (overlayInstance.opening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(1);
 
@@ -595,6 +598,7 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayInstance.opening.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.opening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.animationStarting.emit).toHaveBeenCalledTimes(3);
 
@@ -614,6 +618,68 @@ describe('igxOverlay', () => {
             expect(overlayInstance.closed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, event: undefined });
 
             overlayInstance.detachAll();
+        }));
+
+        it('Should properly emit contentAppending event', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const os: OverlaySettings = {
+                excludeFromOutsideClick: [],
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: true,
+                closeOnOutsideClick: true,
+                closeOnEscape: false
+            };
+
+            spyOn(overlayInstance.contentAppending, 'emit');
+            spyOn(overlayInstance.contentAppended, 'emit');
+
+            const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
+            overlayInstance.show(firstCallId);
+            tick();
+
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
+
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledWith({ id: firstCallId, elementRef: jasmine.any(Object),
+                componentRef: jasmine.any(ComponentRef) as any, settings: os })
+        }));
+
+        it('Should properly be able to override OverlaySettings using contentAppending event args', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const overlayInstance = fixture.componentInstance.overlay;
+            const os: OverlaySettings = {
+                excludeFromOutsideClick: [],
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: new CloseScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false,
+                closeOnEscape: true
+            };
+
+            overlayInstance.contentAppending.pipe(first()).subscribe((e: OverlayEventArgs) => {
+                // override the default settings
+                e.settings = os;
+            });
+            overlayInstance.contentAppended.pipe(first()).subscribe((e: OverlayEventArgs) => {
+                const overlay = overlayInstance.getOverlayById(e.id);
+                expect(overlay.settings.closeOnEscape).toBeTrue();
+                expect(overlay.settings.modal).toBeFalsy();
+                expect(overlay.settings.closeOnOutsideClick).toBeFalsy();
+            });
+
+            spyOn(overlayInstance.contentAppended, 'emit').and.callThrough();
+            spyOn(overlayInstance.contentAppending, 'emit').and.callThrough();
+
+            const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
+            overlayInstance.show(firstCallId);
+            tick();
+
+            expect(overlayInstance.contentAppending.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.contentAppended.emit).toHaveBeenCalledTimes(1);
         }));
 
         it('Should properly set style on position method call - GlobalPosition.', () => {
