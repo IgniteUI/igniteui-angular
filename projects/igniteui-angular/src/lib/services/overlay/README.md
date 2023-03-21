@@ -134,5 +134,6 @@ this.overlay.show(component, overlaySettings);
 | opened            | Emitted after overlay shows                   | false      |            |
 | closing           | Emitted before overlay hides                  | true       |            |
 | closed            | Emitted after overlay hides                   | false      |            |
+| contentAppending   | Emitted before overlay's content is appended   | false      |            |
 | contentAppended   | Emitted after overlay's content is appended   | false      |            |
 | animationStarting | Emitted before animation is started           | false      |            |

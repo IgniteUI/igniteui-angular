@@ -2,12 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 15.1.1
-- **Breaking Changes** - ` $label-floated-background` and `$label-floated-disabled-background` properties of `IgxInputGroupComponent` theme has been removed.
-- `IgxInputGroupComponent` The input group has been refactored so that the floating label for the input of `type="border"` does not require a background to match the surface background under the input field. Also, suffixes and prefixes are refactored to take the full height of the input which makes it easy to add background to them.
-- 
-- **Breaking Changes** - `$size` property of `scrollbar-theme` theme has been renamed to `$scrollbar-size`.
-
 ## 15.1.0
 
 ### New Features
@@ -16,6 +10,9 @@ All notable changes for each version of this project will be documented in this 
     - A new argument `primaryKey` has been introduced to `IRowDataEventArgs` Interface and part of the event arguments that are emitted by the `rowAdded` and `rowDeleted` events. When the grid has a primary key attribute added, then the emitted `primaryKey` event argument represents the row ID, otherwise it defaults to undefined.
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
+
+- `IgxOverlayService`
+    -A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
 
 ### General
  - `IgxPivotGrid`
@@ -35,12 +32,14 @@ All notable changes for each version of this project will be documented in this 
 - `igxMask` directive
     - Added the capability to escape mask pattern literals.
 - `IgxBadge`
-    - Added `shape` property that controls the shape of the badge and can be either `square` or `rounded`. The default shape of the badge is rounded. 
+    - Added `shape` property that controls the shape of the badge and can be either `square` or `rounded`. The default shape of the badge is rounded.
 - `IgxAvatar`
-    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`. 
+    - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`.
 - `IgxOverlayService`
     - `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) is now deprecated in line with API deprecated in Angular 13. New overload is added accepting `ViewComponentRef` that should be used instead.
-
+- **Breaking Changes** - ` $label-floated-background` and `$label-floated-disabled-background` properties of `IgxInputGroupComponent` theme has been removed.
+- `IgxInputGroupComponent` The input group has been refactored so that the floating label for the input of `type="border"` does not require a background to match the surface background under the input field. Also, suffixes and prefixes are refactored to take the full height of the input which makes it easy to add background to them.
+- **Breaking Changes** - `$size` property of `scrollbar-theme` theme has been renamed to `$scrollbar-size`.
 
 ## 15.0.1
 
