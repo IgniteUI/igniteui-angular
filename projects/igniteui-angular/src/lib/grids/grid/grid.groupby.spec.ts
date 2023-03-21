@@ -403,7 +403,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     }));
@@ -788,7 +788,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         grid.groupBy({
             fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
-        }); 
+        });
         fix.detectChanges();
         spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
@@ -2594,7 +2594,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
