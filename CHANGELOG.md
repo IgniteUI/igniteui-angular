@@ -10,9 +10,32 @@ All notable changes for each version of this project will be documented in this 
     - A new argument `primaryKey` has been introduced to `IRowDataEventArgs` Interface and part of the event arguments that are emitted by the `rowAdded` and `rowDeleted` events. When the grid has a primary key attribute added, then the emitted `primaryKey` event argument represents the row ID, otherwise it defaults to undefined.
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
-
 - `IgxOverlayService`
-    -A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
+    - A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
+- `IgxCard`
+    - Buttons and icons slotted in the `igx-card-actions` component will no longer be automatically distributed and arranged on the right/left end of the slot. To position components on either side users can take advantage of the newly added directives: `igxStart` - alignes items on the left and `igxEnd` - alignes items on the right.
+
+    - Code example:
+
+    ```html
+    <igx-card>
+        <igx-card-header>
+            <h3>Title</h3>
+        </igx-card-header>
+        <igx-card-content>
+            Card Content
+        </igx-card-content>
+
+        <!-- Rearrange items using igxStart and igxEnd directives -->
+        <igx-card-actions>
+            <igx-icon igxStart>drag_indicator</igx-icon>
+            <button igxButton="icon" igxStart>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <button igxButton igxEnd>Button</button>
+        </igx-card-actions>
+    </igx-card>
+    ```
 
 ### General
  - `IgxPivotGrid`
