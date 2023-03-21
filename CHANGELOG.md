@@ -8,9 +8,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
     - `GroupMemberCountSortingStrategy` is added, which can be used to sort the grid by number of items in each group in ASC or DESC order, if grouping is applied.
     - A new argument `primaryKey` has been introduced to `IRowDataEventArgs` Interface and part of the event arguments that are emitted by the `rowAdded` and `rowDeleted` events. When the grid has a primary key attribute added, then the emitted `primaryKey` event argument represents the row ID, otherwise it defaults to undefined.
+    - Added the `autoGenerateExclude` property that accepts an array of strings for property names that are to be excluded from the generated column collection
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
-
 - `IgxOverlayService`
     -A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
 
