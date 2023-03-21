@@ -48,18 +48,19 @@
                 (groupRow.expression ? groupRow.expression.fieldName : '') }}:
             </span>
 
-            <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default">
-                <span class="igx-group-label__text">{{ groupRow.value }}</span>
-            </ng-container>
-            <ng-template #default>
-                <ng-container *ngIf="dataType === 'number'">
-                    <span class="igx-group-label__text">{{ groupRow.value | number }}</span>
-                </ng-container>
-                <ng-container *ngIf="dataType === 'date' || dataType === 'dateTime' || dataType === 'time'">
-                    <span class="igx-group-label__text">{{ groupRow.value |
-                        date:groupRow.column.pipeArgs.format:groupRow.column.pipeArgs.timezone:grid.locale }}</span>
-                </ng-container>
-            </ng-template>
+            <span class="igx-group-label__text">{{
+                formatter
+                    ? (groupRow.value | columnFormatter:formatter:groupRow.records[0]:null)
+                    : dataType === "number"
+                    ? (groupRow.value | number:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : (dataType === 'date' || dataType === 'time' || dataType === 'dateTime')
+                    ? (groupRow.value | date:groupRow.column.pipeArgs.format:groupRow.column.pipeArgs.timezone:grid.locale)
+                    : dataType === 'currency'
+                    ? (groupRow.value | currency:currencyCode:groupRow.column.pipeArgs.display:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : dataType === 'percent'
+                    ? (groupRow.value | percent:groupRow.column.pipeArgs.digitsInfo:grid.locale)
+                    : groupRow.value
+            }}</span>
 
             <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'>
             </igx-badge>
