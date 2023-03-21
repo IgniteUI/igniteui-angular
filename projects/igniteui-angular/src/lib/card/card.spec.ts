@@ -124,7 +124,9 @@ describe('Card', () => {
         const header = fixture.debugElement.query(By.css('igx-card-header')).nativeElement;
 
         expect(header).toBeDefined();
-        expect(header.getAttribute('role')).toEqual('header');
+        // K.D. March 20th, 2023 #12792 Card header should have no role
+        // expect(header.getAttribute('role')).toEqual('header');
+        expect(header.getAttribute('role')).toBeNull();
 
         expect(header).toHaveClass(classes.header.base);
         expect(header).not.toHaveClass(classes.header.vertical);
