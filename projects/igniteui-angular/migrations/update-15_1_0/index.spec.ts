@@ -173,9 +173,7 @@ describe(`Update to ${version}`, () => {
             `$custom-scrollbar: scrollbar-theme($size: 10px);`
         );
 
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-scrollbar: scrollbar-theme($scrollbar-size: 10px);`
@@ -188,9 +186,7 @@ describe(`Update to ${version}`, () => {
             `$custom-input: input-group-theme($label-floated-background: transparent, $label-floated-disabled-background: transparent);`
         );
 
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
             `$custom-input: input-group-theme();`
