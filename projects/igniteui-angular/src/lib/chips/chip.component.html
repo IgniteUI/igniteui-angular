@@ -15,7 +15,7 @@
     (dropped)="onChipDrop($event)">
 
     <div class="igx-chip__start" #selectContainer>
-        <div *ngIf="selectable && selected" [ngClass]="selectClass(selected)">
+        <div *ngIf="selected" [ngClass]="selectClass(selected)">
             <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
         </div>
 

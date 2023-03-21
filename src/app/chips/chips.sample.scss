@@ -45,11 +45,30 @@ $padding: 32px;
     }
 
     &__comp-size {
-        margin-bottom: 16px;
+        margin-block-end: 16px;
     }
 
     &__variant-select {
         margin-block-end: 16px;
+    }
+
+    &__info {
+        text-align: center;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        text-decoration: none;
+        color: hsla(var(--ig-secondary-600));
+        outline: none;
+
+        &:focus,
+        &:hover {
+            color: hsla(var(--ig-secondary-300));
+        }
     }
 }
 
