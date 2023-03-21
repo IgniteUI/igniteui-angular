@@ -143,6 +143,7 @@ describe(`Update to ${version}`, () => {
         appTree.create(`/testSrc/appPrefix/component/test.component.html`,
         `
         <igx-card-actions>
+            <span igxButton>Span</span>
             <button igxButton>Button</button>
             <button igxButton="icon">
                 <igx-icon>favorite</igx-icon>
@@ -157,6 +158,7 @@ describe(`Update to ${version}`, () => {
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
         `
         <igx-card-actions>
+            <span igxButton igxStart>Span</span>
             <button igxButton igxStart>Button</button>
             <button igxButton="icon" igxEnd>
                 <igx-icon>favorite</igx-icon>

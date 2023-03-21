@@ -7,7 +7,7 @@ import { Element } from '@angular/compiler';
 import { nativeImport } from '../common/import-helper.js';
 import { Options } from '../../schematics/interfaces/options';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile } from '../common/util';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile, hasAttribute } from '../common/util';
 
 const version = '15.1.0';
 
@@ -42,8 +42,8 @@ export default (options: Options): Rule => async (host: Tree, context: Schematic
     };
 
     const getChildren = (parent: Element, buttons: any[], icons: any[]) => {
-        const cardButtons = parent.children.filter(column => (column as Element).name === 'button');
-        const cardIcons = parent.children.filter(column => (column as Element).name === 'igx-icon');
+        const cardButtons = parent.children.filter(btn => (btn as Element).attrs !== undefined  && hasAttribute(btn as Element, prop));
+        const cardIcons = parent.children.filter(btn => (btn as Element).name === 'igx-icon');
         buttons.push(...cardButtons);
         icons.push(...cardIcons);
     }
