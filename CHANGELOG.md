@@ -14,7 +14,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
 - `IgxCard`
-    - Buttons and icons slotted in the `igx-card-actions` component will no longer be automatically distributed and arranged on the right/left end of the slot. To position components on either side users can take advantage of the newly added directives: `igxStart` - alignes items on the left and `igxEnd` - alignes items on the right.
+    - Buttons and icons slotted in the `igx-card-actions` can now be explicitly arranged to the start/end of the layout. To position components on either side users can take advantage of the newly added directives: `igxStart` - aligns items to the start and `igxEnd` - aligns items on the end of the card actions area.
     - The `reverse` property has been deprecated and will be removed in a future version.
 
     - Code example:
