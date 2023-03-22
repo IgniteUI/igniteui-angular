@@ -18,13 +18,13 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSelectionKeyComponent,
                 IgxTreeGridSelectionComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
                 IgxTreeGridFKeySelectionWithTransactionComponent
-            ],
-            imports: [NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

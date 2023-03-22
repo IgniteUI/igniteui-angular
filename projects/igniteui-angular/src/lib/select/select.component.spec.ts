@@ -2892,7 +2892,8 @@ class IgxSelectAffixComponent {
         'Option 4',
         'Option 5',
         'Option 6',
-        'Option 7'];
+        'Option 7'
+    ];
 }
 
 @Component({
