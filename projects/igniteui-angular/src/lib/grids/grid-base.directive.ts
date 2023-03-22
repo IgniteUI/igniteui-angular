@@ -213,6 +213,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public autoGenerate = false;
 
     /**
+     * Gets/Sets a list of property keys to be excluded from the generated column collection
+     * @remarks
+     * The collection is only used during initialization and changing it will not cause any changes in the generated columns at runtime
+     * unless the grid is destroyed and recreated. To modify the columns visible in the UI at runtime, please use their
+     * [hidden](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/IgxColumnComponent.html#hidden) property.
+     * @example
+     * ```html
+     * <igx-grid data=[Data] [autoGenerate]="true" [autoGenerateExclude]="['ProductName', 'Count']"></igx-grid>
+     * ```
+     * ```typescript
+     * const Data = [{ 'Id': '1', 'ProductName': 'name1', 'Description': 'description1', 'Count': 5 }]
+     * ```
+     */
+    @Input()
+    public autoGenerateExclude: string[] = [];
+
+    /**
      * Controls whether columns moving is enabled in the grid.
      *
      */
@@ -7159,7 +7176,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected generateDataFields(data: any[]): string[] {
-        return Object.keys(data && data.length !== 0 ? data[0] : []);
+        return Object.keys(data && data.length !== 0 ? data[0] : [])
+            .filter(key => !this.autoGenerateExclude.includes(key));
     }
 
     /**

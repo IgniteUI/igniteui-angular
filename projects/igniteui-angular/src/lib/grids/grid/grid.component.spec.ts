@@ -116,6 +116,20 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
+        it('should skip properties from autoGenerateExclude when auto-generating columns', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = [
+                { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
+            ];
+            fix.componentInstance.autoGenerateExclude = ['Date', 'String'];
+            fix.componentInstance.columns = [];
+            fix.componentInstance.autoGenerate = true;
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+
+            expect(grid.columns.map(col => col.field)).toEqual(['Number', 'Boolean'], 'Invalid columns after exclusion initialized');
+        });
+
         it('should initialize a grid and allow changing columns runtime with ngFor', () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
@@ -2707,7 +2721,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (columnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" [autoGenerateExclude]="autoGenerateExclude" (columnInit)="columnCreated($event)">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -2723,6 +2737,8 @@ export class IgxGridTestComponent {
     ];
 
     public autoGenerate = false;
+
+    public autoGenerateExclude = [];
 
     public columnEventCount = 0;
 
