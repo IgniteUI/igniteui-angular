@@ -12,14 +12,17 @@ describe('IgxSwitch', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, NoopAnimationsModule, InitSwitchComponent,
+            imports: [
+                NoopAnimationsModule,
+                InitSwitchComponent,
                 SwitchSimpleComponent,
                 SwitchRequiredComponent,
                 SwitchExternalLabelComponent,
                 SwitchInvisibleLabelComponent,
                 SwitchFormComponent,
                 SwitchFormGroupComponent,
-                IgxSwitchComponent]
+                IgxSwitchComponent
+            ]
         }).compileComponents();
     }));
 
@@ -294,7 +297,8 @@ describe('IgxSwitch', () => {
 
 @Component({
     template: `<igx-switch #switch>Init</igx-switch>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -304,7 +308,7 @@ class InitSwitchComponent {
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
 [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
     standalone: true,
-    imports: [FormsModule]
+    imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -321,7 +325,8 @@ class SwitchSimpleComponent {
 
 @Component({
     template: `<igx-switch #switch required>Required</igx-switch>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -330,7 +335,8 @@ class SwitchRequiredComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -339,7 +345,8 @@ class SwitchExternalLabelComponent {
 
 @Component({
     template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
-    standalone: true
+    standalone: true,
+    imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -349,7 +356,7 @@ class SwitchInvisibleLabelComponent {
 @Component({
     template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
     standalone: true,
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
@@ -375,7 +382,9 @@ class SwitchFormGroupComponent {
     <form #form="ngForm">
         <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
     </form>
-`
+    `,
+    standalone: true,
+    imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchFormComponent {
     @ViewChild('switch', { read: IgxSwitchComponent, static: true })
