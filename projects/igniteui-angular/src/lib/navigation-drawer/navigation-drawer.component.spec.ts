@@ -5,6 +5,8 @@ import { wait } from '../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
+import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { NgIf } from '@angular/common';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
@@ -16,11 +18,9 @@ describe('Navigation Drawer', () => {
     beforeEach(waitForAsync(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
-            declarations: [
-                TestComponentPin,
-                TestComponentMini
-            ],
             imports: [
+                TestComponentPin,
+                TestComponentMini,
                 TestComponent,
                 TestComponentDIComponent
             ]
@@ -209,8 +209,8 @@ describe('Navigation Drawer', () => {
 
         // immediate requestAnimationFrame for testing
         spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
- callback(0); return 0;
-});
+            callback(0); return 0;
+        });
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
@@ -614,7 +614,7 @@ class TestComponent {
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer></igx-nav-drawer>',
     standalone: true,
-    imports: [IgxNavigationDrawerComponent]
+    imports: [IgxNavigationDrawerComponent, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective, NgIf]
 })
 class TestComponentDIComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;

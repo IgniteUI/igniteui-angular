@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DIR_DOCUMENT, IgxDirectionality } from '../services/direction/directionality';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxSliderType, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
+import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
 
 declare let Simulator: any;
@@ -1925,7 +1925,7 @@ class RangeSliderWithLabelsComponent {
     </igx-slider>
     `,
     standalone: true,
-    imports: [IgxSliderComponent]
+    imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective]
 })
 class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
@@ -1939,7 +1939,7 @@ class RangeSliderWithCustomTemplateComponent {
         </form>
     `,
     standalone: true,
-    imports: [IgxSliderComponent, FormsModule ]
+    imports: [IgxSliderComponent, FormsModule]
 })
 export class SliderTemplateFormComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
