@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -489,6 +489,7 @@ describe('IgxTree #treeView', () => {
     describe('Rendering Tests', () => {
         let fix: ComponentFixture<IgxTreeSampleComponent>;
         let tree: IgxTreeComponent;
+
         beforeAll(
             waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -499,6 +500,7 @@ describe('IgxTree #treeView', () => {
                 }).compileComponents();
             })
         );
+
         beforeEach(() => {
             fix = TestBed.createComponent<IgxTreeSampleComponent>(IgxTreeSampleComponent);
             fix.detectChanges();
@@ -709,7 +711,7 @@ describe('IgxTree #treeView', () => {
         </igx-tree>
     `,
     standalone: true,
-    imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent]
+    imports: [IgxTreeComponent, NgIf, IgxTreeNodeComponent, NgFor]
 })
 class IgxTreeSampleComponent {
     @ViewChild(IgxTreeComponent)
