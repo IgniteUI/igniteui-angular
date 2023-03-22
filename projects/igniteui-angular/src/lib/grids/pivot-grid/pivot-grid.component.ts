@@ -387,10 +387,16 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public verticalRowDimScrollContainers: QueryList<IgxGridForOfDirective<any>>;
 
     /**
-     * @hidden @interal
+     * @hidden @internal
      */
     @Input()
     public addRowEmptyTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @Input()
+    public autoGenerateExclude: string[] = [];
 
     /**
      * @hidden @internal

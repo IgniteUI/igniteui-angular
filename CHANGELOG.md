@@ -2,29 +2,49 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 15.1.1
-- **Breaking Changes** - ` $label-floated-background` and `$label-floated-disabled-background` properties of `IgxInputGroupComponent` theme has been removed.
-- `IgxInputGroupComponent` The input group has been refactored so that the floating label for the input of `type="border"` does not require a background to match the surface background under the input field. Also, suffixes and prefixes are refactored to take the full height of the input which makes it easy to add background to them.
-- 
-- **Breaking Changes** - `$size` property of `scrollbar-theme` theme has been renamed to `$scrollbar-size`.
-
 ## 15.1.0
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
     - `GroupMemberCountSortingStrategy` is added, which can be used to sort the grid by number of items in each group in ASC or DESC order, if grouping is applied.
     - A new argument `primaryKey` has been introduced to `IRowDataEventArgs` Interface and part of the event arguments that are emitted by the `rowAdded` and `rowDeleted` events. When the grid has a primary key attribute added, then the emitted `primaryKey` event argument represents the row ID, otherwise it defaults to undefined.
+    - Added the `autoGenerateExclude` property that accepts an array of strings for property names that are to be excluded from the generated column collection
 - `IgxColumnComponent`
     - Added `currRec` and `groupRec` parameters to the `groupingComparer` function that give access to the all properties of the compared records.
-
 - `IgxOverlayService`
-    -A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
+    - A new event `contentAppending` is introduced - the event is emitted before the content is appended to the overlay. The event is emitted with `OverlayEventArgs` arguments and is not cancellable.
+- `IgxCard`
+    - Buttons and icons slotted in the `igx-card-actions` can now be explicitly arranged to the start/end of the layout. To position components on either side users can take advantage of the newly added directives: `igxStart` - aligns items to the start and `igxEnd` - aligns items on the end of the card actions area.
+    - The `reverse` property has been deprecated and will be removed in a future version.
+
+    - Code example:
+
+    ```html
+    <igx-card>
+        <igx-card-header>
+            <h3>Title</h3>
+        </igx-card-header>
+        <igx-card-content>
+            Card Content
+        </igx-card-content>
+
+        <!-- Rearrange items using igxStart and igxEnd directives -->
+        <igx-card-actions>
+            <igx-icon igxStart>drag_indicator</igx-icon>
+            <button igxButton="icon" igxStart>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <button igxButton igxEnd>Button</button>
+        </igx-card-actions>
+    </igx-card>
+    ```
 
 ### General
  - `IgxPivotGrid`
     - The `IgxPivotDateDimension` properties `inBaseDimension` and `inOption` have been deprecated and renamed to `baseDimension` and `options` respectively.
  - `IgxGrid`
     - **Breaking Change** The `onGroupingDone` output has been renamed to `groupingDone` to not violate the no on-prefixed outputs convention. Automatic migrations are available and will be applied on `ng update`.
+    - Column formatters are now applied to values shown group rows when using the default template. For custom formatters, the formatter function is called with the data from the first row in the group.
  - `DisplayDensity`
     - **Breaking Change** The `onDensityChanged` output has been renamed to `densityChanged` to not violate the no on-prefixed outputs convention. All components exposing this event are affected. Automatic migrations are available and will be applied on `ng update`.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -43,7 +63,9 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** The `roundShape` property has been deprecated and will be removed in a future version. Users can control the shape of the avatar by the newly added `shape` attribute that can be `square`, `rounded` or `circle`. The default shape of the avatar is `square`.
 - `IgxOverlayService`
     - `attach` method overload accepting `ComponentFactoryResolver` (trough `NgModuleRef`-like object) is now deprecated in line with API deprecated in Angular 13. New overload is added accepting `ViewComponentRef` that should be used instead.
-
+- **Breaking Changes** - ` $label-floated-background` and `$label-floated-disabled-background` properties of `IgxInputGroupComponent` theme has been removed.
+- `IgxInputGroupComponent` The input group has been refactored so that the floating label for the input of `type="border"` does not require a background to match the surface background under the input field. Also, suffixes and prefixes are refactored to take the full height of the input which makes it easy to add background to them.
+- **Breaking Changes** - `$size` property of `scrollbar-theme` theme has been renamed to `$scrollbar-size`.
 
 ## 15.0.1
 

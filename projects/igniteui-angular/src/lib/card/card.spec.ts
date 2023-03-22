@@ -54,11 +54,11 @@ describe('Card', () => {
             get reverse() {
                 return `${this.base}--reverse`;
             },
-            get icons() {
-                return `${this.base}__icons`;
+            get end() {
+                return `${this.base}__end`;
             },
-            get buttons() {
-                return `${this.base}__buttons`;
+            get start() {
+                return `${this.base}__start`;
             }
         },
         media: `${baseClass}__media`
@@ -121,7 +121,9 @@ describe('Card', () => {
         const header = fixture.debugElement.query(By.css('igx-card-header')).nativeElement;
 
         expect(header).toBeDefined();
-        expect(header.getAttribute('role')).toEqual('header');
+        // K.D. March 20th, 2023 #12792 Card header should have no role
+        // expect(header.getAttribute('role')).toEqual('header');
+        expect(header.getAttribute('role')).toBeNull();
 
         expect(header).toHaveClass(classes.header.base);
         expect(header).not.toHaveClass(classes.header.vertical);
@@ -225,8 +227,8 @@ describe('Card', () => {
 
         const actionsElement = fixture.debugElement.query(By.css('igx-card-actions'));
 
-        const buttons = actionsElement.query(By.css(`.${classes.actions.buttons}`)).nativeElement;
-        const icons = actionsElement.query(By.css(`.${classes.actions.icons}`)).nativeElement;
+        const buttons = actionsElement.query(By.css(`.${classes.actions.start}`)).nativeElement;
+        const icons = actionsElement.query(By.css(`.${classes.actions.end}`)).nativeElement;
 
         const buttonsOrder = window.getComputedStyle(buttons).getPropertyValue('order');
         const iconsOrder = window.getComputedStyle(icons).getPropertyValue('order');
@@ -242,8 +244,8 @@ describe('Card', () => {
         const actionsInstance = fixture.componentInstance.actions;
         const actionsElement = fixture.debugElement.query(By.css('igx-card-actions'));
 
-        const buttons = actionsElement.query(By.css(`.${classes.actions.buttons}`)).nativeElement;
-        const icons = actionsElement.query(By.css(`.${classes.actions.icons}`)).nativeElement;
+        const buttons = actionsElement.query(By.css(`.${classes.actions.start}`)).nativeElement;
+        const icons = actionsElement.query(By.css(`.${classes.actions.end}`)).nativeElement;
 
         actionsInstance.reverse = true;
         fixture.detectChanges();
@@ -297,8 +299,8 @@ class CardWithHeaderComponent { }
         <igx-card-content>Test Content</igx-card-content>
 
         <igx-card-actions>
-            <button igxButton>Test</button>
-            <button igxButton="icon">
+            <button igxButton igxStart>Test</button>
+            <button igxButton="icon" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>
@@ -325,8 +327,8 @@ class VerticalCardComponent {
     template: `
     <igx-card [horizontal]="true">
         <igx-card-actions>
-            <button igxButton>Test</button>
-            <button igxButton="icon">
+            <button igxButton igxStart>Test</button>
+            <button igxButton="icon" igxEnd>
                 <igx-icon>home</igx-icon>
             </button>
         </igx-card-actions>

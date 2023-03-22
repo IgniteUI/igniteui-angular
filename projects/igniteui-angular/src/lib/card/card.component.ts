@@ -88,18 +88,6 @@ export class IgxCardHeaderComponent {
     @HostBinding('class.igx-card-header--vertical')
     @Input()
     public vertical = false;
-
-    /**
-     * An @Input property that sets the value of the `role` attribute of the card header.
-     * By default the value is set to `header`.
-     *
-     * @example
-     * ```html
-     * <igx-card-header role="header"></igx-card-header>
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'header';
 }
 
 /**
@@ -302,11 +290,9 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
 export class IgxCardActionsComponent implements OnInit, OnChanges {
     /**
      * An @Input property that sets the layout style of the actions.
-     * By default icons and icon buttons, as well as regular buttons
-     * are split into two containers, which are then positioned on both ends
-     * of the card-actions area.
-     * You can justify the elements in those groups so they are positioned equally
-     * from one another taking up all the space available along the card actions axis.
+     * You can justify the elements slotted in the igx-card-action container
+     * so that they are positioned equally from one another taking up all the
+     * space available along the card actions axis.
      *
      * @example
      * ```html
@@ -335,12 +321,9 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 
     /**
-     * An @Input property that sets order of the buttons the actions area.
-     * By default all icons/icon buttons are placed at the end of the action
-     * area. Any regular buttons(flat, raised) will appear before the icons/icon buttons
-     * placed in the actions area.
-     * If you want to reverse their positions so that icons appear first, use the `reverse`
-     * attribute.
+     * @deprecated in version 15.1.0.
+     * 
+     * An @Input property that reverses the order of the buttons in the actions area.
      *
      * @example
      * ```html
