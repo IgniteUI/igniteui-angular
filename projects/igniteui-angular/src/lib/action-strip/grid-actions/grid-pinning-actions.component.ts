@@ -85,7 +85,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const row = this.strip.context;
         const grid = row.grid;
-        grid.pinRow(row.key);
+        grid.pinRow(row.key, grid.pinnedRecords.length);
         this.strip.hide();
     }
 

@@ -174,6 +174,60 @@ describe('Row Pinning #grid', () => {
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
         });
 
+        it('should emit correct rowPinning arguments on pin/unpin.', () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+
+            const row = grid.getRowByIndex(5);
+            const rowID = row.key;
+            row.pin();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID,
+                insertAtIndex: 0,
+                isPinned: true,
+                row,
+                cancel: false
+            });
+
+            const row2 = grid.getRowByIndex(3);
+            const rowID2 = row2.key;
+            row2.pin();
+
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
+                rowID: rowID2,
+                insertAtIndex: 1,
+                isPinned: true,
+                row: row2,
+                cancel: false
+            });
+        });
+
+        it('should be able to set pin possition of row on pin/unpin events.', () => {
+            const row1 = grid.getRowByIndex(0);
+            row1.pin();
+            expect(row1.pinned).toBe(true);
+            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRecords[0]).toEqual(row1.data);
+
+            const row2 = grid.getRowByIndex(2);
+            row2.pin();
+            grid.pinRow(row2.key);
+            expect(row2.pinned).toBe(true);
+            expect(grid.pinnedRecords.length).toBe(2);
+            expect(grid.pinnedRecords[1]).toEqual(row2.data);
+
+            grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
+                e.insertAtIndex = 0;
+            });
+            const row5 = grid.getRowByIndex(5);
+            row5.pin();
+            expect(row2.pinned).toBe(true);
+            expect(grid.pinnedRecords.length).toBe(3);
+            expect(grid.pinnedRecords[0]).toEqual(row5.data);
+        });
+
         it('should emit rowPinned on pin/unpin.', () => {
             spyOn(grid.rowPinned, 'emit').and.callThrough();
 
