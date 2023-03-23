@@ -1114,8 +1114,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
 
-        if (this.gridAPI.grid.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
-            row.index = index + this.paginator.perPage * this.paginator.page;
+        if (this.pagingMode === 1 && this.page !== 0) {
+            row.index = index + this.perPage * this.page;
         }
         return row;
     }
@@ -1148,7 +1148,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public allRows(): RowType[] {
         return this.dataView.map((rec, index) => {
-            this.pagingMode === 1 && this.paginator.page !== 0 ? index = index + this.paginator.perPage * this.paginator.page : index = this.dataRowList.first.index + index;
+            this.pagingMode === 1 && this.page !== 0 ? index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);
         });
     }
@@ -1189,8 +1189,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this._columns.find((col) => col.field === columnField);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            if (this.pagingMode === 1 && this.gridAPI.grid.page !== 0) {
-                row.index = rowIndex + this.paginator.perPage * this.paginator.page;
+            if (this.pagingMode === 1 && this.page !== 0) {
+                row.index = rowIndex + this.perPage * this.page;
             }
             return new IgxGridCell(this, row.index, columnField);
         }
@@ -1256,7 +1256,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.perPage) : allItems);
     }
 
     /**
