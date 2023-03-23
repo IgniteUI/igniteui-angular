@@ -4714,7 +4714,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method `paginate()` exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Use the corresponding method `paginate()` exposed by the `igx-paginator` instance.
      *
      * Goes to the desired page index.
      *
