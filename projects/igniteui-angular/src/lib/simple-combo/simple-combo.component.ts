@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
-    NgModule, Optional, Output, ViewChild
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Injector,
+    NgModule,
+    Optional,
+    Output,
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -22,7 +32,10 @@ import { IgxTextSelectionDirective, IgxTextSelectionModule } from '../directives
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import {
+    IgxInputGroupModule,
+    IgxInputGroupType,
+    IGX_INPUT_GROUP_TYPE} from '../input-group/public_api';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -140,7 +153,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.open();
         } else {
             if (this.virtDir.igxForOf.length > 0 && !this.selectedItem) {
-                this.dropdown.navigateFirst();
+                this.dropdown.navigateNext();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
                 this.addItem?.element.nativeElement.focus();
@@ -260,6 +273,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             // handle clearing of input by space
             this.clearSelection();
             this._onChangeCallback(null);
+            this.filterValue = '';
+        }
+        if (this.selection.length) {
+            this.selectionService.clear(this.id);
         }
         // when filtering the focused item should be the first item or the currently selected item
         if (!this.dropdown.focusedItem || this.dropdown.focusedItem.id !== this.dropdown.items[0].id) {
@@ -267,6 +284,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         super.handleInputChange(event);
         this.composing = true;
+    }
+
+    /** @hidden @internal */
+    public handleInputClick(): void {
+        if (this.collapsed) {
+            this.open();
+            this.comboInput.focus();
+        }
     }
 
     /** @hidden @internal */
@@ -354,6 +379,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.clearSelection(true);
         if (this.collapsed) {
+            this.filterValue = '';
+            this.cdr.detectChanges();
             this.open();
             this.dropdown.navigateFirst();
         } else {
@@ -370,7 +397,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public handleOpened(): void {
         this.triggerCheck();
-        this.dropdownContainer.nativeElement.focus();
+        if (!this.comboInput.focused) {
+            this.dropdownContainer.nativeElement.focus();
+        }
         this.opened.emit({ owner: this });
     }
 
@@ -395,7 +424,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.dropdownContainer.nativeElement.focus();
         } else {
             this.comboInput.nativeElement.focus();
-            this.toggle();
         }
     }
 
@@ -464,6 +492,28 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return newSelection[0]?.toString() || '';
     }
 
+    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+        if (!newSelection.length) {
+            this.registerRemoteEntries(oldSelection, false);
+            return '';
+        }
+
+        this.registerRemoteEntries(oldSelection, false);
+        this.registerRemoteEntries(newSelection);
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+    }
+
+    /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
+    protected registerRemoteEntries(ids: any[], add = true) {
+        const selection = this.getValueDisplayPairs(ids)[0];
+
+        if (add && selection) {
+            this._remoteSelection[selection[this.valueKey]] = selection[this.displayKey].toString();
+        } else {
+            delete this._remoteSelection[ids[0]];
+        }
+    }
+
     private clearSelection(ignoreFilter?: boolean): void {
         let newSelection = this.selectionService.get_empty();
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
@@ -473,11 +523,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
+        if (this.isRemote) {
+            const searchValue = this.searchValue || this.comboInput.value;
+            const remoteValue = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+            if (remoteValue && searchValue !== remoteValue) {
+                this.clear();
+            }
+            return;
+        }
+
         const filtered = this.filteredData.find(this.findMatch);
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !this.selection.length) {
             this.clear();
-            return;
         }
     }
 
@@ -488,8 +546,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private clear(): void {
         this.clearSelection(true);
-        this._internalFilter = '';
-        this.searchValue = '';
+        this.comboInput.value = this._internalFilter = this._value = this.searchValue = '';
     }
 
     private isValid(value: any): boolean {

@@ -5,7 +5,7 @@ import { isObject, mergeObjects } from '../../core/utils';
 
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
     /**
-     * @inheritDoc
+     * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
@@ -15,21 +15,24 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     protected _states: Map<any, S> = new Map();
 
     /**
-     * @inheritDoc
+     * @returns if there are any transactions in the Undo stack
      */
     public get canUndo(): boolean {
         return this._undoStack.length > 0;
     }
 
     /**
-     * @inheritDoc
+     * @returns if there are any transactions in the Redo stack
      */
     public get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
 
     /**
-     * @inheritDoc
+     * Adds provided  transaction with recordRef if any
+     *
+     * @param transaction Transaction to be added
+     * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
     public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
@@ -38,7 +41,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Returns all recorded transactions in chronological order
+     *
+     * @param id Optional record id to get transactions for
+     * @returns All transaction in the service or for the specified record
      */
     public getTransactionLog(id?: any): T[] {
         if (id !== undefined) {
@@ -48,7 +54,11 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Returns aggregated changes from all transactions
+     *
+     * @param mergeChanges If set to true will merge each state's value over relate recordRef
+     * and will record resulting value in the related transaction
+     * @returns Collection of aggregated transactions for each changed record
      */
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
@@ -60,21 +70,30 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Returns the state of the record with provided id
+     *
+     * @param id The id of the record
+     * @param pending Should get pending state
+     * @returns State of the record if any
      */
     public getState(id: any, pending: boolean = false): S {
         return pending ? this._pendingStates.get(id) : this._states.get(id);
     }
 
     /**
-     * @inheritDoc
+     * Returns whether transaction is enabled for this service
      */
     public get enabled(): boolean {
         return true;
     }
 
     /**
-     * @inheritDoc
+     * Returns value of the required id including all uncommitted changes
+     *
+     * @param id The id of the record to return value for
+     * @param mergeChanges If set to true will merge state's value over relate recordRef
+     * and will return merged value
+     * @returns Value with changes or **null**
      */
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
@@ -96,7 +115,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Clears all pending transactions and aggregated pending state. If commit is set to true
+     * commits pending states as single transaction
+     *
+     * @param commit Should commit the pending states
      */
     public endPending(commit: boolean): void {
         this._isPending = false;
@@ -119,7 +141,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Applies all transactions over the provided data
+     *
+     * @param data Data source to update
+     * @param id Optional record id to commit transactions for
      */
     public commit(data: any[], id?: any): void {
         if (id !== undefined) {
@@ -136,7 +161,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Clears all transactions
+     *
+     * @param id Optional record id to clear transactions for
      */
     public clear(id?: any): void {
         if (id !== undefined) {
@@ -157,7 +184,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Remove the last transaction if any
      */
     public undo(): void {
         if (this._undoStack.length <= 0) {
@@ -179,7 +206,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     }
 
     /**
-     * @inheritDoc
+     * Applies the last undone transaction if any
      */
     public redo(): void {
         if (this._redoStack.length > 0) {
@@ -272,7 +299,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                             state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
-                                mergeObjects(state.value, transaction.newValue);
+                            mergeObjects(state.value, transaction.newValue);
                         }
                     } else {
                         state.value = transaction.newValue;
@@ -283,46 +310,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             states.set(transaction.id, state);
         }
 
-        //  should not clean pending state. This will happen automatically on endPending call
-        if (!this._isPending) {
-            this.cleanState(transaction.id, states);
-        }
-    }
-
-    /**
-     * Compares the state with recordRef and clears all duplicated values. If any state ends as
-     * empty object removes it from states.
-     *
-     * @param state State to clean
-     */
-    protected cleanState(id: any, states: Map<any, S>): void {
-        const state = states.get(id);
-        //  do nothing if
-        //  there is no state, or
-        //  there is no state value (e.g. DELETED transaction), or
-        //  there is no recordRef (e.g. ADDED transaction)
-        if (state && state.value && state.recordRef) {
-            //  if state's value is object compare each key with the ones in recordRef
-            //  if values in any key are the same delete it from state's value
-            //  if state's value is not object, simply compare with recordRef and remove
-            //  the state if they are equal
-            if (isObject(state.recordRef)) {
-                for (const key of Object.keys(state.value)) {
-                    if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
-                        delete state.value[key];
-                    }
-                }
-
-                //  if state's value is empty remove the state from the states, only if state is not DELETE type
-                if (state.type !== TransactionType.DELETE && Object.keys(state.value).length === 0) {
-                    states.delete(id);
-                }
-            } else {
-                if (state.recordRef === state.value) {
-                    states.delete(id);
-                }
-            }
-        }
+        this.cleanState(transaction.id, states);
     }
 
     /**

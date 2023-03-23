@@ -116,6 +116,20 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
+        it('should skip properties from autoGenerateExclude when auto-generating columns', () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = [
+                { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
+            ];
+            fix.componentInstance.autoGenerateExclude = ['Date', 'String'];
+            fix.componentInstance.columns = [];
+            fix.componentInstance.autoGenerate = true;
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+
+            expect(grid.columns.map(col => col.field)).toEqual(['Number', 'Boolean'], 'Invalid columns after exclusion initialized');
+        });
+
         it('should initialize a grid and allow changing columns runtime with ngFor', () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
@@ -259,6 +273,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fixture.componentInstance.grid;
             fixture.componentInstance.columns[1].hasSummary = true;
             grid.summaryRowHeight = 0;
+            // density with custom class #6931:
+            grid.nativeElement.classList.add('custom');
             fixture.detectChanges();
 
             const headerHight = fixture.debugElement.query(By.css(THEAD_CLASS)).query(By.css('.igx-grid__tr')).nativeElement;
@@ -268,6 +284,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaryRowHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement;
 
 
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid', 'custom']));
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
@@ -278,7 +295,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--cosy', 'custom']));
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
@@ -289,7 +306,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
             fixture.detectChanges();
 
-            expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+            expect(grid.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['igx-grid--compact', 'custom']));
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
@@ -2323,7 +2340,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 - grid.theadRow.nativeElement.offsetHeight
                 - grid.tfoot.nativeElement.offsetHeight
                 - grid.footer.nativeElement.offsetHeight
-                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);;
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2376,8 +2393,13 @@ describe('IgxGrid Component Tests #grid', () => {
             tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
 
-            grid.navigateTo(grid.data.length - 1, grid.columnList.length - 1);
+            grid.navigateTo(0,  grid.columnList.length - 1);
+            await wait(100);
+            fix.detectChanges();
+            grid.navigateTo(grid.data.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -2699,7 +2721,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (columnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" [autoGenerateExclude]="autoGenerateExclude" (columnInit)="columnCreated($event)">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -2715,6 +2737,8 @@ export class IgxGridTestComponent {
     ];
 
     public autoGenerate = false;
+
+    public autoGenerateExclude = [];
 
     public columnEventCount = 0;
 

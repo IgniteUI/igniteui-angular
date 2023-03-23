@@ -10,7 +10,7 @@ import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 import { TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from './tree-grid.filtering.strategy';
 import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 
@@ -697,6 +697,60 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+        }));
+
+        it('Should display message when there is no data', fakeAsync(() => {
+            let data = tGrid.data;
+            tGrid.data = [];
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl.innerText).toEqual('No matches');
+
+            tGrid.data = data;
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+        }));
+
+        it('Should display message when the last row is deleted', fakeAsync(() => {
+            tGrid.data = [];
+            tGrid.primaryKey = 'ID';
+            const row = {
+                ID: 0,
+                Name: 'John Winchester',
+                HireDate: new Date(2008, 3, 20),
+                Age: 55,
+                OnPTO: false,
+                Employees: []
+            };
+            tGrid.addRow(row);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
+            expect(emptyTextEl).toBeFalsy();
+
+            tGrid.deleteRowById(0);
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            tick();
+
+            searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
         }));
     });

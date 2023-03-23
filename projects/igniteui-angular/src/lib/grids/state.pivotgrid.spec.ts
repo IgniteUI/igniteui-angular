@@ -1,11 +1,11 @@
-import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
 import { NoopPivotDimensionsStrategy } from '../data-operations/pivot-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxPivotGridPersistanceComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent } from '../test-utils/pivot-grid-samples.spec';
-import { IgxPivotAggregate, IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
+import { IgxPivotGridPersistanceComponent } from '../test-utils/pivot-grid-samples.spec';
+import { IgxPivotNumericAggregate } from './pivot-grid/pivot-grid-aggregate';
 import { IgxPivotDateDimension } from './pivot-grid/pivot-grid-dimensions';
 import { IPivotDimension, IPivotGridRecord } from './pivot-grid/pivot-grid.interface';
 import { IgxPivotGridModule } from './pivot-grid/pivot-grid.module';

@@ -1,5 +1,5 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxTooltipTargetDirective, IgxTreeGridComponent, IgxTreeGridModule } from 'igniteui-angular';
@@ -22,7 +22,7 @@ import { IgxGridModule } from './grid.module';
 describe('IgxGrid - Validation #grid', () => {
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
@@ -247,7 +247,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, false);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.editMode = true;
@@ -259,7 +259,7 @@ describe('IgxGrid - Validation #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyCellValid(cell, true);
-            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid});
+            expect(grid.validationStatusChange.emit).toHaveBeenCalledWith({ status: 'INVALID', owner: grid });
         });
 
         it('should return invalid transaction using the transaction service API', () => {
@@ -407,7 +407,7 @@ describe('IgxGrid - Validation #grid', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
 
-            grid.updateCell('IG', 2,'ProductName');
+            grid.updateCell('IG', 2, 'ProductName');
             grid.validation.markAsTouched(2);
             fixture.detectChanges();
 

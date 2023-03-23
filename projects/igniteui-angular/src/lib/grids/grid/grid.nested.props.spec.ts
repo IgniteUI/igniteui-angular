@@ -209,7 +209,7 @@ describe('Grid - nested data source properties #grid', () => {
         };
 
         configureTestSuite((() => {
-            TestBed.configureTestingModule({
+            return TestBed.configureTestingModule({
                 declarations: [NestedPropertiesGridComponent],
                 imports: [IgxGridModule, NoopAnimationsModule]
             });
@@ -342,18 +342,18 @@ describe('Grid nested data advanced editing #grid', () => {
     };
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [NestedPropertiesGrid2Component],
             imports: [IgxGridModule, NoopAnimationsModule]
         });
     }));
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
         fixture = TestBed.createComponent(NestedPropertiesGrid2Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         gridContent = GridFunctions.getGridContent(fixture);
-    }));
+    });
 
     it('canceling the row editing should revert the uncommitted cell values', () => {
         const copiedData = cloneArray(DATA, true);
@@ -501,7 +501,7 @@ describe('Edit cell with data of type Array #grid', () => {
     };
 
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [NestedPropertyGridComponent],
             imports: [IgxGridModule, IgxComboModule, FormsModule, IgxToggleModule,
                 ReactiveFormsModule, IgxFocusModule, IgxInputGroupModule, NoopAnimationsModule]
@@ -533,6 +533,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
+            primaryKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -596,6 +597,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
+            primaryKey: cell.row.key,
             cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -665,6 +667,7 @@ describe('Edit cell with data of type Array #grid', () => {
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.key,
+            primaryKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,
@@ -729,6 +732,7 @@ describe('Edit cell with data of type Array #grid', () => {
         // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.key,
+            primaryKey: cell.row.key,
             rowData: initialRowData,
             oldValue: row.data,
             owner: grid,

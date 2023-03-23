@@ -166,6 +166,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`data`|Array|The data source for the grid.|
 |`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
+|`autoGenerateExclude`|Array|A list of property keys to be excluded from the generated column collection, default is _[]_|
 |`batchEditing`|boolean|Toggles batch editing in the grid, default is _false_|
 |`moving`|boolean|Enables the columns moving feature. Defaults to _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|
@@ -245,7 +246,7 @@ A list of the events emitted by the **igx-grid**:
 |`contextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`doubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
 |`columnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
-|`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
+|`groupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
 |`toolbarExporting`| Emitted when an export process is initiated by the user.|
 | `rowDragStart` | Emitted when the user starts dragging a row. |
 | `rowDragEnd` | Emitted when the user drops a row or cancel the drag. |

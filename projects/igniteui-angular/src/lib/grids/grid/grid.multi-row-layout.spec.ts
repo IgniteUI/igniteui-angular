@@ -18,7 +18,7 @@ const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite((() => {
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent

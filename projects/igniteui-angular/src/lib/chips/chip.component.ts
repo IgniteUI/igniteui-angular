@@ -71,7 +71,7 @@ let CHIP_ID = 0;
  * @example
  * ```html
  * <igx-chip class="chipStyle" [id]="901" [draggable]="true" [removable]="true" (remove)="chipRemoved($event)">
- *    <igx-avatar class="chip-avatar-resized" igxPrefix [roundShape]="true"></igx-avatar>
+ *    <igx-avatar class="chip-avatar-resized" igxPrefix></igx-avatar>
  * </igx-chip>
  * ```
  */
@@ -218,13 +218,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @Input()
     public selectIcon: TemplateRef<any>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    public class = '';
 
     /**
      * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
@@ -465,26 +458,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-chip')];
-
-        // Add the base class first for each density
-        if (!classes.includes('igx-chip')) {
-            classes.unshift('igx-chip');
-        }
-
-        classes.push(this.disabled ? 'igx-chip--disabled' : '');
-
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ').toString().trim();
-    }
-
-    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -572,6 +545,20 @@ export class IgxChipComponent extends DisplayDensityBase {
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
+    }
+
+    @HostBinding('class')
+    private get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-chip')];
+
+        // Add the base class first for each density
+        if (!classes.includes('igx-chip')) {
+            classes.unshift('igx-chip');
+        }
+
+        classes.push(this.disabled ? 'igx-chip--disabled' : '');
+
+        return classes.join(' ').toString().trim();
     }
 
     /**

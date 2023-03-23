@@ -31,7 +31,9 @@ const ONE_DAY = 1000 * 60 * 60 * 24;
 const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
 const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeric' };
-const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
+const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
+const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
+const CSS_CLASS_INPUT_END = '.igx-input-group__bundle-end'
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_ICON = 'igx-icon';
@@ -54,7 +56,6 @@ describe('IgxDateRangePicker', () => {
         let mockPlatformUtil: any;
         let overlay: IgxOverlayService;
         let mockInjector;
-        let ngModuleRef: any;
         let mockCalendar: IgxCalendarComponent;
         let mockDaysView: any;
         let mockAnimationService: AnimationService;
@@ -77,13 +78,6 @@ describe('IgxDateRangePicker', () => {
                     })
                 })
             };
-            ngModuleRef = ({
-                injector: (...args: any[]) => { },
-                componentFactoryResolver: mockFactoryResolver,
-                instance: () => { },
-                destroy: () => { },
-                onDestroy: (fn: any) => { }
-            });
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
                 classList: { add: () => { }, remove: () => { } },
@@ -123,7 +117,14 @@ describe('IgxDateRangePicker', () => {
                         getPosition: () => 0,
                         parentPlayer: {},
                         totalTime: 0,
-                        beforeDestroy: () => { }
+                        beforeDestroy: () => { },
+                        _renderer: {
+                            engine: {
+                                players: [
+                                    {}
+                                ]
+                            }
+                        }
                     })
                 })
             };
@@ -255,7 +256,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, null, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, null, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
@@ -775,6 +776,9 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 expect((dateRange as any).calendar.selectedDates.length).toBeGreaterThan(0);
+
+                // clean up test
+                tick(350);
             }));
 
             it('should set initial validity state when the form group is disabled', () => {
@@ -1036,12 +1040,12 @@ describe('IgxDateRangePicker', () => {
                     const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                     fix.detectChanges();
                     const dateRangePicker = fix.componentInstance.dateRangeWithTwoInputs;
-    
+
                     fix.componentInstance.markAsTouched();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
                     expect(dateRangePicker.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
-    
+
                     fix.componentInstance.disableForm();
                     fix.detectChanges();
                     expect(dateRangePicker.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
@@ -1283,9 +1287,9 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
 
-                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
-                expect(inputGroup.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
-                expect(inputGroup.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+                const inputGroupsStart = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_START));
+                expect(inputGroupsStart.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
+                expect(inputGroupsStart.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
             it('should be able to set toggle icon', () => {
@@ -1295,30 +1299,32 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeTemplatesComponent);
                 fixture.detectChanges();
 
-                const inputGroups = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_GROUP));
-                const prefixSingleRangeInput = inputGroups[0];
+                const inputGroupsStart = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_START));
+                const inputGroupsEnd = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_END));
+
+                const prefixSingleRangeInput = inputGroupsStart[0];
                 expect(prefixSingleRangeInput.children[0].nativeElement.innerText).toBe(prefixIconText);
                 expect(prefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
-                const suffixSingleRangeInput = inputGroups[1];
-                expect(suffixSingleRangeInput.children[1].nativeElement.innerText).toBe(suffixIconText);
-                expect(suffixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+                const suffixSingleRangeInput = inputGroupsEnd[1];
+                expect(suffixSingleRangeInput.children[0].nativeElement.innerText).toBe(suffixIconText);
+                expect(suffixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
-                const addPrefixSingleRangeInput = inputGroups[2];
+                const addPrefixSingleRangeInput = inputGroupsStart[2];
                 expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
                 expect(addPrefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
                 expect(addPrefixSingleRangeInput.children[1].nativeElement.innerText).toBe(additionalIconText);
                 expect(addPrefixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
-                const prefixRangeInput = inputGroups[3];
+                const prefixRangeInput = inputGroupsStart[3];
                 expect(prefixRangeInput.children[0].nativeElement.innerText).toBe(prefixIconText);
                 expect(prefixRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
-                const suffixRangeInput = inputGroups[4];
-                expect(suffixRangeInput.children[1].nativeElement.innerText).toBe(suffixIconText);
+                const suffixRangeInput = inputGroupsEnd[4];
+                expect(suffixRangeInput.children[0].nativeElement.innerText).toBe(suffixIconText);
+                expect(suffixRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+                expect(suffixRangeInput.children[1].nativeElement.innerText).toBe(additionalIconText);
                 expect(suffixRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
-                expect(suffixRangeInput.children[2].nativeElement.innerText).toBe(additionalIconText);
-                expect(suffixRangeInput.children[2].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
             it('should render aria attributes properly', fakeAsync(() => {
@@ -1349,13 +1355,16 @@ describe('IgxDateRangePicker', () => {
                 dateRange.select(startDate, endDate);
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
+
+                // clean up test
+                tick(350);
             }));
 
             it('should render custom label', () => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
 
-                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
+                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_BUNDLE));
                 expect(inputGroup.children[1].children[0].classes[CSS_CLASS_LABEL]).toBeTruthy();
                 expect(inputGroup.children[1].children[0].nativeElement.textContent).toEqual('Select Date');
             });
@@ -1445,7 +1454,7 @@ export class DateRangeTestComponent implements OnInit {
     public dateRange: IgxDateRangePickerComponent;
 
     public doneButtonText: string;
-    public mode = PickerInteractionMode.DropDown;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public disabled = false;
     public minValue: Date | string;
     public maxValue: Date | string;

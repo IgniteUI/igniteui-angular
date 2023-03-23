@@ -22,7 +22,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 Using `igx-badge` with the `igx-avatar` component to show active status.
 ```html
-<igx-avatar [src]="src" [roundShape]="true">
+<igx-avatar [src]="src">
     <igx-badge type="info" value="8"></igx-badge>
 </igx-avatar>
 ```

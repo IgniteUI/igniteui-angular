@@ -14,7 +14,7 @@ Supporting directives and components:
 ```html
 <igx-card>
     <igx-card-header>
-        <igx-avatar src="https://upload.wikimedia.org/wikipedia/commons/4/49/Elon_Musk_2015.jpg" [roundShape]="true"></igx-avatar>
+        <igx-avatar src="https://upload.wikimedia.org/wikipedia/commons/4/49/Elon_Musk_2015.jpg"></igx-avatar>
         <h4 igxCardHeaderTitle>Elon Musk</h4>
         <h5 igxCardHeaderSubtitle>Entrepreneur</h5>
     </igx-card-header>
@@ -47,7 +47,6 @@ Supporting directives and components:
 ## igx-card-header
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `role` | string | The role attribute of the card header. By default it's set to `header`. |
 | `vertical` | boolean | Sets the header layout direction. When set to `true` the card content is vertically layed out. |
 
 ## igx-card-media

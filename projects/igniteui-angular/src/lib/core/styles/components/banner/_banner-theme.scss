@@ -144,11 +144,10 @@
         gap: rem(16px);
     }
 
-    %igx-banner__actions,
     %igx-banner__actions > igx-banner-actions {
         flex-wrap: wrap;
         justify-content: flex-end;
-        align-items: flex-end;
+        align-items: center;
         align-self: flex-end;
         gap: rem(8px);
         min-height: rem(40px);
