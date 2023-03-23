@@ -2,7 +2,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, NgZone, ViewContainerRef } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -14,6 +14,7 @@ import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
+import { IgxRowDirective } from '../row.directive';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -32,7 +33,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridAutoSizeColumnsComponent,
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
-                IgxHierarchicalGridToggleRIAndColsComponent
+                IgxHierarchicalGridToggleRIAndColsComponent,
+                IgxHierarchicalGridAutoGnerateComponent
             ],
             imports: [NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
@@ -1680,6 +1682,21 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             expect(gridCellValues.length).toBe(1);
         }));
+
+        it('should render correct data if setting columns list manually outside angular / angular elements', async () => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridAutoGnerateComponent);
+            fixture.detectChanges();
+
+            let rows = fixture.debugElement.queryAll(By.directive(IgxRowDirective));
+            expect(rows.length).toEqual(0);
+
+            fixture.componentInstance.updateColumnList();
+            fixture.detectChanges();
+            await wait();
+
+            rows = fixture.debugElement.queryAll(By.directive(IgxRowDirective));
+            expect(rows.length).toBeGreaterThan(0);
+        });
     });
 
 });
@@ -2061,4 +2078,46 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false"
+    [height]="'400px'" [width]="width"  #hierarchicalGrid>
+        <igx-column *ngIf='columnsTemplate' field="ID" width="auto"></igx-column>
+        <igx-column *ngIf='columnsTemplate' field="ProductName" width="auto"></igx-column>
+        <igx-column *ngIf='columnsTemplate' field="Col1" width="auto"></igx-column>
+        <igx-column *ngIf='columnsTemplate' field="Col2" width="auto"></igx-column>
+        <igx-column *ngIf='columnsTemplate' field="Col3" width="auto"></igx-column>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridAutoGnerateComponent extends IgxHierarchicalGridTestBaseComponent {
+
+    public columnsTemplate = false;
+
+    constructor(public _zone: NgZone, public _vc: ViewContainerRef) {
+        super();
+    }
+
+    public updateColumnList() {
+        // The `runOutsideAngular` is not required for the test, only if run outsite the testbed
+        this._zone.runOutsideAngular(() => {
+            const newColumns = [];
+            let newCol1 = this._vc.createComponent(IgxColumnComponent, { injector: this.hgrid["injector"] }).instance;
+            newCol1.field = "ID";
+            newColumns.push(newCol1);
+            let newCol2 = this._vc.createComponent(IgxColumnComponent, { injector: this.hgrid["injector"] }).instance;
+            newCol2.field = "ProductName";
+            newColumns.push(newCol2);
+            let newCol3 = this._vc.createComponent(IgxColumnComponent, { injector: this.hgrid["injector"] }).instance;
+            newCol3.field = "Col1";
+            newColumns.push(newCol3);
+            let newCol4 = this._vc.createComponent(IgxColumnComponent, { injector: this.hgrid["injector"] }).instance;
+            newCol4.field = "Col2";
+            newColumns.push(newCol4);
+
+            this.hgrid.columnList.reset(newColumns);
+            this.hgrid.columnList.notifyOnChanges();
+        });
+    }
+}
 
