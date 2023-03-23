@@ -11,7 +11,7 @@ import {
     OnDestroy,
     Inject
 } from '@angular/core';
-import { NgIf, NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode } from '@angular/common';
+import { NgIf, NgTemplateOutlet, DecimalPipe, DatePipe, getLocaleCurrencyCode, PercentPipe, CurrencyPipe } from '@angular/common';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -27,13 +27,25 @@ import { ISelectionNode } from '../common/types';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxColumnFormatterPipe } from '../common/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html',
     standalone: true,
-    imports: [NgIf, IgxIconComponent, NgTemplateOutlet, IgxBadgeComponent, IgxCheckboxComponent, DecimalPipe, DatePipe]
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        DecimalPipe,
+        DatePipe,
+        PercentPipe,
+        CurrencyPipe,
+        IgxIconComponent,
+        IgxBadgeComponent,
+        IgxCheckboxComponent,
+        IgxColumnFormatterPipe
+    ]
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
