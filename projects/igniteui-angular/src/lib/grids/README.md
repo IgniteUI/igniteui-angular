@@ -166,6 +166,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`data`|Array|The data source for the grid.|
 |`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
+|`autoGenerateExclude`|Array|A list of property keys to be excluded from the generated column collection, default is _[]_|
 |`batchEditing`|boolean|Toggles batch editing in the grid, default is _false_|
 |`moving`|boolean|Enables the columns moving feature. Defaults to _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|

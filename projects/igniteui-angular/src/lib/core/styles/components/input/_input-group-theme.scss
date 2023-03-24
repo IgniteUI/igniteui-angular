@@ -369,9 +369,9 @@
         align-items: center;
 
         igx-icon {
+            width: sizable(rem(18px), rem(20px), rem(24px)) ;
+            height: sizable(rem(18px), rem(20px), rem(24px)) ;
             font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-            width: auto;
-            height: auto;
         }
 
         @if $indigo-theme {
@@ -393,8 +393,8 @@
 
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
-            width: auto;
-            height: auto;
+            width: sizable(rem(18px), rem(20px), rem(24px)) ;
+            height: sizable(rem(18px), rem(20px), rem(24px)) ;
             font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
         }
     }
