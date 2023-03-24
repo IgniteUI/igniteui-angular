@@ -105,9 +105,6 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         return rect.y >= parentDiv.y;
     }
 
-    /**
-     * @inheritDoc
-     */
     public clicked(event): void {
         this.comboAPI.disableTransitions = false;
         if (!this.isSelectable) {

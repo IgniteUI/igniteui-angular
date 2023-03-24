@@ -697,7 +697,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @inheritDoc
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false): any[] {
         let source = [];
@@ -997,11 +1002,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
             if (this.paginator) {
                 const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
-                const page = Math.floor(rowIndex / this.paginator.perPage);
+                const page = Math.floor(rowIndex / this.perPage);
 
-                if (this.paginator.page !== page) {
+                if (this.page !== page) {
                     delayScrolling = true;
-                    this.paginator.page = page;
+                    this.page = page;
                 }
             }
         }

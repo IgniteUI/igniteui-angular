@@ -15,7 +15,11 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
-     * @inheritDoc
+     * Sets/gets if the given item is focused
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemFocused = mySelectedItem.focused;
+     * ```
      */
     public get focused(): boolean {
         let focusedState = this._focused;
@@ -28,15 +32,29 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @inheritDoc
+     * Sets/gets if the given item is focused
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemFocused = mySelectedItem.focused;
+     * ```
      */
-     public set focused(value: boolean) {
+    public set focused(value: boolean) {
         this._focused = value;
     }
     /**
-     * @inheritDoc
+     * Sets/Gets if the item is the currently selected one in the dropdown
+     *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.selected; // true
+     * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
+     * ```
      */
-     public get selected(): boolean {
+    public get selected(): boolean {
         if (this.hasIndex) {
             const item = this.selection.first_item(`${this.dropDown.id}`);
             return item ? item.index === this._index && item.value === this.value : false;
@@ -45,9 +63,10 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @inheritDoc
+     * Sets/Gets if the item is the currently selected one in the dropdown
+     *
      */
-     public set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -67,10 +86,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-     public clicked(event): void {
+    public clicked(event): void {
         if (!this.isSelectable) {
             this.ensureItemFocus();
             return;

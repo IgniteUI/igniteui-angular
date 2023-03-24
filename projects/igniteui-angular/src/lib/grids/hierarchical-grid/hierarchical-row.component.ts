@@ -66,7 +66,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public get viewIndex(): number {
-        return this.index + (this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0);
+        return this.index + this.grid.page * this.grid.perPage;
     }
 
     /**

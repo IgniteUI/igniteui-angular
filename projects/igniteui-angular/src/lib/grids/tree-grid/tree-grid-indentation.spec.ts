@@ -252,7 +252,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
-            treeGrid.perPage = 3;
+            treeGrid.paginator.perPage = 3;
             fix.detectChanges();
             tick(16);
 
@@ -263,7 +263,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 2);
 
-            treeGrid.page = 1;
+            treeGrid.paginator.page = 1;
             fix.detectChanges();
             tick(16);
 
@@ -274,7 +274,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(2), rows[2], 0);
 
-            treeGrid.page = 2;
+            treeGrid.paginator.page = 2;
             fix.detectChanges();
             tick(16);
 

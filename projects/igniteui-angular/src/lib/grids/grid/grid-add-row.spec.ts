@@ -668,7 +668,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataLength = grid.data.length;
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fixture.detectChanges();
 
             const row = grid.rowList.first;
@@ -685,7 +685,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataLength = grid.data.length;
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fixture.detectChanges();
 
             const row = grid.rowList.first;

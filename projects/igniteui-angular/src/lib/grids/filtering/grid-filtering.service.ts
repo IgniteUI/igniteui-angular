@@ -209,20 +209,17 @@ export class IgxFilteringService implements OnDestroy {
             return;
         }
 
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
-        grid.crudService.endEdit(false);
-        if (grid.paginator) {
-            grid.paginator.page = 0;
-        }
+        const filteringTree = this.grid.filteringExpressionsTree;
+        this.grid.crudService.endEdit(false);
+        this.grid.page = 0;
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }
 
-        grid.filteringExpressionsTree = filteringTree;
+        this.grid.filteringExpressionsTree = filteringTree;
     }
 
     /**
@@ -291,26 +288,23 @@ export class IgxFilteringService implements OnDestroy {
             return;
         }
 
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
+        const filteringTree = this.grid.filteringExpressionsTree;
         const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
-        for (const column of grid.columns) {
+        for (const column of this.grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
                 ignoreCase || column.filteringIgnoreCase);
         }
 
-        const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: newFilteringTree, cancel: false };
-        grid.filtering.emit(eventArgs);
+        const eventArgs: IFilteringEventArgs = { owner: this.grid, filteringExpressions: newFilteringTree, cancel: false };
+        this.grid.filtering.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
         }
 
         this.grid.crudService.endEdit(false);
-        if (grid.paginator) {
-            grid.paginator.page = 0;
-        }
-        grid.filteringExpressionsTree = newFilteringTree;
+        this.grid.page = 0;
+        this.grid.filteringExpressionsTree = newFilteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.filteringDone.emit(this.grid.filteringExpressionsTree));
@@ -508,17 +502,13 @@ export class IgxFilteringService implements OnDestroy {
 
     protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
+        const filteringTree = this.grid.filteringExpressionsTree;
         this.grid.crudService.endEdit(false);
-
-        if (grid.paginator) {
-            grid.paginator.page = 0;
-        }
+        this.grid.page = 0;
 
         const fieldFilterIndex = filteringTree.findIndex(fieldName);
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
-        grid.filteringExpressionsTree = filteringTree;
+        this.grid.filteringExpressionsTree = filteringTree;
     }
 
     /** Modifies the filteringState object to contain the newly added filtering conditions/expressions.
