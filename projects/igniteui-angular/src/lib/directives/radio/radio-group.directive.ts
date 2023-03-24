@@ -1,7 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
-    ContentChildren, Directive, EventEmitter, HostBinding, HostListener, Input, NgModule, OnDestroy, Optional, Output, QueryList, Self
+    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, NgModule, OnDestroy, Optional, Output, QueryList, Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject } from 'rxjs';
@@ -49,7 +49,7 @@ let nextId = 0;
     exportAs: 'igxRadioGroup',
     selector: 'igx-radio-group, [igxRadioGroup]'
 })
-export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy {
+export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy, DoCheck {
     private static ngAcceptInputType_required: boolean | '';
     private static ngAcceptInputType_invalid: boolean | '';
     /**
@@ -392,12 +392,31 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         const checked = this.radioButtons.find(x => x.checked);
         if (event.key === "Tab") {
             this.radioButtons.forEach((radio) => {
-                if (checked && radio!=checked) {
-                    // event.stopPropagation();
-                } else if (radio == checked) {
+                if (radio == checked) {
                     checked.focused = true;
-                } 
+                }
             });
+        }
+    }
+
+    public ngDoCheck(): void {
+        this._updateTabIndex();
+    }
+
+    private _updateTabIndex() {
+        // Needed so that the keyboard navigation of a radio group
+        // placed inside a dialog works properly 
+        if (this.radioButtons) {
+            const checked = this.radioButtons.find(x => x.checked);
+            if (checked) {
+                this.radioButtons.forEach((button) => {
+                    checked.nativeElement.tabIndex = 0;
+                    if (button !== checked) {
+                        button.nativeElement.tabIndex = -1;
+                        button.focused = false;
+                    }
+                });
+            }
         }
     }
 
