@@ -212,7 +212,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    public dropAreaTemplate: TemplateRef<any>;
+    public dropAreaTemplate: TemplateRef<void>;
 
     /**
      * @hidden @internal
