@@ -5120,13 +5120,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return false;
         }
 
-        const eventArgs: IPinRowEventArgs = {
-            insertAtIndex: index,
-            isPinned: true,
-            rowID,
-            row,
-            cancel: false
-        };
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, index, row, true);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -5162,12 +5156,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === -1) {
             return false;
         }
-        const eventArgs: IPinRowEventArgs = {
-            isPinned: false,
-            rowID,
-            row,
-            cancel: false
-        };
+
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, null, row, false);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
