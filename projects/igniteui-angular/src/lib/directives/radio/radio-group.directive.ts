@@ -204,10 +204,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     @HostListener('keydown', ['$event'])
     protected handleKeyDown(event: KeyboardEvent) {
         const { key } = event;
+        const buttons = this.radioButtons.filter(radio => !radio.disabled);
+        const checked = buttons.find((radio) => radio.checked);
 
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
-            const buttons = this.radioButtons.filter(radio => !radio.disabled);
-            const checked = buttons.find((radio) => radio.checked);
             let index = checked ? buttons.indexOf(checked!) : -1;
             const ltr = this._directionality.value === 'ltr';
 
@@ -237,6 +237,13 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
             buttons[index].nativeElement.focus();
             buttons[index].select();
             event.preventDefault();
+        } else if (event.key === "Tab") {
+            buttons.forEach((radio) => {
+                if (radio != checked) {
+                    event.stopPropagation();
+                    
+                }
+            });
         }
     }
 
@@ -352,6 +359,12 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
                 .subscribe(() => {
                     this.updateValidityOnBlur()
                 });
+
+                fromEvent(button.nativeElement, 'keyup')
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((event: KeyboardEvent) => {
+                    this.updateOnKeyUp(event)
+                });
             });
         }
     }
@@ -368,6 +381,23 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         if (this.required) {
             const checked = this.radioButtons.find(x => x.checked);
             this.invalid = !checked;
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private updateOnKeyUp(event: KeyboardEvent) {
+        const checked = this.radioButtons.find(x => x.checked);
+        if (event.key === "Tab") {
+            this.radioButtons.forEach((radio) => {
+                if (checked && radio!=checked) {
+                    // event.stopPropagation();
+                } else if (radio == checked) {
+                    checked.focused = true;
+                } 
+            });
         }
     }
 
