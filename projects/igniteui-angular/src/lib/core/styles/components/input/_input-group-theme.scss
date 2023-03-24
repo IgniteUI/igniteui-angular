@@ -1580,10 +1580,9 @@
 
     // Label
     %fluent-label {
-        display: inline-flex;
+        display: block;
         font-size: rem(14px);
         font-weight: 600;
-        line-height: 1 !important;
         position: static;
         transform: translateY(0);
         transform-origin: top left;
