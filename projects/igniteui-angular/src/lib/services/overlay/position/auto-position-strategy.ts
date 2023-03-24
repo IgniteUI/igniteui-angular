@@ -9,7 +9,12 @@ import { BaseFitPositionStrategy } from './base-fit-position-strategy';
  */
 export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
-    /** @inheritDoc */
+    /**
+     * Fits the element into viewport according to the position settings
+     *
+     * @param element element to fit in viewport
+     * @param connectedFit connectedFit object containing all necessary parameters
+     */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
