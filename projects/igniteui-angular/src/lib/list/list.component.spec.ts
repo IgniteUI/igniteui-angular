@@ -38,7 +38,7 @@ const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 describe('List', () => {
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
                 ListCustomLoadingComponent,

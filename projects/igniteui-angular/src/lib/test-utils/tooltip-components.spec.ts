@@ -6,16 +6,18 @@ import {
 
 @Component({
     template: `
-        <div class="dummyDiv">dummy div for touch tests</div>
-        <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
-                (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
-                style="margin: 200px">
-            Hover me
-        </button>
-        <div igxTooltip #tooltipRef="tooltip">
-            Hello, I am a tooltip!
-        </div>
-        `
+    <div class="dummyDiv">dummy div for touch tests</div>
+    <button [igxTooltipTarget]="tooltipRef" [tooltip]="'Infragistics Inc. HQ'"
+            (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
+            style="margin: 200px">
+        Hover me
+    </button>
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipSingleTargetComponent {
     @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
@@ -38,18 +40,20 @@ export class IgxTooltipSingleTargetComponent {
 
 @Component({
     template: `
-        <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
-            Target One
-        </button>
+    <button class="buttonOne" #targetOne="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
+        Target One
+    </button>
 
-        <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
-            Target Two
-        </button>
+    <button class="buttonTwo" #targetTwo="tooltipTarget" [igxTooltipTarget]="tooltipRef" style="margin: 100px">
+        Target Two
+    </button>
 
-        <div igxTooltip #tooltipRef="tooltip">
-            Hello, I am a tooltip!
-        </div>
-        `
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>
+    `,
+    standalone: true,
+    imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
     @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipDirective;
@@ -60,10 +64,12 @@ export class IgxTooltipMultipleTargetsComponent {
 
 @Component({
     template: `
-        <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
-                info
-        </button>
-        `
+    <button igxTooltipTarget [tooltip]="'Infragistics Inc. HQ'">
+            info
+    </button>
+    `,
+    standalone: true,
+    imports: [IgxTooltipTargetDirective]
 })
 export class IgxTooltipPlainStringComponent {
     @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;

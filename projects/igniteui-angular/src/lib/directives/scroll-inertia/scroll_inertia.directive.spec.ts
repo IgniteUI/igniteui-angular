@@ -18,8 +18,10 @@ describe('Scroll Inertia Directive - Rendering', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [IgxTestScrollInertiaDirective,
-                ScrollInertiaComponent]
+            imports: [
+                IgxTestScrollInertiaDirective,
+                ScrollInertiaComponent
+            ]
         }).compileComponents().then(() => {
             fix = TestBed.createComponent(ScrollInertiaComponent);
             fix.detectChanges();
