@@ -237,11 +237,12 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
             buttons[index].nativeElement.focus();
             buttons[index].select();
             event.preventDefault();
-        } else if (event.key === "Tab") {
+        }
+
+        if (event.key === "Tab") {
             buttons.forEach((radio) => {
-                if (radio != checked) {
+                if (radio !== checked) {
                     event.stopPropagation();
-                    
                 }
             });
         }
@@ -390,9 +391,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
      */
     private updateOnKeyUp(event: KeyboardEvent) {
         const checked = this.radioButtons.find(x => x.checked);
+
         if (event.key === "Tab") {
             this.radioButtons.forEach((radio) => {
-                if (radio == checked) {
+                if (radio === checked) {
                     checked.focused = true;
                 }
             });
@@ -405,12 +407,14 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
 
     private _updateTabIndex() {
         // Needed so that the keyboard navigation of a radio group
-        // placed inside a dialog works properly 
+        // placed inside a dialog works properly
         if (this.radioButtons) {
             const checked = this.radioButtons.find(x => x.checked);
+
             if (checked) {
                 this.radioButtons.forEach((button) => {
                     checked.nativeElement.tabIndex = 0;
+
                     if (button !== checked) {
                         button.nativeElement.tabIndex = -1;
                         button.focused = false;
