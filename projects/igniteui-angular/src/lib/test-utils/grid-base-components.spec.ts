@@ -14,6 +14,7 @@ import { IgxGridToolbarPinningComponent } from '../grids/toolbar/grid-toolbar-pi
 import { NgFor, NgIf } from '@angular/common';
 import { IgxCellTemplateDirective } from '../grids/columns/templates.directive';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
+import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 
 @Component({
     template: `
@@ -249,7 +250,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
             '</igx-grid-toolbar>')}
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgIf]
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
@@ -302,7 +303,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
         '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, NgIf]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, NgIf]
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
     public data = SampleTestData.contactInfoDataFull();
