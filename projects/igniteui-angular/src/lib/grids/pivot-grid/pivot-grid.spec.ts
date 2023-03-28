@@ -758,6 +758,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             it('should show filters chips', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [
+                    {
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "300px",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }
+                ];
                 pivotGrid.pivotConfiguration.filters = [{
                     memberName: 'SellerName',
                     enabled: true
@@ -1614,7 +1627,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip2,
                     originalEvent: {
-                        offsetX: 100
+                        offsetX: 110
                     }
                 });
                 fixture.detectChanges();
@@ -1648,7 +1661,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip1,
                     originalEvent: {
-                        offsetX: -100
+                        offsetX: -110
                     }
                 });
                 fixture.detectChanges();
@@ -1673,7 +1686,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip2,
                     originalEvent: {
-                        offsetX: 100
+                        offsetX: 110
                     }
                 }, PivotDimensionType.Row);
                 fixture.detectChanges();
@@ -1683,6 +1696,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
             it('should allow moving dimension between rows, columns and filters.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [
+                    {
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "300px",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }
+                ];
                 pivotGrid.pivotConfiguration.filters = [{
                     memberName: 'SellerName',
                     enabled: true

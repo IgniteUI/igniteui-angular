@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 15.2.0
+
+### General
+- `IgxChip`
+    - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip. 
+
 ## 15.1.0
 
 ### New Features

@@ -24,8 +24,6 @@ import {
 import {IBaseEventArgs, mkenum} from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { fromEvent } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
 
 export const IgxChipTypeVariant = mkenum({
     PRIMARY: 'primary',
@@ -554,13 +552,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @ViewChild('selectContainer', { read: ElementRef, static: true })
-    public selectContainer: ElementRef;
-
-    /**
-     * @hidden
-     * @internal
-     */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
@@ -639,16 +630,6 @@ export class IgxChipComponent extends DisplayDensityBase {
             [SELECT_CLASS]: condition,
             [`${SELECT_CLASS}--hidden`]: !condition
         };
-    }
-
-    public onSelectTransitionDone(event) {
-        if (!!event.target.tagName) {
-            // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
-            this.selectedChanged.emit({
-                owner: this,
-                originalEvent: event
-            });
-        }
     }
 
     /**
@@ -889,10 +870,6 @@ export class IgxChipComponent extends DisplayDensityBase {
             cancel: false
         };
 
-        fromEvent(this.selectContainer.nativeElement, 'transitionend')
-            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
-            .subscribe(event => this.onSelectTransitionDone(event));
-
         if (newValue && !this._selected) {
             onSelectArgs.selected = true;
             this.selectedChanging.emit(onSelectArgs);
@@ -901,6 +878,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
                 this.selectedChange.emit(this._selected);
+                this.selectedChanged.emit({
+                    owner: this,
+                    originalEvent: srcEvent
+                });
             }
         } else if (!newValue && this._selected) {
             this.selectedChanging.emit(onSelectArgs);
@@ -909,6 +890,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
                 this.selectedChange.emit(this._selected);
+                this.selectedChanged.emit({
+                    owner: this,
+                    originalEvent: srcEvent
+                });
             }
         }
     }

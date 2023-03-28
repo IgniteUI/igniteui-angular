@@ -1251,8 +1251,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Select the first two chips.
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            fix.detectChanges();
+
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
-            tick(200);
+            tick(200); // Await click timeout
+            fix.detectChanges();
 
             // Scroll to the bottom.
             exprContainer.scrollTop = exprContainer.scrollHeight;
@@ -1984,6 +1987,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
                 tick(200);
+                fix.detectChanges();
 
                 // Verify context menu is visible.
                 verifyContextMenuVisibility(fix, true);
@@ -1992,6 +1996,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Unselect one of the two selected chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
                 tick(200);
+                fix.detectChanges();
 
                 // Verify context menu is no longer visible.
                 verifyContextMenuVisibility(fix, false);
@@ -2212,6 +2217,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click the innner group's operator line.
                 const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 operatorLine.click();
+                fix.detectChanges();
 
                 // Verify context menu is visible.
                 verifyContextMenuVisibility(fix, true);
@@ -2220,6 +2226,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click the innner group's operator line again.
                 operatorLine.click();
                 tick();
+                fix.detectChanges();
 
                 // Verify context menu is no longer visible.
                 verifyContextMenuVisibility(fix, false);
@@ -2545,6 +2552,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
+                fix.detectChanges();
 
                 // Verify context menu is opened.
                 verifyContextMenuVisibility(fix, true);
@@ -2581,6 +2589,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
+                fix.detectChanges();
 
                 // Verify context menu is opened.
                 verifyContextMenuVisibility(fix, true);
