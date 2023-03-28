@@ -51,6 +51,7 @@ let NEXT_ID = 0;
     styles: [`
         :host {
             display: block;
+            width: 100%;
         }
     `
     ],
