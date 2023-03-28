@@ -15,7 +15,7 @@ import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operatio
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy, IgxFilterItem } from '../data-operations/filtering-strategy';
 import { CellType, IgxAdvancedFilteringDialogComponent, IgxGridComponent, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from '../grids/grid/public_api';
-import { IgxRowAddTextDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective } from '../grids/grid.rowEdit.directive';
+import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective } from '../grids/grid.rowEdit.directive';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { ISortingStrategy, SortingDirection } from '../data-operations/sorting-strategy';
@@ -1365,7 +1365,7 @@ export class IgxGridRowEditingComponent extends BasicGridComponent {
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
     </igx-grid>`,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
@@ -1475,7 +1475,7 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     </igx-grid>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTemplateDirective]
 })
 export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
@@ -1501,7 +1501,7 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
     </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowAddTextDirective, IgxRowEditTextDirective]
 })
 export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();

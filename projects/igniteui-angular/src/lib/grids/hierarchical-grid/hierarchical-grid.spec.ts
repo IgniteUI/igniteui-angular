@@ -10,7 +10,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
+import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowEditActionsDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
@@ -20,6 +20,7 @@ import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOper
 import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-style-header.component';
 import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
+import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -1951,7 +1952,7 @@ export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchica
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
@@ -2008,7 +2009,11 @@ export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalG
         IgxExcelStyleHeaderComponent,
         IgxExcelStyleSortingComponent,
         IgxExcelStyleFilterOperationsTemplateDirective,
-        IgxExcelStyleSearchComponent
+        IgxExcelStyleSearchComponent,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective
     ]
 })
 export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
@@ -2037,18 +2042,18 @@ export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHier
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxIconComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxIconComponent, IgxCellHeaderTemplateDirective]
 })
 export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarchicalGridTestBaseComponent {
     constructor(public cdr: ChangeDetectorRef) {
         super();
     }
 
-    public pinColumn(col: IgxColumnComponent) {
+    public pinColumn(col: ColumnType) {
         col.pin();
     }
 
-    public hideColumn(col: IgxColumnComponent){
+    public hideColumn(col: ColumnType){
         col.hidden = true;
     }
 }
@@ -2074,7 +2079,7 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarchicalGridTestBaseComponent{}
 
@@ -2099,7 +2104,7 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
         </igx-row-island>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
 
