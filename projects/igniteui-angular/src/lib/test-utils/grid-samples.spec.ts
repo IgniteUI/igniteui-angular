@@ -198,11 +198,9 @@ export class SummaryColumnComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height"`,
-        '', ColumnDefinitions.productDefaultSummaries),
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, NgIf]
 })
 export class ProductsComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
