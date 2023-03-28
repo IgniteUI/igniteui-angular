@@ -3820,6 +3820,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private createComponentInstance(component: any) {
+        // TODO: create component instance view viewContainerRef.createComponent(Component, Settings) overload
         let dynamicFactory: ComponentFactory<any>;
         const factoryResolver = this.moduleRef
             ? this.moduleRef.componentFactoryResolver
@@ -4773,7 +4774,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.addRowToData(data);
 
         this.pipeTrigger++;
-        this.rowAddedNotifier.next({ data: data, owner: this });
+        this.rowAddedNotifier.next({ data: data, owner: this, primaryKey: data[this.primaryKey] });
         this.notifyChanges();
     }
 
@@ -4799,6 +4800,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public deleteRowById(rowId: any): any {
         const args = {
             rowID: rowId,
+            primaryKey: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
             oldValue: null,
@@ -4811,7 +4813,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
-            this.rowDeleted.emit({ data: record, owner: this });
+            const rowDeletedEventArgs: IRowDataEventArgs = { data: record, owner: this, primaryKey: record[this.primaryKey] };
+            this.rowDeleted.emit(rowDeletedEventArgs);
         }
         return record;
     }
@@ -5133,20 +5136,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
-
-        const eventArgs: IPinRowEventArgs = {
-            insertAtIndex: index,
-            isPinned: true,
-            rowID,
-            row,
-            cancel: false
-        };
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, index, row, true);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
             return;
         }
-
         this.crudService.endEdit(false);
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
@@ -5176,12 +5171,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === -1) {
             return false;
         }
-        const eventArgs: IPinRowEventArgs = {
-            isPinned: false,
-            rowID,
-            row,
-            cancel: false
-        };
+
+        const eventArgs = this.gridAPI.get_pin_row_event_args(rowID, null, row, false);
         this.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -5779,7 +5770,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Select range(s) of cells between certain rows and columns of the grid.
      */
     public selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined): void {
         if (!this.isDefined(arg)) {
@@ -5819,7 +5810,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Get the currently selected ranges in the grid.
      */
     public getSelectedRanges(): GridSelectionRange[] {
         return this.selectionService.ranges;
@@ -6286,11 +6277,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                settings,
-                {
-                    injector: this.viewRef.injector,
-                    componentFactoryResolver: this.resolver
-                });
+                this.viewRef,
+                settings);
             this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
@@ -7322,9 +7310,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray = this.getSelectableColumnsAt(each);
                 columnsArray.forEach((col) => {
                     if (col) {
-                        const key = headers ? col.header || col.field : col.field;
+                        const key = !this.isPivot && headers ? col.header || col.field : col.field;
                         const rowData = source[row].ghostRecord ? source[row].recordRef : source[row];
-                        const value = resolveNestedPath(rowData, col.field);
+                        const value = this.isPivot ? rowData.aggregationValues.get(col.field)
+                        : resolveNestedPath(rowData, col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value, rowData) : value;
                         if (columnData) {
                             if (!record[key]) {

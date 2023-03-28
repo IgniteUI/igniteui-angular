@@ -175,33 +175,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Getter for the 'display' property of the current `IgxActionStrip`
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.display')
-    public get display(): string {
-        return this._hidden ? 'none' : 'flex';
-    }
-
-    /**
-     * Host `attr.class` binding.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class')
-    public get hostClasses(): string {
-        let hostClass = this.getComponentDensityClass('igx-action-strip');
-        if (hostClass !== 'igx-action-strip') {
-            // action strip requires the base class to be always present:
-            hostClass = `igx-action-strip ${hostClass}`;
-        }
-        return hostClass;
-    }
-
-    /**
      * Menu Items list.
      *
      * @hidden
@@ -219,6 +192,28 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         });
         return [... this._menuItems.toArray(), ...actions];
     }
+
+
+    /**
+     * Getter for the 'display' property of the current `IgxActionStrip`
+     */
+     @HostBinding('style.display')
+     private get display(): string {
+         return this._hidden ? 'none' : 'flex';
+     }
+
+     /**
+      * Host `attr.class` binding.
+      */
+     @HostBinding('class')
+     private get hostClasses(): string {
+         let hostClass = this.getComponentDensityClass('igx-action-strip');
+         if (hostClass !== 'igx-action-strip') {
+             // action strip requires the base class to be always present:
+             hostClass = `igx-action-strip ${hostClass}`;
+         }
+         return hostClass;
+     }
 
     /**
      * @hidden

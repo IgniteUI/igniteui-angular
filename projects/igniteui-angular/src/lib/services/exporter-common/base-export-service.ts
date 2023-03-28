@@ -1118,7 +1118,7 @@ export abstract class IgxBaseExporter {
                 1;
 
             const columnInfo: IColumnInfo = {
-                header: columnHeader,
+                header: ExportUtilities.sanitizeValue(columnHeader),
                 dataType: column.dataType,
                 field: column.field,
                 skip: !exportColumn,

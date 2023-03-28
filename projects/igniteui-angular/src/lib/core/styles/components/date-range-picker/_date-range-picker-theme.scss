@@ -35,12 +35,6 @@
 @mixin date-range-picker($theme) {
     @include css-vars($theme);
 
-    $base-scale-size: (
-        'comfortable': rem(16px),
-        'cosy': rem(19px),
-        'compact': rem(22px)
-    );
-
     %igx-date-range-picker {
         display: flex;
 
@@ -65,19 +59,6 @@
         align-items: center;
         color: var-get($theme, 'label-color');
         margin: 0 rem(8px);
-        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
-    }
-
-    %igx-date-range-picker--cosy {
-        %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
-        }
-    }
-
-    %igx-date-range-picker--compact {
-        %igx-date-range-picker__label {
-            padding-top: rem(18px, map.get($base-scale-size, 'compact'));
-        }
     }
 
     %igx-date-range-picker-buttons {
