@@ -2,11 +2,14 @@
 
 # Current Milestone
 
-## Milestone 25, version 15.0 (Due by Jan, 2023)
+## Milestone 26, version 16.0 (Due by May, 2023)
 
-1. Design update of Combo Component
-2. Design update of Input Group Component
-3. Design update of List Component
+1. Compatability with Angular 16.0
+2. IgxDateRangePicker UX improvement [#11994](https://github.com/IgniteUI/igniteui-angular/issues/11994)
+3. IgxSimpleCombo: possibility to not open dropdown on clear [#11871](https://github.com/IgniteUI/igniteui-angular/issues/11871)
+4. Igx Grid allow cell selection on specific columns [#11704](https://github.com/IgniteUI/igniteui-angular/issues/11704)
+5. igniteui-angular as standalone component exports [#12698](https://github.com/IgniteUI/igniteui-angular/issues/12698)
+6. Resizing [IgxDrag] [#6283](https://github.com/IgniteUI/igniteui-angular/issues/6283)
 
 ## Going down the road
 
@@ -20,7 +23,24 @@
 
 # Previous Milestone
 
-## Milestone 24, version 15.0 (Due by Nov, 2022) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-december-release-2022)
+## Milestone 25, version 15.1 (Releasd March 28th, 2023)
+
+1. **[DONE]** [Themes] - Use the sizable mixins and functions to size components [#12347](https://github.com/IgniteUI/igniteui-angular/issues/12347)
+2. **[DONE]** [Input] Update the UI according to the new design. [#12421](https://github.com/IgniteUI/igniteui-angular/issues/12421)
+3. **[DONE]** Use rem instead of px [#12377](https://github.com/IgniteUI/igniteui-angular/issues/12377)
+4. **[DONE]** Improve Material Outlined Input markup to allow for runtime label changes [#12221](https://github.com/IgniteUI/igniteui-angular/issues/12221)
+5. **[DONE]** Update overlay attach dynamic component overload [#11671](https://github.com/IgniteUI/igniteui-angular/issues/11671)
+6. **[DONE]** Add start and end slot to card actions [#12664](https://github.com/IgniteUI/igniteui-angular/issues/12664)
+7. **[DONE]** Suggestion for igx-grid group by row template [#12752](https://github.com/IgniteUI/igniteui-angular/issues/12752)
+8. **[DONE]** Checkbox: missing validation styling [#12585](https://github.com/IgniteUI/igniteui-angular/issues/12585)
+9. **[DONE]** Order by count in igx-grid group by [#11642](https://github.com/IgniteUI/igniteui-angular/issues/11642)
+10. **[DONE]** igxMask always set the symbol '9' as a fillable spot [#7089](https://github.com/IgniteUI/igniteui-angular/issues/7089)
+11. **[DONE]** IgxGrid: after selecting multiple cells using CNTL / click should be able to deselect an individual cell using CNTL / click [#12522](https://github.com/IgniteUI/igniteui-angular/issues/12522)
+12. **[DONE]** Add shape property to badge [#12588](https://github.com/IgniteUI/igniteui-angular/issues/12588)
+13. **[DONE]** Support height for card component [#12555](https://github.com/IgniteUI/igniteui-angular/issues/12555)
+14. **[DONE]** Design update of Combo Component
+
+## Milestone 24, version 15.0 (Released November 23rd, 2022) [Release Blog](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-december-release-2022)
 
 1. **[DONE]** Support exporting grid with summaries [#11598](https://github.com/IgniteUI/igniteui-angular/issues/11598)
 2. **[DONE]** Themes: Add support for adjusting spacing via CSS vars [#11368](https://github.com/IgniteUI/igniteui-angular/issues/11368)
