@@ -1212,7 +1212,7 @@ class InputReactiveFormComponent {
         </igx-input-group>
 `,
     standalone: true,
-    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule]
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule, FormsModule]
 })
 
 class FileInputFormComponent {
