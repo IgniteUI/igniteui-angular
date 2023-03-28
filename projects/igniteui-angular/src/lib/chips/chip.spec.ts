@@ -362,7 +362,7 @@ describe('IgxChip', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
             expect(secondChipComp.selectedChanging.emit).toHaveBeenCalled();
-            expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.selectedChanged.emit).toHaveBeenCalled();
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: secondChipComp,
