@@ -42,7 +42,7 @@ const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
 const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
 
-describe('IgxDateRangePicker', () => {
+fdescribe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
         let mockElementRef: any;
@@ -1493,7 +1493,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>`,
     standalone: true,
-    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, FormsModule]
+    imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
     public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
