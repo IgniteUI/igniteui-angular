@@ -42,7 +42,7 @@ const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
 const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
 
-fdescribe('IgxDateRangePicker', () => {
+describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
         let mockElementRef: any;
