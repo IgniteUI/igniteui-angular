@@ -47,7 +47,6 @@ Supporting directives and components:
 ## igx-card-header
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `role` | string | The role attribute of the card header. By default it's set to `header`. |
 | `vertical` | boolean | Sets the header layout direction. When set to `true` the card content is vertically layed out. |
 
 ## igx-card-media

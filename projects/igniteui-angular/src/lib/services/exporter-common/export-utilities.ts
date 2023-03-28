@@ -58,4 +58,17 @@ export class ExportUtilities {
     public static isNullOrWhitespaces(value: string): boolean {
         return value === undefined || value === null || !value.trim();
     }
+
+    public static sanitizeValue(value: any): string {
+        if (!this.hasValue(value)) {
+            return '';
+        } else {
+            const stringValue = String(value);
+            return stringValue.replace(/&/g, '&amp;')
+                              .replace(/</g, '&lt;')
+                              .replace(/>/g, '&gt;')
+                              .replace(/"/g, '&quot;')
+                              .replace(/'/g, '&apos;');
+        }
+    }
 }
