@@ -56,17 +56,6 @@ export function getDecoratorName({ expression }: ts.Decorator): string {
 }
 
 /**
- * Returns whether a given node is a class declaration.
- *
- * @export
- * @param {ts.Node} node
- * @return {*}  {boolean}
- */
-export function isClass(node: ts.Node): boolean {
-    return ts.isClassDeclaration(node);
-}
-
-/**
  * Returns whether a given symbol node is a property
  *
  * @export

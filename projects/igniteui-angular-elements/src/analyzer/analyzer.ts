@@ -3,7 +3,7 @@ import * as ts from 'typescript';
 import type { ComponentMetadata } from './types';
 import { AnalyzerComponent } from './component';
 import { AnalyzerPrinter } from './printer';
-import { getDecoratorName, getDecorators, isClass, filterRelevantQueries, isChildOfConfigComponent, readTSConfig } from './utils';
+import { getDecoratorName, getDecorators, filterRelevantQueries, isChildOfConfigComponent, readTSConfig } from './utils';
 
 
 export class Analyzer {
@@ -24,8 +24,8 @@ export class Analyzer {
     #getComponents(source: ts.NodeArray<ts.Node>) {
         const isComponent = (dec: ts.Decorator) => getDecoratorName(dec) === 'Component';
         return source
-            .filter(isClass)
-            .filter(x => getDecorators(x as any)!.some(isComponent));
+            .filter(ts.isClassDeclaration)
+            .filter(x => getDecorators(x)!.some(isComponent));
     }
 
     constructor(fileNames: readonly string[], options: ts.CompilerOptions) {
