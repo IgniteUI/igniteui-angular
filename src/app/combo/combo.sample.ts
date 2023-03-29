@@ -54,13 +54,13 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
 
     @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
-    private simpleCombo;
+    private simpleCombo: IgxSimpleComboComponent;
 
-    @ViewChild('openOnClearSimpleComboEvent', { read: IgxSimpleComboComponent, static: true })
-    public openOnClearSimpleComboEvent;
+    @ViewChild('simpleComboOpenOnClear')
+    public simpleComboOpenOnClear: IgxSimpleComboComponent;
 
-    @ViewChild('openOnClearSimpleComboTemplate', { read: IgxSimpleComboComponent, static: true })
-    public openOnClearSimpleComboTemplate;
+    @ViewChild('simpleComboOpenOnClearWithTemplate')
+    public simpleComboOpenOnClearWithTemplate: IgxSimpleComboComponent;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -70,8 +70,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public items: any[] = [];
     public values1: Array<any> = ['Arizona'];
     public singleValue = 'Arizona';
-    public selectedValueSimpleComboEvent = 'Connecticut';
-    public selectedValueSimpleComboTemplate = 'Connecticut';
     public values2: Array<any>;
     public isDisabled = false;
 
@@ -259,10 +257,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.densityCombo.displayDensity = density;
     }
 
-    public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
-        console.log(event);
-    }
-
     public changeFiltering(e: IChangeSwitchEventArgs) {
         if (e.checked) {
             this.igxCombo.filterFunction = this.customFilterFunction;
@@ -339,6 +333,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public handleSelectionChanging(evt: IComboSelectionChangingEventArgs) {
+        if (!evt.newSelection) {
+            this.simpleComboOpenOnClear.open();
+        }   
         this.hasSelection = !!evt?.newSelection.length;
     }
 
@@ -417,15 +414,5 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                 this.remoteSimpleCombo.totalItemCount = data['@odata.count'];
             }
         );
-    }
-
-    public openOnClearSelectionChanging(event: ISimpleComboSelectionChangingEventArgs){
-        if(!event.newSelection){
-            this.openOnClearSimpleComboEvent.open();
-        }   
-    }
-
-    public openSimpleComboTemplate(){
-        this.openOnClearSimpleComboTemplate.open();
     }
 }

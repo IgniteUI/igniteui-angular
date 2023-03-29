@@ -107,28 +107,25 @@
     </section>
 
     <section class="combo-sample__section">
-        <h1 class="combo-sample__title">Open simple combo on clear by handling the selectionChanging event</h1>
-        <!-- Simple combo with selectionChanging event -->
+        <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
         <igx-simple-combo  
-                    #openOnClearSimpleComboEvent
+                    #simpleComboOpenOnClear
                     [displayDensity]="'comfortable'"
-                    [(ngModel)]="selectedValueSimpleComboEvent"
+                    [(ngModel)]="singleValue"
                     type="border"
                     [data]="items"
                     [displayKey]="valueKeyVar"
                     [disabled]="isDisabled"
                     [valueKey]="valueKeyVar"
                     [groupKey]="valueKeyVar ? 'region' : ''" 
-                    (selectionChanging)="openOnClearSelectionChanging($event)">
+                    (selectionChanging)="handleSelectionChanging($event)">
                 <label igxLabel>States</label>
-                <igx-hint>Click clear icon.</igx-hint>
         </igx-simple-combo>
-        <h1 class="combo-sample__title">Open simple combo on clear with template for the clear icon</h1>
-        <!-- Simple combo with template for the clear icon -->
+        <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
         <igx-simple-combo  
-                    #openOnClearSimpleComboTemplate
+                    #simpleComboOpenOnClearWithTemplate
                     [displayDensity]="'comfortable'"
-                    [(ngModel)]="selectedValueSimpleComboTemplate"
+                    [(ngModel)]="singleValue"
                     type="border"
                     [data]="items"
                     [displayKey]="valueKeyVar"
@@ -136,9 +133,8 @@
                     [valueKey]="valueKeyVar"
                     [groupKey]="valueKeyVar ? 'region' : ''" >
                 <label igxLabel>States</label>
-                <igx-hint>Click clear icon.</igx-hint>
                 <ng-template igxComboClearIcon>
-                    <igx-icon (click)="openSimpleComboTemplate()">cancel</igx-icon>
+                    <igx-icon (click)="simpleComboOpenOnClearWithTemplate.open()">cancel</igx-icon>
                 </ng-template>
         </igx-simple-combo>
     </section>
@@ -182,7 +178,7 @@
         <igx-combo #playgroundCombo [placeholder]="'Locations'"
             [showSearchCaseIcon]='true'
             (addition)="handleAddition($event)"
-            (selectionChanging)="handleSelectionChange($event)"
+            (selectionChanging)="handleSelectionChanging($event)"
             [data]="items"
             [allowCustomValues]="customValuesFlag"
             [autoFocusSearch]="autoFocusSearch"

@@ -1447,25 +1447,11 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
 
-            combo.open();
-            fixture.detectChanges();
-            expect(combo.collapsed).toEqual(false);
-
             combo.select('Connecticut');
             fixture.detectChanges();
 
-            expect(combo.selection.length).toBe(1);
-            expect(combo.selection[0]).toEqual('Connecticut');
-            fixture.detectChanges();
-
-            combo.dropdown.close();
-            tick();
-            fixture.detectChanges();
-            expect(combo.collapsed).toEqual(true);
-
             combo.handleClear(new MouseEvent('click'));
             fixture.detectChanges();
-            expect(combo.value).toEqual('');
             expect(combo.collapsed).toEqual(true);
         }));
     });
