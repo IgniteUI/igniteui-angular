@@ -1,7 +1,6 @@
 import { Directive } from '@angular/core';
 import { RequiredValidator, NG_VALIDATORS, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
 
-
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[required]',
@@ -71,12 +70,12 @@ export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator { }
     selector: 'igx-column[maxlength]',
     providers: [{
             provide: NG_VALIDATORS,
-            useExisting: IgxColumMaxLengthValidatorDirective,
+            useExisting: IgxColumnMaxLengthValidatorDirective,
             multi: true
         }],
     standalone: true
 })
-export class IgxColumMaxLengthValidatorDirective extends MaxLengthValidator {
+export class IgxColumnMaxLengthValidatorDirective extends MaxLengthValidator {
 }
 
 @Directive({

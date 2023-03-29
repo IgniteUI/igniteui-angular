@@ -11,13 +11,13 @@ import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib
 import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
-import { IgxColumnRequiredValidatorDirective, IgxColumnMinValidatorDirective, IgxColumnMaxValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
 import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, RowType } from 'projects/igniteui-angular/src/lib/grids/public_api';
-import { GridColumnDataType } from 'projects/igniteui-angular/src/lib/data-operations/data-util';
+import { IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, RowType } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { GridColumnDataType } from '../../../projects/igniteui-angular/src/lib/data-operations/data-util';
+import { IGX_GRID_VALIDATION_DIRECTIVES } from '../../../projects/igniteui-angular/src/lib/grids/columns/public_api';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -47,7 +47,26 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
     standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, ForbiddenValidatorDirective, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective, NgTemplateOutlet, NgIf, IgxColumnMinValidatorDirective, IgxColumnMaxValidatorDirective, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, NgFor, IgxHierarchicalGridComponent, IgxRowIslandComponent]
+    imports: [
+        NgFor,
+        NgIf,
+        NgTemplateOutlet,
+        FormsModule,
+        IgxSwitchComponent,
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxCellTemplateDirective,
+        ForbiddenValidatorDirective,
+        IgxCellEditorTemplateDirective,
+        IgxCellValidationErrorDirective,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
+        IgxTreeGridComponent,
+        IgxHierarchicalGridComponent,
+        IgxRowIslandComponent,
+        IGX_GRID_VALIDATION_DIRECTIVES
+    ]
 })
 export class GridValidationSampleComponent {
     public rowEditWithTransactions = true;

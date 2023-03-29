@@ -1,7 +1,6 @@
 import { Directive, TemplateRef } from '@angular/core';
 import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext } from '../common/grid.interface';
 
-
 @Directive({
     selector: '[igxFilterCellTemplate]',
     standalone: true

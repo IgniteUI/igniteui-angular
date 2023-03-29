@@ -6,8 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxOverlayService, IgxIconService, DisplayDensityToken, DisplayDensity, GridBaseAPIService, IgxGridHierarchicalPipe, IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxIconComponent, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from 'igniteui-angular';
 
-
-import { routing } from './routing';
+import { routing } from './app.routing';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
