@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { format } from 'prettier';
-import type { ComponentMetadata, ContentQuery } from './types';
+import type { ComponentMetadata, ContentQuery, PropertyInfo } from './types';
 
 
 export class AnalyzerPrinter {
@@ -53,11 +53,24 @@ export class AnalyzerPrinter {
         return ts.factory.createObjectLiteralExpression(properties);
     }
 
+    private createPropertyLiteral(prop: PropertyInfo) {
+        const properties = [
+            ts.factory.createPropertyAssignment('name', ts.factory.createStringLiteral(prop.name)),
+        ];
+
+        if (prop.writable) {
+            properties.push(ts.factory.createPropertyAssignment('writable', ts.factory.createToken(ts.SyntaxKind.TrueKeyword)));
+        }
+
+        return ts.factory.createObjectLiteralExpression(properties);
+    }
+
     #createMetaLiteralObject([type, meta]: readonly [ts.InterfaceType, ComponentMetadata]) {
         const properties = [
             ts.factory.createPropertyAssignment('component', ts.factory.createIdentifier(type.symbol.name)),
             ts.factory.createPropertyAssignment('parents', ts.factory.createArrayLiteralExpression(meta.parents.map(x => ts.factory.createIdentifier(x.symbol.name)))),
             ts.factory.createPropertyAssignment('contentQueries', ts.factory.createArrayLiteralExpression(meta.contentQueries.map(x => this.#createContentQueryLiteral(x)))),
+            ts.factory.createPropertyAssignment('additionalProperties', ts.factory.createArrayLiteralExpression(meta.additionalProperties.map(x => this.createPropertyLiteral(x)))),
             ts.factory.createPropertyAssignment('methods', ts.factory.createArrayLiteralExpression(meta.methods.map(x => ts.factory.createStringLiteral(x.name))))
         ];
         if (meta.templateProperties?.length) {

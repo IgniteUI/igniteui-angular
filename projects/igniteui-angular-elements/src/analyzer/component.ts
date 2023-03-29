@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import type { ComponentMetadata, ContentQuery } from './types';
-import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getTypeExpressionIdentifier, isMethod, isProperty, isPublic } from './utils';
+import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getTypeExpressionIdentifier, isMethod, isProperty, isPublic, isReadOnly } from './utils';
 
 export class AnalyzerComponent {
     #checker: ts.TypeChecker;
@@ -61,6 +61,7 @@ export class AnalyzerComponent {
             parents,
             contentQueries: this.#parseQueryProps(),
             methods: this.publicMethods.map(m => ({ name: m.name })),
+            additionalProperties: this.additionalProperties.map(p => ({ name: p.name, writable: !isReadOnly(p)})),
             booleanProperties: this.booleanProperties.map(asString),
             numericProperties: this.numericProperties.map(asString),
             templateProperties: this.templateProperties.map(asString),
@@ -93,7 +94,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all @Input properties of the underlying component.
+     * Return all `@Input` properties of the underlying component.
      *
      * @readonly
      * @memberof AnalyzerComponent
@@ -105,7 +106,7 @@ export class AnalyzerComponent {
     }
 
     /**
-     * Return all @Output properties of the underlying component.
+     * Return all `@Output` properties of the underlying component.
      *
      * @readonly
      * @memberof AnalyzerComponent
@@ -114,6 +115,22 @@ export class AnalyzerComponent {
         const isOutput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Output');
         return this.publicProperties
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isOutput));
+    }
+
+    /**
+     * Return all leftover exposed properties (non-inputs)
+     */
+    get additionalProperties() {
+        const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
+        // TODO: Better handling of collisions with HTMLElement:
+        const forbiddenNames = ['children'];
+
+        const additionalProperties = this.publicProperties
+            .filter(prop => !prop.declarations?.some(x => ts.canHaveDecorators(x) && getDecorators(x)?.some(isInputOutput)))
+            .filter(x => !forbiddenNames.includes(x.name))
+            .filter(x => !this.isOverrideOfParentInput(x, this.#component));
+
+        return additionalProperties;
     }
 
     /**
@@ -234,5 +251,23 @@ export class AnalyzerComponent {
         });
 
         return queries;
+    }
+
+    private isOverrideOfParentInput(symbol: ts.Symbol, type: ts.InterfaceType): boolean {
+        const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
+        if (ts.getCombinedModifierFlags(symbol.valueDeclaration!) & ts.ModifierFlags.Override) {
+            const baseTypes = type.getBaseTypes() || [];
+            // ignore overrides of inherited inputs:
+            for (const base of baseTypes) {
+                const baseProp = base.getProperty(symbol.escapedName.toString());
+                if (baseProp.valueDeclaration === symbol.valueDeclaration) {
+                    // also inherited
+                    return this.isOverrideOfParentInput(symbol, base as ts.InterfaceType);
+                }
+                const isInput = baseProp?.declarations?.some(x => ts.canHaveDecorators(x) && getDecorators(x)?.some(isInputOutput));
+                return isInput;
+            }
+        }
+        return false;
     }
 }

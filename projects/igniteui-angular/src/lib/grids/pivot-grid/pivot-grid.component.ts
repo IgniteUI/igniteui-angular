@@ -874,7 +874,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public set batchEditing(_val: boolean) {
     }
 
-    public get selectedRows(): any[] {
+    public override get selectedRows(): any[] {
         if (this.selectionService.getSelectedRows().length === 0) {
             return [];
         }

@@ -32,12 +32,12 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get width(): any {
+    public override get width(): any {
         const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
         return width;
     }
 
-    public set width(val: any) { }
+    public override set width(val: any) { }
 
     public get columnLayout() {
         return true;

@@ -24,6 +24,32 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
         }
     }
 
+    // Reuse `createCustomElement`'s approach for Inputs, should work for any prop too:
+    componentConfig?.additionalProperties.forEach((p) => {
+        let set: (v: any) => void | undefined;
+
+
+        if (p.name in elementCtor.prototype) {
+            throw new Error(`Potentially illegal property name ${p.name} defined`);
+
+        }
+
+        if (p.writable) {
+            set = function (newValue) {
+                this.ngElementStrategy.setInputValue(p.name, newValue);
+            }
+        }
+
+        Object.defineProperty(elementCtor.prototype, p.name, {
+            get() {
+                return this.ngElementStrategy.getInputValue(p.name);
+            },
+            set,
+            configurable: true,
+            enumerable: true,
+        });
+    });
+
     // TODO: all 'template' props, setInput check for componentRef!, accumulated Props before init, object componentRef
     // let propName = 'sortHeaderIconTemplate';
     // Object.defineProperty(elementCtor.prototype, propName, {

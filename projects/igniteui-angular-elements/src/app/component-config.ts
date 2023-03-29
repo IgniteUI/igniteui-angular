@@ -1,4 +1,5 @@
 import { AbstractType, Type } from '@angular/core';
+import { PropertyInfo } from '../analyzer/types';
 
 export interface ContentQueryMeta {
     property: string;
@@ -11,6 +12,7 @@ export interface ComponentConfig {
     selector?: string;
     parents: Type<any>[],
     contentQueries: ContentQueryMeta[];
+    additionalProperties: PropertyInfo[];
     methods: string[];
     templateProps?: string[];
     numericProps?: string[];

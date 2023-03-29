@@ -150,11 +150,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get selectable(): boolean {
+    public override get selectable(): boolean {
         return this.children && this.children.some(child => child.selectable);
     }
 
-    public set selectable(value: boolean) {}
+    public override set selectable(value: boolean) {}
 
     /**
      * Returns a reference to the body template.
@@ -357,7 +357,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get width() {
+    public override get width() {
         const width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
@@ -367,7 +367,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
-    public set width(val) { }
+    public override set width(val) { }
 
     /**
      * @hidden
