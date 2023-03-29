@@ -136,7 +136,6 @@ import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
 import { GridExportComponent } from './grid-export/grid-export.sample';
-import { GridValidationTestComponent } from './grid-validation-test/grid-validation-test.component';
 
 const appRoutes: Routes = [
     {
