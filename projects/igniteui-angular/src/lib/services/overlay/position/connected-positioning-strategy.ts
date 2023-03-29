@@ -15,7 +15,9 @@ import { IPositionStrategy } from './IPositionStrategy';
  * It is possible to either pass a start point or an HTMLElement as a positioning base.
  */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
-  /** @inheritDoc */
+  /**
+   * PositionSettings to use when position the component in the overlay
+   */
   public settings: PositionSettings;
 
   private _defaultSettings: PositionSettings = {
@@ -32,15 +34,25 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  /** @inheritDoc */
+  /**
+   * Position the element based on the PositionStrategy implementing this interface.
+   *
+   * @param contentElement The HTML element to be positioned
+   * @param size Size of the element
+   * @param document reference to the Document object
+   * @param initialCall should be true if this is the initial call to the method
+   * @param target attaching target for the component to show
+   * ```typescript
+   * settings.positionStrategy.position(content, size, document, true);
+   * ```
+   */
   public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
     const targetElement = target || this.settings.target;
-    const rects =  this.calculateElementRectangles(contentElement, targetElement);
+    const rects = this.calculateElementRectangles(contentElement, targetElement);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }
 
   /**
-   * @inheritDoc
    * Creates clone of this position strategy
    * @returns clone of this position strategy
    */
@@ -53,12 +65,12 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    *
    * @returns target and element DomRect objects
    */
-  protected calculateElementRectangles(contentElement, target: Point | HTMLElement):
-    { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
-      return {
-          targetRect: Util.getTargetRect(target),
-          elementRect: contentElement.getBoundingClientRect() as DOMRect
-      };
+   protected calculateElementRectangles(contentElement, target: Point | HTMLElement):
+   { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
+    return {
+      targetRect: Util.getTargetRect(target),
+      elementRect: contentElement.getBoundingClientRect() as DOMRect
+    };
   }
 
   /**
@@ -70,8 +82,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param elementRect Bounding rectangle of the element
    */
   protected setStyle(element: HTMLElement, targetRect: Partial<DOMRect>, elementRect: Partial<DOMRect>, connectedFit: ConnectedFit) {
-      const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
-      const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
+    const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
+    const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
     const startPoint: Point = {
       x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
       y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
