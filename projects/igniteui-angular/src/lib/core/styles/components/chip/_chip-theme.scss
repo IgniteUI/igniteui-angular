@@ -302,6 +302,10 @@
         transition: $transition;
         transition-property: top, left;
 
+        // Fix: The grid resizing does not autosize the filter header cells with the default filter chips
+        // https://github.com/IgniteUI/igniteui-angular/pull/12770/files/efd2a274038c051e82561903f8799fd03265fd74#r1150993630
+        min-width: max-content;
+
         [dir='rtl'] & {
             transition-property: top right;
         }
