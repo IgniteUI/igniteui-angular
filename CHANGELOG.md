@@ -2,12 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 15.2.0
+## 16.0.0
 
 ### General
 - `IgxChip`
-    - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip. 
-
+    - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip.
+    - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
+    - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
 ## 15.1.0
 
 ### New Features
