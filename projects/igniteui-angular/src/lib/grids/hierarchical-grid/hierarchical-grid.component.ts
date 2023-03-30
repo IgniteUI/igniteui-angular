@@ -1113,12 +1113,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
-        const colLength = this.columnList.length;
+        const colLength = this.columns.length;
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         if (topCols.length > 0) {
-            const columnsChanged = this.columns.length !== colLength;
             this.updateColumns(topCols);
-            if (recalcColSizes && columnsChanged) {
+            if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
             }
         }

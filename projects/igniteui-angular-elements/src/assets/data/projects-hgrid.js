@@ -8769,3 +8769,5 @@ var hgridData = [{
         "Metadata": {}
     }
 }];
+
+export default hgridData;
