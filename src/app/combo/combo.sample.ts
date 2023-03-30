@@ -59,9 +59,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('simpleComboOpenOnClear')
     public simpleComboOpenOnClear: IgxSimpleComboComponent;
 
-    @ViewChild('simpleComboOpenOnClearWithTemplate')
-    public simpleComboOpenOnClearWithTemplate: IgxSimpleComboComponent;
-
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
