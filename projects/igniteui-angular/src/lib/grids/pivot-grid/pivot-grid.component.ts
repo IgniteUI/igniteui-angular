@@ -1406,12 +1406,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public clearSearch() { }
 
     /**
-     * @hidden @internal
-     */
-    public paginate(_val: number): void {
-    }
-
-    /**
     * @hidden @internal
     */
     public nextPage(): void {
