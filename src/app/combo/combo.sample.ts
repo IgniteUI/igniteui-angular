@@ -332,12 +332,14 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.searchText = '';
     }
 
-    public handleSelectionChanging(evt: ISimpleComboSelectionChangingEventArgs)
-    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs) {
+    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs | ISimpleComboSelectionChangingEventArgs) {
+        if ('added' in evt) {
+            this.hasSelection = !!evt?.newSelection.length;
+            return;
+        } 
+
         if (!evt.newSelection) {
             this.simpleComboOpenOnClear.open();
-        } else {
-            this.hasSelection = !!evt?.newSelection.length;
         }
     }
 
