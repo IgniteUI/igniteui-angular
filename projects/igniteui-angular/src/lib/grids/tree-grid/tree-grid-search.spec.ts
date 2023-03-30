@@ -389,7 +389,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
-                expect(treeGrid.totalPages).toBe(expectedPageCounts[index]);
+                expect(treeGrid.paginator.totalPages).toBe(expectedPageCounts[index]);
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }

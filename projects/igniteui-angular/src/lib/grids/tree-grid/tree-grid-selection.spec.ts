@@ -903,9 +903,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should persist selection after scrolling', async () => {
-            treeGrid.paging = false;
-            fix.detectChanges();
-
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             UIInteractions.simulateClickAndSelectEvent(treeGridCell);

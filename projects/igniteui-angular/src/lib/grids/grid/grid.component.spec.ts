@@ -2944,8 +2944,8 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 @Component({
     template:
         `<div style="height:300px">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
-                [paging]="paging" [perPage]="pageSize">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`
 })

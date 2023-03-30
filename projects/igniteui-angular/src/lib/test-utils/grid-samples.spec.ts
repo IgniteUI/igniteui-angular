@@ -555,13 +555,13 @@ export class PagingAndEditingComponent extends PagingComponent {
     public GoToPage(val) {
         switch (val) {
             case -2:
-                this.grid.previousPage();
+                this.grid.paginator.previousPage();
                 break;
             case -1:
-                this.grid.nextPage();
+                this.grid.paginator.nextPage();
                 break;
             default:
-                this.grid.paginate(val);
+                this.grid.paginator.paginate(val);
                 break;
         }
     }
@@ -814,8 +814,8 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate" [paging]="paging"`,
-        EventSubscriptions.columnInit, '')
+    template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate"`,
+        EventSubscriptions.columnInit, '', '','<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
@@ -2030,8 +2030,8 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
-        '', ColumnDefinitions.productBasic, '', '<igx-paginator></igx-paginator>' )
+        ` [width]="width" [height]="height" [primaryKey]="'ProductID'"`,
+        '', ColumnDefinitions.productBasic, '', '<igx-paginator [perPage]="perPage"></igx-paginator>' )
 })
 export class GridWithUndefinedDataComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true })

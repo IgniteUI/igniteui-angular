@@ -1186,7 +1186,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             [0, 0, 1, 2, 3, 4, 5].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
 
-            hierarchicalGrid.paginate(6);
+            hierarchicalGrid.paginator.paginate(6);
             fixture.detectChanges();
 
             rows = hierarchicalGrid.rowList.toArray();

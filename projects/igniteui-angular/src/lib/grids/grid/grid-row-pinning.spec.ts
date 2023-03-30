@@ -730,7 +730,7 @@ describe('Row Pinning #grid', () => {
 
             [1, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
 
-            grid.paginate(2);
+            grid.paginator.paginate(2);
             fix.detectChanges();
 
             rows = grid.rowList.toArray();

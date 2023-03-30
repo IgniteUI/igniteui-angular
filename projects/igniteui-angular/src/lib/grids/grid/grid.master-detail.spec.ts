@@ -1301,9 +1301,10 @@ export class DefaultGridMasterDetailComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
+            <igx-paginator *ngIf="paging"></igx-paginator>
 
             <ng-template igxGridDetail let-dataItem>
                 <div>
@@ -1331,8 +1332,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 
 @Component({
     template: `
-        <igx-grid [data]="data"
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
         <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>
@@ -1346,6 +1346,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         <igx-column-layout field='group1'>
             <igx-column  [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID"></igx-column>
         </igx-column-layout>
+        <igx-paginator *ngIf="paging"></igx-paginator>
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div class="checkboxArea">
