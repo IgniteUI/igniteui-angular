@@ -181,8 +181,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
-|`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
-|`oddRowCSS`|string|Additional styling classes applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupStrategy`| IGridGroupingStrategy | Provides custom group strategy to be used when grouping |
 |`groupingExpressions`| Array | The group by state of the grid.

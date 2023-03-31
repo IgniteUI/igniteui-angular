@@ -373,35 +373,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public gridScroll = new EventEmitter<IGridScrollEventArgs>();
-
-        /**
-     * @deprecated in version 12.2.0. We suggest using `rowClasses` property instead
-     *
-     * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
-     *
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-even-class'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Input()
-    public evenRowCSS = 'igx-grid__tr--even';
-
-    /**
-     * @deprecated in version 12.2.0. We suggest using `rowClasses` property instead
-     *
-     * Gets/Sets the styling classes applied to all odd `IgxGridRowComponent`s in the grid.
-     *
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-odd-class'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Input()
-    public oddRowCSS = 'igx-grid__tr--odd';
-
     /**
      * Sets a conditional class selector to the grid's row element.
      * Accepts an object literal, containing key-value pairs,
