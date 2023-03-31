@@ -31,7 +31,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     }
 };
 
-fdescribe('IgxGrid - Grid Paging #grid', () => {
+describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
             declarations: [
