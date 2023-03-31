@@ -921,9 +921,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
 
         let monthView = this.daysView as IgxDaysViewComponent;
-        let date = monthView.dates.find((d) => d.selected);
+        let date = monthView?.dates.find((d) => d.selected);
 
-        while (!date && monthView.nextMonthView) {
+        while (!date && monthView?.nextMonthView) {
             monthView = monthView.nextMonthView;
             date = monthView.dates.find((d) => d.selected);
         }
