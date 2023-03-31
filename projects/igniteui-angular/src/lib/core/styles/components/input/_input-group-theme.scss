@@ -1120,7 +1120,6 @@
     }
 
     %form-group-input--compact {
-        font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
         height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
