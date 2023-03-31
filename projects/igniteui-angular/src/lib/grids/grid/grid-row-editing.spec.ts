@@ -2660,7 +2660,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.paginator.perPage = 5;
             fix.detectChanges();
 
-            expect(grid.totalPages).toEqual(2);
+            expect(grid.paginator.totalPages).toEqual(2);
             grid.addRow({
                 ProductID: 123,
                 ProductName: 'DummyItem',
