@@ -43,7 +43,12 @@ export const IGX_GRID_BASE = new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
 
 export interface IPathSegment {
+    /**
+     * @deprecated since version 16.0.0
+     * Use `key` instead
+     */
     rowID: any;
+    key: any;
     rowIslandKey: string;
 }
 

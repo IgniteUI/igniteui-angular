@@ -18,14 +18,24 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 }
 
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
-    rowID: any; // deprecated
+    /**
+     * @deprecated since version 16.0.0
+     * Use `key` instead
+     */
+    rowID: any;
+    key: any;
     primaryKey: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
     cellID?: {
         rowID: any;
         columnID: any;
         rowIndex: number;
     };
+        /**
+     * @deprecated since version 16.0.0
+     * Use `data` instead
+     */
     rowData: any;
+    data: any;
     oldValue: any;
     newValue?: any;
     event?: Event;
@@ -154,7 +164,12 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 }
 
 export interface IRowToggleEventArgs extends IBaseEventArgs {
+    /**
+     * @deprecated since version 16.0.0
+     * Use `key` instead
+     */
     rowID: any;
+    key: any;
     expanded: boolean;
     event?: Event;
     cancel: boolean;
@@ -165,10 +180,13 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
     /**
+     * @deprecated since version 16.0.0
+     * Use `key` instead
      * The ID of the row, that was pinned/unpinned.
-     *   ID is either the primaryKey value or the data record instance.
+     * ID is either the primaryKey value or the data record instance.
      */
     readonly rowID: any;
+    readonly key: any;
     row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
