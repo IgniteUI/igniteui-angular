@@ -1,6 +1,11 @@
 import * as ts from 'typescript';
 import type { ComponentMetadata, ContentQuery } from './types';
-import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getTypeExpressionIdentifier, isMethod, isProperty, isPublic, isReadOnly } from './utils';
+import { asString, first, getDecoratorName, getDecorators, getProvidedAs, getTypeExpressionIdentifier, isMethod, isOverride, isProperty, isPublic, isReadOnly } from './utils';
+
+
+const isInput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Input');
+const isOutput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Output');
+const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
 
 export class AnalyzerComponent {
     #checker: ts.TypeChecker;
@@ -100,7 +105,6 @@ export class AnalyzerComponent {
      * @memberof AnalyzerComponent
      */
     get inputProperties() {
-        const isInput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Input');
         return this.publicProperties
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isInput));
     }
@@ -112,7 +116,6 @@ export class AnalyzerComponent {
      * @memberof AnalyzerComponent
      */
     get outputProperties() {
-        const isOutput = (dec: ts.Decorator) => getDecoratorName(dec).includes('Output');
         return this.publicProperties
             .filter(prop => getDecorators(first(prop.declarations as any))?.some(isOutput));
     }
@@ -121,7 +124,6 @@ export class AnalyzerComponent {
      * Return all leftover exposed properties (non-inputs)
      */
     get additionalProperties() {
-        const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
         // TODO: Better handling of collisions with HTMLElement:
         const forbiddenNames = ['children'];
 
@@ -254,18 +256,16 @@ export class AnalyzerComponent {
     }
 
     private isOverrideOfParentInput(symbol: ts.Symbol, type: ts.InterfaceType): boolean {
-        const isInputOutput = (dec: ts.Decorator) => ['Input', 'Output'].includes(getDecoratorName(dec));
-        if (ts.getCombinedModifierFlags(symbol.valueDeclaration!) & ts.ModifierFlags.Override) {
-            const baseTypes = type.getBaseTypes() || [];
-            // ignore overrides of inherited inputs:
-            for (const base of baseTypes) {
+        if (isOverride(symbol)) {
+            // should resolve a single base for classes
+            const base = first(type.getBaseTypes() || []);
+            if (base?.isClass()) {
                 const baseProp = base.getProperty(symbol.escapedName.toString());
-                if (baseProp.valueDeclaration === symbol.valueDeclaration) {
+                if (isOverride(baseProp)) {
                     // also inherited
-                    return this.isOverrideOfParentInput(symbol, base as ts.InterfaceType);
+                    return this.isOverrideOfParentInput(baseProp, base);
                 }
-                const isInput = baseProp?.declarations?.some(x => ts.canHaveDecorators(x) && getDecorators(x)?.some(isInputOutput));
-                return isInput;
+                return baseProp?.declarations?.some(x => ts.canHaveDecorators(x) && getDecorators(x)?.some(isInputOutput));
             }
         }
         return false;

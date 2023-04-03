@@ -17,7 +17,7 @@ export function readTSConfig() {
 
 
 export function first<T>(arr?: T[]) {
-    return arr!.at(0) as T;
+    return arr!.at(0);
 }
 
 /**
@@ -92,6 +92,11 @@ export function isReadOnly(symbol: ts.Symbol) {
         (symbol.flags & ts.SymbolFlags.SetAccessor) === ts.SymbolFlags.None;
     const readonly = symbol.valueDeclaration && ts.getCombinedModifierFlags(symbol.valueDeclaration) & ts.ModifierFlags.Readonly;
     return isGetter || readonly;
+}
+
+/** returns if a symbol has an override modifier */
+export function isOverride(symbol: ts.Symbol) {
+    return (ts.getCombinedModifierFlags(symbol.valueDeclaration!) & ts.ModifierFlags.Override) !== ts.ModifierFlags.None;
 }
 
 export function asString(x?: ts.Symbol) {

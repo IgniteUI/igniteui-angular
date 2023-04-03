@@ -1095,7 +1095,6 @@ export var registerConfig = [
     ],
     additionalProperties: [
       { name: "childrenVisibleIndexes", writable: true },
-      { name: "width", writable: true },
       { name: "columnLayout" },
       { name: "visibleIndex" },
       { name: "hasLastPinnedChildColumn" },

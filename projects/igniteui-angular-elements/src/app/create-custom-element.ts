@@ -30,7 +30,7 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
 
 
         if (p.name in elementCtor.prototype) {
-            throw new Error(`Potentially illegal property name ${p.name} defined`);
+            throw new Error(`Potentially illegal property name ${p.name} defined for ${component.name}`);
 
         }
 
