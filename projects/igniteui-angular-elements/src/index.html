@@ -286,8 +286,8 @@
   </script>
   <!-- END IgxPivotGridComponent -->
 
-  <script src="assets/data/projects-hgrid.js"></script>
-  <script>
+  <script type="module">
+    import hgridData from "./assets/data/projects-hgrid.js";
     let hgrid = document.getElementById('hgrid1');
     hgrid.data = hgridData;
   </script>
