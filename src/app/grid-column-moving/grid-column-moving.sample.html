@@ -33,13 +33,11 @@
                     [dataType]="c.type" [pinned]='c.pinned' [hidden]='c.hidden'>
                     <ng-template igxCell let-cell="cell">
                         <div *ngIf='show'>{{ cell.value}}</div>
-
                     </ng-template>
                 </igx-column>
                 <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
             </igx-grid>
-            <span>Drag mode: {{ grid1.selectionService.dragMode }}</span>
 
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
