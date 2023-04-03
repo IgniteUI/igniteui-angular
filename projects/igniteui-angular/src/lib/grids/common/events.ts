@@ -33,10 +33,9 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 16.1.0
-     * Use `key` instead
+     * Use `primaryKey` instead
      */
     rowID: any;
-    key: any;
     primaryKey: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
     /** `cellID` is optional; specifies the cell the editing is being done on. */
     cellID?: {

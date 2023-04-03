@@ -19,7 +19,7 @@ export class IgxEditRow {
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
-            rowID: this.id, key: this.id,
+            rowID: this.id,
             primaryKey: this.id,
             rowData: this.data,
             data: this.data,
@@ -41,7 +41,7 @@ export class IgxEditRow {
             this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData ?? this.grid.gridAPI.getRowData(this.id);
         const args: IGridEditDoneEventArgs = {
-            rowID: this.id, key: this.id,
+            rowID: this.id,
             primaryKey: this.id,
             rowData,
             data: rowData,
@@ -144,7 +144,7 @@ export class IgxCell {
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditEventArgs = {
-            rowID: this.id.rowID, key: this.id.rowID,
+            rowID: this.id.rowID,
             primaryKey: this.id.rowID,
             cellID: this.id,
             rowData: this.rowData,
@@ -168,7 +168,7 @@ export class IgxCell {
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: IGridEditDoneEventArgs = {
-            rowID: this.id.rowID, key: this.id.rowID,
+            rowID: this.id.rowID,
             primaryKey: this.id.rowID,
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
