@@ -2117,12 +2117,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(1);
 
             // This Month condition
+            const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
             tick();
             fix.detectChanges();
 
             expect(grid.filteringRow.expression.condition.name).toEqual('thisMonth');
-            expect(grid.rowList.length).toEqual(3);
+            expect(grid.rowList.length).toEqual(expectedResults[5]);
 
             const conditionChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(conditionChips.length).toBe(1);
