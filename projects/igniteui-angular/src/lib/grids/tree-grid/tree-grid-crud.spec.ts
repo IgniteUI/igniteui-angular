@@ -950,6 +950,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     primaryKey: someRow.key,
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
                     owner: treeGrid
                 };
@@ -993,6 +994,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     primaryKey: someRow.key,
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
                     owner: treeGrid
                 };

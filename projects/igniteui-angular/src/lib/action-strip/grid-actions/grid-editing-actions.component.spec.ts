@@ -360,6 +360,7 @@ describe('igxGridEditingActions #grid ', () => {
                 primaryKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
+                data: treeGrid.getRowData(row.key),
                 oldValue: null,
                 owner: treeGrid
             };
