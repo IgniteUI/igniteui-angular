@@ -950,6 +950,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     primaryKey: someRow.key,
                     cancel: false,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
                     owner: treeGrid
                 };
@@ -965,7 +966,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
                 expect(treeGrid.rowDelete.emit).toHaveBeenCalledOnceWith(rowDeleteArgs);
                 expect(treeGrid.rowDeleted.emit).toHaveBeenCalledOnceWith(rowDeletedArgs);
-                
+
                 someRow = treeGrid.getRowByIndex(0);
                 expect(someRow.key).toBe(2);
 
@@ -993,6 +994,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     primaryKey: someRow.key,
                     cancel: true,
                     rowData: treeGrid.getRowData(someRow.key),
+                    data: treeGrid.getRowData(someRow.key),
                     oldValue: null,
                     owner: treeGrid
                 };

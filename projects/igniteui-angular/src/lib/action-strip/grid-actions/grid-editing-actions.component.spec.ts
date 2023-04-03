@@ -169,10 +169,10 @@ describe('igxGridEditingActions #grid ', () => {
 
             actionStrip.menu.open();
             fixture.detectChanges();
-                
+
             UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
             fixture.detectChanges();
-                
+
             expect(actionStrip.hidden).toBeFalse();
         });
     });
@@ -256,11 +256,11 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-            
+
             const row = grid.getRowByIndex(0);
             row.pin();
             const rowElem = grid.pinnedRows[0];
-            
+
             actionStrip.show(row);
             fixture.detectChanges();
 
@@ -367,6 +367,7 @@ describe('igxGridEditingActions #grid ', () => {
                 primaryKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
+                data: treeGrid.getRowData(row.key),
                 oldValue: null,
                 owner: treeGrid
             };
