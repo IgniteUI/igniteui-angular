@@ -14,6 +14,7 @@ import {
     IDropDroppedEventArgs,
     DragDirection
 } from './drag-drop.directive';
+import { IgxIconModule } from '../../icon/public_api';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -1845,6 +1846,66 @@ describe('Linked igxDrag/igxDrop ', () => {
     }));
 });
 
+describe('Nested igxDrag elements', () => {
+    configureTestSuite();
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                TestDragDropNestedComponent,
+            ],
+            imports: [
+                FormsModule,
+                IgxIconModule,
+                IgxDragDropModule
+            ]
+        })
+        .compileComponents();
+    }));
+
+    it('should correctly move nested element using drag handle.', async () => {
+        const fix = TestBed.createComponent(TestDragDropNestedComponent);
+        fix.detectChanges();
+
+        const rootList = fix.componentInstance.dragElems.get(0);
+        const firstCategory = fix.componentInstance.dragElems.get(1);
+        const firstMovie = fix.componentInstance.dragElems.get(2);
+        const thirdElement = firstMovie.element.nativeElement;
+        const dragDirsRects = getElemRects(thirdElement);
+        firstMovie.ghost = false;
+        firstMovie.dragTolerance = 0;
+
+        spyOn(rootList.dragStart, 'emit');
+        spyOn(firstCategory.dragStart, 'emit');
+        spyOn(firstMovie.dragStart, 'emit');
+
+        const dragHandle = thirdElement.children[0].children[0];
+        const dragHandleRects = dragHandle.getBoundingClientRect();
+        const handleStartX = (dragHandleRects.left + dragHandleRects.right) / 2;
+        const handleStartY = (dragHandleRects.top + dragHandleRects.bottom) / 2;
+        UIInteractions.simulatePointerEvent('pointerdown', dragHandle, handleStartX, handleStartY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 10, handleStartY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 20, handleStartY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointerup', dragHandle, handleStartX + 20, handleStartY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(thirdElement.getBoundingClientRect().left).toEqual(dragDirsRects.left + 20);
+        expect(thirdElement.getBoundingClientRect().top).toEqual(dragDirsRects.top + 20);
+        expect(firstMovie.dragStart.emit).toHaveBeenCalled();
+        expect(rootList.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstCategory.dragStart.emit).not.toHaveBeenCalled();
+    });
+})
+
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
     dragDirs.forEach((dragDir) => {
@@ -1899,6 +1960,18 @@ const generalStyles = [`
         background-color: red;
         float: right;
         margin: 5px;
+    }
+    .rootList {
+        width: 300px;
+        height: 800px;
+    }
+    .movieListItem {
+        padding: 5px;
+        margin-top: 5px;
+        margin-left: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 6px 0 gray;
+        background-color: rgba(232, 232, 232, .5);
     }
 `];
 
@@ -1998,3 +2071,46 @@ class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
     `
 })
 class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }
+
+@Component({
+    styles: generalStyles,
+    template: `
+        <div class="rootList movieListItem" igxDrag [ghost]="false">
+            <div>
+                <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                <span>Movies list</span>
+            </div>
+            <div class="movieListItem" *ngFor="let category of categoriesNotes" igxDrag [ghost]="false">
+                <div>
+                    <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                    <span>{{category.text}}</span>
+                </div>
+                <div class="movieListItem" *ngFor="let note of getCategoryMovies(category.text)" igxDrag [ghost]="false">
+                    <div>
+                        <igx-icon igxDragHandle>drag_indicator</igx-icon>
+                        <span>{{note.text}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+})
+class TestDragDropNestedComponent extends TestDragDropComponent {
+    public categoriesNotes = [
+        { text: 'Action', dragged: false },
+        { text: 'Fantasy', dragged: false }
+    ];
+    public listNotes = [
+        { text: 'Avengers: Endgame', category: 'Action', dragged: false },
+        { text: 'Avatar', category: 'Fantasy', dragged: false },
+        { text: 'Titanic', category: 'Drama', dragged: false },
+        { text: 'Star Wars: The Force Awakens', category: 'Fantasy', dragged: false },
+        { text: 'Avengers: Infinity War', category: 'Action', dragged: false },
+        { text: 'Jurassic World', category: 'Fantasy', dragged: false },
+        { text: 'The Avengers', category: 'Action', dragged: false }
+    ];
+
+    public getCategoryMovies(inCategory: string){
+        return this.listNotes.filter(item => item.category === inCategory);
+    }
+ }
