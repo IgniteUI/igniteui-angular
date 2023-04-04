@@ -250,7 +250,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditArgs.newValue = newCellValue;
             cellEditArgs.rowData = Object.assign({}, row.data, { ProductName: newCellValue });
-
+            cellEditArgs.data = Object.assign({}, row.data, { ProductName: newCellValue });
             rowEditArgs = {
                 rowID: row.key,
                 primaryKey: cell.row.key,
