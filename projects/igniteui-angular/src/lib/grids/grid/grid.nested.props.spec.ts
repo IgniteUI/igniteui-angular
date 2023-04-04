@@ -630,6 +630,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
+        cellArgs.data = initialRowData;
         cellArgs.newValue = initialRowData.locations;
 
         expect(cellArgs.newValue.length).toEqual(1);

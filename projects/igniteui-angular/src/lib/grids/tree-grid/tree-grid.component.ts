@@ -734,7 +734,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const args = {
             rowID: rowId,
             primaryKey: rowId,
-            key: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
             data: this.getRowData(rowId),
