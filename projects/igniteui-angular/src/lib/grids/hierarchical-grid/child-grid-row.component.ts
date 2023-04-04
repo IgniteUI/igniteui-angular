@@ -1,4 +1,4 @@
-import { AfterViewInit, Input, ChangeDetectionStrategy, Component, OnInit, ViewChild, HostBinding, Inject, ElementRef, ComponentFactoryResolver, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Input, ChangeDetectionStrategy, Component, OnInit, ViewChild, HostBinding, Inject, ElementRef, ComponentFactoryResolver, ChangeDetectorRef, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IGX_GRID_SERVICE_BASE } from '../common/grid.interface';
 import { IgxGridComponent } from '../grid/grid.component';
@@ -51,7 +51,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid', { static: true })
+
+    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    public container: ViewContainerRef;
+
     public hGrid: IgxHierarchicalGridComponent;
 
     /**
@@ -111,6 +114,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     public ngOnInit() {
+        const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        this.hGrid = ref.instance;
+        this.hGrid.data = this.data.childGridsData[this.layout.key];
+
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
