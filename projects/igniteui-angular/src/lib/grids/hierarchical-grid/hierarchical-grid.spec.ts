@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angul
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
-import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -14,6 +14,7 @@ import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
