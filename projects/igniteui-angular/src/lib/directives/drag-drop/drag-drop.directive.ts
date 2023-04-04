@@ -158,6 +158,11 @@ export class IgxDragHandleDirective {
     @HostBinding('class.igx-drag__handle')
     public baseClass = true;
 
+    /**
+     * @hidden
+     */
+    public parentDragElement: HTMLElement = null;
+
     constructor(public element: ElementRef<any>) {}
 }
 
@@ -686,8 +691,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (!this.platformUtil.isBrowser) {
                 return;
             }
-            const targetElements = this.dragHandles && this.dragHandles.length ?
-                this.dragHandles.map((item) => item.element.nativeElement) : [this.element.nativeElement];
+            const targetElements = this.dragHandles && this.dragHandles.length
+                ? this.dragHandles
+                    .filter(item => item.parentDragElement === null)
+                    .map(item => {
+                        item.parentDragElement = this.element.nativeElement;
+                        return item.element.nativeElement;
+                    })
+                : [this.element.nativeElement];
             targetElements.forEach((element) => {
                 if (this.pointerEventsEnabled) {
                     fromEvent(element, 'pointerdown').pipe(takeUntil(this._destroy))
