@@ -4,7 +4,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -148,7 +147,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
-        private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) { }
 
     /**
@@ -194,28 +192,29 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
     private setupEventEmitters() {
-        const destructor = takeUntil(this.hGrid.destroy$);
+        // TODO check if there's any way to get inputs and outputs without ComponentFactory
+        // const destructor = takeUntil(this.hGrid.destroy$);
 
-        const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
-        // exclude outputs related to two-way binding functionality
-        const inputNames = factory.inputs.map(input => input.propName);
-        const outputs = factory.outputs.filter(o => {
-            const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
-            return inputNames.indexOf(matchingInputPropName) === -1;
-        });
+        // const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
+        // // exclude outputs related to two-way binding functionality
+        // const inputNames = factory.inputs.map(input => input.propName);
+        // const outputs = factory.outputs.filter(o => {
+        //     const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
+        //     return inputNames.indexOf(matchingInputPropName) === -1;
+        // });
 
-        // TODO: Skip the `rendered` output. Rendered should be called once per grid.
-        outputs.filter(o => o.propName !== 'rendered').forEach(output => {
-            if (this.hGrid[output.propName]) {
-                this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
-                    if (!args) {
-                        args = {};
-                    }
-                    args.owner = this.hGrid;
-                    this.layout[output.propName].emit(args);
-                });
-            }
-        });
+        // // TODO: Skip the `rendered` output. Rendered should be called once per grid.
+        // outputs.filter(o => o.propName !== 'rendered').forEach(output => {
+        //     if (this.hGrid[output.propName]) {
+        //         this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
+        //             if (!args) {
+        //                 args = {};
+        //             }
+        //             args.owner = this.hGrid;
+        //             this.layout[output.propName].emit(args);
+        //         });
+        //     }
+        // });
     }
 
 

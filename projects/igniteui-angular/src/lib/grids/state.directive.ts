@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -206,13 +206,11 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
-                const groupFactory = context.resolver.resolveComponentFactory(IgxColumnGroupComponent);
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
                     if (hasColumnGroup) {
-                        const ref1 = groupFactory.create(context.viewRef.injector);
+                        const ref1 = context.viewRef.createComponent(IgxColumnGroupComponent);
                         Object.assign(ref1.instance, colState);
                         ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
@@ -223,7 +221,7 @@ export class IgxGridStateDirective {
                         ref1.changeDetectorRef.detectChanges();
                         newColumns.push(ref1.instance);
                     } else {
-                        const ref = factory.create(context.viewRef.injector);
+                        const ref = context.viewRef.createComponent(IgxColumnComponent);
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
@@ -467,7 +465,6 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        private resolver: ComponentFactoryResolver,
         private viewRef: ViewContainerRef) { }
 
     /**

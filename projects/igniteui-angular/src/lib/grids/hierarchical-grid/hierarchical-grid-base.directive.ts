@@ -1,7 +1,6 @@
 import {
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
     Directive,
     ElementRef,
     EventEmitter,
@@ -158,7 +157,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
@@ -182,7 +180,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             zone,
             document,
             cdr,
-            resolver,
             differs,
             viewRef,
             appRef,
@@ -212,18 +209,19 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.updateColumns(result);
         this.initPinning();
 
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
-        outputs.forEach(output => {
-            this.columns.forEach(column => {
-                if (column[output.propName]) {
-                    column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
-                        const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
-                        rowIslandColumn[output.propName].emit({ args, owner: this });
-                    });
-                }
-            });
-        });
+        // TODO - check if there's another way to re-emit events.
+        // const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        // const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
+        // outputs.forEach(output => {
+        //     this.columns.forEach(column => {
+        //         if (column[output.propName]) {
+        //             column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
+        //                 const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
+        //                 rowIslandColumn[output.propName].emit({ args, owner: this });
+        //             });
+        //         }
+        //     });
+        // });
     }
 
     protected _createColumn(col) {
@@ -237,13 +235,13 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
         ref.changeDetectorRef.detectChanges();
-        factoryGroup.inputs.forEach((input) => {
-            const propName = input.propName;
-            ref.instance[propName] = col[propName];
-        });
+        // TODO check if there's another way to get all inputs.
+        // factoryGroup.inputs.forEach((input) => {
+        //     const propName = input.propName;
+        //     ref.instance[propName] = col[propName];
+        // });
         if (col.children.length > 0) {
             const newChildren = [];
             col.children.forEach(child => {
@@ -258,16 +256,16 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
-        factoryColumn.inputs.forEach((input) => {
-            const propName = input.propName;
-            if (!(col[propName] instanceof IgxSummaryOperand)) {
-                ref.instance[propName] = col[propName];
-            } else {
-                ref.instance[propName] = col[propName].constructor;
-            }
-        });
+        // TODO check if there's another way to get all inputs.
+        // factoryColumn.inputs.forEach((input) => {
+        //     const propName = input.propName;
+        //     if (!(col[propName] instanceof IgxSummaryOperand)) {
+        //         ref.instance[propName] = col[propName];
+        //     } else {
+        //         ref.instance[propName] = col[propName].constructor;
+        //     }
+        // });
         ref.instance.validators = col.validators;
         return ref;
     }

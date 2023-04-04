@@ -4,8 +4,6 @@ import {
     AfterViewInit,
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentFactory,
-    ComponentFactoryResolver,
     ComponentRef,
     ContentChild,
     ContentChildren,
@@ -3351,7 +3349,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
@@ -3835,23 +3832,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private createComponentInstance(component: any) {
-        // TODO: create component instance view viewContainerRef.createComponent(Component, Settings) overload
-        let dynamicFactory: ComponentFactory<any>;
-        const factoryResolver = this.moduleRef
-            ? this.moduleRef.componentFactoryResolver
-            : this.resolver;
-        try {
-            dynamicFactory = factoryResolver.resolveComponentFactory(component);
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-
-        const injector = this.moduleRef
-            ? this.moduleRef.injector
-            : this.injector;
-        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
-            injector
+        const dynamicComponent: ComponentRef<any> = this.viewRef.createComponent(
+            component
         );
         this.appRef.attachView(dynamicComponent.hostView);
 
@@ -7156,12 +7138,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected autogenerateColumns() {
         const data = this.gridAPI.get_data();
-        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = factory.create(this.viewRef.injector);
+            const ref = this.viewRef.createComponent(IgxColumnComponent);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();

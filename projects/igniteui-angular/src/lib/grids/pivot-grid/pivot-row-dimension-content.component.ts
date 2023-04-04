@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ElementRef,
     Inject,
     Input,
@@ -70,7 +69,6 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         protected ref: ElementRef<HTMLElement>,
         protected cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
     ) {
         super(ref, cdr);
