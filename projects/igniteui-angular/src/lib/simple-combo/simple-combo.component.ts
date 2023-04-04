@@ -118,10 +118,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public get searchValue(): string {
+    public override get searchValue(): string {
         return this._searchValue;
     }
-    public set searchValue(val: string) {
+    public override set searchValue(val: string) {
         this._searchValue = val;
     }
 
@@ -129,15 +129,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return this.selectionService.get(this.id).values().next().value;
     }
 
-    constructor(protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
+    constructor(elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        selectionService: IgxSelectionAPIService,
+        comboAPI: IgxComboAPIService,
+        _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
+        @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI,
             _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
@@ -198,7 +198,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit(): void {
+    public override ngAfterViewInit(): void {
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
@@ -261,7 +261,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleInputChange(event?: any): void {
+    public override handleInputChange(event?: any): void {
         if (event !== undefined) {
             this.filterValue = this._internalFilter = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
@@ -295,7 +295,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleKeyDown(event: KeyboardEvent): void {
+    public override handleKeyDown(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ENTER) {
             const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === null || filtered === undefined) {
@@ -353,7 +353,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onBlur(): void {
+    public override onBlur(): void {
         // when clicking the toggle button to close the combo and immediately clicking outside of it
         // the collapsed state is not modified as the dropdown is still not closed
         if (this.collapsed || this._collapsing) {
@@ -399,7 +399,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleClosing(e: IBaseCancelableBrowserEventArgs): void {
+    public override handleClosing(e: IBaseCancelableBrowserEventArgs): void {
         const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.closing.emit(args);
         e.cancel = args.cancel;
@@ -423,7 +423,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onClick(event: Event): void {
+    public override onClick(event: Event): void {
         super.onClick(event);
         if (this.comboInput.value.length === 0) {
             this.virtDir.scrollTo(0);
@@ -487,7 +487,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return newSelection[0]?.toString() || '';
     }
 
-    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+    protected override getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
         if (!newSelection.length) {
             this.registerRemoteEntries(oldSelection, false);
             return '';
@@ -499,7 +499,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
-    protected registerRemoteEntries(ids: any[], add = true) {
+    protected override registerRemoteEntries(ids: any[], add = true) {
         const selection = this.getValueDisplayPairs(ids)[0];
 
         if (add && selection) {

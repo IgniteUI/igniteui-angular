@@ -13,7 +13,7 @@ class MySummary extends IgxNumberSummaryOperand {
       super();
   }
 
-  public operate(data?: any[]): IgxSummaryResult[] {
+  public override operate(data?: any[]): IgxSummaryResult[] {
       const result = super.operate(data);
       result.push({
           key: 'test',

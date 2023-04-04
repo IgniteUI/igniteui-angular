@@ -67,9 +67,9 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     public headerGroups: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef,
+        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
+        ref: ElementRef<HTMLElement>,
+        cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
     ) {

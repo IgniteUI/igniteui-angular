@@ -52,10 +52,10 @@ export class IgxTreeExpandIndicatorDirective {
  * @igxGroup Grids & Lists
  *
  * @remark
- * The Angular Tree Component allows users to represent hierarchical data in a tree-view structure, 
- * maintaining parent-child relationships, as well as to define static tree-view structure without a corresponding data model. 
- * Its primary purpose is to allow end-users to visualize and navigate within hierarchical data structures. 
- * The Ignite UI for Angular Tree Component also provides load on demand capabilities, item activation, 
+ * The Angular Tree Component allows users to represent hierarchical data in a tree-view structure,
+ * maintaining parent-child relationships, as well as to define static tree-view structure without a corresponding data model.
+ * Its primary purpose is to allow end-users to visualize and navigate within hierarchical data structures.
+ * The Ignite UI for Angular Tree Component also provides load on demand capabilities, item activation,
  * bi-state and cascading selection of items through built-in checkboxes, built-in keyboard navigation and more.
  *
  * @example
@@ -405,7 +405,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     }
 
     /** @hidden @internal */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);

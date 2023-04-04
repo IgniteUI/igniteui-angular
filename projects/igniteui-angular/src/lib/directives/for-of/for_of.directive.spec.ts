@@ -1343,7 +1343,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         platformUtil: PlatformUtil) {
         super(viewContainer, template, differs, changeDet, zone, syncService, platformUtil, document);
     }
-    public onScroll(evt) {
+    public override onScroll(evt) {
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         this.scrTopArray.push(evt.target.scrollTop);
@@ -1488,16 +1488,16 @@ export class VirtualComponent {
     `
 })
 export class VerticalVirtualComponent extends VirtualComponent {
-    public width = '450px';
-    public height = '300px';
-    public cols = [
+    public override width = '450px';
+    public override height = '300px';
+    public override cols = [
         { field: '1', width: '150px' },
         { field: '2', width: '70px' },
         { field: '3', width: '50px' },
         { field: '4', width: '80px' },
         { field: '5', width: '100px' }
     ];
-    public data = [];
+    public override data = [];
     public itemSize = '50px';
 }
 
@@ -1585,10 +1585,10 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
     `
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
-    public width = '800px';
-    public height = '400px';
-    public cols = [];
-    public data = [];
+    public override width = '800px';
+    public override height = '400px';
+    public override cols = [];
+    public override data = [];
 }
 
 /** Only vertically virtualized component */

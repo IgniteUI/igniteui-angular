@@ -1752,7 +1752,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
 }
 
@@ -1901,7 +1901,7 @@ public toggleChildRI = true;
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchicalGridToggleRIComponent {
-    public toggleRI = false;
+    public override toggleRI = false;
     public toggleColumns = false;
 }
 
