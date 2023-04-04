@@ -1471,7 +1471,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
                 ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
-
             GridFunctions.simulateGridContentKeydown(fix, 'enter');
             tick(16);
             fix.detectChanges();

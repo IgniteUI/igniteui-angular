@@ -778,6 +778,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         delete rowArgs.cancel;
         rowArgs.rowData = initialRowData;
+        rowArgs.data = initialRowData;
         expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowArgs);
 
