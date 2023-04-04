@@ -142,8 +142,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             return;
         }
         const args = cell.createEditEventArgs(true);
-
-        this.grid.summaryService.clearSummaryCache(args);
+        if (!this.grid.crudService.row) {
+            this.grid.summaryService.clearSummaryCache(args);
+        }
         const data = this.getRowData(cell.id.rowID);
         const newRowData = reverseMapper(cell.column.field, args.newValue);
         this.updateData(this.grid, cell.id.rowID, data, cell.rowData, newRowData);
