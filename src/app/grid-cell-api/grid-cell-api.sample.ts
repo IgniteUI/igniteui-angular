@@ -165,28 +165,25 @@ export class GridCellAPISampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    public updateCell(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public updateCell(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: number, field: string,
         logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(rIndex, field);
         cell.update('New Value');
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
-    public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+    public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: number, field: string, logger: HTMLElement) {
+        const cell = grid.getCellByColumn(rIndex, field);
         cell.selected = !cell.selected;
         this.selectedCell = cell;
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
-    public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: number, field: string,
         logger: HTMLElement) {
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(rIndex, field);
         cell.editMode = !cell.editMode;
-        this.logState(grid, indices, logger);
+        this.logState(grid, rIndex, field, logger);
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -222,10 +219,10 @@ export class GridCellAPISampleComponent implements OnInit {
         });
     }
 
-    public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
+    public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: number,
+        field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const cell = grid.getCellByColumn(rIndex, field);
         let state: string;
         let states: string[];
 
@@ -265,10 +262,10 @@ export class GridCellAPISampleComponent implements OnInit {
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
 
-    public logStateByKey(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, key: any,
+    public logStateByKey(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rIndex: number,
     field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const cell = grid.getCellByKey(key, field);
+        const cell = grid.getCellByColumn(rIndex, field);
         let state: string;
         let states: string[];
 
@@ -309,11 +306,10 @@ export class GridCellAPISampleComponent implements OnInit {
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
 
-    public logStateByColumn(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    public logStateByColumn(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, rowIndex: number,
     field: string, logger: HTMLElement) {
         this.clearLog(logger);
-        const indxs = this.getIndices(indices);
-        const cell = grid.getCellByColumn(indxs[0], field);
+        const cell = grid.getCellByColumn(rowIndex, field);
         let state: string;
         let states: string[];
 

@@ -424,26 +424,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, column.field);
-        }
-    }
-
-    /**
      * @hidden
      */
     public ngOnInit() {
