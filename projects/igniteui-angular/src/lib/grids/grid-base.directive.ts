@@ -3835,8 +3835,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const injector = this.moduleRef
         ? this.moduleRef.injector
         : this.injector;
-        const dynamicComponent: ComponentRef<any> = this.viewRef.createComponent(component, { index: 0,  injector: injector } );
-        this.viewRef.detach(0);
+        const dynamicComponent: ComponentRef<any> = this.viewRef.createComponent(component, { injector: injector } );
+        // move to app ref's views.
+        const index = this.viewRef.indexOf(dynamicComponent.hostView);
+        const viewRef = this.viewRef.detach(index);
+        this.appRef.attachView(viewRef);
         return dynamicComponent;
     }
 
