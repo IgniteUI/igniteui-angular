@@ -91,7 +91,11 @@ export class IgxFilteringService implements OnDestroy {
                 this.grid.theadRow.nativeElement.focus();
             });
 
-        this.grid.columnPinned.pipe(first()).subscribe(() => ref?.destroy());
+        this.grid.columnPinned.pipe(first()).subscribe(() => 
+        {
+            this._overlayService.detach(id);
+            ref?.destroy();
+         });
         this._overlayService.show(id);
     }
 
