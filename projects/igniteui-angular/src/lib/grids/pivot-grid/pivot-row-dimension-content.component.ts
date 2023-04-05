@@ -147,7 +147,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     protected _createColComponent(field: string, header: string, dim: IPivotDimension) {
-        const ref = this.viewRef.createComponent(IgxColumnComponent);
+        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector});
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';

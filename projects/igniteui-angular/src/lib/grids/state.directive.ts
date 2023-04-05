@@ -210,7 +210,7 @@ export class IgxGridStateDirective {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
                     if (hasColumnGroup) {
-                        const ref1 = context.viewRef.createComponent(IgxColumnGroupComponent);
+                        const ref1 = context.viewRef.createComponent(IgxColumnGroupComponent, { injector: context.viewRef.injector});
                         Object.assign(ref1.instance, colState);
                         ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
@@ -221,7 +221,7 @@ export class IgxGridStateDirective {
                         ref1.changeDetectorRef.detectChanges();
                         newColumns.push(ref1.instance);
                     } else {
-                        const ref = context.viewRef.createComponent(IgxColumnComponent);
+                        const ref = context.viewRef.createComponent(IgxColumnComponent, { injector: context.viewRef.injector});
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {

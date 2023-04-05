@@ -7141,7 +7141,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = this.viewRef.createComponent(IgxColumnComponent);
+            const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector});
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
