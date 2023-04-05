@@ -139,6 +139,36 @@ describe(`Update to ${version}`, () => {
         );
     });
 
+    it('should append igxStart and igxEnd directives to the child elements of the igx-card-actions', async () => {
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
+        `
+        <igx-card-actions>
+            <span igxButton>Span</span>
+            <button igxButton>Button</button>
+            <button igxButton="icon">
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+        `
+        <igx-card-actions>
+            <span igxButton igxStart>Span</span>
+            <button igxButton igxStart>Button</button>
+            <button igxButton="icon" igxEnd>
+                <igx-icon>favorite</igx-icon>
+            </button>
+            <igx-icon igxEnd>drag_indicator</igx-icon>
+        </igx-card-actions>
+        `
+        );
+    });
+
     it('should rename the $size property to the $scrollbar-size', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.scss`,

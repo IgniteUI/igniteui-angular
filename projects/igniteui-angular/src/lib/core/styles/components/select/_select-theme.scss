@@ -74,13 +74,6 @@
         }
     }
 
-    @if $variant == 'material' {
-        .igx-input-group--focused %igx-select__toggle-button {
-            background: var-get($theme, 'toggle-button-background-focus');
-            color: var-get($theme, 'toggle-button-foreground-focus');
-        }
-    }
-
     @if $variant == 'bootstrap' {
         .igx-input-group--disabled {
             %igx-select__toggle-button {
@@ -103,6 +96,14 @@
             color: var-get($theme, 'toggle-button-foreground');
         }
     }
+
+    @if $variant == 'material' {
+        .igx-input-group--focused %igx-select__toggle-button {
+            background: var-get($theme, 'toggle-button-background-focus');
+            color: var-get($theme, 'toggle-button-foreground-focus');
+        }
+    }
+
 
     .igx-input-group--disabled {
         %igx-select__toggle-button {
