@@ -963,7 +963,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             summaryService,
             _displayDensityOptions,
             localeId,
-            platform);
+            platform,
+            _diTransactions);
     }
 
     /**

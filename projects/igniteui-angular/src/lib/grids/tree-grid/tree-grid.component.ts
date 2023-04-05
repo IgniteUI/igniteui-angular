@@ -411,9 +411,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Optional() @Inject(IgxGridTransaction) protected override _diTransactions?:
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
-        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
-            filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
+        super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
+            _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation, filteringService,
+            overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
     /**
