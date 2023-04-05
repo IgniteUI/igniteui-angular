@@ -277,7 +277,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected _filterStrategy = new TreeGridFilteringStrategy();
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     private _data;
-    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
     private _filteredData = null;
 
@@ -377,11 +377,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get rowLoadingIndicatorTemplate(): TemplateRef<any> {
+    public get rowLoadingIndicatorTemplate(): TemplateRef<void> {
         return this._rowLoadingIndicatorTemplate;
     }
 
-    public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
+    public set rowLoadingIndicatorTemplate(value: TemplateRef<void>) {
         this._rowLoadingIndicatorTemplate = value;
         this.notifyChanges();
     }
@@ -672,7 +672,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @inheritDoc
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
+     * @remarks
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false): any[] {
         let source = [];
@@ -972,11 +977,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
             if (this.paginator) {
                 const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
-                const page = Math.floor(rowIndex / this.paginator.perPage);
+                const page = Math.floor(rowIndex / this.perPage);
 
-                if (this.paginator.page !== page) {
+                if (this.page !== page) {
                     delayScrolling = true;
-                    this.paginator.page = page;
+                    this.page = page;
                 }
             }
         }

@@ -4,7 +4,7 @@ import { NgModule, Directive } from '@angular/core';
  * @hidden
  */
 @Directive({
-    selector: 'igx-suffix,[igxSuffix]'
+    selector: 'igx-suffix,[igxSuffix],[igxEnd]'
 })
 export class IgxSuffixDirective { }
 

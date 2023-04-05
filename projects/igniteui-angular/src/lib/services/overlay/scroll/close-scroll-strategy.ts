@@ -23,7 +23,16 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._threshold = 10;
     }
 
-    /** @inheritDoc */
+    /**
+     * Initializes the strategy. Should be called once
+     *
+     * @param document reference to Document object.
+     * @param overlayService IgxOverlay service to use in this strategy.
+     * @param id Unique id for this strategy.
+     * ```typescript
+     * settings.scrollStrategy.initialize(document, overlay, id);
+     * ```
+     */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -35,7 +44,12 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._overlayInfo = overlayService.getOverlayById(id);
     }
 
-    /** @inheritDoc */
+    /**
+     * Attaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.attach();
+     * ```
+     */
     public attach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.addEventListener('scroll', this.onScroll);
@@ -45,7 +59,12 @@ export class CloseScrollStrategy extends ScrollStrategy {
         }
     }
 
-    /** @inheritDoc */
+    /**
+     * Detaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
+     */
     public detach(): void {
         // TODO: check why event listener removes only on first call and remains on each next!!!
         if (this._scrollContainer) {
