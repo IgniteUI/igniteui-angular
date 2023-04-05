@@ -143,6 +143,34 @@ export const cloneValue = (value: any): any => {
     return value;
 };
 
+export const cloneValueCached = (value: any, cache: Map<any, any>): any => {
+    if (isDate(value)) {
+        return new Date(value.getTime());
+    }
+    if (Array.isArray(value)) {
+        return [...value];
+    }
+
+    if (value instanceof Map || value instanceof Set) {
+        return value;
+    }
+
+    if (isObject(value)) {
+        if (cache.has(value)) {
+            return cache.get(value);
+        }
+
+        const result = {};
+        cache.set(value, result);
+
+        for (const key of Object.keys(value)) {
+            result[key] = cloneValueCached(value[key], cache);
+        }
+        return result;
+    }
+    return value;
+};
+
 /**
  * Parse provided input to Date.
  *

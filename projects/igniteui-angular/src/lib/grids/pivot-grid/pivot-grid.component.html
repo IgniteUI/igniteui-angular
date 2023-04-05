@@ -31,10 +31,10 @@
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
-        | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
+        | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:pivotValueCloneStrategy:filteringPipeTrigger:pipeTrigger
         | pivotGridSort:pivotConfiguration:sortStrategy:pipeTrigger
-        | pivotGridRow:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
-        | pivotGridColumn:pivotConfiguration:expansionStates:pipeTrigger:sortingExpressions
+        | pivotGridRow:pivotConfiguration:pivotValueCloneStrategy:expansionStates:pipeTrigger:sortingExpressions
+        | pivotGridColumn:pivotConfiguration:pivotValueCloneStrategy:expansionStates:pipeTrigger:sortingExpressions
         | pivotGridAutoTransform:pivotConfiguration:pipeTrigger
         | pivotGridColumnSort:sortingExpressions:sortStrategy:pipeTrigger
         | pivotGridRowExpansion:pivotConfiguration:expansionStates:defaultExpandState:pipeTrigger"

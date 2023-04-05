@@ -33,7 +33,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { ColumnType, GridType, IGX_GRID_BASE, RowType } from '../common/grid.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChange, IPivotDimension, IPivotValue, IValuesChange, PivotDimensionType } from './pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -74,6 +74,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -130,6 +131,20 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @Output()
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
+
+    /**
+     * Emitted when the dimension collection is changed via the grid chip area.
+     *
+     * @remarks
+     * Returns the new dimension collection and its type:
+     * @example
+     * ```html
+     * <igx-pivot-grid #grid [data]="localData" [height]="'305px'"
+     *              (dimensionsChange)="dimensionsChange($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public pivotConfigurationChange = new EventEmitter<IPivotConfigurationChange>();
 
 
     /**
@@ -318,6 +333,25 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             };
 
             this.densityChanged.emit(densityChangedArgs);
+        }
+    }
+
+    /**
+     * Gets/Sets the values clone strategy of the pivot grid when assigning them to different dimensions.
+     *
+     * @example
+     * ```html
+     *  <igx-pivot-grid #grid [data]="localData" [pivotValueCloneStrategy]="customCloneStrategy"></igx-pivot-grid>
+     * ```
+     */
+    @Input()
+    public get pivotValueCloneStrategy(): IDataCloneStrategy {
+        return this._pivotValueCloneStrategy;
+    }
+
+    public set pivotValueCloneStrategy(strategy: IDataCloneStrategy) {
+        if (strategy) {
+            this._pivotValueCloneStrategy = strategy;
         }
     }
 
@@ -545,7 +579,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected _defaultExpandState = false;
-    protected _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy();
+    protected _pivotValueCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
+    protected _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy(this.pivotValueCloneStrategy);
     private _data;
     private _filteredData;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
@@ -1567,6 +1602,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.dimensionDataColumns = this.generateDimensionColumns();
             this.reflow();
         }
+        this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
 
     /**
@@ -1645,6 +1681,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (dimType === PivotDimensionType.Filter) {
             this.reflow();
         }
+        this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
 
     /**
@@ -1672,6 +1709,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
         this.cdr.detectChanges();
         this.valuesChange.emit({ values });
+        this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
 
     /**
@@ -1712,6 +1750,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             this.pipeTrigger++;
             this.valuesChange.emit({ values });
+            this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
         }
     }
 
@@ -1732,6 +1771,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.pipeTrigger++;
         this.valuesChange.emit({ values: this.pivotConfiguration.values });
         this.reflow();
+        this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
 
     /**
@@ -1757,6 +1797,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
         }
         this.cdr.detectChanges();
+        this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
 
     /**
@@ -1977,7 +2018,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 sortedData,
                 this.columnDimensions,
                 PivotDimensionType.Column,
-                this.pivotKeys
+                this.pivotKeys,
+                this.pivotValueCloneStrategy
             );
         }
         columns = this.generateColumnHierarchy(fieldsMap, sortedData);

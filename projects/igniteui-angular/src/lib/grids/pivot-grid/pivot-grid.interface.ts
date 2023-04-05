@@ -1,3 +1,4 @@
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -11,7 +12,6 @@ export const DEFAULT_PIVOT_KEYS = {
     aggregations: 'aggregations', records: 'records', children: 'children', level: 'level',
     rowDimensionSeparator: '_', columnDimensionSeparator: '-'
 };
-
 
 /**
  * Event emitted when dimension collection for rows, columns of filters is changed.
@@ -32,6 +32,14 @@ export interface IValuesChange {
 }
 
 /**
+ * Event emitted when pivot configuration is changed.
+ */
+export interface IPivotConfigurationChange {
+    /** The new configuration. */
+    pivotConfiguration: IPivotConfiguration
+}
+
+/**
 * Interface describing Pivot data processing for dimensions.
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
@@ -39,11 +47,12 @@ export interface IPivotDimensionStrategy {
     process(collection: any,
         dimensions: IPivotDimension[],
         values: IPivotValue[],
+        cloneStrategy: IDataCloneStrategy,
         pivotKeys?: IPivotKeys): any[];
 }
 
 /**
-* Interface describing a PivotAggregation function. 
+* Interface describing a PivotAggregation function.
 * Accepts an array of extracted data members and a array of the original data records.
 */
 export type PivotAggregation = (members: any[], data: any[]) => any;
@@ -63,7 +72,7 @@ export interface IPivotAggregator {
      */
     aggregatorName?: PivotAggregationType;
     /**
-     * Aggregator function can be a custom implementation of `PivotAggregation`, or 
+     * Aggregator function can be a custom implementation of `PivotAggregation`, or
      * use predefined ones from `IgxPivotAggregate` and its variants.
      */
     aggregator?: (members: any[], data?: any[]) => any;
