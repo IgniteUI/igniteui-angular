@@ -185,7 +185,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             summaryService,
             _displayDensityOptions,
             localeId,
-            platform);
+            platform,
+            _diTransactions);
     }
 
     /**
