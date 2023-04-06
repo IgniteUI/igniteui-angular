@@ -1027,7 +1027,9 @@ export abstract class IgxBaseExporter {
             const hierarchicalOwner = setGridParent ? GRID_PARENT : `${GRID_CHILD}${++this.rowIslandCounter}`;
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }], hierarchy));
+                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }],
+                hierarchy,
+                grid.groupingExpressions));
             const expanded = expandState ? expandState.expanded : groupingState.defaultExpanded;
 
             const isDate = recordVal instanceof Date;
