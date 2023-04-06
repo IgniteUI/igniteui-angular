@@ -730,6 +730,13 @@ export class ReorderedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.simpleDateColumns)
+})
+export class GridUserMeetingDataComponent extends BasicGridComponent {
+    public data = SampleTestData.personDateData();
+}
+
+@Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobTitleEditable)
 })
 export class GridIDNameJobTitleComponent extends PagingComponent {
