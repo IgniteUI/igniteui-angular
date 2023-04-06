@@ -352,6 +352,9 @@ export class WorksheetFile implements IExcelFile {
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
         } else {
+            const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
+            const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
+
             const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
@@ -367,7 +370,10 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+            const isTime = targetCol?.dataType === 'time';
+            const isDateTime = targetCol?.dataType === 'dateTime';
+
+            const format = isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
