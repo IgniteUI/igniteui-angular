@@ -559,22 +559,22 @@ export class IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid igxPreventDocumentScroll  class="hgrid" [data]="data" [autoGenerate]="false"
+    <igx-hierarchical-grid igxPreventDocumentScroll class="hgrid" [data]="data" [autoGenerate]="false"
         [height]="'1500px'" [width]="'100%'" #hierarchicalGrid>
 
-        <igx-column field="Artist" [hasSummary]='true'></igx-column>
-        <igx-column field="Debut" [hasSummary]='true'></igx-column>
-        <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
-        <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]='true' [summaries]="mySummary" dataType="number"></igx-column>
+        <igx-column field="Artist" [hasSummary]="true"></igx-column>
+        <igx-column field="Debut" [hasSummary]="true"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [hasSummary]="true" [summaries]="mySummary" dataType="number"></igx-column>
 
         <igx-row-island [height]="null" [key]="'Albums'" [autoGenerate]="false">
             <igx-column field="Album"></igx-column>
             <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
-            <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
-            <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]='true' dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200" [hasSummary]="true" dataType="number" [summaries]="mySummary"></igx-column>
             <igx-row-island [height]="null" [key]="'Songs'" [autoGenerate]="false" >
                 <igx-column field="Number" header="No."></igx-column>
-                <igx-column field="Title" [hasSummary]='true' [summaries]="myChildSummary"></igx-column>
+                <igx-column field="Title" [hasSummary]="true" [summaries]="myChildSummary"></igx-column>
                 <igx-column field="Released" dataType="date"></igx-column>
                 <igx-column field="Genre"></igx-column>
             </igx-row-island>

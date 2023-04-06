@@ -278,6 +278,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxIconComponent,
         IgxRowEditTabStopDirective,
         IgxGridColumnResizerComponent,
+        IgxChildGridRowComponent,
         IgxGridSortingPipe,
         IgxGridFilteringPipe,
         IgxGridTransactionPipe,
