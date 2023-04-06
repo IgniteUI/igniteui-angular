@@ -18,6 +18,7 @@ import { IgxIconComponent } from '../icon/icon.component';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { IgxGridToolbarDirective } from '../grids/toolbar/common';
 import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
+import { IgxPaginatorDirective } from '../paginator/paginator-interfaces';
 
 @Component({
     template: `
@@ -305,7 +306,16 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxCheckboxComponent, IgxPaginatorComponent, IgxRowSelectorDirective, IgxHeadSelectorDirective]
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxRowIslandComponent,
+        IgxCheckboxComponent,
+        IgxPaginatorComponent,
+        IgxPaginatorDirective,
+        IgxRowSelectorDirective,
+        IgxHeadSelectorDirective
+    ]
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
