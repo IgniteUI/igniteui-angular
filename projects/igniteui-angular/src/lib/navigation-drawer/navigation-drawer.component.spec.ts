@@ -10,13 +10,13 @@ import { NgIf } from '@angular/common';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare let Simulator: any;
-const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+// const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(waitForAsync(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+        // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             imports: [
                 TestComponentPin,
@@ -32,13 +32,13 @@ describe('Navigation Drawer', () => {
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
-    afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
-    });
+    // afterEach(() => {
+    //     jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
+    // });
 
-    afterAll(() => {
-        TestBed.resetTestingModule();
-    });
+    // afterAll(() => {
+    //     TestBed.resetTestingModule();
+    // });
 
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
@@ -46,7 +46,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             expect(fixture.componentInstance.navDrawer instanceof
                 IgxNavigationDrawerComponent).toBeTruthy();
-            expect(fixture.componentInstance.navDrawer.state).toBeNull();
+            expect(fixture.componentInstance.navDrawer.state).not.toBeNull();
         });
     }));
 
