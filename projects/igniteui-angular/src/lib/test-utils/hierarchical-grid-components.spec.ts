@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
+import { ColumnType, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
@@ -17,6 +17,7 @@ import { IgxColumnGroupComponent } from '../grids/columns/column-group.component
 import { IgxIconComponent } from '../icon/icon.component';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../grids/selection/row-selectors';
 import { IgxGridToolbarDirective } from '../grids/toolbar/common';
+import { IgxCellHeaderTemplateDirective } from '../grids/columns/templates.directive';
 
 @Component({
     template: `
@@ -60,6 +61,7 @@ import { IgxGridToolbarDirective } from '../grids/toolbar/common';
         IgxPaginatorComponent,
         IgxGridToolbarComponent,
         IgxIconComponent,
+        IgxCellHeaderTemplateDirective,
         NgIf
     ]
 })
@@ -82,7 +84,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.data = SampleTestData.generateHGridData(40, 3);
     }
 
-    public pinColumn(column: IgxColumnComponent) {
+    public pinColumn(column: ColumnType) {
         if (column.pinned) {
             column.unpin();
         } else {
