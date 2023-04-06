@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, DoCheck, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, forwardRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, DoCheck, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
