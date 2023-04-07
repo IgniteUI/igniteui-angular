@@ -512,11 +512,15 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Output()
     public rowPinned = new EventEmitter<IPinRowEventArgs>();
 
+    /** @hidden @internal */
     public columnGroupStates = new Map<string, boolean>();
+    /** @hidden @internal */
     public dimensionDataColumns;
+    /** @hidden @internal */
     public get pivotKeys() {
         return this.pivotConfiguration.pivotKeys || DEFAULT_PIVOT_KEYS;
     }
+    /** @hidden @internal */
     public isPivot = true;
 
     /**
@@ -536,10 +540,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     public rowDimensionResizing = true;
 
+    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true, level: 0 };
     /**
      * @hidden @internal
      */
-    private _emptyRowDimension: IPivotDimension = { memberName: '', enabled: true, level: 0 };
     public get emptyRowDimension(): IPivotDimension {
         return this._emptyRowDimension;
     }
@@ -1164,6 +1168,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return (width * 100 / this.calcWidth);
     }
 
+    /** @hidden @internal */
     public get pivotContentCalcWidth() {
         const totalDimWidth = this.rowDimensions.length > 0 ?
             this.rowDimensions.map((dim) => this.rowDimensionWidthToPixels(dim)).reduce((prev, cur) => prev + cur) :
@@ -1171,26 +1176,32 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.calcWidth - totalDimWidth;
     }
 
+    /** @hidden @internal */
     public get pivotPinnedWidth() {
         return !this.shouldGenerate ? (this.isPinningToStart ? this.pinnedWidth : this.headerFeaturesWidth) : 0;
     }
 
+    /** @hidden @internal */
     public get pivotUnpinnedWidth() {
         return !this.shouldGenerate ? this.unpinnedWidth : 0;
     }
 
+    /** @hidden @internal */
     public get rowDimensions() {
         return this.pivotConfiguration.rows?.filter(x => x.enabled) || [];
     }
 
+    /** @hidden @internal */
     public get columnDimensions() {
         return this.pivotConfiguration.columns?.filter(x => x.enabled) || [];
     }
 
+    /** @hidden @internal */
     public get filterDimensions() {
         return this.pivotConfiguration.filters?.filter(x => x.enabled) || [];
     }
 
+    /** @hidden @internal */
     public get values() {
         return this.pivotConfiguration.values?.filter(x => x.enabled) || [];
     }

@@ -288,6 +288,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return 0;
     }
 
+    /** @hidden @internal */
     public get hasColumnsToAutosize() {
         return this._columns.some(x => x.width === 'fit-content');
     }
@@ -515,6 +516,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.excelStyleFilteringComponents?.first;
     }
 
+    /** @hidden @internal */
     public get headerGroups() {
         return this.theadRow.groups;
     }
@@ -1173,6 +1175,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
+    /** @hidden @internal */
     @ContentChild(IgxActionStripComponent)
     public actionStrip: IgxActionStripComponent;
 
@@ -1182,25 +1185,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
 
-    /**
-     * A template reference for the template when the filtered grid is empty.
-     *
-     * @example
-     * ```
-     * const emptyTempalte = this.grid.emptyGridTemplate;
-     * ```
-     */
+    /** @hidden @internal */
     @ViewChild('emptyFilteredGrid', { read: TemplateRef, static: true })
     public emptyFilteredGridTemplate: TemplateRef<any>;
 
-    /**
-     * A template reference for the template when the grid is empty.
-     *
-     * @example
-     * ```
-     * const emptyTempalte = this.grid.emptyGridTemplate;
-     * ```
-     */
+    /** @hidden @internal */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef, static: true })
     public emptyGridDefaultTemplate: TemplateRef<any>;
 
@@ -1292,22 +1281,27 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('footer', { read: ElementRef })
     public footer: ElementRef;
 
+    /** @hidden @internal */
     public get headerContainer() {
         return this.theadRow?.headerForOf;
     }
 
+    /** @hidden @internal */
     public get headerSelectorContainer() {
         return this.theadRow?.headerSelectorContainer;
     }
 
+    /** @hidden @internal */
     public get headerDragContainer() {
         return this.theadRow?.headerDragContainer;
     }
 
+    /** @hidden @internal */
     public get headerGroupContainer() {
         return this.theadRow?.headerGroupContainer;
     }
 
+    /** @hidden @internal */
     public get filteringRow(): IgxGridFilteringRowComponent {
         return this.theadRow?.filterRow;
     }
@@ -1478,9 +1472,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
     public headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
 
-    /**
-     * The custom template, if any, that should be used when rendering a row expand indicator.
-     */
+    /** @hidden @internal */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
     public excelStyleHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
@@ -1542,7 +1534,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._sortAscendingHeaderIconTemplate = template;
     }
 
-
+    /** @hidden @internal */
     @ContentChild(IgxSortDescendingHeaderIconDirective, { read: TemplateRef })
     public sortDescendingHeaderIconDirectiveTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
 
@@ -1991,12 +1983,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public rowDragging = false;
 
-    /**
-     * Gets the row ID that is being dragged.
-     *
-     * @remarks
-     * The row ID is either the primaryKey value or the data record instance.
-     */
+    /** @hidden @internal */
     public dragRowID = null;
 
     /**
@@ -2076,14 +2063,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * Gets the width of the header.
-     *
-     * @example
-     * ```html
-     * let gridHeaderWidth = this.grid.headerWidth;
-     * ```
-     */
+    /** @hidden @internal */
     public get headerWidth() {
         return parseInt(this.width, 10) - 17;
     }
@@ -2451,38 +2431,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
 
-    /**
-     * A list of all `IgxGridHeaderGroupComponent`.
-     *
-     * @example
-     * ```typescript
-     * const headerGroupsList = this.grid.headerGroupsList;
-     * ```
-     */
+    /** @hidden @internal */
     public get headerGroupsList(): IgxGridHeaderGroupComponent[] {
         return this.theadRow.groups;
     }
 
-    /**
-     * A list of all `IgxGridHeaderComponent`.
-     *
-     * @example
-     * ```typescript
-     * const headers = this.grid.headerCellList;
-     * ```
-     */
+    /** @hidden @internal */
     public get headerCellList(): IgxGridHeaderComponent[] {
         return this.headerGroupsList.map(headerGroup => headerGroup.header).filter(header => header);
     }
 
-    /**
-     * A list of all `IgxGridFilteringCellComponent`.
-     *
-     * @example
-     * ```typescript
-     * const filterCells = this.grid.filterCellList;
-     * ```
-     */
+    /** @hidden @internal */
     public get filterCellList(): IgxGridFilteringCellComponent[] {
         return this.headerGroupsList.map(group => group.filter).filter(cell => cell);
     }
@@ -2688,6 +2647,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.rowEditTabsCUSTOM.length ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
     }
 
+    /** @hidden @internal */
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
@@ -2700,6 +2660,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
+    /** @hidden @internal */
     public get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
         return `${this.getComponentDensityClass('igx-banner')} ${position}`;
@@ -3004,6 +2965,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     public EMPTY_DATA = [];
 
+    /** @hidden @internal */
     public isPivot = false;
 
     /** @hidden @internal */
@@ -4281,14 +4243,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * Gets the current width of the container for the pinned `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth;
-     * ```
-     */
+    /** @hidden @internal */
     public get pinnedWidth() {
         if (!isNaN(this._pinnedWidth)) {
             return this._pinnedWidth;
@@ -4297,14 +4252,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedWidth;
     }
 
-    /**
-     * Gets the current width of the container for the unpinned `IgxColumnComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const unpinnedWidth = this.grid.getUnpinnedWidth;
-     * ```
-     */
+    /** @hidden @internal */
     public get unpinnedWidth() {
         if (!isNaN(this._unpinnedWidth)) {
             return this._unpinnedWidth;
@@ -4586,14 +4534,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.paginator.isLastPage;
     }
 
-    /**
-     * Returns the total width of the `IgxGridComponent`.
-     *
-     * @example
-     * ```typescript
-     * const gridWidth = this.grid.totalWidth;
-     * ```
-     */
+    /** @hidden @internal */
     public get totalWidth(): number {
         if (!isNaN(this._totalWidth)) {
             return this._totalWidth;
@@ -5194,11 +5135,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return true;
     }
 
+    /** @hidden @internal */
     public get pinnedRowHeight() {
         const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
         return this.hasPinnedRecords ? containerHeight : 0;
     }
 
+    /** @hidden @internal */
     public get totalHeight() {
         return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
     }
@@ -5315,50 +5258,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has sortable columns.
-     *
-     * @example
-     * ```typescript
-     * const sortableGrid = this.grid.hasSortableColumns;
-     * ```
-     */
-    public get hasSortableColumns(): boolean {
-        return this._columns.some((col) => col.sortable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has editable columns.
-     *
-     * @example
-     * ```typescript
-     * const editableGrid = this.grid.hasEditableColumns;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasEditableColumns(): boolean {
         return this._columns.some((col) => col.editable);
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has filterable columns.
-     *
-     * @example
-     * ```typescript
-     * const filterableGrid = this.grid.hasFilterableColumns;
-     * ```
-     */
-    public get hasFilterableColumns(): boolean {
-        return this._columns.some((col) => col.filterable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has summarized columns.
-     *
-     * @example
-     * ```typescript
-     * const summarizedGrid = this.grid.hasSummarizedColumns;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasSummarizedColumns(): boolean {
         const summarizedColumns = this._columns.filter(col => col.hasSummary && !col.hidden);
         return summarizedColumns.length > 0;
@@ -5384,40 +5289,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set hasVisibleColumns(value) {
         this._hasVisibleColumns = value;
     }
-    /**
-     * Returns if the `IgxGridComponent` has moveable columns.
-     *
-     * @deprecated
-     * Use `IgxGridComponent.moving` instead.
-     *
-     * @example
-     * ```typescript
-     * const movableGrid = this.grid.hasMovableColumns;
-     * ```
-     */
+
+    /** @hidden @internal */
     public get hasMovableColumns(): boolean {
         return this.moving;
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has column groups.
-     *
-     * @example
-     * ```typescript
-     * const groupGrid = this.grid.hasColumnGroups;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasColumnGroups(): boolean {
         return this._columnGroups;
     }
-    /**
-     * Returns if the `IgxGridComponent` has column layouts for multi-row layout definition.
-     *
-     * @example
-     * ```typescript
-     * const layoutGrid = this.grid.hasColumnLayouts;
-     * ```
-     */
+
+    /** @hidden @internal */
     public get hasColumnLayouts() {
         return !!this._columns.some(col => col.columnLayout);
     }
@@ -5624,26 +5507,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return 0;
     }
 
-    /**
-     * Returns the currently transformed paged/filtered/sorted/grouped pinned row data, displayed in the grid.
-     *
-     * @example
-     * ```typescript
-     *      const pinnedDataView = this.grid.pinnedDataView;
-     * ```
-     */
+    /** @hidden @internal */
     public get pinnedDataView(): any[] {
         return this.pinnedRecords ? this.pinnedRecords : [];
     }
 
-    /**
-     * Returns currently transformed paged/filtered/sorted/grouped unpinned row data, displayed in the grid.
-     *
-     * @example
-     * ```typescript
-     *      const pinnedDataView = this.grid.pinnedDataView;
-     * ```
-     */
+    /** @hidden @internal */
     public get unpinnedDataView(): any[] {
         return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer?.igxForOf || [];
     }

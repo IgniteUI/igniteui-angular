@@ -287,10 +287,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected _groupRowTemplate: TemplateRef<IgxGroupByRowTemplateContext>;
-    /**
-     * @hidden
-     */
-    protected _groupAreaTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      */
@@ -671,25 +668,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges();
     }
 
-
-    /**
-     * Gets/Sets the template reference of the `IgxGridComponent`'s group area.
-     *
-     * @example
-     * ```typescript
-     * const groupAreaTemplate = this.grid.groupAreaTemplate;
-     * this.grid.groupAreaTemplate = myAreaTemplate.
-     * ```
-     */
-    public get groupAreaTemplate(): TemplateRef<any> {
-        return this._groupAreaTemplate;
-    }
-
-    public set groupAreaTemplate(template: TemplateRef<any>) {
-        this._groupAreaTemplate = template;
-        this.notifyChanges();
-    }
-
     /** @hidden @internal */
     public trackChanges: (index, rec) => any;
 
@@ -840,14 +818,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges();
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasGroupableColumns(): boolean {
         return this._columns.some((col) => col.groupable && !col.columnGroup);
     }
@@ -872,18 +843,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
         this.notifyChanges(true);
-    }
-
-    /**
-     * Gets if the grid's group by drop area is visible.
-     *
-     * @example
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-     */
-    public get dropAreaVisible(): boolean {
-        return this.columnInDrag?.groupable || !this.groupingExpressions.length;
     }
 
     /**
