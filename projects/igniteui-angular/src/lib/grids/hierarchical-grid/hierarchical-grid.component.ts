@@ -92,7 +92,12 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid', { static: true })
+    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    public container: ViewContainerRef;
+
+    /**
+     * @hidden
+     */
     public hGrid: IgxHierarchicalGridComponent;
 
     /**
@@ -152,6 +157,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     public ngOnInit() {
+        const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        this.hGrid = ref.instance;
+        this.hGrid.data = this.data.childGridsData[this.layout.key];
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
