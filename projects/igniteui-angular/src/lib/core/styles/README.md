@@ -33,7 +33,7 @@ Learn how to create themes:
 * [Component Themes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/component-themes.html)
 
 Learn how to create a component schema:
-* [Schemas](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html)
+* [Schemas](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/schemas)
 
 Learn how to build color palettes:
 * [Palettes](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/palette.html)
