@@ -27,6 +27,7 @@ describe('IgxInputGroup', () => {
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
                 InputGroupSearchComponent,
+                InputGroupFileComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
@@ -93,6 +94,15 @@ describe('IgxInputGroup', () => {
         fixture.detectChanges();
         testInputGroupType('search', igxInputGroup, inputGroupElement);
     }));
+
+    it('Initializes upload file button with type=\'button\'.', () => {
+        const fixture = TestBed.createComponent(InputGroupFileComponent);
+        fixture.detectChanges();
+
+        const uploadFileButton = fixture.debugElement.query(By.css('button')).nativeElement;
+
+        expect(uploadFileButton.getAttribute('type')).toEqual('button');
+    });
 
     it('Should respect type Token and be able to change input group type programmatically.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupComponent);
@@ -329,6 +339,13 @@ class InputGroupBorderComponent {
 class InputGroupSearchComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
+
+@Component({
+    template: `<igx-input-group>
+                    <input igxInput type="file" multiple />
+                </igx-input-group>`
+})
+class InputGroupFileComponent { }
 
 const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) => {
     let isLine = false;
