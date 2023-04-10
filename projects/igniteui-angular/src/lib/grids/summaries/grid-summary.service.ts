@@ -33,7 +33,6 @@ export class IgxGridSummaryService {
             }
             return;
         }
-        debugger;
         if (args.data) {
             const rowID = this.grid.primaryKey ? args.data[this.grid.primaryKey] : args.data;
             this.removeSummaries(rowID);
