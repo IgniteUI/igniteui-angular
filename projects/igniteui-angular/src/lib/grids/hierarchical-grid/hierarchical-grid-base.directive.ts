@@ -235,7 +235,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
+        const ref = this.anchor.createComponent(IgxColumnGroupComponent, { injector: this.anchor.injector });
         ref.changeDetectorRef.detectChanges();
         const mirror = reflectComponentType(IgxColumnGroupComponent);
         mirror.inputs.forEach((input) => {
@@ -256,7 +256,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
+        const ref = this.anchor.createComponent(IgxColumnComponent, { injector: this.anchor.injector });
         const mirror = reflectComponentType(IgxColumnComponent);
         mirror.inputs.forEach((input) => {
             const propName = input.propName;

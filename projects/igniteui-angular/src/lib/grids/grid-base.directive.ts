@@ -1655,6 +1655,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+     @ViewChild('sink', { read: ViewContainerRef, static: true })
+     public anchor: ViewContainerRef;
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultExpandedTemplate: TemplateRef<any>;
 
@@ -3835,10 +3841,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const injector = this.moduleRef
         ? this.moduleRef.injector
         : this.injector;
-        const dynamicComponent: ComponentRef<any> = this.viewRef.createComponent(component, { injector: injector } );
+        const dynamicComponent: ComponentRef<any> = this.anchor.createComponent(component, { injector: this.anchor.injector } );
         // move to app ref's views.
-        const index = this.viewRef.indexOf(dynamicComponent.hostView);
-        const viewRef = this.viewRef.detach(index);
+        const index = this.anchor.indexOf(dynamicComponent.hostView);
+        const viewRef = this.anchor.detach(index);
         this.appRef.attachView(viewRef);
         return dynamicComponent;
     }
@@ -7145,7 +7151,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector});
+            const ref = this.anchor.createComponent(IgxColumnComponent, { injector: this.anchor.injector});
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
