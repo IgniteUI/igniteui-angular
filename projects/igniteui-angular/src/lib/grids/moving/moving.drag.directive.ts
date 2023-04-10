@@ -79,7 +79,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
 
         super.onPointerMove(event);
-        event.preventDefault();
         if (this._dragStarted && this.ghostElement && !this.cms.column) {
             this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();
