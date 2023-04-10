@@ -1,6 +1,29 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 16.0.0
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+  - **Breaking Changes**
+    The following deprecated grid properties in version 12.1.0 are now removed:
+        - *evenRowCSS*;
+        - *oddRowCSS*;
+        - *page*;
+        - *paging*;
+        - *perPage*;
+        - *totalPages*;
+        - *isFirstPage*;
+        - *isLastPage*;
+        - *pageChange*;
+    Also the following deprecated grid events are removed.
+        - *perPageChange*;
+        - *pagingDone*;
+    Deprecated methods removed from the grid API are:
+        - *nextPage*;
+        - *previousPage*;
+        - *paginate*;
+        - *getCellByColumnVisibleIndex*;
+ - **Breaking Changes** In the `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs` and `IPathSegment` interfaces the *rowID* property has been deprecated and a *key* property has been introduced instead;
+ - **Breaking Changes** In the `IGridEditDoneEventArgs` interface *rowID* and *rowData* properties are deprecated and new *data* property has been introduced.
 
 ## 15.1.0
 
