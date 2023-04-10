@@ -1,6 +1,6 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { CurrencyPipe, formatDate as _formatDate, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { ElementRef, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { Observable } from 'rxjs';
 import {
@@ -519,6 +519,36 @@ export const reverseMapper = (path: string, value: any) => {
     });
 
     return obj;
+};
+
+/**
+ * Returns the `textContent` of an element
+ *
+ * ```html
+ * <igx-expansion-panel-title>
+ *  Tooltip content
+ * </igx-expansion-panel-title>
+ * ```
+ *
+ *  or the `title` content
+ *
+ * ```html
+ * <igx-expansion-panel-title [title]="'Tooltip content'">
+ * </igx-expansion-panel-title>
+ * ```
+ *
+ * If both are provided, returns the `title` content.
+ *
+ * @param element
+ * @returns tooltip content for an element
+ * @hidden
+ * @internal
+ */
+export const getTooltipContent = (element: ElementRef): any => {
+    return element.nativeElement.title
+        ? element.nativeElement.title
+        : element.nativeElement.textContent
+        ? element.nativeElement.textContent.trim() : null;
 };
 
 export const yieldingLoop = (count: number, chunkSize: number, callback: (index: number) => void, done: () => void) => {

@@ -1,4 +1,5 @@
-import { Directive, HostBinding } from '@angular/core';
+import { Directive, ElementRef, HostBinding, OnInit } from '@angular/core';
+import { getTooltipContent } from '../core/utils';
 
 /**
  * @hidden @internal
@@ -7,9 +8,18 @@ import { Directive, HostBinding } from '@angular/core';
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-title'
 })
-export class IgxExpansionPanelTitleDirective {
+export class IgxExpansionPanelTitleDirective implements OnInit {
     @HostBinding('class.igx-expansion-panel__header-title')
     public cssClass = `igx-expansion-panel__header-title`;
+
+    @HostBinding('attr.title')
+    public title: string;
+
+    constructor(private element: ElementRef) {}
+
+    public ngOnInit() {
+        this.title = getTooltipContent(this.element);
+    }
 }
 
 /**
@@ -19,9 +29,18 @@ export class IgxExpansionPanelTitleDirective {
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-description'
 })
-export class IgxExpansionPanelDescriptionDirective {
+export class IgxExpansionPanelDescriptionDirective implements OnInit {
     @HostBinding('class.igx-expansion-panel__header-description')
     public cssClass = `igx-expansion-panel__header-description`;
+
+    @HostBinding('attr.title')
+    public title: string;
+
+    constructor(private element: ElementRef) {}
+
+    public ngOnInit() {
+        this.title = getTooltipContent(this.element);
+    }
 }
 
 /**
