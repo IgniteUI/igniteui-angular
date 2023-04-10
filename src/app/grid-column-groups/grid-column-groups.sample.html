@@ -1,6 +1,6 @@
 <section style="height: 800px" class="sample-content">
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
-        <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+        <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
     </ng-template>
     <igx-grid [allowFiltering]="true" [moving]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
         <igx-grid-toolbar [displayDensity]="grid.displayDensity">
@@ -19,7 +19,7 @@
                 <igx-column [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column" #ind >
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column [hidden]="s" [resizable]="true" field="ID" [editable]="true"></igx-column>

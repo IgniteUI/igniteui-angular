@@ -120,9 +120,7 @@
 
 <ng-template #headerTemplate let-column>
     <div class="igx-grid__tr--header">
-        <igx-icon [attr.draggable]="false"
-                  (click)="toggleColumn(column)">
-                  {{getColumnGroupExpandState(column) ? 'chevron_right' : 'expand_more'}}</igx-icon>
+        <igx-icon (click)="toggleColumn(column)">{{getColumnGroupExpandState(column) ? 'chevron_right' : 'expand_more'}}</igx-icon>
         {{column.header}}
     </div>
 </ng-template>
