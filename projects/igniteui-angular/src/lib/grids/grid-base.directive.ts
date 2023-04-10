@@ -3713,7 +3713,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
                 .subscribe(() => {
                     this.selectionService.clear(true);
-                    this.paginator.page = 0;
+                    this.page = 0;
                     this.crudService.endEdit(false);
                     this.notifyChanges();
                 });
@@ -4399,8 +4399,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
-            newIndex = index - this.paginator.perPage * this.paginator.page;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
+            newIndex = index - this.perPage * this.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
         }
@@ -7041,7 +7041,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.paginator.perPage * this.paginator.page) : row;
+            row = this.paginator && (this.pagingMode === GridPagingMode.Local && source === this.filteredSortedData) ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -7224,11 +7224,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this.paginator && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
-            const page = Math.floor(rowIndex / this.paginator.perPage);
+            const page = Math.floor(rowIndex / this.perPage);
 
-            if (this.paginator.page !== page) {
+            if (this.page !== page) {
                 delayScrolling = true;
-                this.paginator.page = page;
+                this.page = page;
             }
         }
 
