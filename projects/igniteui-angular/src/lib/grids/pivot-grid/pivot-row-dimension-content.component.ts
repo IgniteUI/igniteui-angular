@@ -2,8 +2,11 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    createComponent,
     ElementRef,
+    EnvironmentInjector,
     Inject,
+    Injector,
     Input,
     OnChanges,
     QueryList,
@@ -68,6 +71,8 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     constructor(
         @Inject(IGX_GRID_BASE) public grid: PivotGridType,
         protected ref: ElementRef<HTMLElement>,
+        protected injector: Injector,
+        protected envInjector: EnvironmentInjector,
         protected cdr: ChangeDetectorRef,
         protected viewRef: ViewContainerRef
     ) {
@@ -147,7 +152,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     protected _createColComponent(field: string, header: string, dim: IPivotDimension) {
-        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector});
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';

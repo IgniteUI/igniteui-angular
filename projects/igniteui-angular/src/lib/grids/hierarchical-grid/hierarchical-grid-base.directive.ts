@@ -1,8 +1,10 @@
 import {
     ApplicationRef,
     ChangeDetectorRef,
+    createComponent,
     Directive,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     Inject,
     Injector,
@@ -163,6 +165,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         appRef: ApplicationRef,
         moduleRef: NgModuleRef<any>,
         injector: Injector,
+        protected envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -186,6 +189,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             appRef,
             moduleRef,
             injector,
+            envInjector,
             navigation,
             filteringService,
             overlayService,
@@ -235,7 +239,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
+        const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         ref.changeDetectorRef.detectChanges();
         const mirror = reflectComponentType(IgxColumnGroupComponent);
         mirror.inputs.forEach((input) => {
@@ -256,7 +260,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         const mirror = reflectComponentType(IgxColumnComponent);
         mirror.inputs.forEach((input) => {
             const propName = input.propName;

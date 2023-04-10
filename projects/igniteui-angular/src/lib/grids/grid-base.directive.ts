@@ -7,9 +7,11 @@ import {
     ComponentRef,
     ContentChild,
     ContentChildren,
+    createComponent,
     Directive,
     DoCheck,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -3353,7 +3355,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
         private moduleRef: NgModuleRef<any>,
-        private injector: Injector,
+        protected injector: Injector,
+        protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -3832,14 +3835,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private createComponentInstance(component: any) {
-        const injector = this.moduleRef
-        ? this.moduleRef.injector
-        : this.injector;
-        const dynamicComponent: ComponentRef<any> = this.viewRef.createComponent(component, { injector: injector } );
-        // move to app ref's views.
-        const index = this.viewRef.indexOf(dynamicComponent.hostView);
-        const viewRef = this.viewRef.detach(index);
-        this.appRef.attachView(viewRef);
+        const dynamicComponent: ComponentRef<any> = createComponent(component, { environmentInjector: this.envInjector, elementInjector: this.injector } );
+        this.appRef.attachView(dynamicComponent.hostView);
         return dynamicComponent;
     }
 
@@ -7145,7 +7142,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector});
+            const ref = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
