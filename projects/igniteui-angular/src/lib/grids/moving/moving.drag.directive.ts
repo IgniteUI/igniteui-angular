@@ -52,36 +52,33 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     }
 
     public onPointerDown(event: Event) {
-        if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
+        if (!this.draggable) {
             return;
         }
 
-        event.preventDefault();
-        event.stopPropagation();
-
-        this._removeOnDestroy = false;
-        this.cms.column = this.column;
-        this.ghostClass = this._ghostClass;
-
         super.onPointerDown(event);
-        this.column.grid.cdr.detectChanges();
-
-        const args = {
-            source: this.column
-        };
-        this.column.grid.columnMovingStart.emit(args);
-
-        this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                this.onEscape(ev);
-            }
-        });
     }
 
     public onPointerMove(event: Event) {
-        event.preventDefault();
-        super.onPointerMove(event);
+        if (this._clicked && !this._dragStarted) {
+            this._removeOnDestroy = false;
+            this.cms.column = this.column;
+            this.ghostClass = this._ghostClass;
+            this.column.grid.cdr.detectChanges();
 
+            const movingStartArgs = {
+                source: this.column
+            };
+            this.column.grid.columnMovingStart.emit(movingStartArgs);
+
+            this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+                if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
+                    this.onEscape(ev);
+                }
+            });
+        }
+
+        super.onPointerMove(event);
         if (this._dragStarted && this.ghostElement && !this.cms.column) {
             this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();
