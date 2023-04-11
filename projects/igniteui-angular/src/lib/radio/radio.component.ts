@@ -566,10 +566,10 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
         if (this.ngControl) {
             if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                 // the control is not disabled and is touched or dirty
-                if (this.checked) {
-                    this._invalid = this.ngControl.invalid;
-                } else {
-                    this._invalid = this.required ? true : false;
+                this._invalid = this.ngControl.invalid;
+                
+                if (!this.checked && this.required) {
+                    this._invalid = true;
                 }
             } else {
                 //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
