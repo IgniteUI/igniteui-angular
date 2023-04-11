@@ -2163,9 +2163,10 @@
     }
 
     %igx-group-label__count-badge {
-        > div {
-            background: var-get($theme, 'group-count-background');
-            color: var-get($theme, 'group-count-text-color');
+        --background-color: #{var-get($theme, 'group-count-background')};
+        --text-color: #{var-get($theme, 'group-count-text-color')};
+
+        > span {
             font-size: $grid-head-fs;
         }
     }
