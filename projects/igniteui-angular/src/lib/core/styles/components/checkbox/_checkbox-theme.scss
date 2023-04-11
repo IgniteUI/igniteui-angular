@@ -213,7 +213,7 @@
 
     %cbx-composite--x {
         border-color: var-get($theme, 'fill-color');
-        background: var-get($theme, 'fill-color');
+        // background: var-get($theme, 'fill-color');
 
         &::after {
             background: var-get($theme, 'fill-color');
@@ -232,7 +232,7 @@
 
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
-        background: var-get($theme, 'error-color');
+        // background: var-get($theme, 'error-color');
 
         &::after {
             background: var-get($theme, 'error-color');
@@ -242,10 +242,20 @@
     %cbx-composite--x--fluent {
         @if $variant == 'fluent' {
             border-color: var-get($theme, 'fill-color-hover');
-            background: var-get($theme, 'fill-color-hover');
+            // background: var-get($theme, 'fill-color-hover');
 
             &::after {
                 background: var-get($theme, 'fill-color-hover');
+            }
+        }
+    }
+
+    %cbx-composite--x--invalid--fluent {
+        @if $variant == 'fluent' {
+            border-color: var-get($theme, 'error-color-hover');
+
+            &::after {
+                background: var-get($theme, 'error-color-hover');
             }
         }
     }
@@ -346,6 +356,36 @@
                 &::before {
                     border-color: var-get($theme, 'disabled-color');
                     background: var-get($theme, 'disabled-color');
+                }
+            }
+        }
+    }
+
+    %igx-checkbox--indeterminate--invalid {
+        @if $variant == 'material' {
+            %cbx-composite--x {
+                &::after {
+                    background: var-get($theme, 'error-color');
+                }
+            }
+        }
+
+        @if $variant == 'fluent' {
+            %cbx-composite {
+                border-color: var-get($theme, 'error-color');
+            
+                &::before {
+                    border-color: var-get($theme, 'error-color');
+                }
+            }
+
+            &:hover {
+                %cbx-composite {
+                    border-color: var-get($theme, 'error-color-hover');
+
+                    &::before {
+                        border-color: var-get($theme, 'error-color-hover');
+                    }
                 }
             }
         }
