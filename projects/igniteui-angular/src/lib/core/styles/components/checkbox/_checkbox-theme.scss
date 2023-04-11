@@ -362,11 +362,9 @@
     }
 
     %igx-checkbox--indeterminate--invalid {
-        @if $variant == 'material' {
-            %cbx-composite--x {
-                &::after {
-                    background: var-get($theme, 'error-color');
-                }
+        %cbx-composite--x {
+            &::after {
+                background: var-get($theme, 'error-color');
             }
         }
 
