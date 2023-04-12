@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject, Output, EventEmitter } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -206,13 +206,11 @@ export class IgxGridStateDirective {
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
-                const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
-                const groupFactory = context.resolver.resolveComponentFactory(IgxColumnGroupComponent);
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     delete colState.columnGroup;
                     if (hasColumnGroup) {
-                        const ref1 = groupFactory.create(context.viewRef.injector);
+                        const ref1 = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                         Object.assign(ref1.instance, colState);
                         ref1.instance.grid = context.currGrid;
                         if (ref1.instance.parent) {
@@ -223,7 +221,7 @@ export class IgxGridStateDirective {
                         ref1.changeDetectorRef.detectChanges();
                         newColumns.push(ref1.instance);
                     } else {
-                        const ref = factory.create(context.viewRef.injector);
+                        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
                         Object.assign(ref.instance, colState);
                         ref.instance.grid = context.currGrid;
                         if (ref.instance.parent) {
@@ -274,11 +272,11 @@ export class IgxGridStateDirective {
                 if (!context.currGrid.paginator) {
                     return;
                 }
-                if (context.currGrid.paginator.perPage !== state.recordsPerPage) {
-                    context.currGrid.paginator.perPage = state.recordsPerPage;
+                if (context.currGrid.perPage !== state.recordsPerPage) {
+                    context.currGrid.perPage = state.recordsPerPage;
                     context.currGrid.cdr.detectChanges();
                 }
-                context.currGrid.paginator.page = state.index;
+                context.currGrid.page = state.index;
             }
         },
         moving: {
@@ -467,8 +465,7 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() @Inject(IGX_GRID_BASE) public grid: GridType,
-        private resolver: ComponentFactoryResolver,
-        private viewRef: ViewContainerRef) { }
+        private viewRef: ViewContainerRef, private envInjector: EnvironmentInjector,  private injector: Injector) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.

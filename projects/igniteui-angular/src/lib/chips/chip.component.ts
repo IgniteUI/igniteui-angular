@@ -11,7 +11,8 @@
     Renderer2,
     TemplateRef,
     Inject,
-    Optional
+    Optional,
+    OnDestroy
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
@@ -24,7 +25,7 @@ import {
 import { IBaseEventArgs } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
@@ -79,7 +80,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent extends DisplayDensityBase {
+export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -218,13 +219,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @Input()
     public selectIcon: TemplateRef<any>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    public class = '';
 
     /**
      * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
@@ -465,26 +459,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     public dragDrop = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    public get hostClass(): string {
-        const classes = [this.getComponentDensityClass('igx-chip')];
-
-        // Add the base class first for each density
-        if (!classes.includes('igx-chip')) {
-            classes.unshift('igx-chip');
-        }
-
-        classes.push(this.disabled ? 'igx-chip--disabled' : '');
-
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ').toString().trim();
-    }
-
-    /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
      *
      * @example
@@ -563,6 +537,12 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     public hideBaseElement = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject();
+
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
@@ -572,6 +552,20 @@ export class IgxChipComponent extends DisplayDensityBase {
     constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
+    }
+
+    @HostBinding('class')
+    private get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-chip')];
+
+        // Add the base class first for each density
+        if (!classes.includes('igx-chip')) {
+            classes.unshift('igx-chip');
+        }
+
+        classes.push(this.disabled ? 'igx-chip--disabled' : '');
+
+        return classes.join(' ').toString().trim();
     }
 
     /**
@@ -866,5 +860,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.selectedChange.emit(this._selected);
             }
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

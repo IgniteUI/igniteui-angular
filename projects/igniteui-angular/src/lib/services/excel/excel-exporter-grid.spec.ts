@@ -747,6 +747,21 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
+
+        it('Should escape special chars in headers', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            grid.columnList.get(1).header = '&';
+            grid.columnList.get(2).header = '<>';
+            grid.columnList.get(3).header = '"';
+            grid.columnList.get(4).header = '\'';
+
+
+            await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
+        });
     });
 
     describe('', () => {
@@ -1215,6 +1230,15 @@ describe('Excel Exporter', () => {
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
+        });
+
+        it('should export grouped grid with only multi column headers', async () => {
+            grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            grid.columnList.get(0).hidden = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersWithGroupedData, false);
         });
     });
 

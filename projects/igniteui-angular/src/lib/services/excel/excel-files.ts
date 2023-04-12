@@ -260,7 +260,7 @@ export class WorksheetFile implements IExcelFile {
                             recordHeaders = worksheetData.rootKeys;
                         } else {
                             recordHeaders = worksheetData.owner.columns
-                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.MultiRowHeader && c.headerType !== HeaderType.RowHeader && !c.skip)
+                                .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
                                 .sort((a, b) => a.startIndex-b.startIndex)
                                 .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
                                 .map(c => c.field);
@@ -610,7 +610,7 @@ export class WorksheetFile implements IExcelFile {
                     ? startValue + owner.maxLevel + 2
                     : this.rowIndex
 
-                const columnValue = dictionary.saveValue(currentCol.header, true);
+                const columnValue = dictionary.saveValue(currentCol.header, true, false);
 
                 columnCoordinate = (currentCol.field === GRID_LEVEL_COL
                     ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
