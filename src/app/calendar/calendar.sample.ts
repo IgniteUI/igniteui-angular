@@ -1,16 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChangeEventArgs } from 'igniteui-angular';
-import { IgxCalendarComponent as IgxCalendarComponent_1 } from '../../../projects/igniteui-angular/src/lib/calendar/calendar.component';
+import { IgxCalendarComponent } from '../../../projects/igniteui-angular/src/lib/calendar/calendar.component';
 import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { DateRangeType } from '../../../projects/igniteui-angular/src/lib/core/dates';
+import { IViewDateChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/calendar/public_api';
 
 @Component({
     selector: 'app-calendar-sample',
     templateUrl: 'calendar.sample.html',
     styleUrls: ['calendar.sample.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxRippleDirective, IgxCardComponent, IgxCalendarComponent_1]
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxCardComponent, IgxCalendarComponent]
 })
 export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true })

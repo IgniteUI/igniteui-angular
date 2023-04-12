@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxCarouselComponent, CarouselIndicatorsOrientation } from 'igniteui-angular';
+import { NgFor, NgIf } from '@angular/common';
+
 import { IgxCarouselIndicatorDirective } from '../../../projects/igniteui-angular/src/lib/carousel/carousel.directives';
 import { IgxSlideComponent } from '../../../projects/igniteui-angular/src/lib/carousel/slide.component';
-import { IgxCarouselComponent as IgxCarouselComponent_1 } from '../../../projects/igniteui-angular/src/lib/carousel/carousel.component';
+import { CarouselIndicatorsOrientation, IgxCarouselComponent } from '../../../projects/igniteui-angular/src/lib/carousel/carousel.component';
 import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { NgFor, NgIf } from '@angular/common';
 import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
@@ -17,7 +17,7 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
     standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent_1, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
 })
 export class CarouselSampleComponent {
     @ViewChild('car', { static: true })

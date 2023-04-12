@@ -1,10 +1,9 @@
 import { Component, PipeTransform, Pipe, ViewChild, forwardRef } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { worldInfo, attractions } from './data';
-import { IgxDialogComponent } from 'igniteui-angular';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxDialogComponent as IgxDialogComponent_1 } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
 import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
 import { IgxDropDownGroupComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-group.component';
 import { NgFor } from '@angular/common';
@@ -21,7 +20,7 @@ const ATTRACTIONS_CUSTOM_WIDTH = '300px';
     styleUrls: ['autocomplete.sample.scss'],
     templateUrl: `autocomplete.sample.html`,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxAutocompleteDirective, IgxDropDownComponent, NgFor, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxDialogComponent_1, IgxButtonDirective, IgxSwitchComponent, forwardRef(() => AutocompletePipeContains), forwardRef(() => AutocompleteGroupPipeContains)]
+    imports: [FormsModule, ReactiveFormsModule, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxAutocompleteDirective, IgxDropDownComponent, NgFor, IgxDropDownGroupComponent, IgxDropDownItemComponent, IgxDialogComponent, IgxButtonDirective, IgxSwitchComponent, forwardRef(() => AutocompletePipeContains), forwardRef(() => AutocompleteGroupPipeContains)]
 })
 export class AutocompleteSampleComponent {
     @ViewChild('alert', { read: IgxDialogComponent, static: true })

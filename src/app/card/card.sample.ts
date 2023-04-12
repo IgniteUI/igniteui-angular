@@ -1,12 +1,10 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import {
-    IgxExpansionPanelComponent
-} from 'igniteui-angular';
+
 import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
 import { IgxListComponent, IgxListLineTitleDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
 import { IgxExpansionPanelBodyComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-body.component';
-import { IgxExpansionPanelComponent as IgxExpansionPanelComponent_1 } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.component';
+import { IgxExpansionPanelComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.component';
 import { FormsModule } from '@angular/forms';
 import { IgxSliderComponent } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
@@ -75,7 +73,29 @@ const detailsFactory = (params: any): Idetails => ({
     styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html',
     standalone: true,
-    imports: [IgxCardComponent, IgxCardMediaDirective, IgxCardHeaderComponent, IgxCardContentDirective, IgxDividerDirective, NgFor, IgxChipComponent, IgxCardActionsComponent, IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxSliderComponent, FormsModule, IgxExpansionPanelComponent_1, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxAvatarComponent, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective]
+    imports: [
+        NgFor,
+        FormsModule,
+        IgxCardComponent,
+        IgxCardMediaDirective,
+        IgxCardHeaderComponent,
+        IgxCardContentDirective,
+        IgxDividerDirective,
+        IgxChipComponent,
+        IgxCardActionsComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxSliderComponent,
+        IgxExpansionPanelComponent,
+        IgxExpansionPanelBodyComponent,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListLineTitleDirective,
+        IgxAvatarComponent,
+        IgxCardHeaderTitleDirective,
+        IgxCardHeaderSubtitleDirective
+    ]
 })
 export class CardSampleComponent {
     @ViewChild(IgxExpansionPanelComponent, { static: true })

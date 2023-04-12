@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ButtonGroupAlignment, IgxButtonGroupComponent } from 'igniteui-angular';
 import { IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
 import { NgFor } from '@angular/common';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxButtonGroupComponent as IgxButtonGroupComponent_1 } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { ButtonGroupAlignment, IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 interface IButton {
     ripple?: string;
@@ -43,7 +42,7 @@ class Button {
     selector: 'app-buttongroup-sample',
     templateUrl: 'buttonGroup.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent_1, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent, NgFor, IgxLayoutDirective]
 })
 
 export class ButtonGroupSampleComponent implements OnInit {
