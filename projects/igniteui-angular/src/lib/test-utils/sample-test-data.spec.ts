@@ -215,13 +215,13 @@ export class SampleTestData {
         { ID: 5, HireDate: new Date(2020, 4, 17).toISOString() },
     ]);
 
-    /* Data fields: Name: string, BirthDate: date, LastLogin: dateTime, MeetingTime: time; 5 items. */
-    public static personDateData = () => ([
-        { Name: 'Casey Houston', BirthDate: new Date(1990, 2, 14), LastLogin: new Date(2023, 3, 28).setHours(13, 12, 36), MeetingTime: new Date(2023, 6, 7).setHours(10, 30, 1) },
-        { Name: 'Gilberto Todd', BirthDate: new Date(1985, 4, 17), LastLogin: new Date(2023, 3, 14).setHours(14, 25, 23), MeetingTime: new Date(2023, 6, 7).setHours(9, 35, 31)},
-        { Name: 'Tanya Bennett', BirthDate: new Date(1987, 6, 19), LastLogin: new Date(2023, 2, 23).setHours(19, 7, 13), MeetingTime: new Date(2023, 6, 7).setHours(13, 10, 36)},
-        { Name: 'Jack Simon', BirthDate: new Date(1995, 8, 23), LastLogin: new Date(2023, 1, 27).setHours(17, 17, 41), MeetingTime: new Date(2023, 6, 7).setHours(14, 50, 47)},
-        { Name: 'Celia Martinez', BirthDate: new Date(1994, 10, 27), LastLogin: new Date(2023, 2, 14).setHours(1, 31, 49), MeetingTime: new Date(2023, 6, 7).setHours(7, 0, 17)}
+    /* Data fields: Name: string, BirthDate: date, LastLogin: dateTime, MeetingTime: time, AttendanceRate: percent; 5 items. */
+    public static personMeetingData = () => ([
+        { Name: 'Casey Houston', BirthDate: new Date(1990, 2, 14), LastLogin: new Date(2023, 3, 28).setHours(13, 12, 36), MeetingTime: new Date(2023, 6, 7).setHours(10, 30, 1), AttendanceRate: 0.78 },
+        { Name: 'Gilberto Todd', BirthDate: new Date(1985, 4, 17), LastLogin: new Date(2023, 3, 14).setHours(14, 25, 23), MeetingTime: new Date(2023, 6, 7).setHours(9, 35, 31), AttendanceRate: 0.46 },
+        { Name: 'Tanya Bennett', BirthDate: new Date(1987, 6, 19), LastLogin: new Date(2023, 2, 23).setHours(19, 7, 13), MeetingTime: new Date(2023, 6, 7).setHours(13, 10, 36), AttendanceRate: 0.289 },
+        { Name: 'Jack Simon', BirthDate: new Date(1995, 8, 23), LastLogin: new Date(2023, 1, 27).setHours(17, 17, 41), MeetingTime: new Date(2023, 6, 7).setHours(14, 50, 47), AttendanceRate: 1 },
+        { Name: 'Celia Martinez', BirthDate: new Date(1994, 10, 27), LastLogin: new Date(2023, 2, 14).setHours(1, 31, 49), MeetingTime: new Date(2023, 6, 7).setHours(7, 0, 17), AttendanceRate: 0.384 }
     ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
@@ -453,7 +453,7 @@ export class SampleTestData {
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
         { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
     ]);
-    
+
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = () => ([{
@@ -1781,7 +1781,7 @@ export class SampleTestData {
             JobTitle: 'Director'
         }
     ]);
-    
+
     public static employeeGroupByData = () => ([
         {
             ID: 475,

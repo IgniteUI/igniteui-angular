@@ -371,9 +371,10 @@ export class WorksheetFile implements IExcelFile {
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
             const isTime = targetCol?.dataType === 'time';
+            const isPercent = targetCol?.dataType === 'percent';
             const isDateTime = targetCol?.dataType === 'dateTime';
 
-            const format = isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+            const format = isPercent ? ` s="12"` : isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
