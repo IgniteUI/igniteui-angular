@@ -1,4 +1,27 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, DoCheck, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DoCheck,
+    ElementRef,
+    HostBinding,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    reflectComponentType,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    ViewContainerRef
+} from '@angular/core';
 import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
@@ -153,7 +176,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
-        private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) { }
 
     /**
@@ -204,10 +226,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     private setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
-        const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
+        const mirror = reflectComponentType(IgxGridComponent);
         // exclude outputs related to two-way binding functionality
-        const inputNames = factory.inputs.map(input => input.propName);
-        const outputs = factory.outputs.filter(o => {
+        const inputNames = mirror.inputs.map(input => input.propName);
+        const outputs = mirror.outputs.filter(o => {
             const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
             return inputNames.indexOf(matchingInputPropName) === -1;
         });

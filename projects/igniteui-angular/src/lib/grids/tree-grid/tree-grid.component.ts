@@ -14,16 +14,17 @@ import {
     NgZone,
     Inject,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
     IterableDiffers,
     ViewContainerRef,
     Optional,
     LOCALE_ID,
     ApplicationRef,
-    NgModuleRef,
     Injector,
+    EnvironmentInjector,
     CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
+import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -53,7 +54,6 @@ import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { DOCUMENT, NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 import { HierarchicalTransactionService } from '../../services/transaction/hierarchical-transaction';
 import { IgxOverlayService } from '../../services/overlay/overlay';
@@ -118,7 +118,44 @@ let NEXT_ID = 0;
         IgxForOfScrollSyncService
     ],
     standalone: true,
-    imports: [IgxGridHeaderRowComponent, IgxGridBodyDirective, IgxGridDragSelectDirective, NgIf, IgxColumnMovingDropDirective, NgClass, NgFor, NgTemplateOutlet, IgxGridForOfDirective, IgxTemplateOutletDirective, IgxTreeGridRowComponent, NgStyle, IgxSummaryRowComponent, IgxOverlayOutletDirective, IgxToggleDirective, IgxCircularProgressBarComponent, IgxSnackbarComponent, IgxButtonDirective, IgxRippleDirective, IgxRowEditTabStopDirective, IgxIconComponent, IgxGridColumnResizerComponent, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe, IgxSummaryDataPipe, IgxTreeGridHierarchizingPipe, IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridFilteringPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe, IgxTreeGridSummaryPipe, IgxTreeGridNormalizeRecordsPipe, IgxTreeGridAddRowPipe],
+    imports: [
+        NgIf,
+        NgFor,
+        NgClass,
+        NgStyle,
+        NgTemplateOutlet,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxTreeGridRowComponent,
+        IgxSummaryRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxRowEditTabStopDirective,
+        IgxIconComponent,
+        IgxGridColumnResizerComponent,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxTreeGridHierarchizingPipe,
+        IgxTreeGridFlatteningPipe,
+        IgxTreeGridSortingPipe,
+        IgxTreeGridFilteringPipe,
+        IgxTreeGridPagingPipe,
+        IgxTreeGridTransactionPipe,
+        IgxTreeGridSummaryPipe,
+        IgxTreeGridNormalizeRecordsPipe,
+        IgxTreeGridAddRowPipe
+    ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
@@ -427,12 +464,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
+        envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -444,7 +480,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory,
-            _elementRef, _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation,
+            _elementRef, _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 

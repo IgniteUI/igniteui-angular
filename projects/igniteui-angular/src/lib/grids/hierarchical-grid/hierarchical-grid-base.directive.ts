@@ -1,19 +1,20 @@
 import {
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
+    createComponent,
     Directive,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     Inject,
     Injector,
     Input,
     IterableDiffers,
     LOCALE_ID,
-    NgModuleRef,
     NgZone,
     Optional,
     Output,
+    reflectComponentType,
     TemplateRef,
     ViewChild,
     ViewContainerRef
@@ -158,12 +159,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
+        envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -182,12 +182,11 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             zone,
             document,
             cdr,
-            resolver,
             differs,
             viewRef,
             appRef,
-            moduleRef,
             injector,
+            envInjector,
             navigation,
             filteringService,
             overlayService,
@@ -212,8 +211,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.updateColumns(result);
         this.initPinning();
 
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
+        const mirror = reflectComponentType(IgxColumnComponent);
+        const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columns.forEach(column => {
                 if (column[output.propName]) {
@@ -237,10 +236,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColGroupComponent(col: IgxColumnGroupComponent) {
-        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
-        const ref = this.viewRef.createComponent(IgxColumnGroupComponent, { injector: this.viewRef.injector });
+        const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         ref.changeDetectorRef.detectChanges();
-        factoryGroup.inputs.forEach((input) => {
+        const mirror = reflectComponentType(IgxColumnGroupComponent);
+        mirror.inputs.forEach((input) => {
             const propName = input.propName;
             ref.instance[propName] = col[propName];
         });
@@ -258,9 +257,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 
     protected _createColComponent(col) {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const ref = this.viewRef.createComponent(IgxColumnComponent, { injector: this.viewRef.injector });
-        factoryColumn.inputs.forEach((input) => {
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
+        const mirror = reflectComponentType(IgxColumnComponent);
+        mirror.inputs.forEach((input) => {
             const propName = input.propName;
             if (!(col[propName] instanceof IgxSummaryOperand)) {
                 ref.instance[propName] = col[propName];

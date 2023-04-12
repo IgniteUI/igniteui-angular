@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ElementRef,
     forwardRef,
     HostBinding, Inject, Input, ViewContainerRef
@@ -50,7 +49,6 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef
     ) {
         super(grid, selectionService, element, cdr);

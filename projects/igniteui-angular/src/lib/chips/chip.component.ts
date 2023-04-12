@@ -11,14 +11,15 @@
     Renderer2,
     TemplateRef,
     Inject,
-    Optional
+    Optional,
+    OnDestroy
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
 import { IgxIconComponent } from '../icon/icon.component';
 import { NgClass, NgTemplateOutlet, NgIf } from '@angular/common';
@@ -77,7 +78,7 @@ let CHIP_ID = 0;
     standalone: true,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, NgIf, IgxIconComponent]
 })
-export class IgxChipComponent extends DisplayDensityBase {
+export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -534,6 +535,12 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     public hideBaseElement = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject();
+
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
@@ -851,5 +858,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.selectedChange.emit(this._selected);
             }
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }
