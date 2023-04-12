@@ -445,7 +445,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader && !c.skip)
+                    .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -1017,7 +1017,10 @@ export abstract class IgxBaseExporter {
         }
 
         let previousKey = ''
-        const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns[0].field;
+        const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns
+            .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
+            .sort((a, b) => a.startIndex - b.startIndex)
+            .sort((a, b) => a.pinnedIndex - b.pinnedIndex)[0].field;
 
         for (const record of records) {
             let recordVal = record.value;

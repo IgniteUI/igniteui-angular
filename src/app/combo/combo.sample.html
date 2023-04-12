@@ -107,6 +107,39 @@
     </section>
 
     <section class="combo-sample__section">
+        <h1 class="combo-sample__title">Simple combo that opens on clear by handling its selectionChanging event</h1>
+        <igx-simple-combo  
+                    #simpleComboOpenOnClear
+                    [displayDensity]="'comfortable'"
+                    [(ngModel)]="singleValue"
+                    type="border"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''" 
+                    (selectionChanging)="handleSelectionChanging($event)">
+                <label igxLabel>States</label>
+        </igx-simple-combo>
+        <h1 class="combo-sample__title">Simple combo that opens after its templated clear icon is clicked</h1>
+        <igx-simple-combo  
+                    #simpleComboOpenOnClearWithTemplate
+                    [displayDensity]="'comfortable'"
+                    [(ngModel)]="singleValue"
+                    type="border"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [disabled]="isDisabled"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''" >
+                <label igxLabel>States</label>
+                <ng-template igxComboClearIcon>
+                    <igx-icon (click)="simpleComboOpenOnClearWithTemplate.open()">cancel</igx-icon>
+                </ng-template>
+        </igx-simple-combo>
+    </section>
+
+    <section class="combo-sample__section">
         <h1 class="combo-sample__title">Template items</h1>
 
         <div class="combo-sample__row combo-sample__row--buttons">
@@ -145,7 +178,7 @@
         <igx-combo #playgroundCombo [placeholder]="'Locations'"
             [showSearchCaseIcon]='true'
             (addition)="handleAddition($event)"
-            (selectionChanging)="handleSelectionChange($event)"
+            (selectionChanging)="handleSelectionChanging($event)"
             [data]="items"
             [allowCustomValues]="customValuesFlag"
             [autoFocusSearch]="autoFocusSearch"
