@@ -1,23 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {
-    IgxDropDownComponent,
-    ConnectedPositioningStrategy,
-    OverlaySettings,
-    NoOpScrollStrategy,
-    IgxOverlayOutletDirective
-} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
 import { foods } from './foods';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { IgxDropDownGroupComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-group.component';
 import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { NgFor } from '@angular/common';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective as IgxOverlayOutletDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { ConnectedPositioningStrategy, NoOpScrollStrategy, OverlaySettings } from '../../../projects/igniteui-angular/src/lib/services/public_api';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -25,7 +20,21 @@ import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss'],
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective, IgxDropDownComponent_1, NgFor, IgxDropDownItemComponent, IgxToggleDirective, IgxDropDownGroupComponent, IgxInputGroupComponent, IgxInputDirective, IgxRippleDirective, IgxOverlayOutletDirective_1]
+    imports: [
+        NgFor,
+        IgxButtonGroupComponent,
+        IgxButtonDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxToggleActionDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxToggleDirective,
+        IgxDropDownGroupComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxRippleDirective,
+        IgxOverlayOutletDirective
+    ]
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

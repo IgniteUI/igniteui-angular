@@ -1,12 +1,7 @@
-import {
-    IgxExpansionPanelComponent,
-    growVerIn,
-    growVerOut,
-    IExpansionPanelEventArgs,
-    ExpansionPanelHeaderIconPosition
-} from 'igniteui-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
+
 import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
@@ -14,11 +9,12 @@ import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/di
 import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { IgxExpansionPanelBodyComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-body.component';
-import { NgIf } from '@angular/common';
 import { IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.directives';
-import { IgxExpansionPanelHeaderComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-header.component';
-import { IgxExpansionPanelComponent as IgxExpansionPanelComponent_1 } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.component';
+import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-header.component';
+import { IgxExpansionPanelComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { growVerIn, growVerOut } from '../../../projects/igniteui-angular/src/lib/animations/main';
+import { IExpansionPanelEventArgs } from '../../../projects/igniteui-angular/src/lib/expansion-panel/public_api';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -26,7 +22,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxExpansionPanelComponent_1, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
+    imports: [IgxButtonDirective, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class ExpansionPanelSampleComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })

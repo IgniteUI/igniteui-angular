@@ -1,15 +1,18 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { RemoteService } from 'src/app/shared/remote.service';
-import { Observable } from 'rxjs';
-import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective, DisplayDensity, VerticalAlignment } from 'igniteui-angular';
 import { AsyncPipe } from '@angular/common';
-import { IgxToastComponent as IgxToastComponent_1 } from '../../../../projects/igniteui-angular/src/lib/toast/toast.component';
+
+import { Observable } from 'rxjs';
+
+import { RemoteService } from 'src/app/shared/remote.service';
+import { IgxToastComponent } from '../../../../projects/igniteui-angular/src/lib/toast/toast.component';
 import { IgxDropDownItemComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IgxForOfDirective as IgxForOfDirective_1 } from '../../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
-import { IgxDropDownComponent as IgxDropDownComponent_1 } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IForOfState, IgxForOfDirective } from '../../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
+import { IgxDropDownComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { DisplayDensity } from '../../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { VerticalAlignment } from '../../../../projects/igniteui-angular/src/lib/services/public_api';
 
 interface DataItem {
   name: string;
@@ -20,7 +23,7 @@ interface DataItem {
     templateUrl: './drop-down-virtual.component.html',
     styleUrls: ['./drop-down-virtual.component.scss'],
     standalone: true,
-    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent_1, IgxForOfDirective_1, IgxDropDownItemComponent, IgxToastComponent_1, AsyncPipe]
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   @ViewChild('loadingToast', { read: IgxToastComponent, static: true })
