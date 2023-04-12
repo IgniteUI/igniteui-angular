@@ -2144,6 +2144,63 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(1);
             }));
 
+            it('Should respect the changes of the groups applied from the context menu.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Verify the filter changes are applied.
+                expect(grid.filteredData.length).toEqual(0);
+
+                // Open Advanced Filtering dialog.
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+
+                // Verify tree layout before the group change through context menu.
+                let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(2);
+                
+                // Select two chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
+                tick(200);
+
+                // Click "Create Or Group" in context menu.
+                const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+                buttons[2].click();
+                tick(100);
+                fix.detectChanges();
+                         
+                // Close dialog through API.
+                grid.closeAdvancedFilteringDialog(true);
+                tick(100);
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                grid.openAdvancedFilteringDialog();
+                fix.detectChanges();
+                
+                // Verify tree layout after the group change through context menu.
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(3);
+                
+                // Verify the filter changes are applied.
+                expect(grid.filteredData.length).toEqual(3);
+            }));
+
+
             it('Should delete all selected conditions when the \'delete filters\' option from context menu is clicked.',
             fakeAsync(() => {
                 // Apply advanced filter through API.
