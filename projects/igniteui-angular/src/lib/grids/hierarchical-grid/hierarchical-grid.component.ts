@@ -4,7 +4,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ContentChild,
     ContentChildren,
     DoCheck,
@@ -15,6 +14,7 @@ import {
     OnDestroy,
     OnInit,
     QueryList,
+    reflectComponentType,
     SimpleChanges,
     TemplateRef,
     ViewChild,
@@ -95,7 +95,12 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid', { static: true })
+    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    public container: ViewContainerRef;
+
+    /**
+     * @hidden
+     */
     public hGrid: IgxHierarchicalGridComponent;
 
     /**
@@ -148,13 +153,15 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     constructor(
         @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
-        private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
      */
     public ngOnInit() {
+        const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        this.hGrid = ref.instance;
+        this.hGrid.data = this.data.childGridsData[this.layout.key];
         this.layout.layoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -196,10 +203,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     private setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
-        const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
+        const mirror = reflectComponentType(IgxGridComponent);
         // exclude outputs related to two-way binding functionality
-        const inputNames = factory.inputs.map(input => input.propName);
-        const outputs = factory.outputs.filter(o => {
+        const inputNames = mirror.inputs.map(input => input.propName);
+        const outputs = mirror.outputs.filter(o => {
             const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
             return inputNames.indexOf(matchingInputPropName) === -1;
         });

@@ -14,14 +14,13 @@ import {
     NgZone,
     Inject,
     ChangeDetectorRef,
-    ComponentFactoryResolver,
     IterableDiffers,
     ViewContainerRef,
     Optional,
     LOCALE_ID,
     ApplicationRef,
-    NgModuleRef,
-    Injector
+    Injector,
+    EnvironmentInjector
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -395,12 +394,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         _zone: NgZone,
         @Inject(DOCUMENT) document: any,
         cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
+        envInjector: EnvironmentInjector,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService,
@@ -412,7 +410,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
     ) {
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
-            _zone, document, cdr, resolver, differs, viewRef, appRef, moduleRef, injector, navigation, filteringService,
+            _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation, filteringService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
     }
 
