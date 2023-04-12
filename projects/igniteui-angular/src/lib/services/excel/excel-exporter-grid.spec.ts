@@ -765,7 +765,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
         });
 
-        it('Should export date, dateTime and time columns correctly', async () => {
+        it('Should export date, dateTime, time and percent columns correctly', async () => {
             const fix = TestBed.createComponent(GridUserMeetingDataComponent);
             fix.detectChanges();
             await wait();

@@ -1484,18 +1484,18 @@ export class FileContentData {
 
     public get exportGriWithDateData() {
         this._sharedStringsData =
-            `count="9" uniqueCount="9"><si><t>Name</t></si><si><t>BirthDate</t></si><si><t>LastLogin</t></si><si><t>MeetingTime</t></si><si><t>Casey Houston</t></si><si><t>Gilberto Todd</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Celia Martinez</t></si>`;
+            `count="10" uniqueCount="10"><si><t>Name</t></si><si><t>BirthDate</t></si><si><t>LastLogin</t></si><si><t>MeetingTime</t></si><si><t>AttendanceRate</t></si><si><t>Casey Houston</t></si><si><t>Gilberto Todd</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Celia Martinez</t></si>`;
 
         this._tableData =
-            `ref="A1:D6" totalsRowShown="0">
-            <autoFilter ref="A1:D6"/><tableColumns count="4"><tableColumn id="1" name="Name"/><tableColumn id="2" name="BirthDate"/><tableColumn id="3" name="LastLogin"/><tableColumn id="4" name="MeetingTime"/></tableColumns>`;
+            `ref="A1:E6" totalsRowShown="0">
+            <autoFilter ref="A1:E6"/><tableColumns count="5"><tableColumn id="1" name="Name"/><tableColumn id="2" name="BirthDate"/><tableColumn id="3" name="LastLogin"/><tableColumn id="4" name="MeetingTime"/><tableColumn id="5" name="AttendanceRate"/></tableColumns>`;
 
         this._worksheetData =
-            `<dimension ref="A1:D6"/>
+            `<dimension ref="A1:E6"/>
             <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
             <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
-            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/></cols>
-            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2"><c r="A2" t="s"><v>4</v></c><c r="B2" t="d" s="2"><v>1990-03-14T00:00:00</v></c><c r="C2" t="d" s="11"><v>2023-04-28T13:12:36</v></c><c r="D2" t="d" s="10"><v>2023-07-07T10:30:01</v></c></row><row r="3"><c r="A3" t="s"><v>5</v></c><c r="B3" t="d" s="2"><v>1985-05-17T00:00:00</v></c><c r="C3" t="d" s="11"><v>2023-04-14T14:25:23</v></c><c r="D3" t="d" s="10"><v>2023-07-07T09:35:31</v></c></row><row r="4"><c r="A4" t="s"><v>6</v></c><c r="B4" t="d" s="2"><v>1987-07-19T00:00:00</v></c><c r="C4" t="d" s="11"><v>2023-03-23T19:07:13</v></c><c r="D4" t="d" s="10"><v>2023-07-07T13:10:36</v></c></row><row r="5"><c r="A5" t="s"><v>7</v></c><c r="B5" t="d" s="2"><v>1995-09-23T00:00:00</v></c><c r="C5" t="d" s="11"><v>2023-02-27T17:17:41</v></c><c r="D5" t="d" s="10"><v>2023-07-07T14:50:47</v></c></row><row r="6"><c r="A6" t="s"><v>8</v></c><c r="B6" t="d" s="2"><v>1994-11-27T00:00:00</v></c><c r="C6" t="d" s="11"><v>2023-03-14T01:31:49</v></c><c r="D6" t="d" s="10"><v>2023-07-07T07:00:17</v></c></row></sheetData>`;
+            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c></row><row r="2"><c r="A2" t="s"><v>5</v></c><c r="B2" t="d" s="2"><v>1990-03-14T00:00:00</v></c><c r="C2" t="d" s="11"><v>2023-04-28T13:12:36</v></c><c r="D2" t="d" s="10"><v>2023-07-07T10:30:01</v></c><c r="E2" s="12"><v>0.78</v></c></row><row r="3"><c r="A3" t="s"><v>6</v></c><c r="B3" t="d" s="2"><v>1985-05-17T00:00:00</v></c><c r="C3" t="d" s="11"><v>2023-04-14T14:25:23</v></c><c r="D3" t="d" s="10"><v>2023-07-07T09:35:31</v></c><c r="E3" s="12"><v>0.46</v></c></row><row r="4"><c r="A4" t="s"><v>7</v></c><c r="B4" t="d" s="2"><v>1987-07-19T00:00:00</v></c><c r="C4" t="d" s="11"><v>2023-03-23T19:07:13</v></c><c r="D4" t="d" s="10"><v>2023-07-07T13:10:36</v></c><c r="E4" s="12"><v>0.289</v></c></row><row r="5"><c r="A5" t="s"><v>8</v></c><c r="B5" t="d" s="2"><v>1995-09-23T00:00:00</v></c><c r="C5" t="d" s="11"><v>2023-02-27T17:17:41</v></c><c r="D5" t="d" s="10"><v>2023-07-07T14:50:47</v></c><c r="E5" s="12"><v>1</v></c></row><row r="6"><c r="A6" t="s"><v>9</v></c><c r="B6" t="d" s="2"><v>1994-11-27T00:00:00</v></c><c r="C6" t="d" s="11"><v>2023-03-14T01:31:49</v></c><c r="D6" t="d" s="10"><v>2023-07-07T07:00:17</v></c><c r="E6" s="12"><v>0.384</v></c></row></sheetData>`;
 
         return this.createData();
     }
