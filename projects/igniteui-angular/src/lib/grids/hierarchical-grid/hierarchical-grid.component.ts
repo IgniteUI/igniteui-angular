@@ -95,7 +95,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    @ViewChild('container', {read: ViewContainerRef, static: true})
     public container: ViewContainerRef;
 
     /**
@@ -410,21 +410,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents.first :
             super.excelStyleFilteringComponent;
-    }
-
-    /**
-     * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**

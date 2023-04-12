@@ -1090,18 +1090,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get data(): any[] | null {
         return this._data;
     }
-    /**
-     * Sets an array of objects containing the filtered data.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
-    }
 
     /**
      * Returns an array of objects containing the filtered data.

@@ -249,6 +249,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -257,7 +258,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -339,20 +342,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets/Sets an array of objects containing the filtered data.
+     * Gets an array of objects containing the filtered data.
      *
      * @example
      * ```typescript
      * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
      * ```
      */
     public get filteredData() {
         return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
