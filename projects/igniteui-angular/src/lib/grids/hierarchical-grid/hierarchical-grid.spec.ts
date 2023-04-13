@@ -2061,4 +2061,3 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
-
