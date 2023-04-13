@@ -198,7 +198,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     @HostListener('click', ['$event'])
     protected handleClick(event: MouseEvent) {
         event.stopPropagation();
-        this.selected.nativeElement.focus();
+
+        if (this.selected) {
+            this.selected.nativeElement.focus();
+        }
     }
 
     @HostListener('keydown', ['$event'])

@@ -469,10 +469,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider,
             if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
                 // the control is not disabled and is touched or dirty
                 this._invalid = this.ngControl.invalid;
-
-                if (!this.checked && this.required) {
-                    this._invalid = true;
-                }
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the switch or when the form/control is reset
