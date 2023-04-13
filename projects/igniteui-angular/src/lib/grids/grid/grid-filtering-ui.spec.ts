@@ -2084,12 +2084,49 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // iterate over unary conditions
             // empty
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
+            expect(grid.filteringRow.expression.condition.name).toEqual('empty');
 
-            grid.filteringRow.onClearClick();
+            const filterUIRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const reset = filterUIRow.queryAll(By.css('button'))[0];
+
+            reset.triggerEventHandler('click', null);
             tick(100);
             fix.detectChanges();
 
             expect(grid.filteringRow.expression.condition.name).toEqual('contains');
+        }));
+
+        it('should reset expression to selected unary condition', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+
+            const filterUIRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
+
+            // Equals condition
+            datePicker.triggerEventHandler('click', null);
+            tick();
+            fix.detectChanges();
+
+            const currentDay = document.querySelector('.igx-calendar__date--current');
+
+            currentDay.dispatchEvent(new Event('click'));
+            tick();
+            fix.detectChanges();
+
+            expect(grid.filteringRow.expression.condition.name).toEqual('equals');
+            expect(grid.rowList.length).toEqual(1);
+
+            // This Month condition
+            const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
+            GridFunctions.openFilterDDAndSelectCondition(fix, 6);
+            tick();
+            fix.detectChanges();
+
+            expect(grid.filteringRow.expression.condition.name).toEqual('thisMonth');
+            expect(grid.rowList.length).toEqual(expectedResults[5]);
+
+            const conditionChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(conditionChips.length).toBe(1);
         }));
 
         it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {

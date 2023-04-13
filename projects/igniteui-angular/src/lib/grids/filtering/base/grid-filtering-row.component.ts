@@ -68,14 +68,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public set value(val) {
-        if (!val && val !== 0) {
+        if (!val && val !== 0 && this.expression.searchVal) {
             this.expression.searchVal = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
             if (index === 0 && this.expressionsList.length === 1) {
                 this.filteringService.clearFilter(this.column.field);
 
                 if (this.expression.condition.isUnary) {
-                    this.resetExpression();
+                    this.resetExpression(this.expression.condition.name);
                 }
 
                 return;
@@ -767,7 +767,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.showHideArrowButtons();
     }
 
-    private resetExpression() {
+    private resetExpression(condition?: string) {
         this.expression = {
             fieldName: this.column.field,
             condition: null,
@@ -776,7 +776,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         };
 
         if (this.column.dataType !== GridColumnDataType.Boolean) {
-            this.expression.condition = this.getCondition(this.conditions[0]);
+            this.expression.condition = this.getCondition(condition ?? this.conditions[0]);
         }
 
         if (this.column.dataType === GridColumnDataType.Date && this.input) {
