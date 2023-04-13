@@ -28,7 +28,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         this.arrange_sorting_expressions();
     }
 
-    public clear_groupby(name?: string | Array<string>) {
+    public override clear_groupby(name?: string | Array<string>) {
         const groupingState = cloneArray(this.grid.groupingExpressions);
 
         if (name) {
@@ -149,7 +149,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         return recordId;
     }
 
-    public remove_grouping_expression(fieldName: string) {
+    public override remove_grouping_expression(fieldName: string) {
         const groupingExpressions = this.grid.groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
         if (index !== -1) {

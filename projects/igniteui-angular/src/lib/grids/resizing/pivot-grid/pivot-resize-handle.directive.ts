@@ -34,16 +34,16 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     @Input('igxPivotResizeHandleHeader')
     public rowHeaderGroup: PivotRowHeaderGroupType;
 
-    constructor(protected zone: NgZone,
-        protected element: ElementRef,
-        public colResizingService: IgxPivotColumnResizingService) {
+    constructor(zone: NgZone,
+        element: ElementRef,
+        public override colResizingService: IgxPivotColumnResizingService) {
         super(zone, element, colResizingService);
     }
 
     /**
      * @hidden
      */
-    public onDoubleClick() {
+    public override onDoubleClick() {
         this._dblClick = true;
         this.initResizeService();
         this.rowHeaderGroup.grid.autoSizeRowDimension(this.rowHeaderGroup.parent.rootDimension);
@@ -52,7 +52,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     /**
      * @hidden
      */
-    protected initResizeService(event = null) {
+    protected override initResizeService(event = null) {
         super.initResizeService(event);
         this.colResizingService.rowHeaderGroup = this.rowHeaderGroup;
     }

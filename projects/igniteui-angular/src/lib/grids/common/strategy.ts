@@ -211,7 +211,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
 export class IgxDataRecordSorting extends IgxSorting {
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected override getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
         return super.getFieldValue(obj.data, key, isDate, isTime);
     }
 }

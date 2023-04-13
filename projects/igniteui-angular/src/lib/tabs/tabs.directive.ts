@@ -112,9 +112,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     /** @hidden */
     protected _disableAnimation = false;
     /** @hidden */
-    protected currentItem: IgxTabItemDirective;
+    protected override currentItem: IgxTabItemDirective;
     /** @hidden */
-    protected previousItem: IgxTabItemDirective;
+    protected override previousItem: IgxTabItemDirective;
     /** @hidden */
     protected componentName: string;
 
