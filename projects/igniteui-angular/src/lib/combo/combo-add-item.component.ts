@@ -16,9 +16,6 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     public set selected(value: boolean) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public clicked(event?) {// eslint-disable-line
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();

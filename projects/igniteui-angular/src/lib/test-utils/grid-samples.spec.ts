@@ -21,6 +21,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { ExpressionUI } from '../grids/filtering/excel-style/common';
 import { IDataCloneStrategy } from '../data-operations/data-clone-strategy';
 import { ColumnType } from '../grids/common/grid.interface';
+import { IgxPaginatorComponent } from '../paginator/public_api';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -326,10 +327,15 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.productBasic, '', '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class ProductsComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
+
+    public paging = false;
+
+    @ViewChild(IgxPaginatorComponent)
+    public paginator: IgxPaginatorComponent;
 }
 
 @Component({
@@ -1538,13 +1544,14 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
         <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
-        <igx-paginator *ngIf='grid.paging'></igx-paginator>
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
     public data = SampleTestData.excelFilteringData();
     public formatter = (value: any) => `** ${value} **`;
     public allowFiltering = false;
+    public paging = false;
 }
 
 @Component({

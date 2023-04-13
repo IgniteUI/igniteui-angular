@@ -369,9 +369,9 @@
         align-items: center;
 
         igx-icon {
+            width: sizable(rem(18px), rem(20px), rem(24px)) ;
+            height: sizable(rem(18px), rem(20px), rem(24px)) ;
             font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
-            width: auto;
-            height: auto;
         }
 
         @if $indigo-theme {
@@ -393,8 +393,8 @@
 
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {
-            width: auto;
-            height: auto;
+            width: sizable(rem(18px), rem(20px), rem(24px)) ;
+            height: sizable(rem(18px), rem(20px), rem(24px)) ;
             font-size: sizable(rem(18px), rem(20px), rem(24px)) !important;
         }
     }
@@ -534,7 +534,7 @@
         height: var(--size);
         position: relative;
         max-width: 100%;
-        font-size: 1rem;
+        font-size: rem(16px);
 
         &::after {
             content: '';
@@ -637,6 +637,7 @@
         width: auto;
         min-width: 0;
         height: 100%;
+        position: relative;
 
         grid-area: 1 / 2;
     }
@@ -653,10 +654,6 @@
         grid-area: 1 / 4;
     }
 
-    %form-group-bundle--box,
-    %form-group-bundle--border {
-        grid-template-columns: auto auto 1fr auto;
-    }
 
     %form-group-bundle-start,
     %form-group-bundle-end {
@@ -677,8 +674,7 @@
     }
 
     %form-group-bundle--border {
-        --size: #{sizable(rem(40px), rem(48px), rem(56px))};
-
+        grid-template-columns: auto auto 1fr auto;
         display: grid;
         align-items: initial;
         padding: 0;
@@ -787,7 +783,6 @@
         padding-block: 0;
         border: none;
         outline-style: none;
-        color: inherit;
         z-index: 1;
     }
 
@@ -873,7 +868,7 @@
         position: absolute;
         max-width: 100%;
         padding-inline-end: rem(4px);
-        line-height: 1;
+        line-height: normal;
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
@@ -905,7 +900,7 @@
     }
 
     %form-group-label--float {
-        --floating-label-position: -106%;
+        --floating-label-position: -73%;
         transform: translateY(var(--floating-label-position));
         font-size: rem(12px);
     }
@@ -1584,10 +1579,9 @@
 
     // Label
     %fluent-label {
-        display: inline-flex;
+        display: block;
         font-size: rem(14px);
         font-weight: 600;
-        line-height: 1 !important;
         position: static;
         transform: translateY(0);
         transform-origin: top left;
@@ -1902,7 +1896,6 @@
 
     %form-group-input {
         @include type-style($input-text) {
-            font-size: 16px;
             margin: 0;
         }
     }

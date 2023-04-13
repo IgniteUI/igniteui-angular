@@ -73,12 +73,12 @@
     @include b(igx-card-actions) {
         @extend %igx-card-actions !optional;
 
-        @include e(icons) {
-            @extend %igx-card-actions__icons !optional;
+        @include e(start) {
+            @extend %igx-card-actions__start !optional;
         }
 
-        @include e(buttons) {
-            @extend %igx-card-actions__buttons !optional;
+        @include e(end) {
+            @extend %igx-card-actions__end !optional;
         }
 
         @include e(igroup) {
@@ -102,42 +102,42 @@
         @include m(vertical) {
             @extend %igx-card-actions--vertical !optional;
 
-            @include e(icons) {
-                @extend %igx-card-actions__icons--vertical !optional;
+            @include e(start) {
+                @extend %igx-card-actions__start--vertical !optional;
             }
 
-            @include e(buttons) {
-                @extend %igx-card-actions__buttons--vertical !optional;
+            @include e(end) {
+                @extend %igx-card-actions__end--vertical !optional;
             }
         }
 
         @include m(reverse) {
-            @include e(icons) {
-                @extend %igx-card-actions__icons--reverse !optional;
+            @include e(start) {
+                @extend %igx-card-actions__start--reverse !optional;
             }
 
-            @include e(buttons) {
-                @extend %igx-card-actions__buttons--reverse !optional;
+            @include e(end) {
+                @extend %igx-card-actions__end--reverse !optional;
             }
         }
 
         @include mx(vertical, reverse) {
-            @include e(icons) {
-                @extend %igx-card-actions__icons--vertical-reverse !optional;
+            @include e(start) {
+                @extend %igx-card-actions__start--vertical-reverse !optional;
             }
 
-            @include e(buttons) {
-                @extend %igx-card-actions__buttons--vertical-reverse !optional;
+            @include e(end) {
+                @extend %igx-card-actions__end--vertical-reverse !optional;
             }
         }
 
         @include m(justify) {
-            @include e(icons) {
-                @extend %igx-card-actions__icons--justify !optional;
+            @include e(start) {
+                @extend %igx-card-actions__start--justify !optional;
             }
 
-            @include e(buttons) {
-                @extend %igx-card-actions__buttons--justify !optional;
+            @include e(end) {
+                @extend %igx-card-actions__end--justify !optional;
             }
         }
     }

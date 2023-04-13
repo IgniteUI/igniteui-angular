@@ -6,7 +6,7 @@ import { IgxGridModule, IGridCellEventArgs } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -1785,20 +1785,21 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await waitForSelectionChange(fix.componentInstance.grid);
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await waitForSelectionChange(fix.componentInstance.grid);
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
@@ -2166,8 +2167,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // scroll right
                 grid.headerContainer.getScroll().scrollLeft = 800;
-                fix.detectChanges();
                 await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
 
                 // focus first pinned cell
                 const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -2492,33 +2493,33 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             grid.width = '500px';
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // navigate down to cell in a row that is in the DOM but is not in view (half-visible row)
             let col = grid.getColumnByName('ContactTitle');
             grid.navigateTo(2, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at bottom of grid
             let cell = grid.gridAPI.get_cell_by_index(2, 'ContactTitle');
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
             let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
             // there is 2px border at the bottom now
             expect(diff).toBe(0);
-    
+
             // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
             col = grid.getColumnByName('CompanyName');
             grid.navigateTo(0, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at top of grid
             cell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
             diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
             expect(diff).toBe(0);
         });
-    
+
         it('navigateTo method should work in multi-row layout grid when scrolling to bottom.', async () => {
             fix.componentInstance.colGroups = [
                 {
@@ -2553,29 +2554,29 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             grid.width = '500px';
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // navigate to cell in a row is not in the DOM
             let col = grid.getColumnByName('CompanyName');
             grid.navigateTo(10, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at bottom of grid
             let cell = grid.gridAPI.get_cell_by_index(10, 'CompanyName');
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50 * 10);
             let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
             // there is 2px border at the bottom now
             expect(diff).toBe(0);
-    
+
             // navigate right to cell in column that is in DOM but is not in view
             col = grid.getColumnByName('City');
             grid.navigateTo(10, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at right edge of grid
             cell = grid.gridAPI.get_cell_by_index(10, 'City');
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(100);
@@ -2583,33 +2584,33 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
             await wait();
             expect(diff).toBe(0);
-    
+
             // navigate left to cell in column that is in DOM but is not in view
             col = grid.getColumnByName('CompanyName');
             grid.navigateTo(10, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at left edge of grid
             cell = grid.gridAPI.get_cell_by_index(10, 'CompanyName');
             expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
             // check if cell right left is visible
             diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
             expect(diff).toBe(0);
-    
+
             // navigate to cell in column that is not in DOM
-    
+
             col = grid.getColumnByName('ID');
             grid.navigateTo(9, col.visibleIndex);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-    
+
             // cell should be at right edge of grid
             cell = grid.gridAPI.get_cell_by_index(9, 'ID');
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(250);
