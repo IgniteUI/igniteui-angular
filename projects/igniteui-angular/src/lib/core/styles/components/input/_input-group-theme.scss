@@ -534,7 +534,7 @@
         height: var(--size);
         position: relative;
         max-width: 100%;
-        font-size: 1rem;
+        font-size: rem(16px);
 
         &::after {
             content: '';
@@ -1896,7 +1896,6 @@
 
     %form-group-input {
         @include type-style($input-text) {
-            font-size: 16px;
             margin: 0;
         }
     }

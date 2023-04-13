@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    ComponentFactoryResolver,
     ElementRef,
     HostBinding,
     Inject,
@@ -22,9 +21,10 @@ import {
     ViewChildren,
     ViewContainerRef,
     Injector,
-    NgModuleRef,
     ApplicationRef,
-    ContentChild
+    ContentChild,
+    createComponent,
+    EnvironmentInjector
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -927,12 +927,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         zone: NgZone,
         @Inject(DOCUMENT) public document,
         cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         appRef: ApplicationRef,
-        moduleRef: NgModuleRef<any>,
         injector: Injector,
+        envInjector: EnvironmentInjector,
         navigation: IgxPivotGridNavigationService,
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -951,12 +950,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             zone,
             document,
             cdr,
-            resolver,
             differs,
             viewRef,
             appRef,
-            moduleRef,
             injector,
+            envInjector,
             navigation,
             filteringService,
             overlayService,
@@ -2005,9 +2003,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected generateDimensionColumns(): IgxColumnComponent[] {
         const rootFields = this.allDimensions.map(x => x.memberName);
         const columns = [];
-        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         rootFields.forEach((field) => {
-            const ref = factory.create(this.viewRef.injector);
+            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
             ref.instance.field = field;
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
@@ -2037,11 +2034,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected generateColumnHierarchy(fields: Map<string, any>, data, parent = null): IgxColumnComponent[] {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
         let columns = [];
         if (fields.size === 0) {
             this.values.forEach((value) => {
-                const ref = factoryColumn.create(this.viewRef.injector);
+                const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                 ref.instance.header = value.displayName;
                 ref.instance.field = value.member;
                 ref.instance.parent = parent;
@@ -2062,7 +2058,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const col = this.createColumnForDimension(value, data, parent, this.hasMultipleValues);
                 columns.push(col);
                 if (this.hasMultipleValues) {
-                    const measureChildren = this.getMeasureChildren(factoryColumn, data, col, false, value.dimension.width);
+                    const measureChildren = this.getMeasureChildren(data, col, false, value.dimension.width);
                     col.children.reset(measureChildren);
                     columns = columns.concat(measureChildren);
                 }
@@ -2076,7 +2072,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                 const filteredChildren = children.filter(x => x.level === col.level + 1);
                 columns.push(col);
                 if (this.hasMultipleValues) {
-                    let measureChildren = this.getMeasureChildren(factoryColumn, data, col, true, value.dimension.width);
+                    let measureChildren = this.getMeasureChildren(data, col, true, value.dimension.width);
                     const nestedChildren = filteredChildren;
                     //const allChildren = children.concat(measureChildren);
                     col.children.reset(nestedChildren);
@@ -2085,7 +2081,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         const sibling = this.createColumnForDimension(value, data, parent, true);
                         columns.push(sibling);
 
-                        measureChildren = this.getMeasureChildren(factoryColumn, data, sibling, false, value.dimension?.width);
+                        measureChildren = this.getMeasureChildren(data, sibling, false, value.dimension?.width);
                         sibling.children.reset(measureChildren);
                         columns = columns.concat(measureChildren);
                     }
@@ -2105,12 +2101,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected createColumnForDimension(value: any, data: any, parent: ColumnType, isGroup: boolean) {
-        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const factoryColumnGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
         const key = value.value;
         const ref = isGroup ?
-            factoryColumnGroup.create(this.viewRef.injector) :
-            factoryColumn.create(this.viewRef.injector);
+            createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector }) :
+            createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         ref.instance.header = parent != null ? key.split(parent.header + this.pivotKeys.columnDimensionSeparator)[1] : key;
         ref.instance.field = key;
         ref.instance.parent = parent;
@@ -2132,13 +2126,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.minColumnWidth + 'px';
     }
 
-    protected getMeasureChildren(colFactory, data, parent, hidden, parentWidth) {
+    protected getMeasureChildren(data, parent, hidden, parentWidth) {
         const cols = [];
         const count = this.values.length;
         const childWidth = parseInt(parentWidth, 10) / count;
         const isPercent = parentWidth && parentWidth.indexOf('%') !== -1;
         this.values.forEach(val => {
-            const ref = colFactory.create(this.viewRef.injector);
+            const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
             ref.instance.header = val.displayName || val.member;
             ref.instance.field = parent.field + this.pivotKeys.columnDimensionSeparator + val.member;
             ref.instance.parent = parent;
