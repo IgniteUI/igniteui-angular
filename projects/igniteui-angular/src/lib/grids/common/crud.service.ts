@@ -62,22 +62,22 @@ export class IgxEditRow {
 export class IgxAddRow extends IgxEditRow {
     public isAddRow = true;
 
-    constructor(public id: any,
-        public index: number,
-        public data: any,
+    constructor(id: any,
+        index: number,
+        data: any,
         public recordRef: any,
-        public grid: GridType) {
+        grid: GridType) {
         super(id, index, data, grid);
     }
 
-    public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
+    public override createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args = super.createEditEventArgs(includeNewValue, event);
         args.oldValue = null;
         args.isAddRow = true;
         return args;
     }
 
-    public createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
+    public override createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const args = super.createDoneEditEventArgs(null, event);
         args.isAddRow = true;
         return args;
@@ -304,7 +304,6 @@ export class IgxCellCrudState {
     }
 }
 export class IgxRowCrudState extends IgxCellCrudState {
-    public row: IgxEditRow | null = null;
     public closeRowEditingOverlay = new Subject();
 
     private _rowEditingBlocked = false;
@@ -519,7 +518,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     /**
      * @hidden @internal
      */
-    public endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs {
+    public override endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs {
         const isAddRow = this.row && this.row.getClassName() === IgxAddRow.name;
         if (isAddRow) {
             this.grid.rowAdded.pipe(first()).subscribe((addRowArgs: IRowDataEventArgs) => {
@@ -570,7 +569,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         return this.grid.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
     }
 
-    protected getParentRowId() {
+    protected override getParentRowId() {
         if (this.addRowParent.asChild) {
             return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
         } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {

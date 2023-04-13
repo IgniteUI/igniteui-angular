@@ -62,10 +62,10 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * ```
      */
     @Input()
-    public get animationSettings(): ToggleAnimationSettings {
+    public override get animationSettings(): ToggleAnimationSettings {
         return this._animationSettings;
     }
-    public set animationSettings(value: ToggleAnimationSettings) {
+    public override set animationSettings(value: ToggleAnimationSettings) {
         this._animationSettings = value;
     }
 
@@ -213,7 +213,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     public header: IgxExpansionPanelHeaderComponent;
 
     constructor(
-        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private cdr: ChangeDetectorRef,
         private elementRef?: ElementRef) {
         super(animationService);
