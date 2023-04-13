@@ -9,7 +9,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
-    constructor(@Inject(IgxAngularAnimationService) protected animationService: AnimationService) {
+    constructor(@Inject(IgxAngularAnimationService) animationService: AnimationService) {
         super(animationService);
     }
 }

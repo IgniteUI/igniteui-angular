@@ -9,13 +9,13 @@ import { IgxSelectBase } from './select.common';
     selector: '[igxSelectItemNavigation]'
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
-    protected _target: IgxSelectBase = null;
+    protected override _target: IgxSelectBase = null;
 
     @Input('igxSelectItemNavigation')
-    public get target(): IgxSelectBase {
+    public override get target(): IgxSelectBase {
         return this._target;
     }
-    public set target(target: IgxSelectBase) {
+    public override set target(target: IgxSelectBase) {
         this._target = target ? target : this.dropdown as IgxSelectBase;
     }
 
@@ -24,7 +24,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     }
 
     /** Captures keydown events and calls the appropriate handlers on the target component */
-    public handleKeyDown(event: KeyboardEvent) {
+    public override handleKeyDown(event: KeyboardEvent) {
         if (!event) {
             return;
         }

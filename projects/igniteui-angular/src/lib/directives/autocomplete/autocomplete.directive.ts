@@ -92,10 +92,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocomplete')
-    public get target(): IgxDropDownComponent {
+    public override get target(): IgxDropDownComponent {
         return this._target as IgxDropDownComponent;
     }
-    public set target(v: IgxDropDownComponent) {
+    public override set target(v: IgxDropDownComponent) {
         this._target = v;
     }
 
@@ -267,7 +267,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    public handleKeyDown(event) {
+    public override handleKeyDown(event) {
         if (!this.collapsed && !this._composing) {
             switch (event.key.toLowerCase()) {
                 case 'space':
@@ -283,22 +283,22 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    public onArrowDownKeyDown() {
+    public override onArrowDownKeyDown() {
         super.onArrowDownKeyDown();
     }
 
     /** @hidden  @internal */
-    public onArrowUpKeyDown() {
+    public override onArrowUpKeyDown() {
         super.onArrowUpKeyDown();
     }
 
     /** @hidden  @internal */
-    public onEndKeyDown() {
+    public override onEndKeyDown() {
         super.onEndKeyDown();
     }
 
     /** @hidden  @internal */
-    public onHomeKeyDown() {
+    public override onHomeKeyDown() {
         super.onHomeKeyDown();
     }
 
