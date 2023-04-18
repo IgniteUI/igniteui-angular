@@ -25,8 +25,7 @@ import {
 import {IBaseEventArgs, mkenum} from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { fromEvent, Subject } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 export const IgxChipTypeVariant = mkenum({
     PRIMARY: 'primary',
