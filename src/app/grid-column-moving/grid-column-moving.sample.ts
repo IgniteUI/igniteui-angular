@@ -20,7 +20,7 @@ import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/di
 import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 
 @Component({
     providers: [],

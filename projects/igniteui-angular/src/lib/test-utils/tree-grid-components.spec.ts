@@ -3,7 +3,7 @@ import { NgIf } from '@angular/common';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult, IPinningConfig, IgxColumnComponent } from '../grids/public_api';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';

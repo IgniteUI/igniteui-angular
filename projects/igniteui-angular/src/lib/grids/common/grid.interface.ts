@@ -8,7 +8,7 @@ import {
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs
 } from '../common/events';
-import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
+import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';

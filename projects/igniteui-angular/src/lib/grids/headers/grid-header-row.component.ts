@@ -11,7 +11,7 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { ColumnType, GridType, IgxHeadSelectorTemplateContext } from '../common/grid.interface';

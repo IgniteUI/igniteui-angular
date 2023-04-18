@@ -10,7 +10,7 @@ import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angul
 import { IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { IgxCsvExporterService, IgxExcelExporterService } from '../../../projects/igniteui-angular/src/lib/services/public_api';
 import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 

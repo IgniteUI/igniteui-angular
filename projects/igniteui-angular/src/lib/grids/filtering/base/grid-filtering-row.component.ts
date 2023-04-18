@@ -24,7 +24,7 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { ISelectionEventArgs } from '../../../drop-down/drop-down.common';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
-import { DisplayDensity } from '../../../core/displayDensity';
+import { DisplayDensity } from '../../../core/density';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { isEqual, PlatformUtil } from '../../../core/utils';

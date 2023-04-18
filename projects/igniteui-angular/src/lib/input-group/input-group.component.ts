@@ -11,7 +11,7 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import {
     DisplayDensity, DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions
-} from '../core/displayDensity';
+} from '../core/density';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { mkenum, PlatformUtil } from '../core/utils';

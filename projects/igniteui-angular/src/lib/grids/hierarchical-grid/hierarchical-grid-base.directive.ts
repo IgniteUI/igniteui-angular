@@ -23,7 +23,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/density';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';

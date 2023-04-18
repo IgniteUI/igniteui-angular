@@ -27,7 +27,7 @@ import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableBrowserEventArgs, cloneArray, IBaseCancelableBrowserEventArgs, IBaseEventArgs, isNaNvalue, rem } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';

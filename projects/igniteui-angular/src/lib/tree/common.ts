@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 

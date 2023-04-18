@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxFilteringService } from '../grid-filtering.service';
-import { DisplayDensity } from '../../../core/displayDensity';
+import { DisplayDensity } from '../../../core/density';
 import { ExpressionUI } from '../excel-style/common';
 import { IgxChipsAreaComponent } from '../../../chips/chips-area.component';
 import { IBaseChipEventArgs, IgxChipComponent } from '../../../chips/chip.component';

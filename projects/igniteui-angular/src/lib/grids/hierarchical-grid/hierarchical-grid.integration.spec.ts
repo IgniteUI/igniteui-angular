@@ -19,7 +19,7 @@ import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-fu
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;

@@ -14,7 +14,7 @@
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/density';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';

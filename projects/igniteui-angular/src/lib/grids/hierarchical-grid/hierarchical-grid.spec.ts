@@ -8,7 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowEditActionsDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';

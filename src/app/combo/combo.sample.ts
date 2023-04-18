@@ -21,7 +21,7 @@ import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from 
 import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
 import { IForOfState } from '../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { ConnectedPositioningStrategy, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
 import { scaleInCenter, scaleOutCenter } from '../../../projects/igniteui-angular/src/lib/animations/scale';
 
@@ -335,7 +335,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         if ('added' in evt) {
             this.hasSelection = !!evt?.newSelection.length;
             return;
-        } 
+        }
 
         if (!evt.newSelection) {
             this.simpleComboOpenOnClear.open();

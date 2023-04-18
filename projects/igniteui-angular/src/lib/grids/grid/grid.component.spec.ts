@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from './public_api';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';

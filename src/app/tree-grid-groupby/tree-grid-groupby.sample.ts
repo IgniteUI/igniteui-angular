@@ -10,7 +10,7 @@ import { IgxTreeGridGroupByAreaComponent } from '../../../projects/igniteui-angu
 import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { IGroupingExpression } from '../../../projects/igniteui-angular/src/lib/data-operations/grouping-expression.interface';
 import { DefaultSortingStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
 import { ITreeGridRecord, TreeGridFilteringStrategy } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/public_api';

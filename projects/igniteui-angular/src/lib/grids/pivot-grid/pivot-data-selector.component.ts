@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { fadeIn, fadeOut } from "../../animations/fade";
-import { DisplayDensity } from "../../core/displayDensity";
+import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";

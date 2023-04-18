@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { AnimationService } from '../services/animation/animation';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';

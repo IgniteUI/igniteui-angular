@@ -11,7 +11,7 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
 import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxButtonDirective } from '../directives/button/button.directive';

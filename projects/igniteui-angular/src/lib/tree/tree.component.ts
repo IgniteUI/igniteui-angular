@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 

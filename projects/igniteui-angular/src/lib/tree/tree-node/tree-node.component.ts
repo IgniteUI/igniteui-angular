@@ -19,7 +19,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';

@@ -11,7 +11,7 @@ import { IgxDropDownComponent } from '../../../../projects/igniteui-angular/src/
 import { IgxDropDownItemNavigationDirective } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
 import { IgxToggleActionDirective } from '../../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { DisplayDensity } from '../../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../../projects/igniteui-angular/src/lib/core/density';
 import { VerticalAlignment } from '../../../../projects/igniteui-angular/src/lib/services/public_api';
 
 interface DataItem {

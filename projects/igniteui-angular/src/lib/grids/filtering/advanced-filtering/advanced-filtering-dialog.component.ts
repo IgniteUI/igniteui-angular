@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { PlatformUtil } from '../../../core/utils';
 import { FieldType, GridType } from '../../common/grid.interface';
-import { DisplayDensity } from '../../../core/displayDensity';
+import { DisplayDensity } from '../../../core/density';
 import { IgxQueryBuilderComponent } from '../../../query-builder/query-builder.component';
 import { CurrentResourceStrings } from '../../../core/i18n/resources';
 import { GridResourceStringsEN } from '../../../core/i18n/grid-resources';

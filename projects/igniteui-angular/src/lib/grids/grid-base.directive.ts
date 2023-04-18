@@ -60,7 +60,7 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/density';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';

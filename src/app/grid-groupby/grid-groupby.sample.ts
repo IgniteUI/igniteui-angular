@@ -12,7 +12,7 @@ import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-a
 import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { DefaultSortingStrategy, GroupMemberCountSortingStrategy, ISortingExpression, SortingDirection } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
 import { GridSummaryCalculationMode, GridSummaryPosition } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 import { IRowSelectionEventArgs, ISortingOptions } from '../../../projects/igniteui-angular/src/lib/grids/public_api';

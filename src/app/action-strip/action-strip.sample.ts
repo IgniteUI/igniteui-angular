@@ -11,7 +11,7 @@ import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from '../../
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 import { IDataCloneStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/data-clone-strategy';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { IGridEditEventArgs, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 

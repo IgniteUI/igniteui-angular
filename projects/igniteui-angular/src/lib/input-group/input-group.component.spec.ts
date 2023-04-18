@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
-import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
+import { DisplayDensityToken, DisplayDensity } from '../core/density';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';

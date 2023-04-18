@@ -17,7 +17,7 @@ import { Component, ElementRef, EventEmitter, QueryList, Renderer2, ViewChild } 
 import { By } from '@angular/platform-browser';
 import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
 import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';

@@ -17,7 +17,7 @@ import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 import { GridSelectionMode, GridSummaryCalculationMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../../projects/igniteui-angular/src/lib/services/public_api';
 
 export class MySummaryOperand extends IgxSummaryOperand {

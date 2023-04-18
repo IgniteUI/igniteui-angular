@@ -3,7 +3,7 @@ import { fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
-import { DisplayDensity } from "../../core/displayDensity";
+import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
 import { IgxExpansionPanelHeaderComponent } from '../../expansion-panel/expansion-panel-header.component';
 import { IgxExpansionPanelComponent } from '../../expansion-panel/expansion-panel.component';

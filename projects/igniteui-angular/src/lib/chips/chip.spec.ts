@@ -6,7 +6,7 @@ import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';

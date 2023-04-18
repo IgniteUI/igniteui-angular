@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {

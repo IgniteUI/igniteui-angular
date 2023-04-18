@@ -9,7 +9,7 @@ import {
     Optional
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/density';
 import { IgxIconService } from '../../icon/icon.service';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';

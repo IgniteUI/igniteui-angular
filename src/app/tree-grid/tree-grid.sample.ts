@@ -19,7 +19,7 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 import { TreeGridFilteringStrategy } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/public_api';
 import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../../projects/igniteui-angular/src/lib/services/public_api';

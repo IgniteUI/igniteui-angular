@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { PlatformUtil } from '../core/utils';

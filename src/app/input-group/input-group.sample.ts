@@ -21,7 +21,7 @@ import { ButtonGroupAlignment, IButtonGroupEventArgs, IgxButtonGroupComponent } 
 
 import { defineComponents, IgcInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../../../projects/igniteui-angular/src/lib/input-group/public_api';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/density';
 
 defineComponents(IgcInputComponent, IgcIconComponent);
 

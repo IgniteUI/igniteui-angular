@@ -58,7 +58,7 @@ import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTempl
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resizing.service';
 import { IgxFlatTransactionFactory, IgxOverlayService, State, Transaction, TransactionService } from '../../services/public_api';
-import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/displayDensity';
+import { DisplayDensity, DisplayDensityToken, IDensityChangedEventArgs, IDisplayDensityOptions } from '../../core/density';
 import { cloneArray, PlatformUtil } from '../../core/utils';
 import { IgxPivotFilteringService } from './pivot-filtering.service';
 import { DataUtil } from '../../data-operations/data-util';

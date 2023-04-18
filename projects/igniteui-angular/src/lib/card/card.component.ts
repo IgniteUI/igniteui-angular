@@ -322,7 +322,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
 
     /**
      * @deprecated in version 15.1.0.
-     * 
+     *
      * An @Input property that reverses the order of the buttons in the actions area.
      *
      * @example
@@ -360,8 +360,4 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         };
     }
 }
-
-/**
- * @hidden
- */
 
