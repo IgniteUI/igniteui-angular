@@ -18,7 +18,8 @@ import {
     MultiColumnHeadersExportComponent,
     GridWithEmptyColumnsComponent,
     ColumnsAddedOnInitComponent,
-    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
+    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
+    GridUserMeetingDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -68,7 +69,8 @@ describe('Excel Exporter', () => {
                 IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
                 GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
                 IgxPivotGridMultipleRowComponent,
-                IgxPivotGridTestComplexHierarchyComponent
+                IgxPivotGridTestComplexHierarchyComponent,
+                GridUserMeetingDataComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -755,6 +757,16 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
         });
+
+        it('Should export date, dateTime and time columns correctly', async () => {
+            const fix = TestBed.createComponent(GridUserMeetingDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGriWithDateData);
+        });
     });
 
     describe('', () => {
@@ -1221,7 +1233,7 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             grid = fix.componentInstance.grid;
-            
+
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
         });
 

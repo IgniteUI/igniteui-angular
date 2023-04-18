@@ -437,8 +437,9 @@ export abstract class IgxBaseExporter {
                         let rawValue = resolveNestedPath(record.data, e.field);
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+                        const isOfDateType = e.dataType === 'date' || e.dataType === 'dateTime' || e.dataType === 'time';
 
-                        if (e.dataType === 'date' &&
+                        if (isOfDateType &&
                             !(rawValue instanceof Date) &&
                             !shouldApplyFormatter &&
                             rawValue !== undefined &&
