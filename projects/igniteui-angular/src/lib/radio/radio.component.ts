@@ -271,7 +271,7 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
 
     /** @hidden @internal */
-    private blurRadio = new EventEmitter();
+    public blurRadio = new EventEmitter();
 
     /**
      * Returns the class of the radio component.

@@ -358,7 +358,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
 
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
-                fromEvent(button.nativeElement, 'blur')
+                button.blurRadio
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.updateValidityOnBlur()
@@ -380,12 +380,12 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     private updateValidityOnBlur() {
         this.radioButtons.forEach((button) => {
             button.focused = false;
-        });
 
-        if (this.required) {
-            const checked = this.radioButtons.find(x => x.checked);
-            this.invalid = !checked;
-        }
+            if (button.required) {
+                const checked = this.radioButtons.find(x => x.checked);
+                this.invalid = !checked;
+            }
+        });
     }
 
     /**
