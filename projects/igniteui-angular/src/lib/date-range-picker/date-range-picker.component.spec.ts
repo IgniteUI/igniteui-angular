@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
+import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 import { CancelableEventArgs } from '../core/utils';
 import { DateRange, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';

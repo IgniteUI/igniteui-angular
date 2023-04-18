@@ -1,4 +1,3 @@
-
 /*
  * Public API Surface of igniteui-angular
  */
@@ -7,7 +6,6 @@
  * Animations
  */
 export * from './lib/animations/main';
-
 
 /**
  * Directives
@@ -57,7 +55,7 @@ export * from './lib/data-operations/data-util';
  * Components
  */
 export * from './lib/action-strip/public_api';
-export * from './lib/accordion/public_api';
+export * from './lib/accordion/accordion.component';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/public_api';
@@ -85,8 +83,7 @@ export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
 export * from './lib/grids/hierarchical-grid/hierarchical-grid.pipes';
-export * from './lib/icon/icon.component';
-export * from './lib/icon/icon.service';
+export * from './lib/icon/public_api';
 export * from './lib/input-group/public_api';
 export * from './lib/list/public_api';
 export * from './lib/expansion-panel/public_api';
@@ -145,3 +142,16 @@ export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-reso
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';
+
+/* IMPORTANT: The following are NgModules exported for backwards-compatibility before standalone components */
+export * from './lib/icon/icon.module';
+export * from './lib/directives/ripple/ripple.module';
+export * from './lib/avatar/avatar.module';
+export * from './lib/directives/button/button.module';
+export * from './lib/expansion-panel/expansion-panel.module';
+export * from './lib/accordion/accordion.module';
+export * from './lib/action-strip/action-strip.module';
+export * from './lib/badge/badge.module';
+export * from './lib/banner/banner.module';
+export * from './lib/buttonGroup/buttongroup.module';
+export * from './lib/calendar/calendar.module';

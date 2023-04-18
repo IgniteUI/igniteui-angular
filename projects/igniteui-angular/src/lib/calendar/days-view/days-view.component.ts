@@ -11,11 +11,11 @@ import {
     OnInit,
     Inject, LOCALE_ID
 } from '@angular/core';
-import { ICalendarDate, isDateInRanges } from '../../calendar/calendar';
+import { CalendarSelection, ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
-import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
+import { IgxCalendarBaseDirective } from '../calendar-base';
 import { isEqual, PlatformUtil } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';

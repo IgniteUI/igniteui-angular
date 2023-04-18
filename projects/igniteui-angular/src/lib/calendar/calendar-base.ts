@@ -1,35 +1,13 @@
 import { Input, Output, EventEmitter, Directive, Inject, LOCALE_ID, HostListener } from '@angular/core';
-import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
+import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews, IViewDateChangeEventArgs, ScrollMonth, IgxCalendarView, CalendarSelection } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { noop, Subject } from 'rxjs';
-import { isDate, mkenum, PlatformUtil } from '../core/utils';
-import { IgxCalendarView } from './month-picker-base';
+import { isDate, PlatformUtil } from '../core/utils';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { getLocaleFirstDayOfWeek } from "@angular/common";
-
-/**
- * Sets the selection type - single, multi or range.
- */
-export const CalendarSelection = mkenum({
-    SINGLE: 'single',
-    MULTI: 'multi',
-    RANGE: 'range'
-});
-export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
-
-export enum ScrollMonth {
-    PREV = 'prev',
-    NEXT = 'next',
-    NONE = 'none'
-}
-
-export interface IViewDateChangeEventArgs {
-    previousValue: Date;
-    currentValue: Date;
-}
 
 /** @hidden @internal */
 @Directive({

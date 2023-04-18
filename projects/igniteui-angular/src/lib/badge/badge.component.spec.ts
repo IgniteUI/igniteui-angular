@@ -9,12 +9,14 @@ describe('Badge', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [InitBadgeComponent,
-        InitBadgeWithDefaultsComponent,
-        InitBadgeWithIconComponent,
-        IgxBadgeComponent,
-        InitBadgeWithIconARIAComponent]
-}).compileComponents();
+            imports: [
+                InitBadgeComponent,
+                InitBadgeWithDefaultsComponent,
+                InitBadgeWithIconComponent,
+                IgxBadgeComponent,
+                InitBadgeWithIconARIAComponent
+            ]
+        }).compileComponents();
     }));
 
     it('Initializes badge ', () => {

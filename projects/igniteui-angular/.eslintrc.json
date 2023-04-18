@@ -27,9 +27,8 @@
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "type": "attribute",
-            "prefix": ["igx", "igc"],
-            "style": "camelCase"
+            "type": ["attribute", "element"],
+            "prefix": ["igx", "igc"]
           }
         ],
         "@angular-eslint/no-input-rename": "off",

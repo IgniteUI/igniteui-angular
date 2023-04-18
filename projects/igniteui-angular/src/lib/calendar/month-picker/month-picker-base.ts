@@ -1,27 +1,6 @@
-import { IgxCalendarBaseDirective } from './calendar-base';
+import { IgxCalendarView } from '../calendar';
+import { IgxCalendarBaseDirective } from '../calendar-base';
 import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
-import { mkenum } from '../core/utils';
-
-export const IgxCalendarView = mkenum({
-    Month: 'month',
-    Year: 'year',
-    Decade: 'decade'
-});
-
-
-/**
- * @hidden
- */
-export enum CalendarView {
-    DEFAULT,
-    YEAR,
-    DECADE
-}
-
-/**
- * Determines the Calendar active view - days, months or years.
- */
-export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarView] | CalendarView;
 
 @Directive({
     selector: '[igxMonthPickerBase]',
@@ -78,14 +57,14 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public get isDefaultView(): boolean {
-        return this._activeView === CalendarView.DEFAULT || this._activeView === IgxCalendarView.Month;
+        return this._activeView === IgxCalendarView.Month;
     }
 
     /**
      * @hidden
      */
     public get isDecadeView(): boolean {
-        return this._activeView === CalendarView.DECADE || this._activeView === IgxCalendarView.Decade;
+        return this._activeView === IgxCalendarView.Decade;
     }
 
     /**

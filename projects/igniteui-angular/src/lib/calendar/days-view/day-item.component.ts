@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
-import { ICalendarDate, isDateInRanges } from '../calendar';
+import { CalendarSelection, ICalendarDate, isDateInRanges } from '../calendar';
 import { DateRangeDescriptor } from '../../core/dates';
-import { CalendarSelection } from '../calendar-base';
 
 /**
  * @hidden

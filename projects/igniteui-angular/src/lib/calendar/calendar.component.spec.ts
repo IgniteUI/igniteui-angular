@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    Calendar, IgxCalendarComponent, isLeap,
+    Calendar, IgxCalendarComponent, IgxCalendarView, isLeap,
+    IViewDateChangeEventArgs,
     monthRange, weekDay, WEEKDAYS
 } from './public_api';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -12,9 +13,7 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
-import { HelperTestFunctions } from './calendar-helper-utils';
-import { IgxCalendarView } from './month-picker-base';
-import { IViewDateChangeEventArgs } from './calendar-base';
+import { HelperTestFunctions } from '../test-utils/calendar-helper-utils';
 
 describe('IgxCalendar - ', () => {
 

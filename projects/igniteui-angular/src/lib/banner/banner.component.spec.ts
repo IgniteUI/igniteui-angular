@@ -16,7 +16,6 @@ const CSS_CLASS_BANNER_MESSAGE = 'igx-banner__message';
 const CSS_CLASS_BANNER_ILLUSTRATION = 'igx-banner__illustration';
 const CSS_CLASS_BANNER_TEXT = 'igx-banner__text';
 const CSS_CLASS_BANNER_ACTIONS = 'igx-banner__actions';
-const CSS_CLASS_BANNER_ROW = 'igx-banner__row';
 
 describe('igxBanner', () => {
     let bannerElement: DebugElement = null;
@@ -28,15 +27,15 @@ describe('igxBanner', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
-        IgxBannerEmptyComponent,
-        IgxBannerOneButtonComponent,
-        IgxBannerSampleComponent,
-        IgxBannerCustomTemplateComponent,
-        SimpleBannerEventsComponent
-    ]
-}).compileComponents();
+            imports: [
+                NoopAnimationsModule,
+                IgxBannerEmptyComponent,
+                IgxBannerOneButtonComponent,
+                IgxBannerSampleComponent,
+                IgxBannerCustomTemplateComponent,
+                SimpleBannerEventsComponent
+            ]
+        }).compileComponents();
     }));
 
     describe('General tests: ', () => {

@@ -6,16 +6,17 @@ import {
     Input,
     ElementRef
 } from '@angular/core';
+import { NgIf, NgStyle } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
+
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
-import { IgxMonthPickerBaseDirective, IgxCalendarView } from '../month-picker-base';
+import { IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
-import { ScrollMonth } from '../calendar-base';
 import { IgxIconComponent } from '../../icon/icon.component';
-import { NgIf, NgStyle } from '@angular/common';
+import { IgxCalendarView, ScrollMonth } from '../calendar';
 
 let NEXT_ID = 0;
 @Component({
