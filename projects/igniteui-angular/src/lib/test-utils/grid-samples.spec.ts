@@ -733,7 +733,7 @@ export class ReorderedColumnsComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.simpleDatePercentColumns)
 })
 export class GridUserMeetingDataComponent extends BasicGridComponent {
-    public data = SampleTestData.personMeetingData();
+    public override data = SampleTestData.personMeetingData();
 }
 
 @Component({
