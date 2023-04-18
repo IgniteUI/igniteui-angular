@@ -3760,7 +3760,7 @@ const formatUnboundValueFunction = (rowData: any | undefined): string | undefine
 
 
 class MySortingStrategy extends IgxGrouping {
-    protected getFieldValue(
+    protected override getFieldValue(
         obj: any,
         key: string,
         isDate = false,

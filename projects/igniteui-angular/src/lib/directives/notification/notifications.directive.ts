@@ -1,5 +1,4 @@
 import { Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
 import { IToggleView } from '../../core/navigation';
 import { IPositionStrategy, OverlaySettings } from '../../services/public_api';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../toggle/toggle.directive';
@@ -70,7 +69,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * @hidden
      */
     public timeoutId: number;
-    public d$ = new Subject<boolean>();
 
     /**
      * @hidden
@@ -80,7 +78,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     /**
      * @hidden
      */
-    public open() {
+    public override open() {
         clearInterval(this.timeoutId);
 
         const overlaySettings: OverlaySettings = {
@@ -103,16 +101,8 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     /**
      * Hides the element.
      */
-    public close() {
+    public override close() {
         clearTimeout(this.timeoutId);
         super.close();
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.d$.next(true);
-        this.d$.complete();
     }
 }
