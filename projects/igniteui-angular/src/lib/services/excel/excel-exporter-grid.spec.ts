@@ -1231,6 +1231,15 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.exportThreeLevelsOfMultiColumnHeadersWithTwoRowsData, false);
         });
+
+        it('should export grouped grid with only multi column headers', async () => {
+            grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            grid.columnList.get(0).hidden = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersWithGroupedData, false);
+        });
     });
 
 

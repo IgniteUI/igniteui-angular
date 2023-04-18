@@ -2118,6 +2118,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(1);
 
             // This Month condition
+            const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
             GridFunctions.openFilterDDAndSelectCondition(fix, 6);
             tick();
             fix.detectChanges();

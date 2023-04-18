@@ -11,7 +11,8 @@ import {
     Renderer2,
     TemplateRef,
     Inject,
-    Optional
+    Optional,
+    OnDestroy
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
@@ -24,6 +25,8 @@ import {
 import {IBaseEventArgs, mkenum} from '../core/utils';
 import { IChipResourceStrings } from '../core/i18n/chip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { fromEvent, Subject } from 'rxjs';
+import { take, filter } from 'rxjs/operators';
 
 export const IgxChipTypeVariant = mkenum({
     PRIMARY: 'primary',
@@ -85,7 +88,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent extends DisplayDensityBase {
+export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
 
     /**
      * Sets/gets the variant of the chip.
@@ -101,7 +104,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @Input()
     public variant: string | typeof IgxChipTypeVariant;
-
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -599,6 +601,12 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     public hideBaseElement = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroy$ = new Subject();
+
     protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
@@ -896,5 +904,10 @@ export class IgxChipComponent extends DisplayDensityBase {
                 });
             }
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }
