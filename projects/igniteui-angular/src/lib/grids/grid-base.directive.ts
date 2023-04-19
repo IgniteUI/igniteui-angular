@@ -4,14 +4,14 @@ import {
     AfterViewInit,
     ApplicationRef,
     ChangeDetectorRef,
-    ComponentFactory,
-    ComponentFactoryResolver,
     ComponentRef,
     ContentChild,
     ContentChildren,
+    createComponent,
     Directive,
     DoCheck,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -21,7 +21,6 @@ import {
     IterableChangeRecord,
     IterableDiffers,
     LOCALE_ID,
-    NgModuleRef,
     NgZone,
     OnDestroy,
     OnInit,
@@ -213,6 +212,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public autoGenerate = false;
 
     /**
+     * Gets/Sets a list of property keys to be excluded from the generated column collection
+     * @remarks
+     * The collection is only used during initialization and changing it will not cause any changes in the generated columns at runtime
+     * unless the grid is destroyed and recreated. To modify the columns visible in the UI at runtime, please use their
+     * [hidden](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/IgxColumnComponent.html#hidden) property.
+     * @example
+     * ```html
+     * <igx-grid data=[Data] [autoGenerate]="true" [autoGenerateExclude]="['ProductName', 'Count']"></igx-grid>
+     * ```
+     * ```typescript
+     * const Data = [{ 'Id': '1', 'ProductName': 'name1', 'Description': 'description1', 'Count': 5 }]
+     * ```
+     */
+    @Input()
+    public autoGenerateExclude: string[] = [];
+
+    /**
      * Controls whether columns moving is enabled in the grid.
      *
      */
@@ -228,7 +244,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public emptyGridTemplate: TemplateRef<any>;
+    public emptyGridTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
@@ -239,7 +255,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public addRowEmptyTemplate: TemplateRef<any>;
+    public addRowEmptyTemplate: TemplateRef<void>;
 
     /**
      * Gets/Sets a custom template when loading.
@@ -250,7 +266,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public loadingGridTemplate: TemplateRef<any>;
+    public loadingGridTemplate: TemplateRef<void>;
 
     /**
      * Get/Set IgxSummaryRow height
@@ -1832,7 +1848,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Define `igx-paginator` as a grid child component and paging will be enabled, otherwise disabled.
      *
      * Gets/Sets whether the paging feature is enabled.
      *
@@ -1841,8 +1857,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The default state is disabled (false).
      * @example
      * ```html
+     * <!-- old -->
+     * <igx-grid #grid [data]="Data" [paging]="true" [autoGenerate]="true"></igx-grid>
+     *
+     * <!-- new -->
      * <igx-grid #grid [data]="Data" [autoGenerate]="true">
-     *  <igx-paginator></igx-paginator>
+     *   <igx-paginator></igx-paginator>
      * </igx-grid>
      * ```
      */
@@ -1857,15 +1877,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `page` property form `paginator` component instead
+     * @deprecated in version 12.1.0. Use `page` property from `igx-paginator` component instance instead.
      *
      * Gets/Sets the current page index.
      *
      *
      * @example
      * ```html
+     * <!-- old -->
+     * <igx-grid #grid [data]="Data" [page]="model.page" [autoGenerate]="true"></igx-grid>
+     *
+     * <!-- new -->
      * <igx-grid #grid [data]="Data" [autoGenerate]="true">
-     *  <igx-paginator [(page)]="model.page"></igx-paginator>
+     *   <igx-paginator [(page)]="model.page"></igx-paginator>
      * </igx-grid>
      * ```
      * @remarks
@@ -1883,7 +1907,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `perPage` property from `paginator` component instead
+     * @deprecated in version 12.1.0. Use `perPage` property from `igx-paginator` component instance instead
      *
      * Gets/Sets the number of visible items per page.
      *
@@ -1892,8 +1916,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The default is 15.
      * @example
      * ```html
+     * <!-- old -->
+     * <igx-grid #grid [data]="Data" [perPage]="model.perPage" [autoGenerate]="true"></igx-grid>
+     *
+     * <!-- new -->
      * <igx-grid #grid [data]="Data" [autoGenerate]="true">
-     *  <igx-paginator [(perPage)]="model.perPage"></igx-paginator>
+     *   <igx-paginator [(perPage)]="model.perPage"></igx-paginator>
      * </igx-grid>
      * ```
      */
@@ -3322,12 +3350,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         protected zone: NgZone,
         @Inject(DOCUMENT) public document: any,
         public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
-        private moduleRef: NgModuleRef<any>,
-        private injector: Injector,
+        protected injector: Injector,
+        protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
@@ -3806,26 +3833,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private createComponentInstance(component: any) {
-        // TODO: create component instance view viewContainerRef.createComponent(Component, Settings) overload
-        let dynamicFactory: ComponentFactory<any>;
-        const factoryResolver = this.moduleRef
-            ? this.moduleRef.componentFactoryResolver
-            : this.resolver;
-        try {
-            dynamicFactory = factoryResolver.resolveComponentFactory(component);
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-
-        const injector = this.moduleRef
-            ? this.moduleRef.injector
-            : this.injector;
-        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
-            injector
-        );
+        const dynamicComponent: ComponentRef<any> = createComponent(component, { environmentInjector: this.envInjector, elementInjector: this.injector } );
         this.appRef.attachView(dynamicComponent.hostView);
-
         return dynamicComponent;
     }
 
@@ -4488,7 +4497,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Use the corresponding method `nextPage()` exposed by the `igx-paginator` instance.
      *
      * Goes to the next page, if the grid is not already at the last page.
      *
@@ -4504,7 +4513,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Use the corresponding method `nextPage()` exposed by the `igx-paginator` instance.
      *
      * Goes to the previous page, if the grid is not already at the first page.
      *
@@ -4685,18 +4694,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated in version 12.1.0. Use the corresponding method exposed by the `igx-paginator`
+     * @deprecated in version 12.1.0. Use the corresponding method `paginate()` exposed by the `igx-paginator` instance.
      *
      * Goes to the desired page index.
      *
      *
      * @example
      * ```typescript
+     * // old
      * this.grid1.paginate(1);
+     * // new
+     * this.paginator1.paginate(1);
      * ```
      * @param val
      */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     public paginate(val: number): void {
         this.paginator?.paginate(val);
     }
@@ -7125,12 +7136,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected autogenerateColumns() {
         const data = this.gridAPI.get_data();
-        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = this.generateDataFields(data);
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = factory.create(this.viewRef.injector);
+            const ref = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);
             ref.changeDetectorRef.detectChanges();
@@ -7145,7 +7155,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected generateDataFields(data: any[]): string[] {
-        return Object.keys(data && data.length !== 0 ? data[0] : []);
+        return Object.keys(data && data.length !== 0 ? data[0] : [])
+            .filter(key => !this.autoGenerateExclude.includes(key));
     }
 
     /**

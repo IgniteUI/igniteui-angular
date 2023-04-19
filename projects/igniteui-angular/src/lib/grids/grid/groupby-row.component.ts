@@ -21,6 +21,7 @@ import { Subject } from 'rxjs';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridSelectionMode } from '../common/enums';
 import { ISelectionNode } from '../common/types';
+import { getLocaleCurrencyCode } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -117,6 +118,12 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     public get focused(): boolean {
         return this.isActive();
+    }
+
+    /** @hidden @internal */
+    public get currencyCode(): string {
+        return this.groupRow.column.pipeArgs.currencyCode ?
+            this.groupRow.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
     }
 
     constructor(
@@ -249,11 +256,19 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || GridColumnDataType.String;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get formatter(): any {
+        const column = this.groupRow.column;
+        return (column && column.formatter) || null;
     }
 
     /**

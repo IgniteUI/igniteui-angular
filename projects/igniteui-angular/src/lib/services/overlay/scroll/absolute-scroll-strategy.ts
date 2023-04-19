@@ -18,7 +18,16 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         this._scrollContainer = scrollContainer;
     }
 
-    /** @inheritDoc */
+    /**
+     * Initializes the strategy. Should be called once
+     *
+     * @param document reference to Document object.
+     * @param overlayService IgxOverlay service to use in this strategy.
+     * @param id Unique id for this strategy.
+     * ```typescript
+     * settings.scrollStrategy.initialize(document, overlay, id);
+     * ```
+     */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -30,7 +39,12 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         this._initialized = true;
     }
 
-    /** @inheritDoc */
+    /**
+     * Attaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.attach();
+     * ```
+     */
     public attach(): void {
         if (this._zone) {
             this._zone.runOutsideAngular(() => {
@@ -41,7 +55,12 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         }
     }
 
-    /** @inheritDoc */
+    /**
+     * Detaches the strategy
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
+     */
     public detach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll, true);
