@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input, NgModule } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { IgxNavigationService } from './nav.service';
 
 /**

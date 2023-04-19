@@ -10,13 +10,8 @@ export * from '../directives/suffix/suffix.directive';
 
 /* NOTE: Chips directives collection for ease-of-use import in standalone components scenario */
 export const IGX_CHIPS_DIRECTIVES = [
-    IgxComboAddItemDirective,
-    IgxComboClearIconDirective,
-    IgxComboComponent,
-    IgxComboEmptyDirective,
-    IgxComboFooterDirective,
-    IgxComboHeaderDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboItemDirective,
-    IgxComboToggleIconDirective
+    IgxChipsAreaComponent,
+    IgxChipComponent,
+    IgxPrefixDirective,
+    IgxSuffixDirective
 ] as const;
