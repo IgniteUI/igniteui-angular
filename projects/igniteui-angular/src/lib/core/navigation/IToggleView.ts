@@ -7,5 +7,4 @@ export interface IToggleView {
     open(...args);
     close(...args);
     toggle(...args);
-
 }

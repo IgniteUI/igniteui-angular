@@ -24,11 +24,13 @@ export interface IDensityChangedEventArgs extends IBaseEventArgs {
 }
 
 /**
+ * @hidden
  * Defines the DisplayDensity DI token.
  */
 export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('DisplayDensity');
 
 /**
+ * @hidden
  * Base class containing all logic required for implementing DisplayDensity.
  */
 @Directive({

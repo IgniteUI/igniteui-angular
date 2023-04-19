@@ -156,3 +156,8 @@ export * from './lib/banner/banner.module';
 export * from './lib/buttonGroup/buttongroup.module';
 export * from './lib/calendar/calendar.module';
 export * from './lib/card/card.module';
+export * from './lib/carousel/carousel.module';
+export * from './lib/checkbox/checkbox.module';
+export * from './lib/chips/chips.module';
+export * from './lib/combo/combo.module';
+export * from './lib/date-picker/date-picker.module';

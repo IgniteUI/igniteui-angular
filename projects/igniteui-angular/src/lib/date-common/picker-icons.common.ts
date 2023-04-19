@@ -66,6 +66,3 @@ export class IgxPickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-
-/** @hidden */
-

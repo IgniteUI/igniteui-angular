@@ -1028,8 +1028,3 @@ export interface ISlideEventArgs extends IBaseEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
 }
-
-/**
- * @hidden
- */
-

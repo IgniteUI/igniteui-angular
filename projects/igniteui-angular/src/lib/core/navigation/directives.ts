@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, NgModule } from '@angular/core';
-import {IgxNavigationService} from './nav.service';
+import { IgxNavigationService } from './nav.service';
 
 /**
  * Directive that can toggle targets through provided NavigationService.
@@ -56,13 +56,3 @@ export class IgxNavigationCloseDirective {
         this.state.close(this.target, true);
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    imports: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
-    exports: [IgxNavigationCloseDirective, IgxNavigationToggleDirective],
-    providers: [IgxNavigationService]
-})
-export class IgxNavigationModule {}

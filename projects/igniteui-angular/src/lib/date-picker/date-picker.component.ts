@@ -91,7 +91,16 @@ let NEXT_ID = 0;
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
     standalone: true,
-    imports: [IgxInputGroupComponent, NgIf, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxSuffixDirective]
+    imports: [
+        NgIf,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxTextSelectionDirective,
+        IgxSuffixDirective
+    ]
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {

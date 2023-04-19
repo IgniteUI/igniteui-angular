@@ -31,9 +31,39 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-30';
 
-    it('should replace on-prefixed outputs in carousel', async () => {
-        pending(`No test migrations available yet for ${migrationName}`);
+    it('Should replace IgxProcessBarTextTemplateDirective with IgxProgressBarTextTemplateDirective', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { IgxProcessBarTextTemplateDirective } from 'igniteui-angular';
+
+        @Component({
+            selector: 'test-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            toolbar: IgxGridToolbarComponent;
+            @ViewChild(IgxProcessBarTextTemplateDirective)
+            public title: IgxProcessBarTextTemplateDirective;
+        }
+        `);
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        tree.readContent('/testSrc/appPrefix/component/COMPONENT_HTML.html');
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { IgxProgressBarTextTemplateDirective } from 'igniteui-angular';
+
+        @Component({
+            selector: 'test-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            toolbar: IgxGridToolbarComponent;
+            @ViewChild(IgxProgressBarTextTemplateDirective)
+            public title: IgxProgressBarTextTemplateDirective;
+        }
+        `;
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(expectedContent);
     });
 });
