@@ -13,7 +13,7 @@
             <div class="igx-banner__actions">
                     <ng-container *ngIf="useDefaultTemplate">
                         <button igxButton="flat" igxRipple (click)="close()">
-                            Dismiss
+                            {{ resourceStrings.igx_banner_dismiss }}
                         </button>
                     </ng-container>
                     <ng-container *ngIf="!useDefaultTemplate">
