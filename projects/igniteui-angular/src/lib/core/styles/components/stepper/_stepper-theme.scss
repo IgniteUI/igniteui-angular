@@ -397,10 +397,13 @@
         white-space: nowrap;
         flex-direction: column;
         width: 100%;
+        flex: none;
     }
 
     %igx-stepper__body {
-        position: relative
+        position: relative;
+        flex-direction: column;
+        flex: 1 1 auto;
     }
 
     %stepper-display,
