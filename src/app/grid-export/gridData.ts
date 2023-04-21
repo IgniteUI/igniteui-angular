@@ -10,7 +10,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 10,
     Discontinued: false,
-    OrderDate: new Date("2012-02-12")
+    OrderDate: new Date("2012-02-12"),
+    ProductionDate: new Date("2011-02-12 10:15:35"),
+    PackagedAt: new Date("2011-02-12 10:15:35"),
+    PercentInStock: 0.6807
   }, {
     ProductID: 2,
     ProductName: "Chang",
@@ -22,7 +25,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 40,
     ReorderLevel: 25,
     Discontinued: true,
-    OrderDate: new Date("2003-03-17")
+    OrderDate: new Date("2003-03-17"),
+    ProductionDate: new Date("2002-03-17 13:35:25"),
+    PackagedAt: new Date("2002-03-17 13:35:25"),
+    PercentInStock: 0.7006
   }, {
     ProductID: 3,
     ProductName: "Aniseed Syrup",
@@ -34,7 +40,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 70,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date("2006-03-17")
+    OrderDate: new Date("2006-03-17"),
+    ProductionDate: new Date("2005-03-17 12:16:33"),
+    PackagedAt: new Date("2005-03-17 12:16:33"),
+    PercentInStock: 0.1634
   }, {
     ProductID: 4,
     ProductName: "Chef Antons Cajun Seasoning",
@@ -46,7 +55,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2016-03-17")
+    OrderDate: new Date("2016-03-17"),
+    ProductionDate: new Date("2015-03-17 13:24:28"),
+    PackagedAt: new Date("2015-03-17 13:24:28"),
+    PercentInStock: 0.7523
   }, {
     ProductID: 5,
     ProductName: "Chef Antons Gumbo Mix",
@@ -58,7 +70,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: true,
-    OrderDate: new Date("2011-11-11")
+    OrderDate: new Date("2011-11-11"),
+    ProductionDate: new Date("2010-11-11 09:15:25"),
+    PackagedAt: new Date("2010-11-11 09:15:25"),
+    PercentInStock: 0.5
   }, {
     ProductID: 6,
     ProductName: "Grandmas Boysenberry Spread",
@@ -70,7 +85,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date("2017-12-17")
+    OrderDate: new Date("2017-12-17"),
+    ProductionDate: new Date("2016-12-17 10:10:30"),
+    PackagedAt: new Date("2016-12-17 10:10:30"),
+    PercentInStock: 0.5642
   }, {
     ProductID: 7,
     ProductName: "Uncle Bobs Organic Dried Pears",
@@ -82,7 +100,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 10,
     Discontinued: false,
-    OrderDate: new Date("2016-07-17")
+    OrderDate: new Date("2016-07-17"),
+    ProductionDate: new Date("2015-07-17 11:11:11"),
+    PackagedAt: new Date("2015-07-17 11:11:11"),
+    PercentInStock: 0.1707
   }, {
     ProductID: 8,
     ProductName: "Northwoods Cranberry Sauce",
@@ -94,7 +115,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2018-01-17")
+    OrderDate: new Date("2018-01-17"),
+    ProductionDate: new Date("2017-01-17 12:12:32"),
+    PackagedAt: new Date("2017-01-17 12:12:32"),
+    PercentInStock: 0.0717
   }, {
     ProductID: 9,
     ProductName: "Mishi Kobe Niku",
@@ -106,7 +130,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: true,
-    OrderDate: new Date("2010-02-17")
+    OrderDate: new Date("2010-02-17"),
+    ProductionDate: new Date("2009-02-17 15:16:35"),
+    PackagedAt: new Date("2009-02-17 15:16:35"),
+    PercentInStock: 0.1219
   }, {
     ProductID: 10,
     ProductName: "Ikura",
@@ -118,7 +145,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2008-05-17")
+    OrderDate: new Date("2008-05-17"),
+    ProductionDate: new Date("2007-05-17 19:29:35"),
+    PackagedAt: new Date("2007-05-17 19:29:35"),
+    PercentInStock: 0.9812
   }, {
     ProductID: 11,
     ProductName: "Queso Cabrales",
@@ -130,7 +160,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 30,
     Discontinued: false,
-    OrderDate: new Date("2009-01-17")
+    OrderDate: new Date("2009-01-17"),
+    ProductionDate: new Date("2008-01-17 17:17:35"),
+    PackagedAt: new Date("2008-01-17 17:17:35"),
+    PercentInStock: 0.1912
   }, {
     ProductID: 12,
     ProductName: "Queso Manchego La Pastora",
@@ -142,7 +175,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2015-11-17")
+    OrderDate: new Date("2015-11-17"),
+    ProductionDate: new Date("2014-11-17 15:25:35"),
+    PackagedAt: new Date("2014-11-17 15:25:35"),
+    PercentInStock: 0.1717
   }, {
     ProductID: 13,
     ProductName: "Konbu",
@@ -154,7 +190,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 5,
     Discontinued: false,
-    OrderDate: new Date("2015-03-17")
+    OrderDate: new Date("2015-03-17"),
+    ProductionDate: new Date("2014-03-17 03:05:35"),
+    PackagedAt: new Date("2014-03-17 03:05:35"),
+    PercentInStock: 0.3788
   }, {
     ProductID: 14,
     ProductName: "Tofu",
@@ -166,7 +205,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2017-06-17")
+    OrderDate: new Date("2017-06-17"),
+    ProductionDate: new Date("2016-06-17 05:03:35"),
+    PackagedAt: new Date("2016-06-17 05:03:35"),
+    PercentInStock: 0.0128
   }, {
     ProductID: 15,
     ProductName: "Genen Shouyu",
@@ -178,7 +220,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 5,
     Discontinued: false,
-    OrderDate: new Date("2014-03-17")
+    OrderDate: new Date("2014-03-17"),
+    ProductionDate: new Date("2013-03-17 06:15:25"),
+    PackagedAt: new Date("2013-03-17 06:15:25"),
+    PercentInStock: 0.892
   }, {
     ProductID: 16,
     ProductName: "Pavlova",
@@ -190,7 +235,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 10,
     Discontinued: false,
-    OrderDate: new Date("2018-03-28")
+    OrderDate: new Date("2018-03-28"),
+    ProductionDate: new Date("2017-03-28 08:17:35"),
+    PackagedAt: new Date("2017-03-28 08:17:35"),
+    PercentInStock: 0.9124
   }, {
     ProductID: 17,
     ProductName: "Alice Mutton",
@@ -202,7 +250,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: true,
-    OrderDate: new Date("2015-08-17")
+    OrderDate: new Date("2015-08-17 10:15:35"),
+    ProductionDate: new Date("2014-08-17 16:15:35"),
+    PackagedAt: new Date("2014-08-17 16:15:35"),
+    PercentInStock: 0.2634
   }, {
     ProductID: 18,
     ProductName: "Carnarvon Tigers",
@@ -214,7 +265,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2005-09-27")
+    OrderDate: new Date("2005-09-27"),
+    ProductionDate: new Date("2004-09-27 16:48:35"),
+    PackagedAt: new Date("2004-09-27 16:48:35"),
+    PercentInStock: 0.4632
   }, {
     ProductID: 19,
     ProductName: "Teatime Chocolate Biscuits",
@@ -226,7 +280,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 5,
     Discontinued: false,
-    OrderDate: new Date("2001-03-17")
+    OrderDate: new Date("2001-03-17"),
+    ProductionDate: new Date("2000-03-17 14:34:35"),
+    PackagedAt: new Date("2000-03-17 14:34:35"),
+    PercentInStock: 0.069
   }, {
     ProductID: 20,
     ProductName: "Sir Rodneys Marmalade",
@@ -238,7 +295,10 @@ export const GRID_DATA: any[] = [{
     UnitsOnOrder: 30,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date("2005-03-17")
+    OrderDate: new Date("2005-03-17"),
+    ProductionDate: new Date("2004-03-17 11:17:35"),
+    PackagedAt: new Date("2004-03-17 11:17:35"),
+    PercentInStock: 0.234,
   }
   ];
   /* tslint:enable */
