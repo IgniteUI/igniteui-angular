@@ -66,6 +66,8 @@ All notable changes for each version of this project will be documented in this 
 - **Breaking Changes** - ` $label-floated-background` and `$label-floated-disabled-background` properties of `IgxInputGroupComponent` theme has been removed.
 - `IgxInputGroupComponent` The input group has been refactored so that the floating label for the input of `type="border"` does not require a background to match the surface background under the input field. Also, suffixes and prefixes are refactored to take the full height of the input which makes it easy to add background to them.
 - **Breaking Changes** - `$size` property of `scrollbar-theme` theme has been renamed to `$scrollbar-size`.
+- `IgxSimpleCombo`
+    - The `IgxSimpleCombo` will not open its drop-down on clear.
 
 ## 15.0.1
 
