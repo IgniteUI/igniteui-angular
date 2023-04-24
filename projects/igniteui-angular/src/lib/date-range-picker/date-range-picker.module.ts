@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
-import { IgxDatePickerComponent } from './date-picker.component';
-import { IgxPickerActionsDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxDateRangePickerComponent } from './date-range-picker.component';
+import {
+    IgxDateRangeStartComponent, IgxDateRangeEndComponent,
+    IgxDateRangeSeparatorDirective
+} from './date-range-picker-inputs.common';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
@@ -12,24 +15,24 @@ import { IgxHintDirective } from '../directives/hint/hint.directive';
  */
 @NgModule({
     imports: [
-        IgxDatePickerComponent,
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
-        IgxPickerActionsDirective,
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxDateRangeSeparatorDirective,
         IgxLabelDirective,
         IgxPrefixDirective,
         IgxSuffixDirective,
         IgxHintDirective
     ],
     exports: [
-        IgxDatePickerComponent,
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
-        IgxPickerActionsDirective,
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxDateRangeSeparatorDirective,
         IgxLabelDirective,
         IgxPrefixDirective,
         IgxSuffixDirective,
         IgxHintDirective
     ]
 })
-export class IgxDatePickerModule { }
+export class IgxDateRangePickerModule { }

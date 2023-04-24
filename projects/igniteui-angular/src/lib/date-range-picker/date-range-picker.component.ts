@@ -9,8 +9,10 @@ import {
   AbstractControl, ControlValueAccessor, NgControl,
   NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
+
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+
 import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
@@ -67,7 +69,15 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ],
     standalone: true,
-    imports: [NgTemplateOutlet, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, NgIf, IgxPrefixDirective, DateRangePickerFormatPipe]
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        IgxIconComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxPrefixDirective,
+        DateRangePickerFormatPipe
+    ]
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {

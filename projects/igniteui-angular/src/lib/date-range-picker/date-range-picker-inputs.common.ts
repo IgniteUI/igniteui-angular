@@ -134,7 +134,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
 /**
  * Defines the end input for a date range picker
  *
- * @igxModule IgxDateRangeModule
+ * @igxModule IgxDateRangePickerModule
  *
  * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
  *

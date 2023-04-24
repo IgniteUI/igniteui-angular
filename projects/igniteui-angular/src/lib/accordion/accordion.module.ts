@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IgxAccordionComponent } from './accordion.component';
+import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 
 /**
  * @hidden
@@ -7,10 +8,12 @@ import { IgxAccordionComponent } from './accordion.component';
  */
 @NgModule({
     imports: [
-        IgxAccordionComponent
+        IgxAccordionComponent,
+        IgxExpansionPanelModule
     ],
     exports: [
-        IgxAccordionComponent
+        IgxAccordionComponent,
+        IgxExpansionPanelModule
     ]
 })
 export class IgxAccordionModule {

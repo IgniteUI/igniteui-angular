@@ -1903,8 +1903,3 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     }
 }
 
-
-/**
- * @hidden
- */
-
