@@ -1,5 +1,4 @@
-import { Directive, ElementRef, HostBinding, OnInit } from '@angular/core';
-import { getTooltipContent } from '../core/utils';
+import { Directive, ElementRef, HostBinding } from '@angular/core';
 
 /**
  * @hidden @internal
@@ -8,18 +7,16 @@ import { getTooltipContent } from '../core/utils';
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-title'
 })
-export class IgxExpansionPanelTitleDirective implements OnInit {
+export class IgxExpansionPanelTitleDirective {
     @HostBinding('class.igx-expansion-panel__header-title')
     public cssClass = `igx-expansion-panel__header-title`;
 
     @HostBinding('attr.title')
-    public title: string;
+    private get title(): string {
+        return getTooltipContent(this.element);
+    }
 
     constructor(private element: ElementRef) {}
-
-    public ngOnInit() {
-        this.title = getTooltipContent(this.element);
-    }
 }
 
 /**
@@ -29,18 +26,16 @@ export class IgxExpansionPanelTitleDirective implements OnInit {
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-description'
 })
-export class IgxExpansionPanelDescriptionDirective implements OnInit {
+export class IgxExpansionPanelDescriptionDirective {
     @HostBinding('class.igx-expansion-panel__header-description')
     public cssClass = `igx-expansion-panel__header-description`;
 
     @HostBinding('attr.title')
-    public title: string;
+    private get title(): string {
+        return getTooltipContent(this.element);
+    }
 
     constructor(private element: ElementRef) {}
-
-    public ngOnInit() {
-        this.title = getTooltipContent(this.element);
-    }
 }
 
 /**
@@ -51,3 +46,33 @@ export class IgxExpansionPanelDescriptionDirective implements OnInit {
     selector: 'igx-expansion-panel-icon'
 })
 export class IgxExpansionPanelIconDirective { }
+
+/**
+ * Returns the `textContent` of an element
+ *
+ * ```html
+ * <igx-expansion-panel-title>
+ *  Tooltip content
+ * </igx-expansion-panel-title>
+ * ```
+ *
+ *  or the `title` content
+ *
+ * ```html
+ * <igx-expansion-panel-title [title]="'Tooltip content'">
+ * </igx-expansion-panel-title>
+ * ```
+ *
+ * If both are provided, returns the `title` content.
+ *
+ * @param element
+ * @returns tooltip content for an element
+ * @hidden
+ * @internal
+ */
+export const getTooltipContent = (element: ElementRef): any => {
+    return element.nativeElement.title
+        ? element.nativeElement.title
+        : element.nativeElement.textContent
+        ? element.nativeElement.textContent.trim() : null;
+};
