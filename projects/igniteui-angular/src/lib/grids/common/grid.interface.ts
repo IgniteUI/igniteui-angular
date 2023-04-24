@@ -353,7 +353,7 @@ export interface GridType extends IGridDataBindable {
     resizeLine: any;
 
     tfoot: ElementRef<HTMLElement>;
-    paginator: IgxPaginatorComponent | Element;
+    paginator: IgxPaginatorComponent;
     paginatorList?: QueryList<IgxPaginatorComponent>;
     crudService: any;
     summaryService: any;

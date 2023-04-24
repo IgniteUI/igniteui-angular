@@ -102,7 +102,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.notifyChanges(true);
             fixture.detectChanges();
 
-            grid.perPage = 7;
+            grid.paginator.perPage = 7;
             fixture.detectChanges();
 
             const lastRow = grid.rowList.last;
@@ -249,7 +249,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
 
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             grid.markForCheck();
             fixture.detectChanges();
 
@@ -276,7 +276,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             // check page is correct
-            expect(grid.page).toBe(5);
+            expect(grid.paginator.page).toBe(5);
 
              // check added row is rendered and is in view
              const row = grid.gridAPI.get_row_by_key(addedRec[grid.primaryKey]);

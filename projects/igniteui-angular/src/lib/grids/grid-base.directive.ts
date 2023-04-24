@@ -3209,7 +3209,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rendered = false;
     private readonly DRAG_SCROLL_DELTA = 10;
     private _dataCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
-    private _class = '';
     private _autoSize = false;
     private _sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
@@ -4521,7 +4520,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get isFirstPage(): boolean {
-        return this.paginator?.isLastPage;
+        return this.paginator.isLastPage;
     }
 
     /**
@@ -4647,8 +4646,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
-        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.page !== 0) {
-            newIndex = index - this.perPage * this.page;
+        if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 1 && this.paginator.page !== 0) {
+            newIndex = index - this.paginator.perPage * this.paginator.page;
         } else if (this.gridAPI.grid.verticalScrollContainer.isRemote) {
             newIndex = index - this.gridAPI.grid.virtualizationState.startIndex;
         }

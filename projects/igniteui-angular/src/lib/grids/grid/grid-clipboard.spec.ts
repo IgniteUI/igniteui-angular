@@ -95,7 +95,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     it('Copy data when paging is enabled', () => {
         fix.componentInstance.paging = true;
         fix.detectChanges();
-        grid.perPage = 5;
+        grid.paginator.perPage = 5;
         fix.detectChanges();
 
         grid.paginator.page = 1;
