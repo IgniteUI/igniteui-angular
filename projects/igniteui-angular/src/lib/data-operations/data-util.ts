@@ -22,6 +22,7 @@ import {
     IgxGrouping
 } from '../grids/common/strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { IGroupingExpression } from './grouping-expression.interface';
 
 /**
  * @hidden
@@ -134,8 +135,8 @@ export class DataUtil {
         return getHierarchy(gRow);
     }
 
-    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
-        return isHierarchyMatch(h1, h2);
+    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>, expressions: IGroupingExpression[]): boolean {
+        return isHierarchyMatch(h1, h2, expressions);
     }
 
     /**
