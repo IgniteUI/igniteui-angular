@@ -135,7 +135,7 @@
     "lit-html": "^2.6.1",
     "ng-packagr": "^15.1.1",
     "postcss-scss": "^4.0.6",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "sass": "^1.58.1",
     "sass-true": "^6.0.1",
     "sassdoc": "^2.7.4",
