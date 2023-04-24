@@ -150,7 +150,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public overlaySettings: OverlaySettings;
+    public override overlaySettings: OverlaySettings;
 
     /**
      * The format used when editable inputs are not focused.
@@ -165,7 +165,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public displayFormat: string;
+    public override displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -179,7 +179,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public inputFormat: string;
+    public override inputFormat: string;
 
     /**
      * The minimum value in a valid range.
@@ -238,7 +238,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public placeholder = '';
+    public override placeholder = '';
 
     /**
      * Gets/Sets the container used for the popup element.
@@ -254,7 +254,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef<any>;
+    public override outlet: IgxOverlayOutletDirective | ElementRef<any>;
 
     /**
      * Emitted when the picker's value changes. Used for two-way binding.
@@ -270,10 +270,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     @HostBinding('class.igx-date-range-picker')
     public cssClass = 'igx-date-range-picker';
-
-    /** @hidden @internal */
-    @ViewChild(IgxInputGroupComponent)
-    public inputGroup: IgxInputGroupComponent;
 
     @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
@@ -327,7 +323,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * let state = this.dateRange.collapsed;
      * ```
      */
-    public get collapsed(): boolean {
+    public override get collapsed(): boolean {
         return this._collapsed;
     }
 
@@ -414,14 +410,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private onTouchCallback: () => void = noop;
     private onValidatorChange: () => void = noop;
 
-    constructor(public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
+    constructor(element: ElementRef,
+        @Inject(LOCALE_ID) _localeId: string,
         protected platform: PlatformUtil,
         private _injector: Injector,
         private _cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
@@ -581,14 +577,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden */
-    public ngOnInit(): void {
+    public override ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
+        super.ngOnInit();
     }
 
     /** @hidden */
-    public ngAfterViewInit(): void {
+    public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
@@ -634,7 +631,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
         super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();

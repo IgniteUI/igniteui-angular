@@ -7,7 +7,7 @@ import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
 
 export class MySummaryOperand extends IgxSummaryOperand {
-    public operate(data: any[] = []): IgxSummaryResult[] {
+    public override operate(data: any[] = []): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
