@@ -30,7 +30,7 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
         this.scrollWidth = this.scrollNativeSize;
     }
 
-    protected restoreScroll() {
+    protected override restoreScroll() {
         this.nativeElement.scrollTop = this.scrollAmount;
     }
 }

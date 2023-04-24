@@ -30,7 +30,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      * @hidden
      */
     @HostBinding('class.igx-tooltip--hidden')
-    public get hiddenClass() {
+    public override get hiddenClass() {
         return this.collapsed;
     }
 
@@ -38,7 +38,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      * @hidden
      */
     @HostBinding('class.igx-tooltip--desktop')
-    public get defaultClass() {
+    public override get defaultClass() {
         return !this.collapsed;
     }
 
@@ -70,7 +70,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-tooltip-${NEXT_ID++}`;
+    public override id = `igx-tooltip-${NEXT_ID++}`;
 
     /**
      * Get the role attribute of the tooltip.

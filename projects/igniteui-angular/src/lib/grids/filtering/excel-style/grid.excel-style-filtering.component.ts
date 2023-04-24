@@ -282,9 +282,9 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     constructor(
-        protected cdr: ChangeDetectorRef,
-        public element: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil,
+        cdr: ChangeDetectorRef,
+        element: ElementRef<HTMLElement>,
+        platform: PlatformUtil,
         @Host() @Optional() @Inject(IGX_GRID_BASE) protected gridAPI?: GridType) {
         super(cdr, element, platform);
     }

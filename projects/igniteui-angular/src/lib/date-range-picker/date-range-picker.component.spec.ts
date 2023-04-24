@@ -1471,7 +1471,7 @@ export class DateRangeTestComponent implements OnInit {
     `
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
-    public disabled = false;
+    public override disabled = false;
 }
 
 @Component({
@@ -1499,7 +1499,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     public range;
     public inputFormat: string;
     public displayFormat: string;
-    public disabled = false;
+    public override disabled = false;
 }
 @Component({
     selector: 'igx-date-range-two-inputs-ng-model',

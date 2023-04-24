@@ -22,7 +22,7 @@ export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
         super(elementRef, cdr, zone, document, platformUtil);
     }
 
-    protected restoreScroll() {
+    protected override restoreScroll() {
         this.nativeElement.scrollLeft = this.scrollAmount;
     }
 }

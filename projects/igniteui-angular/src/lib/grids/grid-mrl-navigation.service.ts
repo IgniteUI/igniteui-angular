@@ -3,14 +3,13 @@ import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { GridKeydownTargetType } from './common/enums';
-import { ColumnType, GridType } from './common/grid.interface';
+import { ColumnType } from './common/grid.interface';
 
 /** @hidden */
 @Injectable()
 export class IgxGridMRLNavigationService extends IgxGridNavigationService {
-    public grid: GridType;
 
-    public isValidPosition(rowIndex: number, colIndex: number): boolean {
+    public override isValidPosition(rowIndex: number, colIndex: number): boolean {
         if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex ||
             Math.max(...this.grid.visibleColumns.map(col => col.visibleIndex)) < colIndex ||
             (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true))) {
@@ -19,7 +18,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return true;
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
+    public override shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         if (!super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex)) {
             return false;
         }
@@ -34,7 +33,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             || containerHeight && containerHeight < scrollPos.rowBottom -  Math.ceil(this.scrollTop));
     }
 
-    public isColumnFullyVisible(visibleColIndex: number): boolean {
+    public override isColumnFullyVisible(visibleColIndex: number): boolean {
         const targetCol = this.grid.getColumnByVisibleIndex(visibleColIndex);
         if (this.isParentColumnFullyVisible(targetCol?.parent) || super.isColumnPinned(visibleColIndex, this.forOfDir())) {
             return true;
@@ -57,7 +56,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { topOffset, rowTop, rowBottom: rowTop + (this.grid.defaultRowHeight * rowSpan) };
     }
 
-    public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
+    public override performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
         if (!this.shouldPerformHorizontalScroll(visibleColumnIndex)) {
             return;
         }
@@ -75,7 +74,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             });
     }
 
-    public performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
+    public override performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
         const children = this.parentByChildIndex(visibleColIndex || 0)?.children;
         if (!super.isDataRow(rowIndex) || (children && children.length < 2) || visibleColIndex < 0) {
             return super.performVerticalScrollToCell(rowIndex, visibleColIndex, cb);
@@ -137,7 +136,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { row: nextBlock ? nextRI : this.activeNode.row, column: col.visibleIndex };
     }
 
-    public headerNavigation(event: KeyboardEvent) {
+    public override headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) {
             return;
@@ -174,7 +173,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 colEnd: column.colEnd, rowEnd: column.rowEnd, columnVisibleIndex: column.visibleIndex };
     }
 
-    protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
+    protected override getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
         if (!this.activeNode.layout) {
             this.activeNode.layout = this.layout(this.activeNode.column || 0);
         }
@@ -230,7 +229,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { rowIndex, colIndex };
     }
 
-    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number, tag: GridKeydownTargetType) {
+    protected override horizontalNav(event: KeyboardEvent, key: string, rowIndex: number, tag: GridKeydownTargetType) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(key) || event.altKey) {
             return;

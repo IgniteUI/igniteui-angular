@@ -34,12 +34,9 @@
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
             </ng-template>
         </igx-column>
-        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'" [groupable]='true'>
-            <ng-template igxCell let-cell="cell" let-val>
-                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
-                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
-            </ng-template>
-        </igx-column>
+        <igx-column #col field="PercentInStock" [dataType]="'percent'"></igx-column>
+        <igx-column #col field="ProductionDate" [dataType]="'dateTime'"></igx-column>
+        <igx-column #col field="PackagedAt" [dataType]="'time'"></igx-column>
         <igx-column #col field="OrderDate" [dataType]="'date'" [hasSummary]="true">
             <ng-template igxCell let-cell="cell" let-val let-row>
                 {{ val | date: 'MMM d, yyyy' }}
@@ -47,6 +44,12 @@
             <ng-template igxHeader let-col>
                 <div class="header-text">{{col.field}}</div>
                 <igx-icon class="header-icon" style.color="{{ col.hasSummary ? '#e41c77' : '' }}" (click)="toggleSummary(col)">functions</igx-icon>
+            </ng-template>
+        </igx-column>
+        <igx-column #col field="Discontinued" header="Discontinued" [hasSummary]="true" [dataType]="'boolean'" [groupable]='true'>
+            <ng-template igxCell let-cell="cell" let-val>
+                <img *ngIf="val" src="assets/images/grid/active.png" title="Continued" alt="Continued" />
+                <img *ngIf="!val" src="assets/images/grid/expired.png" title="Discontinued" alt="Discontinued" />
             </ng-template>
         </igx-column>
     </igx-grid>
