@@ -95,7 +95,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('container', {read: ViewContainerRef, static: true}) 
+    @ViewChild('container', {read: ViewContainerRef, static: true})
     public container: ViewContainerRef;
 
     /**
@@ -249,7 +249,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxGridCRUDService,
         IgxGridValidationService,
         IgxGridSelectionService,
-        IgxColumnResizingService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxHierarchicalGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxHierarchicalGridComponent },
         IgxGridSummaryService,

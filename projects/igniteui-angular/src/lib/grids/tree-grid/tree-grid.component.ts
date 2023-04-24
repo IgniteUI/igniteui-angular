@@ -86,7 +86,6 @@ let NEXT_ID = 0;
         IgxGridValidationService,
         IgxGridSummaryService,
         IgxGridNavigationService,
-        IgxColumnResizingService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxTreeGridComponent },
