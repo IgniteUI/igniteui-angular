@@ -368,7 +368,7 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
     // @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     // public hgrid: IgxHierarchicalGridComponent;
 
-    public data = SampleTestData.generateHGridData(5, 3);
+    public override data = SampleTestData.generateHGridData(5, 3);
 }
 
 @Component({

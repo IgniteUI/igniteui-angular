@@ -25,21 +25,21 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get width(): any {
+    public override get width(): any {
         const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
         return width;
     }
 
-    public set width(val: any) { }
+    public override set width(val: any) { }
 
-    public get columnLayout() {
+    public override get columnLayout() {
         return true;
     }
 
     /**
      * @hidden
      */
-    public getCalcWidth(): any {
+    public override getCalcWidth(): any {
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
@@ -59,7 +59,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnComponent
      */
-    public get visibleIndex(): number {
+    public override get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
             return this._vIndex;
         }
@@ -86,7 +86,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public get hidden() {
+    public override get hidden() {
         return this._hidden;
     }
 
@@ -98,7 +98,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set hidden(value: boolean) {
+    public override set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
@@ -115,7 +115,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         super.ngAfterContentInit();
         if (!this.hidden) {
             this.hidden = this.allChildren.some(x => x.hidden);
@@ -149,7 +149,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    public populateVisibleIndexes() {
+    public override populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
             ? this.grid.pinnedColumns.concat(this.grid.unpinnedColumns)
