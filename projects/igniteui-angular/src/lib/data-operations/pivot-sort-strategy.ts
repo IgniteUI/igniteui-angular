@@ -6,11 +6,11 @@ import { GridColumnDataType } from './data-util';
 import { DefaultSortingStrategy, SortingDirection } from './sorting-strategy';
 
 export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrategy {
-    protected static _instance: DefaultPivotGridRecordSortingStrategy = null;
-    public static instance(): DefaultPivotGridRecordSortingStrategy {
+    protected static override _instance: DefaultPivotGridRecordSortingStrategy = null;
+    public static override instance(): DefaultPivotGridRecordSortingStrategy {
         return this._instance || (this._instance = new this());
     }
-    public sort(data: any[],
+    public override sort(data: any[],
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,
@@ -30,12 +30,12 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
 
 
 export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
-    protected static _instance: DefaultPivotSortingStrategy = null;
+    protected static override _instance: DefaultPivotSortingStrategy = null;
     protected dimension;
-    public static instance(): DefaultPivotSortingStrategy {
+    public static override instance(): DefaultPivotSortingStrategy {
         return this._instance || (this._instance = new this());
     }
-    public sort(data: any[],
+    public override sort(data: any[],
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,

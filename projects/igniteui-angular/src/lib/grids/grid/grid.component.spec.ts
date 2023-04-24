@@ -2864,7 +2864,7 @@ export class IgxGridDefaultRenderingComponent {
     </igx-grid>`
 })
 export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
-    public initColumns(column) {
+    public override initColumns(column) {
         if (column.index === 0) {
             column.width = '40%';
         }
@@ -2885,8 +2885,8 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         </div>`
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
-    public data = SampleTestData.foodProductData();
+    @ViewChild(IgxGridComponent, { static: true }) public override grid: IgxGridComponent;
+    public override data = SampleTestData.foodProductData();
 }
 @Component({
     template:
@@ -2897,7 +2897,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
         </div>`
 })
 export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
-    public data = [];
+    public override data = [];
 
     public fullData = [
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste' },
@@ -2950,9 +2950,9 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
         </div>`
 })
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
-    public paging = false;
-    public pageSize = 5;
-    public density: DisplayDensity = DisplayDensity.comfortable;
+    public override paging = false;
+    public override pageSize = 5;
+    public override density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 @Component({
@@ -2966,7 +2966,7 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
 export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
-    public data = [
+    public override data = [
         { ID: 1, Name: 'Johny' },
         { ID: 2, Name: 'Sally' },
         { ID: 3, Name: 'Tim' }
@@ -2984,8 +2984,8 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-    public data = [];
+    public override grid: IgxGridComponent;
+    public override data = [];
 }
 
 @Injectable()
@@ -3109,8 +3109,8 @@ export class IgxGridRemoteOnDemandComponent {
         </igx-column>`)
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
-    public data = SampleTestData.foodProductData();
+    @ViewChild(IgxGridComponent, { static: true }) public override grid: IgxGridComponent;
+    public override data = SampleTestData.foodProductData();
     public width = '600px';
     public height = '400px';
     public value: any;

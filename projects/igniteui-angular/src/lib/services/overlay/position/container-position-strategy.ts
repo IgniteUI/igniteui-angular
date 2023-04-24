@@ -13,7 +13,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     /**
      * Position the element based on the PositionStrategy implementing this interface.
      */
-    public position(contentElement: HTMLElement): void {
+    public override position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         this.setPosition(contentElement);
