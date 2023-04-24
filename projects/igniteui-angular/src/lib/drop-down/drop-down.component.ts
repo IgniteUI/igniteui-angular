@@ -521,7 +521,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 index: newSelection.index
             } as IgxDropDownItemBaseDirective;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner:this };
         this.selectionChanging.emit(args);
 
         if (!args.cancel) {
