@@ -119,7 +119,8 @@ describe('IgxDropDown ', () => {
             args = {
                 oldSelection: selected,
                 newSelection: null,
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
         });
