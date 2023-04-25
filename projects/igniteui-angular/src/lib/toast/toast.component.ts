@@ -202,8 +202,3 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
         });
     }
 }
-
-/**
- * @hidden
- */
-

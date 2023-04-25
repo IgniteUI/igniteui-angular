@@ -1,6 +1,5 @@
 import {
     Directive,
-    ElementRef,
     EventEmitter,
     Input,
     OnChanges,
@@ -84,7 +83,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input('igxFilter') public filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef) {
+    constructor() {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -122,7 +121,6 @@ export class IgxFilterDirective implements OnChanges {
     pure: false,
     standalone: true
 })
-
 export class IgxFilterPipe implements PipeTransform {
     private findMatchByKey(item: any, options: IgxFilterOptions, key: string) {
         const match = options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue);
@@ -171,8 +169,3 @@ export class IgxFilterPipe implements PipeTransform {
         return result;
     }
 }
-
-/**
- * @hidden
- */
-

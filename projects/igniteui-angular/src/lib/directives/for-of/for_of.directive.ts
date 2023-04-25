@@ -1839,8 +1839,3 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     }
 }
-
-/**
- * @hidden
- */
-

@@ -101,8 +101,3 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
         return activeElement;
     }
 }
-
-/**
- * @hidden
- */
-

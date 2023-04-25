@@ -85,8 +85,3 @@ export class IgxFocusDirective {
         }
     }
 }
-
-/**
- * @hidden
- */
-
