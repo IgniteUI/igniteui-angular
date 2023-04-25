@@ -467,6 +467,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
         expect(groupRow.expanded).toBe(false);
+
+        grid.clearGrouping();
+        tick();
+        grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Desc });
+        fix.detectChanges();
+        grid.toggleGroup(grid.groupsRowList.first.groupRow);
+        tick();
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toEqual(false);
     }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
