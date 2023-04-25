@@ -123,7 +123,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
 /**
  * Defines the end input for a date range picker
  *
- * @igxModule IgxDateRangeModule
+ * @igxModule IgxDateRangePickerModule
  *
  * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
  *
@@ -137,10 +137,10 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
  * @example
  * ```html
  * <igx-date-range-picker mode="dropdown">
+ *      ...
  *      <igx-date-range-end>
  *          <input igxInput igxDateTimeEditor type="text">
  *      </igx-date-range-end>
- *      ...
  * </igx-date-range-picker>
  * ```
  */
@@ -154,8 +154,34 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 
+/**
+ * Replaces the default separator `to` with the provided value
+ *
+ * @igxModule IgxDateRangePickerModule
+ *
+ * @igxTheme igx-date-range-picker-theme
+ *
+ * @igxKeywords date, range, date range, date picker
+ *
+ * @igxGroup scheduling
+ *
+ * @example
+ * ```html
+ * <igx-date-range-picker>
+ *      <igx-date-range-start>
+ *          <input igxInput igxDateTimeEditor type="text">
+ *      </igx-date-range-start>
+ *
+ *      <ng-template igxDateRangeSeparator>-</ng-template>
+ *
+ *      <igx-date-range-end>
+ *          <input igxInput igxDateTimeEditor type="text">
+ *      </igx-date-range-end>
+ *      ...
+ * </igx-date-range-picker>
+ * ```
+ */
 @Directive({
     selector: '[igxDateRangeSeparator]'
 })
-export class IgxDateRangeSeparatorDirective {
-}
+export class IgxDateRangeSeparatorDirective { }
