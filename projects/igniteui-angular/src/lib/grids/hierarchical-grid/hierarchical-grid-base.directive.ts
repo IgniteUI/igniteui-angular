@@ -15,8 +15,6 @@ import {
     Optional,
     Output,
     reflectComponentType,
-    TemplateRef,
-    ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -92,15 +90,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * @hidden
-     * @internal
      */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
-    public dragIndicatorIconBase: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    public get maxLevelHeaderDepth() {
+    public override get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.columns.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -113,25 +104,25 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    public get outlet() {
+    public override get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-    public set outlet(val: any) {
+    public override set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
     /** @hidden @internal */
     public batchEditingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public get batchEditing(): boolean {
+    public override get batchEditing(): boolean {
         return this._batchEditing;
     }
 
-    public set batchEditing(val: boolean) {
+    public override set batchEditing(val: boolean) {
         if (val !== this._batchEditing) {
             delete this._transactions;
             this.switchTransactionService(val);
@@ -151,13 +142,13 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     constructor(
         validationService: IgxGridValidationService,
-        public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
-        protected transactionFactory: IgxFlatTransactionFactory,
+        selectionService: IgxGridSelectionService,
+        colResizingService: IgxColumnResizingService,
+        @Inject(IGX_GRID_SERVICE_BASE) public override gridAPI: IgxHierarchicalGridAPIService,
+        transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
-        @Inject(DOCUMENT) public document,
+        @Inject(DOCUMENT) document,
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
@@ -166,12 +157,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         envInjector: EnvironmentInjector,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
-        protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
+        platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) _diTransactions?: TransactionService<Transaction, State>) {
         super(
             validationService,
             selectionService,
@@ -193,7 +184,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             summaryService,
             _displayDensityOptions,
             localeId,
-            platform);
+            platform,
+            _diTransactions);
     }
 
     /**

@@ -12,13 +12,13 @@ import { take } from 'rxjs/operators';
 
 
 export class MyRowStrategy extends NoopPivotDimensionsStrategy {
-  public process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
+  public override process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
     return collection;
   }
 }
 
 export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
-  public process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
+  public override process(collection: any[], _: IPivotDimension[], __: IPivotValue[]): any[] {
     return collection;
   }
 }

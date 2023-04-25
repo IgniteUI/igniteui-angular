@@ -10,7 +10,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     private rowsToBeIndeterminate: Set<any>;
 
     /** Select specified rows. No event is emitted. */
-    public selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
+    public override selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (this.grid && this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
@@ -19,7 +19,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     }
 
     /** Deselect specified rows. No event is emitted. */
-    public deselectRowsWithNoEvent(rowIDs: any[]): void {
+    public override deselectRowsWithNoEvent(rowIDs: any[]): void {
         if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeDeselectRowsWithNoEvent(rowIDs);
             return;
@@ -27,7 +27,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         super.deselectRowsWithNoEvent(rowIDs);
     }
 
-    public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
+    public override emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.emitCascadeRowSelectionEvent(newSelection, added, removed, event);
             return;

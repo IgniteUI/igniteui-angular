@@ -8,7 +8,7 @@ import { IgxPivotColumnResizingService } from './pivot-resizing.service';
     templateUrl: '../resizer.component.html'
 })
 export class IgxPivotGridColumnResizerComponent extends IgxGridColumnResizerComponent {
-    constructor(public colResizingService: IgxPivotColumnResizingService) {
+    constructor(public override colResizingService: IgxPivotColumnResizingService) {
         super(colResizingService);
     }
 }

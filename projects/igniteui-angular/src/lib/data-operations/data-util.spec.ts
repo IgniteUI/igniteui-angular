@@ -322,7 +322,7 @@ const testGroupBy = () => {
 
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
-    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
+    public override filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
         const len = Math.ceil(data.length / 2);
         const res: T[] = [];
         let i;
