@@ -3,11 +3,11 @@ import { ConnectedFit } from '../../../services/overlay/utilities';
 
 /** @hidden */
 export class ExcelStylePositionStrategy extends AutoPositionStrategy {
-    protected shouldFitInViewPort() {
+    protected override shouldFitInViewPort() {
         return true;
     }
 
-    protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
+    protected override fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const heightOverflow = connectedFit.contentElementRect.height - connectedFit.viewPortRect.height;
         if (heightOverflow > 0) {
             element.style.width = 'auto';

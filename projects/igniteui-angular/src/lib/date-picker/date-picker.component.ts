@@ -228,7 +228,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
+    public override outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Gets/Sets the value of `id` attribute.
@@ -410,9 +410,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ViewChild(IgxDateTimeEditorDirective, { static: true })
     private dateTimeEditor: IgxDateTimeEditorDirective;
 
-    @ViewChild(IgxInputGroupComponent)
-    protected inputGroup: IgxInputGroupComponent;
-
     @ViewChild(IgxInputGroupComponent, { read: ViewContainerRef })
     private viewContainerRef: ViewContainerRef;
 
@@ -502,15 +499,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(public element: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) protected _localeId: string,
+    constructor(element: ElementRef<HTMLElement>,
+        @Inject(LOCALE_ID) _localeId: string,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         private _injector: Injector,
         private _renderer: Renderer2,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions?: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
         this.locale = this.locale || this._localeId;
     }
@@ -749,14 +746,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#endregion
 
     /** @hidden @internal */
-    public ngOnInit(): void {
+    public override ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this.locale = this.locale || this._localeId;
+        super.ngOnInit();
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         super.ngAfterViewInit();
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
@@ -795,7 +793,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     /** @hidden @internal */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
         super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();

@@ -51,13 +51,13 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
 
     constructor(selectionService: IgxGridSelectionService,
                 @Inject(IGX_GRID_BASE) grid: GridType,
-                @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+                @Inject(IgxOverlayService) overlayService: IgxOverlayService,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
-                protected zone: NgZone,
+                zone: NgZone,
                 touchManager: HammerGesturesManager,
                 @Inject(DOCUMENT) public document,
-                protected platformUtil: PlatformUtil) {
+                platformUtil: PlatformUtil) {
         super(selectionService, grid, overlayService, cdr, element, zone, touchManager, platformUtil);
     }
 
@@ -80,7 +80,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     /**
      * @hidden
      */
-    public calculateSizeToFit(range: any): number {
+    public override calculateSizeToFit(range: any): number {
         let leftPadding = 0;
         if (this.indentationDiv) {
             const indentationStyle = this.document.defaultView.getComputedStyle(this.indentationDiv.nativeElement);

@@ -10,13 +10,13 @@ import { Component } from '@angular/core';
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent}]
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-    public get selected(): boolean {
+    public override get selected(): boolean {
         return false;
     }
-    public set selected(value: boolean) {
+    public override set selected(value: boolean) {
     }
 
-    public clicked(event?) {// eslint-disable-line
+    public override clicked(event?) {// eslint-disable-line
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();
     }
