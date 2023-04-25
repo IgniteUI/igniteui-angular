@@ -377,18 +377,27 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         const checkbox = fixture.componentInstance.cb;
-        checkbox.checked = false;
+        const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
         expect(checkbox.required).toBe(true);
+        expect(checkbox.invalid).toBe(false);
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(false);
         expect(checkbox.nativeElement.getAttribute('aria-required')).toEqual('true');
         expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
 
-        fixture.debugElement.componentInstance.markAsTouched();
-        fixture.detectChanges();
+        dispatchCbEvent('keyup', cbxEl, fixture);
+        expect(checkbox.focused).toBe(true);
+        dispatchCbEvent('blur', cbxEl, fixture);
 
-        const invalidCheckbox = fixture.debugElement.nativeElement.querySelectorAll(`.igx-checkbox--invalid`);
-        expect(invalidCheckbox.length).toBe(1);
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(true);
         expect(checkbox.invalid).toBe(true);
         expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        checkbox.checked = true;
+        fixture.detectChanges();
+
+        expect(cbxEl.classList.contains('igx-checkbox--invalid')).toBe(false);
+        expect(checkbox.invalid).toBe(false);
+        expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
     describe('EditorProvider', () => {
@@ -488,17 +497,6 @@ class CheckboxFormGroupComponent {
     public myForm = this.fb.group({ checkbox: ['', Validators.required] });
 
     constructor(private fb: UntypedFormBuilder) {}
-
-    public markAsTouched() {
-        if (!this.myForm.valid) {
-            for (const key in this.myForm.controls) {
-                if (this.myForm.controls[key]) {
-                    this.myForm.controls[key].markAsTouched();
-                    this.myForm.controls[key].updateValueAndValidity();
-                }
-            }
-        }
-    }
 }
 @Component({
     template: `
