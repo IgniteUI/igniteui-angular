@@ -400,8 +400,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
-    private scrollTop = 0;
-    private scrollLeft = 0;
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -655,10 +653,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
-            this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
-        });
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
@@ -1192,14 +1186,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
-    }
-
-
-    private hg_verticalScrollHandler() {
-        this.scrollTop = this.verticalScrollContainer.scrollPosition;
-    }
-    private hg_horizontalScrollHandler() {
-        this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }
 
