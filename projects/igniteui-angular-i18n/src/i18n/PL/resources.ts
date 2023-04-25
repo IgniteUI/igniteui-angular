@@ -11,6 +11,8 @@ import { InputResourceStringsPL } from './input-resources';
 import { ChipResourceStringsPL } from './chip-resources';
 import { ComboResourceStringsPL } from './combo-resources';
 import { QueryBuilderResourceStringsPL } from './query-builder-resources';
+import { BannerResourceStringsPL } from './banner-resources';
+import { ActionStripResourceStringsPL } from './action-strip-resources';
 
 /**
  * Polish resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsPL = {
     ...InputResourceStringsPL,
     ...ChipResourceStringsPL,
     ...ComboResourceStringsPL,
-    ...QueryBuilderResourceStringsPL
+    ...QueryBuilderResourceStringsPL,
+    ...BannerResourceStringsPL,
+    ...ActionStripResourceStringsPL,
 };

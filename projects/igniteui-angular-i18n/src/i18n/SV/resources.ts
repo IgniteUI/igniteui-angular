@@ -11,6 +11,7 @@ import { InputResourceStringsSV } from './input-resources';
 import { ChipResourceStringsSV } from './chip-resources';
 import { ComboResourceStringsSV } from './combo-resources';
 import { QueryBuilderResourceStringsSV } from './query-builder-resources';
+import { ActionStripResourceStringsSV } from './action-strip-resources';
 
 /**
  * Swedish resource strings for all components
@@ -28,5 +29,6 @@ export const IgxResourceStringsSV = {
     ...InputResourceStringsSV,
     ...ChipResourceStringsSV,
     ...ComboResourceStringsSV,
-    ...QueryBuilderResourceStringsSV
+    ...QueryBuilderResourceStringsSV,
+    ...ActionStripResourceStringsSV,
 };

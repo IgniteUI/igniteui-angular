@@ -17,7 +17,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-    public position(
+    public override position(
         contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
