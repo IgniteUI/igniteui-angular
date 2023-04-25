@@ -11,6 +11,8 @@ import { InputResourceStringsNB } from './input-resources';
 import { ChipResourceStringsNB } from './chip-resources';
 import { ComboResourceStringsNB } from './combo-resources';
 import { QueryBuilderResourceStringsNB } from './query-builder-resources';
+import { BannerResourceStringsNB } from './banner-resources';
+import { ActionStripResourceStringsNB } from './action-strip-resources';
 
 /**
  * Norwegian resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsNB = {
     ...InputResourceStringsNB,
     ...ChipResourceStringsNB,
     ...ComboResourceStringsNB,
-    ...QueryBuilderResourceStringsNB
+    ...QueryBuilderResourceStringsNB,
+    ...BannerResourceStringsNB,
+    ...ActionStripResourceStringsNB,
 };

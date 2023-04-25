@@ -11,6 +11,8 @@ import { InputResourceStringsPT } from './input-resources';
 import { ChipResourceStringsPT } from './chip-resources';
 import { ComboResourceStringsPT } from './combo-resources';
 import { QueryBuilderResourceStringsPT } from './query-builder-resources';
+import { BannerResourceStringsPT } from './banner-resources';
+import { ActionStripResourceStringsPT } from './action-strip-resources';
 
 /**
  * Portuguese resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsPT = {
     ...InputResourceStringsPT,
     ...ChipResourceStringsPT,
     ...ComboResourceStringsPT,
-    ...QueryBuilderResourceStringsPT
+    ...QueryBuilderResourceStringsPT,
+    ...BannerResourceStringsPT,
+    ...ActionStripResourceStringsPT,
 };

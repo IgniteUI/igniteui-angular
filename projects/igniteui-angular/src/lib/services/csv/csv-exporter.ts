@@ -45,7 +45,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      *
      * @memberof IgxCsvExporterService
      */
-    public exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
+    public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     private _stringData: string;
 

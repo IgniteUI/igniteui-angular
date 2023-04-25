@@ -275,10 +275,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   constructor(
-    protected renderer: Renderer2,
-    protected elementRef: ElementRef,
-    protected maskParser: MaskParsingService,
-    protected platform: PlatformUtil,
+    renderer: Renderer2,
+    elementRef: ElementRef,
+    maskParser: MaskParsingService,
+    platform: PlatformUtil,
     @Inject(DOCUMENT) private _document: any,
     @Inject(LOCALE_ID) private _locale: any) {
     super(elementRef, maskParser, renderer, platform);
@@ -300,7 +300,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     this.updateDefaultFormat();
     this.setMask(this.inputFormat);
     this.updateMask();
@@ -360,7 +360,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public writeValue(value: any): void {
+  public override writeValue(value: any): void {
     this._value = value;
     this.setDateValue(value);
     this.updateMask();
@@ -395,12 +395,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public registerOnChange(fn: any): void {
+  public override registerOnChange(fn: any): void {
     this.onChangeCallback = fn;
   }
 
   /** @hidden @internal */
-  public registerOnTouched(fn: any): void {
+  public override registerOnTouched(fn: any): void {
     this.onTouchCallback = fn;
   }
 
@@ -408,7 +408,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public setDisabledState?(_isDisabled: boolean): void { }
 
   /** @hidden @internal */
-  public onCompositionEnd(): void {
+  public override onCompositionEnd(): void {
     super.onCompositionEnd();
 
     this.updateValue(this.parseDate(this.inputValue));
@@ -416,7 +416,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public onInputChanged(event): void {
+  public override onInputChanged(event): void {
     super.onInputChanged(event);
     if (this._composing) {
       return;
@@ -442,7 +442,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public onKeyDown(event: KeyboardEvent): void {
+  public override onKeyDown(event: KeyboardEvent): void {
     if (this.nativeElement.readOnly) {
       return;
     }
@@ -466,7 +466,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public onFocus(): void {
+  public override onFocus(): void {
     if (this.nativeElement.readOnly) {
       return;
     }
@@ -478,7 +478,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public onBlur(value: string): void {
+  public override onBlur(value: string): void {
     this._isFocused = false;
     if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
       this.updateValue(this.parseDate(this.inputValue));
@@ -496,7 +496,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   // the date editor sets its own inputFormat as its placeholder if none is provided
   /** @hidden */
-  protected setPlaceholder(_value: string): void { }
+  protected override setPlaceholder(_value: string): void { }
 
   private updateDefaultFormat(): void {
     this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
