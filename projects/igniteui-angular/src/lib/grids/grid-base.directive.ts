@@ -7562,11 +7562,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private configToColumns(config: IgxColumn[]) {
-        const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const columns: IgxColumnComponent[] = [];
 
         config.forEach(column => {
-            const newColumn = factory.create(this.viewRef.injector);
+            const newColumn = createComponent(IgxColumnComponent, { environmentInjector:  this.envInjector, elementInjector: this.injector});
             for (const prop in column) {
                 newColumn.instance[prop] = column[prop];
             }
