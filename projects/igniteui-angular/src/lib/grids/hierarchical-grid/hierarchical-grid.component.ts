@@ -337,7 +337,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public childRow: IgxChildGridRowComponent;
 
     private _data;
-    private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
@@ -409,18 +408,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents.first :
             super.excelStyleFilteringComponent;
-    }
-
-    /**
-     * Returns an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
     }
 
     /**

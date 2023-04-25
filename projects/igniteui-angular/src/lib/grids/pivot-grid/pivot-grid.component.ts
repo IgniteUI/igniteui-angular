@@ -547,7 +547,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected override _defaultExpandState = false;
     protected override _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy();
     private _data;
-    private _filteredData;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
     private _superCompactMode = false;
@@ -1089,19 +1088,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public get data(): any[] | null {
         return this._data;
     }
-
-    /**
-     * Returns an array of objects containing the filtered data.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
 
     /**
      * @hidden

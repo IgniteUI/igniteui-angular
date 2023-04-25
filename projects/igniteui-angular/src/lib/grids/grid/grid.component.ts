@@ -335,18 +335,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    /**
      * Gets/Sets the total number of records in the data source.
      *
      * @remarks
@@ -369,7 +357,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
 
