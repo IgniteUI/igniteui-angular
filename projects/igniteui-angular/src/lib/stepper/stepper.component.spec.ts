@@ -79,7 +79,8 @@ describe('Rendering Tests', () => {
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxStepperSampleTestComponent
+                    IgxStepperSampleTestComponent,
+                    IgxStepperLinearComponent
                 ],
                 imports: [
                     NoopAnimationsModule,
@@ -146,6 +147,23 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[2].active).toBeTruthy();
             expect(serviceExpandSpy).toHaveBeenCalledOnceWith(stepper.steps[2]);
             expect(serviceCollapseSpy).toHaveBeenCalledOnceWith(stepper.steps[0]);
+        }));
+
+        it('should calculate disabled steps properly when the stepper is initially in linear mode', fakeAsync(()=>{
+            const fixture = TestBed.createComponent(IgxStepperLinearComponent);
+            fixture.detectChanges();
+            const linearStepper = fixture.componentInstance.stepper;
+
+            const serviceExpandSpy = spyOn((linearStepper as any).stepperService, 'expand').and.callThrough();
+            linearStepper.next();
+            fixture.detectChanges();
+            tick();
+            console.log(linearStepper.steps[0].active, linearStepper.steps[1].active, linearStepper.steps[1].linearDisabled);
+
+            expect(linearStepper.steps[1].active).toBeFalsy();
+            expect(linearStepper.steps[0].active).toBeTruthy();
+            expect(linearStepper.steps[1].linearDisabled).toBeTruthy();
+            expect(serviceExpandSpy).not.toHaveBeenCalled();
         }));
 
         it('should not allow moving forward to next step in linear mode if the previous step is invalid', fakeAsync(() => {
@@ -1291,4 +1309,20 @@ export class IgxStepperSampleTestComponent {
     public animationDuration = 300;
     public displayHiddenStep = false;
 
+}
+
+@Component({
+    template: `
+     <igx-stepper #stepper [linear]="true">
+        <igx-step #step1 [isValid]="false">
+        </igx-step>
+        <igx-step #step2 [isValid]="false">
+        </igx-step>
+        <igx-step #step3 [isValid]="false">
+        </igx-step>
+    </igx-stepper>
+    `
+})
+export class IgxStepperLinearComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
 }
