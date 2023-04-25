@@ -11,6 +11,8 @@ import { InputResourceStringsZHHANT } from './input-resources';
 import { ChipResourceStringsZHHANT } from './chip-resources';
 import { ComboResourceStringsZHHANT } from './combo-resources';
 import { QueryBuilderResourceStringsZHHANT } from './query-builder-resources';
+import { BannerResourceStringsZHHANT } from './banner-resources';
+import { ActionStripResourceStringsZHHANT } from './action-strip-resources';
 
 /**
  * Traditional Chinese (zh-Hant) resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsZHHANT = {
     ...InputResourceStringsZHHANT,
     ...ChipResourceStringsZHHANT,
     ...ComboResourceStringsZHHANT,
-    ...QueryBuilderResourceStringsZHHANT
+    ...QueryBuilderResourceStringsZHHANT,
+    ...BannerResourceStringsZHHANT,
+    ...ActionStripResourceStringsZHHANT,
 };
