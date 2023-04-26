@@ -498,6 +498,12 @@
                 background: var-get($theme, 'error-color');
                 border-color: var-get($theme, 'error-color');
             }
+
+            @if $variant == 'bootstrap' {
+                &::before {
+                    background: white;
+                }
+            }
         }
 
         @if $variant == 'fluent' {
