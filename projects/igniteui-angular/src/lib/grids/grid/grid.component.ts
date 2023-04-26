@@ -52,6 +52,7 @@ import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
 import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
