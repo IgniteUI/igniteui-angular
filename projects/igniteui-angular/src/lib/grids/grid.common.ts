@@ -35,8 +35,8 @@ export interface IPinningConfig {
 export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
-    public settings: RowEditPositionSettings;
-    public position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+    public override settings: RowEditPositionSettings;
+    public override position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
             target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement || this.settings.target as HTMLElement; // current grid.row

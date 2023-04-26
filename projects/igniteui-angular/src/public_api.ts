@@ -123,7 +123,14 @@ export * from './lib/query-builder/query-builder-header.component'
 export * from './lib/services/public_api';
 export * from './lib/core/dates';
 export * from './lib/core/density';
+export { PickerInteractionMode } from './lib/date-common/types';
+export { SplitterType } from './lib/splitter/splitter.component';
+export { GridSelectionRange } from './lib/grids/common/types';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
+
+/**
+ * i18n
+ */
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
@@ -139,9 +146,7 @@ export { IInputResourceStrings } from './lib/core/i18n/input-resources';
 export { IChipResourceStrings } from './lib/core/i18n/chip-resources';
 export { IActionStripResourceStrings } from './lib/core/i18n/action-strip-resources';
 export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-resources';
-export { PickerInteractionMode } from './lib/date-common/types';
-export { SplitterType } from './lib/splitter/splitter.component';
-export { GridSelectionRange } from './lib/grids/common/types';
+export { IBannerResourceStrings } from './lib/core/i18n/banner-resources';
 
 /* IMPORTANT: The following are NgModules exported for backwards-compatibility before standalone components */
 export * from './lib/icon/icon.module';
@@ -176,4 +181,3 @@ export * from './lib/directives/mask/mask.module';
 export * from './lib/directives/radio/radio-group.module';
 export * from './lib/directives/ripple/ripple.module';
 export * from './lib/directives/scroll-inertia/scroll_inertia.module';
-

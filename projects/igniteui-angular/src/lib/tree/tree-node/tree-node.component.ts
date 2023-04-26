@@ -207,7 +207,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /** @hidden @internal */
-    public get animationSettings(): ToggleAnimationSettings {
+    public override get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
     }
 
@@ -403,7 +403,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected treeService: IgxTreeService,
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
-        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
@@ -629,7 +629,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.navService.setFocusedAndActiveNode(this);
     }
 
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
         super.ngOnDestroy();
         this.selectionService.ensureStateOnNodeDelete(this);
     }

@@ -406,7 +406,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     }
 
     /** @hidden @internal */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);

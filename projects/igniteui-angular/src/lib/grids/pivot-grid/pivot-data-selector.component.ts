@@ -233,11 +233,11 @@ export class IgxPivotDataSelectorComponent {
     public dropAllowed: boolean;
     /** @hidden @internal */
     public get dims() : IPivotDimension[] {
-        return this._grid.allDimensions;
+        return this._grid?.allDimensions || [];
     };
     /** @hidden @internal */
     public get values(): IPivotValue[] {
-        return this._grid.pivotConfiguration.values;
+        return this._grid?.pivotConfiguration.values || [];
     };
 
     constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
@@ -623,6 +623,10 @@ export class IgxPivotDataSelectorComponent {
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public getPanelCollapsed(panelType: PivotDimensionType): boolean {
         switch(panelType) {
             case PivotDimensionType.Column:
@@ -636,6 +640,10 @@ export class IgxPivotDataSelectorComponent {
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public onCollapseChange(value: boolean, panelType: PivotDimensionType): void {
         switch(panelType) {
             case PivotDimensionType.Column:

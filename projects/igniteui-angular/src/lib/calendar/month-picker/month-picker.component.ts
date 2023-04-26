@@ -174,7 +174,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event: KeyboardEvent) {
+    public override activeViewDecadeKB(event: KeyboardEvent) {
         super.activeViewDecadeKB(event);
 
         if (event.key === this.platform.KEYMAP.ARROW_RIGHT) {
@@ -195,7 +195,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecade() {
+    public override activeViewDecade() {
         super.activeViewDecade();
 
         requestAnimationFrame(() => {
@@ -246,7 +246,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      *  this.monthPicker.selectDate(new Date(`2018-06-12`));
      * ```
      */
-    public selectDate(value: Date) {
+    public override selectDate(value: Date) {
         if (!value) {
             return new Date();
         }
@@ -257,7 +257,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public writeValue(value: Date) {
+    public override writeValue(value: Date) {
         if (value) {
             this.viewDate = this.selectedDates = value;
         }

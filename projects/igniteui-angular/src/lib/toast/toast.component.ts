@@ -65,7 +65,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-toast-${NEXT_ID++}`;
+    public override id = `igx-toast-${NEXT_ID++}`;
 
     /**
      * Sets/gets the `role` attribute.
@@ -140,7 +140,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      *
      * @memberof IgxToastComponent
      */
-    public get element() {
+    public override get element() {
         return this._element.nativeElement;
     }
 
@@ -161,7 +161,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      * this.toast.open();
      * ```
      */
-    public open(message?: string, settings?: PositionSettings) {
+    public override open(message?: string, settings?: PositionSettings) {
         if (message !== undefined) {
             this.textMessage = message;
         }
@@ -179,7 +179,7 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      * this.toast.toggle();
      * ```
      */
-     public toggle() {
+     public override toggle() {
         if (this.collapsed || this.isClosing) {
             this.open();
         } else {
@@ -190,13 +190,13 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
     /**
      * @hidden
      */
-    public ngOnInit() {
-        this.opened.pipe(takeUntil(this.d$)).subscribe(() => {
+    public override ngOnInit() {
+        this.opened.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.isVisibleChange.emit(openedEventArgs);
         });
 
-        this.closed.pipe(takeUntil(this.d$)).subscribe(() => {
+        this.closed.pipe(takeUntil(this.destroy$)).subscribe(() => {
             const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.isVisibleChange.emit(closedEventArgs);
         });

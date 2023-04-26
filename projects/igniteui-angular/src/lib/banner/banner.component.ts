@@ -19,6 +19,8 @@ import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
+import { IBannerResourceStrings } from '../core/i18n/banner-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
@@ -133,6 +135,25 @@ export class IgxBannerComponent implements IToggleView {
         return this._animationSettings ? this._animationSettings : this._expansionPanel.animationSettings;
     }
 
+        /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
+     */
+
+    @Input()
+    public set resourceStrings(value: IBannerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    public get resourceStrings(): IBannerResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.BannerResourceStrings;
+        }
+        return this._resourceStrings;
+    }
+
     /**
      * Set the animation settings used by the banner open/close methods
      * ```typescript
@@ -184,6 +205,7 @@ export class IgxBannerComponent implements IToggleView {
 
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
+    private _resourceStrings;
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
 

@@ -2565,7 +2565,7 @@ class DealsSummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
                 return obj;
@@ -2580,7 +2580,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
                 return obj;
@@ -2595,7 +2595,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
                 return obj;
@@ -2615,7 +2615,7 @@ class InStockSummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries: any[], allData = [], field?): IgxSummaryResult[] {
+    public override operate(summaries: any[], allData = [], field?): IgxSummaryResult[] {
         const result = super.operate(summaries);
         if (field && field === 'UnitsInStock') {
             result.push({
@@ -2633,7 +2633,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
+    public override operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
         const result = super.operate(data);
         if (fieldName === 'UnitsInStock') {
             result.push({

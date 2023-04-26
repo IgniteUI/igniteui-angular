@@ -19,7 +19,7 @@ import { NgFor } from '@angular/common';
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
-    public overrides = {
+    public override overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
     };
 }

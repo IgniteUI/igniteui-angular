@@ -1322,14 +1322,14 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
-    public showToolbar = false;
-    public cols1: Array<any> = [
+    public override showToolbar = false;
+    public override cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
         { field: 'CompanyName', rowStart: 1, colStart: 2, groupable: true },
         { field: 'ContactName', rowStart: 1, colStart: 3, groupable: true },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4, groupable: true },
     ];
-    public cols2: Array<any> = [
+    public override cols2: Array<any> = [
         { field: 'PostalCode', rowStart: 1, colStart: 1, colEnd: 3 },
         { field: 'City', rowStart: 2, colStart: 1, groupable: true },
         { field: 'Country', rowStart: 2, colStart: 2, groupable: true },

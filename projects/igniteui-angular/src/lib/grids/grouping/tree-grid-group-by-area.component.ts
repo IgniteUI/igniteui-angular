@@ -116,7 +116,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
         this.grid.notifyChanges(true);
     }
 
-    protected expressionsChanged() {
+    protected override expressionsChanged() {
         this.updateColumnsVisibility();
     }
 

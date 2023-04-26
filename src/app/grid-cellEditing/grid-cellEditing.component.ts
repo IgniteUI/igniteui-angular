@@ -231,7 +231,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
                 const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;

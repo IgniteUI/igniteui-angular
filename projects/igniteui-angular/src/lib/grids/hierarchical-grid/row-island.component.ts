@@ -220,13 +220,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     constructor(
         validationService: IgxGridValidationService,
-        public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
+        selectionService: IgxGridSelectionService,
+        colResizingService: IgxColumnResizingService,
         @Inject(IGX_GRID_SERVICE_BASE) gridAPI: IgxHierarchicalGridAPIService,
-        protected transactionFactory: IgxFlatTransactionFactory,
+        transactionFactory: IgxFlatTransactionFactory,
         elementRef: ElementRef<HTMLElement>,
         zone: NgZone,
-        @Inject(DOCUMENT) public document,
+        @Inject(DOCUMENT) document,
         cdr: ChangeDetectorRef,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
@@ -235,12 +235,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         appRef: ApplicationRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService,
         @Inject(LOCALE_ID) localeId: string,
-        protected platform: PlatformUtil) {
+        platform: PlatformUtil) {
         super(
             validationService,
             selectionService,
@@ -269,7 +269,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         this.filteringService.grid = this as GridType;
         this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
@@ -279,7 +279,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         this.updateChildren();
         this.children.notifyOnChanges();
         this.children.changes.pipe(takeUntil(this.destroy$))
@@ -321,7 +321,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         this.rowIslandAPI.register(this);
         if (this.parentIsland) {
             this.parentIsland.rowIslandAPI.registerChildRowIsland(this);
@@ -355,7 +355,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -376,12 +376,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public reflow() { }
+    public override reflow() { }
 
     /**
      * @hidden
      */
-    public calculateGridHeight() { }
+    public override calculateGridHeight() { }
 
     protected _childColumns = [];
 

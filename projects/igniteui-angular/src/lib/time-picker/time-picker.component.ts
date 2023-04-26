@@ -126,7 +126,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public displayFormat: string;
+    public override displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -140,7 +140,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
+    public override inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -151,7 +151,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+    public override mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
      * The minimum value the picker will accept.
@@ -188,7 +188,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * let isCollapsed = this.timePicker.collapsed;
      * ```
      */
-    public get collapsed(): boolean {
+    public override get collapsed(): boolean {
         return this.toggleRef?.collapsed;
     }
 
@@ -381,11 +381,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden */
     public get isTwelveHourFormat(): boolean {
         return this.inputFormat.indexOf('h') !== - 1;
-    }
-
-    /** @hidden @internal */
-    public get isDropdown(): boolean {
-        return this.mode === PickerInteractionMode.DropDown;
     }
 
     /** @hidden @internal */
@@ -606,10 +601,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     constructor(
-        public element: ElementRef,
-        @Inject(LOCALE_ID) protected _localeId: string,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
+        element: ElementRef,
+        @Inject(LOCALE_ID) _localeId: string,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
         private _injector: Injector,
         private platform: PlatformUtil,
         private cdr: ChangeDetectorRef) {
@@ -713,15 +708,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     //#endregion
 
     /** @hidden */
-    public ngOnInit(): void {
+    public override ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
         this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
+        super.ngOnInit();
     }
 
     /** @hidden */
-    public ngAfterViewInit(): void {
+    public override ngAfterViewInit(): void {
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
@@ -748,7 +744,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
         super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();

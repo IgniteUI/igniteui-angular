@@ -111,14 +111,14 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
     public headerContainers: QueryList<IgxGridForOfDirective<IgxGridHeaderGroupComponent>>;
 
-    public get headerForOf() {
+    public override get headerForOf() {
         return this.headerContainers.last;
     }
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef,
+        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
+        ref: ElementRef<HTMLElement>,
+        cdr: ChangeDetectorRef,
         protected renderer: Renderer2,
     ) {
         super(ref, cdr);

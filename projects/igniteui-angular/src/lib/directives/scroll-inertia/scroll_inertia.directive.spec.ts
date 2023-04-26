@@ -311,21 +311,21 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     constructor(element: ElementRef, _zone: NgZone) {
         super(element, _zone);
     }
-    public onWheel(evt) {
+    public override onWheel(evt) {
         super.onWheel(evt);
     }
 
-    public onTouchStart(evt) {
+    public override onTouchStart(evt) {
         return super.onTouchStart(evt);
     }
-    public onTouchEnd(evt) {
+    public override onTouchEnd(evt) {
         super.onTouchEnd(evt);
     }
-    public onTouchMove(evt) {
+    public override onTouchMove(evt) {
        return super.onTouchMove(evt);
     }
 
-    public _inertiaInit(speedX, speedY) {
+    public override _inertiaInit(speedX, speedY) {
         super._inertiaInit(speedX, speedY);
     }
 }

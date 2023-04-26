@@ -27,7 +27,7 @@ class MySummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(data: any[], allData = [], fieldName?): IgxSummaryResult[] {
+    public override operate(data: any[], allData = [], fieldName?): IgxSummaryResult[] {
         fieldName = fieldName === 'Sum' ? 'ReorderLevel' : fieldName;
         const result = super.operate(allData.map(r => r[fieldName]));
             result.push({

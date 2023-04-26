@@ -5,7 +5,7 @@ import { ColumnType } from '../common/grid.interface';
 export abstract class IgxColumnActionsBaseDirective {
 
     /** @hidden @internal */
-    public actionEnabledColumnsFilter: (
+    public abstract actionEnabledColumnsFilter: (
         value: ColumnType,
         index: number,
         array: ColumnType[]

@@ -466,7 +466,7 @@ class AgeSummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
                 const summaryResult = obj.summaryResult;
@@ -486,7 +486,7 @@ class AgeSummaryMinMax extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'min' || obj.key === 'max') {
                 const summaryResult = obj.summaryResult;
@@ -506,7 +506,7 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries);
         result.push({
             key: 'test',
@@ -523,7 +523,7 @@ class PTOSummary extends IgxSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[], allData = [], field?): IgxSummaryResult[] {
+    public override operate(summaries?: any[], allData = [], field?): IgxSummaryResult[] {
         const result = super.operate(summaries);
         if (field && field === 'Name') {
             result.push({

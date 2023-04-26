@@ -19,7 +19,7 @@ import { NgTemplateOutlet, NgIf, NgClass, NgStyle, NgFor } from '@angular/common
 })
 export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {
     @ViewChildren('treeCell')
-    protected _cells: QueryList<any>;
+    protected override _cells: QueryList<any>;
 
     /**
      * @hidden
@@ -55,7 +55,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * this.grid.selectedRows[0].pinned = true;
      * ```
      */
-    public set pinned(value: boolean) {
+    public override set pinned(value: boolean) {
         if (value) {
             this.grid.pinRow(this.key);
         } else {
@@ -69,14 +69,14 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * let isPinned = row.pinned;
      * ```
      */
-    public get pinned() {
+    public override get pinned() {
         return this.grid.isRecordPinned(this._treeRow);
     }
 
     /**
      * @hidden
      */
-    public get isRoot(): boolean {
+    public override get isRoot(): boolean {
         let treeRec = this.treeRow;
         const isPinnedArea = this.pinned && !this.disabled;
         if (isPinnedArea) {
@@ -88,7 +88,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
     /**
      * @hidden
      */
-    public get hasChildren(): boolean {
+    public override get hasChildren(): boolean {
         return true;
     }
 
@@ -101,7 +101,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * ```
      */
     @HostBinding('attr.aria-expanded')
-    public get expanded(): boolean {
+    public override get expanded(): boolean {
         return this._treeRow.expanded;
     }
 
@@ -113,7 +113,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * row.expanded = true;
      * ```
      */
-    public set expanded(value: boolean) {
+    public override set expanded(value: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this._treeRow.key, value);
     }
 
@@ -121,7 +121,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * @hidden
      * @internal
      */
-    public get viewIndex(): number {
+    public override get viewIndex(): number {
         return this.index + this.grid.page * this.grid.perPage;
     }
 
@@ -148,7 +148,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
     /**
      * @hidden
      */
-    public ngDoCheck() {
+    public override ngDoCheck() {
         this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.key) : false;
         super.ngDoCheck();
     }

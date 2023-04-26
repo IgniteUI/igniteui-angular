@@ -45,7 +45,7 @@ export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientatio
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
-    public overrides = {
+    public override overrides = {
         pan: { direction: Hammer.DIRECTION_HORIZONTAL }
     };
 }
@@ -232,7 +232,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
+    @Input() public override animationType: HorizontalAnimationType = HorizontalAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -382,8 +382,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @internal
      */
     public stoppedByInteraction: boolean;
-    protected currentItem: IgxSlideComponent;
-    protected previousItem: IgxSlideComponent;
+    protected override currentItem: IgxSlideComponent;
+    protected override previousItem: IgxSlideComponent;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;

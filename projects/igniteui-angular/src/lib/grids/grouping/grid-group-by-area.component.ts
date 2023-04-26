@@ -35,7 +35,7 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public grid: FlatGridType;
+    public override grid: FlatGridType;
 
     constructor(ref: ElementRef<HTMLElement>, platform: PlatformUtil) {
         super(ref, platform);

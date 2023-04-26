@@ -20,6 +20,22 @@ import {
 } from "./pivot-grid.interface";
 
 describe("Pivot data selector", () => {
+
+    configureTestSuite(() => {
+        return TestBed.configureTestingModule({
+            declarations: [IgxPivotDataSelectorComponent],
+            imports: [NoopAnimationsModule, IgxPivotGridModule],
+        });
+    });
+
+    it("should initialize standalone before a grid is set ", () => {
+        const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
+        fixture.detectChanges();
+        expect(fixture.componentInstance).toBeDefined();
+    });
+});
+
+describe("Pivot data selector integration", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;

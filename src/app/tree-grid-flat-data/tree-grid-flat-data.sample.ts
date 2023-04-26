@@ -20,7 +20,7 @@ import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExp
 import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 
 export class MySummaryOperand extends IgxSummaryOperand {
-    public operate(data: any[] = []): IgxSummaryResult[] {
+    public override operate(data: any[] = []): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',

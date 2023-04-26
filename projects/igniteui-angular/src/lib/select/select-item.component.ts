@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
-    public isHeader: boolean;
+    public override isHeader: boolean;
 
     private _text: any;
 
@@ -52,11 +52,11 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      *  let isMyItemSelected = mySelectedItem.selected; // true
      * ```
      */
-    public get selected() {
+    public override get selected() {
         return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this);
     }
 
-    public set selected(value: any) {
+    public override set selected(value: any) {
         if (value && !this.isHeader && !this.disabled) {
             this.dropDown.selectItem(this);
         }

@@ -1,6 +1,5 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { DisplayDensity } from '../../../core/density';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { getLocaleFirstDayOfWeek, NgIf, NgFor } from "@angular/common";
@@ -27,16 +26,13 @@ import { IgxSelectComponent } from '../../../select/select.component';
     imports: [IgxSelectComponent, IgxPrefixDirective, NgIf, IgxIconComponent, NgFor, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
-    @Input()
-    public displayDensity: DisplayDensity;
-
     @ViewChild('input', { read: IgxInputDirective, static: false })
     private input: IgxInputDirective;
 
     @ViewChild('picker')
     private picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
-    protected get inputValuesElement() {
+    protected override get inputValuesElement() {
         return this.picker?.getEditElement() || this.input?.nativeElement;
     }
 

@@ -142,7 +142,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     constructor(
         public daysNavService: IgxDaysViewNavigationService,
-        protected platform: PlatformUtil, @Inject(LOCALE_ID) protected _localeId: any
+        platform: PlatformUtil, @Inject(LOCALE_ID) _localeId: any
     ) {
         super(platform, _localeId);
     }

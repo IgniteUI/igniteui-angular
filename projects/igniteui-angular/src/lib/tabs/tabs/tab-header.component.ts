@@ -35,10 +35,10 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
 
     /** @hidden @internal */
     constructor(
-        protected tabs: IgxTabsComponent,
+        protected override tabs: IgxTabsComponent,
         tab: IgxTabItemDirective,
         elementRef: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil,
+        platform: PlatformUtil,
         private ngZone: NgZone,
         private dir: IgxDirectionality
     ) {

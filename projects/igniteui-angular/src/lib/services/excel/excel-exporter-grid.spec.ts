@@ -19,7 +19,8 @@ import {
     ColumnsAddedOnInitComponent,
     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
     GroupedGridWithSummariesComponent,
-    GridCurrencySummariesComponent
+    GridCurrencySummariesComponent,
+    GridUserMeetingDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -73,7 +74,8 @@ describe('Excel Exporter', () => {
                 IgxTreeGridSummariesKeyComponent,
                 IgxHierarchicalGridSummariesExportComponent,
                 GroupedGridWithSummariesComponent,
-                GridCurrencySummariesComponent
+                GridCurrencySummariesComponent,
+                GridUserMeetingDataComponent
             ]
         }).compileComponents();
     }));
@@ -758,6 +760,16 @@ describe('Excel Exporter', () => {
 
 
             await exportAndVerify(grid, options, actualData.exportGridDataWithSpecialCharsInHeaders);
+        });
+
+        it('Should export date, dateTime, time and percent columns correctly', async () => {
+            const fix = TestBed.createComponent(GridUserMeetingDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.exportGriWithDateData);
         });
     });
 

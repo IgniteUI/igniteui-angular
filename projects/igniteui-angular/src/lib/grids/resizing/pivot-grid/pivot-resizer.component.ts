@@ -11,7 +11,7 @@ import { IgxColumnResizerDirective } from '../resizer.directive';
     imports: [IgxColumnResizerDirective]
 })
 export class IgxPivotGridColumnResizerComponent extends IgxGridColumnResizerComponent {
-    constructor(public colResizingService: IgxPivotColumnResizingService) {
+    constructor(public override colResizingService: IgxPivotColumnResizingService) {
         super(colResizingService);
     }
 }
