@@ -821,7 +821,6 @@ export var registerConfig = [
     ],
     methods: [
       "getCellByColumnVisibleIndex",
-      "ngDoCheck",
       "getDefaultExpandState",
       "expandAll",
       "collapseAll",
