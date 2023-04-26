@@ -4,6 +4,10 @@
         {
             "name": "IgxProcessBarTextTemplateDirective",
             "replaceWith": "IgxProgressBarTextTemplateDirective"
+        },
+        {
+            "name": "IgxColumMaxLengthValidatorDirective",
+            "replaceWith": "IgxColumnMaxLengthValidatorDirective"
         }
     ]
 }

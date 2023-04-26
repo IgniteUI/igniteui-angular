@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
-import { IgxTooltipTargetDirective } from './tooltip-target.directive';
-import { IgxTooltipComponent } from './tooltip.component';
-import { IgxTooltipDirective } from './tooltip.directive';
+import { IGX_TOOLTIP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
  * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
  @NgModule({
-    exports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxTooltipComponent],
-    imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxTooltipComponent]
+    imports: [...IGX_TOOLTIP_DIRECTIVES],
+    exports: [...IGX_TOOLTIP_DIRECTIVES]
 })
 export class IgxTooltipModule { }

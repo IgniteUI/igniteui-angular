@@ -28,7 +28,7 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/template-outlet/template_outlet.directive';
 export * from './lib/directives/toggle/toggle.directive';
-export * from './lib/directives/tooltip';
+export * from './lib/directives/tooltip/public_api';
 export * from './lib/directives/date-time-editor/public_api';
 export * from './lib/directives/form-control/form-control.directive';
 
@@ -149,11 +149,9 @@ export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-reso
 export { IBannerResourceStrings } from './lib/core/i18n/banner-resources';
 
 /* IMPORTANT: The following are NgModules exported for backwards-compatibility before standalone components */
-export * from './lib/icon/icon.module';
-export * from './lib/avatar/avatar.module';
-export * from './lib/expansion-panel/expansion-panel.module';
 export * from './lib/accordion/accordion.module';
 export * from './lib/action-strip/action-strip.module';
+export * from './lib/avatar/avatar.module';
 export * from './lib/badge/badge.module';
 export * from './lib/banner/banner.module';
 export * from './lib/buttonGroup/buttongroup.module';
@@ -184,3 +182,6 @@ export * from './lib/directives/scroll-inertia/scroll_inertia.module';
 export * from './lib/directives/text-highlight/text-highlight.module';
 export * from './lib/directives/toggle/toggle.module';
 export * from './lib/directives/tooltip/tooltip.module';
+export * from './lib/drop-down/drop-down.module';
+export * from './lib/expansion-panel/expansion-panel.module';
+export * from './lib/icon/icon.module';
