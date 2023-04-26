@@ -158,7 +158,6 @@ describe('Rendering Tests', () => {
             linearStepper.next();
             fixture.detectChanges();
             tick();
-            console.log(linearStepper.steps[0].active, linearStepper.steps[1].active, linearStepper.steps[1].linearDisabled);
 
             expect(linearStepper.steps[1].active).toBeFalsy();
             expect(linearStepper.steps[0].active).toBeTruthy();
