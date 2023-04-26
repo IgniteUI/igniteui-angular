@@ -503,8 +503,3 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 this._forceEvaluation);
     }
 }
-
-/**
- * @hidden
- */
-
