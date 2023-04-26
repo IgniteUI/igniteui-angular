@@ -343,7 +343,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    public get animationSettings(): ToggleAnimationSettings {
+    public override get animationSettings(): ToggleAnimationSettings {
         return this.stepper.verticalAnimationSettings;
     }
 
@@ -385,7 +385,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         public renderer: Renderer2,
         protected platform: PlatformUtil,
         protected stepperService: IgxStepperService,
-        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         private dir: IgxDirectionality
     ) {
@@ -441,11 +441,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             this.stepperService.collapse(this);
             this.cdr.markForCheck();
         });
-    }
-
-    /** @hidden @internal */
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
     }
 
     /** @hidden @internal */

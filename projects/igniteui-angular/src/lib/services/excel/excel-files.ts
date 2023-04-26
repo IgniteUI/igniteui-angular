@@ -260,7 +260,7 @@ export class WorksheetFile implements IExcelFile {
                             recordHeaders = worksheetData.rootKeys;
                         } else {
                             recordHeaders = worksheetData.owner.columns
-                                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.MultiRowHeader && c.headerType !== HeaderType.RowHeader && !c.skip)
+                                .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
                                 .sort((a, b) => a.startIndex-b.startIndex)
                                 .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
                                 .map(c => c.field);
@@ -417,7 +417,6 @@ export class WorksheetFile implements IExcelFile {
 
         const targetColArr = Array.from(worksheetData.owners.values()).map(arr => arr.columns).find(product => product.some(item => item.field === key));
         const targetCol = targetColArr ? targetColArr.find(col => col.field === key) : undefined;
-        const isColumnCurrencyType = targetCol ? targetCol.dataType === 'currency' : false;
 
         if ((cellValue === undefined || cellValue === null) && !worksheetData.hasSummaries) {
             return `<c r="${columnName}" s="1"/>`;
@@ -437,7 +436,12 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
+            const isTime = targetCol?.dataType === 'time';
+            const isDateTime = targetCol?.dataType === 'dateTime';
+            const isPercentage = targetCol?.dataType === 'percent';
+            const isColumnCurrencyType = targetCol?.dataType === 'currency';
+
+            const format = isPercentage ? ` s="12"` : isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {

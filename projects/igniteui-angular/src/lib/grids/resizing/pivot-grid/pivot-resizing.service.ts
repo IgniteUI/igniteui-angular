@@ -18,11 +18,11 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
     /**
      * @hidden
      */
-    public getColumnHeaderRenderedWidth() {
+    public override getColumnHeaderRenderedWidth() {
         return this.rowHeaderGroup.header.nativeElement.getBoundingClientRect().width;
     }
 
-    protected _handlePixelResize(diff: number, column: ColumnType) {
+    protected override _handlePixelResize(diff: number, column: ColumnType) {
         const rowDim = this.rowHeaderGroup.parent.rootDimension;
         if (!rowDim) return;
 
@@ -41,5 +41,5 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
         this.rowHeaderGroup.grid.resizeRowDimensionPixels(rowDim, newWidth);
     }
 
-    protected _handlePercentageResize() { }
+    protected override _handlePercentageResize() { }
 }

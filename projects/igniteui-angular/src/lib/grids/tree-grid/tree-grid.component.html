@@ -56,7 +56,7 @@
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger
         | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger
         | treeGridFlattening:expansionDepth:expansionStates:pipeTrigger
-        | treeGridPaging:paginator?.page:paginator?.perPage:pipeTrigger
+        | treeGridPaging:!!paginator:page:perPage:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | treeGridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger"

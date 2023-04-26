@@ -6,12 +6,10 @@ import { IActiveNode, IgxGridNavigationService } from '../grid-navigation.servic
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
-    public grid: GridType;
-
     protected _pendingNavigation = false;
 
 
-    public dispatchEvent(event: KeyboardEvent) {
+    public override dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
             !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
@@ -34,7 +32,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         super.dispatchEvent(event);
     }
 
-    public navigateInBody(rowIndex, visibleColIndex, cb: (arg: any) => void = null): void {
+    public override navigateInBody(rowIndex, visibleColIndex, cb: (arg: any) => void = null): void {
         const rec = this.grid.dataView[rowIndex];
         if (rec && this.grid.isChildGridRecord(rec)) {
              // target is child grid
@@ -89,7 +87,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         super.navigateInBody(rowIndex, visibleColIndex, cb);
     }
 
-    public shouldPerformVerticalScroll(index, visibleColumnIndex = -1, isNext?) {
+    public override shouldPerformVerticalScroll(index, visibleColumnIndex = -1, isNext?) {
         const targetRec = this.grid.dataView[index];
         if (this.grid.isChildGridRecord(targetRec)) {
             const scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(index, !isNext);
@@ -101,7 +99,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    public focusTbody(event) {
+    public override focusTbody(event) {
         if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
                 row: 0,

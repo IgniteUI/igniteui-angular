@@ -165,7 +165,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
-    protected findValueInSet(target: any, searchVal: Set<any>) {
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }
@@ -703,7 +703,7 @@ export class IgxTimeFilteringOperand extends IgxBaseDateTimeFilteringOperand {
         }].concat(this.operations);
     }
 
-    protected findValueInSet(target: any, searchVal: Set<any>) {
+    protected override findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
             return false;
         }

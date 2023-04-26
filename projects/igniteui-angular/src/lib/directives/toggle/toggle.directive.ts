@@ -176,7 +176,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     protected _overlayId: string;
 
     private _collapsed = true;
-    private destroy$ = new Subject<boolean>();
+    protected destroy$ = new Subject<boolean>();
     private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
         filter(x => x.id === this._overlayId),
         takeUntil(this.destroy$)

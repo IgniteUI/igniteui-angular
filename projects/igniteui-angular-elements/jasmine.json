@@ -1,0 +1,9 @@
+{
+    "spec_dir": "projects/igniteui-angular-elements/tests",
+    "spec_files": [
+        "**/*.test.ts"
+    ],
+    "env": {
+        "random": false
+    }
+}

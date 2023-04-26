@@ -38,15 +38,24 @@ export class ServerHost implements ts.server.ServerHost {
         return ts.sys.getFileSize(path);
     }
 
-    public watchFile(path: string, callback: ts.FileWatcherCallback, pollingInterval?: number):
+    //#region Watchers
+    // Atm we do not need to have file or dir watchers that access the actual FS
+    // as we are only working with NG's virtual FS
+    // Prior to https://github.com/microsoft/TypeScript/pull/49990 we were more or less required
+    // to add a watcher since it threw an error otherwise
+
+    public watchFile(_path: string, _callback: ts.FileWatcherCallback, _pollingInterval?: number):
         ts.FileWatcher {
-        return ts.sys.watchFile(path, callback, pollingInterval);
+        // return ts.sys.watchFile(path, callback, pollingInterval);
+        return undefined;
     }
 
-    public watchDirectory(path: string, callback: ts.DirectoryWatcherCallback, recursive?: boolean):
+    public watchDirectory(_path: string, _callback: ts.DirectoryWatcherCallback, _recursive?: boolean):
         ts.FileWatcher {
-        return ts.sys.watchDirectory(path, callback, recursive);
+        // return ts.sys.watchDirectory(path, callback, recursive);
+        return undefined;
     }
+    //#endregion
 
     public resolvePath(path: string): string {
         return ts.sys.resolvePath(path);

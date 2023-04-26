@@ -447,7 +447,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader && c.headerType !== HeaderType.RowHeader && c.headerType !== HeaderType.MultiRowHeader && !c.skip)
+                    .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -456,8 +456,9 @@ export abstract class IgxBaseExporter {
                         let rawValue = resolveNestedPath(record.data, e.field);
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+                        const isOfDateType = e.dataType === 'date' || e.dataType === 'dateTime' || e.dataType === 'time';
 
-                        if (e.dataType === 'date' &&
+                        if (isOfDateType &&
                             record.type !== ExportRecordType.SummaryRecord &&
                             record.type !== ExportRecordType.GroupedRecord &&
                             !(rawValue instanceof Date) &&
@@ -1020,14 +1021,19 @@ export abstract class IgxBaseExporter {
         }
 
         let previousKey = ''
-        const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns[0].field;
+        const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns
+            .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
+            .sort((a, b) => a.startIndex - b.startIndex)
+            .sort((a, b) => a.pinnedIndex - b.pinnedIndex)[0].field;
 
         for (const record of records) {
             let recordVal = record.value;
             const hierarchicalOwner = setGridParent ? GRID_PARENT : `${GRID_CHILD}${++this.rowIslandCounter}`;
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }], hierarchy));
+                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }],
+                hierarchy,
+                grid.groupingExpressions));
             const expanded = expandState ? expandState.expanded : groupingState.defaultExpanded;
 
             const isDate = recordVal instanceof Date;

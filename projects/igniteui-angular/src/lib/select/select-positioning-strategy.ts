@@ -8,9 +8,6 @@ import { Optional } from '@angular/core';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    /** @inheritDoc */
-    public settings: PositionSettings;
-
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -30,8 +27,19 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    /** @inheritDoc */
-    public position(contentElement: HTMLElement,
+    /**
+     * Position the element based on the PositionStrategy implementing this interface.
+     *
+     * @param contentElement The HTML element to be positioned
+     * @param size Size of the element
+     * @param document reference to the Document object
+     * @param initialCall should be true if this is the initial call to the method
+     * @param target attaching target for the component to show
+     * ```typescript
+     * settings.positionStrategy.position(content, size, document, true);
+     * ```
+     */
+    public override position(contentElement: HTMLElement,
                     size: Size,
                     document?: Document,
                     initialCall?: boolean,

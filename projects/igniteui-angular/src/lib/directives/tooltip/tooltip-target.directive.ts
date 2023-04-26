@@ -98,7 +98,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @Input('igxTooltipTarget')
-    public set target(target: any) {
+    public override set target(target: any) {
         if (target !== null && target !== '') {
             this._target = target;
         }
@@ -107,7 +107,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    public get target(): any {
+    public override get target(): any {
         if (typeof this._target === 'string') {
             return this._navigationService.get(this._target);
         }
@@ -198,7 +198,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @HostListener('click')
-    public onClick() {
+    public override onClick() {
         if (!this.target.collapsed) {
             this.target.forceClose(this.mergedOverlaySettings);
         }
@@ -288,7 +288,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
 
         const positionSettings: PositionSettings = {

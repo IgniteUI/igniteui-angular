@@ -193,14 +193,14 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
+        elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        selectionService: IgxSelectionAPIService,
+        comboAPI: IgxComboAPIService,
+        _iconService: IgxIconService,
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
+        @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI, _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
     }

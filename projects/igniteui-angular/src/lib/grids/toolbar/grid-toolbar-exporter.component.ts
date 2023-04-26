@@ -84,7 +84,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     public isExporting = false;
 
     constructor(
-        @Inject(IgxToolbarToken) protected toolbar: IgxToolbarToken,
+        @Inject(IgxToolbarToken) toolbar: IgxToolbarToken,
         private excelExporter: IgxExcelExporterService,
         private csvExporter: IgxCsvExporterService,
     ) {

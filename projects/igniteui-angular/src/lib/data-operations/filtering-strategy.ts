@@ -236,7 +236,7 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         super();
     }
 
-    protected shouldFormatFilterValues(column: ColumnType): boolean {
+    protected override shouldFormatFilterValues(column: ColumnType): boolean {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === column.field);
     }
 }
