@@ -232,7 +232,6 @@
 
     %cbx-composite--x--invalid {
         border-color: var-get($theme, 'error-color');
-        // background: var-get($theme, 'error-color');
 
         &::after {
             background: var-get($theme, 'error-color');
@@ -242,7 +241,6 @@
     %cbx-composite--x--fluent {
         @if $variant == 'fluent' {
             border-color: var-get($theme, 'fill-color-hover');
-            // background: var-get($theme, 'fill-color-hover');
 
             &::after {
                 background: var-get($theme, 'fill-color-hover');
@@ -374,6 +372,12 @@
             
                 &::before {
                     border-color: var-get($theme, 'error-color');
+                }
+            }
+
+            %cbx-composite--x {
+                &::after {
+                    background: transparent;
                 }
             }
 
