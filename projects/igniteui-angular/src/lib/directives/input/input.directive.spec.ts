@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -266,10 +266,10 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         const invalidInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--invalid`);
-        expect(invalidInputGroups.length).toBe(4);
+        expect(invalidInputGroups.length).toBe(6);
 
         const requiredInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--required`);
-        expect(requiredInputGroups.length).toBe(4);
+        expect(requiredInputGroups.length).toBe(6);
     });
 
     it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
@@ -1033,7 +1033,20 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
             <input type="number" formControlName="num" igxInput igxMask="###">
         </igx-input-group>
         </section>
-    </form>`
+    </form>
+    <form>
+        <section>
+            <igx-input-group>
+                <label igxLabel>single line</label>
+                <input type="text" [formControl]="inputControl" igxInput>
+            </igx-input-group>
+            <igx-input-group>
+                <label igxLabel>multi line</label>
+                <textarea type="text" [formControl]="textareaControl" igxInput></textarea>
+            </igx-input-group>
+        </section>
+    </form>
+    `
 })
 class ReactiveFormComponent {
     @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
@@ -1044,6 +1057,8 @@ class ReactiveFormComponent {
         password: ['', Validators.required],
         num: [null, Validators.required]
     });
+    public inputControl = new FormControl('', [Validators.required]);
+    public textareaControl = new FormControl('', [Validators.required]);
 
     constructor(private fb: UntypedFormBuilder) { }
 
@@ -1056,6 +1071,11 @@ class ReactiveFormComponent {
                 }
             }
         }
+        this.inputControl.markAsTouched();
+        this.inputControl.updateValueAndValidity();
+
+        this.textareaControl.markAsTouched();
+        this.textareaControl.updateValueAndValidity();
     }
 }
 
