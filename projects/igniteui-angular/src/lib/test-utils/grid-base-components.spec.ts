@@ -61,7 +61,7 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     public startFromOne = false;
     public columnNamePrefix = 'col';
     public columns = [];
-    public autoGenerate = false;
+    public override autoGenerate = false;
 
     public ngOnInit() {
         this.columns = (this.hasEditableColumns) ?
@@ -93,7 +93,7 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
-    public data = SampleTestData.personJobDataFull();
+    public override data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -105,7 +105,7 @@ export class RemotePagingComponent extends GridWithSizeComponent {
     public pagingMode = GridPagingMode.Remote;
     public perPage = 3;
     public totalRecords = 10;
-    public data = SampleTestData.personJobDataFull();
+    public override data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -113,7 +113,7 @@ export class RemotePagingComponent extends GridWithSizeComponent {
         '', ColumnDefinitions.productBasicNumberID)
 })
 export class SelectionComponent extends BasicGridComponent {
-    public data = SampleTestData.generateBigValuesData(100);
+    public override data = SampleTestData.generateBigValuesData(100);
 }
 
 @Component({
@@ -127,7 +127,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     public exportExcel = true;
     public exportCsv = true;
 
-    public data = SampleTestData.contactInfoData();
+    public override data = SampleTestData.contactInfoData();
 }
 
 @Component({
@@ -136,7 +136,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 })
 export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
 
-    public data = SampleTestData.contactInfoData();
+    public override data = SampleTestData.contactInfoData();
     public evenRowCondition = (row) => row.index % 2 === 0;
     public oddRowCondition = (row) => row.index % 2 !== 0;
 
@@ -157,8 +157,8 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxColumnActionsComponent)
     public chooser: IgxColumnActionsComponent;
-    public width = '500px';
-    public height = '500px';
+    public override width = '500px';
+    public override height = '500px';
     public showInline = true;
     public hideFilter = false;
     public paging = false;
@@ -187,10 +187,10 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public override grid: IgxGridComponent;
 
     public hasGroupColumns = false;
-    public data = SampleTestData.contactInfoDataFull();
+    public override data = SampleTestData.contactInfoDataFull();
     constructor(cdr: ChangeDetectorRef) {
         super(cdr);
     }
@@ -208,8 +208,8 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
 
-    public height = '500px';
-    public width = '500px';
+    public override height = '500px';
+    public override width = '500px';
     public showInline = true;
     public hideFilter = false;
 
@@ -255,7 +255,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
-    public data = SampleTestData.contactInfoDataFull();
+    public override data = SampleTestData.contactInfoDataFull();
 
     constructor(cdr: ChangeDetectorRef) {
         super(cdr);

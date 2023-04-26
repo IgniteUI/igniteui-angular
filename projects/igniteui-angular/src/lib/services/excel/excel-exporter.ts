@@ -54,7 +54,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      *
      * @memberof IgxExcelExporterService
      */
-    public exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
+    public override exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
     private static async populateZipFileConfig(fileStructure: Object, folder: IExcelFolder, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {

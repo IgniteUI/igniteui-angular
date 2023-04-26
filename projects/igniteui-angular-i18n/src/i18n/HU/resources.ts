@@ -11,6 +11,8 @@ import { InputResourceStringsHU } from './input-resources';
 import { ChipResourceStringsHU } from './chip-resources';
 import { ComboResourceStringsHU } from './combo-resources';
 import { QueryBuilderResourceStringsHU } from './query-builder-resources';
+import { BannerResourceStringsHU } from './banner-resources';
+import { ActionStripResourceStringsHU } from './action-strip-resources';
 
 /**
  * Hungarian resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsHU = {
     ...InputResourceStringsHU,
     ...ChipResourceStringsHU,
     ...ComboResourceStringsHU,
-    ...QueryBuilderResourceStringsHU
+    ...QueryBuilderResourceStringsHU,
+    ...BannerResourceStringsHU,
+    ...ActionStripResourceStringsHU,
 };
