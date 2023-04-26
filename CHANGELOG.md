@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 16.0.0
+
+### New Features
+- `IgxExpansionPanel`:
+    - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
+
 ## 15.1.0
 
 ### New Features
