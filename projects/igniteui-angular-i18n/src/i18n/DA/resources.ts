@@ -11,6 +11,8 @@ import { InputResourceStringsDA } from './input-resources';
 import { ChipResourceStringsDA } from './chip-resources';
 import { ComboResourceStringsDA } from './combo-resources';
 import { QueryBuilderResourceStringsDA } from './query-builder-resources';
+import { BannerResourceStringsDA } from './banner-resources';
+import { ActionStripResourceStringsDA } from './action-strip-resources';
 
 /**
  * Danish resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsDA = {
     ...InputResourceStringsDA,
     ...ChipResourceStringsDA,
     ...ComboResourceStringsDA,
-    ...QueryBuilderResourceStringsDA
+    ...QueryBuilderResourceStringsDA,
+    ...BannerResourceStringsDA,
+    ...ActionStripResourceStringsDA,
 };

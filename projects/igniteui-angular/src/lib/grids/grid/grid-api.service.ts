@@ -28,7 +28,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         this.arrange_sorting_expressions();
     }
 
-    public clear_groupby(name?: string | Array<string>) {
+    public override clear_groupby(name?: string | Array<string>) {
         const groupingState = cloneArray(this.grid.groupingExpressions);
 
         if (name) {
@@ -58,7 +58,10 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         const grState = this.grid.groupingExpansionState;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
-            DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+            DataUtil.isHierarchyMatch(
+                state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }],
+                hierarchy,
+                this.grid.groupingExpressions));
     }
 
     public groupBy_is_row_in_group(groupRow: IGroupByRecord, rowID): boolean {
@@ -149,7 +152,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         return recordId;
     }
 
-    public remove_grouping_expression(fieldName: string) {
+    public override remove_grouping_expression(fieldName: string) {
         const groupingExpressions = this.grid.groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
         if (index !== -1) {

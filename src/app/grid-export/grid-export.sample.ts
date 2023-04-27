@@ -16,7 +16,7 @@ class GridSummary {
         const result = new IgxNumberSummaryOperand().operate(data);
         result.push({
             key: 'test',
-            label: 'Test',
+            label: 'Custom summary',
             summaryResult: data.filter((rec) => rec > 10 && rec < 30).length
         });
 

@@ -131,7 +131,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         super();
     }
 
-    protected getFieldValue(rec: any, fieldName: string, _isDate: boolean = false, _isTime: boolean = false,
+    protected override getFieldValue(rec: any, fieldName: string, _isDate: boolean = false, _isTime: boolean = false,
         grid?: PivotGridType): any {
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -140,7 +140,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         return value;
     }
 
-    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+    public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
         const grid = (column.grid as any);
         const enabledDimensions = grid.allDimensions.filter(x => x && x.enabled);
         let data = column.grid.gridAPI.filterDataByExpressions(tree);
