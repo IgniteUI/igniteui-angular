@@ -3519,7 +3519,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this._setupServices();
         this._setupListeners();
@@ -3825,7 +3825,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public ngDoCheck() {
+    public override ngDoCheck() {
         super.ngDoCheck();
         if (this._init) {
             return;

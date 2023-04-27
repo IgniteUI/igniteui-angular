@@ -454,8 +454,9 @@ export abstract class IgxBaseExporter {
                         let rawValue = resolveNestedPath(record.data, e.field);
 
                         const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
+                        const isOfDateType = e.dataType === 'date' || e.dataType === 'dateTime' || e.dataType === 'time';
 
-                        if (e.dataType === 'date' &&
+                        if (isOfDateType &&
                             record.type !== ExportRecordType.SummaryRecord &&
                             record.type !== ExportRecordType.GroupedRecord &&
                             !(rawValue instanceof Date) &&
@@ -1029,7 +1030,9 @@ export abstract class IgxBaseExporter {
             const hierarchicalOwner = setGridParent ? GRID_PARENT : `${GRID_CHILD}${++this.rowIslandCounter}`;
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }], hierarchy));
+                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }],
+                hierarchy,
+                grid.groupingExpressions));
             const expanded = expandState ? expandState.expanded : groupingState.defaultExpanded;
 
             const isDate = recordVal instanceof Date;

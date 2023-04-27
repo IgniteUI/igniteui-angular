@@ -43,17 +43,17 @@ export const clearGridSubs = () => {
 
 @Injectable()
 export class TestNgZone extends NgZone {
-    public onStable: EventEmitter<any> = new EventEmitter(false);
+    public override onStable: EventEmitter<any> = new EventEmitter(false);
 
     constructor() {
         super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
     }
 
-    public run(fn: () => void): any {
+    public override run(fn: () => void): any {
         return fn();
     }
 
-    public runOutsideAngular(fn: () => void): any {
+    public override runOutsideAngular(fn: () => void): any {
         return fn();
     }
 

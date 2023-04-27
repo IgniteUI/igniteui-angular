@@ -16,20 +16,20 @@ import { IgxPivotColumnResizingService } from '../resizing/pivot-grid/pivot-resi
 export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent {
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        public colResizingService: IgxPivotColumnResizingService,
-        public cdr: ChangeDetectorRef,
+        @Inject(IGX_GRID_BASE) grid: GridType,
+        public override colResizingService: IgxPivotColumnResizingService,
+        cdr: ChangeDetectorRef,
         public refInstance: ElementRef<HTMLElement>
     ) {
         super(grid, colResizingService, cdr, refInstance);
     }
 
     @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
+    public override onClick(event: MouseEvent) {
         event.preventDefault();
     }
 
-    public get selectable(): boolean {
+    public override get selectable(): boolean {
         return false;
     }
 }
