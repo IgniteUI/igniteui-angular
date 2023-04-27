@@ -120,6 +120,7 @@ With projected inputs:
 | overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 | placeholder      | string             | Sets the `placeholder` for single-input `IgxDateRangePickerComponent`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
+| showWeekNumbers  | number             | Shows or hides week numbers. |
 
 ### Outputs
 | Name        | Description                                                        | Cancelable | Emitted with                    |
