@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 16.0.0
+
+### New Features
+- `IgxDateRangePicker`
+    - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
+
 ## 15.1.0
 
 ### New Features
