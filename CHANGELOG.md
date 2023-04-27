@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
+- `IgxDateRangePicker`
+    - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 
 ## 15.1.0
 
