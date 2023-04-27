@@ -75,7 +75,6 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
-import { IgxPivotDateDimension } from './public_api';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;

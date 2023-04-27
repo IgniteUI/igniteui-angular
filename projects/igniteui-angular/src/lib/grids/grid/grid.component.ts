@@ -30,10 +30,6 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
-import { IFilterFactory } from '../common/grid.interface';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxTimeFilteringOperand, IgxDateTimeFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 let NEXT_ID = 0;
 
