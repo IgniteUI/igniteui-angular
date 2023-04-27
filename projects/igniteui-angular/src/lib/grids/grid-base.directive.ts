@@ -1766,7 +1766,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
                 this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
-                this.filteredData = null;
+                this._filteredData = null;
             }
 
             this.filteringService.refreshExpressions();
@@ -1803,7 +1803,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
             this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
-            this.filteredData = null;
+            this._filteredData = null;
         }
 
         this.selectionService.clearHeaderCBState();
@@ -3114,6 +3114,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+    private _filteredData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
@@ -3216,7 +3217,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public abstract id: string;
     public abstract data: any[] | null;
-    public abstract filteredData: any[];
+
+    /**
+     * Returns an array of objects containing the filtered data.
+     *
+     * @example
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+     */
+    public get filteredData() {
+        return this._filteredData;
+    }
+
     /**
      * Returns an array containing the filtered sorted data.
      *
@@ -3730,11 +3743,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._filteredPinnedData = data || [];
             const filteredUnpinned = this._filteredUnpinnedData || [];
             const filteredData = [... this._filteredPinnedData, ...filteredUnpinned];
-            this.filteredData = filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
+            this._filteredData = filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
-            this.filteredData = data;
+            this._filteredData = data;
         }
     }
 

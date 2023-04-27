@@ -271,7 +271,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<void>;
     private _expansionDepth = Infinity;
-    private _filteredData = null;
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -293,33 +292,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.setupColumns();
         }
         this.cdr.markForCheck();
-    }
-
-    /**
-     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    /**
-     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
-     * ```typescript
-     * this.grid.filteredData = [{
-     *       ID: 1,
-     *       Name: "A"
-     * }];
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
