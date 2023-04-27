@@ -23,8 +23,7 @@ describe("Pivot data selector", () => {
 
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [IgxPivotDataSelectorComponent],
-            imports: [NoopAnimationsModule],
+            imports: [NoopAnimationsModule, IgxPivotDataSelectorComponent],
         });
     });
 
