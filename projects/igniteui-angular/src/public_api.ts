@@ -184,4 +184,5 @@ export * from './lib/directives/toggle/toggle.module';
 export * from './lib/directives/tooltip/tooltip.module';
 export * from './lib/drop-down/drop-down.module';
 export * from './lib/expansion-panel/expansion-panel.module';
+// export * from './lib/grids/grid/grid.module';
 export * from './lib/icon/icon.module';

@@ -68,7 +68,7 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
-    templateUrl: './grid.excel-style-filtering.component.html',
+    templateUrl: './excel-style-filtering.component.html',
     standalone: true,
     imports: [IgxExcelStyleHeaderComponent, NgIf, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })

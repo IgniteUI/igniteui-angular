@@ -11,7 +11,7 @@ import { IgxExcelStylePinningComponent } from '../../../projects/igniteui-angula
 import { IgxExcelStyleMovingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-header.component';
-import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-filtering.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxExcelStyleHeaderIconDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';

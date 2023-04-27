@@ -27,7 +27,7 @@ import { PivotUtil } from './pivot-util';
 import { IgxGridTopLevelColumns } from '../common/pipes';
 import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
 import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
-import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxSuffixDirective } from '../../directives/suffix/suffix.directive';

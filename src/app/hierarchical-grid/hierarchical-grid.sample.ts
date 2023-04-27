@@ -27,7 +27,7 @@ import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/
 import { IgxExcelStyleSearchComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-search.component';
 import { IgxExcelStyleSortingComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-header.component';
-import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-filtering.component';
 import { IgxHierarchicalGridComponent as IgxHierarchicalGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';

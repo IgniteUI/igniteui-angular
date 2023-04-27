@@ -12,7 +12,7 @@ import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angul
 import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxGridExcelStyleFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/filtering/excel-style/excel-style-filtering.component';
 import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
 import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
 import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
