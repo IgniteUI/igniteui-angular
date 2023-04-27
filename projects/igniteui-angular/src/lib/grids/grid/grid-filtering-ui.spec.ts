@@ -2101,7 +2101,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filterUIRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
-            const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
 
             // Equals condition
             datePicker.triggerEventHandler('click', null);
