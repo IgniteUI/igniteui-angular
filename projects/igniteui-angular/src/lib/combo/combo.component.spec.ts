@@ -14,7 +14,6 @@ import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { SortingDirection } from '../data-operations/sorting-strategy';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxInputState } from '../directives/input/input.directive';
-import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { IgxIconService } from '../icon/public_api';
 import { IgxLabelDirective } from '../input-group/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
@@ -29,6 +28,7 @@ import {
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe } from './combo.pipes';
+import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';

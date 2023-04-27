@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    IgxTooltipTargetDirective, IgxTooltipDirective,
-    ITooltipShowEventArgs, ITooltipHideEventArgs
-} from '../directives/tooltip';
+import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
+import { ITooltipHideEventArgs, ITooltipShowEventArgs, IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
 
 @Component({
     template: `

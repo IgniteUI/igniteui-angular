@@ -1,18 +1,5 @@
 import { NgModule } from '@angular/core';
-import {
-    IgxComboAddItemDirective,
-    IgxComboClearIconDirective,
-    IgxComboEmptyDirective,
-    IgxComboFooterDirective,
-    IgxComboHeaderDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboItemDirective,
-    IgxComboToggleIconDirective
-} from './combo.directives';
-import { IgxComboComponent } from './combo.component';
-import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IGX_COMBO_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -20,32 +7,10 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
  */
 @NgModule({
     imports: [
-        IgxComboComponent,
-        IgxComboAddItemDirective,
-        IgxComboClearIconDirective,
-        IgxComboEmptyDirective,
-        IgxComboFooterDirective,
-        IgxComboHeaderDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboItemDirective,
-        IgxComboToggleIconDirective,
-        IgxLabelDirective,
-        IgxPrefixDirective,
-        IgxSuffixDirective
+        ...IGX_COMBO_DIRECTIVES
     ],
     exports: [
-        IgxComboComponent,
-        IgxComboAddItemDirective,
-        IgxComboClearIconDirective,
-        IgxComboEmptyDirective,
-        IgxComboFooterDirective,
-        IgxComboHeaderDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboItemDirective,
-        IgxComboToggleIconDirective,
-        IgxLabelDirective,
-        IgxPrefixDirective,
-        IgxSuffixDirective
+        ...IGX_COMBO_DIRECTIVES
     ]
 })
 export class IgxComboModule { }
