@@ -346,7 +346,9 @@ class InputGroupSearchComponent {
 @Component({
     template: `<igx-input-group>
                     <input igxInput type="file" multiple />
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupFileComponent { }
 
