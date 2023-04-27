@@ -25,6 +25,12 @@ All notable changes for each version of this project will be documented in this 
  - **Breaking Changes** In the `IgxAddRowParent`, `IRowToggleEventArgs`, `IPinRowEventArgs` and `IPathSegment` interfaces the *rowID* property has been deprecated and a *key* property has been introduced instead;
  - **Breaking Changes** In the `IGridEditDoneEventArgs` interface *rowID* and *rowData* properties are deprecated and new *data* property has been introduced.
 
+## 16.0.0
+
+### New Features
+- `IgxDateRangePicker`
+    - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
+
 ## 15.1.0
 
 ### New Features
