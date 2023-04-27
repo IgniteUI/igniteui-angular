@@ -1351,19 +1351,4 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             });
         }
     }
-
-    /* blazorSuppress */
-    public getFilterFactory(): IFilterFactory {
-        return {
-            stringFilteringOperand: IgxStringFilteringOperand.instance(),
-            numberFilteringOperand: IgxNumberFilteringOperand.instance(),
-            timeFilteringOperand: IgxTimeFilteringOperand.instance(),
-            dateTimeFilteringOperand: IgxDateTimeFilteringOperand.instance(),
-            dateFilteringOperand: IgxDateFilteringOperand.instance(),
-            booleanFilteringOperand: IgxBooleanFilteringOperand.instance(),
-            createFilteringExpressionTree: (operator: FilteringLogic, fieldName?: string) => {
-                return new FilteringExpressionsTree(operator, fieldName);
-            }
-        };
-    }
 }

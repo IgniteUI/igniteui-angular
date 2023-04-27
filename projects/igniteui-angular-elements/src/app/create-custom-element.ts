@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 import { createCustomElement, NgElementConfig, NgElementConstructor } from '@angular/elements';
+import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxGridComponent, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from 'igniteui-angular';
 import { ComponentConfig } from './component-config';
 import { IgxCustomNgElementStrategyFactory } from './custom-strategy';
 
@@ -22,6 +23,26 @@ export function createIgxCustomElement<T>(component: Type<any>, config: IgxNgEle
             const instance = this.ngElementStrategy.componentRef.instance;
             return this.ngElementStrategy.runInZone(() => instance[method].apply(instance, arguments));
         }
+    }
+
+    if (component === IgxGridComponent) {
+        /**
+         * @deprecated API access workaround moved from Grid for possible existing use compat. Remove in future version
+         */
+        function getFilterFactory () {
+            return {
+                stringFilteringOperand: IgxStringFilteringOperand.instance(),
+                numberFilteringOperand: IgxNumberFilteringOperand.instance(),
+                timeFilteringOperand: IgxTimeFilteringOperand.instance(),
+                dateTimeFilteringOperand: IgxDateTimeFilteringOperand.instance(),
+                dateFilteringOperand: IgxDateFilteringOperand.instance(),
+                booleanFilteringOperand: IgxBooleanFilteringOperand.instance(),
+                createFilteringExpressionTree: (operator: FilteringLogic, fieldName?: string) => {
+                    return new FilteringExpressionsTree(operator, fieldName);
+                }
+            };
+        }
+        elementCtor.prototype.getFilterFactory = getFilterFactory;
     }
 
     // TODO: all 'template' props, setInput check for componentRef!, accumulated Props before init, object componentRef

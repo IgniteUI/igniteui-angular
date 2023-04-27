@@ -234,7 +234,6 @@ export var registerConfig = [
       },
     ],
     methods: [
-      "getFilterFactory",
       "getCellByColumnVisibleIndex",
       "groupBy",
       "clearGrouping",
