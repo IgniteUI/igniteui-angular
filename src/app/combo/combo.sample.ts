@@ -130,7 +130,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
@@ -333,7 +333,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         if ('added' in evt) {
             this.hasSelection = !!evt?.newSelection.length;
             return;
-        } 
+        }
 
         if (!evt.newSelection) {
             this.simpleComboOpenOnClear.open();

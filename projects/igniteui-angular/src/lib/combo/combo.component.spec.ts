@@ -2101,6 +2101,38 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([]);
                 expect(combo.value).toBe('');
             });
+            it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+                combo.displayKey = combo.valueKey = 'value';
+                combo.data = [
+                    { value: "Mississippi " }
+                ];
+                const dropdown = combo.dropdown;
+
+                dropdown.toggle();
+                tick();
+                fixture.detectChanges();
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+                UIInteractions.simulateTyping('Mississippi ', input);
+                // combo.searchValue = 'My New Custom Item';
+                // combo.handleInputChange();
+                fixture.detectChanges();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+                UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                tick();
+                fixture.detectChanges();
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+                combo.onBlur();
+                tick();
+                fixture.detectChanges();
+                expect(combo.value).toBe('Mississippi ');
+            }));
             it('should prevent selection when selectionChanging is cancelled', () => {
                 spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
                 combo.toggle();
