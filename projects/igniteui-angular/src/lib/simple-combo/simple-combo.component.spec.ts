@@ -1455,7 +1455,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.collapsed).toEqual(true);
         }));
 
-        fit('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
             fixture.detectChanges();
 
             dropdown.toggle();
