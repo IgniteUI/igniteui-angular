@@ -10,7 +10,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
 import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
 import { IgxFocusDirective } from '../../../projects/igniteui-angular/src/lib/directives/focus/focus.directive';
 import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
-import { IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IRowDataEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/public_api';
 import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 import { IgxColumnRequiredValidatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/validators.directive';
@@ -21,7 +21,7 @@ import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/
     styleUrls: [`grid-row-edit-sample.component.scss`],
     templateUrl: 'grid-row-edit-sample.component.html',
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, NgFor, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, NgIf, IgxRowEditTemplateDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxColumnRequiredValidatorDirective, IgxCellEditorTemplateDirective, FormsModule, IgxFocusDirective, IgxCheckboxComponent, NgFor, IgxButtonDirective, IgxSwitchComponent, IgxColumnGroupComponent, NgIf, IgxRowEditTabStopDirective, IgxRowEditTextDirective, IgxRowEditActionsDirective, IgxPaginatorComponent, IgxToggleDirective]
 })
 export class GridRowEditSampleComponent {
     @ViewChild(IgxToggleDirective, { static: true })

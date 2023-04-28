@@ -10,7 +10,7 @@ import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/ico
 import { NgIf } from '@angular/common';
 import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
 import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxGridBaseDirective } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IgxGridComponent, IgxHierarchicalGridComponent, IgxTreeGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-search-box',
@@ -21,7 +21,7 @@ import { IgxGridBaseDirective } from '../../../projects/igniteui-angular/src/lib
 })
 export class GridSearchBoxComponent {
     @Input()
-    public grid: IgxGridBaseDirective;
+    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
 
     public searchText = '';
     public caseSensitive = false;

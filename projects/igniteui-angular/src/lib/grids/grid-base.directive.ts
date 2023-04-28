@@ -43,7 +43,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
+import { RowEditPositionStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -141,7 +141,8 @@ import {
     IgxRowSelectorTemplateContext,
     IGX_GRID_SERVICE_BASE,
     ISizeInfo,
-    RowType
+    RowType,
+    IPinningConfig
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';

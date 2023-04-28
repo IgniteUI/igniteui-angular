@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
-import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
-import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
-import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
-import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.component';
+import { IGX_GRID_ACTION_STRIP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -11,20 +7,10 @@ import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.
  */
 @NgModule({
     imports: [
-        IgxActionStripComponent,
-        IgxActionStripMenuItemDirective,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective,
-        IgxGridActionButtonComponent
+        ...IGX_GRID_ACTION_STRIP_DIRECTIVES
     ],
     exports: [
-        IgxActionStripComponent,
-        IgxActionStripMenuItemDirective,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective,
-        IgxGridActionButtonComponent
+        ...IGX_GRID_ACTION_STRIP_DIRECTIVES
     ],
 })
 export class IgxActionStripModule { }

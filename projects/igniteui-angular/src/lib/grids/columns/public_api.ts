@@ -26,6 +26,7 @@ export * from './column-group.component';
 export * from './column-layout.component';
 export * from './templates.directive';
 export * from './validators.directive';
+export * from './interfaces';
 
 /* NOTE: Grid column validation directives collection for ease-of-use import in standalone components scenario */
 export const IGX_GRID_VALIDATION_DIRECTIVES = [

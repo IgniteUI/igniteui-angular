@@ -55,7 +55,7 @@ export * from './lib/data-operations/data-util';
  * Components
  */
 export * from './lib/action-strip/public_api';
-export * from './lib/accordion/accordion.component';
+export * from './lib/accordion/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/public_api';

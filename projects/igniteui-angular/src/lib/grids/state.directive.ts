@@ -14,10 +14,9 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
-import { IPinningConfig } from './grid.common';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -723,8 +722,3 @@ export class IgxGridStateDirective {
         return feature;
     }
 }
-
-/**
- * @hidden
- */
-

@@ -1,12 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
-import {
-    IgxExpansionPanelDescriptionDirective,
-    IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelIconDirective
-} from './expansion-panel.directives';
+import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -14,20 +7,10 @@ import {
  */
 @NgModule({
     imports: [
-        IgxExpansionPanelComponent,
-        IgxExpansionPanelHeaderComponent,
-        IgxExpansionPanelBodyComponent,
-        IgxExpansionPanelDescriptionDirective,
-        IgxExpansionPanelTitleDirective,
-        IgxExpansionPanelIconDirective
+        ...IGX_EXPANSION_PANEL_DIRECTIVES
     ],
     exports: [
-        IgxExpansionPanelComponent,
-        IgxExpansionPanelHeaderComponent,
-        IgxExpansionPanelBodyComponent,
-        IgxExpansionPanelDescriptionDirective,
-        IgxExpansionPanelTitleDirective,
-        IgxExpansionPanelIconDirective
+        ...IGX_EXPANSION_PANEL_DIRECTIVES
     ]
 })
 export class IgxExpansionPanelModule { }

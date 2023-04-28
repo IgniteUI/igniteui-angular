@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxAccordionComponent } from './accordion.component';
-import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
+import { IGX_ACCORDION_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -8,12 +7,10 @@ import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.modu
  */
 @NgModule({
     imports: [
-        IgxAccordionComponent,
-        IgxExpansionPanelModule
+        ...IGX_ACCORDION_DIRECTIVES
     ],
     exports: [
-        IgxAccordionComponent,
-        IgxExpansionPanelModule
+        ...IGX_ACCORDION_DIRECTIVES
     ]
 })
 export class IgxAccordionModule {

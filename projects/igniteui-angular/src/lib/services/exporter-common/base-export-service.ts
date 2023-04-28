@@ -26,7 +26,7 @@ export enum ExportRecordType {
     PivotGridRecord = 'PivotGridRecord'
 }
 
-export enum HeaderType {
+export enum ExportHeaderType {
     RowHeader = 'RowHeader',
     ColumnHeader = 'ColumnHeader',
     MultiRowHeader = 'MultiRowHeader',
@@ -58,7 +58,7 @@ export interface IColumnInfo {
     dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
-    headerType?: HeaderType;
+    headerType?: ExportHeaderType;
     startIndex?: number;
     columnSpan?: number;
     rowSpan?: number;
@@ -317,7 +317,7 @@ export abstract class IgxBaseExporter {
             const recordsData = records.filter(r => r.type !== ExportRecordType.SummaryRecord).map(r => r.data);
             const keys = ExportUtilities.getKeysFromData(recordsData);
             const columns = keys.map((k) =>
-                ({ header: k, field: k, skip: false, headerType: HeaderType.ColumnHeader, level: 0, columnSpan: 1 }));
+                ({ header: k, field: k, skip: false, headerType: ExportHeaderType.ColumnHeader, level: 0, columnSpan: 1 }));
             const columnWidths = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
 
             const mapRecord: IColumnList = {
@@ -408,11 +408,11 @@ export abstract class IgxBaseExporter {
     }
 
     private calculateColumnSpans(column: IColumnInfo, mapRecord: IColumnList, span: number) {
-        if (column.headerType === HeaderType.MultiColumnHeader && column.skip) {
+        if (column.headerType === ExportHeaderType.MultiColumnHeader && column.skip) {
             const columnGroupChildren = mapRecord.columns.filter(c => c.columnGroupParent === column.columnGroup);
 
             columnGroupChildren.forEach(cgc => {
-                if (cgc.headerType === HeaderType.MultiColumnHeader) {
+                if (cgc.headerType === ExportHeaderType.MultiColumnHeader) {
                     cgc.columnSpan = 0;
                     cgc.columnGroupParent = null;
                     cgc.skip = true;
@@ -445,7 +445,7 @@ export abstract class IgxBaseExporter {
 
             if (record.type !== ExportRecordType.HeaderRecord) {
                 const columns = ownerCols
-                    .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
+                    .filter(c => c.headerType === ExportHeaderType.ColumnHeader && !c.skip)
                     .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
@@ -757,7 +757,7 @@ export abstract class IgxBaseExporter {
         const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`;
         const columnList = this._ownersMap.get(island).columns;
         const columnHeader = columnList
-            .filter(col => col.headerType === HeaderType.ColumnHeader)
+            .filter(col => col.headerType === ExportHeaderType.ColumnHeader)
             .map(col => col.header ? col.header : col.field);
 
         const headerRecord: IExportRecord = {
@@ -1019,7 +1019,7 @@ export abstract class IgxBaseExporter {
 
         let previousKey = ''
         const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns
-            .filter(c => c.headerType === HeaderType.ColumnHeader && !c.skip)
+            .filter(c => c.headerType === ExportHeaderType.ColumnHeader && !c.skip)
             .sort((a, b) => a.startIndex - b.startIndex)
             .sort((a, b) => a.pinnedIndex - b.pinnedIndex)[0].field;
 
@@ -1129,7 +1129,7 @@ export abstract class IgxBaseExporter {
                 formatter: column.formatter,
                 skipFormatter: false,
 
-                headerType: isMultiColHeader ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
+                headerType: isMultiColHeader ? ExportHeaderType.MultiColumnHeader : ExportHeaderType.ColumnHeader,
                 columnSpan: colSpan,
                 level: columnLevel,
                 startIndex: index,
@@ -1182,7 +1182,7 @@ export abstract class IgxBaseExporter {
                 hiddenColumns.push(columnInfo);
             }
 
-            if (column.pinned && exportColumn && columnInfo.headerType === HeaderType.ColumnHeader) {
+            if (column.pinned && exportColumn && columnInfo.headerType === ExportHeaderType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
             }
 
@@ -1250,7 +1250,7 @@ export abstract class IgxBaseExporter {
                 field: colKey,
                 dataType: 'string',
                 skip: false,
-                headerType: HeaderType.ColumnHeader,
+                headerType: ExportHeaderType.ColumnHeader,
                 columnSpan: 1,
                 level: 0,
                 startIndex: i,
@@ -1325,7 +1325,7 @@ export abstract class IgxBaseExporter {
                 pinnedIndex: 0,
                 level: key.level,
                 dataType: 'string',
-                headerType: groupedRecords[k].length > 1 ? HeaderType.MultiRowHeader : HeaderType.RowHeader,
+                headerType: groupedRecords[k].length > 1 ? ExportHeaderType.MultiRowHeader : ExportHeaderType.RowHeader,
             };
 
             if (columnGroupParent) {
@@ -1356,7 +1356,7 @@ export abstract class IgxBaseExporter {
                     field: GRID_LEVEL_COL,
                     skip: false,
                     skipFormatter: false,
-                    headerType: HeaderType.ColumnHeader,
+                    headerType: ExportHeaderType.ColumnHeader,
                     columnSpan: 1,
                     level: 0,
                 };
