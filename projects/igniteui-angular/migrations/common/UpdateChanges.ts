@@ -829,7 +829,7 @@ export class UpdateChanges {
     }
 
     private resolveWorkspaceProject(): WorkspaceProject<ProjectType> | null {
-        let wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        let wsProject = this.workspace.projects[0];
         if (!wsProject) {
             const projectKeys = Object.keys(this.workspace.projects);
             if (!projectKeys.length) {
