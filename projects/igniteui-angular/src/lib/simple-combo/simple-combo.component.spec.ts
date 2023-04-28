@@ -1454,6 +1454,28 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
         }));
+
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            fixture.detectChanges();
+
+            dropdown.toggle();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('Ohio ', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(combo.value).toBe('Ohio ');
+        }));
     });
 
     describe('Display density', () => {
@@ -2020,7 +2042,7 @@ class IgxSimpleComboSampleComponent {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
@@ -2269,7 +2291,7 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
 @Component({
     template: `
         <div style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
-            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'" 
+            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'"
             style="margin-bottom: 60px;">
             </igx-simple-combo>
         </div>`
