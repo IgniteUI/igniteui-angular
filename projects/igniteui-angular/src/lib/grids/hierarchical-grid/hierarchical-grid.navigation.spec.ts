@@ -9,8 +9,8 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { IgxGridCellComponent } from '../cell.component';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCE_TIME = 30;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';

@@ -8,7 +8,6 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -24,6 +23,7 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
+import { IgxGrouping } from '../public_api';
 
 describe('IgxGrid - GroupBy #grid', () => {
 

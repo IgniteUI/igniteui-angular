@@ -13,7 +13,8 @@ import { IgxGridStateDirective } from './state.directive';
 import { IGX_GRID_TOOLBAR_DIRECTIVES } from './toolbar/public_api';
 
 export { IgxRowDirective } from './row.directive';
-export * from './columns/public_api';
+export * from './grid-public-row';
+export * from './grid-public-cell';
 export {
     IgxDragIndicatorIconDirective,
     IgxRowDragGhostDirective
@@ -25,6 +26,7 @@ export {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 export * from './state.directive';
+export * from './columns/public_api';
 export * from './common/public_api';
 export * from './grid-footer/grid-footer.component';
 export { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
@@ -40,8 +42,6 @@ export * from './columns/interfaces';
 // export { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 export * from './grid-base.directive';
 export * from './grid.common';
-export * from './grid-public-row';
-export * from './grid-public-cell';
 // export * from './grid-common.module';
 // export * from './column-actions/column-actions.module';
 // export * from './toolbar/toolbar.module';

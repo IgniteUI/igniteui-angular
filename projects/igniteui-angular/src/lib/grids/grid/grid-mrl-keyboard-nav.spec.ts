@@ -2,7 +2,6 @@
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IGridCellEventArgs, IgxColumnComponent } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -14,6 +13,7 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.s
 import { CellType } from '../common/grid.interface';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { NgFor } from '@angular/common';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';

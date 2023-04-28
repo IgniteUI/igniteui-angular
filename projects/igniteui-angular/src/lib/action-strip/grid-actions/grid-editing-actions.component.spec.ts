@@ -5,7 +5,7 @@ import { NgFor } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxColumnComponent, IgxGridComponent } from '../../grids/grid/public_api';
+import { IgxGridComponent } from '../../grids/grid/public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
@@ -15,6 +15,7 @@ import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-comp
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxActionStripComponent } from '../action-strip.component';
+import { IgxColumnComponent } from '../../grids/public_api';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;

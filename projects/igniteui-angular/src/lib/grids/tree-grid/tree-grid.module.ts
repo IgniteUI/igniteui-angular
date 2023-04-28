@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxTreeGridComponent } from './tree-grid.component';
-import { IGX_GRID_COMMON_DIRECTIVES } from '../public_api';
+import { IGX_TREE_GRID_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -8,12 +7,10 @@ import { IGX_GRID_COMMON_DIRECTIVES } from '../public_api';
  */
 @NgModule({
     imports: [
-        IgxTreeGridComponent,
-        ...IGX_GRID_COMMON_DIRECTIVES
+        ...IGX_TREE_GRID_DIRECTIVES
     ],
     exports: [
-        IgxTreeGridComponent,
-        ...IGX_GRID_COMMON_DIRECTIVES
+        ...IGX_TREE_GRID_DIRECTIVES
     ]
 })
 export class IgxTreeGridModule {

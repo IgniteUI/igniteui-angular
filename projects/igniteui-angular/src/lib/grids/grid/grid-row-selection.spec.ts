@@ -1,7 +1,6 @@
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IRowSelectionEventArgs } from './public_api';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -19,6 +18,7 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IRowSelectionEventArgs } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;

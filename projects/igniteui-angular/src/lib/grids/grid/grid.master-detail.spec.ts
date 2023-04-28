@@ -4,7 +4,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective } from './public_api';
+import { IgxGridDetailTemplateDirective } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -19,6 +19,7 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { NgFor, NgIf } from '@angular/common';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
+import { CellType, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';

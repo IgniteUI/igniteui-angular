@@ -1,7 +1,6 @@
 import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { CellType } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
@@ -17,12 +16,12 @@ import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
-import { IgxTreeGridRow } from '../grid/public_api';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 import { DropPosition } from '../moving/moving.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from '../common/types';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { CellType, IgxTreeGridRow } from '../public_api';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';

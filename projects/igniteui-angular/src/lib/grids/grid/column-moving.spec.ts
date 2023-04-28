@@ -15,8 +15,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxColumnComponent } from '../tree-grid/public_api';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';

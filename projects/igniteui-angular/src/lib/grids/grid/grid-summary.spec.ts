@@ -2,17 +2,6 @@
 import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxDateSummaryOperand,
-    IgxNumberSummaryOperand,
-    IgxSummaryOperand,
-    IgxSummaryResult,
-    IgxGroupByRow,
-    IgxSummaryRow,
-    IgxGridRow,
-    IColumnPipeArgs,
-    IgxColumnComponent
-} from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -32,6 +21,7 @@ import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IColumnPipeArgs, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult, IgxSummaryRow } from '../public_api';
 
 describe('IgxGrid - Summaries #grid', () => {
 

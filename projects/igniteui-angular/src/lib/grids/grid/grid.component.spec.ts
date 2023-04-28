@@ -9,7 +9,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from './public_api';
 import { DisplayDensity } from '../../core/density';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -27,6 +26,7 @@ import { ISortingExpression, SortingDirection } from '../../data-operations/sort
 import { GRID_SCROLL_CLASS } from '../../test-utils/grid-functions.spec';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../../paginator/paginator.component';
+import { IgxGridFooterComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../public_api';
 
 
 describe('IgxGrid Component Tests #grid', () => {

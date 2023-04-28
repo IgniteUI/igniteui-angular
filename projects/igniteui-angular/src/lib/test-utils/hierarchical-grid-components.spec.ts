@@ -1,10 +1,9 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { SampleTestData } from './sample-test-data.spec';
-import { ColumnType, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
+import { ColumnType, IPinningConfig, IgxAdvancedFilteringDialogComponent, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
-import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA_SHORT } from 'src/app/shared/sample-data';

@@ -2,12 +2,13 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxColumnComponent, IgxGridComponent } from '../../grids/grid/public_api';
+import { IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { NgFor } from '@angular/common';
+import { IgxColumnComponent } from '../../grids/public_api';
 
 
 describe('igxGridPinningActions #grid ', () => {

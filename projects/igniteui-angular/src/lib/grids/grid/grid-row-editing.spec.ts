@@ -5,7 +5,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { RowType } from './public_api';
 import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
@@ -27,8 +26,8 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CellType } from '../common/grid.interface';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { CellType, RowType } from '../public_api';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';

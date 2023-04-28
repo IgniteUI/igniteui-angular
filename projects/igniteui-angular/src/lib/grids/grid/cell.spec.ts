@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IGridCellEventArgs } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -13,6 +13,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { CellType } from '../common/grid.interface';
 import { NgFor } from '@angular/common';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
 

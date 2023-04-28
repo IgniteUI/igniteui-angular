@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxGridCell } from './public_api';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
@@ -30,6 +29,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();

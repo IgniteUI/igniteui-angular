@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
-import { IColumnResizeEventArgs, IgxColumnComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -14,6 +13,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
 import { NgFor } from '@angular/common';
 import { IgxAvatarComponent } from '../../avatar/avatar.component';
+import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 

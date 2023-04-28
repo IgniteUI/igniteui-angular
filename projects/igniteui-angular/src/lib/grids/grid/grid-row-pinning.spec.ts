@@ -5,10 +5,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IPinRowEventArgs } from './public_api';
+import { IgxGridDetailTemplateDirective } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
-import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -19,6 +18,7 @@ import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper
 import { GridRowConditionalStylingComponent } from '../../test-utils/grid-base-components.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
+import { CellType, IPinRowEventArgs, IPinningConfig, IgxColumnComponent } from '../public_api';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';

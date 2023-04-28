@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
-import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
@@ -27,6 +26,7 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IPinningConfig } from '../public_api';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
