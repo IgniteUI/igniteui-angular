@@ -49,7 +49,7 @@ export interface IPathSegment {
 
 export interface IGridDataBindable {
     data: any[] | null;
-    filteredData: any[];
+    get filteredData(): any[];
 }
 
 export interface CellType {
@@ -565,7 +565,7 @@ export interface GridType extends IGridDataBindable {
     groupingExpressions?: IGroupingExpression[];
     groupingExpressionsChange?: EventEmitter<IGroupingExpression[]>;
     groupsExpanded?: boolean;
-    groupsRecords?: IGroupByRecord[];
+    readonly groupsRecords?: IGroupByRecord[];
     groupingFlatResult?: any[];
     groupingResult?: any[];
     groupingMetadata?: any[];
