@@ -333,7 +333,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         if ('added' in evt) {
             this.hasSelection = !!evt?.newSelection.length;
             return;
-        } 
+        }
 
         if (!evt.newSelection) {
             this.simpleComboOpenOnClear.open();
