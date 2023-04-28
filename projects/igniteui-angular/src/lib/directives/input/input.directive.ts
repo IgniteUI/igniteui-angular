@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import {
     AbstractControl,
-    FormControlName,
     NgControl,
     NgModel
 } from '@angular/forms';
@@ -108,8 +107,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         @Optional()
         @Self()
-        @Inject(FormControlName)
-        protected formControl: FormControlName,
+        @Inject(NgControl)
+        protected formControl: NgControl,
         protected element: ElementRef<HTMLInputElement>,
         protected cdr: ChangeDetectorRef,
         protected renderer: Renderer2

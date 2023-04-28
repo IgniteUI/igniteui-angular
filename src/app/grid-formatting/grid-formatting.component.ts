@@ -133,7 +133,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'count') {
                 const count = obj.summaryResult ? Number(obj.summaryResult) : undefined;
@@ -151,7 +151,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
 }
 
 class CustomFilteringStrategy extends FilteringStrategy {
-    public filter(dataa, expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree, grid): any[] {
+    public override filter(dataa, expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree, grid): any[] {
         const res = super.filter(dataa, expressionsTree, advancedExpressionsTree, grid);
         return res;
     }

@@ -11,6 +11,8 @@ import { InputResourceStringsRO } from './input-resources';
 import { ChipResourceStringsRO } from './chip-resources';
 import { ComboResourceStringsRO } from './combo-resources';
 import { QueryBuilderResourceStringsRO } from './query-builder-resources';
+import { BannerResourceStringsRO } from './banner-resources';
+import { ActionStripResourceStringsRO } from './action-strip-resources';
 
 /**
  * Romanian resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsRO = {
     ...InputResourceStringsRO,
     ...ChipResourceStringsRO,
     ...ComboResourceStringsRO,
-    ...QueryBuilderResourceStringsRO
+    ...QueryBuilderResourceStringsRO,
+    ...BannerResourceStringsRO,
+    ...ActionStripResourceStringsRO,
 };

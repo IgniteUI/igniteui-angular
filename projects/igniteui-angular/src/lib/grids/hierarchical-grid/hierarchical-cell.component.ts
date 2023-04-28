@@ -17,19 +17,19 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     protected _rootGrid;
 
     constructor(
-        protected selectionService: IgxGridSelectionService,
-        @Inject(IGX_GRID_BASE) public grid: GridType,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public cdr: ChangeDetectorRef,
+        selectionService: IgxGridSelectionService,
+        @Inject(IGX_GRID_BASE) grid: GridType,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        cdr: ChangeDetectorRef,
         helement: ElementRef<HTMLElement>,
-        protected zone: NgZone,
+        zone: NgZone,
         touchManager: HammerGesturesManager,
-        protected platformUtil: PlatformUtil
+        platformUtil: PlatformUtil
     ) {
         super(selectionService, grid, overlayService, cdr, helement, zone, touchManager, platformUtil);
     }
 
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this._rootGrid = this._getRootGrid();
     }
@@ -38,7 +38,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      * @internal
      */
-    public activate(event: FocusEvent) {
+    public override activate(event: FocusEvent) {
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
         let parentGrid = this.grid;
