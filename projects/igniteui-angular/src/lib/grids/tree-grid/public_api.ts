@@ -1,11 +1,4 @@
-export * from '../public_api';
 export * from './tree-grid.component';
-// export * from './tree-grid.module';
-export * from './tree-grid-api.service';
 export * from './tree-grid.interfaces';
 export * from './tree-grid.filtering.strategy';
 export * from './tree-grid.grouping.pipe';
-export * from './tree-grid.directives';
-export { IgxTreeGridRowComponent } from './tree-grid-row.component';
-export { IgxTreeGridAddRowPipe } from './tree-grid.pipes';
-export { IgxTreeGridCellComponent } from './tree-cell.component';

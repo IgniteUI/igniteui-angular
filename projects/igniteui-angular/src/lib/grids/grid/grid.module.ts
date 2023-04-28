@@ -1,37 +1,16 @@
 import { NgModule } from '@angular/core';
-import {
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective
-} from './grid.directives';
-import { IgxGridComponent } from './grid.component';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridRowComponent } from './grid-row.component';
-import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
-import { IGX_GRID_COMMON_DIRECTIVES } from '../public_api';
+import { IGX_GRID_DIRECTIVES } from './public_api';
+
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
   imports: [
-    IgxGridComponent,
-    IgxGridRowComponent,
-    IgxGridGroupByRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByAreaComponent,
-    ...IGX_GRID_COMMON_DIRECTIVES
+    ...IGX_GRID_DIRECTIVES
   ],
   exports: [
-    IgxGridComponent,
-    IgxGridExpandableCellComponent,
-    IgxGridGroupByRowComponent,
-    IgxGridRowComponent,
-    IgxGroupByRowTemplateDirective,
-    IgxGridDetailTemplateDirective,
-    IgxGridGroupByAreaComponent,
-    ...IGX_GRID_COMMON_DIRECTIVES
+    ...IGX_GRID_DIRECTIVES
   ]
 })
 export class IgxGridModule {}
