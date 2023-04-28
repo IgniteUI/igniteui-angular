@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxCarouselComponent } from './carousel.component';
-import { IgxSlideComponent } from './slide.component';
-import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
+import { IGX_CAROUSEL_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -9,18 +7,10 @@ import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarou
  */
 @NgModule({
     imports: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
+        ...IGX_CAROUSEL_DIRECTIVES
     ],
     exports: [
-        IgxCarouselComponent,
-        IgxSlideComponent,
-        IgxCarouselIndicatorDirective,
-        IgxCarouselNextButtonDirective,
-        IgxCarouselPrevButtonDirective
+        ...IGX_CAROUSEL_DIRECTIVES
     ]
 })
 export class IgxCarouselModule {

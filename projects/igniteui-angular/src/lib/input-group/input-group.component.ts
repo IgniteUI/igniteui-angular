@@ -493,6 +493,3 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         this._subscription.unsubscribe();
     }
 }
-
-/** @hidden */
-

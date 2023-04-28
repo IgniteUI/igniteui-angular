@@ -9,7 +9,6 @@ import {
     ContentChild
 } from '@angular/core';
 
-
 import { IgxIconComponent } from '../icon/icon.component';
 
 /**
@@ -163,8 +162,4 @@ export class IgxNavbarComponent {
         this.action.emit(this);
     }
 }
-
-/**
- * @hidden
- */
 

@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
-import { IgxBannerComponent } from './banner.component';
-import { IgxBannerActionsDirective } from './banner.directives';
+import { IGX_BANNER_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
  * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-    imports: [IgxBannerComponent, IgxBannerActionsDirective],
-    exports: [IgxBannerComponent, IgxBannerActionsDirective]
+    imports: [...IGX_BANNER_DIRECTIVES],
+    exports: [...IGX_BANNER_DIRECTIVES]
 })
 export class IgxBannerModule { }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IGX_CARD_DIRECTIVES } from './public_api';
+import { IGX_INPUT_GROUP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -7,10 +7,11 @@ import { IGX_CARD_DIRECTIVES } from './public_api';
  */
 @NgModule({
     imports: [
-        ...IGX_CARD_DIRECTIVES
+        ...IGX_INPUT_GROUP_DIRECTIVES
     ],
     exports: [
-        ...IGX_CARD_DIRECTIVES
+        ...IGX_INPUT_GROUP_DIRECTIVES
     ]
 })
-export class IgxCardModule { }
+
+export class IgxInputGroupModule {}

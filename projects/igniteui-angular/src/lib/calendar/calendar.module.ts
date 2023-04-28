@@ -1,15 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxCalendarComponent } from './calendar.component';
-import {
-    IgxCalendarHeaderTemplateDirective,
-    IgxCalendarMonthDirective,
-    IgxCalendarSubheaderTemplateDirective,
-    IgxCalendarYearDirective
-} from './calendar.directives';
-import { IgxMonthsViewComponent } from './months-view/months-view.component';
-import { IgxYearsViewComponent } from './years-view/years-view.component';
-import { IgxDaysViewComponent } from './days-view/days-view.component';
-import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
+import { IGX_CALENDAR_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
@@ -17,26 +7,10 @@ import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
  */
 @NgModule({
     imports: [
-        IgxCalendarComponent,
-        IgxDaysViewComponent,
-        IgxMonthsViewComponent,
-        IgxYearsViewComponent,
-        IgxMonthPickerComponent,
-        IgxCalendarHeaderTemplateDirective,
-        IgxCalendarMonthDirective,
-        IgxCalendarYearDirective,
-        IgxCalendarSubheaderTemplateDirective
+        ...IGX_CALENDAR_DIRECTIVES
     ],
     exports: [
-        IgxCalendarComponent,
-        IgxDaysViewComponent,
-        IgxMonthsViewComponent,
-        IgxYearsViewComponent,
-        IgxMonthPickerComponent,
-        IgxCalendarHeaderTemplateDirective,
-        IgxCalendarMonthDirective,
-        IgxCalendarYearDirective,
-        IgxCalendarSubheaderTemplateDirective
+        ...IGX_CALENDAR_DIRECTIVES
     ]
 })
 export class IgxCalendarModule { }

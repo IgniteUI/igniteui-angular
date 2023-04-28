@@ -1,4 +1,5 @@
 import { IgxPickerActionsDirective, IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
@@ -14,5 +15,6 @@ export const IGX_DATE_PICKER_DIRECTIVES = [
     IgxPickerActionsDirective,
     IgxLabelDirective,
     IgxPrefixDirective,
-    IgxSuffixDirective
+    IgxSuffixDirective,
+    IgxHintDirective
 ] as const;

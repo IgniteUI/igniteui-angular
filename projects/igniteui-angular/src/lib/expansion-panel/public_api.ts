@@ -14,6 +14,7 @@ export {
 } from './expansion-panel.directives';
 export { ExpansionPanelHeaderIconPosition } from './expansion-panel-header.component';
 
+/* NOTE: Expansion panel directives collection for ease-of-use import in standalone components scenario */
 export const IGX_EXPANSION_PANEL_DIRECTIVES = [
     IgxExpansionPanelComponent,
     IgxExpansionPanelHeaderComponent,

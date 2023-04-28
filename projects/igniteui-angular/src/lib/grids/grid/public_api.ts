@@ -5,6 +5,7 @@ import { IgxExcelStyleHeaderIconDirective, IgxGridDetailTemplateDirective, IgxGr
 export * from './grid.component';
 export * from './grid.directives';
 
+/* NOTE: Grid directives collection for ease-of-use import in standalone components scenario */
 export const IGX_GRID_DIRECTIVES = [
     IgxGridComponent,
     IgxGroupByRowTemplateDirective,
