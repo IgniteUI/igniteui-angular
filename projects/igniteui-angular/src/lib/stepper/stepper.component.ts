@@ -378,6 +378,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
             this.activateFirstStep(true);
         }
 
+        if (this.linear) {
+            this.stepperService.calculateLinearDisabledSteps();
+        }
+
         this.handleStepChanges();
     }
 

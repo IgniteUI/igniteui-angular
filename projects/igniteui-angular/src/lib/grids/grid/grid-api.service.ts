@@ -58,7 +58,10 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         const grState = this.grid.groupingExpansionState;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
-            DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+            DataUtil.isHierarchyMatch(
+                state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }],
+                hierarchy,
+                this.grid.groupingExpressions));
     }
 
     public groupBy_is_row_in_group(groupRow: IGroupByRecord, rowID): boolean {
