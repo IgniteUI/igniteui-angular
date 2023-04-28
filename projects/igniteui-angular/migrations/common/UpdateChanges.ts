@@ -675,7 +675,7 @@ export class UpdateChanges {
         }
 
         // attempt to find a main tsconfig from workspace:
-        const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        const wsProject = this.workspace.projects[0];
         // technically could be per-project, but assuming there's at least one main tsconfig for IDE support
         const projectConfig = wsProject.architect?.build?.options['tsConfig'];
 
