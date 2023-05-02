@@ -403,10 +403,6 @@
         label {
             @extend %igx-drop-down__header !optional;
         }
-
-        %igx-drop-down__item {
-            text-indent: pad-inline(map.get($item-padding-inline, 'comfortable'));
-        }
     }
 
     %igx-drop-down__item--focused {
