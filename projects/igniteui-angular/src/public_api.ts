@@ -57,7 +57,7 @@ export * from './lib/accordion/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/public_api';
-export * from './lib/buttonGroup/buttonGroup.component';
+export * from './lib/buttonGroup/public_api';
 export * from './lib/calendar/public_api';
 export * from './lib/card/public_api';
 export * from './lib/carousel/public_api';
