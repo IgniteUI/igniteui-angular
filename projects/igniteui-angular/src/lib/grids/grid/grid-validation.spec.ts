@@ -290,6 +290,8 @@ describe('IgxGrid - Validation #grid', () => {
         it('should update formControl state when grid data is updated.', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             const originalDataCopy = JSON.parse(JSON.stringify(grid.data));
+
+            grid.data = JSON.parse(JSON.stringify(grid.data));
             let cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
             cell.update('asd');
@@ -307,7 +309,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = grid.gridAPI.get_cell_by_visible_index(1, 1);
             GridFunctions.verifyCellValid(cell, true);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell.element);
-            expect(cell.editValue).toBe("Chang");
+            expect(cell.editValue).toBe(originalDataCopy[1].ProductName);
         });
     });
 
