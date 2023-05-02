@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
+import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxButtonGroupComponent, IgxIconComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
-import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav.directives';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { ITabsSelectedItemChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/tabs/public_api';
-import { IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/public_api';
 
 @Component({
     selector: 'app-tabs-routing-sample',

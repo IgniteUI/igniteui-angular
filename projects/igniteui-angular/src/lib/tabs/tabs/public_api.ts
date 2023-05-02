@@ -11,6 +11,10 @@ export * from './tab-item.component';
 export * from './tab-header.component';
 export * from './tabs.directives';
 export * from './tab-content.component';
+export {
+    ITabsSelectedIndexChangingEventArgs,
+    ITabsSelectedItemChangeEventArgs
+} from '../tabs.directive'
 
 /* NOTE: Tabs directives collection for ease-of-use import in standalone components scenario */
 export const IGX_TABS_DIRECTIVES = [

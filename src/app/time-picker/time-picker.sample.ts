@@ -1,26 +1,28 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxTimePickerComponent,
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+    IgxTimePickerComponent,
     IgxInputDirective,
     AutoPositionStrategy,
     OverlaySettings,
-    DatePart } from 'igniteui-angular';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../../../projects/igniteui-angular/src/lib/date-common/picker-icons.common';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxTimePickerActionsDirective } from '../../../projects/igniteui-angular/src/lib/time-picker/time-picker.directives';
-import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
-import { NgIf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IgxTimePickerComponent as IgxTimePickerComponent_1 } from '../../../projects/igniteui-angular/src/lib/time-picker/time-picker.component';
+    DatePart,
+    IgxHintDirective,
+    IgxButtonDirective,
+    IgxPickerActionsDirective,
+    IgxPickerToggleComponent,
+    IgxPrefixDirective,
+    IgxIconComponent,
+    IgxPickerClearComponent,
+    IgxSuffixDirective
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
     standalone: true,
-    imports: [IgxTimePickerComponent_1, FormsModule, NgIf, IgxHintDirective, IgxTimePickerActionsDirective, IgxButtonDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
+    imports: [IgxTimePickerComponent, FormsModule, NgIf, IgxHintDirective, IgxButtonDirective, IgxPickerActionsDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxIconComponent, IgxPickerClearComponent, IgxSuffixDirective]
 })
 export class TimePickerSampleComponent {
     @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
