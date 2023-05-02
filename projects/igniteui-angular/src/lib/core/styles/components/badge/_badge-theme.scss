@@ -88,7 +88,7 @@
 
     $badge-font-weight: normal;
 
-    $badge-value-padding: rem(4px) rem(8px);
+    $badge-value-padding: rem(4px);
     $border-type: solid;
 
     %igx-badge-display {
@@ -106,7 +106,7 @@
         color: var-get($theme, 'text-color');
         line-height: 1;
         background: var-get($theme, 'background-color');
-        border-radius: 50%;
+        border-radius: calc(var(--size) / 2);
         box-shadow: var-get($theme, 'shadow');
         border-width: var-get($theme, 'border-width');
         border-color: var-get($theme, 'border-color');
