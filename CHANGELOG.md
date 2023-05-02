@@ -10,6 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
     - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
 ### New Features
+- `IgxExpansionPanel`:
+    - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
 - `IgxDateRangePicker`
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 
