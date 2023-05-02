@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { NgFor } from '@angular/common';
-import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
-import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     template: `
@@ -19,7 +15,18 @@ import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective,
         </igx-list>
     `,
     standalone: true,
-    imports: [IgxListComponent, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
+    imports: [
+        NgFor,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxRippleDirective,
+        IgxAvatarComponent,
+        IgxListThumbnailDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxIconComponent,
+        IgxListActionDirective
+    ]
 })
 export class BottomNavRoutingView1Component {
 

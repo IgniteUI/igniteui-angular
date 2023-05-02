@@ -1,11 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent } from '../../../projects/igniteui-angular/src/lib/calendar/calendar.component';
-import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
-import { DateRangeType } from '../../../projects/igniteui-angular/src/lib/core/dates';
-import { IViewDateChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/calendar/public_api';
+import { DateRangeType, IgxButtonDirective, IgxCalendarComponent, IgxCardComponent, IgxRippleDirective, IViewDateChangeEventArgs } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-calendar-sample',
@@ -19,8 +14,8 @@ export class CalendarSampleComponent implements OnInit {
     private calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true })
     private calendar1: IgxCalendarComponent;
-    @ViewChild('alert', { static: true })
-    private dialog: IgxDialogComponent;
+    // @ViewChild('alert', { static: true })
+    // private dialog: IgxDialogComponent;
 
     public range = [];
     public today = new Date();
@@ -51,12 +46,12 @@ export class CalendarSampleComponent implements OnInit {
             this.calendar1.selectDate(item);
         });
 
-        if (this.range.length === 0) {
-            this.dialog.message = 'Select dates from the Calendar first.';
-        } else {
-            this.dialog.message = 'PTO days submitted.';
-        }
-        this.dialog.open();
+        // if (this.range.length === 0) {
+        //     this.dialog.message = 'Select dates from the Calendar first.';
+        // } else {
+        //     this.dialog.message = 'PTO days submitted.';
+        // }
+        // this.dialog.open();
     }
 
     public showHide() {

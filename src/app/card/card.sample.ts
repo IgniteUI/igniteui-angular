@@ -1,17 +1,17 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
 import { IgxListComponent, IgxListLineTitleDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
 import { IgxExpansionPanelBodyComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-body.component';
 import { IgxExpansionPanelComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.component';
-import { FormsModule } from '@angular/forms';
 import { IgxSliderComponent } from '../../../projects/igniteui-angular/src/lib/slider/slider.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
 import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { IgxChipComponent } from '../../../projects/igniteui-angular/src/lib/chips/chip.component';
-import { NgFor } from '@angular/common';
 import { IgxDividerDirective } from '../../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 import { IgxCardComponent, IgxCardMediaDirective, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
 

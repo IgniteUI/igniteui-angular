@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { DisplayDensity } from 'igniteui-angular';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { DisplayDensity, IgxButtonDirective, IgxButtonGroupComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-button-sample',

@@ -1,25 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxRippleDirective, IgxYearsViewComponent } from 'igniteui-angular';
 
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxDaysViewComponent } from '../../../projects/igniteui-angular/src/lib/calendar/days-view/days-view.component';
-import { IgxYearsViewComponent } from '../../../projects/igniteui-angular/src/lib/calendar/years-view/years-view.component';
-import { IgxMonthsViewComponent } from '../../../projects/igniteui-angular/src/lib/calendar/months-view/months-view.component';
-import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxCalendarComponent } from '../../../projects/igniteui-angular/src/lib/calendar/public_api';
-import { DateRangeType } from '../../../projects/igniteui-angular/src/lib/core/dates';
 
 @Component({
     selector: 'app-calendar-views-sample',
     templateUrl: 'calendar-views.sample.html',
     styleUrls: ['calendar-views.sample.scss'],
     standalone: true,
-    imports: [IgxCardComponent, IgxMonthsViewComponent, FormsModule, IgxYearsViewComponent, IgxDaysViewComponent, IgxButtonDirective, IgxRippleDirective]
+    imports: [
+        FormsModule,
+        IgxCardComponent,
+        IgxMonthsViewComponent,
+        IgxYearsViewComponent,
+        IgxDaysViewComponent,
+        IgxButtonDirective,
+        IgxRippleDirective
+    ]
 })
 export class CalendarViewsSampleComponent implements OnInit {
-    @ViewChild('calendar', { static: true })
-    private calendar: IgxCalendarComponent;
+    // @ViewChild('calendar', { static: true })
+    // private calendar: IgxCalendarComponent;
     @ViewChild('daysView', { static: true })
     private daysView: IgxDaysViewComponent;
 
@@ -85,15 +86,15 @@ export class CalendarViewsSampleComponent implements OnInit {
         console.log(`selected date: ${date}`);
     }
 
-    public select() {
-        // this.calendar.selectDate(new Date(2019, 1, 13));
-        this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
+    // public select() {
+    //     // this.calendar.selectDate(new Date(2019, 1, 13));
+    //     this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    // }
 
-    public deselect() {
-        // this.calendar.deselectDate(new Date(2019, 1, 13));
-        this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
+    // public deselect() {
+    //     // this.calendar.deselectDate(new Date(2019, 1, 13));
+    //     this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    // }
 
     public selectDV() {
         this.daysView.selectDate(new Date(2019, 1, 13));
