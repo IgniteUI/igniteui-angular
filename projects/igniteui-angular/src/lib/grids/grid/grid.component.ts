@@ -306,6 +306,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -314,7 +315,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -396,23 +399,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets/Sets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
-    }
-
-    /**
      * Gets/Sets the total number of records in the data source.
      *
      * @remarks
@@ -435,7 +421,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
 

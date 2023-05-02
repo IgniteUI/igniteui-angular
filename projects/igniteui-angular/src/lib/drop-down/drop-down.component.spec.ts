@@ -79,7 +79,8 @@ describe('IgxDropDown ', () => {
             const selectionArgs: ISelectionEventArgs = {
                 newSelection: dropdown.items[1],
                 oldSelection: null,
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             dropdown.selectItem(data[1]);
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
@@ -87,7 +88,8 @@ describe('IgxDropDown ', () => {
             const newSelectionArgs: ISelectionEventArgs = {
                 newSelection: dropdown.items[4],
                 oldSelection: dropdown.items[1],
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             dropdown.selectItem(data[4]);
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(newSelectionArgs);
@@ -108,7 +110,8 @@ describe('IgxDropDown ', () => {
             let args: ISelectionEventArgs = {
                 oldSelection: null,
                 newSelection: data[1],
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -118,7 +121,8 @@ describe('IgxDropDown ', () => {
             args = {
                 oldSelection: selected,
                 newSelection: null,
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -506,7 +510,8 @@ describe('IgxDropDown ', () => {
                 const selectionArgs: ISelectionEventArgs = {
                     oldSelection: null,
                     newSelection: dropdown.items[3],
-                    cancel: false
+                    cancel: false,
+                    owner: dropdown
                 };
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
 
@@ -517,7 +522,8 @@ describe('IgxDropDown ', () => {
                 const canceledSelectionArgs: ISelectionEventArgs = {
                     oldSelection: dropdown.items[3],
                     newSelection: dropdown.items[1],
-                    cancel: true
+                    cancel: true,
+                    owner: dropdown
                 };
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(canceledSelectionArgs);
             }));

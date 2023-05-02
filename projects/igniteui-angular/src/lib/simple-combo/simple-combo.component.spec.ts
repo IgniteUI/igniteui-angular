@@ -1441,6 +1441,28 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(true);
         }));
+
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            fixture.detectChanges();
+
+            dropdown.toggle();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('Ohio ', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(combo.value).toBe('Ohio ');
+        }));
     });
 
     describe('Display density', () => {
@@ -1957,26 +1979,26 @@ describe('IgxSimpleCombo', () => {
 
 @Component({
     template: `
-<igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
-[valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
-[allowCustomValues]="allowCustomValues">
-    <ng-template igxComboItem let-display let-key="valueKey">
-    <div class="state-card--simple">
-    <span class="small-red-circle"></span>
-    <div class="display-value--main">State: {{display[key]}}</div>
-    <div class="display-value--sub">Region: {{display.region}}</div>
-    </div>
-    </ng-template>
-    <ng-template igxComboHeader>
-    <div class="header-class">This is a header</div>
-    </ng-template>
-    <ng-template igxComboFooter>
-    <div class="footer-class">This is a footer</div>
-    </ng-template>
-</igx-simple-combo>
-`,
+    <igx-simple-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
+    [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" (selectionChanging)="selectionChanging($event)"
+    [allowCustomValues]="allowCustomValues">
+        <ng-template igxComboItem let-display let-key="valueKey">
+        <div class="state-card--simple">
+        <span class="small-red-circle"></span>
+        <div class="display-value--main">State: {{display[key]}}</div>
+        <div class="display-value--sub">Region: {{display.region}}</div>
+        </div>
+        </ng-template>
+        <ng-template igxComboHeader>
+        <div class="header-class">This is a header</div>
+        </ng-template>
+        <ng-template igxComboFooter>
+        <div class="footer-class">This is a footer</div>
+        </ng-template>
+    </igx-simple-combo>
+    `,
     standalone: true,
-    imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective, ReactiveFormsModule, FormsModule]
+    imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxSimpleComboSampleComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -1993,7 +2015,7 @@ class IgxSimpleComboSampleComponent {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],

@@ -1232,7 +1232,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 select.toggle();
@@ -1267,7 +1268,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 selectedItem.selected = true;
@@ -1298,7 +1300,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 const navigateDropdownItems = (selectEvent: KeyboardEvent) => {
@@ -1372,7 +1375,8 @@ describe('igxSelect', () => {
                 const args: ISelectionEventArgs = {
                     oldSelection: <IgxDropDownItemBaseDirective>{},
                     newSelection: selectedItem,
-                    cancel: false
+                    cancel: false,
+                    owner: select
                 };
 
                 select.selectItem(selectedItem);
