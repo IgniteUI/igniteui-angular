@@ -891,7 +891,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             }
 
             // add check in case value changes externally and form control needs to update.
-            if (this.formControl && this.formControl.value != changes.value.currentValue) {
+            if (!this.editMode && this.formControl && this.formControl.value != changes.value.currentValue) {
                 const obj = {};
                 obj[this.column.field] = changes.value.currentValue;
                 this.grid.validation.update(this.cellID.rowID, obj);
