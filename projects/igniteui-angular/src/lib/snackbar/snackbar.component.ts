@@ -204,7 +204,3 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     }
 }
 
-/**
- * @hidden
- */
-

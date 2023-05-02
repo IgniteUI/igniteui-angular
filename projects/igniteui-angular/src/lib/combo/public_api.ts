@@ -1,3 +1,4 @@
+import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
@@ -30,5 +31,6 @@ export const IGX_COMBO_DIRECTIVES = [
     IgxComboToggleIconDirective,
     IgxLabelDirective,
     IgxPrefixDirective,
-    IgxSuffixDirective
+    IgxSuffixDirective,
+    IgxHintDirective
 ] as const;

@@ -2,16 +2,13 @@ import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
     TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject
 } from '@angular/core';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { growVerIn, growVerOut } from '../animations/grow';
-
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-
-
-
 import {
     IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
@@ -507,10 +504,3 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>) => node.data === data;
 
 }
-
-/**
- * @hidden
- *
- * NgModule defining the components and directives needed for `igx-tree`
- */
-

@@ -12,8 +12,7 @@ import {
     Inject,
     Input,
     OnDestroy,
-    OnInit,
-    TemplateRef
+    OnInit
 } from '@angular/core';
 import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
@@ -363,26 +362,4 @@ export class IgxTimeItemDirective {
         }
         return hour;
     }
-}
-
-/**
- * This directive should be used to mark which ng-template will be used from IgxTimePicker when re-templating its input group.
- */
-@Directive({
-    selector: '[igxTimePickerTemplate]',
-    standalone: true
-})
-export class IgxTimePickerTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
-}
-
-/**
- * This directive can be used to add custom action buttons to the dropdown/dialog.
- */
-@Directive({
-    selector: '[igxTimePickerActions]',
-    standalone: true
-})
-export class IgxTimePickerActionsDirective {
-    constructor(public template: TemplateRef<any>) { }
 }

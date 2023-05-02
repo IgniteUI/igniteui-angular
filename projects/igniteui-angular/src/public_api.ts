@@ -86,31 +86,25 @@ export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/public_api';
 export * from './lib/navigation-drawer/public_api';
 export * from './lib/paginator/public_api';
-export * from './lib/progressbar/progressbar.common';
-export * from './lib/progressbar/progressbar.component';
+export * from './lib/progressbar/public_api';
 export * from './lib/radio/radio.component';
 export * from './lib/slider/public_api';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
-export * from './lib/tabs/public_api';
 export * from './lib/tabs/bottom-nav/public_api';
 export * from './lib/tabs/tabs/public_api';
-export * from './lib/time-picker/time-picker.directives';
-export * from './lib/time-picker/time-picker.component';
+export * from './lib/time-picker/public_api';
 export * from './lib/toast/toast.component';
 export * from './lib/select/public_api';
-export * from './lib/splitter/splitter-pane/splitter-pane.component';
-export * from './lib/splitter/splitter.component';
+export * from './lib/splitter/public_api';
 export * from './lib/stepper/public_api';
 export * from './lib/date-range-picker/public_api';
 export * from './lib/date-common/public_api';
-
 export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
 export * from './lib/tree/public_api';
 export * from './lib/grids/pivot-grid/public_api';
-export * from './lib/query-builder/query-builder.component'
-export * from './lib/query-builder/query-builder-header.component'
+export * from './lib/query-builder/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -119,7 +113,6 @@ export * from './lib/services/public_api';
 export * from './lib/core/dates';
 export * from './lib/core/density';
 export { PickerInteractionMode } from './lib/date-common/types';
-export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 
@@ -189,3 +182,17 @@ export * from './lib/list/list.module';
 export * from './lib/navbar/navbar.module';
 export * from './lib/navigation-drawer/navigation-drawer.module';
 export * from './lib/paginator/paginator.module';
+export * from './lib/progressbar/progressbar.module';
+export * from './lib/query-builder/query-builder.module';
+export * from './lib/select/select.module';
+export * from './lib/simple-combo/simple-combo.module';
+export * from './lib/slider/slider.module';
+export * from './lib/snackbar/snackbar.module';
+export * from './lib/splitter/splitter.module';
+export * from './lib/stepper/stepper.module';
+export * from './lib/switch/switch.module';
+export * from './lib/tabs/bottom-nav/bottom-nav.module';
+export * from './lib/tabs/tabs/tabs.module';
+export * from './lib/time-picker/time-picker.module';
+export * from './lib/toast/toast.module';
+export * from './lib/tree/tree.module';

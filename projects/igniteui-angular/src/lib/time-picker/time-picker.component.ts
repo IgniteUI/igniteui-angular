@@ -33,8 +33,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_a
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import {
     IgxItemListDirective,
-    IgxTimeItemDirective,
-    IgxTimePickerActionsDirective
+    IgxTimeItemDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
@@ -56,7 +55,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective, IgxPickerClearComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxIconComponent } from '../icon/icon.component';
@@ -319,8 +318,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public label: IgxLabelDirective;
 
     /** @hidden @internal */
-    @ContentChild(IgxTimePickerActionsDirective)
-    public timePickerActionsDirective: IgxTimePickerActionsDirective;
+    @ContentChild(IgxPickerActionsDirective)
+    public timePickerActionsDirective: IgxPickerActionsDirective;
 
     @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private inputDirective: IgxInputDirective;

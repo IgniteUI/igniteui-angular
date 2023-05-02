@@ -642,8 +642,5 @@ export const valueInRange = (value: number, max: number, min = 0): number => Mat
 export const toPercent = (value: number, max: number) =>  !max ? 0 : Math.floor(100 * value / max);
 
 export const toValue = (value: number, max: number) => max * value / 100;
-/**
- * @hidden
- */
 
 
