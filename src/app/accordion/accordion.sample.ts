@@ -9,7 +9,7 @@ import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/s
     templateUrl: 'accordion.sample.html',
     styleUrls: ['accordion.sample.scss'],
     standalone: true,
-    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxAccordionComponent, IGX_ACCORDION_DIRECTIVES]
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IGX_ACCORDION_DIRECTIVES]
 })
 export class AccordionSampleComponent {
     @ViewChild('accordion', { static: true }) public accordion: IgxAccordionComponent;
