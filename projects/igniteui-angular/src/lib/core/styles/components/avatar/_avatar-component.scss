@@ -42,15 +42,7 @@
         }
 
         @include m(initials) {
-            @extend %igx-avatar-initials--small !optional;
-        }
-
-        @include mx(medium, initials) {
-            @extend %igx-avatar-initials--medium !optional;
-        }
-
-        @include mx(large, initials) {
-            @extend %igx-avatar-initials--large !optional;
+            @extend %igx-avatar--initials !optional;
         }
     }
 }

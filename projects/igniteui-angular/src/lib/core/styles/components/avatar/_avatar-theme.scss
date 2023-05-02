@@ -78,7 +78,7 @@
     }
 
     %igx-avatar-display {
-        --sizes: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
+        --size: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
 
         position: relative;
         display: inline-flex;
@@ -91,8 +91,8 @@
         border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
-        width: var(--sizes);
-        height: var(--sizes);
+        width: var(--size);
+        height: var(--size);
 
         &::after {
             box-shadow: none;
@@ -130,8 +130,8 @@
 
     %igx-avatar--initials {
         text-transform: uppercase;
-        font-size: calc(var(--sizes) / 2);
-        line-height: calc(var(--sizes) / 2);
+        font-size: calc(var(--size) / 2);
+        line-height: calc(var(--size) / 2);
     }
 
     %igx-avatar--small,
