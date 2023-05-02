@@ -27,7 +27,8 @@
         ]
       },
       "rootDir": ".",
-      "useDefineForClassFields": false
+      "useDefineForClassFields": false,
+      "noImplicitOverride": true
     },
     "exclude": [
         "dist",

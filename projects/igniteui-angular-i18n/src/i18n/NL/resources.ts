@@ -11,6 +11,8 @@ import { InputResourceStringsNL } from './input-resources';
 import { ChipResourceStringsNL } from './chip-resources';
 import { ComboResourceStringsNL } from './combo-resources';
 import { QueryBuilderResourceStringsNL } from './query-builder-resources';
+import { BannerResourceStringsNL } from './banner-resources';
+import { ActionStripResourceStringsNL } from './action-strip-resources';
 
 /**
  * Dutch resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsNL = {
     ...InputResourceStringsNL,
     ...ChipResourceStringsNL,
     ...ComboResourceStringsNL,
-    ...QueryBuilderResourceStringsNL
+    ...QueryBuilderResourceStringsNL,
+    ...BannerResourceStringsNL,
+    ...ActionStripResourceStringsNL,
 };
