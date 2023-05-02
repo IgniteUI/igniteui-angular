@@ -91,9 +91,9 @@
         gap: rem(8px);
 
         padding-inline-start: pad-inline($padding-inline-start, $padding-inline-start, $padding-inline-start);
-        padding-inline-end: pad-inline(rem(4px), rem(8px), rem(16px));
-        padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
-        padding-block-end: pad-block(rem(4px), rem(8px), rem(16px));
+        padding-inline-end: pad-inline($padding, $padding, $padding);
+        padding-block-start: pad-block($padding, $padding, $padding);
+        padding-block-end: pad-block($padding, $padding, $padding);
         background: var-get($theme, 'banner-background');
     }
 
