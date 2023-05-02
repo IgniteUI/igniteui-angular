@@ -4,11 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 16.0.0
 
-### New Features
-- *General*
-    - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
+### General
+- All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 
-    Now you can do:
+Now you can do:
     
 ```typescript
 // IGX_GRID_DIRECTIVES exports all grid related components and directives
@@ -53,6 +52,7 @@ import { IgxGridModule } from 'igniteui-angular';
 })
 ```
 
+### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
 - `IgxDateRangePicker`

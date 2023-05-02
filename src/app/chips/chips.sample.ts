@@ -1,12 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 import { NgFor, NgIf } from '@angular/common';
-import { IChipsAreaReorderEventArgs, IChipsAreaSelectEventArgs, IgxChipsAreaComponent } from '../../../projects/igniteui-angular/src/lib/chips/chips-area.component';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IBaseChipEventArgs, IgxChipComponent } from '../../../projects/igniteui-angular/src/lib/chips/chip.component';
+import { IBaseChipEventArgs, IChipsAreaReorderEventArgs, IChipsAreaSelectEventArgs, IgxAvatarComponent, IgxChipComponent, IgxChipsAreaComponent, IgxDropDirective, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-chips-sample',

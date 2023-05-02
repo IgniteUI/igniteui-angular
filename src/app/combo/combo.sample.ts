@@ -4,26 +4,9 @@ import { NgIf, AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
-import { IComboFilteringOptions } from '../../../projects/igniteui-angular/src/lib/combo/combo.common';
 import { RemoteNWindService } from './remote-nwind.service';
-import { ButtonGroupAlignment, IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IChangeSwitchEventArgs, IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective } from '../../../projects/igniteui-angular/src/lib/combo/combo.directives';
-import { IgxToastComponent } from '../../../projects/igniteui-angular/src/lib/toast/toast.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent } from '../../../projects/igniteui-angular/src/lib/combo/combo.component';
-import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from '../../../projects/igniteui-angular/src/lib/simple-combo/simple-combo.component';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IForOfState } from '../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
-import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { ConnectedPositioningStrategy, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
-import { scaleInCenter, scaleOutCenter } from '../../../projects/igniteui-angular/src/lib/animations/scale';
+import { ButtonGroupAlignment, ConnectedPositioningStrategy, DisplayDensity, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, IChangeSwitchEventArgs, IComboFilteringOptions, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IForOfState, ISimpleComboSelectionChangingEventArgs, IgxButtonDirective, IgxButtonGroupComponent, IgxComboAddItemDirective, IgxComboComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxHintDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSimpleComboComponent, IgxSwitchComponent, IgxToastComponent, OverlaySettings, VerticalAlignment, scaleInCenter, scaleOutCenter } from 'igniteui-angular';
+
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector

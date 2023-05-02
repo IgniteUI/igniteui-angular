@@ -1,16 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-
-import { IgxCarouselIndicatorDirective } from '../../../projects/igniteui-angular/src/lib/carousel/carousel.directives';
-import { IgxSlideComponent } from '../../../projects/igniteui-angular/src/lib/carousel/slide.component';
-import { CarouselIndicatorsOrientation, IgxCarouselComponent } from '../../../projects/igniteui-angular/src/lib/carousel/carousel.component';
-import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
-import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 import { FormsModule } from '@angular/forms';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent, IgxCarouselIndicatorDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSlideComponent, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-carousel-sample',
