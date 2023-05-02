@@ -896,7 +896,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 const obj = {};
                 obj[this.column.field] = changes.value.currentValue;
                 this.grid.validation.update(this.cellID.rowID, obj);
-                (this.grid as any).markForCheck();
+                this.grid.cdr.detectChanges();
             }
         }
     }
