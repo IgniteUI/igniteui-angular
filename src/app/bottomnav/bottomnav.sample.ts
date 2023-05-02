@@ -1,27 +1,37 @@
-import { AfterViewInit,
-        Component,
-        ElementRef,
-        QueryList,
-        Renderer2,
-        ViewChildren } from '@angular/core';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    QueryList,
+    Renderer2,
+    ViewChildren
+} from '@angular/core';
 import { NgFor } from '@angular/common';
-import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
-import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
-import { IgxBottomNavContentComponent } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav-content.component';
-import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav.directives';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxBottomNavHeaderComponent } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav-header.component';
-import { IgxBottomNavItemComponent } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav-item.component';
-import { IgxBottomNavComponent } from '../../../projects/igniteui-angular/src/lib/tabs/bottom-nav/bottom-nav.component';
+import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavItemComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-bottomnav-sample',
     styleUrls: ['bottomnav.sample.scss'],
     templateUrl: 'bottomnav.sample.html',
     standalone: true,
-    imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavContentComponent, IgxListComponent, IgxListItemComponent, NgFor, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective]
+    imports: [
+        NgFor,
+        IgxBottomNavComponent,
+        IgxBottomNavItemComponent,
+        IgxBottomNavHeaderComponent,
+        IgxIconComponent,
+        IgxBottomNavHeaderIconDirective,
+        IgxBottomNavHeaderLabelDirective,
+        IgxBottomNavContentComponent,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxRippleDirective,
+        IgxAvatarComponent,
+        IgxListThumbnailDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxListActionDirective
+    ]
 })
 export class BottomNavSampleComponent implements AfterViewInit {
     @ViewChildren('tabbarEl')

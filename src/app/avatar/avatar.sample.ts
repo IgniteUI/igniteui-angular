@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxDragDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxAvatarComponent, IgxDragDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-avatar-sample',
