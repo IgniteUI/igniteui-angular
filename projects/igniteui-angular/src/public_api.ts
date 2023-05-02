@@ -168,6 +168,7 @@ export * from './lib/directives/radio/radio-group.module';
 export * from './lib/directives/ripple/ripple.module';
 export * from './lib/directives/scroll-inertia/scroll_inertia.module';
 export * from './lib/directives/text-highlight/text-highlight.module';
+export * from './lib/directives/text-selection/text-selection.module';
 export * from './lib/directives/toggle/toggle.module';
 export * from './lib/directives/tooltip/tooltip.module';
 export * from './lib/drop-down/drop-down.module';
