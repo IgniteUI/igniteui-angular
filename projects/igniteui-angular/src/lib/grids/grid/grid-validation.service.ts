@@ -129,7 +129,7 @@ export class IgxGridValidationService {
         for (const key of keys) {
             const colKey = this.getFieldKey(key);
             const control = rowGroup?.get(colKey);
-            if (control && control.value != rowData[key]) {
+            if (control) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
         }
