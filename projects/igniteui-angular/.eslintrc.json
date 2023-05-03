@@ -20,15 +20,24 @@
           "error",
           {
             "type": "element",
-            "prefix": ["igx", "igc"],
+            "prefix": [
+              "igx",
+              "igc"
+            ],
             "style": "kebab-case"
           }
         ],
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "type": ["attribute", "element"],
-            "prefix": ["igx", "igc"]
+            "type": [
+              "attribute",
+              "element"
+            ],
+            "prefix": [
+              "igx",
+              "igc"
+            ]
           }
         ],
         "@angular-eslint/no-input-rename": "off",
