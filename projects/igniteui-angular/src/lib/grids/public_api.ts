@@ -1,4 +1,5 @@
 import { IGX_PAGINATOR_DIRECTIVES } from '../paginator/public_api';
+import { IGX_GRID_COLUMN_ACTIONS_DIRECTIVES } from './column-actions/public_api';
 import { IGX_GRID_COLUMN_DIRECTIVES, IGX_GRID_VALIDATION_DIRECTIVES } from './columns/public_api';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES } from './filtering/excel-style/public_api';
@@ -31,6 +32,7 @@ export * from './common/public_api';
 export * from './grid-footer/grid-footer.component';
 export { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 export * from './summaries/grid-summary';
+export * from './column-actions/public_api';
 
 /*
 export * from './api.service';
@@ -43,7 +45,7 @@ export * from './columns/interfaces';
 export * from './grid-base.directive';
 export * from './grid.common';
 // export * from './grid-common.module';
-// export * from './column-actions/column-actions.module';
+//
 // export * from './toolbar/toolbar.module';
 export * from './grid/grid-validation.service';
 
@@ -83,6 +85,7 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     ...IGX_GRID_HEADERS_DIRECTIVES,
     ...IGX_GRID_COLUMN_DIRECTIVES,
     ...IGX_GRID_VALIDATION_DIRECTIVES,
+    ...IGX_GRID_COLUMN_ACTIONS_DIRECTIVES,
     ...IGX_GRID_SELECTION_DIRECTIVES,
     ...IGX_GRID_TOOLBAR_DIRECTIVES,
     ...IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES,
