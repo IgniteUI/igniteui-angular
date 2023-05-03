@@ -81,6 +81,8 @@
     }
 
     %grid-excel-menu {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -363,12 +365,16 @@
     }
 
     %grid-excel-menu--cosy {
+        --component-size: var(--ig-size, var(--ig-size-medium));
+
         %grid-excel-menu__header {
             justify-content: space-between;
         }
     }
 
     %grid-excel-menu--compact {
+        --component-size: var(--ig-size, var(--ig-size-small));
+
         %grid-excel-menu__header {
             justify-content: space-between;
         }
