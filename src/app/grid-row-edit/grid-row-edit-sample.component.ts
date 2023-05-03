@@ -239,7 +239,7 @@ export class GridRowEditSampleComponent {
         return null;
     }
 
-    private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {
+    private generatePerformanceData(rowsCount = 100000, colsCount = 300) {
         const cols = [];
         cols.push({
             field: 'ID',

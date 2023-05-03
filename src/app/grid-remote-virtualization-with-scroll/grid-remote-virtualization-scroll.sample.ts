@@ -21,7 +21,7 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
     public prevRequest: any;
     public columns: any;
     public loading = true;
-    public areAllRowsSelected: boolean = false;
+    public areAllRowsSelected = false;
 
     public clipboardOptions = {
         enabled: true,

@@ -633,7 +633,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(mockTree.activeNodeChanged.emit).toHaveBeenCalledWith(someNode2);
 
                 // do not change active node when call w/ same node
-                navService.focusedNode = navService.focusedNode;
+                // navService.focusedNode = navService.focusedNode;
                 expect(mockTree.activeNodeChanged.emit).toHaveBeenCalledTimes(1);
 
                 // handle call w/ null

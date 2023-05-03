@@ -57,7 +57,7 @@ export class MaskSampleComponent {
     }
 
     public isSSNValid(ssn) {
-        const ssnPattern = /^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/;
+        const ssnPattern = /^[0-9]{3}-?[0-9]{2}-?[0-9]{4}$/;
         return (ssn.match(ssnPattern));
     }
 

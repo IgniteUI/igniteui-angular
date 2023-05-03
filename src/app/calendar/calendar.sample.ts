@@ -59,7 +59,7 @@ export class CalendarSampleComponent implements OnInit {
     }
 
     public onSelection(event: Date | Date []) {
-        console.log(`Selected date\s:${event}`);
+        console.log(`Selected dates: ${event}`);
     }
 
     public viewDateChanged(event: IViewDateChangeEventArgs) {

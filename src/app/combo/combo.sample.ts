@@ -58,13 +58,13 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public rData: any;
     public prevRequest: any;
     public simpleComboPrevRequest: any;
-    private searchText: string = '';
+    private searchText = '';
     private defaultVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
     private currentVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
     private hasSelection: boolean;
-    private additionalScroll: number = 0;
+    private additionalScroll = 0;
     private itemID = 1;
-    private itemCount: number = 0;
+    private itemCount = 0;
 
     public valueKeyVar = 'field';
     public currentDataType = '';

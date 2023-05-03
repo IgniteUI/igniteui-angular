@@ -15,11 +15,15 @@
         "createDefaultProgram": true
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
         "no-shadow": "off",
+        "no-prototype-builtins": "off",
+        "prefer-spread": "warn",
         "@typescript-eslint/no-shadow": [
           "error"
         ],
@@ -57,7 +61,9 @@
         ],
         "id-blacklist": "off",
         "id-match": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-function": "off"
       }
     },
     {
