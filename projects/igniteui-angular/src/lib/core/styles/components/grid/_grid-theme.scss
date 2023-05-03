@@ -695,6 +695,8 @@
     }
 
     %grid-display {
+        --igx-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
+        --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
         --igx-tree-indent-size: #{rem(24px)};
 
         position: relative;
