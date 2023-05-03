@@ -13,9 +13,6 @@
                     <label igxLabel for="newIndex">New index</label>
                 </igx-input-group>
             </div>
-            <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
-            </div>
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="pagingEnabled = !pagingEnabled">Enable Paging</button>
                 <button igxButton="raised" (click)='reverseColumn()'>Reverse</button>

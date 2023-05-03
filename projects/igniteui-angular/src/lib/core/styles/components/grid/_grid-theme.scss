@@ -2416,16 +2416,10 @@
         }
 
         %igx-badge-display {
-            /* start of IE vertical alignment fix */
-            top: 50%;
-            transform: translateY(-50%);
-            /* end of IE vertical alignment fix */
+            --size: #{rem(14px)};
+            --font-size: #{rem(12px)};
+            line-height: 0;
             position: absolute;
-            width: rem(14px);
-            height: rem(14px);
-            min-width: rem(14px);
-            font-size: rem(12px);
-            text-align: center;
             inset-inline-end: 0;
         }
     }
