@@ -628,7 +628,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
-            let checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
             expect(!checkboxes[1].checked && !checkboxes[2].checked && !checkboxes[3].checked && checkboxes[4].indeterminate).toBe(true);
         }));
 
@@ -687,8 +687,8 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             fix.detectChanges();
             tick();
 
-            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
-            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent, 'igx-tree-grid');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent, 'igx-tree-grid');
 
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '77', fix);
             fix.detectChanges();
@@ -699,7 +699,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         }));
 
         it('Should display message when there is no data', fakeAsync(() => {
-            let data = tGrid.data;
+            const data = tGrid.data;
             tGrid.data = [];
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();
@@ -818,7 +818,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             tick();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-tree-grid');
-            let checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
+            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu, 'igx-tree-grid'));
             expect(!checkboxes[1].checked && !checkboxes[2].checked && !checkboxes[3].checked && checkboxes[4].indeterminate).toBe(true);
         }));
 

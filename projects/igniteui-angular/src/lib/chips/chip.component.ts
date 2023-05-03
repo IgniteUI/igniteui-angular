@@ -589,7 +589,7 @@ export class IgxChipComponent extends DisplayDensityBase implements OnDestroy {
     }
 
     public onSelectTransitionDone(event) {
-        if (!!event.target.tagName) {
+        if (event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.selectedChanged.emit({
                 owner: this,

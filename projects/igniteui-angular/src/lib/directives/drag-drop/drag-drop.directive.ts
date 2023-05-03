@@ -1280,7 +1280,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         let targetElements = [];
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
-            if (!!elFromPoint?.shadowRoot) {
+            if (elFromPoint?.shadowRoot) {
                 targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             } else if (targetElements.indexOf(elFromPoint) === -1) {
                 targetElements.push(elFromPoint);

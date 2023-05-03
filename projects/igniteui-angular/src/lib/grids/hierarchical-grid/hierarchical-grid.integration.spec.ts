@@ -651,7 +651,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             let headers = GridFunctions.getColumnHeaders(fixture);
             let gridRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
-            let paging = GridFunctions.getGridPaginator(fixture);
+            const paging = GridFunctions.getGridPaginator(fixture);
             let rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             let dragIndicators = GridFunctions.getDragIndicators(fixture);
             let expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');

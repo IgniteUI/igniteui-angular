@@ -1512,7 +1512,7 @@ const verifyRowDragStartEvent =(
     dragRow: RowType,
     dragElement: HTMLElement,
     dragDirective: IgxRowDragDirective,
-    timesCalled: number = 1,
+    timesCalled = 1,
     cancel = false) => {
     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.rowDragStart.emit).toHaveBeenCalledWith({
@@ -1538,7 +1538,7 @@ const verifyRowDragEndEvent = (
     dragElement: HTMLElement,
     dragDirective: IgxRowDragDirective,
     animations: boolean,
-    timesCalled: number = 1) => {
+    timesCalled = 1) => {
     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.rowDragEnd.emit).toHaveBeenCalledWith({
         dragDirective,

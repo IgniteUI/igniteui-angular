@@ -1696,7 +1696,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(document.activeElement).toEqual(header.nativeElement);
         }));
 
-        it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', fakeAsync(() => {
+        it('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', fakeAsync(() => {
             pending('This this is not valid anymore, so we should probably dellete it.');
             grid.getColumnByName('ProductName').width = '350px';
             tick(DEBOUNCETIME);
@@ -1811,7 +1811,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(() => {
                 filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
             })
-                .not.toThrowError(/\'id\' of undefined/);
+                .not.toThrowError(/'id' of undefined/);
             fix.detectChanges();
             await wait(500);
             fix.detectChanges();
@@ -1820,7 +1820,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(() => {
                 filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
             })
-                .not.toThrowError(/\'id\' of undefined/);
+                .not.toThrowError(/'id' of undefined/);
             fix.detectChanges();
             await wait(100);
         }));
@@ -2649,23 +2649,23 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should render custom filter template instead of default one.', fakeAsync(() => {
             // Verify default filter template is not present.
             expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\`ProductName\` default filter chips area template was found.');
+                '\'ProductName\' default filter chips area template was found.');
             expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\`Downloads\` default filter chips area template was found.');
+                '\'Downloads\' default filter chips area template was found.');
             expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\`Released\` default filter chips area template was found.');
+                '\'Released\' default filter chips area template was found.');
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.igx-filtering-chips'))).toBeNull(
-                '\`ReleaseDate\` default filter chips area template was found.');
+                '\'ReleaseDate\' default filter chips area template was found.');
 
             // Verify the custom filter template is present.
             expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ProductName\` customer filter template was not found.');
+                '\'ProductName\' customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Downloads\` customer filter template was not found.');
+                '\'Downloads\' customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Released\` customer filter template was not found.');
+                '\'Released\' customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ReleaseDate\` customer filter template was not found.');
+                '\'ReleaseDate\' customer filter template was not found.');
         }));
 
         it('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
@@ -5268,7 +5268,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
+        it('Should ignore duplicate records when column\'s filteringIgnoreCase is true', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             expect(column.filteringIgnoreCase).toBeTrue();
 
@@ -5281,7 +5281,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 [true, true, true]);
         }));
 
-        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
+        it('Should not ignore duplicate records when column\'s filteringIgnoreCase is false', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             column.filteringIgnoreCase = false;
             expect(column.filteringIgnoreCase).toBeFalse();
@@ -6226,7 +6226,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(() => {
                 GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
                 tick(2000);
-            }).not.toThrowError(/\'dataType\' of null/);
+            }).not.toThrowError(/'dataType' of null/);
         }));
     });
 

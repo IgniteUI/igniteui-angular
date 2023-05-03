@@ -125,6 +125,18 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     /**
+     * Set the animation settings used by the banner open/close methods
+     * ```typescript
+     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     * ...
+     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
+     * ```
+     */
+    public set animationSettings(settings: ToggleAnimationSettings) {
+        this._animationSettings = settings;
+    }
+
+    /**
      * Get the animation settings used by the banner open/close methods
      * ```typescript
      * let currentAnimations: ToggleAnimationSettings = banner.animationSettings
@@ -152,18 +164,6 @@ export class IgxBannerComponent implements IToggleView {
             this._resourceStrings = CurrentResourceStrings.BannerResourceStrings;
         }
         return this._resourceStrings;
-    }
-
-    /**
-     * Set the animation settings used by the banner open/close methods
-     * ```typescript
-     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
-     * ...
-     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
-     * ```
-     */
-    public set animationSettings(settings: ToggleAnimationSettings) {
-        this._animationSettings = settings;
     }
     /**
      * Gets whether banner is collapsed

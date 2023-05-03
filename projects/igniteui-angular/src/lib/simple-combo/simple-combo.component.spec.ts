@@ -222,7 +222,7 @@ describe('IgxSimpleCombo', () => {
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             spyOn(combo.selectionChanging, 'emit');
 
-            let oldSelection;
+            let oldSelection = undefined;
             let newSelection = [combo.data[1]];
 
             combo.select(combo.data[1]);
@@ -1955,7 +1955,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.valueKey).toBeDefined();
             expect(combo.selection.length).toEqual(0);
 
-            let selectedItem = combo.data[1];
+            const selectedItem = combo.data[1];
             combo.toggle();
             combo.select(combo.data[1][combo.valueKey]);
 
@@ -2265,7 +2265,7 @@ export class IgxSimpleComboInReactiveFormComponent {
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
     public items: any[];
-    public selectedItem: number = 1;
+    public selectedItem = 1;
 
     constructor(private cdr: ChangeDetectorRef) { }
 

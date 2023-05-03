@@ -23,7 +23,12 @@
       "rules": {
         "no-shadow": "off",
         "no-prototype-builtins": "off",
+        "no-case-declarations": "warn",
         "prefer-spread": "warn",
+        "no-async-promise-executor": "warn",
+        "prefer-const": "warn",
+        "no-useless-escape": "warn",
+        "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-shadow": [
           "error"
         ],
@@ -63,7 +68,8 @@
         "id-match": "off",
         "no-underscore-dangle": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-empty-function": "off"
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/ban-types": "warn"
       }
     },
     {

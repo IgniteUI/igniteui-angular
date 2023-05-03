@@ -47,7 +47,7 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
     public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
         ctx: unknown): ctx is undefined {
         return true
-    };
+    }
     constructor(public template: TemplateRef<undefined>) { }
 }
 

@@ -544,8 +544,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
 
-        let groupRows = grid.groupsRowList.toArray();
-        let dataRows = grid.dataRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(5);

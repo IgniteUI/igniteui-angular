@@ -179,7 +179,7 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
         const index = enabledRows.indexOf(dim);
-        for (let rec of data) {
+        for (const rec of data) {
             const currentDim = rec.dimensions[index];
             const id = PivotUtil.getRecordKey(rec, currentDim);
             if (groupData.length > 0 && prevId !== id) {

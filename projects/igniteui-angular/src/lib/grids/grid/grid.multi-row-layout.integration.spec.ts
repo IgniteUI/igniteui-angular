@@ -238,7 +238,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.componentInstance.grid.width = '600px';
             fixture.detectChanges();
 
-            let gridFirstRow = grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
             // group1 should be hidden on init, check DOM
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
             GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups.slice(1));
@@ -598,7 +598,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Fax').pinned).toBeTruthy();
             expect(grid.getColumnByName('Phone').pinned).toBeTruthy();
 
-            let gridFirstRow = grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
 
             GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
             // headers are aligned to cells

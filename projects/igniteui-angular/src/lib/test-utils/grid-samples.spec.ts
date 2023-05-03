@@ -2378,10 +2378,10 @@ export class GridCurrencySummariesComponent extends BasicGridComponent implement
 
 export class ObjectCloneStrategy implements IDataCloneStrategy {
     public clone(data: any): any {
-        let clonedData = {};
+        const clonedData = {};
         if (data) {
-            let clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
-            for (let key in clone) {
+            const clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
+            for (const key in clone) {
                 clonedData[key] = clone[key]
             }
 

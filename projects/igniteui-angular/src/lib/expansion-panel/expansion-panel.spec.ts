@@ -302,8 +302,8 @@ describe('igxExpansionPanel', () => {
             panelContainer: any,
             panelHeader: HTMLElement,
             button: HTMLElement,
-            timesCollapsed: number = 0,
-            timesExpanded: number = 0) => {
+            timesCollapsed = 0,
+            timesExpanded = 0) => {
             expect(panel.collapsed).toEqual(collapsed);
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);

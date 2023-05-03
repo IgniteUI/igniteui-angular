@@ -25,7 +25,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     @Input('igxPivotResizeHandle')
     public set pivotColumn(value: ColumnType) {
         this.column = value;
-    };
+    }
 
     public get pivotColumn() {
         return this.column;

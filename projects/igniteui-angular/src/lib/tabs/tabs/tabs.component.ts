@@ -74,7 +74,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     @Input()
     public get tabAlignment(): string | IgxTabsAlignment {
         return this._tabAlignment;
-    };
+    }
 
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;

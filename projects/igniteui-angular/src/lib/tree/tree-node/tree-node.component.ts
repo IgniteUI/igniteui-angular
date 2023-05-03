@@ -330,7 +330,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('attr.role')
     public get role() {
         return this.hasLinkChildren ? 'none' : 'treeitem';
-    };
+    }
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeLinkDirective, { read: ElementRef })
@@ -707,7 +707,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public addLinkChild(link: IgxTreeNodeLinkDirective) {
         this._tabIndex = -1;
         this.registeredChildren.push(link);
-    };
+    }
 
     /** @hidden @internal */
     public removeLinkChild(link: IgxTreeNodeLinkDirective) {

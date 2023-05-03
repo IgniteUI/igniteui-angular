@@ -259,7 +259,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     */
     public onDimDragStart(event, area) {
         this.cdr.detectChanges();
-        for (let chip of this.notificationChips) {
+        for (const chip of this.notificationChips) {
             const parent = chip.nativeElement.parentElement;
             if (area.chipsList.toArray().indexOf(chip) === -1 &&
                 parent.children.length > 0 &&
@@ -275,7 +275,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     * @internal
     */
     public onDimDragEnd() {
-        for (let chip of this.notificationChips) {
+        for (const chip of this.notificationChips) {
             chip.nativeElement.hidden = true;
         }
     }
@@ -355,7 +355,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
     public onFilteringIconClick(event, dimension) {
         event.stopPropagation();
         event.preventDefault();
-        let dim = dimension;
+        const dim = dimension;
         const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         this.grid.filteringService.toggleFilterDropdown(event.target, col);
     }
@@ -373,7 +373,7 @@ export class IgxPivotHeaderRowComponent extends IgxGridHeaderRowComponent implem
      * @hidden @internal
      */
     public onFiltersAreaDropdownClick(event, dimension?, shouldReattach = true) {
-        let dim = dimension || this.filterDropdownDimensions.values().next().value;
+        const dim = dimension || this.filterDropdownDimensions.values().next().value;
         const col = this.grid.dimensionDataColumns.find(x => x.field === dim.memberName || x.field === dim.member);
         if (shouldReattach) {
             this.dropdownChips.chipsList.forEach(chip => {

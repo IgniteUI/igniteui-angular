@@ -178,7 +178,7 @@ export class IgxExpansionPanelHeaderComponent {
     @HostBinding('class.igx-expansion-panel--disabled')
     public get disabled(): boolean {
         return this._disabled;
-    };
+    }
 
     public set disabled(val: boolean) {
         this._disabled = val;
@@ -188,7 +188,7 @@ export class IgxExpansionPanelHeaderComponent {
         } else {
             this.tabIndex = 0;
         }
-    };
+    }
 
     /** @hidden @internal */
     @ContentChild(IgxExpansionPanelIconDirective, { read: ElementRef })

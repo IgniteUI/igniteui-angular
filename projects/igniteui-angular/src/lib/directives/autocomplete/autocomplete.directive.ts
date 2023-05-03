@@ -384,7 +384,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         } else {
             this.nativeElement.value = newValue;
         }
-    };
+    }
 
     private highlightFirstItem() {
         if (this.target.focusedItem) {
@@ -393,5 +393,5 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.target.navigateFirst();
         this.cdr.detectChanges();
-    };
+    }
 }

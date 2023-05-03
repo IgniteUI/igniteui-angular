@@ -472,7 +472,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
         const page = (index: number) => grid.page = index;
-        let desiredPageIndex = 2;
+        const desiredPageIndex = 2;
         page(2);
         fix.detectChanges();
         tick();

@@ -307,7 +307,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * <igx-pivot-grid [showPivotConfigurationUI]="false"></igx-pivot-grid>
      * ```
      */
-    public showPivotConfigurationUI: boolean = true;
+    public showPivotConfigurationUI = true;
 
     /**
      * @hidden @internal
@@ -1167,7 +1167,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit: boolean = false): number {
+    public rowDimensionWidthToPixels(dim: IPivotDimension, ignoreBeforeInit = false): number {
         if (!ignoreBeforeInit && this.shouldGenerate) {
             return 0;
         }
@@ -2082,7 +2082,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             });
             return columns;
         }
-        let currentFields = fields;
+        const currentFields = fields;
         currentFields.forEach((value) => {
             let shouldGenerate = true;
             if (data.length === 0) {

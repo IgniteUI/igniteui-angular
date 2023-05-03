@@ -74,8 +74,8 @@ describe('IgxSelection', () => {
         const inputElem: HTMLElement = input.nativeElement;
 
         selectableTypes.forEach( el => {
-            let type = Object.keys(el)[0];
-            let val = el[type];
+            const type = Object.keys(el)[0];
+            const val = el[type];
             fix.componentInstance.inputType = type;
             fix.componentInstance.inputValue = val;
             fix.detectChanges();
@@ -91,15 +91,15 @@ describe('IgxSelection', () => {
             }
 
             if(type === 'number'){
-                let selection = document.getSelection().toString();
+                const selection = document.getSelection().toString();
                 tick(1000);
                 expect((String(val)).length).toBe(selection.length);
             }
         });
 
         nonSelectableTypes.forEach( el => {
-            let type = Object.keys(el)[0];
-            let val = el[type];
+            const type = Object.keys(el)[0];
+            const val = el[type];
             fix.componentInstance.inputType = type;
             fix.componentInstance.inputValue = val;
             fix.detectChanges();

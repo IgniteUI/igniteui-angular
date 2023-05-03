@@ -151,7 +151,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            let addRow = treeGrid.gridAPI.get_row_by_index(2);
+            const addRow = treeGrid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBeTrue();
             expect(addRow.inEditMode).toBeTrue();
 
@@ -185,7 +185,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            let addRow = treeGrid.gridAPI.get_row_by_index(10);
+            const addRow = treeGrid.gridAPI.get_row_by_index(10);
             expect(addRow.addRowUI).toBeTrue();
             expect(addRow.inEditMode).toBeTrue();
 

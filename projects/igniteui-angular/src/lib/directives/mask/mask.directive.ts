@@ -394,7 +394,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
-        };
+        }
 
         this.setSelectionRange(replacedData.end);
 

@@ -11,7 +11,7 @@ export class IgxFilterCellTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
         return true;
-    };
+    }
 }
 
 @Directive({
@@ -24,7 +24,7 @@ export class IgxCellTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective,
         context: unknown): context is IgxCellTemplateContext {
         return true;
-    };
+    }
 }
 
 @Directive({
@@ -37,7 +37,7 @@ export class IgxCellValidationErrorDirective {
     public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective,
         context: unknown): context is IgxCellTemplateContext {
         return true;
-    };
+    }
 }
 
 @Directive({
@@ -50,7 +50,7 @@ export class IgxCellHeaderTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
         return true;
-    };
+    }
 }
 
 /**
@@ -74,7 +74,7 @@ export class IgxCellEditorTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective,
         context: unknown): context is IgxCellTemplateContext {
         return true;
-    };
+    }
 }
 
 @Directive({
@@ -87,7 +87,7 @@ export class IgxCollapsibleIndicatorTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective,
         context: unknown): context is IgxColumnTemplateContext {
         return true;
-    };
+    }
 }
 
 @Directive({
@@ -100,5 +100,5 @@ export class IgxSummaryTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective,
         context: unknown): context is IgxSummaryTemplateContext {
         return true;
-    };
+    }
 }

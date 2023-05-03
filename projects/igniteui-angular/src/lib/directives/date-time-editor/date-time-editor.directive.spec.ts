@@ -1273,8 +1273,8 @@ class IgxDateTimeEditorFormComponent {
 @Component({
     template: `
         <igx-input-group>
-        	<label igxLabel>Choose Date</label>
-        	<input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
+            <label igxLabel>Choose Date</label>
+            <input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
         </igx-input-group>`,
     encapsulation: ViewEncapsulation.ShadowDom,
     standalone: true,

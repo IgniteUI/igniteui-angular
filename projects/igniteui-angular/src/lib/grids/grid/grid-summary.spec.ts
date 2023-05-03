@@ -2314,7 +2314,7 @@ describe('IgxGrid - Summaries #grid', () => {
             addRow = grid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBeFalse();
 
-            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '17', '17', '51', '17']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);

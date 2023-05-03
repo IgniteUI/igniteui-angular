@@ -357,7 +357,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public ngOnInit() {
         if (!this.isVerticalSet && this.card.horizontal) {
             this.vertical = true;
-        };
+        }
     }
 }
 

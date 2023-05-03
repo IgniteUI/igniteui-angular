@@ -394,7 +394,7 @@ export class WorksheetFile implements IExcelFile {
 
         this.firstDataRow = this.firstDataRow > this.rowIndex ? this.rowIndex : this.firstDataRow;
 
-        let cellValue = worksheetData.isSpecialData ?
+        const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
             fullRow.data[key];
 
@@ -516,7 +516,7 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate: boolean = false) {
+    private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate = false) {
         for (const a of map.values()) {
             const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
             a.endCoordinate = `${colName}${useLastValidEndCoordinate ? this.lastValidRow : this.rowIndex}`;

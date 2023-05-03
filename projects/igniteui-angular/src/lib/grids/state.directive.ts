@@ -671,7 +671,7 @@ export class IgxGridStateDirective {
                     expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
 
-                let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
+                const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
                                 this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
 
                 if (condition) {

@@ -559,9 +559,9 @@ describe('IgxGrid - Column properties #grid', () => {
             grid.locale = 'fr-FR';
             fix.detectChanges();
 
-            expect(unitsColumn._cells[8].nativeElement.innerText).toEqual('6 998 €');
-            expect(unitsColumn._cells[5].nativeElement.innerText).toEqual('1 098 €');
-            expect(unitsColumn._cells[3].nativeElement.innerText).toEqual('0 €');
+            expect(unitsColumn._cells[8].nativeElement.innerText).toEqual('6 998 €');
+            expect(unitsColumn._cells[5].nativeElement.innerText).toEqual('1 098 €');
+            expect(unitsColumn._cells[3].nativeElement.innerText).toEqual('0 €');
 
             grid.locale = 'ja';
             fix.detectChanges();
@@ -604,7 +604,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             firstCell = grid.gridAPI.get_cell_by_index(0, 'UnitsInStock');
             expect(grid.locale).toEqual('fr-FR');
-            expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
+            expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
@@ -636,7 +636,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0 €', '20 000 €', '39 004 €', '3 900,4 €']);
         });
 
         it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs', fakeAsync(() => {
@@ -732,8 +732,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             discountColumn = grid.getColumnByName('Discount');
-            expect(discountColumn._cells[8].nativeElement.innerText).toEqual('12,3 %');
-            expect(discountColumn._cells[5].nativeElement.innerText).toEqual('2,7 %');
+            expect(discountColumn._cells[8].nativeElement.innerText).toEqual('12,3 %');
+            expect(discountColumn._cells[5].nativeElement.innerText).toEqual('2,7 %');
         });
 
         it('should preview the percent value correctly when cell is in edit mode correctly', fakeAsync(() => {
@@ -1155,7 +1155,7 @@ describe('IgxGrid - Column properties #grid', () => {
     describe('Data type image column tests', () => {
         let fix: ComponentFixture<IgxGridComponent>;
         let grid: IgxGridComponent;
-        let dataWithImages = [{
+        const dataWithImages = [{
             avatar: 'assets/images/avatar/1.jpg',
             phone: '770-504-2217',
             text: 'Terrance Orta',
@@ -1203,7 +1203,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
 
         it('should initialize correctly with autoGenerate and image data', () => {
-            let column = grid.getColumnByName('avatar');
+            const column = grid.getColumnByName('avatar');
             expect(column.dataType).toBe(GridColumnDataType.Image);
             expect(column.sortable).toBeFalse();
             expect(column.groupable).toBeFalse();
@@ -1211,7 +1211,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(column.editable).toBeFalse();
             expect(column.hasSummary).toBeFalse();
 
-            let cell = column._cells[0];
+            const cell = column._cells[0];
             expect(cell.nativeElement.firstElementChild.tagName).toBe('IMG');
             expect(cell.nativeElement.firstElementChild.getAttribute('src')).toBe('assets/images/avatar/1.jpg');
             expect(cell.nativeElement.firstElementChild.getAttribute('alt')).toBe('1');

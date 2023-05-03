@@ -210,7 +210,7 @@ export abstract class IgxBaseExporter {
     protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
     private locale: string
-    private _setChildSummaries: boolean = false
+    private _setChildSummaries = false
     private isPivotGridExport: boolean;
     private options: IgxExporterOptionsBase;
     private summaries: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
@@ -670,7 +670,7 @@ export abstract class IgxBaseExporter {
                     summaryCacheMap.delete(GRID_ROOT_SUMMARY);
                     break;
                 case GridSummaryCalculationMode.rootLevelOnly:
-                    for (let k of summaryCacheMap.keys()) {
+                    for (const k of summaryCacheMap.keys()) {
                         if (k !== GRID_ROOT_SUMMARY) {
                             summaryCacheMap.delete(k);
                         }
@@ -907,7 +907,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addTreeGridData(records: ITreeGridRecord[], parentExpanded: boolean = true, hierarchicalOwner?: string) {
+    private addTreeGridData(records: ITreeGridRecord[], parentExpanded = true, hierarchicalOwner?: string) {
         if (!records) {
             return;
         }
@@ -930,7 +930,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private getTreeGridChildData(recordChildren: ITreeGridRecord[], key: string, level:number, parentExpanded: boolean = true) {
+    private getTreeGridChildData(recordChildren: ITreeGridRecord[], key: string, level:number, parentExpanded = true) {
         const hierarchicalOwner = `${GRID_CHILD}${++this.rowIslandCounter}`
         let summaryLevel = level;
         let summaryHidden = !parentExpanded;
@@ -979,7 +979,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private setSummaries(summaryKey: string, level: number = 0, hidden: boolean = false, owner?: any, summary?: Map<string, IgxSummaryResult[]>, hierarchicalOwner?: string) {
+    private setSummaries(summaryKey: string, level = 0, hidden = false, owner?: any, summary?: Map<string, IgxSummaryResult[]>, hierarchicalOwner?: string) {
         const rootSummary = summary ?? this.summaries.get(summaryKey);
 
         if (rootSummary) {
@@ -1012,7 +1012,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addGroupedData(grid: GridType, records: IGroupByRecord[], groupingState: IGroupingState, setGridParent: boolean, parentExpanded: boolean = true, summaryKeysArr: string[] = []) {
+    private addGroupedData(grid: GridType, records: IGroupByRecord[], groupingState: IGroupingState, setGridParent: boolean, parentExpanded = true, summaryKeysArr: string[] = []) {
         if (!records) {
             return;
         }

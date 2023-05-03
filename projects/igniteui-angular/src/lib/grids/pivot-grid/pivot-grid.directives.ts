@@ -12,5 +12,5 @@ export class IgxPivotValueChipTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxPivotValueChipTemplateDirective,
         context: unknown): context is IgxPivotGridValueTemplateContext { 
         return true;
-    };
+    }
 }

@@ -1417,7 +1417,7 @@ describe('Excel Exporter', () => {
         return opts;
     };
 
-    const exportAndVerify = async (component, exportOptions, expectedData, exportTable: boolean = true) => {
+    const exportAndVerify = async (component, exportOptions, expectedData, exportTable = true) => {
         const isHGrid = component instanceof IgxHierarchicalGridComponent;
         const shouldNotExportTable = isHGrid || !exportTable;
 

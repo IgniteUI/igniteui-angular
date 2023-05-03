@@ -800,11 +800,11 @@ describe('IgxDropDown ', () => {
                     ]
                 }).compileComponents();
             }));
-            it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
-                fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
+            it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
+                fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
                 fixture.detectChanges();
 
-                dropdown = fixture.componentInstance.dropdown;
+                dropdown = fixture.componentInstance.dropdown;
                 dropdown.allowItemsFocus = false;
                 fixture.detectChanges();
 

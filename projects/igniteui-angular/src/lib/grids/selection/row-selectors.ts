@@ -15,7 +15,7 @@ export class IgxRowSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective,
         context: unknown): context is IgxRowSelectorTemplateContext { 
         return true
-    };
+    }
 }
 
 /**
@@ -32,7 +32,7 @@ export class IgxGroupByRowSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective,
         context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
         return true
-    };
+    }
 }
 
 /**
@@ -49,5 +49,5 @@ export class IgxHeadSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective,
         context: unknown): context is IgxHeadSelectorTemplateContext { 
         return true
-    };
+    }
 }

@@ -23,7 +23,7 @@ import { CellType } from '../public_api';
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
-    let treeGrid: IgxTreeGridComponent;;
+    let treeGrid: IgxTreeGridComponent;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -1054,7 +1054,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             it('check expanding and collapsing a row with children', fakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
-                let row = rows[0];
+                const row = rows[0];
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(3);
 
@@ -1394,7 +1394,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         it('should allow setting custom template for  expand/collapse icons', async () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(12);
-            let expander = TreeGridFunctions.getExpansionIndicatorDiv(rows[0]);
+            const expander = TreeGridFunctions.getExpansionIndicatorDiv(rows[0]);
             expect(expander.nativeElement.innerText).toBe('EXPANDED');
 
             expander.triggerEventHandler('click', new Event('click'));

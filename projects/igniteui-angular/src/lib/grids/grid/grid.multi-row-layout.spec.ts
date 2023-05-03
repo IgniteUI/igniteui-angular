@@ -91,7 +91,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        let gridFirstRow = grid.rowList.first;
+        const gridFirstRow = grid.rowList.first;
 
         // headers are aligned to cells
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);

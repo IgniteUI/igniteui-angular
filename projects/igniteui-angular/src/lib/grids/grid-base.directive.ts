@@ -1968,6 +1968,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowDrag && this.hasVisibleColumns;
     }
 
+    public set rowDraggable(val: boolean) {
+        this._rowDrag = val;
+        this.notifyChanges(true);
+    }
+
     /**
      * Gets/Sets the trigger for validators used when editing the grid.
      *
@@ -1978,12 +1983,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public validationTrigger: GridValidationTrigger = 'change';
-
-
-    public set rowDraggable(val: boolean) {
-        this._rowDrag = val;
-        this.notifyChanges(true);
-    }
 
     /**
      * @hidden
@@ -2154,7 +2153,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
-            if (!!this.data) {
+            if (this.data) {
                 this.evaluateLoadingState();
             }
         }
@@ -5971,7 +5970,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let selectedData;
         if (event.type === 'copy') {
             selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        };
+        }
 
         let data = [];
         let result;
@@ -6456,7 +6455,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    protected beginAddRowForIndex(index: number, asChild: boolean = false) {
+    protected beginAddRowForIndex(index: number, asChild = false) {
         // TODO is row from rowList suitable for enterAddRowMode
         const row = index == null ?
             null : this.rowList.find(r => r.index === index);
@@ -6522,7 +6521,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
         this.notifyChanges();
-    };
+    }
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
@@ -7244,7 +7243,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
-                        let updatedKey = key;
+                        const updatedKey = key;
                         let subtract = 0;
                         expansionRowIndexes.forEach((row) => {
                             if (updatedKey > Number(row)) {

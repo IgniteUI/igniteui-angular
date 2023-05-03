@@ -1768,7 +1768,7 @@ export class IgxTimePickerInFormComponent {
     public timePicker: IgxTimePickerComponent;
 
     public minValue = new Date(2010, 3, 3, 13, 0, 0);
-    public date: Date = new Date(2010, 3, 3, 12, 0, 0);;
+    public date: Date = new Date(2010, 3, 3, 12, 0, 0);
 }
 
 @Component({

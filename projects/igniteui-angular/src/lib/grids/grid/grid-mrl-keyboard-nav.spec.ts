@@ -2181,9 +2181,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check if first unpinned cell is active and is in view
-                let firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+                const firstUnpinnedCell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 expect(firstUnpinnedCell.active).toBe(true);
-                let diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
+                const diff = firstUnpinnedCell.nativeElement.getBoundingClientRect().left -
                     grid.pinnedWidth - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
 

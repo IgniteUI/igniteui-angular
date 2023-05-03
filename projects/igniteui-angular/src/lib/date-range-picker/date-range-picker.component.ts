@@ -682,7 +682,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 .forEach(i => {
                     i.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
                         ? this.getInputState(i.isFocused)
-                        : IgxInputState.INITIAL;;
+                        : IgxInputState.INITIAL;
                 });
         }
         this.setRequiredToInputs();

@@ -1354,8 +1354,8 @@ describe('IgxSlider', () => {
 
             const componentInst = fix.componentInstance;
             const slider = componentInst.slider;
-            let expectedMinVal = 0;
-            let expectedMaxVal = 10;
+            const expectedMinVal = 0;
+            const expectedMaxVal = 10;
 
             expect(slider.minValue).toEqual(expectedMinVal);
             expect(slider.maxValue).toEqual(expectedMaxVal);

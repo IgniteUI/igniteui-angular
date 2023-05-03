@@ -970,7 +970,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         }
         super.transactionStatusUpdate(event);
-    };
+    }
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);

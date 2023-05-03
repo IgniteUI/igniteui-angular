@@ -81,5 +81,5 @@ export class IgxGridToolbarDirective {
     public static ngTemplateContextGuard(_dir: IgxGridToolbarDirective,
         ctx: unknown): ctx is IgxGridToolbarTemplateContext {
         return true
-    };
+    }
 }

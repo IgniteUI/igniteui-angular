@@ -1607,7 +1607,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('should apply sorting to both pinned and unpinned rows', () => {
             treeGrid.pinRow(147);
-            treeGrid.pinRow(711);;
+            treeGrid.pinRow(711);
 
             expect(treeGrid.getRowByIndex(0).key).toBe(147);
             expect(treeGrid.getRowByIndex(1).key).toBe(711);

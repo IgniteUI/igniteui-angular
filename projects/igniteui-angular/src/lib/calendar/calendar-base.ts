@@ -97,7 +97,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public shiftKey: boolean = false;
+    public shiftKey = false;
 
      /**
      * @hidden
@@ -731,7 +731,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private selectRange(value: Date | Date[], excludeDisabledDates: boolean = false) {
+    private selectRange(value: Date | Date[], excludeDisabledDates = false) {
         if (Array.isArray(value)) {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             this._startDate = this.getDateOnly(value[0]);

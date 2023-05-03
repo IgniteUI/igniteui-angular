@@ -18,7 +18,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridType): any {
         const column = grid?.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = this.isHierarchicalFilterField(fieldName) ?

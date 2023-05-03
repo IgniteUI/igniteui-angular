@@ -1112,7 +1112,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            let cellElem = grid.gridAPI.get_cell_by_index(10, 'ProductName');
+            const cellElem = grid.gridAPI.get_cell_by_index(10, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fixture.detectChanges();
 

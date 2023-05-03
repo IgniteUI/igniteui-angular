@@ -474,8 +474,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
 
-    public autoSize: number;
-
     /**
      * Sets the `width` of the column.
      * ```html
@@ -509,6 +507,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this.widthChange.emit(this._width);
         }
     }
+
+    public autoSize: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -1394,6 +1394,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let col = this;
         let vIndex = -1;
 
@@ -1420,6 +1421,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._vIndex = vIndex;
         return vIndex;
     }
+
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
      * ```typescript

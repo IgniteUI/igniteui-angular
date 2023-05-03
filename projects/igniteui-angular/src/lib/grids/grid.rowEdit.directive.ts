@@ -10,7 +10,7 @@ export class IgxRowEditTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
         context: unknown): context is IgxGridRowEditTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
@@ -22,7 +22,7 @@ export class IgxRowEditTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
         context: unknown): context is IgxGridRowEditTextTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
@@ -34,7 +34,7 @@ export class IgxRowAddTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
         context: unknown): context is IgxGridEmptyTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
@@ -46,7 +46,7 @@ export class IgxRowEditActionsDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
         context: unknown): context is IgxGridRowEditActionsTemplateContext { 
         return true;
-    };
+    }
  }
 
 

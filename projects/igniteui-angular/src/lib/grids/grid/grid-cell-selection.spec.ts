@@ -239,13 +239,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(0);
-            
+
             grid.navigation.lastActiveNode = grid.navigation.activeNode;
             grid.navigation.activeNode = null;
             fix.detectChanges();
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
-            
+
             UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
@@ -925,7 +925,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not throw an error when trying to do a drag selection that is started outside the grid', fakeAsync(() => {
-            let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
+            const cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
             tick();
@@ -2177,8 +2177,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.dataRowList.first.virtDirRow.scrollTo(2);
             await wait(100);
             fix.detectChanges();
-            await GridSelectionFunctions.selectCellsRange
-                (fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
+            await GridSelectionFunctions.selectCellsRange(fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
             detect();
 
             const selectedData = [

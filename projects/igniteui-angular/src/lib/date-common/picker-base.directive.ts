@@ -319,7 +319,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
                 .pipe(takeUntil(merge(components.changes, this._destroy$)))
                 .subscribe(next);
         });
-    };
+    }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

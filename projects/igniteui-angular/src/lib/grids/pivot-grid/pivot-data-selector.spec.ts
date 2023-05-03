@@ -317,7 +317,7 @@ describe("Pivot data selector integration", () => {
 
     it("should fire event handlers on reorder in a panel using drag and drop gestures", () => {
         // Get all value items
-        let items = getPanelItemsByDimensionType(null);
+        const items = getPanelItemsByDimensionType(null);
 
         spyOn(selector, "ghostCreated");
         spyOn(selector, "onItemDragMove");
@@ -326,8 +326,7 @@ describe("Pivot data selector integration", () => {
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
-            .querySelectorAll("igx-list-item")
-            [items.length - 1].querySelector("[igxDragHandle]");
+            .querySelectorAll("igx-list-item")[items.length - 1].querySelector("[igxDragHandle]");
 
         dragHandle.scrollIntoView();
         fixture.detectChanges();
@@ -358,15 +357,14 @@ describe("Pivot data selector integration", () => {
 
     it("should reorder items in a panel using drag and drop gestures", () => {
         // Get all value items
-        let items = getPanelItemsByDimensionType(null);
+        const items = getPanelItemsByDimensionType(null);
 
         expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[0].member).toEqual('UnitsSold');
         expect(fixture.componentInstance.pivotGrid.pivotConfiguration.values[1].member).toEqual('UnitPrice');
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
-            .querySelectorAll("igx-list-item")
-            [items.length - 1].querySelector("[igxDragHandle]");
+            .querySelectorAll("igx-list-item")[items.length - 1].querySelector("[igxDragHandle]");
 
         dragHandle.scrollIntoView();
         fixture.detectChanges();
@@ -397,10 +395,10 @@ describe("Pivot data selector integration", () => {
     it("should call filtering menu on column and row filter click", () => {
         spyOn(grid.filteringService, "toggleFilterDropdown");
 
-        let columnItems = getPanelItemsByDimensionType(
+        const columnItems = getPanelItemsByDimensionType(
             PivotDimensionType.Column
         );
-        let rowItems = getPanelItemsByDimensionType(PivotDimensionType.Row);
+        const rowItems = getPanelItemsByDimensionType(PivotDimensionType.Row);
 
         const getFilteringIcon = (item: Node) =>
             item.parentNode
@@ -472,8 +470,7 @@ describe("Pivot data selector integration", () => {
         return Array.from(
             fixture.debugElement
                 .query(By.directive(IgxPivotDataSelectorComponent))
-                .nativeElement.querySelectorAll("igx-expansion-panel-body")
-                [panelIndex].querySelectorAll("igx-list-item") as NodeList
+                .nativeElement.querySelectorAll("igx-expansion-panel-body")[panelIndex].querySelectorAll("igx-list-item") as NodeList
         );
     };
 });

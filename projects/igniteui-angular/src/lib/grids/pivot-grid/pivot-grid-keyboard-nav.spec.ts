@@ -227,7 +227,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstHeader.nativeElement);
         fixture.detectChanges();
-        let secondHeader = fixture.debugElement.queryAll(
+        const secondHeader = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[1];
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));

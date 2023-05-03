@@ -497,7 +497,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.generateListData();
     }
 
-    private generateFilterValues(isDateColumn: boolean = false) {
+    private generateFilterValues(isDateColumn = false) {
         let filterValues;
 
         if (isDateColumn) {
@@ -616,7 +616,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private generateFilterListItems(values: IgxFilterItem[], shouldUpdateSelection: boolean, parent?: FilterListItem) {
-        let filterListItems = [];
+        const filterListItems = [];
         values?.forEach(element => {
             const value = element.value;
             const hasValue = value !== undefined && value !== null && value !== '';
@@ -692,7 +692,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         return blanks;
     }
 
-    private getFilterItemLabel(value: any, applyFormatter: boolean = true, data?: any) {
+    private getFilterItemLabel(value: any, applyFormatter = true, data?: any) {
         if (this.column.formatter) {
             if (applyFormatter) {
                 return this.column.formatter(value, data);

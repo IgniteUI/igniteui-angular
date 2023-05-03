@@ -996,7 +996,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * from the view container.
      * Often, called while handling a scroll event.
      */
-    protected updateTemplateContext(context: any, index: number = 0): void {
+    protected updateTemplateContext(context: any, index = 0): void {
         context.$implicit = this.igxForOf[index];
         context.index = this.getContextIndex(this.igxForOf[index]);
         context.count = this.igxForOf.length;
@@ -1484,15 +1484,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.igxForOf = value;
     }
 
+    public get igxGridForOf() {
+        return this.igxForOf;
+    }
+
     @Input()
     public igxGridForOfUniqueSizeCache = false;
 
     @Input()
     public igxGridForOfVariableSizes = true;
-
-    public get igxGridForOf() {
-        return this.igxForOf;
-    }
 
     /**
      * @hidden

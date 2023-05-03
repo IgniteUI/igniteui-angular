@@ -234,11 +234,11 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public get dims() : IPivotDimension[] {
         return this._grid?.allDimensions || [];
-    };
+    }
     /** @hidden @internal */
     public get values(): IPivotValue[] {
         return this._grid?.pivotConfiguration.values || [];
-    };
+    }
 
     constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 
