@@ -129,12 +129,28 @@ export class IgxGridValidationService {
         for (const key of keys) {
             const colKey = this.getFieldKey(key);
             const control = rowGroup?.get(colKey);
-            if (control) {
+            if (control && control.value != rowData[key]) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
         }
 
         this.updateStatus();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Update validity based on new data.
+     */
+    public updateAll(newData: any) {
+        if (!newData) return;
+        for (const rec of newData) {
+            const rowId = rec[this.grid.primaryKey] || rec;
+            if (this.getFormGroup(rowId)) {
+                const recAggregatedData = this.grid.transactions.getAggregatedValue(rowId, true) || rec;
+                this.update(rowId, recAggregatedData);
+            }
+        }
     }
 
     /** Marks the associated record or field as touched.
