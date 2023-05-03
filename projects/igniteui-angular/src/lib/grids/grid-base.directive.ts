@@ -177,7 +177,6 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
-const FILTER_ROW_HEIGHT = 50;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
@@ -6926,10 +6925,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected calcGridHeadRow() {
         if (this.maxLevelHeaderDepth) {
             this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
-            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
-                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
-            }
+            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
+            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
             this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
     }
