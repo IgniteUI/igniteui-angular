@@ -11,6 +11,8 @@ import { InputResourceStringsJA } from './input-resources';
 import { ChipResourceStringsJA } from './chip-resources';
 import { ComboResourceStringsJA } from './combo-resources';
 import { QueryBuilderResourceStringsJA } from './query-builder-resources';
+import { BannerResourceStringsJA } from './banner-resources';
+import { ActionStripResourceStringsJA } from './action-strip-resources';
 
 /**
  * Japanese resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsJA = {
     ...InputResourceStringsJA,
     ...ChipResourceStringsJA,
     ...ComboResourceStringsJA,
-    ...QueryBuilderResourceStringsJA
+    ...QueryBuilderResourceStringsJA,
+    ...BannerResourceStringsJA,
+    ...ActionStripResourceStringsJA,
 };

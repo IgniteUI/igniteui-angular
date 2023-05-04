@@ -1,32 +1,37 @@
 import { Directive, HostBinding } from '@angular/core';
+import { HeaderContentBaseDirective } from './expansion-panel.common';
 
-/**
- * @hidden @internal
- */
+/** @hidden @internal */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-title'
 })
-export class IgxExpansionPanelTitleDirective {
+export class IgxExpansionPanelTitleDirective extends HeaderContentBaseDirective {
     @HostBinding('class.igx-expansion-panel__header-title')
     public cssClass = `igx-expansion-panel__header-title`;
+
+    @HostBinding('attr.title')
+    private get title(): string {
+        return this.getTooltipContent(this.element);
+    }
 }
 
-/**
- * @hidden @internal
- */
+/** @hidden @internal */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-description'
 })
-export class IgxExpansionPanelDescriptionDirective {
+export class IgxExpansionPanelDescriptionDirective extends HeaderContentBaseDirective {
     @HostBinding('class.igx-expansion-panel__header-description')
     public cssClass = `igx-expansion-panel__header-description`;
+
+    @HostBinding('attr.title')
+    private get title(): string {
+        return this.getTooltipContent(this.element);
+    }
 }
 
-/**
- * @hidden @internal
- */
+/** @hidden @internal */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-icon'
