@@ -2138,7 +2138,7 @@ export class ColumnSelectionGroupTestComponent {
 @Component({
     template: `
     <ng-template #indicatorTemplate let-column="column">
-        <igx-icon [attr.draggable]="false">{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
+        <igx-icon>{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
     </ng-template>
 
     <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
@@ -2150,7 +2150,7 @@ export class ColumnSelectionGroupTestComponent {
                 <igx-column  field="ContactTitle"></igx-column>
             </igx-column-group>
             <ng-template igxCollapsibleIndicator let-column="column">
-                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+                <igx-icon>{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
         </igx-column-group>
         <igx-column-group header="Address Information" [collapsible]="true">
