@@ -471,7 +471,6 @@ export class IgxRadioComponent implements AfterViewInit, ControlValueAccessor, E
     public select() {
         if(!this.checked) {
             this.checked = true;
-            this.invalid = false;
             this.change.emit({ value: this.value, radio: this });
             this._onChangeCallback(this.value);
         }

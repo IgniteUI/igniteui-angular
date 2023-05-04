@@ -381,9 +381,8 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
         this.radioButtons.forEach((button) => {
             button.focused = false;
 
-            if (button.required) {
-                const checked = this.radioButtons.find(x => x.checked);
-                this.invalid = !checked;
+            if (button.invalid) {
+                this.invalid = true;
             }
         });
     }
@@ -516,7 +515,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
         this.radioButtons.forEach((button) => {
             button.checked = button.id === args.radio.id;
-            if (button.checked) {
+            if (button.checked && button.ngControl) {
+                this.invalid = button.ngControl.invalid;
+            } else if (button.checked) {
                 this.invalid = false;
             }
         });
