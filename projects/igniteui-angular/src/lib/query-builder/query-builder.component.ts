@@ -51,6 +51,8 @@ export class IgxFieldFormatterPipe implements PipeTransform {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionItem {
     public parent: ExpressionGroupItem;
@@ -62,6 +64,8 @@ class ExpressionItem {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionGroupItem extends ExpressionItem {
     public operator: FilteringLogic;
@@ -75,6 +79,8 @@ class ExpressionGroupItem extends ExpressionItem {
 
 /**
  * @hidden @internal
+ * 
+ * Internal class usage
  */
 class ExpressionOperandItem extends ExpressionItem {
     public expression: IFilteringExpression;
