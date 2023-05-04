@@ -6,7 +6,7 @@ const config = {
     entryPoints: [`${ROOT}/index.js`],
     bundle: true,
     minify: true,
-    outfile: `${ROOT}/element.js`,
+    outfile: `${ROOT}/elements.js`,
     format: 'esm',
     external: ['lit-html'],
     target: 'es2022',
