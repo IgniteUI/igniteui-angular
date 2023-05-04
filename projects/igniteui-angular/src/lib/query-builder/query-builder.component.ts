@@ -1,12 +1,12 @@
-import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
-import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
-import { Inject } from '@angular/core';
 import {
+    AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform, Inject,
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
 } from '@angular/core';
+import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { editor } from '@igniteui/material-icons-extended';
 import { Subject } from 'rxjs';
+
+import { editor } from '@igniteui/material-icons-extended';
 import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { IgxChipsModule } from '../chips/chips.module';
@@ -359,7 +359,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _addModeExpression: ExpressionOperandItem;    
+    private _addModeExpression: ExpressionOperandItem;
     private _editedExpression: ExpressionOperandItem;
     private _selectedGroups: ExpressionGroupItem[] = [];
     private _fields: FieldType[];
@@ -371,7 +371,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
     };
-    
+
     private _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
@@ -426,12 +426,12 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
      */
     public get selectedField(): FieldType {
         return this._selectedField;
-    }    
+    }
 
     /**
      * @hidden @internal
-     * 
-     * used by the grid 
+     *
+     * used by the grid
      */
     public setPickerOutlet(outlet?: IgxOverlayOutletDirective | ElementRef) {
         this.pickerOutlet = outlet;
@@ -439,7 +439,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
-     * 
+     *
      * used by the grid
      */
     public get isContextMenuVisible(): boolean {
@@ -553,7 +553,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
-     * 
+     *
      * used by the grid
      */
     public exitOperandEdit() {
@@ -849,7 +849,7 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
 
     /**
      * @hidden @internal
-     * 
+     *
      * used by the grid
      */
     public setAddButtonFocus() {
