@@ -16,6 +16,7 @@
         @extend %igx-drop-down !optional;
 
         @include e(list) {
+            @include sizable();
             @extend %igx-drop-down__list !optional;
         }
 
@@ -26,7 +27,6 @@
 
         @include e(item) {
             @extend %igx-drop-down__item !optional;
-            @extend %item-size !optional;
         }
 
         @include e(inner) {
@@ -39,12 +39,10 @@
 
         @include e(item, $m: cosy) {
             @extend %igx-drop-down__item--cosy !optional;
-            @extend %item-size !optional;
         }
 
         @include e(item, $m: compact) {
             @extend %igx-drop-down__item--compact !optional;
-            @extend %item-size !optional;
         }
 
         @include e(item, $m: focused) {
@@ -65,17 +63,14 @@
 
         @include e(header) {
             @extend %igx-drop-down__header !optional;
-            @extend %item-size !optional;
         }
 
         @include e(header, $m: cosy) {
             @extend %igx-drop-down__header--cosy !optional;
-            @extend %item-size !optional;
         }
 
         @include e(header, $m: compact) {
             @extend %igx-drop-down__header--compact !optional;
-            @extend %item-size !optional;
         }
 
         @include e(group) {

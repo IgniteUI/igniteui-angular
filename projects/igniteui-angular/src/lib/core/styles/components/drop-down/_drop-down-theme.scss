@@ -252,11 +252,6 @@
         margin-inline-end: auto;
     }
 
-    // TODO use this after density classes are applied on the scroll container
-    //%item-size {
-    //    height: sizable(map.get($item-height, 'compact'), map.get($item-height, 'cosy'), map.get($item-height, 'comfortable'));
-    //}
-
     %igx-drop-down__header,
     %igx-drop-down__item {
         --component-size: var(--ig-size, var(--ig-size-large));
