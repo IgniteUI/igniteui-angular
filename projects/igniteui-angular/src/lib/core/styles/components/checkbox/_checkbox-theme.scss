@@ -213,7 +213,6 @@
 
     %cbx-composite--x {
         border-color: var-get($theme, 'fill-color');
-        // background: var-get($theme, 'fill-color');
 
         &::after {
             background: var-get($theme, 'fill-color');
