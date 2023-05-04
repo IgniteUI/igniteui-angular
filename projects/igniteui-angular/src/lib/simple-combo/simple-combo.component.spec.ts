@@ -1935,6 +1935,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.selection).toEqual([selectedItem[combo.valueKey]]);
         }));
+        it('should set combo.value to empty string when bound to remote data and selected item\'s data is not present', (async () => {
+            expect(combo.valueKey).toBeDefined();
+            expect(combo.valueKey).toEqual('id');
+            expect(combo.selection.length).toEqual(0);
+
+            // current combo data - id: 0 - 9
+            // select item that is not present in the data source yet
+            combo.select(15);
+
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('');
+
+            combo.toggle();
+
+            // scroll to selected item
+            combo.virtualScrollContainer.scrollTo(15);
+            await wait();
+            fixture.detectChanges();
+
+            const selectedItem = combo.data[combo.data.length - 1];
+            expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
+        }));
     });
 });
 
