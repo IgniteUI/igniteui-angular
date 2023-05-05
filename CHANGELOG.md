@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
 - `IgxDateRangePicker`
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
 
 ## 15.1.0
 
