@@ -18,7 +18,8 @@ import { IgxDatePickerComponent } from './date-picker.component';
     ],
     exports: [
         IgxDatePickerComponent,
-        IgxPickersCommonModule
+        IgxPickersCommonModule,
+        IgxInputGroupModule
     ],
     imports: [
         FormsModule,

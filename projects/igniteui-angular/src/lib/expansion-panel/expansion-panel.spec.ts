@@ -16,6 +16,8 @@ import { By } from '@angular/platform-browser';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_PANEL_HEADER_TITLE = 'igx-expansion-panel__header-title';
+const CSS_CLASS_PANEL_HEADER_DESCRIPTION = 'igx-expansion-panel__header-description';
 const CSS_CLASS_PANEL_TITLE_WRAPPER = 'igx-expansion-panel__title-wrapper';
 const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
 const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
@@ -39,7 +41,8 @@ describe('igxExpansionPanel', () => {
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
                 IgxExpansionPanelSampleComponent,
-                IgxExpansionPanelImageComponent
+                IgxExpansionPanelImageComponent,
+                IgxExpansionPanelTooltipComponent
             ],
             imports: [
                 IgxExpansionPanelModule,
@@ -1258,6 +1261,35 @@ describe('igxExpansionPanel', () => {
             expect(image.tagName).toEqual('IMG');
             expect (textWrapper.textContent.trim()).toEqual(fixture.componentInstance.text);
         }));
+        it('Should display tooltip with the title and description text content', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelTooltipComponent> = TestBed.createComponent(IgxExpansionPanelTooltipComponent);
+            fixture.detectChanges();
+
+            const headerTitle = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_TITLE);
+            const headerDescription = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_DESCRIPTION);
+
+            const headerTitleTooltip = headerTitle.getAttribute('title');
+            const headerDescriptionTooltip = headerDescription.getAttribute('title');
+
+            expect(headerTitleTooltip).toEqual(headerTitle.textContent.trim());
+            expect(headerDescriptionTooltip).toEqual(headerDescription.textContent.trim());
+        });
+        it('Should display tooltip with the attr.title text content', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelTooltipComponent> = TestBed.createComponent(IgxExpansionPanelTooltipComponent);
+
+            fixture.componentInstance.titleTooltip = 'Custom Title Tooltip';
+            fixture.componentInstance.descriptionTooltip = 'Custom Description Tooltip';
+            fixture.detectChanges();
+
+            const headerTitle = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_TITLE);
+            const headerDescription = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER_DESCRIPTION);
+
+            const headerTitleTooltip = headerTitle.getAttribute('title');
+            const headerDescriptionTooltip = headerDescription.getAttribute('title');
+
+            expect(headerTitleTooltip).toEqual('Custom Title Tooltip');
+            expect(headerDescriptionTooltip).toEqual('Custom Description Tooltip');
+        });
     });
 });
 
@@ -1395,5 +1427,27 @@ export class IgxExpansionPanelImageComponent {
     public imagePath = 'http://milewalk.com/wp-content/uploads/2016/01/My-2-Morning-Tricks-to-Eating-the-Frog.jpg';
     // eslint-disable-next-line max-len
     public text = 'A frog is any member of a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order Anura. The oldest fossil \"proto-frog\" appeared in the early Triassic of Madagascar, but molecular clock dating suggests their origins may extend further back to the Permian, 265 million years ago. Frogs are widely distributed, ranging from the tropics to subarctic regions, but the greatest concentration of species diversity is in tropical rainforests. There are approximately 4,800 recorded species, accounting for over 85% of extant amphibian species. They are also one of the five most diverse vertebrate orders. The body plan of an adult frog is generally characterized by a stout body, protruding eyes, cleft tongue, limbs folded underneath, and the absence of a tail. Besides living in fresh water and on dry land, the adults of some species are adapted for living underground or in trees. The skins of frogs are glandular, with secretions ranging from distasteful to toxic. Warty species of frog tend to be called toads but the distinction between frogs and toads is based on informal naming conventions concentrating on the warts rather than taxonomy or evolutionary history.';
+}
+
+@Component({
+    template: `
+    <igx-expansion-panel>
+        <igx-expansion-panel-header>
+            <igx-expansion-panel-title [title]="titleTooltip">
+                Example Title
+            </igx-expansion-panel-title>
+            <igx-expansion-panel-description [title]="descriptionTooltip">
+                Example Description
+            </igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            Example Body
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+`
+})
+export class IgxExpansionPanelTooltipComponent {
+    public titleTooltip = '';
+    public descriptionTooltip = '';
 }
 
