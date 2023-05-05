@@ -230,6 +230,7 @@ describe('IgxRadioGroupDirective', () => {
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
         expect(radioGroup.selected).toBeUndefined;
+        expect(radioGroup.invalid).toBe(false);
 
         dispatchRadioEvent('keyup', domRadio, fixture);
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
@@ -237,6 +238,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
+        expect(radioGroup.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
 
         dispatchRadioEvent('keyup', domRadio, fixture);
@@ -247,6 +249,7 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
+        expect(radioGroup.invalid).toBe(false);
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
     }));

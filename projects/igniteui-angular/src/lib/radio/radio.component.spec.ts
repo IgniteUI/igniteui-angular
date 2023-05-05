@@ -209,13 +209,7 @@ describe('IgxRadio', () => {
         radioInstance.deselect();
         fixture.detectChanges();
 
-        dispatchRadioEvent('keyup', domRadio, fixture);
-        expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
-        dispatchRadioEvent('blur', domRadio, fixture);
-
         expect(radioInstance.checked).toBe(false);
-        expect(radioInstance.invalid).toBe(true);
-        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
     });
 
     it('Should work properly with ngModel', fakeAsync(() => {
