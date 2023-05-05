@@ -1,4 +1,4 @@
-import { FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger } from './enums';
+import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -8,7 +8,7 @@ import {
     IActiveNodeChangeEventArgs,
     ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs
 } from '../common/events';
-import { DisplayDensity, IDensityChangedEventArgs } from '../../core/displayDensity';
+import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
@@ -33,7 +33,6 @@ import { ISortingExpression, ISortingStrategy, SortingDirection } from '../../da
 import { IGridGroupingStrategy, IGridSortingStrategy } from './strategy';
 import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { OverlaySettings } from '../../services/overlay/utilities';
-import { IPinningConfig } from '../grid.common';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid/pivot-grid.interface';
 import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
@@ -70,6 +69,7 @@ export interface CellType {
     title?: any;
     width: string;
     visibleColumnIndex?: number;
+    defaultErrorTemplate?: TemplateRef<any>;
     update: (value: any) => void;
     setEditMode?(value: boolean): void;
     calculateSizeToFit?(range: any): number;
@@ -679,7 +679,6 @@ export interface GridType extends IGridDataBindable {
     toggleAll?(): void;
     generateRowPath?(rowId: any): any[];
     preventHeaderScroll?(args: any): void;
-
 }
 
 /**
@@ -848,4 +847,12 @@ export interface IgxHeadSelectorTemplateContext {
 
 export interface IgxSummaryTemplateContext {
     $implicit: IgxSummaryResult[]
+}
+
+/**
+ * An interface describing settings for row/column pinning position.
+ */
+export interface IPinningConfig {
+    columns?: ColumnPinningPosition;
+    rows?: RowPinningPosition;
 }

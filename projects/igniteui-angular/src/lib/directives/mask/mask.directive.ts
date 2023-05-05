@@ -1,8 +1,7 @@
-import { CommonModule } from '@angular/common';
 import {
     Directive, ElementRef, EventEmitter, HostListener,
     Output, PipeTransform, Renderer2,
-    Input, NgModule, OnInit, AfterViewChecked,
+    Input, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
@@ -12,7 +11,8 @@ import { noop } from 'rxjs';
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
     selector: '[igxMask]',
-    exportAs: 'igxMask'
+    exportAs: 'igxMask',
+    standalone: true
 })
 export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueAccessor {
     /**
@@ -394,7 +394,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
-        };
+        }
 
         this.setSelectionRange(replacedData.end);
 
@@ -424,9 +424,4 @@ export interface IMaskEventArgs extends IBaseEventArgs {
 }
 
 /** @hidden */
-@NgModule({
-    declarations: [IgxMaskDirective],
-    exports: [IgxMaskDirective],
-    imports: [CommonModule]
-})
-export class IgxMaskModule { }
+

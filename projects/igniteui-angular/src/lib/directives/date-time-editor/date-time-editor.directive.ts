@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject,
+  Renderer2, Output, EventEmitter, Inject,
   LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit
 } from '@angular/core';
 import {
@@ -46,12 +46,13 @@ import { DateTimeUtil } from '../../date-common/util/date-time.util';
  * ```
  */
 @Directive({
-  selector: '[igxDateTimeEditor]',
-  exportAs: 'igxDateTimeEditor',
-  providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateTimeEditorDirective, multi: true },
-    { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
-  ]
+    selector: '[igxDateTimeEditor]',
+    exportAs: 'igxDateTimeEditor',
+    providers: [
+        { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateTimeEditorDirective, multi: true },
+        { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
+    ],
+    standalone: true
 })
 export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
   /**
@@ -764,8 +765,4 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 }
 
-@NgModule({
-  declarations: [IgxDateTimeEditorDirective],
-  exports: [IgxDateTimeEditorDirective]
-})
-export class IgxDateTimeEditorModule { }
+

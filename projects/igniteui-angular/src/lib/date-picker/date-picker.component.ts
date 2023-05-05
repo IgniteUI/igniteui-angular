@@ -24,6 +24,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import { NgIf } from '@angular/common';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -33,17 +34,16 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { fromEvent, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
+import {
+    IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarSubheaderTemplateDirective,
+    isDateInRanges, IFormattingViews, IFormattingOptions
+} from '../calendar/public_api';
+import {
+    IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective
+} from '../input-group/public_api';
+import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
-import {
-    IFormattingOptions,
-    IFormattingViews,
-    IgxCalendarComponent,
-    IgxCalendarHeaderTemplateDirective,
-    IgxCalendarSubheaderTemplateDirective,
-    isDateInRanges
-} from '../calendar/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
@@ -57,14 +57,6 @@ import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
-  IgxInputDirective,
-  IgxInputGroupComponent,
-  IgxInputGroupType,
-  IgxInputState,
-  IgxLabelDirective,
-  IGX_INPUT_GROUP_TYPE
-} from '../input-group/public_api';
-import {
   AbsoluteScrollStrategy,
   AutoPositionStrategy,
   IgxOverlayService,
@@ -73,6 +65,8 @@ import {
   OverlaySettings
 } from '../services/public_api';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
 
 let NEXT_ID = 0;
 
@@ -95,7 +89,18 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
-    styles: [':host { display: block; }']
+    styles: [':host { display: block; }'],
+    standalone: true,
+    imports: [
+        NgIf,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxIconComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        IgxTextSelectionDirective,
+        IgxSuffixDirective
+    ]
 })
 export class IgxDatePickerComponent extends PickerBaseDirective implements ControlValueAccessor, Validator,
     OnInit, AfterViewInit, OnDestroy, AfterViewChecked, AfterContentChecked {

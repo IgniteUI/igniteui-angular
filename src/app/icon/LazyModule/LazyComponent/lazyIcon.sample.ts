@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { IgxIconComponent } from '../../../../../projects/igniteui-angular/src/lib/icon/icon.component';
 
 @Component({
     selector: 'app-lazy-icon-sample',
     styleUrls: ['./lazyIcon.sample.css'],
-    templateUrl: 'lazyIcon.sample.html'
+    templateUrl: 'lazyIcon.sample.html',
+    standalone: true,
+    imports: [IgxIconComponent]
 })
 export class LazyIconSampleComponent implements OnInit {
     constructor(private httpClient: HttpClient) {}

@@ -80,7 +80,7 @@ export default (options: Options): Rule =>
         }
         result += '>'
 
-        const toolbarTitle = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-title'])[0] : null;
+        const toolbarTitle = toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-title'])[0] : null;
         const title = !toolbarTitle || attributes['toolbarTitle']?.value ? attributes['toolbarTitle'] : (((toolbarTitle as Element).children)[0] as Text);
         if (title && title.value) {
             result += `\n<igx-grid-toolbar-title>${title.value}</igx-grid-toolbar-title>`
@@ -96,7 +96,7 @@ export default (options: Options): Rule =>
             result += '\n<igx-grid-toolbar-actions>';
         }
 
-        const hiding = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-hiding'])[0] : null;
+        const hiding = toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-hiding'])[0] : null;
         const showHiding = !hiding || attributes['columnHiding']?.value ? attributes['columnHiding'] : getAttribute(hiding as Element, ['*ngIf', '[*ngIf]'])[0];
 
         if (hasHiding) {
@@ -117,7 +117,7 @@ export default (options: Options): Rule =>
             result += '></igx-grid-toolbar-hiding>';
         }
 
-        const pinning = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-pinning'])[0] : null;
+        const pinning = toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-pinning'])[0] : null;
         const showPinning = !pinning || attributes['columnPinning']?.value ? attributes['columnPinning'] : getAttribute(pinning as Element, ['*ngIf', '[*ngIf]'])[0];
         if (hasPinning) {
             result += `\n<igx-grid-toolbar-pinning`;
@@ -137,7 +137,7 @@ export default (options: Options): Rule =>
             result += '></igx-grid-toolbar-pinning>';
         }
 
-        const exporting = !!toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-exporter'])[0] : null;
+        const exporting = toolbar ? findElementNodes([toolbar], ['igx-grid-toolbar-exporter'])[0] : null;
         const showExcelExporter = !exporting || attributes['exportExcel']?.value ? attributes['exportExcel'] : getAttribute(exporting as Element, ['exportExcel', '[exportExcel]'])[0];
         const showCsvExporter = !exporting || attributes['exportCsv']?.value ? attributes['exportCsv'] : getAttribute(exporting as Element, ['exportCSV', '[exportCSV]'])[0];
 

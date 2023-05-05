@@ -489,6 +489,23 @@
     }
 
     %igx-radio--focused--invalid--checked {
+        %radio-composite {
+            &::after {
+                border: $border-width $border-style var-get($theme, 'error-color');
+            }
+    
+            &::before {
+                background: var-get($theme, 'error-color');
+                border-color: var-get($theme, 'error-color');
+            }
+
+            @if $variant == 'bootstrap' {
+                &::before {
+                    background: white;
+                }
+            }
+        }
+
         @if $variant == 'fluent' {
             %radio-composite {
                 &::after {

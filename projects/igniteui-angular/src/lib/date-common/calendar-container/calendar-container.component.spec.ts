@@ -3,10 +3,10 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCalendarComponent } from '../../calendar/public_api';
-import { IgxButtonDirective, IgxButtonModule } from '../../directives/button/button.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxPickerActionsDirective, IgxPickersCommonModule } from '../picker-icons.common';
-import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from './calendar-container.component';
+import { IgxPickerActionsDirective } from '../picker-icons.common';
+import { IgxCalendarContainerComponent } from './calendar-container.component';
 
 
 describe('Calendar Container', () => {
@@ -15,12 +15,8 @@ describe('Calendar Container', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxDatePickerTestComponent
-            ],
-            imports: [IgxCalendarContainerModule, IgxPickersCommonModule, IgxButtonModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+            imports: [NoopAnimationsModule, IgxDatePickerTestComponent]
+        }).compileComponents();
     }));
 
     beforeEach(fakeAsync(() => {
@@ -77,7 +73,9 @@ describe('Calendar Container', () => {
         <ng-template igxPickerActions let-calendar>
             <button igxButton (click)="doWork(calendar)">action</button>
         </ng-template>
-        `
+        `,
+    standalone: true,
+    imports: [IgxCalendarContainerComponent, IgxPickerActionsDirective, IgxButtonDirective]
 })
 export class IgxDatePickerTestComponent {
     @ViewChild(IgxCalendarContainerComponent) public container: IgxCalendarContainerComponent;

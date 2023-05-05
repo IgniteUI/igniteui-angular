@@ -9,7 +9,10 @@ import { ColumnType } from '../common/grid.interface';
 // import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 
 
-@Directive({ selector: '[igxColumnMovingDrop]' })
+@Directive({
+    selector: '[igxColumnMovingDrop]',
+    standalone: true
+})
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrop')

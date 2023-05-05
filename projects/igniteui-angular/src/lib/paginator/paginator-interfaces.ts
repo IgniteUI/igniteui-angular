@@ -12,7 +12,8 @@ export interface IPageCancellableEventArgs extends CancelableEventArgs {
 }
 
 @Directive({
-    selector: '[igxPaginator]'
+    selector: '[igxPaginator]',
+    standalone: true
 })
 export class IgxPaginatorDirective {
 
