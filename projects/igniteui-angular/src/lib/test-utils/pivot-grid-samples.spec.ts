@@ -9,7 +9,7 @@ import { IgxGridStateDirective } from '../grids/state.directive';
     template: `
     <div style="display:flex;">
         <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
-            [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]='defaultExpand'>
+            [rowSelection]="'single'" [columnSelection]="'single'" [defaultExpandState]="defaultExpand">
         </igx-pivot-grid>
         <igx-pivot-data-selector #selector [grid]="grid"
             [(filtersExpanded)]="filterExpandState" [(rowsExpanded)]="rowExpandState"
@@ -22,7 +22,9 @@ import { IgxGridStateDirective } from '../grids/state.directive';
     <ng-template #chipValue let-value>
      {{value.member}}
     </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxPivotGridComponent, IgxPivotDataSelectorComponent]
 })
 export class IgxPivotGridTestBaseComponent {
     public defaultExpand = true;
@@ -128,7 +130,9 @@ export class IgxPivotGridTestBaseComponent {
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
         [rowSelection]="'single'" [columnSelection]="'single'"
         [defaultExpandState]='defaultExpand'>
-    </igx-pivot-grid>`
+    </igx-pivot-grid>`,
+    standalone: true,
+    imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;
@@ -222,7 +226,9 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     template: `
     <igx-pivot-grid #grid igxGridState [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
     </igx-pivot-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
@@ -290,7 +296,9 @@ export class IgxPivotGridPersistanceComponent {
 @Component({
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
-    </igx-pivot-grid>`
+    </igx-pivot-grid>`,
+    standalone: true,
+    imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;

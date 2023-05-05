@@ -7,7 +7,8 @@ export interface IListChild {
 
 /** @hidden */
 @Directive({
-    selector: '[igxListBase]'
+    selector: '[igxListBase]',
+    standalone: true
 })
 export class IgxListBaseDirective extends DisplayDensityBase {
     public itemClicked: EventEmitter<any>;
@@ -32,28 +33,32 @@ export class IgxListBaseDirective extends DisplayDensityBase {
 export enum IgxListPanState { NONE, LEFT, RIGHT }
 
 @Directive({
-    selector: '[igxEmptyList]'
+    selector: '[igxEmptyList]',
+    standalone: true
 })
 export class IgxEmptyListTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
-    selector: '[igxDataLoading]'
+    selector: '[igxDataLoading]',
+    standalone: true
 })
 export class IgxDataLoadingTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
-    selector: '[igxListItemLeftPanning]'
+    selector: '[igxListItemLeftPanning]',
+    standalone: true
 })
 export class IgxListItemLeftPanningTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
 @Directive({
-    selector: '[igxListItemRightPanning]'
+    selector: '[igxListItemRightPanning]',
+    standalone: true
 })
 export class IgxListItemRightPanningTemplateDirective {
     constructor(public template: TemplateRef<any>) { }

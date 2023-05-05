@@ -1,6 +1,6 @@
 # igx-switch
 
-`igx-switch` is a selection component that allows users to make a binary choice for a certain condition. It behaves similar to the switch component sans the indeterminate state.  
+`igx-switch` is a selection component that allows users to make a binary choice for a certain condition. It behaves similar to the switch component sans the indeterminate state.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)
 
 Basic usage of `igx-switch`

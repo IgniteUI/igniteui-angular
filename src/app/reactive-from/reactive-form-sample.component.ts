@@ -1,10 +1,28 @@
 import { Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxTimePickerComponent } from '../../../projects/igniteui-angular/src/lib/time-picker/time-picker.component';
+import { IgxDatePickerComponent } from '../../../projects/igniteui-angular/src/lib/date-picker/date-picker.component';
+import { IgxComboComponent } from '../../../projects/igniteui-angular/src/lib/combo/combo.component';
+import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { IgxSelectGroupComponent } from '../../../projects/igniteui-angular/src/lib/select/select-group.component';
+import { NgFor } from '@angular/common';
+import { IgxSelectComponent, IgxSelectToggleIconDirective } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 
 @Component({
     selector: 'app-reactive-form',
     styleUrls: ['reactive-form-sample.component.scss'],
-    templateUrl: 'reactive-form-sample.component.html'
+    templateUrl: 'reactive-form-sample.component.html',
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, IgxSelectComponent, NgFor, IgxSelectGroupComponent, IgxSelectItemComponent, IgxLabelDirective, IgxSelectToggleIconDirective, IgxIconComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxPrefixDirective, IgxHintDirective, IgxComboComponent, IgxDatePickerComponent, IgxTimePickerComponent, IgxButtonDirective, IgxRippleDirective]
 })
 export class ReactiveFormSampleComponent {
     public genres = [];

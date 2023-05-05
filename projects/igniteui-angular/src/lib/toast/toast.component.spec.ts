@@ -16,13 +16,13 @@ describe('IgxToast', () => {
     const baseId = 'igx-toast-';
     let fixture: ComponentFixture<IgxToastComponent>;
     let toast: IgxToastComponent;
-    let firstPositionSettings: PositionSettings = {
+    const firstPositionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         verticalDirection: VerticalAlignment.Middle,
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Middle
     };
-    let secondPositionSettings: PositionSettings = {
+    const secondPositionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Middle,
         horizontalStartPoint: HorizontalAlignment.Center,
@@ -33,8 +33,7 @@ describe('IgxToast', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxToastComponent],
-            imports: [NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxToastComponent]
         }).compileComponents();
     }));
 

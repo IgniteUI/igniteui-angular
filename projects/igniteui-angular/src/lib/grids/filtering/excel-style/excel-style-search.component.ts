@@ -19,22 +19,35 @@ import {
     IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { Subject } from 'rxjs';
-import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
 import { cloneHierarchicalArray, PlatformUtil } from '../../../core/utils';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { ExpressionUI, FilterListItem } from './common';
-import { IgxTreeComponent, ITreeNodeSelectionEvent } from '../../../tree/public_api';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { IgxCircularProgressBarComponent } from '../../../progressbar/progressbar.component';
+import { IgxTreeNodeComponent } from '../../../tree/tree-node/tree-node.component';
+import { IgxTreeComponent } from '../../../tree/tree.component';
+import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective } from '../../../list/list.common';
+import { IgxListItemComponent } from '../../../list/list-item.component';
+import { IgxListComponent } from '../../../list/list.component';
+import { IgxSuffixDirective } from '../../../directives/suffix/suffix.directive';
+import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IgxPrefixDirective } from '../../../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxInputGroupComponent } from '../../../input-group/input-group.component';
+import { ITreeNodeSelectionEvent } from '../../../tree/common';
 
 @Directive({
-    selector: '[igxExcelStyleLoading]'
+    selector: '[igxExcelStyleLoading]',
+    standalone: true
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
         ctx: unknown): ctx is undefined {
         return true
-    };
+    }
     constructor(public template: TemplateRef<undefined>) { }
 }
 
@@ -43,7 +56,9 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
  */
 @Component({
     selector: 'igx-excel-style-search',
-    templateUrl: './excel-style-search.component.html'
+    templateUrl: './excel-style-search.component.html',
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, NgIf, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, NgFor, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;

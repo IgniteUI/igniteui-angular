@@ -14,7 +14,8 @@ import { takeUntil, throttleTime } from 'rxjs/operators';
 import { resizeObservable, PlatformUtil } from '../../core/utils';
 
 @Directive({
-    selector: '[igxVirtualHelperBase]'
+    selector: '[igxVirtualHelperBase]',
+    standalone: true
 })
 export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     public scrollAmount = 0;

@@ -13,13 +13,16 @@ import { Calendar } from '../calendar';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxCalendarMonthDirective } from '../calendar.directives';
 import { noop } from 'rxjs';
+import { NgFor, TitleCasePipe, DatePipe } from '@angular/common';
 
 let NEXT_ID = 0;
 
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMonthsViewComponent, multi: true }],
     selector: 'igx-months-view',
-    templateUrl: 'months-view.component.html'
+    templateUrl: 'months-view.component.html',
+    standalone: true,
+    imports: [NgFor, IgxCalendarMonthDirective, TitleCasePipe, DatePipe]
 })
 export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**

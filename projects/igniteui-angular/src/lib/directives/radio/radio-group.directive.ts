@@ -1,7 +1,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
-    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, NgModule, OnDestroy, Optional, Output, QueryList, Self
+    ContentChildren, Directive, DoCheck, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList, Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject } from 'rxjs';
@@ -9,7 +9,6 @@ import { startWith, takeUntil } from 'rxjs/operators';
 import { mkenum } from '../../core/utils';
 import { IChangeRadioEventArgs, IgxRadioComponent } from '../../radio/radio.component';
 import { IgxDirectionality } from '../../services/direction/directionality';
-import { IgxRippleModule } from '../ripple/ripple.directive';
 
 /**
  * Determines the Radio Group alignment
@@ -47,7 +46,8 @@ let nextId = 0;
  */
 @Directive({
     exportAs: 'igxRadioGroup',
-    selector: 'igx-radio-group, [igxRadioGroup]'
+    selector: 'igx-radio-group, [igxRadioGroup]',
+    standalone: true
 })
 export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, ControlValueAccessor, OnDestroy, DoCheck {
     private static ngAcceptInputType_required: boolean | '';
@@ -604,9 +604,4 @@ export class IgxRadioGroupDirective implements AfterContentInit, AfterViewInit, 
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxRadioGroupDirective, IgxRadioComponent],
-    exports: [IgxRadioGroupDirective, IgxRadioComponent],
-    imports: [IgxRippleModule]
-})
-export class IgxRadioModule {}
+

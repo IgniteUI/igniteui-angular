@@ -1,11 +1,10 @@
 import { useAnimation } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     Component,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     OnInit,
     Output
 } from '@angular/core';
@@ -36,7 +35,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-snackbar',
-    templateUrl: 'snackbar.component.html'
+    templateUrl: 'snackbar.component.html',
+    standalone: true,
+    imports: [NgIf]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {
@@ -203,12 +204,3 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxSnackbarComponent],
-    exports: [IgxSnackbarComponent],
-    imports: [CommonModule]
-})
-export class IgxSnackbarModule { }

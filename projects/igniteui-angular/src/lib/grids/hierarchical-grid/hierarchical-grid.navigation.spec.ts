@@ -1,7 +1,6 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions, waitForSelectionChange } from '../../test-utils/ui-interactions.spec';
@@ -10,8 +9,8 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IGridCellEventArgs } from '../grid/public_api';
 import { IgxGridCellComponent } from '../cell.component';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCE_TIME = 30;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -25,14 +24,12 @@ describe('IgxHierarchicalGrid Navigation', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestComplexComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSmallerChildComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule
             ]
         }).compileComponents();
     }));
@@ -954,7 +951,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
             <igx-row-island (selected)="selected($event)" [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -996,7 +995,9 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [height]="'200px'" >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGridTestBaseComponent {
     constructor() {
@@ -1016,7 +1017,9 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
         </igx-row-island>
         <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'150px'">
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {}
 
@@ -1045,6 +1048,8 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxColumnComponent]
 })
 export class IgxHierarchicalGridSmallerChildComponent extends IgxHierarchicalGridTestBaseComponent {}

@@ -473,6 +473,7 @@ export class UpdateChanges {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         const allowedStartCharacters = new RegExp('(\:|\,)\s?', 'g');
+        // eslint-disable-next-line no-control-regex
         const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
         for (const change of this.themeChanges.changes) {
             if (change.type !== ThemeType.Variable) {
@@ -532,7 +533,7 @@ export class UpdateChanges {
             /@use(\s+)('|")igniteui-angular\/lib\/core\/styles\/themes\/index\2\1as\1(\w+)/g
         ];
 
-        var aliases = [];
+        const aliases = [];
         matchers.forEach(m => {
             const match = m.exec(fileContent);
             if (match) {
@@ -667,7 +668,7 @@ export class UpdateChanges {
                 this._initialTsConfig = originalContent;
             }
         }
-    };
+    }
 
     private ensureTsConfigPath(): void {
         if (this.host.exists(this.tsconfigPath)) {
@@ -675,7 +676,7 @@ export class UpdateChanges {
         }
 
         // attempt to find a main tsconfig from workspace:
-        const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        const wsProject = this.workspace.projects[0];
         // technically could be per-project, but assuming there's at least one main tsconfig for IDE support
         const projectConfig = wsProject.architect?.build?.options['tsConfig'];
 
@@ -693,7 +694,7 @@ export class UpdateChanges {
         if (!result.error && result.config.extends) {
             this.tsconfigPath = path.posix.join(path.posix.dirname(projectConfig), result.config.extends);
         }
-    };
+    }
 
     private loadConfig(configJson: string) {
         const filePath = path.join(this.rootPath, 'changes', configJson);
@@ -829,7 +830,7 @@ export class UpdateChanges {
     }
 
     private resolveWorkspaceProject(): WorkspaceProject<ProjectType> | null {
-        let wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+        let wsProject = this.workspace.projects[0];
         if (!wsProject) {
             const projectKeys = Object.keys(this.workspace.projects);
             if (!projectKeys.length) {

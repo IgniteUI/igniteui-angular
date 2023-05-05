@@ -1,13 +1,14 @@
 import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
-import {
-    IgxChipsAreaComponent, IgxChipComponent,
-    IChipsAreaReorderEventArgs, IBaseChipEventArgs, IChipsAreaSelectEventArgs
-} from 'igniteui-angular';
+import { NgFor, NgIf } from '@angular/common';
+import { IBaseChipEventArgs, IChipsAreaReorderEventArgs, IChipsAreaSelectEventArgs, IgxAvatarComponent, IgxChipComponent, IgxChipsAreaComponent, IgxDropDirective, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
-    templateUrl: 'chips.sample.html'
+    templateUrl: 'chips.sample.html',
+    standalone: true,
+    imports: [IgxChipComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxChipsAreaComponent, NgFor, NgIf, IgxAvatarComponent, IgxDropDirective]
 })
 export class ChipsSampleComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
