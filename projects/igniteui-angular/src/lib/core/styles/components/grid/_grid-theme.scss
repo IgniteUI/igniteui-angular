@@ -696,18 +696,47 @@
         indigo-design: 600,
     ), $variant);
 
-    %disable-focus-styles {
-        outline: 0;
-    }
-
-    %grid-display {
+    igx-grid,
+    igx-hierarchical-grid,
+    igx-pivot-grid,
+    igx-tree-grid, {
         @if $variant == 'material' {
             @if $theme-variant == 'light' {
                 --igx-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
                 --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
             }
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+            }
         }
 
+        @if $variant == 'fluent' {
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+            }
+        }
+
+        @if $variant == 'bootstrap' {
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            @if $theme-variant == 'light' {
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+            }
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+            }
+        }
+    }
+
+    %disable-focus-styles {
+        outline: 0;
+    }
+
+    %grid-display {
         --igx-tree-indent-size: #{rem(24px)};
 
         position: relative;
