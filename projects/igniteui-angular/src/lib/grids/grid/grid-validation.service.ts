@@ -32,9 +32,9 @@ export class IgxGridValidationService {
                 const value = resolveNestedPath(data || {}, col.field);
                 const field = this.getFieldKey(col.field);
                 const control = new FormControl(value, { updateOn: this.grid.validationTrigger });
-                control.setValue(value);
                 control.addValidators(col.validators);
                 formGroup.addControl(field, control);
+                control.setValue(value);
             }
             const args: IGridFormGroupCreatedEventArgs = {
                 formGroup,
@@ -129,7 +129,7 @@ export class IgxGridValidationService {
         for (const key of keys) {
             const colKey = this.getFieldKey(key);
             const control = rowGroup?.get(colKey);
-            if (control) {
+            if (control && control.value != rowData[key]) {
                 control.setValue(rowData[key], { emitEvent: false });
             }
         }
@@ -143,7 +143,7 @@ export class IgxGridValidationService {
      * Update validity based on new data.
      */
     public updateAll(newData: any) {
-        if (!newData) return;
+        if (!newData || this._validityStates.size === 0) return;
         for (const rec of newData) {
             const rowId = rec[this.grid.primaryKey] || rec;
             if (this.getFormGroup(rowId)) {
