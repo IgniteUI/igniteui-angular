@@ -1,63 +1,18 @@
 import { NgModule } from '@angular/core';
-import { IgxColumnComponent } from './column.component';
-import { IgxColumnGroupComponent } from './column-group.component';
-import { IgxColumnLayoutComponent } from './column-layout.component';
-import {
-    IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
-    IgxCellValidationErrorDirective,
-    IgxCollapsibleIndicatorTemplateDirective,
-    IgxFilterCellTemplateDirective,
-    IgxSummaryTemplateDirective
-} from './templates.directive';
-import {
-    IgxColumMaxLengthValidatorDirective, IgxColumnEmailValidatorDirective, IgxColumnMaxValidatorDirective,
-    IgxColumnMinLengthValidatorDirective, IgxColumnMinValidatorDirective, IgxColumnRequiredValidatorDirective,
-    IgxColumPatternValidatorDirective
-} from './validators.directive';
+import { IGX_GRID_COLUMN_DIRECTIVES, IGX_GRID_VALIDATION_DIRECTIVES } from './public_api';
 
+/**
+ * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
+ */
 @NgModule({
-    declarations: [
-        IgxColumnRequiredValidatorDirective,
-        IgxColumnMinValidatorDirective,
-        IgxColumnMaxValidatorDirective,
-        IgxColumnMinLengthValidatorDirective,
-        IgxColumMaxLengthValidatorDirective,
-        IgxColumnEmailValidatorDirective,
-        IgxColumPatternValidatorDirective,
-        IgxFilterCellTemplateDirective,
-        IgxSummaryTemplateDirective,
-        IgxCellTemplateDirective,
-        IgxCellValidationErrorDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellFooterTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCollapsibleIndicatorTemplateDirective,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent
+    imports: [
+        ...IGX_GRID_VALIDATION_DIRECTIVES,
+        ...IGX_GRID_COLUMN_DIRECTIVES
     ],
     exports: [
-        IgxColumnRequiredValidatorDirective,
-        IgxColumnMinValidatorDirective,
-        IgxColumnMaxValidatorDirective,
-        IgxColumnMinLengthValidatorDirective,
-        IgxColumMaxLengthValidatorDirective,
-        IgxColumnEmailValidatorDirective,
-        IgxColumPatternValidatorDirective,
-        IgxFilterCellTemplateDirective,
-        IgxSummaryTemplateDirective,
-        IgxCellTemplateDirective,
-        IgxCellValidationErrorDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellFooterTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCollapsibleIndicatorTemplateDirective,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent
+        ...IGX_GRID_VALIDATION_DIRECTIVES,
+        ...IGX_GRID_COLUMN_DIRECTIVES
     ]
 })
 export class IgxGridColumnModule { }

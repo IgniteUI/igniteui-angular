@@ -1,6 +1,6 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList } from '@angular/core';
-import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs } from '../directives/drag-drop/drag-drop.directive';
+import { DOCUMENT, NgFor, NgIf } from '@angular/common';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Inject, Input, Output, QueryList, forwardRef } from '@angular/core';
+import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 /**
@@ -44,7 +44,9 @@ export declare interface ISplitterBarResizeEventArgs {
  */
 @Component({
     selector: 'igx-splitter',
-    templateUrl: './splitter.component.html'
+    templateUrl: './splitter.component.html',
+    standalone: true,
+    imports: [NgFor, NgIf, forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
     /**
@@ -346,7 +348,9 @@ export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright 
  */
 @Component({
     selector: 'igx-splitter-bar',
-    templateUrl: './splitter-bar.component.html'
+    templateUrl: './splitter-bar.component.html',
+    standalone: true,
+    imports: [IgxDragDirective, IgxDragIgnoreDirective]
 })
 export class IgxSplitBarComponent {
     /**

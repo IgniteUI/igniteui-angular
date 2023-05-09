@@ -1,13 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  IGridState,
-  IgxGridStateDirective,
-  IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension,
-  IPivotValue,
-  NoopPivotDimensionsStrategy,
-  NoopSortingStrategy
-} from 'igniteui-angular';
+
 import { take } from 'rxjs/operators';
+
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IGridState, IgxGridStateDirective } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
+import { IgxPivotGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/pivot-grid/pivot-grid.component';
+import { IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotValue, NoopPivotDimensionsStrategy } from '../../../projects/igniteui-angular/src/lib/grids/pivot-grid/public_api';
+import { NoopSortingStrategy } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 
 
@@ -25,10 +24,12 @@ export class MyColumnStrategy extends NoopPivotDimensionsStrategy {
 
 
 @Component({
-  providers: [],
-  selector: 'app-tree-grid-sample',
-  styleUrls: ['pivot-grid-noop.sample.scss'],
-  templateUrl: 'pivot-grid-noop.sample.html'
+    providers: [],
+    selector: 'app-tree-grid-sample',
+    styleUrls: ['pivot-grid-noop.sample.scss'],
+    templateUrl: 'pivot-grid-noop.sample.html',
+    standalone: true,
+    imports: [IgxPivotGridComponent, IgxGridStateDirective, IgxButtonDirective]
 })
 
 export class PivotGridNoopSampleComponent {

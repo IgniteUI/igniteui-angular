@@ -8,7 +8,8 @@ import { DropDownActionKey } from './drop-down.common';
  * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBaseDirective component
  */
 @Directive({
-    selector: '[igxDropDownItemNavigation]'
+    selector: '[igxDropDownItemNavigation]',
+    standalone: true
 })
 export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
 

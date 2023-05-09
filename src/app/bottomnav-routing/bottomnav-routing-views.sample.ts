@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
     template: `
@@ -11,7 +13,20 @@ import { Component } from '@angular/core';
                 <igx-icon igxListAction>phone</igx-icon>
             </igx-list-item>
         </igx-list>
-    `
+    `,
+    standalone: true,
+    imports: [
+        NgFor,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxRippleDirective,
+        IgxAvatarComponent,
+        IgxListThumbnailDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxIconComponent,
+        IgxListActionDirective
+    ]
 })
 export class BottomNavRoutingView1Component {
 
@@ -57,7 +72,8 @@ export class BottomNavRoutingView1Component {
             a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula a
             arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
             Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-    `
+    `,
+    standalone: true
 })
 export class BottomNavRoutingView2Component {
 }
@@ -69,7 +85,8 @@ export class BottomNavRoutingView2Component {
             consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus. Vestibulum
             urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
             Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.</p>
-    `
+    `,
+    standalone: true
 })
 export class BottomNavRoutingView3Component {
 }

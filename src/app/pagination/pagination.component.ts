@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective, IgxPageSizeSelectorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
 
 @Component({
     selector: 'app-pagination',
     styleUrls: ['./pagination.styles.scss'],
-    templateUrl: './pagination.template.html'
+    templateUrl: './pagination.template.html',
+    standalone: true,
+    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective, IgxPageSizeSelectorComponent, IgxIconComponent]
 })
 export class PaginationSampleComponent implements OnInit {
 

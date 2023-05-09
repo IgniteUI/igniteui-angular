@@ -1,22 +1,18 @@
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxFocusTrapDirective, IgxFocusTrapModule } from './focus-trap.directive';
+import { IgxFocusTrapDirective } from './focus-trap.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxCheckboxModule } from '../../checkbox/checkbox.component';
-import { IgxDatePickerModule } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { NgIf } from '@angular/common';
 
 describe('igxFocusTrap', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TrapFocusTestComponent
-            ],
-            imports: [IgxFocusTrapModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, TrapFocusTestComponent]
         }).compileComponents();
     }));
 
@@ -172,13 +168,17 @@ describe('igxFocusTrap', () => {
 
 
 @Component({
-    template: `<div #wrapper [igxFocusTrap]="focusTrap" tabindex="0">
-                <label for="uname"><b>Username</b></label><br>
-                <input type="text" *ngIf="showInput" placeholder="Enter Username" name="uname"><br>
-                <label for="psw"><b>Password</b></label><br>
-                <input type="password" *ngIf="showInput" placeholder="Enter Password" name="psw"><br>
-                <button *ngIf="showButton">SIGN IN</button>
-            </div>` })
+    template: `
+    <div #wrapper [igxFocusTrap]="focusTrap" tabindex="0">
+        <label for="uname"><b>Username</b></label><br>
+        <input type="text" *ngIf="showInput" placeholder="Enter Username" name="uname"><br>
+        <label for="psw"><b>Password</b></label><br>
+        <input type="password" *ngIf="showInput" placeholder="Enter Password" name="psw"><br>
+        <button *ngIf="showButton">SIGN IN</button>
+    </div>`,
+    standalone: true,
+    imports: [IgxFocusTrapDirective, NgIf]
+})
 class TrapFocusTestComponent {
     public showInput = true;
     public showButton = true;

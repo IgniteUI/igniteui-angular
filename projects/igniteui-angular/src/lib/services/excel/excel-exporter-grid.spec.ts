@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
@@ -29,7 +28,7 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,13 +39,11 @@ import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMultiColumnHeadersExportComponent,
          IgxHierarchicalGridSummariesExportComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxHierarchicalGridModule,
-         IgxHierarchicalGridComponent,
-} from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/public_api';
 import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../test-utils/pivot-grid-samples.spec';
-import { IgxPivotGridComponent, IgxPivotGridModule } from '../../grids/pivot-grid/public_api';
+import { IgxPivotGridComponent } from '../../grids/pivot-grid/public_api';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -56,7 +53,8 @@ describe('Excel Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -78,8 +76,7 @@ describe('Excel Exporter', () => {
                 GroupedGridWithSummariesComponent,
                 GridCurrencySummariesComponent,
                 GridUserMeetingDataComponent
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxPivotGridModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 
@@ -1420,7 +1417,7 @@ describe('Excel Exporter', () => {
         return opts;
     };
 
-    const exportAndVerify = async (component, exportOptions, expectedData, exportTable: boolean = true) => {
+    const exportAndVerify = async (component, exportOptions, expectedData, exportTable = true) => {
         const isHGrid = component instanceof IgxHierarchicalGridComponent;
         const shouldNotExportTable = isHGrid || !exportTable;
 

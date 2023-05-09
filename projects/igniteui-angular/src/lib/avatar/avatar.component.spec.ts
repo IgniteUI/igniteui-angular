@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -23,16 +22,14 @@ describe('Avatar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
                 IgxAvatarComponent,
                 InitIconAvatarComponent,
                 InitImageAvatarComponent
-            ],
-            imports: [IgxIconModule]
-        })
-            .compileComponents();
+            ]
+        }).compileComponents();
     }));
 
     it('Initializes avatar with auto-incremented id', () => {
@@ -190,20 +187,25 @@ describe('Avatar', () => {
 });
 
 @Component({
-    template: `<igx-avatar>TEST</igx-avatar>`
+    template: `<igx-avatar>TEST</igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 }
 
 @Component({
-    template: `<igx-avatar
+    template: `
+    <igx-avatar
         [initials]="initials"
         [bgColor]="bgColor"
         [color]="color"
         size="small"
         [roundShape]="true">
-    </igx-avatar>`
+    </igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class AvatarWithAttribsComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
@@ -214,14 +216,18 @@ class AvatarWithAttribsComponent {
 }
 
 @Component({
-    template: `<igx-avatar icon="person"></igx-avatar>`
+    template: `<igx-avatar icon="person"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitIconAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;
 }
 
 @Component({
-    template: `<igx-avatar [src]="source"></igx-avatar>`
+    template: `<igx-avatar [src]="source"></igx-avatar>`,
+    standalone: true,
+    imports: [IgxAvatarComponent]
 })
 class InitImageAvatarComponent {
     @ViewChild(IgxAvatarComponent, { static: true }) public avatar: IgxAvatarComponent;

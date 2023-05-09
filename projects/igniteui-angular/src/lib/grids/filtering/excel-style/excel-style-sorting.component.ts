@@ -9,13 +9,18 @@ import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.compon
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BaseFilteringComponent } from './base-filtering.component';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { NgIf } from '@angular/common';
 
 /**
  * A component used for presenting Excel style column sorting UI.
  */
 @Component({
     selector: 'igx-excel-style-sorting',
-    templateUrl: './excel-style-sorting.component.html'
+    templateUrl: './excel-style-sorting.component.html',
+    standalone: true,
+    imports: [NgIf, IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleSortingComponent implements OnDestroy {
     /**

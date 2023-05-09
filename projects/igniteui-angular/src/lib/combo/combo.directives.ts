@@ -16,7 +16,10 @@ import { Directive } from '@angular/core';
  *   </ng-template>
  * </igx-combo>
  */
-@Directive({ selector: '[igxComboHeader]' })
+@Directive({
+    selector: '[igxComboHeader]',
+    standalone: true
+})
 export class IgxComboHeaderDirective { }
 
 /**
@@ -35,7 +38,10 @@ export class IgxComboHeaderDirective { }
  *   </ng-template>
  * </igx-combo>
  */
-@Directive({ selector: '[igxComboFooter]' })
+@Directive({
+    selector: '[igxComboFooter]',
+    standalone: true
+})
 export class IgxComboFooterDirective { }
 
 /**
@@ -56,7 +62,10 @@ export class IgxComboFooterDirective { }
  *	 </ng-template>
   * </igx-combo>
  */
-@Directive({ selector: '[igxComboItem]' })
+@Directive({
+    selector: '[igxComboItem]',
+    standalone: true
+})
 export class IgxComboItemDirective { }
 
 /**
@@ -76,7 +85,10 @@ export class IgxComboItemDirective { }
  *      </ng-template>
  *  </igx-combo>
  */
-@Directive({ selector: '[igxComboEmpty]' })
+@Directive({
+    selector: '[igxComboEmpty]',
+    standalone: true
+})
 export class IgxComboEmptyDirective { }
 
 /**
@@ -94,7 +106,10 @@ export class IgxComboEmptyDirective { }
  *      </ng-template>
  *  </igx-combo>
  */
-@Directive({ selector: '[igxComboHeaderItem]' })
+@Directive({
+    selector: '[igxComboHeaderItem]',
+    standalone: true
+})
 export class IgxComboHeaderItemDirective { }
 
 /**
@@ -116,7 +131,10 @@ export class IgxComboHeaderItemDirective { }
  *      </ng-template>
  *  </igx-combo>
  */
-@Directive({ selector: '[igxComboAddItem]' })
+@Directive({
+    selector: '[igxComboAddItem]',
+    standalone: true
+})
 export class IgxComboAddItemDirective { }
 
 /**
@@ -134,7 +152,10 @@ export class IgxComboAddItemDirective { }
  *      </ng-template>
  *  </igx-combo>
  */
-@Directive({ selector: '[igxComboToggleIcon]' })
+@Directive({
+    selector: '[igxComboToggleIcon]',
+    standalone: true
+})
 export class IgxComboToggleIconDirective { }
 
 /**
@@ -152,5 +173,8 @@ export class IgxComboToggleIconDirective { }
  *      </ng-template>
  *  </igx-combo>
  */
-@Directive({ selector: '[igxComboClearIcon]' })
+@Directive({
+    selector: '[igxComboClearIcon]',
+    standalone: true
+})
 export class IgxComboClearIconDirective { }

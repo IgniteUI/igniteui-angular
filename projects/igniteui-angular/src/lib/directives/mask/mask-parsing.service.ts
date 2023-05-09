@@ -29,7 +29,7 @@ export interface Replaced {
 interface ParsedMask {
     literals: Map<number, string>,
     mask: string
-};
+}
 
 const replaceCharAt = (string: string, idx: number, char: string) =>
     `${string.substring(0, idx)}${char}${string.substring(idx + 1)}`;
@@ -62,7 +62,7 @@ export function parseMask(format: string): ParsedMask {
 })
 export class MaskParsingService {
 
-    public applyMask(inputVal: string, maskOptions: MaskOptions, pos: number = 0): string {
+    public applyMask(inputVal: string, maskOptions: MaskOptions, pos = 0): string {
         let outputVal = '';
         let value = '';
         const { literals, mask } = parseMask(maskOptions.format);
@@ -131,7 +131,7 @@ export class MaskParsingService {
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);
-        let initialMaskedValue = maskedValue;
+        const initialMaskedValue = maskedValue;
 
         for (let i = start; i < end || (chars.length && i < maskedValue.length); i++) {
             if (literalsPositions.indexOf(i) !== -1) {
@@ -182,7 +182,7 @@ export class MaskParsingService {
     }
 
     private getNonLiteralIndices(mask: string, literalKeys: number[]): number[] {
-        const nonLiteralsIndices: number[] = new Array();
+        const nonLiteralsIndices: number[] = [];
 
         for (let i = 0; i < mask.length; i++) {
             if (literalKeys.indexOf(i) === -1) {
@@ -193,7 +193,7 @@ export class MaskParsingService {
         return nonLiteralsIndices;
     }
     private getNonLiteralValues(value: string, literalValues: string[]): string[] {
-        const nonLiteralValues: string[] = new Array();
+        const nonLiteralValues: string[] = [];
 
         for (const val of value) {
             if (literalValues.indexOf(val) === -1) {

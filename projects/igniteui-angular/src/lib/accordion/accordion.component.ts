@@ -47,7 +47,8 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-accordion',
-    templateUrl: 'accordion.component.html'
+    templateUrl: 'accordion.component.html',
+    standalone: true
 })
 export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, OnDestroy {
     /**
