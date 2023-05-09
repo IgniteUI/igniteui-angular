@@ -631,9 +631,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this._emptyRowDimension;
     }
 
+    protected _pivotValueCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     protected override _defaultExpandState = false;
     protected override _filterStrategy: IFilteringStrategy = new DimensionValuesFilteringStrategy(this.pivotValueCloneStrategy);
-    protected _pivotValueCloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy();
     private _data;
     private _pivotConfiguration: IPivotConfiguration = { rows: null, columns: null, values: null, filters: null };
     private p_id = `igx-pivot-grid-${NEXT_ID++}`;
