@@ -4,7 +4,6 @@ import { Inject } from '@angular/core';
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
-import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { editor } from '@igniteui/material-icons-extended';
