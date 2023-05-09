@@ -13,7 +13,10 @@ import { IgxResizeHandleDirective } from '../resize-handle.directive';
  * @hidden
  * @internal
  */
-@Directive({ selector: '[igxPivotResizeHandle]' })
+@Directive({
+    selector: '[igxPivotResizeHandle]',
+    standalone: true
+})
 export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
 
     /**
@@ -22,7 +25,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
     @Input('igxPivotResizeHandle')
     public set pivotColumn(value: ColumnType) {
         this.column = value;
-    };
+    }
 
     public get pivotColumn() {
         return this.column;

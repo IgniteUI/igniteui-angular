@@ -1,28 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import {
-    IgxNavDrawerItemDirective,
-    IgxNavDrawerMiniTemplateDirective,
-    IgxNavDrawerTemplateDirective
-} from './navigation-drawer.directives';
+import { IGX_NAVIGATION_DRAWER_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
  */
 @NgModule({
-    declarations: [
-        IgxNavigationDrawerComponent,
-        IgxNavDrawerItemDirective,
-        IgxNavDrawerMiniTemplateDirective,
-        IgxNavDrawerTemplateDirective
+    imports: [
+        ...IGX_NAVIGATION_DRAWER_DIRECTIVES
     ],
     exports: [
-        IgxNavigationDrawerComponent,
-        IgxNavDrawerItemDirective,
-        IgxNavDrawerMiniTemplateDirective,
-        IgxNavDrawerTemplateDirective
-    ],
-    imports: [CommonModule]
+        ...IGX_NAVIGATION_DRAWER_DIRECTIVES
+    ]
 })
 export class IgxNavigationDrawerModule {}

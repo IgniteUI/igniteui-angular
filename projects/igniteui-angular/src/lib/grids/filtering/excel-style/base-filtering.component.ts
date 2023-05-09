@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter } from '@angular/core';
-import { DisplayDensity } from '../../../core/displayDensity';
+import { DisplayDensity } from '../../../core/density';
 import { PlatformUtil } from '../../../core/utils';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { ExpressionUI, FilterListItem } from './common';

@@ -1,18 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChangeEventArgs } from 'igniteui-angular';
+import { DateRangeType, IgxButtonDirective, IgxCalendarComponent, IgxCardComponent, IgxRippleDirective, IViewDateChangeEventArgs } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-calendar-sample',
     templateUrl: 'calendar.sample.html',
-    styleUrls: ['calendar.sample.scss']
+    styleUrls: ['calendar.sample.scss'],
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxCardComponent, IgxCalendarComponent]
 })
 export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true })
     private calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true })
     private calendar1: IgxCalendarComponent;
-    @ViewChild('alert', { static: true })
-    private dialog: IgxDialogComponent;
+    // @ViewChild('alert', { static: true })
+    // private dialog: IgxDialogComponent;
 
     public range = [];
     public today = new Date();
@@ -43,12 +46,12 @@ export class CalendarSampleComponent implements OnInit {
             this.calendar1.selectDate(item);
         });
 
-        if (this.range.length === 0) {
-            this.dialog.message = 'Select dates from the Calendar first.';
-        } else {
-            this.dialog.message = 'PTO days submitted.';
-        }
-        this.dialog.open();
+        // if (this.range.length === 0) {
+        //     this.dialog.message = 'Select dates from the Calendar first.';
+        // } else {
+        //     this.dialog.message = 'PTO days submitted.';
+        // }
+        // this.dialog.open();
     }
 
     public showHide() {
@@ -56,7 +59,7 @@ export class CalendarSampleComponent implements OnInit {
     }
 
     public onSelection(event: Date | Date []) {
-        console.log(`Selected date\s:${event}`);
+        console.log(`Selected dates: ${event}`);
     }
 
     public viewDateChanged(event: IViewDateChangeEventArgs) {

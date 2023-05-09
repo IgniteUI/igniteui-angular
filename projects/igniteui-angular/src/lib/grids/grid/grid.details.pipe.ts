@@ -2,7 +2,10 @@ import { PipeTransform, Pipe, Inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /** @hidden */
-@Pipe({ name: 'gridDetails' })
+@Pipe({
+    name: 'gridDetails',
+    standalone: true
+})
 export class IgxGridDetailsPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }

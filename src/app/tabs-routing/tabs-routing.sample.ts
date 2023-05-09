@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
+import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxButtonGroupComponent, IgxIconComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.scss'],
-    templateUrl: 'tabs-routing.sample.html'
+    templateUrl: 'tabs-routing.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
 })
 export class TabsRoutingSampleComponent {
     public contacts: any[] = [{

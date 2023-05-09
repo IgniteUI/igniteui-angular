@@ -23,7 +23,8 @@ let NEXT_ID = 0;
  */
 @Directive({
     exportAs: 'tooltip',
-    selector: '[igxTooltip]'
+    selector: '[igxTooltip]',
+    standalone: true
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
     /**

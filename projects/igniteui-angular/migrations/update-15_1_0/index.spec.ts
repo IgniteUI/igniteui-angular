@@ -70,6 +70,56 @@ describe(`Update to ${version}`, () => {
             </igx-carousel>`);
     });
 
+    it('should replace on-prefixed typescript outputs in carousel', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { IgxCarouselComponent } from 'igniteui-angular';
+
+        @Component({
+            selector: 'appPrefix-component',
+            template: '<ng-content></ng-content>'
+        })
+        export class TestComponent {
+            @ViewChild(IgxCarouselComponent)
+            public carousel: IgxCarouselComponent;
+
+            contructor() {
+                this.carousel.onSlideChanged.subscribe((e) => {});
+                this.carousel.onSlideAdded.subscribe((e) => {});
+                this.carousel.onSlideRemoved.subscribe((e) => {});
+                this.carousel.onCarouselPaused.subscribe((e) => {});
+                this.carousel.onCarouselPlaying.subscribe((e) => {});
+            }
+        }
+        `);
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: true }, appTree);
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { IgxCarouselComponent } from 'igniteui-angular';
+
+        @Component({
+            selector: 'appPrefix-component',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class TestComponent {
+            @ViewChild(IgxCarouselComponent)
+            public carousel: IgxCarouselComponent;
+
+            contructor() {
+                this.carousel.slideChanged.subscribe((e) => {});
+                this.carousel.slideAdded.subscribe((e) => {});
+                this.carousel.slideRemoved.subscribe((e) => {});
+                this.carousel.carouselPaused.subscribe((e) => {});
+                this.carousel.carouselPlaying.subscribe((e) => {});
+            }
+        }
+        `;
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(expectedContent);
+    });
+
     it('should replace on-prefixed outputs for displayDensity and onGroupingDone to groupingDone', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/carousel.component.html`,

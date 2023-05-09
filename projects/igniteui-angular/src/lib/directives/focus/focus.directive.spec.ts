@@ -1,27 +1,27 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxFocusDirective, IgxFocusModule } from './focus.directive';
+import { IgxFocusDirective } from './focus.directive';
+
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { EditorProvider } from '../../core/edit-provider';
-import { IgxCheckboxModule, IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/public_api';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxDatePickerComponent } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRadioComponent } from '../../radio/radio.component';
-import { IgxRadioModule } from '../radio/radio-group.directive';
-import { IgxSwitchComponent, IgxSwitchModule } from '../../switch/switch.component';
+import { IgxSwitchComponent } from '../../switch/switch.component';
 
 describe('igxFocus', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 SetFocusComponent,
                 NoFocusComponent,
                 TriggerFocusOnClickComponent,
                 CheckboxPickerComponent
-            ],
-            imports: [ IgxFocusModule, IgxCheckboxModule, IgxRadioModule, IgxSwitchModule, IgxDatePickerModule, NoopAnimationsModule ]
+            ]
         }).compileComponents();
     }));
 
@@ -96,28 +96,32 @@ describe('igxFocus', () => {
 });
 
 @Component({
-    template:
-    `
+    template: `
         <input type="text" value="First" />
         <input type="text" [igxFocus]="true" value="Fifth" />
         <input type="text" value="Seventh" />
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusDirective]
 })
 class SetFocusComponent { }
 
 @Component({
-    template: `<input type="text" [igxFocus]="false" value="First" />`
+    template: `<input type="text" [igxFocus]="false" value="First" />`,
+    standalone: true,
+    imports: [IgxFocusDirective]
 })
 class NoFocusComponent { }
 
 @Component({
-    template:
-    `
+    template: `
     <div>First</div>
     <div>Second</div>
     <div tabindex="0" [igxFocus]>Third</div>
     <button (click)="focus()">Focus the third one</button>
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusDirective]
 })
 class TriggerFocusOnClickComponent {
     @ViewChild(IgxFocusDirective, { static: true }) public focusRef: IgxFocusDirective;
@@ -129,13 +133,14 @@ class TriggerFocusOnClickComponent {
 }
 
 @Component({
-    template:
-    `
+    template: `
     <igx-checkbox [igxFocus]="true"></igx-checkbox>
     <igx-radio #radio [igxFocus]></igx-radio>
     <igx-switch #switch [igxFocus]></igx-switch>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
-    `
+    `,
+    standalone: true,
+    imports: [IgxFocusDirective, IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, IgxDatePickerComponent]
 })
 class CheckboxPickerComponent {
     @ViewChild(IgxCheckboxComponent, { static: true }) public checkbox: IgxCheckboxComponent;

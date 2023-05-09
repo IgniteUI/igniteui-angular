@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -15,6 +15,7 @@ import { DebugElement } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -25,13 +26,13 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
                 ColumnEditablePropertyTestComponent,
                 SelectionWithTransactionsComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+            ]
         });
     }));
 
@@ -309,12 +310,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
         });
-    
+
         it('should focus the first cell when editing mode is cell', fakeAsync(() => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             expect(cell.editMode).toBe(false);
             expect(document.activeElement.nodeName).toEqual('BODY')
-            
+
             // Enter cell edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();

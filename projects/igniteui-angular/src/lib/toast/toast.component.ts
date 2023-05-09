@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -7,7 +6,6 @@ import {
     HostBinding,
     Inject,
     Input,
-    NgModule,
     OnInit,
     Optional,
     Output
@@ -45,7 +43,8 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-toast',
-    templateUrl: 'toast.component.html'
+    templateUrl: 'toast.component.html',
+    standalone: true
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     /**
@@ -203,13 +202,3 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
         });
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxToastComponent],
-    exports: [IgxToastComponent],
-    imports: [CommonModule],
-})
-export class IgxToastModule { }

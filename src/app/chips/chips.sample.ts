@@ -1,13 +1,23 @@
-import {Component, ViewChild, ChangeDetectorRef, ElementRef, Inject, OnInit} from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, ElementRef, Inject, OnInit } from '@angular/core';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions, IButtonGroupEventArgs, ButtonGroupAlignment } from 'igniteui-angular';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
-    IgxChipsAreaComponent,
-    IgxChipComponent,
-    IChipsAreaReorderEventArgs,
     IBaseChipEventArgs,
+    IChipsAreaReorderEventArgs,
     IChipsAreaSelectEventArgs,
-    DisplayDensity,
-    DisplayDensityToken,
-    IDisplayDensityOptions, IButtonGroupEventArgs, ButtonGroupAlignment
+    IgxAvatarComponent,
+    IgxButtonGroupComponent,
+    IgxChipComponent,
+    IgxChipsAreaComponent,
+    IgxDropDirective,
+    IgxIconComponent,
+    IgxPrefixDirective,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
+    IgxSuffixDirective,
+    IgxSwitchComponent,
+    IgxCircularProgressBarComponent
 } from 'igniteui-angular';
 
 interface Selection {
@@ -18,7 +28,25 @@ interface Selection {
 @Component({
     selector: 'app-chips-sample',
     styleUrls: ['chips.sample.scss', '../app.component.scss'],
-    templateUrl: 'chips.sample.html'
+    templateUrl: 'chips.sample.html',
+    standalone: true,
+    imports: [
+        IgxButtonGroupComponent,
+        IgxChipComponent,
+        IgxCircularProgressBarComponent,
+        IgxIconComponent,
+        IgxPrefixDirective,
+        IgxSelectComponent,
+        IgxSelectItemComponent,
+        IgxSuffixDirective,
+        IgxSwitchComponent,
+        IgxChipsAreaComponent,
+        NgFor,
+        NgIf,
+        FormsModule,
+        IgxAvatarComponent,
+        IgxDropDirective
+    ]
 })
 export class ChipsSampleComponent implements OnInit {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })

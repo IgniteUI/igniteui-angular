@@ -1,13 +1,16 @@
 import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 /**
  * @hidden
  */
 @Component({
     selector: 'igx-thumb-label',
-    templateUrl: 'thumb-label.component.html'
+    templateUrl: 'thumb-label.component.html',
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxThumbLabelComponent {
     @Input()

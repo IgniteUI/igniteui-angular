@@ -1,4 +1,4 @@
-import { Directive, HostBinding, NgModule, Input } from '@angular/core';
+import { Directive, HostBinding, Input } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
 export const IgxDividerType = mkenum({
@@ -11,7 +11,8 @@ let NEXT_ID = 0;
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igx-divider'
+    selector: 'igx-divider',
+    standalone: true
 })
 export class IgxDividerDirective {
     /**
@@ -132,8 +133,4 @@ export class IgxDividerDirective {
     }
 }
 
-@NgModule({
-    declarations: [IgxDividerDirective],
-    exports: [IgxDividerDirective]
-})
-export class IgxDividerModule { }
+
