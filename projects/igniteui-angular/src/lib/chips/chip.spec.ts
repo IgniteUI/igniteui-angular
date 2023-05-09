@@ -128,22 +128,31 @@ describe('IgxChip', () => {
         });
 
         it('should render prefix element inside the chip before the content', () => {
-            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChip = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChipItem = igxChip[1].nativeElement;
 
-            // For this first chip there are 2 elements. The prefix and content span.
-            expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
-            expect(chipElems[0].nativeElement.children[0].children[0].offsetWidth).toEqual(0);
-            expect(chipElems[0].nativeElement.children[0].children[1].tagName).toEqual('IGX-ICON');
-            expect(chipElems[0].nativeElement.children[0].children[1].hasAttribute('igxprefix')).toEqual(true);
+            expect(igxChipItem.children[0].children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
         });
 
         it('should render remove button when enabled after the content inside the chip', () => {
-            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const chipRemoveButton = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
+            const igxChip = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChipItem = igxChip[1].nativeElement;
+            const chipRemoveButton = ControlsFunction.getChipRemoveButton(igxChipItem);
 
-            // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
-            expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
+            expect(igxChipItem.children[0].children[2].children[0]).toHaveClass('igx-chip__remove');
             expect(chipRemoveButton).toBeTruthy();
+        });
+
+        it('should change chip variant', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+
+            igxChip.variant = 'danger';
+
+            fixture.detectChanges();
+
+            expect(igxChip.variant).toMatch('danger');
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
         });
 
         it('should set text in chips correctly', () => {
@@ -351,7 +360,7 @@ describe('IgxChip', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
             expect(secondChipComp.selectedChanging.emit).toHaveBeenCalled();
-            expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.selectedChanged.emit).toHaveBeenCalled();
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: secondChipComp,

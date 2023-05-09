@@ -219,6 +219,7 @@
     }
 
     $theme: digest-schema($grid-schema);
+    $meta: map.get($theme, '_meta');
 
     @if not($cell-selected-within-text-color) and $cell-selected-within-background {
         $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
@@ -550,6 +551,10 @@
 
         cell-selected-within-background: $cell-selected-within-background,
         cell-selected-within-text-color: $cell-selected-within-text-color,
+
+        _meta: map.merge(if($meta, $meta, ()), (
+            theme-variant: map.get($schema, '_meta', 'variant')
+        )),
     ));
 }
 
@@ -570,6 +575,7 @@
     @include scale-in-ver-center();
 
     $variant: map.get($theme, variant);
+    $theme-variant: map.get($theme, '_meta', 'theme-variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
@@ -701,6 +707,42 @@
         bootstrap: 700,
         indigo-design: 600,
     ), $variant);
+
+    igx-grid,
+    igx-hierarchical-grid,
+    igx-pivot-grid,
+    igx-tree-grid, {
+        @if $variant == 'material' {
+            @if $theme-variant == 'light' {
+                --igx-chip-disabled-background: #{color($color: 'gray', $variant: 300)};
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+            }
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+            }
+        }
+
+        @if $variant == 'fluent' {
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+            }
+        }
+
+        @if $variant == 'bootstrap' {
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 400)};
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            @if $theme-variant == 'light' {
+                --igx-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
+            }
+            @if $theme-variant == 'dark' {
+                --igx-chip-disabled-text-color: #{color($color: 'gray', $variant: 300)};
+            }
+        }
+    }
 
     %disable-focus-styles {
         outline: 0;
