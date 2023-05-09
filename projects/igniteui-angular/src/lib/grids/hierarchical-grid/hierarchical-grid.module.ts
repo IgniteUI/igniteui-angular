@@ -1,40 +1,17 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IgxGridModule } from '../grid/grid.module';
-import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
-import { IgxRowIslandComponent } from './row-island.component';
-import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { IgxTooltipModule } from '../../directives/tooltip';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { IGX_HIERARCHICAL_GRID_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
 @NgModule({
-    declarations: [
-        IgxHierarchicalGridComponent,
-        IgxHierarchicalRowComponent,
-        IgxRowIslandComponent,
-        IgxChildGridRowComponent,
-        IgxHierarchicalGridCellComponent,
-        IgxGridHierarchicalPipe,
-        IgxGridHierarchicalPagingPipe
+    imports: [
+        ...IGX_HIERARCHICAL_GRID_DIRECTIVES
     ],
     exports: [
-        IgxGridModule,
-        IgxHierarchicalGridComponent,
-        IgxHierarchicalRowComponent,
-        IgxHierarchicalGridCellComponent,
-        IgxRowIslandComponent,
-        IgxChildGridRowComponent
-    ],
-    imports: [
-        IgxGridModule,
-        IgxTooltipModule,
-        ReactiveFormsModule 
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        ...IGX_HIERARCHICAL_GRID_DIRECTIVES
+    ]
 })
 export class IgxHierarchicalGridModule {
 }

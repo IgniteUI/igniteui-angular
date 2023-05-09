@@ -4,12 +4,15 @@ import {
   OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
   SimpleChanges, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
+import { NgTemplateOutlet, NgIf } from '@angular/common';
 import {
   AbstractControl, ControlValueAccessor, NgControl,
   NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
+
 import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+
 import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
@@ -30,10 +33,9 @@ import {
   AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
   OverlaySettings, PositionSettings
 } from '../services/public_api';
-import {
-  DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
-  IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
-} from './date-range-picker-inputs.common';
+import { DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, DateRangePickerFormatPipe } from './date-range-picker-inputs.common';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const SingleInputDatesConcatenationString = ' - ';
 
@@ -65,6 +67,16 @@ const SingleInputDatesConcatenationString = ' - ';
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        IgxIconComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxPrefixDirective,
+        DateRangePickerFormatPipe
     ]
 })
 export class IgxDateRangePickerComponent extends PickerBaseDirective
@@ -670,7 +682,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 .forEach(i => {
                     i.inputDirective.valid = this.isTouchedOrDirty && !this._ngControl.disabled
                         ? this.getInputState(i.isFocused)
-                        : IgxInputState.INITIAL;;
+                        : IgxInputState.INITIAL;
                 });
         }
         this.setRequiredToInputs();

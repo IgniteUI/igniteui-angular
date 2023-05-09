@@ -25,7 +25,8 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
     selector: 'igx-column-group',
     template: `<div #sink style="display: none;">
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group"></ng-content>
-</div>`
+</div>`,
+    standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 

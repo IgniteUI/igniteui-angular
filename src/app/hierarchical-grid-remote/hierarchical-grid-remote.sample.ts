@@ -6,11 +6,20 @@ import {
     GridSelectionMode
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxRowIslandComponent as IgxRowIslandComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxHierarchicalGridComponent as IgxHierarchicalGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
 
 @Component({
     selector: 'app-hierarchical-grid-remote-sample',
     templateUrl: 'hierarchical-grid-remote.sample.html',
-    providers: [RemoteService]
+    providers: [RemoteService],
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxColumnComponent, IgxRowIslandComponent_1, IgxGridToolbarDirective, IgxGridToolbarPinningComponent]
 })
 export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     @ViewChild('rowIsland1', { static: true })

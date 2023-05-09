@@ -1,7 +1,19 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { Observable } from 'rxjs';
-import { DisplayDensity, IgxGridComponent } from 'igniteui-angular';
+
 import { RemoteService } from '../shared/remote.service';
+import { IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxRowDragDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from '../../../projects/igniteui-angular/src/lib/grids/row-drag.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { DisplayDensity } from '../../../projects/igniteui-angular/src/lib/core/density';
 
 enum DragIcon {
     DEFAULT = 'drag_indicator',
@@ -11,8 +23,10 @@ enum DragIcon {
 
 @Component({
     selector: 'app-grid-row-draggable-sample',
+    templateUrl: 'grid-row-draggable.sample.html',
     styleUrls: ['grid-row-draggable.sample.scss'],
-    templateUrl: 'grid-row-draggable.sample.html'
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 

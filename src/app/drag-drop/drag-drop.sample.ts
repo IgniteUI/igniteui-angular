@@ -1,21 +1,25 @@
 import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import {
-    OverlaySettings,
-    GlobalPositionStrategy,
-    NoOpScrollStrategy,
-    IgxToggleDirective,
-    IgxDragDirective,
-    IgxInsertDropStrategy,
-    IDragBaseEventArgs,
-    IgxDragLocation,
-    DragDirection,
-    IDropDroppedEventArgs
-} from 'igniteui-angular';
+import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
+
+import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxToggleDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective, DragDirection, IDragBaseEventArgs, IgxDragLocation, IDropDroppedEventArgs } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxInsertDropStrategy } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.strategy';
+import { GlobalPositionStrategy, NoOpScrollStrategy, OverlaySettings } from '../../../projects/igniteui-angular/src/lib/services/public_api';
 
 @Component({
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
-    styleUrls: ['drag-drop.sample.scss']
+    styleUrls: ['drag-drop.sample.scss'],
+    standalone: true,
+    imports: [IgxDragDirective, NgIf, IgxIconComponent, IgxDragIgnoreDirective, NgClass, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective, IgxDragHandleDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective, NgFor, IgxDropDirective, NgStyle, ShadowGridSampleComponent]
 })
 export class DragDropSampleComponent {
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })

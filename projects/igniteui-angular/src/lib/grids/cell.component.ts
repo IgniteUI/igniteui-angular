@@ -18,25 +18,39 @@
     QueryList,
     AfterViewInit
 } from '@angular/core';
-import { formatPercent } from '@angular/common';
+import { formatPercent, NgIf, NgClass, NgTemplateOutlet, DecimalPipe, PercentPipe, CurrencyPipe, DatePipe, getLocaleCurrencyCode, getCurrencySymbol } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { first, takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { formatCurrency, formatDate, PlatformUtil } from '../core/utils';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { HammerGesturesManager } from '../core/touch';
 import { GridSelectionMode } from './common/enums';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
-import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
 import { IgxGridCell } from './grid-public-cell';
 import { ISelectionNode } from './common/types';
-import { IgxTooltipDirective } from '../directives/tooltip';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService } from '../services/public_api';
 import { IgxIconComponent } from '../icon/icon.component';
-import { first, takeUntil, takeWhile } from 'rxjs/operators';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { IgxGridCellImageAltPipe, IgxStringReplacePipe, IgxColumnFormatterPipe } from './common/pipes';
+import { IgxTooltipDirective } from '../directives/tooltip/tooltip.directive';
+import { IgxTooltipTargetDirective } from '../directives/tooltip/tooltip-target.directive';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
+import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
+import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
+import { IgxFocusDirective } from '../directives/focus/focus.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxChipComponent } from '../chips/chip.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -55,7 +69,36 @@ import { Subject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
-    providers: [HammerGesturesManager]
+    providers: [HammerGesturesManager],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        NgTemplateOutlet,
+        DecimalPipe,
+        PercentPipe,
+        CurrencyPipe,
+        DatePipe,
+        ReactiveFormsModule,
+        IgxChipComponent,
+        IgxTextHighlightDirective,
+        IgxIconComponent,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxFocusDirective,
+        IgxTextSelectionDirective,
+        IgxCheckboxComponent,
+        IgxDatePickerComponent,
+        IgxTimePickerComponent,
+        IgxDateTimeEditorDirective,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxTooltipTargetDirective,
+        IgxTooltipDirective,
+        IgxGridCellImageAltPipe,
+        IgxStringReplacePipe,
+        IgxColumnFormatterPipe
+    ]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellType, AfterViewInit {
     private _destroy$ = new Subject<void>();
@@ -1035,7 +1078,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
         let shouldEmitSelection = !this.selectionService.isActiveNode(node);
-        
+
         if (this.selectionService.primaryButton) {
             const currentActive = this.selectionService.activeElement;
             if (this.cellSelectionMode === GridSelectionMode.single && (event as any)?.ctrlKey && this.selected) {

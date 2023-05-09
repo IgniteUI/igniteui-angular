@@ -6,8 +6,11 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent } from './chips/chips.sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -21,6 +24,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -42,19 +46,32 @@ import {
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
+import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
+import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
+import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
-import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
+import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
+import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
+import { ComboSampleComponent } from './combo/combo.sample';
+import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
+import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
-import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
@@ -65,15 +82,28 @@ import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-upd
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
-import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
+import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
+import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
+import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
+import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
+import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
+import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
+import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
+import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import {
     HierarchicalGridRemoteVirtualizationComponent
@@ -88,9 +118,9 @@ import { GridFormattingComponent } from './grid-formatting/grid-formatting.compo
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
-import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
+import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
@@ -99,10 +129,13 @@ import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample
 import { PivotGridSampleComponent } from './pivot-grid/pivot-grid.sample';
 import { PivotGridHierarchySampleComponent } from './pivot-grid-hierarchy/pivot-grid-hierarchy.sample';
 import { PivotGridNoopSampleComponent } from './pivot-grid-noop/pivot-grid-noop.sample';
-import { IgxStepperSampleComponent } from './stepper/stepper.sample';
+import { IgxStepperSampleComponent as StepperSampleComponent } from './stepper/stepper.sample';
+import { RatingSampleComponent } from './rating/rating.sample';
 import { RangeSliderComponent } from './slider/range-slider/range-slider.component';
+import { QueryBuilderComponent } from './query-builder/query-builder.sample';
 import { PivotGridStateSampleComponent } from './pivot-grid-state/pivot-grid-state.sample';
 import { GridValidationSampleComponent } from './grid-validation/grid-validation.sample.component';
+import { GridExportComponent } from './grid-export/grid-export.sample';
 
 const appRoutes: Routes = [
     {
@@ -159,6 +192,18 @@ const appRoutes: Routes = [
         component: CarouselSampleComponent
     },
     {
+        path: 'combo',
+        component: ComboSampleComponent
+    },
+    {
+        path: 'expansionPanel',
+        component: ExpansionPanelSampleComponent
+    },
+    {
+        path: 'chip',
+        component: ChipsSampleComponent
+    },
+    {
         path: 'datePicker',
         component: DatePickerSampleComponent
     },
@@ -167,12 +212,28 @@ const appRoutes: Routes = [
         component: DialogSampleComponent
     },
     {
-        path: 'expansion-panel',
-        component: ExpansionPanelSampleComponent
+        path: 'dropDown',
+        component: DropDownSampleComponent
+    },
+    {
+        path: 'dropDown-density',
+        component: DisplayDensityDropDownComponent
+    },
+    {
+        path: 'virtual-dropdown',
+        component: DropDownVirtualComponent
+    },
+    {
+        path: 'drag-drop',
+        component: DragDropSampleComponent
     },
     {
         path: 'icon',
         component: IconSampleComponent
+    },
+    {
+        path: 'lazyIconModule',
+        loadChildren: () => import('./icon/LazyModule/lazyIcon.module').then(m => m.LazyIconModule)
     },
     {
         path: 'inputs',
@@ -215,8 +276,32 @@ const appRoutes: Routes = [
         component: NavdrawerSampleComponent
     },
     {
+        path: 'overlay',
+        component: OverlaySampleComponent
+    },
+    {
+        path: 'overlay-presets',
+        component: OverlayPresetsSampleComponent
+    },
+    {
+        path: 'overlay-animation',
+        component: OverlayAnimationSampleComponent
+    },
+    {
         path: 'progressbar',
         component: ProgressbarSampleComponent
+    },
+    {
+        path: 'radio',
+        component: RadioSampleComponent
+    },
+    {
+        path: 'rating',
+        component: RatingSampleComponent
+    },
+    {
+        path: 'reactive',
+        component: ReactiveFormSampleComponent
     },
     {
         path: 'ripple',
@@ -229,6 +314,10 @@ const appRoutes: Routes = [
     {
         path: 'range-slider',
         component: RangeSliderComponent
+    },
+    {
+        path: 'splitter',
+        component: SplitterSampleComponent
     },
     {
         path: 'snackbar',
@@ -292,6 +381,14 @@ const appRoutes: Routes = [
         component: VirtualForSampleComponent
     },
     {
+        path: 'gridCellEditing',
+        component: GridCellEditingComponent
+    },
+    {
+        path: 'gridConditionalCellStyling',
+        component: GridCellStylingSampleComponent
+    },
+    {
         path: 'grid',
         component: GridSampleComponent
     },
@@ -306,6 +403,30 @@ const appRoutes: Routes = [
     {
         path: 'treeGridAddRow',
         component: TreeGridAddRowSampleComponent
+    },
+    {
+        path: 'gridFilterTemplate',
+        component: GridFilterTemplateSampleComponent
+    },
+    {
+        path: 'gridEsfLoadOnDemand',
+        component: GridEsfLoadOnDemandComponent
+    },
+    {
+        path: 'gridClipboard',
+        component: GridClipboardSampleComponent
+    },
+    {
+        path: 'gridColumnMoving',
+        component: GridColumnMovingSampleComponent
+    },
+    {
+        path: 'gridColumnTypes',
+        component: GridColumnTypesSampleComponent
+    },
+    {
+        path: 'gridColumnSelecting',
+        component: GridColumnSelectionSampleComponent
     },
     {
         path: 'gridColumnPinning',
@@ -324,20 +445,16 @@ const appRoutes: Routes = [
         component: GridRowAPISampleComponent
     },
     {
-        path: 'gridRowReorder',
-        component: GridRowReorderComponent
-    },
-    {
         path: 'gridCellAPI',
         component: GridCellAPISampleComponent
     },
     {
-        path: 'gridColumnResizing',
-        component: GridColumnResizingSampleComponent
+        path: 'gridRemotePaging',
+        component: GridRemotePagingSampleComponent
     },
     {
-        path: 'gridConditionalCellStyling',
-        component: GridCellStylingSampleComponent
+        path: 'gridColumnResizing',
+        component: GridColumnResizingSampleComponent
     },
     {
         path: 'gridSummary',
@@ -348,10 +465,6 @@ const appRoutes: Routes = [
         component: GridPerformanceSampleComponent
     },
     {
-        path: 'gridRemotePaging',
-        component: GridRemotePagingSampleComponent
-    },
-    {
         path: 'gridSelection',
         component: GridSelectionComponent
     },
@@ -360,20 +473,40 @@ const appRoutes: Routes = [
         component: GridRowDraggableComponent
     },
     {
+        path: 'gridToolbar',
+        component: GridToolbarSampleComponent
+    },
+    {
+        path: 'gridToolbarCustom',
+        component: GridToolbarCustomSampleComponent
+    },
+    {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
     },
     {
-        path: 'gridRowEdit',
-        component: GridRowEditSampleComponent
-    },
-    {
-        path: 'gridValidation',
-        component: GridValidationSampleComponent
+        path: 'gridExport',
+        component: GridExportComponent
     },
     {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
+    },
+    {
+        path: 'gridColumnGroups',
+        component: GridColumnGroupsSampleComponent
+    },
+    {
+        path: 'gridMRL',
+        component: GridMRLSampleComponent
+    },
+    {
+        path: 'gridMRLConfig',
+        component: GridMRLConfigSampleComponent
+    },
+    {
+        path: 'gridMRLCustomNav',
+        component: GridMRLCustomNavigationSampleComponent
     },
     {
         path: 'gridGroupBy',
@@ -388,8 +521,35 @@ const appRoutes: Routes = [
         component: GridLocalizationSampleComponent
     },
     {
+        path: 'gridRowEdit',
+        component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridRowReorder',
+        component: GridRowReorderComponent
+    },
+    {
+        path: 'gridValidation',
+        component: GridValidationSampleComponent
+    },
+    {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
+    },
+    {
+        path: 'gridFormatting',
+        component: GridFormattingComponent
+    },
+    {
+        path: 'gridFinJS',
+        component: MainComponent
+    }, {
         path: 'tree',
         component: TreeSampleComponent
+    },
+    {
+        path: 'gridUpdates',
+        component: GridUpdatesComponent
     },
     {
         path: 'treeGrid',
@@ -432,6 +592,22 @@ const appRoutes: Routes = [
         component: GridAutoSizeSampleComponent
     },
     {
+        path: 'gridFlex',
+        component: GridFlexSampleComponent
+    },
+    {
+        path: 'gridSearch',
+        component: GridSearchComponent
+    },
+    {
+        path: 'gridFiltering',
+        component: GridFilteringComponent
+    },
+    {
+        path: 'gridExternalFiltering',
+        component: GridExternalFilteringComponent
+    },
+    {
         path: 'gridState',
         component: GridSaveStateComponent
     },
@@ -440,28 +616,16 @@ const appRoutes: Routes = [
         component: AboutComponent
     },
     {
-        path: 'gridScrollVirtualization',
-        component: GridVirtualizationScrollSampleComponent
+        path: 'dateRange',
+        component: DateRangeSampleComponent
     },
     {
         path: 'grid-nested-props',
         component: GridNestedPropsSampleComponent
     },
     {
-        path: 'gridFormatting',
-        component: GridFormattingComponent
-    },
-    {
-        path: 'gridFinJS',
-        component: MainComponent
-    },
-    {
         path: 'gridEvents',
         component: GridEventsComponent
-    },
-    {
-        path: 'gridUpdates',
-        component: GridUpdatesComponent
     },
     {
         path: 'pagination',
@@ -472,21 +636,25 @@ const appRoutes: Routes = [
         component: PivotGridSampleComponent
     },
     {
-        path: 'pivotHierarchy',
+        path: 'pivot-hierarchy',
         component: PivotGridHierarchySampleComponent
     },
     {
-        path: 'pivotState',
+        path: 'pivot-state',
         component: PivotGridStateSampleComponent
     },
-    {
+     {
         path: 'pivot-noop',
         component: PivotGridNoopSampleComponent
     },
     {
+        path: 'query-builder',
+        component: QueryBuilderComponent
+    },
+    {
         path: 'stepper',
-        component: IgxStepperSampleComponent
+        component: StepperSampleComponent
     }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes);
+export const routing = RouterModule.forRoot(appRoutes, {});

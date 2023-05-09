@@ -5,14 +5,15 @@
         "e2e",
         "projects/igniteui-angular/migrations/",
         "projects/igniteui-angular/schematics/",
-        "projects/igniteui-angular-elements/",
         "projects/igniteui-angular/cypress/",
+        "projects/igniteui-angular-elements/",
         "cypress",
-        "./cypress.config.ts"
+        "./cypress.config.ts",
+        "**/*.spec.ts",
+        "src"
     ],
     "typedocOptions": {
         "out": "dist/igniteui-angular/docs/typescript",
-        "exclude": "**/*.spec.ts",
         "theme":  "igtheme",
         "excludePrivate": true,
         "excludeProtected": true,

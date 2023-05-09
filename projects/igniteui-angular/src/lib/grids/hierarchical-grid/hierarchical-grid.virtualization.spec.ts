@@ -1,7 +1,6 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -21,11 +20,10 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestBaseComponent
-            ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule]
+                NoopAnimationsModule,
+                IgxHierarchicalGridTestBaseComponent
+            ]
         });
     }));
 
@@ -402,12 +400,10 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridNoScrollTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule
             ]
         });
     }));
@@ -450,7 +446,9 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -488,7 +486,9 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridNoScrollTestComponent extends IgxHierarchicalGridTestBaseComponent {
     constructor() {

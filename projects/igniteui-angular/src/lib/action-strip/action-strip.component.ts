@@ -18,12 +18,20 @@ import {
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IActionStripResourceStrings } from '../core/i18n/action-strip-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IgxDropDownComponent } from '../drop-down/public_api';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxToggleActionDirective } from '../directives/toggle/toggle.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 
 @Directive({
-    selector: '[igxActionStripMenuItem]'
+    selector: '[igxActionStripMenuItem]',
+    standalone: true
 })
 export class IgxActionStripMenuItemDirective {
     constructor(
@@ -56,7 +64,20 @@ export class IgxActionStripMenuItemDirective {
  */
 @Component({
     selector: 'igx-action-strip',
-    templateUrl: 'action-strip.component.html'
+    templateUrl: 'action-strip.component.html',
+    standalone: true,
+    imports: [
+        NgIf,
+        NgFor,
+        NgTemplateOutlet,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxToggleActionDirective,
+        IgxDropDownItemNavigationDirective,
+        IgxIconComponent,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent
+    ]
 })
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {

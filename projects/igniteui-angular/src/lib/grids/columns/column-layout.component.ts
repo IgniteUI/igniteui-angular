@@ -20,7 +20,8 @@ import { IgxColumnGroupComponent } from './column-group.component';
     selector: 'igx-column-layout',
     template: `<div #sink style="display: none;">
     <ng-content select="igx-column,igc-column"></ng-content>
-</div>`
+</div>`,
+    standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     public childrenVisibleIndexes = [];

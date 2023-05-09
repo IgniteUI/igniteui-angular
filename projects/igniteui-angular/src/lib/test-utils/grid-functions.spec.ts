@@ -824,7 +824,7 @@ export class GridFunctions {
      * Click the pin/unpin icon in the ESF by specifying whether the icon is in the header
      * or at its default position (depending on the display density).
      */
-    public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader: boolean = true) {
+    public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader = true) {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
@@ -843,7 +843,7 @@ export class GridFunctions {
      * Click the hide icon in the ESF by specifying whether the icon is in the header
      * or at its default position (depending on the display density).
      */
-    public static clickHideIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader: boolean = true) {
+    public static clickHideIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader = true) {
         let hideIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
@@ -899,13 +899,13 @@ export class GridFunctions {
         moveRightIcon.click();
     }
 
-    public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex: number = 0): HTMLInputElement {
+    public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex = 0): HTMLInputElement {
         const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
         return expr.querySelectorAll('.igx-input-group__input').item(1) as HTMLInputElement;
     }
 
     public static getExcelFilteringDDInput(fix: ComponentFixture<any>,
-        expressionIndex: number = 0, isDate: boolean = false): HTMLInputElement {
+        expressionIndex = 0, isDate = false): HTMLInputElement {
         const allExpressions = isDate ? GridFunctions.getExcelCustomFilteringDateExpressions(fix) :
             GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
         return allExpressions[expressionIndex].querySelectorAll('.igx-input-group__input').item(0) as HTMLInputElement;
@@ -1319,7 +1319,7 @@ export class GridFunctions {
     /**
      * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
      */
-    public static clickAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick: boolean = false) {
+    public static clickAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick = false) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
         if (dblClick) {
             chip.dispatchEvent(new MouseEvent('dblclick'));
@@ -1382,7 +1382,7 @@ export class GridFunctions {
      * Click the value input for the expression that is currently in edit mode.
      * (NOTE: The value input could be either an input group or a date picker.)
      */
-    public static clickAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
+    public static clickAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType = false) {
         // Could be either an input group or a date picker.
         const valueInput = GridFunctions.getAdvancedFilteringValueInput(fix, dateType);
         valueInput.click();
@@ -1488,7 +1488,7 @@ export class GridFunctions {
      * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
      * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
      */
-    public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly: boolean = true) {
+    public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
         const childGroups = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
@@ -1499,7 +1499,7 @@ export class GridFunctions {
      * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
      * or all of its child expressions in the hierarchy.
      */
-    public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly: boolean = true) {
+    public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
         const childExpressions = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
@@ -1510,7 +1510,7 @@ export class GridFunctions {
      * Get all child groups and expressions of the given 'group' by specifying whether to include its
      * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
      */
-    public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly: boolean = true) {
+    public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly = true) {
         const childGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(group, directChildrenOnly));
         const childExpressions = Array.from(GridFunctions.getAdvancedFilteringTreeChildExpressions(group, directChildrenOnly));
         return GridFunctions.sortNativeElementsVertically(childGroups.concat(childExpressions));
@@ -1707,7 +1707,7 @@ export class GridFunctions {
         return columnSelect;
     }
 
-    public static getAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
+    public static getAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType = false) {
         const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
         const input = dateType ?
             editModeContainer.querySelector('igx-date-picker').querySelector('input') :
@@ -2183,7 +2183,7 @@ export class GridSummaryFunctions {
         });
     }
 
-    public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
+    public static verifySummaryCellActive(fix, row, cellIndex, active = true) {
         const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
