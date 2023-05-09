@@ -9,6 +9,8 @@
     }
 
     @include b(igx-banner) {
+        @include sizable();
+        // Register the component in the component registry
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -46,12 +48,10 @@
         }
 
         @include m(cosy) {
-            @extend %igx-banner !optional;
             @extend %igx-banner--cosy !optional
-    }
+        }
 
         @include m(compact) {
-            @extend %igx-banner !optional;
             @extend %igx-banner--compact !optional;
         }
     }

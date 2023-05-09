@@ -16,7 +16,6 @@
 }
 
 .badge-theme {
-    min-width: 15px;
-    width: 15px;
-    height: 15px;
+    --size: 15px;
+    --igx-icon-size: 12px;
 }
