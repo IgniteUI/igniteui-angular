@@ -9,7 +9,6 @@ import {
     IgxListLineDirective,
     IgxListLineSubTitleDirective,
     IgxListLineTitleDirective,
-    IgxListModule,
     IgxListThumbnailDirective,
     IListItemClickEventArgs
 } from './list.component';
@@ -29,8 +28,6 @@ import {
 } from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxIconModule } from '../icon/public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
@@ -41,7 +38,7 @@ const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 describe('List', () => {
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
                 ListCustomLoadingComponent,
@@ -53,8 +50,7 @@ describe('List', () => {
                 ListWithPanningTemplatesComponent,
                 ListWithIgxForAndScrollingComponent,
                 ListDirectivesComponent
-            ],
-            imports: [IgxListModule, IgxForOfModule, IgxIconModule]
+            ]
         });
     });
 
@@ -312,17 +308,15 @@ describe('List', () => {
     });
 
     it('should fire ItemClicked on click.', () => {
-        let fixture;
-        let list: IgxListComponent;
-        fixture = TestBed.createComponent(ListWithHeaderComponent);
-        list = fixture.componentInstance.list;
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
         fixture.detectChanges();
 
         spyOn(list.itemClicked, 'emit').and.callThrough();
 
         const event = new Event('click');
         list.items[0].element.dispatchEvent(event);
-        let args: IListItemClickEventArgs = {
+        const args: IListItemClickEventArgs = {
             item: list.items[0],
             event: event,
             direction: IgxListPanState.NONE
@@ -432,17 +426,13 @@ describe('List', () => {
     });
 
     it('should not pan when panning is not allowed.', () => {
-        let fixture;
-        let list: IgxListComponent;
-        let item: IgxListItemComponent;
+        const fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
         let elementRefCollection;
-
-        fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
-        list = fixture.componentInstance.list;
 
         fixture.detectChanges();
 
-        item = list.items[0] as IgxListItemComponent;
+        const item = list.items[0] as IgxListItemComponent;
 
         spyOn(list.leftPan, 'emit').and.callThrough();
         spyOn(list.rightPan, 'emit').and.callThrough();

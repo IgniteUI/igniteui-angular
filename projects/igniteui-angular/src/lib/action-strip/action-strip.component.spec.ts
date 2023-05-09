@@ -1,13 +1,11 @@
-import { IgxActionStripComponent } from './action-strip.component';
+import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxIconModule } from '../icon/public_api';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxActionStripModule } from './action-strip.module';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
@@ -21,17 +19,12 @@ describe('igxActionStrip', () => {
 
     configureTestSuite(() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxActionStripComponent,
                 IgxActionStripTestingComponent,
                 IgxActionStripMenuTestingComponent,
                 IgxActionStripCombinedMenuTestingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxActionStripModule,
-                IgxIconModule,
-                IgxToggleModule
             ]
         });
     });
@@ -184,17 +177,19 @@ describe('igxActionStrip', () => {
 
 @Component({
     template: `
-<div #parent style="position:relative; height: 200px; width: 400px;">
-    <div #inner style="position:relative; height: 100px; width: 200px;">
-        <p>
-            Lorem ipsum dolor sit
-        </p>
+    <div #parent style="position:relative; height: 200px; width: 400px;">
+        <div #inner style="position:relative; height: 100px; width: 200px;">
+            <p>
+                Lorem ipsum dolor sit
+            </p>
+        </div>
+        <igx-action-strip #actionStrip>
+            <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
+        </igx-action-strip>
     </div>
-    <igx-action-strip #actionStrip>
-        <igx-icon class="asIcon" (click)="onIconClick()">alarm</igx-icon>
-    </igx-action-strip>
-</div>
-`
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -230,7 +225,9 @@ class IgxActionStripTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
@@ -251,7 +248,9 @@ class IgxActionStripMenuTestingComponent {
             <span *igxActionStripMenuItem>Download</span>
         </igx-action-strip>
     </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })

@@ -5,7 +5,8 @@ import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
 
 @Directive({
-    selector: '[igxGridActionsBase]'
+    selector: '[igxGridActionsBase]',
+    standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
     @ViewChildren(IgxGridActionButtonComponent)

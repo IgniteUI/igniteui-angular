@@ -84,5 +84,5 @@ export class TreeTestFunctions {
         mockQuery.filter.and.callFake((cb) => nodes.filter(cb));
         mockQuery.forEach.and.callFake((cb) => nodes.forEach(cb));
         return mockQuery;
-    };
+    }
 }

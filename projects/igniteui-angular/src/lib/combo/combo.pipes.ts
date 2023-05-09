@@ -5,7 +5,10 @@ import { DefaultSortingStrategy, SortingDirection } from '../data-operations/sor
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 
 /** @hidden */
-@Pipe({ name: 'comboFiltering' })
+@Pipe({
+    name: 'comboFiltering',
+    standalone: true
+})
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(
         collection: any[],
@@ -25,7 +28,10 @@ export class IgxComboFilteringPipe implements PipeTransform {
 }
 
 /** @hidden */
-@Pipe({ name: 'comboGrouping' })
+@Pipe({
+    name: 'comboGrouping',
+    standalone: true
+})
 export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }

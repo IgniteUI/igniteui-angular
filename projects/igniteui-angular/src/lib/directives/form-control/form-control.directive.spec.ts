@@ -1,11 +1,11 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgcFormControlDirective, IgcFormsModule } from './form-control.directive';
+import { IgcFormControlDirective } from './form-control.directive';
 
 describe('IgcFormControlDirective - ', () => {
 
@@ -21,7 +21,7 @@ describe('IgcFormControlDirective - ', () => {
             defineComponents(IgcRatingComponent);
         }));
 
-        const elementRef = { nativeElement: document.createElement('igc-rating') }; 
+        const elementRef = { nativeElement: document.createElement('igc-rating') };
 
         const mockNgControl = jasmine.createSpyObj('NgControl', [
             'writeValue',
@@ -65,13 +65,8 @@ describe('IgcFormControlDirective - ', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    IgxFormsControlComponent
-                ],
                 imports: [
-                    IgcFormsModule,
-                    ReactiveFormsModule,
-                    FormsModule
+                    IgxFormsControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcRatingComponent);
@@ -113,11 +108,13 @@ describe('IgcFormControlDirective - ', () => {
 
 @Component({
     template: `
-<form #form1="ngForm">
-    <input type="number" id="basicModelRating" name="model rating" min="0" max="10" [(ngModel)]="model.Rating">
-    <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
-</form>
-`
+    <form #form1="ngForm">
+        <input type="number" id="basicModelRating" name="model rating" min="0" max="10" [(ngModel)]="model.Rating">
+        <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
+    </form>
+    `,
+    standalone: true,
+    imports: [IgcFormControlDirective, FormsModule]
 })
 class IgxFormsControlComponent {
 

@@ -5,7 +5,6 @@ import {
     HostBinding,
     Input,
     Output,
-    NgModule,
     Renderer2,
     HostListener,
     Optional,
@@ -48,7 +47,8 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
  * ```
  */
 @Directive({
-    selector: '[igxButton]'
+    selector: '[igxButton]',
+    standalone: true
 })
 export class IgxButtonDirective extends DisplayDensityBase {
     private static ngAcceptInputType_type: IgxButtonType | '';
@@ -352,8 +352,4 @@ export interface IButtonEventArgs extends IBaseEventArgs {
  *
  * @hidden
  */
-@NgModule({
-    declarations: [IgxButtonDirective],
-    exports: [IgxButtonDirective]
-})
-export class IgxButtonModule {}
+

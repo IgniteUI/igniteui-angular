@@ -60,6 +60,7 @@ export enum IgxInputState {
 @Directive({
     selector: '[igxInput]',
     exportAs: 'igxInput',
+    standalone: true
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';

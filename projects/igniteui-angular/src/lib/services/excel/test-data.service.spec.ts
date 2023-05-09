@@ -240,7 +240,7 @@ export class FileContentData {
 
     constructor() {}
 
-    public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string, appData: string, isHGrid: boolean = false): IFileContent[] {
+    public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string, appData: string, isHGrid = false): IFileContent[] {
         this._fileContentCollection = [
             {  fileName: ZipFiles.dataFiles[1].name, fileContent : worksheetData },
             {  fileName: ZipFiles.dataFiles[3].name, fileContent : sharedStringsData },
@@ -356,7 +356,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    private createData(isHGrid: boolean = false) {
+    private createData(isHGrid = false) {
         return this.create(this._worksheetData, this._tableData, this._sharedStringsData, this._workbookData, this._appData, isHGrid);
     }
 

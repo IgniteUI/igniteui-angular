@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxBannerComponent, growVerIn, growVerOut } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
+import { IgxBannerActionsDirective, IgxBannerComponent, IgxButtonDirective, IgxFlexDirective, IgxIconComponent, IgxLayoutDirective, IgxRippleDirective, growVerIn, growVerOut } from 'igniteui-angular';
 
 @Component({
     selector: 'app-banner-sample',
     templateUrl: `banner.sample.html`,
-    styleUrls: [`banner.sample.scss`]
+    styleUrls: [`banner.sample.scss`],
+    standalone: true,
+    imports: [IgxBannerComponent, IgxIconComponent, IgxBannerActionsDirective, IgxButtonDirective, IgxRippleDirective, IgxLayoutDirective, IgxFlexDirective]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })
