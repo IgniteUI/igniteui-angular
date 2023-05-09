@@ -105,6 +105,7 @@ export class AnalyzerPrinter {
         //     }
         // }
 
+        const configSorted = Array.from(config).sort((a, b) => a[0].symbol.name.localeCompare(b[0].symbol.name));
         const configExport = ts.factory.createVariableStatement(
             ts.factory.createModifiersFromModifierFlags(ts.ModifierFlags.Export),
             ts.factory.createVariableDeclarationList([
@@ -113,7 +114,7 @@ export class AnalyzerPrinter {
                     undefined,
                     undefined,
                     ts.factory.createArrayLiteralExpression(
-                        Array.from(config).map(x => this.#createMetaLiteralObject(x)),
+                        configSorted.map(x => this.#createMetaLiteralObject(x)),
                         true
                     )
                 )
