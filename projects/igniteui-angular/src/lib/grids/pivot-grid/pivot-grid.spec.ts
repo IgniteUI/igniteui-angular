@@ -155,7 +155,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
-            const removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+            const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalse();
@@ -179,7 +179,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
-            const removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+            const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.columns[1].enabled).toBeFalse();
@@ -198,7 +198,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             let rowChip = headerRow.querySelector('igx-chip[id="UnitsSold"]');
-            let removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+            let removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.values[0].enabled).toBeFalse();
@@ -207,7 +207,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // should remove the second one as well
             rowChip = headerRow.querySelector('igx-chip[id="Units Price"]');
-            removeIcon = rowChip.querySelectorAll('igx-icon')[3];
+            removeIcon = rowChip.querySelectorAll('igx-icon')[2];
             removeIcon.click();
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.values[1].enabled).toBeFalse();
@@ -239,7 +239,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const rowChip = headerRow.querySelector('igx-chip[id="SellerName"]');
-            const removeIcon = rowChip.querySelectorAll('igx-icon')[2];
+            const removeIcon = rowChip.querySelectorAll('igx-icon')[1];
             removeIcon.click();
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.filters[0].enabled).toBeFalse();
@@ -277,7 +277,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[4];
+            const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[2];
             expect(dropdownIcon).not.toBeUndefined();
             expect(headerRow.querySelector('igx-badge').innerText).toBe('2');
             dropdownIcon.click();
@@ -659,7 +659,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
-                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
@@ -690,7 +690,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
-                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
                 await wait(100);
                 fixture.detectChanges();
@@ -728,7 +728,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="Country"]');
-                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
                 await wait(100);
                 fixture.detectChanges();
@@ -756,6 +756,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             it('should show filters chips', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [
+                    {
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "300px",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }
+                ];
                 pivotGrid.pivotConfiguration.filters = [{
                     memberName: 'SellerName',
                     enabled: true
@@ -766,7 +779,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const filtersChip = headerRow.querySelector('igx-chip[id="SellerName"]');
-                const filterIcon = filtersChip.querySelectorAll('igx-icon')[1];
+                const filterIcon = filtersChip.querySelectorAll('igx-icon')[0];
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
@@ -800,7 +813,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[1];
+                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
@@ -860,7 +873,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[0];
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[1];
+                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[0];
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
@@ -889,7 +902,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimensionHeaders).toEqual(expectedHeaders);
             });
 
-            it('should show chips and dropdown if enough space', () => {
+            it('should show chips and dropdown if there is not enough space', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.filters = [
                     {
@@ -910,7 +923,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
-                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[4];
+                const dropdownIcon = headerRow.querySelector('.igx-grid__tr-pivot--filter').querySelectorAll('igx-icon')[2];
                 expect(dropdownIcon).not.toBeUndefined();
                 expect(headerRow.querySelector('igx-badge').innerText).toBe('1');
                 const filtersChip = headerRow.querySelector('igx-chip[id="Date"]');
@@ -939,7 +952,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="AllPeriods"]');
-                const filterIcon = rowChip.querySelectorAll('igx-icon')[2];
+                const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
                 await wait(100);
                 fixture.detectChanges();
@@ -1066,7 +1079,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     By.directive(IgxPivotHeaderRowComponent))[0].componentInstance;
                 const filtersChip = headerRow.nativeElement.querySelector('igx-chip[id="Date"]');
                 expect(filtersChip).not.toBeUndefined();
-                const filterIcon = filtersChip.querySelectorAll('igx-icon')[1];
+                const filterIcon = filtersChip.querySelectorAll('igx-icon')[0];
 
                 spyOn(headerRow, 'onFilteringIconPointerDown').and.callThrough();
                 filterIcon.dispatchEvent(new Event('pointerdown'));
@@ -1612,7 +1625,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip2,
                     originalEvent: {
-                        offsetX: 100
+                        offsetX: 110
                     }
                 });
                 fixture.detectChanges();
@@ -1646,7 +1659,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip1,
                     originalEvent: {
-                        offsetX: -100
+                        offsetX: -110
                     }
                 });
                 fixture.detectChanges();
@@ -1671,7 +1684,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     },
                     owner: valChip2,
                     originalEvent: {
-                        offsetX: 100
+                        offsetX: 110
                     }
                 }, PivotDimensionType.Row);
                 fixture.detectChanges();
@@ -1681,6 +1694,19 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
             it('should allow moving dimension between rows, columns and filters.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                pivotGrid.pivotConfiguration.rows = [
+                    {
+                        memberName: 'All',
+                        memberFunction: () => 'All',
+                        enabled: true,
+                        width: "300px",
+                        childLevel: {
+                            memberName: 'ProductCategory',
+                            memberFunction: (data) => data.ProductCategory,
+                            enabled: true
+                        }
+                    }
+                ];
                 pivotGrid.pivotConfiguration.filters = [{
                     memberName: 'SellerName',
                     enabled: true

@@ -105,7 +105,6 @@ describe('IgxChipsArea ', () => {
     configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
     const CHIP_SELECT_ICON = 'igx-chip__select';
-    const CHIP_SELECT_ICON_HIDDEN = 'igx-chip__select--hidden';
     const CHIP_AREA_CLASS = 'igx-chip-area';
 
     let fix;
@@ -325,22 +324,14 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            const selectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
-            const unselectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[1];
-            selectedChip.selected = true;
+            const igxChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
+            const igxChipItem = igxChip.nativeElement.children[0]; // Return igx-chip__item
+
+            igxChip.selected = true;
             fix.detectChanges();
 
-            const selectedChipIconContainer = selectedChip.nativeElement.children[0].children[0];
-            const unselectedChipIconContainer = unselectedChip.nativeElement.children[0].children[0];
-            expect(selectedChip.selected).toBe(true);
-            expect(selectedChipIconContainer.children.length).toEqual(1);
-            expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-            // expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
-            expect(selectedChip.nativeElement.children[0].children[0].className).toEqual(CHIP_SELECT_ICON);
-            expect(selectedChip.nativeElement.children[0].children[0].className).not.toEqual(CHIP_SELECT_ICON_HIDDEN);
-            expect(unselectedChipIconContainer.children.length).toEqual(1);
-            expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-            expect(unselectedChip.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
+            expect(igxChip.selected).toBe(true);
+            expect(igxChipItem).toHaveClass(`igx-chip__item--selected`);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {
