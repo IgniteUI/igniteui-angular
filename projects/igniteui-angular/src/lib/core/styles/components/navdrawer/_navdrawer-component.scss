@@ -30,7 +30,6 @@
             }
         }
 
-
         @include e(aside, right) {
             @extend %aside--right !optional;
         }
