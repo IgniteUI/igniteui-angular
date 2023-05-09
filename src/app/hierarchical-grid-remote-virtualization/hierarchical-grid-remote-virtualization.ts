@@ -5,12 +5,19 @@ import {
 import { RemoteService } from '../shared/remote.service';
 import { HierarchicalRemoteService } from './hierarchical-remote.service';
 import { debounceTime } from 'rxjs/operators';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxHierarchicalGridComponent as IgxHierarchicalGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
+import { NgIf } from '@angular/common';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
 
 @Component({
     selector: 'app-hierarchical-grid-remote-virtualization-sample',
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
     styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
-    providers: [RemoteService]
+    providers: [RemoteService],
+    standalone: true,
+    imports: [IgxCellTemplateDirective, NgIf, IgxHierarchicalGridComponent_1, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
     @ViewChild('hGrid', { static: true })

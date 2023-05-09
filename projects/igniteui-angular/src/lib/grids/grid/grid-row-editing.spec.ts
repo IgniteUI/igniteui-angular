@@ -5,8 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridModule, RowType } from './public_api';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TransactionType, Transaction } from '../../services/public_api';
@@ -27,8 +26,8 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CellType } from '../common/grid.interface';
 import { DefaultDataCloneStrategy } from '../../data-operations/data-clone-strategy';
+import { CellType, RowType } from '../public_api';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -40,7 +39,8 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxGridRowEditingComponent,
                 IgxGridRowEditingTransactionComponent,
                 IgxGridWithEditingAndFeaturesComponent,
@@ -49,9 +49,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridEmptyRowEditTemplateComponent,
                 IgxGridCustomRowEditTemplateComponent,
                 VirtualGridComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxGridModule]
+            ]
         });
     }));
 

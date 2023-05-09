@@ -31,6 +31,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { NgIf } from '@angular/common';
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -51,7 +52,9 @@ import { OverlaySettings } from '../services/overlay/utilities';
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
-    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
+    standalone: true,
+    imports: [IgxToggleDirective, NgIf]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     /**

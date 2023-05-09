@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxSnackbarComponent } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, PositionSettings, slideInLeft, slideInRight, VerticalAlignment } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
@@ -11,13 +11,10 @@ describe('IgxSnackbar', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                SnackbarInitializeTestComponent,
-                SnackbarCustomContentComponent
-            ],
             imports: [
                 NoopAnimationsModule,
-                IgxSnackbarModule
+                SnackbarInitializeTestComponent,
+                SnackbarCustomContentComponent
             ]
         }).compileComponents();
     }));
@@ -192,12 +189,9 @@ describe('IgxSnackbar with custom content', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                SnackbarCustomContentComponent
-            ],
             imports: [
-                BrowserAnimationsModule,
-                IgxSnackbarModule
+                NoopAnimationsModule,
+                SnackbarCustomContentComponent
             ]
         }).compileComponents();
     }));
@@ -257,7 +251,9 @@ describe('IgxSnackbar with custom content', () => {
 
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
-               </igx-snackbar>`
+               </igx-snackbar>`,
+    standalone: true,
+    imports: [IgxSnackbarComponent]
 })
 class SnackbarInitializeTestComponent {
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
@@ -267,7 +263,9 @@ class SnackbarInitializeTestComponent {
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                     <span class="igx-snackbar__content">Custom content</span>
-               </igx-snackbar>`
+               </igx-snackbar>`,
+    standalone: true,
+    imports: [IgxSnackbarComponent]
 })
 class SnackbarCustomContentComponent {
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;

@@ -3,7 +3,10 @@ import { ColumnType } from '../common/grid.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
-@Directive({ selector: '[igxColumnHiding]' })
+@Directive({
+    selector: '[igxColumnHiding]',
+    standalone: true
+})
 export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
 
     constructor(

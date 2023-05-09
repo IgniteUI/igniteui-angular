@@ -4,20 +4,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {
-    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxOverlayService,
-    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
-    IgxListModule,
-    IgxTextSelectionModule,
-    IgxPivotGridModule,
-    IgxQueryBuilderModule,
-    IgcFormsModule
-} from 'igniteui-angular';
-import { SharedModule } from './shared/shared.module';
+import { IgxOverlayService, IgxIconService, DisplayDensityToken, DisplayDensity, IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxIconComponent, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from 'igniteui-angular';
 
-import { routing } from './routing';
+import { routing } from './app.routing';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
@@ -133,7 +122,6 @@ import {
     HierarchicalGridRemoteVirtualizationComponent
 } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
-import { IgxGridHierarchicalPipe } from 'igniteui-angular';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
@@ -147,7 +135,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
-import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-common/picker-icons.common';
+
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
@@ -172,7 +160,6 @@ import { GridExportComponent } from './grid-export/grid-export.sample';
 const components = [
     AccordionSampleComponent,
     ActionStripSampleComponent,
-    AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
     AutocompleteSampleComponent,
@@ -318,7 +305,7 @@ const components = [
 ];
 
 @NgModule({
-    declarations: components,
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -327,35 +314,20 @@ const components = [
         CommonModule,
         ReactiveFormsModule,
         HttpClientModule,
-        IgxBottomNavModule,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxActionStripModule,
-        IgxGridModule,
-        IgxTreeGridModule,
-        IgxHierarchicalGridModule,
-        IgxDragDropModule,
-        IgxDateRangePickerModule,
-        IgxPickersCommonModule,
-        IgxDividerModule,
-        IgxButtonGroupModule,
-        IgxListModule,
-        IgxTextSelectionModule,
-        SharedModule,
+        PageHeaderComponent,
+        IgxNavigationDrawerComponent,
+        IgxNavDrawerItemDirective,
+        IgxNavDrawerMiniTemplateDirective,
+        IgxNavDrawerTemplateDirective,
+        IgxIconComponent,
         routing,
         HammerModule,
-        IgxDateTimeEditorModule,
-        IgxButtonModule,
-        IgxPivotGridModule,
-        IgxQueryBuilderModule,
-        IgcFormsModule
+        ...components
     ],
     providers: [
         LocalService,
         RemoteService,
         HierarchicalRemoteService,
-        GridBaseAPIService,
-        IgxGridHierarchicalPipe,
         IgxIconService,
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) },

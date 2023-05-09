@@ -28,5 +28,5 @@ export abstract class IgxTabContentDirective implements IgxTabContentBase {
     /** @hidden */
     public get nativeElement() {
         return this.elementRef.nativeElement;
-    };
+    }
 }

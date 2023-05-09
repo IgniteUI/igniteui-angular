@@ -2,17 +2,17 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IgxExpansionPanelModule } from './expansion-panel.module';
-import { IgxGridComponent, IgxGridModule } from '../grids/grid/public_api';
-import { IgxListModule } from '../list/public_api';
-import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
+import { IgxGridComponent } from '../grids/grid/public_api';
+import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
+import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
+import { IgxListComponent } from '../list/list.component';
+import { IgxListItemComponent } from '../list/list-item.component';
+import { NgIf } from '@angular/common';
+import { IGX_EXPANSION_PANEL_DIRECTIVES } from './public_api';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
@@ -37,21 +37,13 @@ describe('igxExpansionPanel', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
                 IgxExpansionPanelSampleComponent,
                 IgxExpansionPanelImageComponent,
                 IgxExpansionPanelTooltipComponent
-            ],
-            imports: [
-                IgxExpansionPanelModule,
-                NoopAnimationsModule,
-                IgxToggleModule,
-                IgxRippleModule,
-                IgxButtonModule,
-                IgxListModule,
-                IgxGridModule
             ]
         }).compileComponents();
     }));
@@ -310,8 +302,8 @@ describe('igxExpansionPanel', () => {
             panelContainer: any,
             panelHeader: HTMLElement,
             button: HTMLElement,
-            timesCollapsed: number = 0,
-            timesExpanded: number = 0) => {
+            timesCollapsed = 0,
+            timesExpanded = 0) => {
             expect(panel.collapsed).toEqual(collapsed);
             const ariaExpanded = collapsed ? 'false' : 'true';
             expect(panelHeader.querySelector('div [role = \'button\']').getAttribute('aria-expanded')).toMatch(ariaExpanded);
@@ -1297,16 +1289,17 @@ describe('igxExpansionPanel', () => {
 @Component({
     template: `
     <igx-expansion-panel #expansionPanel>
-<igx-expansion-panel-header headerHeight="50px">
-                <igx-expansion-panel-title>Product orders</igx-expansion-panel-title>
-                <igx-expansion-panel-description>Product orders details</igx-expansion-panel-description>
-            </igx-expansion-panel-header>
-            <igx-expansion-panel-body>
-<igx-grid #grid1 [data] = "data" [autoGenerate]="true" [width]="width" [height]="height">
-        </igx-grid>
-       </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+        <igx-expansion-panel-header headerHeight="50px">
+            <igx-expansion-panel-title>Product orders</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Product orders details</igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <igx-grid #grid1 [data] = "data" [autoGenerate]="true" [width]="width" [height]="height"></igx-grid>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelGridComponent {
 
@@ -1353,7 +1346,9 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel-body>
         </igx-expansion-panel>
     </div>
-`
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelListComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1365,21 +1360,23 @@ export class IgxExpansionPanelListComponent {
 
 @Component({
     template: `
-<igx-expansion-panel
-    (contentCollapsed)="handleCollapsed()"
-    (contentExpanded)="handleExpanded()">
-    <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
-        <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
-        <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
-        <igx-expansion-panel-icon *ngIf="customIcon">
-            <span class="custom-test-icon">TEST_ICON</span>
-        </igx-expansion-panel-icon>
-    </igx-expansion-panel-header>
-    <igx-expansion-panel-body *ngIf="showBody">
-    Example body
-    </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+    <igx-expansion-panel
+        (contentCollapsed)="handleCollapsed()"
+        (contentExpanded)="handleExpanded()">
+        <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
+            <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+            <igx-expansion-panel-icon *ngIf="customIcon">
+                <span class="custom-test-icon">TEST_ICON</span>
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body *ngIf="showBody">
+        Example body
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, NgIf]
 })
 export class IgxExpansionPanelSampleComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
@@ -1404,19 +1401,21 @@ export class IgxExpansionPanelSampleComponent {
 
 @Component({
     template: `
-<igx-expansion-panel #panel>
-    <igx-expansion-panel-header headerHeight="50px">
-        <igx-expansion-panel-title >Frogs</igx-expansion-panel-title>
-        <igx-expansion-panel-description>Frog description</igx-expansion-panel-description>
-    </igx-expansion-panel-header>
-    <igx-expansion-panel-body >
-    <p class = "sample-wrapper" style = "padding: 5px">
-    <img style="float: left; margin: 5px;" src="{{imagePath}}" width="250px" height="150px">
-    {{text}}
-    </p>
-    </igx-expansion-panel-body>
-</igx-expansion-panel>
-`
+    <igx-expansion-panel #panel>
+        <igx-expansion-panel-header headerHeight="50px">
+            <igx-expansion-panel-title >Frogs</igx-expansion-panel-title>
+            <igx-expansion-panel-description>Frog description</igx-expansion-panel-description>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body >
+        <p class = "sample-wrapper" style = "padding: 5px">
+        <img style="float: left; margin: 5px;" src="{{imagePath}}" width="250px" height="150px">
+        {{text}}
+        </p>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelImageComponent {
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
@@ -1444,7 +1443,9 @@ export class IgxExpansionPanelImageComponent {
             Example Body
         </igx-expansion-panel-body>
     </igx-expansion-panel>
-`
+    `,
+    standalone: true,
+    imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class IgxExpansionPanelTooltipComponent {
     public titleTooltip = '';

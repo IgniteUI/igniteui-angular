@@ -141,7 +141,7 @@ export class IgxIconService {
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
      */
-    public addSvgIconFromText(name: string, iconText: string, family: string = '', stripMeta = false) {
+    public addSvgIconFromText(name: string, iconText: string, family = '', stripMeta = false) {
         if (name && iconText) {
             if (this.isSvgIconCached(name, family)) {
                 return;
@@ -159,7 +159,7 @@ export class IgxIconService {
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
      */
-    public isSvgIconCached(name: string, family: string = ''): boolean {
+    public isSvgIconCached(name: string, family = ''): boolean {
         const familyClassName = this.familyClassName(family);
         if (this._cachedSvgIcons.has(familyClassName)) {
             const familyRegistry = this._cachedSvgIcons.get(familyClassName) as Map<string, SafeHtml>;
@@ -175,7 +175,7 @@ export class IgxIconService {
      *   const svgIcon = this.iconService.getSvgIcon('aruba', 'svg-flags');
      * ```
      */
-    public getSvgIcon(name: string, family: string = '') {
+    public getSvgIcon(name: string, family = '') {
         const familyClassName = this.familyClassName(family);
         return this._cachedSvgIcons.get(familyClassName)?.get(name);
     }
@@ -192,7 +192,7 @@ export class IgxIconService {
      * @hidden
      */
     private cacheSvgIcon(name: string, value: string, family = this._family, stripMeta: boolean) {
-        family = !!family ? family : this._family;
+        family = family ? family : this._family;
 
         if (this._platformUtil?.isBrowser && name && value) {
             const doc = this._domParser.parseFromString(value, 'image/svg+xml');

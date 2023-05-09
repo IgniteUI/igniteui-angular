@@ -1,5 +1,15 @@
 import { Component } from '@angular/core';
 import { GridColumnDataType } from 'igniteui-angular';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor } from '@angular/common';
+import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
+import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 interface GridConfig {
     field: string;
@@ -9,7 +19,9 @@ interface GridConfig {
 
 @Component({
     selector: 'app-grid-nested-props',
-    templateUrl: 'grid-nested-props.sample.html'
+    templateUrl: 'grid-nested-props.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxTreeGridComponent]
 })
 export class GridNestedPropsSampleComponent {
     public data = [];
