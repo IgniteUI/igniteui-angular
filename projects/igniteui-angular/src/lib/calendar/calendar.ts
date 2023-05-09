@@ -1,4 +1,37 @@
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
+import { mkenum } from '../core/utils';
+
+/**
+ * Sets the selection type - single, multi or range.
+ */
+export const CalendarSelection = mkenum({
+    SINGLE: 'single',
+    MULTI: 'multi',
+    RANGE: 'range'
+});
+export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
+
+export enum ScrollMonth {
+    PREV = 'prev',
+    NEXT = 'next',
+    NONE = 'none'
+}
+
+export interface IViewDateChangeEventArgs {
+    previousValue: Date;
+    currentValue: Date;
+}
+
+export const IgxCalendarView = mkenum({
+    Month: 'month',
+    Year: 'year',
+    Decade: 'decade'
+});
+
+/**
+ * Determines the Calendar active view - days, months or years.
+ */
+export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarView];
 
 /**
  * @hidden
@@ -199,7 +232,7 @@ export class Calendar {
      *
      * @memberof Calendar
      */
-    public monthdates(year: number, month: number, extraWeek: boolean = false): ICalendarDate[] {
+    public monthdates(year: number, month: number, extraWeek = false): ICalendarDate[] {
         let date = new Date(year, month, 1);
         let days = (date.getDay() - this.firstWeekDay) % 7;
         if (days < 0) {
@@ -209,6 +242,7 @@ export class Calendar {
         const res = [];
         let value: ICalendarDate;
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
 
             value = this.generateICalendarDate(date, year, month);
@@ -240,7 +274,7 @@ export class Calendar {
      *
      * @memberof Calendar
      */
-    public monthdatescalendar(year: number, month: number, extraWeek: boolean = false): ICalendarDate[][] {
+    public monthdatescalendar(year: number, month: number, extraWeek = false): ICalendarDate[][] {
         const dates = this.monthdates(year, month, extraWeek);
         const res = [];
         for (const i of range(0, dates.length, 7)) {

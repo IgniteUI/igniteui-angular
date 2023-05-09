@@ -3,12 +3,12 @@ import { ConnectedPositioningStrategy } from '../services/public_api';
 import { VerticalAlignment, PositionSettings, Point } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
-import { ColumnPinningPosition, RowPinningPosition } from './common/enums';
 
 
 @Directive({
     selector: '[igxGridBody]',
-    providers: [IgxForOfSyncService]
+    providers: [IgxForOfSyncService],
+    standalone: true
 })
 export class IgxGridBodyDirective {}
 
@@ -21,21 +21,13 @@ export interface RowEditPositionSettings extends PositionSettings {
 }
 
 /**
- * An interface describing settings for row/column pinning position.
- */
-export interface IPinningConfig {
-    columns?: ColumnPinningPosition;
-    rows?: RowPinningPosition;
-}
-
-/**
  * @hidden
  */
 export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
-    public settings: RowEditPositionSettings;
-    public position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
+    public override settings: RowEditPositionSettings;
+    public override position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
             target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement || this.settings.target as HTMLElement; // current grid.row

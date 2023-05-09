@@ -137,7 +137,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         this.cloneStrategy = cloneStrategy;
     }
 
-    protected getFieldValue(rec: any, fieldName: string, _isDate: boolean = false, _isTime: boolean = false,
+    protected override getFieldValue(rec: any, fieldName: string, _isDate = false, _isTime = false,
         grid?: PivotGridType): any {
         const allDimensions = grid.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
@@ -146,10 +146,10 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         return value;
     }
 
-    public getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
+    public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
         const grid = (column.grid as any);
         const enabledDimensions = grid.allDimensions.filter(x => x && x.enabled);
-        let data = column.grid.gridAPI.filterDataByExpressions(tree);
+        const data = column.grid.gridAPI.filterDataByExpressions(tree);
         const dim = enabledDimensions.find(x => x.memberName === column.field);
         const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
             data,
@@ -181,7 +181,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
 
     private _getDimensionValueHierarchy(dim: IPivotDimension, rec: any) : string[] {
         let path = [];
-        let value = PivotUtil.extractValueFromDimension(dim, rec);
+        const value = PivotUtil.extractValueFromDimension(dim, rec);
         path.push(value);
         if (dim.childLevel) {
             const childVals = this._getDimensionValueHierarchy(dim.childLevel, rec);

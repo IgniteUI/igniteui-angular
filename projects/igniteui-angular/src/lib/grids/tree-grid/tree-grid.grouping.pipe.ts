@@ -30,7 +30,7 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
         return this._instance || (this._instance = new IgxGroupedTreeGridSorting());
     }
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected override getFieldValue(obj: any, key: string, isDate = false, isTime = false): any {
         const data = obj.data[HIDDEN_FIELD_NAME] ?
             obj.data.hasOwnProperty(key) ?
                 obj.data :
@@ -43,7 +43,8 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
 
 /** @hidden */
 @Pipe({
-    name: 'treeGridGrouping'
+    name: 'treeGridGrouping',
+    standalone: true
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
     private grid: GridType;

@@ -1,26 +1,35 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IGridCreatedEventArgs, IgxHierarchicalGridModule } from './public_api';
+import { IGridCreatedEventArgs } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { CellType, IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
+import { IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/excel-style-filtering.component';
+import { IgxExcelStyleHeaderComponent } from '../filtering/excel-style/excel-style-header.component';
+import { IgxExcelStyleSortingComponent } from '../filtering/excel-style/excel-style-sorting.component';
+import { IgxExcelStyleSearchComponent } from '../filtering/excel-style/excel-style-search.component';
+import { IgxCellHeaderTemplateDirective } from '../columns/templates.directive';
+import { CellType, ColumnType, IGridCellEventArgs, IgxColumnComponent, IgxRowEditActionsDirective, IgxRowEditTextDirective } from '../public_api';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSizingComponent,
@@ -33,8 +42,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
                 IgxHierarchicalGridToggleRIAndColsComponent
-            ],
-            imports: [NoopAnimationsModule, IgxHierarchicalGridModule]
+            ]
         }).compileComponents();
     }))
 
@@ -1699,7 +1707,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -1748,11 +1758,13 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-column field="Col2"></igx-column>
             <igx-column field="Col3"></igx-column>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public override rowIsland2: IgxRowIslandComponent;
     public height = '100px';
 }
 
@@ -1766,7 +1778,9 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
                 </igx-row-island>
             </igx-row-island>
         </igx-hierarchical-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHGridRemoteOnDemandComponent {
     @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
@@ -1820,13 +1834,15 @@ export class IgxHGridRemoteOnDemandComponent {
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
         <igx-column *ngFor="let colField of parentCols" [field]="colField"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [height]="'350px'">
+        <igx-row-island key="childData" [autoGenerate]="false" #rowIsland [height]="'350px'">
             <igx-column *ngFor="let colField of islandCols1" [field]="colField"></igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
+            <igx-row-island key="childData" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
                 <igx-column *ngFor="let colField of islandCols2" [field]="colField"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgFor]
 })
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
@@ -1851,11 +1867,13 @@ export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGr
         [autoGenerate]="false" [height]="'600px'" [width]="'700px'" #hierarchicalGrid>
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [width]="'500px'" [height]="childHeight" #rowIsland>
+        <igx-row-island key="childData" [autoGenerate]="false" [width]="'500px'" [height]="childHeight" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridSizingComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -1879,11 +1897,13 @@ export class IgxHierarchicalGridSizingComponent {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
-     <igx-row-island *ngIf='toggleRI' [key]="'childData'" [autoGenerate]="true">
-        <igx-row-island *ngIf='toggleChildRI' [key]="'childData'" [autoGenerate]="true">
+     <igx-row-island *ngIf="toggleRI" key="childData" [autoGenerate]="true">
+        <igx-row-island *ngIf="toggleChildRI" key="childData" [autoGenerate]="true">
         </igx-row-island>
      </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
 public toggleRI = true;
@@ -1894,14 +1914,16 @@ public toggleChildRI = true;
     template: `
     <igx-hierarchical-grid #hierarchicalGrid [data]="data"
      [autoGenerate]="false" [height]="'400px'" [width]="'500px'">
-     <igx-column field="ID" *ngIf='toggleColumns'></igx-column>
-     <igx-column field="ProductName" *ngIf='toggleColumns'></igx-column>
-     <igx-row-island *ngIf='toggleRI' [key]="'childData'" [autoGenerate]="true">
+     <igx-column field="ID" *ngIf="toggleColumns"></igx-column>
+     <igx-column field="ProductName" *ngIf="toggleColumns"></igx-column>
+     <igx-row-island *ngIf="toggleRI" [key]="'childData'" [autoGenerate]="true">
      </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, NgIf]
 })
 export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchicalGridToggleRIComponent {
-    public toggleRI = false;
+    public override toggleRI = false;
     public toggleColumns = false;
 }
 
@@ -1911,10 +1933,10 @@ export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchica
      [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
-        <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" #rowIsland>
+        <igx-row-island [showExpandAll]="true" key="childData" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            <igx-row-island key="childData" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
         <ng-template igxRowExpandedIndicator>
@@ -1929,7 +1951,9 @@ export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchica
         <ng-template igxHeaderExpandedIndicator>
             <span>EXPANDED</span>
         </ng-template>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
@@ -1974,7 +1998,24 @@ export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalG
         <ng-template igxHeaderExpandedIndicator>
             <span>EXPANDED</span>
         </ng-template>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [
+        IgxHierarchicalGridComponent,
+        IgxColumnComponent,
+        IgxRowIslandComponent,
+        IgxIconComponent,
+        IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleHeaderComponent,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStyleFilterOperationsTemplateDirective,
+        IgxExcelStyleSearchComponent,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective
+    ]
 })
 export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
@@ -2000,18 +2041,20 @@ export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHier
             <igx-column field="ProductName"></igx-column>
             <igx-column field="Col1" [headerTemplate]="hideTemplate"></igx-column>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxIconComponent, IgxCellHeaderTemplateDirective]
 })
 export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarchicalGridTestBaseComponent {
     constructor(public cdr: ChangeDetectorRef) {
         super();
     }
 
-    public pinColumn(col: IgxColumnComponent) {
+    public pinColumn(col: ColumnType) {
         col.pin();
     }
 
-    public hideColumn(col: IgxColumnComponent){
+    public hideColumn(col: ColumnType){
         col.hidden = true;
     }
 }
@@ -2022,11 +2065,11 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
     [height]="'400px'" [width]="width" [rowEditable]="true" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowEditable]="true"
+        <igx-row-island key="childData" [autoGenerate]="false" [rowEditable]="true"
             #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            <igx-row-island key="childData" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
             <ng-template igxRowEditText let-rowChangesCount>
                 <span>Row Edit Text</span>
@@ -2035,7 +2078,9 @@ export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarc
                 <span>Row Edit Actions</span>
             </ng-template>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarchicalGridTestBaseComponent{}
 
@@ -2058,7 +2103,8 @@ export class IgxHierarchicalGridCustomRowEditOverlayComponent extends IgxHierarc
                 <span>Row Edit Actions</span>
             </ng-template>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowEditTextDirective, IgxRowEditActionsDirective]
 })
 export class IgxHierarchicalGridAutoSizeColumnsComponent extends IgxHierarchicalGridTestBaseComponent {}
-

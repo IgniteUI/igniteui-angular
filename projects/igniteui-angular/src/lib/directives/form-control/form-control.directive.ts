@@ -3,20 +3,20 @@ import {
     forwardRef,
     ElementRef,
     HostListener,
-    NgModule,
     Renderer2
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-@Directive({
-    selector: 'igc-rating[ngModel],igc-rating[formControlName]', /* eslint-disable-line @angular-eslint/directive-selector */
+@Directive({// eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'igc-rating[ngModel],igc-rating[formControlName]',
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => IgcFormControlDirective),
             multi: true
         }
-    ]
+    ],
+    standalone: true
 })
 export class IgcFormControlDirective implements ControlValueAccessor {
     /** @hidden @internal */
@@ -63,8 +63,3 @@ export class IgcFormControlDirective implements ControlValueAccessor {
     }
 }
 
-@NgModule({
-    declarations: [IgcFormControlDirective],
-    exports: [IgcFormControlDirective]
-})
-export class IgcFormsModule { }

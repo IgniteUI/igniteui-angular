@@ -26,6 +26,8 @@ import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
 import { IgxStepperService } from '../stepper.service';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -53,7 +55,9 @@ let NEXT_ID = 0;
     templateUrl: 'step.component.html',
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {
 
@@ -343,7 +347,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    public get animationSettings(): ToggleAnimationSettings {
+    public override get animationSettings(): ToggleAnimationSettings {
         return this.stepper.verticalAnimationSettings;
     }
 
@@ -385,7 +389,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         public renderer: Renderer2,
         protected platform: PlatformUtil,
         protected stepperService: IgxStepperService,
-        @Inject(IgxAngularAnimationService) protected animationService: AnimationService,
+        @Inject(IgxAngularAnimationService) animationService: AnimationService,
         private element: ElementRef<HTMLElement>,
         private dir: IgxDirectionality
     ) {
@@ -441,11 +445,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             this.stepperService.collapse(this);
             this.cdr.markForCheck();
         });
-    }
-
-    /** @hidden @internal */
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
     }
 
     /** @hidden @internal */

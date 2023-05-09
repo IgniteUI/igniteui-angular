@@ -10,7 +10,8 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
  */
 @Component({
     selector: 'igx-drop-down-item',
-    templateUrl: 'drop-down-item.component.html'
+    templateUrl: 'drop-down-item.component.html',
+    standalone: true
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
@@ -20,7 +21,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
-    public get focused(): boolean {
+    public override get focused(): boolean {
         let focusedState = this._focused;
         if (this.hasIndex) {
             const focusedItem = this.selection.first_item(`${this.dropDown.id}-active`);
@@ -37,7 +38,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
-    public set focused(value: boolean) {
+    public override set focused(value: boolean) {
         this._focused = value;
     }
     /**
@@ -53,7 +54,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
      * ```
      */
-    public get selected(): boolean {
+    public override get selected(): boolean {
         if (this.hasIndex) {
             const item = this.selection.first_item(`${this.dropDown.id}`);
             return item ? item.index === this._index && item.value === this.value : false;
@@ -65,7 +66,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
      */
-    public set selected(value: boolean) {
+    public override set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -85,7 +86,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
         }
     }
 
-    public clicked(event): void {
+    public override clicked(event): void {
         if (!this.isSelectable) {
             this.ensureItemFocus();
             return;

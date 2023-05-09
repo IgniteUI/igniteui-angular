@@ -1,10 +1,9 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
-import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
+import { IgxInputGroupComponent } from './input-group.component';
+import { DisplayDensityToken, DisplayDensity } from '../core/density';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxIconModule } from '../icon/public_api';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
@@ -22,23 +21,20 @@ describe('IgxInputGroup', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 InputGroupComponent,
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
                 InputGroupSearchComponent,
+                InputGroupFileComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
                 InputGroupDisabledWithoutValueComponent,
                 InputGroupCompactDisplayDensityComponent,
                 InputGroupInputDisplayDensityComponent
-            ],
-            imports: [
-                IgxInputGroupModule, IgxIconModule
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     it('Initializes an input group.', fakeAsync(() => {
@@ -93,6 +89,15 @@ describe('IgxInputGroup', () => {
         fixture.detectChanges();
         testInputGroupType('search', igxInputGroup, inputGroupElement);
     }));
+
+    it('Initializes upload file button with type=\'button\'.', () => {
+        const fixture = TestBed.createComponent(InputGroupFileComponent);
+        fixture.detectChanges();
+
+        const uploadFileButton = fixture.debugElement.query(By.css('button')).nativeElement;
+
+        expect(uploadFileButton.getAttribute('type')).toEqual('button');
+    });
 
     it('Should respect type Token and be able to change input group type programmatically.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupComponent);
@@ -291,7 +296,9 @@ describe('IgxInputGroup', () => {
                     <igx-suffix>SUFFIX</igx-suffix>
                     <input #igxInput igxInput />
                 </igx-input-group>`,
-     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box'}]
+    providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 class InputGroupComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -306,7 +313,9 @@ class InputGroupComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup type="box">
                     <input igxInput />
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBoxComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -315,7 +324,9 @@ class InputGroupBoxComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup type="border">
                     <input igxInput />
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBorderComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -324,11 +335,22 @@ class InputGroupBorderComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup type="search">
                     <input igxInput />
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputDirective, IgxInputGroupComponent]
 })
 class InputGroupSearchComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
+
+@Component({
+    template: `<igx-input-group>
+                    <input igxInput type="file" multiple />
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
+})
+class InputGroupFileComponent { }
 
 const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) => {
     let isLine = false;
@@ -365,7 +387,9 @@ const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupCom
 @Component({
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput [disabled]="disabled"/>
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -380,7 +404,9 @@ class InputGroupDisabledComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput disabled/>
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledWithoutValueComponent {
     @ViewChild('igxInputGroup')
@@ -397,7 +423,9 @@ class InputGroupDisabledWithoutValueComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput [disabled]="disabled"/>
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledByDefaultComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -409,7 +437,9 @@ class InputGroupDisabledByDefaultComponent {
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput />
                 </igx-input-group>`,
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupCosyDisplayDensityComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -419,7 +449,9 @@ class InputGroupCosyDisplayDensityComponent {
     template: `<igx-input-group #igxInputGroup>
                     <input igxInput />
                 </igx-input-group>`,
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupCompactDisplayDensityComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -428,7 +460,9 @@ class InputGroupCompactDisplayDensityComponent {
 @Component({
     template: `<igx-input-group #igxInputGroup displayDensity="compact">
                     <input igxInput />
-                </igx-input-group>`
+                </igx-input-group>`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupInputDisplayDensityComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;

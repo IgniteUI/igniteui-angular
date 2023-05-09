@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -27,14 +26,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
                 CollapsibleGroupsDynamicColComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxGridModule
             ]
         });
     }));

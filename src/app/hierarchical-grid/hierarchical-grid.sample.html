@@ -29,8 +29,6 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-grid-footer>Footer</igx-grid-footer>
-        <igx-paginator>
-        </igx-paginator>
         <igx-column width="150px" [filterable]="false">
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="imx-icons"

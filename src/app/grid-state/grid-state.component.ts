@@ -1,11 +1,34 @@
 import { Component, OnInit, ViewChild, QueryList, ViewChildren, TemplateRef } from '@angular/core';
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
-  IgxExpansionPanelComponent, IgxGridBaseDirective,
-  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent } from 'igniteui-angular';
+  IgxExpansionPanelComponent,
+  IGridStateOptions, GridFeatures, GridColumnDataType, IgxColumnComponent, GridType } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
+import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxTooltipTargetDirective } from '../../../projects/igniteui-angular/src/lib/directives/tooltip/tooltip-target.directive';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
+import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
+import { IgxTooltipDirective } from '../../../projects/igniteui-angular/src/lib/directives/tooltip/tooltip.directive';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
+import { IgxGridToolbarAdvancedFilteringComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-advanced-filtering.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxExpansionPanelBodyComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-body.component';
+import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
+import { IgxExpansionPanelTitleDirective, IgxExpansionPanelIconDirective } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel.directives';
+import { IgxExpansionPanelHeaderComponent } from '../../../projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-header.component';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -13,7 +36,7 @@ class MySummary extends IgxNumberSummaryOperand {
       super();
   }
 
-  public operate(data?: any[]): IgxSummaryResult[] {
+  public override operate(data?: any[]): IgxSummaryResult[] {
       const result = super.operate(data);
       result.push({
           key: 'test',
@@ -43,9 +66,11 @@ interface GridState {
 }
 
 @Component({
-  selector: 'app-grid',
-  styleUrls: ['./grid-state.component.scss'],
-  templateUrl: './grid-state.component.html'
+    selector: 'app-grid',
+    styleUrls: ['./grid-state.component.scss'],
+    templateUrl: './grid-state.component.html',
+    standalone: true,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective, NgIf, IgxExpansionPanelIconDirective, IgxExpansionPanelBodyComponent, NgTemplateOutlet, IgxGridComponent, IgxGridStateDirective, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent, IgxTooltipDirective, IgxColumnGroupComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RouterLink, IgxTooltipTargetDirective, IgxIconComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxCellTemplateDirective]
 })
 
 export class GridSaveStateComponent implements OnInit {
@@ -127,7 +152,7 @@ export class GridSaveStateComponent implements OnInit {
         });
     }
 
-    public getContext(grid: IgxGridBaseDirective) {
+    public getContext(grid: GridType) {
         if (this.state) {
         const stateDirective = this.state.find(st => st.grid.id === grid.id);
         return { $implicit: grid, stateDirective};

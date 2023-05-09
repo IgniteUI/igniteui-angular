@@ -8,7 +8,6 @@ import {
     IgxTreeGridFKeySelectionWithTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridModule } from './tree-grid.module';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -19,13 +18,13 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSelectionKeyComponent,
                 IgxTreeGridSelectionComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
                 IgxTreeGridFKeySelectionWithTransactionComponent
-            ],
-            imports: [NoopAnimationsModule, IgxTreeGridModule]
+            ]
         }).compileComponents();
     }));
 

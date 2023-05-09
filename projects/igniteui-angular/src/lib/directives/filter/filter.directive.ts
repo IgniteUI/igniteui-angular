@@ -1,10 +1,7 @@
-import { CommonModule } from '@angular/common';
 import {
     Directive,
-    ElementRef,
     EventEmitter,
     Input,
-    NgModule,
     OnChanges,
     Output,
     Pipe,
@@ -77,7 +74,8 @@ export class IgxFilterOptions {
 
 
 @Directive({
-    selector: '[igxFilter]'
+    selector: '[igxFilter]',
+    standalone: true
 })
 export class IgxFilterDirective implements OnChanges {
     @Output() public filtering = new EventEmitter(false); // synchronous event emitter
@@ -85,7 +83,7 @@ export class IgxFilterDirective implements OnChanges {
 
     @Input('igxFilter') public filterOptions: IgxFilterOptions;
 
-    constructor(private element: ElementRef) {
+    constructor() {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -120,9 +118,9 @@ export class IgxFilterDirective implements OnChanges {
 
 @Pipe({
     name: 'igxFilter',
-    pure: false
+    pure: false,
+    standalone: true
 })
-
 export class IgxFilterPipe implements PipeTransform {
     private findMatchByKey(item: any, options: IgxFilterOptions, key: string) {
         const match = options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue);
@@ -170,15 +168,4 @@ export class IgxFilterPipe implements PipeTransform {
 
         return result;
     }
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxFilterDirective, IgxFilterPipe],
-    exports: [IgxFilterDirective, IgxFilterPipe],
-    imports: [CommonModule]
-})
-export class IgxFilterModule {
 }

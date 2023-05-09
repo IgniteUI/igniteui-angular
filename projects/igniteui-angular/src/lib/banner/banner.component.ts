@@ -5,20 +5,22 @@ import {
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     Output,
     ViewChild
 } from '@angular/core';
-import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
-import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
-import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
+
+import { IgxIconComponent } from '../icon/icon.component';
 import { IToggleView } from '../core/navigation';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxExpansionPanelBodyComponent } from '../expansion-panel/expansion-panel-body.component';
+import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
+import { IBannerResourceStrings } from '../core/i18n/banner-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     /**
@@ -50,7 +52,9 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
  */
 @Component({
     selector: 'igx-banner',
-    templateUrl: 'banner.component.html'
+    templateUrl: 'banner.component.html',
+    standalone: true,
+    imports: [ IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, NgIf, IgxButtonDirective, IgxRippleDirective ]
 })
 export class IgxBannerComponent implements IToggleView {
     /**
@@ -121,6 +125,18 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     /**
+     * Set the animation settings used by the banner open/close methods
+     * ```typescript
+     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     * ...
+     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
+     * ```
+     */
+    public set animationSettings(settings: ToggleAnimationSettings) {
+        this._animationSettings = settings;
+    }
+
+    /**
      * Get the animation settings used by the banner open/close methods
      * ```typescript
      * let currentAnimations: ToggleAnimationSettings = banner.animationSettings
@@ -131,16 +147,23 @@ export class IgxBannerComponent implements IToggleView {
         return this._animationSettings ? this._animationSettings : this._expansionPanel.animationSettings;
     }
 
-    /**
-     * Set the animation settings used by the banner open/close methods
-     * ```typescript
-     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
-     * ...
-     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
-     * ```
+        /**
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * By default it uses EN resources.
      */
-    public set animationSettings(settings: ToggleAnimationSettings) {
-        this._animationSettings = settings;
+
+    @Input()
+    public set resourceStrings(value: IBannerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    public get resourceStrings(): IBannerResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.BannerResourceStrings;
+        }
+        return this._resourceStrings;
     }
     /**
      * Gets whether banner is collapsed
@@ -182,6 +205,7 @@ export class IgxBannerComponent implements IToggleView {
 
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
+    private _resourceStrings;
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
 
@@ -279,9 +303,4 @@ export class IgxBannerComponent implements IToggleView {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxBannerComponent, IgxBannerActionsDirective],
-    exports: [IgxBannerComponent, IgxBannerActionsDirective],
-    imports: [CommonModule, IgxExpansionPanelModule, IgxIconModule, IgxButtonModule, IgxRippleModule]
-})
-export class IgxBannerModule { }
+

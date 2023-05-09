@@ -6,7 +6,8 @@ import { DatePart } from '../directives/date-time-editor/public_api';
 const ITEMS_COUNT = 7;
 
 @Pipe({
-    name: 'timeFormatPipe'
+    name: 'timeFormatPipe',
+    standalone: true
 })
 export class TimeFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
@@ -19,7 +20,8 @@ export class TimeFormatPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'timeItemPipe'
+    name: 'timeItemPipe',
+    standalone: true
 })
 export class TimeItemPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }

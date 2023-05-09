@@ -23,7 +23,8 @@ import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
  */
 @Pipe({
     name: 'pivotGridRow',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotRowPipe implements PipeTransform {
 
@@ -57,7 +58,8 @@ export class IgxPivotRowPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridAutoTransform',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotAutoTransform implements PipeTransform {
     public transform(
@@ -125,7 +127,8 @@ export class IgxPivotAutoTransform implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridRowExpansion',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotRowExpansionPipe implements PipeTransform {
 
@@ -159,7 +162,8 @@ export class IgxPivotRowExpansionPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridCellMerging',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotCellMergingPipe implements PipeTransform {
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -177,7 +181,7 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
         let groupData: IPivotGridGroupRecord[] = [];
         let prevId;
         const index = enabledRows.indexOf(dim);
-        for (let rec of data) {
+        for (const rec of data) {
             const currentDim = rec.dimensions[index];
             const id = PivotUtil.getRecordKey(rec, currentDim);
             if (groupData.length > 0 && prevId !== id) {
@@ -206,7 +210,8 @@ export class IgxPivotCellMergingPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridColumn',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotColumnPipe implements PipeTransform {
 
@@ -233,7 +238,8 @@ export class IgxPivotColumnPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridFilter',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotGridFilterPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
@@ -268,7 +274,8 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridColumnSort',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotGridColumnSortingPipe implements PipeTransform {
     public transform(
@@ -296,7 +303,8 @@ export class IgxPivotGridColumnSortingPipe implements PipeTransform {
  */
 @Pipe({
     name: 'pivotGridSort',
-    pure: true
+    pure: true,
+    standalone: true
 })
 export class IgxPivotGridSortingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
@@ -318,7 +326,10 @@ export class IgxPivotGridSortingPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: "filterPivotItems" })
+@Pipe({
+    name: "filterPivotItems",
+    standalone: true
+})
 export class IgxFilterPivotItemsPipe implements PipeTransform {
     public transform(
         collection: (IPivotDimension | IPivotValue)[],
@@ -352,7 +363,10 @@ export interface GridStyleCSSProperty {
     [prop: string]: any;
 }
 
-@Pipe({ name: 'igxPivotCellStyleClasses' })
+@Pipe({
+    name: 'igxPivotCellStyleClasses',
+    standalone: true
+})
 export class IgxPivotGridCellStyleClassesPipe implements PipeTransform {
 
     public transform(cssClasses: GridStyleCSSProperty, _: any, rowData: IPivotGridRecord, columnData: IPivotGridColumn, index: number, __: number): string {

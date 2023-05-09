@@ -2,10 +2,17 @@ import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
-import { IgxGridComponent, IgxGridModule } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from "../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
+import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
+import { NgIf } from '@angular/common';
+import { IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent } from '../toolbar/common';
+import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarAdvancedFilteringComponent } from '../toolbar/grid-toolbar-advanced-filtering.component';
+import { IgxGridToolbarExporterComponent } from '../toolbar/grid-toolbar-exporter.component';
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
 const TOOLBAR_TITLE_TAG = 'igx-grid-toolbar-title';
@@ -31,13 +38,10 @@ const DATA = [
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 DefaultToolbarComponent,
                 ToolbarActionsComponent
-            ],
-            imports: [
-                IgxGridModule,
-                NoopAnimationsModule
             ],
             providers: [
                 IgxExcelExporterService,
@@ -258,7 +262,9 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             <igx-grid-toolbar-actions *ngIf="toolbarActionsEnabled"></igx-grid-toolbar-actions>
         </igx-grid-toolbar>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent, NgIf]
 })
 export class DefaultToolbarComponent {
     public toolbarEnabled = true;
@@ -293,7 +299,18 @@ export class DefaultToolbarComponent {
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [
+        IgxGridComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarTitleComponent,
+        IgxGridToolbarPinningComponent,
+        IgxGridToolbarHidingComponent,
+        IgxGridToolbarAdvancedFilteringComponent,
+        IgxGridToolbarExporterComponent
+    ]
 })
 export class ToolbarActionsComponent {
     @ViewChild(IgxGridComponent, { static: true })

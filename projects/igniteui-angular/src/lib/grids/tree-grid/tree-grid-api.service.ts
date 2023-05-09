@@ -14,14 +14,14 @@ import { FilterUtil } from '../../data-operations/filtering-strategy';
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
-    public get_all_data(transactions?: boolean): any[] {
+    public override get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
         let data = grid && grid.flatData ? grid.flatData : [];
         data = transactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
     }
 
-    public get_summary_data() {
+    public override get_summary_data() {
         const grid = this.grid;
         const data = grid.processedRootRecords?.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);
@@ -38,7 +38,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return data;
     }
 
-    public allow_expansion_state_change(rowID, expanded): boolean {
+    public override allow_expansion_state_change(rowID, expanded): boolean {
         const grid = this.grid;
         const row = grid.records.get(rowID);
         if (row.expanded === expanded ||
@@ -68,7 +68,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         }
     }
 
-    public get_row_expansion_state(record: ITreeGridRecord): boolean {
+    public override get_row_expansion_state(record: ITreeGridRecord): boolean {
         const grid = this.grid;
         const states = grid.expansionStates;
         const expanded = states.get(record.key);
@@ -80,11 +80,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         }
     }
 
-    public should_apply_number_style(column: ColumnType): boolean {
+    public override should_apply_number_style(column: ColumnType): boolean {
         return column.dataType === GridColumnDataType.Number && column.visibleIndex !== 0;
     }
 
-    public deleteRowById(rowID: any): any {
+    public override deleteRowById(rowID: any): any {
         const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
             treeGrid.primaryKey &&
@@ -105,7 +105,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return record;
     }
 
-    public deleteRowFromData(rowID: any, index: number) {
+    public override deleteRowFromData(rowID: any, index: number) {
         const treeGrid = this.grid;
         const record = treeGrid.records.get(rowID);
 
@@ -164,11 +164,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         }
     }
 
-    public row_deleted_transaction(rowID: any): boolean {
+    public override row_deleted_transaction(rowID: any): boolean {
         return this.row_deleted_parent(rowID) || super.row_deleted_transaction(rowID);
     }
 
-    public get_rec_by_id(rowID) {
+    public override get_rec_by_id(rowID) {
         return this.grid.records.get(rowID);
     }
 
@@ -178,12 +178,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
      * @param pk
      * @param dataCollection
      */
-    public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
+    public override get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
         dataCollection = dataCollection || this.grid.data;
         return this.grid.primaryKey ? dataCollection.findIndex(rec => rec.data[this.grid.primaryKey] === pk) : -1;
     }
 
-    public addRowToData(data: any, parentRowID?: any) {
+    public override addRowToData(data: any, parentRowID?: any) {
         if (parentRowID !== undefined && parentRowID !== null) {
 
             const state = this.grid.transactions.getState(parentRowID);
@@ -228,8 +228,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         }
     }
 
-    public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
-        let records = this.filterTreeDataByExpressions(expressionsTree);
+    public override filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
+        const records = this.filterTreeDataByExpressions(expressionsTree);
         const data = [];
 
         this.getFlatDataFromFilteredRecords(records, data);
@@ -237,7 +237,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return data;
     }
 
-    public sortDataByExpressions(data: ITreeGridRecord[], expressions: ISortingExpression[]) {
+    public override sortDataByExpressions(data: ITreeGridRecord[], expressions: ISortingExpression[]) {
         const records: ITreeGridRecord[] = DataUtil.sort(
             cloneArray(data),
             expressions,
@@ -260,7 +260,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return records;
     }
 
-    protected update_row_in_array(value: any, rowID: any, index: number) {
+    protected override update_row_in_array(value: any, rowID: any, index: number) {
         const grid = this.grid;
         if (grid.primaryKey && grid.foreignKey) {
             super.update_row_in_array(value, rowID, index);
@@ -282,7 +282,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
      * @param rowCurrentValue Current value of the row as it is with applied previous transactions
      * @param rowNewValue New value of the row
      */
-    protected updateData(
+    protected override updateData(
         grid: GridType,
         rowID: any,
         rowValueInDataSource: any,

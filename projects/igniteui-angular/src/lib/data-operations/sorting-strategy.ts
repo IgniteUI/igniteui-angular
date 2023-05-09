@@ -119,8 +119,8 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
     }
 
     protected compareObjects(obj1: any, obj2: any, data: any[], fieldName: string, reverse: number) {
-        let firstItemValuesLength = data[obj1[fieldName]].length;
-        let secondItemValuesLength = data[obj2[fieldName]].length;
+        const firstItemValuesLength = data[obj1[fieldName]].length;
+        const secondItemValuesLength = data[obj2[fieldName]].length;
 
         return reverse * (firstItemValuesLength - secondItemValuesLength);
     }

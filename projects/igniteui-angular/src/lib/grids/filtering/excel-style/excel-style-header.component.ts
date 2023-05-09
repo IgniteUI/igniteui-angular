@@ -1,12 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { NgIf, NgClass } from '@angular/common';
 
 /**
  * A component used for presenting Excel style header UI.
  */
 @Component({
     selector: 'igx-excel-style-header',
-    templateUrl: './excel-style-header.component.html'
+    templateUrl: './excel-style-header.component.html',
+    standalone: true,
+    imports: [NgIf, IgxButtonDirective, NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleHeaderComponent {
     /**

@@ -1,35 +1,20 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    ButtonGroupAlignment,
-    ConnectedPositioningStrategy,
-    DisplayDensity,
-    ElasticPositionStrategy,
-    GlobalPositionStrategy,
-    HorizontalAlignment,
-    IChangeSwitchEventArgs,
-    IComboSearchInputEventArgs,
-    IComboSelectionChangingEventArgs,
-    ISimpleComboSelectionChangingEventArgs,
-    IForOfState,
-    IgxComboComponent,
-    IgxSimpleComboComponent,
-    IgxToastComponent,
-    OverlaySettings,
-    scaleInCenter,
-    scaleOutCenter,
-    VerticalAlignment
-} from 'igniteui-angular';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgIf, AsyncPipe } from '@angular/common';
 import { cloneDeep } from 'lodash-es';
-import { IComboFilteringOptions } from 'projects/igniteui-angular/src/lib/combo/combo.common';
 import { take } from 'rxjs/operators';
+
 import { RemoteNWindService } from './remote-nwind.service';
+import { ButtonGroupAlignment, ConnectedPositioningStrategy, DisplayDensity, ElasticPositionStrategy, GlobalPositionStrategy, HorizontalAlignment, IChangeSwitchEventArgs, IComboFilteringOptions, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IForOfState, ISimpleComboSelectionChangingEventArgs, IgxButtonDirective, IgxButtonGroupComponent, IgxComboAddItemDirective, IgxComboComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxHintDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSimpleComboComponent, IgxSwitchComponent, IgxToastComponent, OverlaySettings, VerticalAlignment, scaleInCenter, scaleOutCenter } from 'igniteui-angular';
+
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
-    styleUrls: ['combo.sample.scss']
+    styleUrls: ['combo.sample.scss'],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, FormsModule, IgxSimpleComboComponent, IgxLabelDirective, IgxHintDirective, IgxComboComponent, IgxButtonDirective, ReactiveFormsModule, IgxToastComponent, NgIf, IgxComboHeaderDirective, IgxComboFooterDirective, IgxComboAddItemDirective, IgxRippleDirective, IgxPrefixDirective, IgxIconComponent, IgxSwitchComponent, IgxButtonGroupComponent, AsyncPipe]
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })
@@ -54,7 +39,10 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
 
     @ViewChild('simpleCombo', { read: IgxSimpleComboComponent, static: true })
-    private simpleCombo;
+    private simpleCombo: IgxSimpleComboComponent;
+
+    @ViewChild('simpleComboOpenOnClear')
+    public simpleComboOpenOnClear: IgxSimpleComboComponent;
 
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
@@ -70,13 +58,13 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public rData: any;
     public prevRequest: any;
     public simpleComboPrevRequest: any;
-    private searchText: string = '';
+    private searchText = '';
     private defaultVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
     private currentVirtState: IForOfState = { chunkSize: 6, startIndex: 0 };
     private hasSelection: boolean;
-    private additionalScroll: number = 0;
+    private additionalScroll = 0;
     private itemID = 1;
-    private itemCount: number = 0;
+    private itemCount = 0;
 
     public valueKeyVar = 'field';
     public currentDataType = '';
@@ -251,10 +239,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.densityCombo.displayDensity = density;
     }
 
-    public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
-        console.log(event);
-    }
-
     public changeFiltering(e: IChangeSwitchEventArgs) {
         if (e.checked) {
             this.igxCombo.filterFunction = this.customFilterFunction;
@@ -330,8 +314,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.searchText = '';
     }
 
-    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs) {
-        this.hasSelection = !!evt?.newSelection.length;
+    public handleSelectionChanging(evt: IComboSelectionChangingEventArgs | ISimpleComboSelectionChangingEventArgs) {
+        if ('added' in evt) {
+            this.hasSelection = !!evt?.newSelection.length;
+            return;
+        }
+
+        if (!evt.newSelection) {
+            this.simpleComboOpenOnClear.open();
+        }
     }
 
     public onSimpleComboDataLoading() {

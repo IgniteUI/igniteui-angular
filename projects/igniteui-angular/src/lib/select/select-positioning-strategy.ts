@@ -8,11 +8,6 @@ import { Optional } from '@angular/core';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
-    /**
-     * PositionSettings to use when position the component in the overlay
-     */
-    public settings: PositionSettings;
-
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -44,7 +39,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-    public position(contentElement: HTMLElement,
+    public override position(contentElement: HTMLElement,
                     size: Size,
                     document?: Document,
                     initialCall?: boolean,

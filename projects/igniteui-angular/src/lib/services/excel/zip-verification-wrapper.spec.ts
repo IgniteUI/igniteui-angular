@@ -19,7 +19,7 @@ export class ZipWrapper {
     }
 
     /* Asserts the zip contains the files it should contain. */
-    public verifyStructure(isHGrid: boolean = false, message = '') {
+    public verifyStructure(isHGrid = false, message = '') {
         let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, ZipFiles.templatesNames);
         const template = isHGrid ? ZipFiles.hGridDataFilesAndFoldersNames : ZipFiles.dataFilesAndFoldersNames;
 
@@ -170,7 +170,7 @@ export class ZipWrapper {
     }
 
     /* Compares the contents of the provided files to their expected values. */
-    private compareFiles(actualFilesContent: IFileContent[], expectedFilesData: IFileContent[], isHGrid: boolean = false) {
+    private compareFiles(actualFilesContent: IFileContent[], expectedFilesData: IFileContent[], isHGrid = false) {
         let result = true;
         let differences = '';
         for (const current of actualFilesContent) {

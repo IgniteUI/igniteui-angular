@@ -9,7 +9,10 @@ import { ColumnType } from '../common/grid.interface';
  * @hidden
  * @internal
  */
-@Directive({ selector: '[igxColumnMovingDrag]' })
+@Directive({
+    selector: '[igxColumnMovingDrag]',
+    standalone: true
+})
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
@@ -23,7 +26,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
-    protected _data: any;
     private subscription$: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
@@ -31,19 +33,20 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private columnSelectedClass = 'igx-grid-th--selected';
 
     constructor(
-        public element: ElementRef<HTMLElement>,
-        public viewContainer: ViewContainerRef,
-        public zone: NgZone,
-        public renderer: Renderer2,
-        public cdr: ChangeDetectorRef,
+        element: ElementRef<HTMLElement>,
+        viewContainer: ViewContainerRef,
+        zone: NgZone,
+        renderer: Renderer2,
+        cdr: ChangeDetectorRef,
         private cms: IgxColumnMovingService,
         _platformUtil: PlatformUtil,
     ) {
         super(cdr, element, viewContainer, zone, renderer, _platformUtil);
     }
 
-    public ngOnDestroy() {
+    public override ngOnDestroy() {
         this._unsubscribe();
+        super.ngOnDestroy();
     }
 
     public onEscape(event: Event) {
@@ -51,7 +54,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.onPointerUp(event);
     }
 
-    public onPointerDown(event: Event) {
+    public override onPointerDown(event: Event) {
         if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
         }
@@ -78,7 +81,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         });
     }
 
-    public onPointerMove(event: Event) {
+    public override onPointerMove(event: Event) {
         event.preventDefault();
         super.onPointerMove(event);
 
@@ -100,7 +103,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
     }
 
-    public onPointerUp(event: Event) {
+    public override onPointerUp(event: Event) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
             super.onPointerUp(event);
@@ -111,7 +114,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
-    protected createGhost(pageX: number, pageY: number) {
+    protected override createGhost(pageX: number, pageY: number) {
         super.createGhost(pageX, pageY);
 
         this.ghostElement.style.height = null;

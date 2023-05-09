@@ -1,8 +1,10 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren
+    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
+import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
+
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
@@ -11,7 +13,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -26,11 +28,31 @@ import { CellType, GridType, IgxGridMasterDetailContext, IgxGroupByRowSelectorTe
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
-import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { IgxGridDetailsPipe } from './grid.details.pipe';
+import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxGridRowComponent } from './grid-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -76,7 +98,48 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        NgFor,
+        NgStyle,
+        NgTemplateOutlet,
+        IgxGridGroupByAreaComponent,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxGridRowComponent,
+        IgxGridGroupByRowComponent,
+        IgxSummaryRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxRowEditTabStopDirective,
+        IgxGridColumnResizerComponent,
+        IgxGridTransactionPipe,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridAddRowPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxGridGroupingPipe,
+        IgxGridPagingPipe,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridSummaryPipe,
+        IgxGridDetailsPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     /**
@@ -195,12 +258,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxGridGroupByAreaComponent)
-    public groupArea: IgxGridGroupByAreaComponent;
-
-    /**
-     * @hidden @internal
-     */
     @HostBinding('attr.role')
     public role = 'grid';
 
@@ -249,6 +306,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -257,7 +315,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -339,23 +399,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets/Sets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
-    }
-
-    /**
      * Gets/Sets the total number of records in the data source.
      *
      * @remarks
@@ -378,7 +421,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
 
@@ -619,7 +661,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public get hasDetails() {
+    public override get hasDetails() {
         return !!this.detailTemplate;
     }
 
@@ -641,7 +683,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isDetailRecord(record) {
+    public override isDetailRecord(record) {
         return record && record.detailsData !== undefined;
     }
 
@@ -752,7 +794,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const expandedGroup = this.grid.isExpandedGroup(this.groupRow);
      * ```
      */
-    public isExpandedGroup(group: IGroupByRecord): boolean {
+    public override isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
         return state ? state.expanded : this.groupsExpanded;
     }
@@ -820,7 +862,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isGroupByRecord(record: any): boolean {
+    public override isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record && record?.records && record.records?.length &&
          record.expression && record.expression?.fieldName;
@@ -889,7 +931,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public isColumnGrouped(fieldName: string): boolean {
+    public override isColumnGrouped(fieldName: string): boolean {
         return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
     }
 
@@ -971,7 +1013,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         super.ngAfterContentInit();
         if (this.allowFiltering && this.hasColumnLayouts) {
             this.filterMode = FilterMode.excelStyleFilter;
@@ -994,7 +1036,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngAfterViewInit() {
+    public override ngAfterViewInit() {
         super.ngAfterViewInit();
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
@@ -1025,7 +1067,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
         this.trackChanges = (_, rec) => (rec?.detailsData !== undefined ? rec.detailsData : rec);
         this.groupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
@@ -1038,7 +1080,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public ngDoCheck(): void {
+    public override ngDoCheck(): void {
         if (this.groupingDiffer && this._columns && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
             if (changes && this._columns.length > 0) {
@@ -1072,7 +1114,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false): any[] {
+    public override getSelectedData(formatters = false, headers = false): any[] {
         if (this.groupingExpressions.length || this.hasDetails) {
             const source = [];
 
@@ -1216,12 +1258,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
-    public pinRow(rowID: any, index?: number): boolean {
+    public override pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
     }
 
-    public unpinRow(rowID: any): boolean {
+    public override unpinRow(rowID: any): boolean {
         const row = this.getRowByKey(rowID);
         return super.unpinRow(rowID, row);
     }
@@ -1231,10 +1273,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        let rec: any;
 
         const dataIndex = this._getDataViewIndex(index);
-        rec = data ?? this.dataView[dataIndex];
+        const rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);
@@ -1253,7 +1294,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    protected get defaultTargetBodyHeight(): number {
+    protected override get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paginator ? Math.min(allItems, this.perPage) : allItems);
@@ -1262,14 +1303,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    protected getGroupAreaHeight(): number {
+    protected override getGroupAreaHeight(): number {
         return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**
      * @hidden @internal
      */
-    protected scrollTo(row: any | number, column: any | number): void {
+    protected override scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof (row) !== 'number') {
             const rowIndex = this.groupingResult.indexOf(row);

@@ -1,6 +1,5 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../test-utils/grid-samples.spec';
@@ -34,11 +33,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ProductsComponent,
-                ColumnSelectionGroupTestComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            imports: [ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule]
         });
     }));
 

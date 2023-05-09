@@ -10,7 +10,8 @@ import { IgxDirectionality } from '../../services/direction/directionality';
 @Component({
     selector: 'igx-tab-header',
     templateUrl: 'tab-header.component.html',
-    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }]
+    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }],
+    standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
 
@@ -34,10 +35,10 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
 
     /** @hidden @internal */
     constructor(
-        protected tabs: IgxTabsComponent,
+        protected override tabs: IgxTabsComponent,
         tab: IgxTabItemDirective,
         elementRef: ElementRef<HTMLElement>,
-        protected platform: PlatformUtil,
+        platform: PlatformUtil,
         private ngZone: NgZone,
         private dir: IgxDirectionality
     ) {

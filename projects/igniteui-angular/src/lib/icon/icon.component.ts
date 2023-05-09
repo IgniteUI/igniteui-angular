@@ -3,6 +3,7 @@ import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
+import { NgTemplateOutlet } from '@angular/common';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -28,7 +29,9 @@ import { SafeHtml } from '@angular/platform-browser';
  */
 @Component({
     selector: 'igx-icon',
-    templateUrl: 'icon.component.html'
+    templateUrl: 'icon.component.html',
+    standalone: true,
+    imports: [NgTemplateOutlet]
 })
 export class IgxIconComponent implements OnInit, OnDestroy {
     /**

@@ -90,7 +90,9 @@ export const getPackageVersion = (pkg: string): string => {
     let version = null;
     try {
         version = require(path.posix.join(pkg, 'package.json'))?.version;
-    } catch { }
+    } catch {
+        return version;
+    }
 
     return version;
 };
@@ -269,7 +271,7 @@ class SerializerVisitor implements Visitor {
         return ` ${expansionCase.value} {${this._visitAll(expansionCase.expression)}}`;
     }
 
-    private _visitAll(nodes: Node[], join: string = ''): string {
+    private _visitAll(nodes: Node[], join = ''): string {
         if (nodes.length === 0) {
             return '';
         }

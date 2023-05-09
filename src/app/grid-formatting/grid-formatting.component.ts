@@ -1,19 +1,26 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, AsyncPipe } from '@angular/common';
 
-import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
-    IFilteringExpressionsTree, FilteringStrategy, IgxSummaryOperand } from 'igniteui-angular';
+import { Observable } from 'rxjs';
+
 import { RemoteService } from '../shared/remote.service';
 import { data } from '../shared/data';
-import { Observable } from 'rxjs';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxDateSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IFilteringExpressionsTree } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-expressions-tree';
+import { FilteringStrategy } from '../../../projects/igniteui-angular/src/lib/data-operations/filtering-strategy';
 
 const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
 
 @Component({
     selector: 'app-grid-formatting',
-    styleUrls: ['grid-formatting.component.scss'],
-    templateUrl: 'grid-formatting.component.html'
+    templateUrl: 'grid-formatting.component.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, NgFor, AsyncPipe]
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {
 
@@ -133,7 +140,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
         super();
     }
 
-    public operate(summaries?: any[]): IgxSummaryResult[] {
+    public override operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'count') {
                 const count = obj.summaryResult ? Number(obj.summaryResult) : undefined;
@@ -151,7 +158,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
 }
 
 class CustomFilteringStrategy extends FilteringStrategy {
-    public filter(dataa, expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree, grid): any[] {
+    public override filter(dataa, expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree, grid): any[] {
         const res = super.filter(dataa, expressionsTree, advancedExpressionsTree, grid);
         return res;
     }

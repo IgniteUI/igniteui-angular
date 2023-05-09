@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -10,14 +9,13 @@ describe('Badge', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
                 InitBadgeWithIconComponent,
                 IgxBadgeComponent,
                 InitBadgeWithIconARIAComponent
-            ],
-            imports: [IgxIconModule]
+            ]
         }).compileComponents();
     }));
 
@@ -90,22 +88,38 @@ describe('Badge', () => {
     });
 });
 
-@Component({ template: `<igx-badge type="error" value="22"></igx-badge>` })
+@Component({
+    template: `<igx-badge type="error" value="22"></igx-badge>`,
+    standalone: true,
+    imports: [IgxBadgeComponent]
+})
 class InitBadgeComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
-@Component({ template: `<igx-badge></igx-badge>` })
+@Component({
+    template: `<igx-badge></igx-badge>`,
+    standalone: true,
+    imports: [IgxBadgeComponent]
+})
 class InitBadgeWithDefaultsComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
-@Component({ template: `<igx-badge icon="person" type="info"></igx-badge>` })
+@Component({
+    template: `<igx-badge icon="person" type="info"></igx-badge>`,
+    standalone: true,
+    imports: [IgxBadgeComponent]
+})
 class InitBadgeWithIconComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
 
-@Component({ template: `<igx-badge icon="person"></igx-badge>` })
+@Component({
+    template: `<igx-badge icon="person"></igx-badge>`,
+    standalone: true,
+    imports: [IgxBadgeComponent]
+})
 class InitBadgeWithIconARIAComponent {
     @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
 }
