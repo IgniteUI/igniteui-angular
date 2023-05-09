@@ -595,12 +595,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets the list of group rows.
-     *
-     * @example
-     * ```typescript
-     * const groupList = this.grid.groupsRowList;
-     * ```
+     * @hidden @internal
      */
     public get groupsRowList() {
         const res = new QueryList<any>();
