@@ -1,8 +1,15 @@
 import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
+import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
+import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
 
 @Component({
     selector: 'app-hierarchical-grid-add-row-sample',
-    templateUrl: 'hierarchical-grid-add-row.sample.html'
+    templateUrl: 'hierarchical-grid-add-row.sample.html',
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxRowIslandComponent]
 })
 export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
     public localData = [];

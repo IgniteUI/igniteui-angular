@@ -3,20 +3,25 @@ import {
     AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
     Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList, ViewChild
 } from '@angular/core';
+import { getLocaleFirstDayOfWeek } from "@angular/common";
+
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { DateRange } from '../date-range-picker/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE, IgxPrefixDirective, IgxSuffixDirective, IgxInputGroupComponent } from '../input-group/public_api';
 import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxPickerToggleComponent } from './picker-icons.common';
 import { PickerInteractionMode } from './types';
-import { getLocaleFirstDayOfWeek } from "@angular/common";
 import { WEEKDAYS } from '../calendar/calendar';
+import { DateRange } from '../date-range-picker/date-range-picker-inputs.common';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from '../input-group/inputGroupType';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 @Directive()
 export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, AfterContentChecked, OnDestroy {
@@ -314,7 +319,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
                 .pipe(takeUntil(merge(components.changes, this._destroy$)))
                 .subscribe(next);
         });
-    };
+    }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

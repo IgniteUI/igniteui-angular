@@ -1,8 +1,9 @@
-import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, NgZone, Renderer2 } from '@angular/core';
 import { AnimationBuilder, style, animate } from '@angular/animations';
 
 @Directive({
-    selector: '[igxRipple]'
+    selector: '[igxRipple]',
+    standalone: true
 })
 export class IgxRippleDirective {
     /**
@@ -170,8 +171,4 @@ export class IgxRippleDirective {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxRippleDirective],
-    exports: [IgxRippleDirective]
-})
-export class IgxRippleModule { }
+

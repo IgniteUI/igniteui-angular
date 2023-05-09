@@ -4,7 +4,8 @@ import { IgxColumnActionsBaseDirective, IgxColumnActionsComponent, IgxColumnComp
 
 
 @Directive({
-    selector: '[appColumnGrouping]'
+    selector: '[appColumnGrouping]',
+    standalone: true
 })
 export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
 

@@ -75,19 +75,6 @@ export class IgxGridCell implements CellType {
     }
 
     /**
-     * Gets the validation status and errors, if any.
-     * ```typescript
-     * let validation = this.cell.validation;
-     * let errors = validation.errors;
-     * ```
-     */
-
-    public get validation(): IGridValidationState {
-        const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
-        return { status: form?.status as ValidationStatus || 'VALID', errors: form?.errors } as const;
-    }
-
-    /**
      * Sets the current edit value while a cell is in edit mode.
      * Only for cell editing mode.
      * ```typescript
@@ -100,6 +87,19 @@ export class IgxGridCell implements CellType {
         if (this.isCellInEditMode()) {
             this.grid.crudService.cell.editValue = value;
         }
+    }
+
+    /**
+     * Gets the validation status and errors, if any.
+     * ```typescript
+     * let validation = this.cell.validation;
+     * let errors = validation.errors;
+     * ```
+     */
+
+    public get validation(): IGridValidationState {
+        const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
+        return { status: form?.status as ValidationStatus || 'VALID', errors: form?.errors } as const;
     }
 
     /**

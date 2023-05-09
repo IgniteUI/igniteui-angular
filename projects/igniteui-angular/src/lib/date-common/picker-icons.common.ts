@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter, HostListener, NgModule, Directive, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef } from '@angular/core';
 
 /**
  * Templates the default toggle icon in the picker.
@@ -17,7 +16,8 @@ import { Component, Output, EventEmitter, HostListener, NgModule, Directive, Tem
  */
 @Component({
     template: `<ng-content></ng-content>`,
-    selector: 'igx-picker-toggle'
+    selector: 'igx-picker-toggle',
+    standalone: true
 })
 export class IgxPickerToggleComponent {
     @Output()
@@ -47,7 +47,8 @@ export class IgxPickerToggleComponent {
  */
 @Component({
     template: `<ng-content></ng-content>`,
-    selector: 'igx-picker-clear'
+    selector: 'igx-picker-clear',
+    standalone: true
 })
 export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
 
@@ -58,25 +59,10 @@ export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
  *
  */
 @Directive({
-    selector: '[igxPickerActions]'
+    selector: '[igxPickerActions]',
+    standalone: true
 })
 export class IgxPickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-
-/** @hidden */
-@NgModule({
-    declarations: [
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
-        IgxPickerActionsDirective
-    ],
-    imports: [CommonModule],
-    exports: [
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
-        IgxPickerActionsDirective
-    ]
-})
-export class IgxPickersCommonModule { }

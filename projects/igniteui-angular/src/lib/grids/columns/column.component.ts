@@ -29,7 +29,7 @@ import {
     IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { CellType, ColumnType, GridType, IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateContext, IGX_GRID_BASE } from '../common/grid.interface';
@@ -72,7 +72,8 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnType {
     /**
@@ -473,8 +474,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
 
-    public autoSize: number;
-
     /**
      * Sets the `width` of the column.
      * ```html
@@ -508,6 +507,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             this.widthChange.emit(this._width);
         }
     }
+
+    public autoSize: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -1393,6 +1394,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let col = this;
         let vIndex = -1;
 
@@ -1419,6 +1421,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this._vIndex = vIndex;
         return vIndex;
     }
+
     /**
      * Returns a boolean indicating if the column is a `ColumnGroup`.
      * ```typescript

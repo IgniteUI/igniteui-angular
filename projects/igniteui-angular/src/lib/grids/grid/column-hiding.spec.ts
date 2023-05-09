@@ -2,7 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -15,7 +14,6 @@ import { SortingDirection } from '../../data-operations/sorting-strategy';
 
 describe('Column Hiding UI #grid', () => {
 
-
     let fix: ComponentFixture<ColumnHidingTestComponent>;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnActionsComponent;
@@ -27,13 +25,10 @@ describe('Column Hiding UI #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnHidingTestComponent,
-                ColumnGroupsHidingTestComponent
-            ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule
+                ColumnHidingTestComponent,
+                ColumnGroupsHidingTestComponent
             ]
         });
     }));
@@ -528,7 +523,7 @@ describe('Column Hiding UI #grid', () => {
             let fixEl = fix.nativeElement; let gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-grid-row');
-            let paging = fixEl.querySelector('.igx-paginator');
+            const paging = fixEl.querySelector('.igx-paginator');
             let rowSelectors = gridEl.querySelector('.igx-grid__cbx-padding > igx-checkbox');
             let dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             let verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');

@@ -1,19 +1,22 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-    selector: '[igxCarouselIndicator]'
+    selector: '[igxCarouselIndicator]',
+    standalone: true
 })
 export class IgxCarouselIndicatorDirective {
 }
 
 @Directive({
-    selector: '[igxCarouselNextButton]'
+    selector: '[igxCarouselNextButton]',
+    standalone: true
 })
 export class IgxCarouselNextButtonDirective {
 }
 
 @Directive({
-    selector: '[igxCarouselPrevButton]'
+    selector: '[igxCarouselPrevButton]',
+    standalone: true
 })
 export class IgxCarouselPrevButtonDirective {
 }
