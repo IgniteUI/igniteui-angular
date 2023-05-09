@@ -56,10 +56,6 @@
 @mixin paginator($theme) {
     @include css-vars($theme);
 
-    igx-paginator {
-        @include sizable();
-    }
-
     $paginator-padding-inline: (
         comfortable: rem(24px),
         cosy: rem(16px),
@@ -92,6 +88,10 @@
         &:empty {
             padding: 0;
         }
+    }
+
+    %igx-paginator--sizable {
+        @include sizable();
     }
 
     %igx-paginator--cosy {
