@@ -3,53 +3,58 @@ import { GridType, IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateCon
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEdit]'
+    selector: '[igxRowEdit]',
+    standalone: true
 })
 export class IgxRowEditTemplateDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
         context: unknown): context is IgxGridRowEditTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEditText]'
+    selector: '[igxRowEditText]',
+    standalone: true
 })
 export class IgxRowEditTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
         context: unknown): context is IgxGridRowEditTextTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowAddText]'
+    selector: '[igxRowAddText]',
+    standalone: true
 })
 export class IgxRowAddTextDirective {
     public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
         context: unknown): context is IgxGridEmptyTemplateContext { 
         return true;
-    };
+    }
  }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxRowEditActions]'
+    selector: '[igxRowEditActions]',
+    standalone: true
 })
 export class IgxRowEditActionsDirective {
     public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
         context: unknown): context is IgxGridRowEditActionsTemplateContext { 
         return true;
-    };
+    }
  }
 
 
 // TODO: Refactor circular ref, deps and logic
 /** @hidden @internal */
 @Directive({
-    selector: `[igxRowEditTabStop]`
+    selector: `[igxRowEditTabStop]`,
+    standalone: true
 })
 export class IgxRowEditTabStopDirective {
     private currentCellIndex: number;

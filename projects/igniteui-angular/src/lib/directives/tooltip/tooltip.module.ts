@@ -1,17 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IgxOverlayService } from '../../services/overlay/overlay';
-import { IgxTooltipTargetDirective } from './tooltip-target.directive';
-import { IgxTooltipComponent } from './tooltip.component';
-import { IgxTooltipDirective } from './tooltip.directive';
+import { IGX_TOOLTIP_DIRECTIVES } from './public_api';
 
 /**
  * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
  */
  @NgModule({
-    declarations: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxTooltipComponent],
-    exports: [IgxTooltipDirective, IgxTooltipTargetDirective],
-    imports: [CommonModule],
-    providers: [IgxOverlayService]
+    imports: [...IGX_TOOLTIP_DIRECTIVES],
+    exports: [...IGX_TOOLTIP_DIRECTIVES]
 })
 export class IgxTooltipModule { }

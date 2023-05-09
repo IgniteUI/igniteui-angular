@@ -1,16 +1,16 @@
+import { AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform } from '@angular/core';
+import { getLocaleFirstDayOfWeek, NgIf, NgFor, NgTemplateOutlet, NgClass, DatePipe } from '@angular/common';
+import { Inject } from '@angular/core';
 import {
-    AfterViewInit, ContentChild, EventEmitter, LOCALE_ID, Optional, Output, Pipe, PipeTransform, Inject,
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding, NgModule
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, HostBinding
 } from '@angular/core';
 import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-
 import { editor } from '@igniteui/material-icons-extended';
-import { IButtonGroupEventArgs, IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
+import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxChipComponent } from '../chips/chip.component';
-import { IgxChipsModule } from '../chips/chips.module';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IQueryBuilderResourceStrings } from '../core/i18n/query-builder-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { PlatformUtil } from '../core/utils';
@@ -19,20 +19,25 @@ import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteri
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree, IExpressionTree } from '../data-operations/filtering-expressions-tree';
 import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
-import { IgxDatePickerModule } from '../date-picker/date-picker.module';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDateTimeEditorModule } from '../directives/date-time-editor/date-time-editor.directive';
-import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/date-time-editor.directive';
+
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FieldType } from '../grids/common/grid.interface';
-import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxIconService } from '../icon/icon.service';
 import { IgxSelectComponent } from '../select/select.component';
-import { IgxSelectModule } from '../select/select.module';
 import { HorizontalAlignment, OverlaySettings, Point, VerticalAlignment } from '../services/overlay/utilities';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, CloseScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
-import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
+import { IgxTimePickerComponent } from '../time-picker/time-picker.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
+import { IgxPickerToggleComponent, IgxPickerClearComponent } from '../date-common/picker-icons.common';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxSelectItemComponent } from '../select/select-item.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxIconComponent } from '../icon/icon.component';
 
 const DEFAULT_PIPE_DATE_FORMAT = 'mediumDate';
 const DEFAULT_PIPE_TIME_FORMAT = 'mediumTime';
@@ -41,7 +46,10 @@ const DEFAULT_PIPE_DIGITS_INFO = '1.0-3';
 const DEFAULT_DATE_TIME_FORMAT = 'dd/MM/yyyy HH:mm:ss tt';
 const DEFAULT_TIME_FORMAT = 'hh:mm:ss tt';
 
-@Pipe({ name: 'fieldFormatter' })
+@Pipe({
+    name: 'fieldFormatter',
+    standalone: true
+})
 export class IgxFieldFormatterPipe implements PipeTransform {
 
     public transform(value: any, formatter: (v: any, data: any, fieldData?: any) => any, rowData: any, fieldData?: any) {
@@ -108,6 +116,8 @@ class ExpressionOperandItem extends ExpressionItem {
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
+    standalone: true,
+    imports: [NgIf, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxIconComponent, IgxChipComponent, IgxPrefixDirective, IgxSuffixDirective, IgxSelectComponent, FormsModule, NgFor, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, NgTemplateOutlet, NgClass, IgxToggleDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, DatePipe, IgxFieldFormatterPipe]
 })
 export class IgxQueryBuilderComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
     /**
@@ -1203,28 +1213,4 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxFieldFormatterPipe],
-    exports: [IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxButtonGroupModule,
-        IgxDatePickerModule,
-        IgxDateTimeEditorModule,
-        IgxInputGroupModule,
-        IgxTimePickerModule,
-        IgxChipsModule,
-        IgxDragDropModule,
-        IgxIconModule,
-        IgxSelectModule,
-        IgxToggleModule
-    ]
-})
-export class IgxQueryBuilderModule { }
 

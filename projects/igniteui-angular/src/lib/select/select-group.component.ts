@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxDropDownGroupComponent } from '../drop-down/public_api';
+import { IgxDropDownGroupComponent } from '../drop-down/drop-down-group.component';
 
 /**
  * The `<igx-select-item>` is a container intended for row items in
@@ -10,7 +10,8 @@ import { IgxDropDownGroupComponent } from '../drop-down/public_api';
     template: `
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-select-item"></ng-content>
-    `
+    `,
+    standalone: true
 })
 export class IgxSelectGroupComponent extends IgxDropDownGroupComponent {
 }

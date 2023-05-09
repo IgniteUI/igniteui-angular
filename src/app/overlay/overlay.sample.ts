@@ -12,14 +12,26 @@ import {
     ElasticPositionStrategy,
     IgxDragDirective,
     ContainerPositionStrategy,
-    IAnimationParams
+    IAnimationParams,
+    IgxRadioComponent,
+    IgxSwitchComponent,
+    IgxInputGroupComponent,
+    IgxInputDirective,
+    IgxLabelDirective,
+    IgxButtonDirective,
+    IgxRippleDirective,
+    IgxDropDownItemComponent
 } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
+    standalone: true,
+    imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

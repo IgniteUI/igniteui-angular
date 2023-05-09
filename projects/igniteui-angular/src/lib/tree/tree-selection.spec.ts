@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { EventEmitter, QueryList } from '@angular/core';
-import { IgxTreeComponent, IgxTreeModule } from './tree.component';
+import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
 import { IgxTree, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
@@ -16,11 +16,11 @@ describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeSimpleComponent,
                 IgxTreeSelectionSampleComponent
-            ],
-            imports: [IgxTreeModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 
@@ -596,7 +596,7 @@ describe('IgxTree - Selection #treeView', () => {
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const navService = new IgxTreeNavigationService(treeService, selectionService);
-        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);;
+        const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);
         const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
             { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
                 find: () => true

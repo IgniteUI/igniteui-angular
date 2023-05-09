@@ -4,12 +4,15 @@ import { takeUntil } from 'rxjs/operators';
 import { LocalService } from '../shared/local.service';
 import { ControllerComponent } from './controllers.component';
 import { GridFinJSComponent } from './grid-finjs.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     providers: [LocalService],
     selector: 'app-finjs-main',
     styleUrls: ['./main.component.scss'],
-    templateUrl: './main.component.html'
+    templateUrl: './main.component.html',
+    standalone: true,
+    imports: [ControllerComponent, GridFinJSComponent, AsyncPipe]
 })
 export class MainComponent implements OnDestroy {
     @ViewChild('grid', { static: true }) public finGrid: GridFinJSComponent;

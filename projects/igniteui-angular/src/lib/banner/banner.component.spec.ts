@@ -1,15 +1,13 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxAvatarModule } from '../avatar/avatar.component';
-import { IgxBannerComponent, IgxBannerModule } from './banner.component';
-import { IgxCardModule } from '../card/card.component';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
+import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxBannerActionsDirective } from './banner.directives';
+import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from '../card/card.component';
+import { IgxAvatarComponent } from '../avatar/avatar.component';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_EXPANSION_PANEL_BODY = 'igx-expansion-panel__body';
@@ -18,7 +16,6 @@ const CSS_CLASS_BANNER_MESSAGE = 'igx-banner__message';
 const CSS_CLASS_BANNER_ILLUSTRATION = 'igx-banner__illustration';
 const CSS_CLASS_BANNER_TEXT = 'igx-banner__text';
 const CSS_CLASS_BANNER_ACTIONS = 'igx-banner__actions';
-const CSS_CLASS_BANNER_ROW = 'igx-banner__row';
 
 describe('igxBanner', () => {
     let bannerElement: DebugElement = null;
@@ -30,22 +27,13 @@ describe('igxBanner', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxBannerEmptyComponent,
                 IgxBannerOneButtonComponent,
                 IgxBannerSampleComponent,
                 IgxBannerCustomTemplateComponent,
                 SimpleBannerEventsComponent
-            ],
-            imports: [
-                IgxBannerModule,
-                IgxExpansionPanelModule,
-                NoopAnimationsModule,
-                IgxRippleModule,
-                IgxButtonModule,
-                IgxAvatarModule,
-                IgxCardModule,
-                IgxIconModule
             ]
         }).compileComponents();
     }));
@@ -503,7 +491,9 @@ describe('igxBanner', () => {
         <div id="wrapper" style = "width:900px">
             <igx-banner></igx-banner>
         </div>
-        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
+        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    standalone: true,
+    imports: [ IgxBannerComponent ]
 })
 export class IgxBannerEmptyComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -521,7 +511,9 @@ export class IgxBannerEmptyComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
-    `
+    `,
+    standalone: true,
+    imports: [ IgxBannerComponent, IgxBannerActionsDirective ]
 })
 export class IgxBannerOneButtonComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -541,7 +533,9 @@ export class IgxBannerOneButtonComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
-    `
+    `,
+    standalone: true,
+    imports: [ IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent ]
 })
 export class IgxBannerSampleComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -566,13 +560,15 @@ export class IgxBannerSampleComponent {
                         <p class="igx-card-content__text">Brad Stanley has requested to follow you.</p>
                     </igx-card-content>
                 </igx-card>
-                <igx-banner-actions >
+                <igx-banner-actions>
                     <button igxButton igxRipple >Dismiss</button>
                     <button igxButton igxRipple >Approve</button>
                 </igx-banner-actions>
             </igx-banner>
         </div>
-        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
+        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    standalone: true,
+    imports: [ IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent ]
 })
 export class IgxBannerCustomTemplateComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
@@ -584,7 +580,9 @@ export class IgxBannerCustomTemplateComponent {
         <div id="wrapper" style = "width:900px">
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
-        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
+        <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    standalone: true,
+    imports: [ IgxBannerComponent ]
 })
 export class SimpleBannerEventsComponent {
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })

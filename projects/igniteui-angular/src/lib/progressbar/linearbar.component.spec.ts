@@ -17,8 +17,8 @@ describe('IgxLinearBar', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxLinearProgressBarComponent]
-        })
+    imports: [IgxLinearProgressBarComponent]
+})
         .compileComponents();
     }));
 
@@ -238,7 +238,7 @@ describe('IgxLinearBar', () => {
     });
 
     it('Value should not exceed the max limit when max limit is set to 0', () => {
-        let value = 10;
+        const value = 10;
         const max = 0;
 
         expect(progress.value).toBe(0);

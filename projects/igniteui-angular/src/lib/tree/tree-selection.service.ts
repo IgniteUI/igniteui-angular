@@ -5,7 +5,7 @@ import { IgxTree, IgxTreeNode, IgxTreeSelectionType, ITreeNodeSelectionEvent } f
 interface CascadeSelectionNodeCollection {
     nodes: Set<IgxTreeNode<any>>;
     parents: Set<IgxTreeNode<any>>;
-};
+}
 
 /** @hidden @internal */
 @Injectable()

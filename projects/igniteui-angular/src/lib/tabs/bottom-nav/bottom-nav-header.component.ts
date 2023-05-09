@@ -5,7 +5,8 @@ import { IgxTabHeaderBase } from '../tabs.base';
 @Component({
     selector: 'igx-bottom-nav-header',
     templateUrl: 'bottom-nav-header.component.html',
-    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxBottomNavHeaderComponent }]
+    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxBottomNavHeaderComponent }],
+    standalone: true
 })
 export class IgxBottomNavHeaderComponent extends IgxTabHeaderDirective {
 

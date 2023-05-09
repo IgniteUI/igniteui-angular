@@ -1,5 +1,4 @@
 ﻿import { TestBed, fakeAsync } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,6 +10,9 @@ import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
+import { NgFor } from '@angular/common';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
@@ -19,13 +21,10 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                ColumnLayoutTestComponent,
-                ColumnLayoutAndGroupsTestComponent
-            ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule
+                ColumnLayoutTestComponent,
+                ColumnLayoutAndGroupsTestComponent
             ]
         });
     }));
@@ -92,7 +91,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        let gridFirstRow = grid.rowList.first;
+        const gridFirstRow = grid.rowList.first;
 
         // headers are aligned to cells
         GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
@@ -1144,7 +1143,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1180,7 +1181,9 @@ export class ColumnLayoutTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, NgFor]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {
 

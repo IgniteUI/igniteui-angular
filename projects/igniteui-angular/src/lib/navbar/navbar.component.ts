@@ -1,27 +1,28 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
     Component,
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     Output,
     Directive,
     ContentChild
 } from '@angular/core';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/public_api';
+
+import { IgxIconComponent } from '../icon/icon.component';
 
 /**
  * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
  */
 @Directive({
-    selector: 'igx-navbar-action,[igxNavbarAction]'
+    selector: 'igx-navbar-action,[igxNavbarAction]',
+    standalone: true
 })
 export class IgxNavbarActionDirective { }
 
 @Directive({
-    selector: 'igx-navbar-title,[igxNavbarTitle]'
+    selector: 'igx-navbar-title,[igxNavbarTitle]',
+    standalone: true
 })
 export class IgxNavbarTitleDirective { }
 
@@ -52,7 +53,9 @@ let NEXT_ID = 0;
             width: 100%;
         }
     `
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, IgxIconComponent]
 })
 
 export class IgxNavbarComponent {
@@ -160,13 +163,3 @@ export class IgxNavbarComponent {
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective],
-    exports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective],
-    imports: [IgxButtonModule, IgxIconModule, CommonModule]
-})
-export class IgxNavbarModule {
-}
