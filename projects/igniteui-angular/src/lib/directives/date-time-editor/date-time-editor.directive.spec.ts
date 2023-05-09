@@ -1,4 +1,4 @@
-import { IgxDateTimeEditorDirective, IgxDateTimeEditorModule } from './date-time-editor.directive';
+import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
 import { DOCUMENT, formatDate } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
@@ -6,7 +6,7 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
+import { IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -19,11 +19,6 @@ describe('IgxDateTimeEditor', () => {
             ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
-        const _ngModel = {
-            control: { touched: false, dirty: false, validator: null, setValue: () => { } },
-            valid: false,
-            statusChanges: new EventEmitter(),
-        };
         let elementRef = { nativeElement: null };
         let inputFormat: string;
         let inputDate: string;
@@ -369,14 +364,13 @@ describe('IgxDateTimeEditor', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
+                    imports: [
+                        NoopAnimationsModule,
                         IgxDateTimeEditorSampleComponent,
                         IgxDateTimeEditorBaseTestComponent,
                         IgxDateTimeEditorShadowDomComponent
-                    ],
-                    imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule, NoopAnimationsModule]
-                })
-                    .compileComponents();
+                    ]
+                }).compileComponents();
             }));
             beforeEach(async () => {
                 fixture = TestBed.createComponent(IgxDateTimeEditorSampleComponent);
@@ -1117,15 +1111,9 @@ describe('IgxDateTimeEditor', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDateTimeEditorFormComponent
-                    ],
                     imports: [
-                        IgxInputGroupModule,
-                        IgxDateTimeEditorModule,
                         NoopAnimationsModule,
-                        ReactiveFormsModule,
-                        FormsModule
+                        IgxDateTimeEditorFormComponent
                     ]
                 }).compileComponents();
             }));
@@ -1211,7 +1199,9 @@ describe('IgxDateTimeEditor', () => {
     <igx-input-group>
         <input igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [value]="date"/>
     </igx-input-group>
-    `
+    `,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorBaseTestComponent {
     @ViewChild(IgxDateTimeEditorDirective)
@@ -1221,14 +1211,16 @@ export class IgxDateTimeEditorBaseTestComponent {
 
 @Component({
     template: `
-<igx-input-group #igxInputGroup>
+    <igx-input-group #igxInputGroup>
         <input type="text" igxInput [disabled]="disabled" [readonly]="readonly"
             [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat" [placeholder]="placeholder"
             [(ngModel)]="date" [minValue]="minDate" [maxValue]="maxDate" [promptChar]="promptChar"/>
     </igx-input-group>
 
     <input [(ngModel)]="placeholder" />
-`
+`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class IgxDateTimeEditorSampleComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -1251,7 +1243,9 @@ export class IgxDateTimeEditorSampleComponent {
         igxInput [igxDateTimeEditor]="dateTimeFormat" [minValue]="minDate" [maxValue]="maxDate"/>
     </igx-input-group>
 </form>
-`
+`,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, ReactiveFormsModule]
 })
 class IgxDateTimeEditorFormComponent {
     @ViewChild('dateEditor', { read: IgxInputDirective, static: true })
@@ -1279,10 +1273,12 @@ class IgxDateTimeEditorFormComponent {
 @Component({
     template: `
         <igx-input-group>
-        	<label igxLabel>Choose Date</label>
-        	<input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
+            <label igxLabel>Choose Date</label>
+            <input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
         </igx-input-group>`,
-    encapsulation: ViewEncapsulation.ShadowDom
+    encapsulation: ViewEncapsulation.ShadowDom,
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorShadowDomComponent {
     public dateTimeFormat = 'dd/MM/yyyy hh:mm:ss';

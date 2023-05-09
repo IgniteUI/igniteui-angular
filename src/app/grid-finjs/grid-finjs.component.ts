@@ -10,6 +10,22 @@ import {
     SortingDirection
 } from 'igniteui-angular';
 import { Contract, REGIONS } from '../shared/financialData';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { IgxFocusDirective } from '../../../projects/igniteui-angular/src/lib/directives/focus/focus.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
     dir: SortingDirection.Desc,
@@ -34,7 +50,9 @@ const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
 @Component({
     selector: 'app-finjs-grid',
     styleUrls: ['./grid-finjs.component.scss'],
-    templateUrl: './grid-finjs.component.html'
+    templateUrl: './grid-finjs.component.html',
+    standalone: true,
+    imports: [IgxGridComponent_1, NgIf, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarExporterComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, IgxSelectComponent, FormsModule, IgxFocusDirective, NgFor, IgxSelectItemComponent, IgxCellTemplateDirective, IgxIconComponent, IgxButtonDirective, IgxRippleDirective, CurrencyPipe]
 })
 export class GridFinJSComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;

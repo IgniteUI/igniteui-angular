@@ -1,11 +1,9 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './public_api';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
-import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
@@ -28,6 +26,7 @@ import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IPinningConfig } from '../public_api';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -37,15 +36,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 PinningComponent,
                 PinOnInitAndSelectionComponent,
                 GridFeaturesComponent,
                 MultiColumnHeadersWithGroupingComponent,
                 GridPinningMRLComponent
-
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+            ]
         }).compileComponents();
     }))
 

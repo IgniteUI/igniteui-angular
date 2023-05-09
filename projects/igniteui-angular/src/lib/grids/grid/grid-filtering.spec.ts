@@ -3,7 +3,6 @@ import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips/public_api';
 import {
@@ -24,12 +23,9 @@ import { ExpressionUI } from '../filtering/excel-style/common';
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringComponent
-            ],
             imports: [
-                NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridFilteringComponent, NoopAnimationsModule
+            ]
         });
     }));
 
@@ -1152,12 +1148,10 @@ describe('IgxGrid - Filtering actions #grid', () => {
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxGridFilteringBindingComponent
-            ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridFilteringBindingComponent
+            ]
         });
     }));
 

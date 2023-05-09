@@ -3,7 +3,10 @@ import { ColumnType } from '../common/grid.interface';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
-@Directive({ selector: '[igxColumnPinning]' })
+@Directive({
+    selector: '[igxColumnPinning]',
+    standalone: true
+})
 export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
 
     constructor(

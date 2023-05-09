@@ -7,12 +7,17 @@ import {
     HorizontalAlignment
 } from 'igniteui-angular';
 import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxToggleDirective as IgxToggleDirective_1 } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-animation-sample',
     templateUrl: './overlay-animation.sample.html',
-    styleUrls: ['overlay-animation.sample.scss']
+    styleUrls: ['overlay-animation.sample.scss'],
+    standalone: true,
+    imports: [IgxAvatarComponent, IgxToggleDirective_1, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective]
 })
 export class OverlayAnimationSampleComponent {
     @ViewChild('audiToggle', { static: true }) public audiToggle: IgxToggleDirective;

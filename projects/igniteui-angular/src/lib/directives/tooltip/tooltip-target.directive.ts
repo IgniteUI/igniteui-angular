@@ -39,6 +39,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
  @Directive({
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]',
+    standalone: true
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
     /**

@@ -1,12 +1,25 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxDialogComponent, slideOutBottom, slideInTop,
-    PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
+
+import { IgxDialogTitleDirective, IgxDialogActionsDirective } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.directives';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
+import { slideInTop, slideOutBottom } from '../../../projects/igniteui-angular/src/lib/animations/slide';
 
 @Component({
     selector: 'app-dialog-sample',
     styleUrls: ['dialog.sample.scss'],
-    templateUrl: 'dialog.sample.html'
+    templateUrl: 'dialog.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 export class DialogSampleComponent implements OnInit {
 

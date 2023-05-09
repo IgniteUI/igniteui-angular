@@ -1,31 +1,20 @@
-import { CommonModule } from '@angular/common';
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, OnDestroy,
-    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener, AfterContentChecked
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy,
+    Optional, Inject, Injector, ViewChild, Input, Output, EventEmitter, HostListener
 } from '@angular/core';
-import {
-    IgxComboItemDirective,
-    IgxComboEmptyDirective,
-    IgxComboHeaderItemDirective,
-    IgxComboHeaderDirective,
-    IgxComboFooterDirective,
-    IgxComboAddItemDirective,
-    IgxComboToggleIconDirective,
-    IgxComboClearIconDirective
-} from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
+
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { IgxSelectionAPIService } from '../core/selection';
 import { IBaseEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/public_api';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxIconService } from '../icon/icon.service';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
@@ -34,10 +23,11 @@ import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
-import {
-    IgxInputGroupType,
-    IGX_INPUT_GROUP_TYPE
-} from '../input-group/public_api';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
 
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
@@ -108,10 +98,30 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        NgClass,
+        FormsModule,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxSuffixDirective,
+        IgxIconComponent,
+        IgxComboDropDownComponent,
+        IgxDropDownItemNavigationDirective,
+        IgxForOfDirective,
+        IgxComboItemComponent,
+        IgxComboAddItemComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxComboFilteringPipe,
+        IgxComboGroupingPipe
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
-    OnDestroy, EditorProvider, AfterContentChecked {
+    OnDestroy, EditorProvider {
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `opened` event is called
@@ -449,56 +459,3 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return value;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxComboAddItemComponent,
-        IgxComboAddItemDirective,
-        IgxComboClearIconDirective,
-        IgxComboComponent,
-        IgxComboDropDownComponent,
-        IgxComboEmptyDirective,
-        IgxComboFilteringPipe,
-        IgxComboFooterDirective,
-        IgxComboGroupingPipe,
-        IgxComboHeaderDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboItemComponent,
-        IgxComboItemDirective,
-        IgxComboToggleIconDirective
-    ],
-    exports: [
-        IgxComboAddItemComponent,
-        IgxComboAddItemDirective,
-        IgxComboClearIconDirective,
-        IgxComboComponent,
-        IgxComboDropDownComponent,
-        IgxComboEmptyDirective,
-        IgxComboFilteringPipe,
-        IgxComboFooterDirective,
-        IgxComboGroupingPipe,
-        IgxComboHeaderDirective,
-        IgxComboHeaderItemDirective,
-        IgxComboItemComponent,
-        IgxComboItemDirective,
-        IgxComboToggleIconDirective,
-        IgxInputGroupModule
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxCheckboxModule,
-        IgxDropDownModule,
-        IgxForOfModule,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxRippleModule,
-        IgxToggleModule,
-        ReactiveFormsModule
-    ]
-})
-export class IgxComboModule { }

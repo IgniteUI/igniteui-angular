@@ -16,7 +16,8 @@ import { Direction, IgxSlideComponentBase } from './carousel-base';
  */
 @Component({
     selector: 'igx-slide',
-    templateUrl: 'slide.component.html'
+    templateUrl: 'slide.component.html',
+    standalone: true
 })
 
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {

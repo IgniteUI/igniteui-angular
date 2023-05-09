@@ -229,7 +229,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
     }
 
     public override filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
-        let records = this.filterTreeDataByExpressions(expressionsTree);
+        const records = this.filterTreeDataByExpressions(expressionsTree);
         const data = [];
 
         this.getFlatDataFromFilteredRecords(records, data);

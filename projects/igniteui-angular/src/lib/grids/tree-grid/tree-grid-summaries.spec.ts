@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './public_api';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridSummariesComponent,
     IgxTreeGridSummariesKeyComponent,
@@ -24,17 +23,15 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxTreeGridCustomSummariesComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridSummariesScrollingComponent,
                 IgxTreeGridSummariesKeyScroliingComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
+            ]
         }).compileComponents();
     }));
 
