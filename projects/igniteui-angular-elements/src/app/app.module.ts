@@ -7,7 +7,6 @@ import {
     IgxColumnComponent,
     IgxColumnGroupComponent,
     IgxColumnLayoutComponent,
-    IgxGridColumnModule,
     IgxGridComponent,
     IgxGridEditingActionsComponent,
     IgxGridPinningActionsComponent,

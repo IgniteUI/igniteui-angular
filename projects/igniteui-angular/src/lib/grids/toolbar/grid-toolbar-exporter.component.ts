@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
+import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
 import {
     CsvFileTypes,
     IgxBaseExporter,

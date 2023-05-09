@@ -89,7 +89,6 @@ import { IgxTemplateOutletDirective } from '../../directives/template-outlet/tem
 import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
 import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
 import { IgxGridBodyDirective } from '../grid.common';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
