@@ -933,18 +933,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return row;
     }
 
-    /**
-     * Returns if the `IgxTreeGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
-    public get hasGroupableColumns(): boolean {
-        return this.columns.some((col) => col.groupable && !col.columnGroup);
-    }
-
     protected override generateDataFields(data: any[]): string[] {
         return super.generateDataFields(data).filter(field => field !== this.childDataKey);
     }
