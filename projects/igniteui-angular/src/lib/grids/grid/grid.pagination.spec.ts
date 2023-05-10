@@ -87,7 +87,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             paginator.paginate(2);
 
             fix.detectChanges();
-            debugger;
 
             expect(paginator.pagingDone.emit).toHaveBeenCalled();
             verifyGridPager(fix, 3, '7', '3\xA0of\xA04', []);
