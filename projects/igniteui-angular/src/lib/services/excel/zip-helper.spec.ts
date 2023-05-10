@@ -176,7 +176,7 @@ export class ZipFiles {
         }
     }
 
-    public static createExpectedXML(xmlFile: ExcelFileTypes, currentData = '', hasValues = true, isHGrid: boolean = false): any {
+    public static createExpectedXML(xmlFile: ExcelFileTypes, currentData = '', hasValues = true, isHGrid = false): any {
         let resultXml;
         switch (xmlFile) {
             case ExcelFileTypes.RootRelsFile:

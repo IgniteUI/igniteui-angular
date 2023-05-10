@@ -1,6 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -8,13 +7,12 @@ import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxComboComponent, IgxComboModule } from '../../combo/public_api';
-import { IgxFocusModule } from '../../directives/focus/focus.directive';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
-import { IgxInputGroupModule } from '../../input-group/public_api';
+import { IgxComboComponent } from '../../combo/public_api';
 import { IGridEditEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxColumnComponent } from '../public_api';
+import { IgxCellEditorTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
+import { FormsModule } from '@angular/forms';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -128,7 +126,9 @@ const DATA2 = [
 ];
 
 @Component({
-    template: `<igx-grid></igx-grid>`
+    template: `<igx-grid></igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent]
 })
 class NestedPropertiesGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -145,7 +145,9 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.address.zip' header='ZIP' editable='true' dataType='number'></igx-column>
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>
-    </igx-grid>`
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 class NestedPropertiesGrid2Component {
     @ViewChild('grid', { static: true, read: IgxGridComponent })
@@ -153,10 +155,10 @@ class NestedPropertiesGrid2Component {
 }
 
 @Component({
-    template: `<igx-grid #grid [autoGenerate]='false'>
+    template: `<igx-grid #grid [autoGenerate]="false">
         <igx-column field='id' header='ID' dataType='number'></igx-column>
-        <igx-column field='productName' header='Product Name' editable='true' dataType='string'></igx-column>
-        <igx-column field='locations' header='Available At' [editable]='true' width='220px'>
+        <igx-column field='productName' header='Product Name' [editable]="true" dataType='string'></igx-column>
+        <igx-column field='locations' header='Available At' [editable]="true" width='220px'>
             <ng-template igxCell let-cell='cell'>
                 {{ parseArray(cell.value) }}
             </ng-template>
@@ -164,7 +166,9 @@ class NestedPropertiesGrid2Component {
                 <igx-combo type='line' [(ngModel)]='cell.editValue' [data]='locations' [displayKey]="'shop'" width='220px'></igx-combo>
             </ng-template>
         </igx-column>
-    </igx-grid>`
+    </igx-grid>`,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent, FormsModule]
 })
 class NestedPropertyGridComponent {
     @ViewChild('grid', { static: true, read: IgxGridComponent })
@@ -210,8 +214,7 @@ describe('Grid - nested data source properties #grid', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [NestedPropertiesGridComponent],
-                imports: [IgxGridModule, NoopAnimationsModule]
+                imports: [NoopAnimationsModule, NestedPropertiesGridComponent]
             });
         }));
 
@@ -343,8 +346,7 @@ describe('Grid nested data advanced editing #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [NestedPropertiesGrid2Component],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, NestedPropertiesGrid2Component]
         });
     }));
 
@@ -502,9 +504,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [NestedPropertyGridComponent],
-            imports: [IgxGridModule, IgxComboModule, FormsModule, IgxToggleModule,
-                ReactiveFormsModule, IgxFocusModule, IgxInputGroupModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, NestedPropertyGridComponent]
         });
     }));
 

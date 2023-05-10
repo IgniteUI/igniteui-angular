@@ -1,12 +1,10 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridRowSelectionComponent,
@@ -14,7 +12,6 @@ import {
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
-import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { QueryList } from '@angular/core';
@@ -32,18 +29,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxHierarchicalGridModule,
-                IgxIconModule,
-                IgxGridSelectionModule]
+            ]
         }).compileComponents();
     }))
 

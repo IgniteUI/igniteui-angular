@@ -10,15 +10,9 @@ import {
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { fadeIn, fadeOut } from "../../animations/fade";
-import { DisplayDensity } from "../../core/displayDensity";
+import { DisplayDensity } from "../../core/density";
 import { SortingDirection } from "../../data-operations/sorting-strategy";
-import {
-    IDragBaseEventArgs,
-    IDragGhostBaseEventArgs,
-    IDragMoveEventArgs,
-    IDropBaseEventArgs,
-    IDropDroppedEventArgs
-} from "../../directives/drag-drop/drag-drop.directive";
+import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective, IgxDragDirective, IgxDragHandleDirective } from "../../directives/drag-drop/drag-drop.directive";
 import { ISelectionEventArgs } from "../../drop-down/drop-down.common";
 import { IgxDropDownComponent } from "../../drop-down/drop-down.component";
 import {
@@ -36,6 +30,23 @@ import {
     PivotDimensionType
 } from "./pivot-grid.interface";
 import { PivotUtil } from './pivot-util';
+import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
+import { IgxDropDownItemComponent } from "../../drop-down/drop-down-item.component";
+import { IgxDropDownItemNavigationDirective } from "../../drop-down/drop-down-navigation.directive";
+import { IgxExpansionPanelBodyComponent } from "../../expansion-panel/expansion-panel-body.component";
+import { IgxChipComponent } from "../../chips/chip.component";
+import { IgxExpansionPanelTitleDirective } from "../../expansion-panel/expansion-panel.directives";
+import { IgxExpansionPanelHeaderComponent } from "../../expansion-panel/expansion-panel-header.component";
+import { IgxExpansionPanelComponent } from "../../expansion-panel/expansion-panel.component";
+import { IgxAccordionComponent } from "../../accordion/accordion.component";
+import { IgxCheckboxComponent } from "../../checkbox/checkbox.component";
+import { IgxListItemComponent } from "../../list/list-item.component";
+import { NgFor, NgIf } from "@angular/common";
+import { IgxListComponent } from "../../list/list.component";
+import { IgxInputDirective } from "../../directives/input/input.directive";
+import { IgxPrefixDirective } from "../../directives/prefix/prefix.directive";
+import { IgxIconComponent } from "../../icon/icon.component";
+import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 
 interface IDataSelectorPanel {
     name: string;
@@ -70,6 +81,8 @@ interface IDataSelectorPanel {
 @Component({
     selector: "igx-pivot-data-selector",
     templateUrl: "./pivot-data-selector.component.html",
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, NgFor, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, NgIf, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
 export class IgxPivotDataSelectorComponent {
 
@@ -221,11 +234,11 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public get dims() : IPivotDimension[] {
         return this._grid?.allDimensions || [];
-    };
+    }
     /** @hidden @internal */
     public get values(): IPivotValue[] {
         return this._grid?.pivotConfiguration.values || [];
-    };
+    }
 
     constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 

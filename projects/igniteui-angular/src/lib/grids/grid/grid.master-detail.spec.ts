@@ -4,18 +4,22 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../test-utils/ui-interactions.spec';
-import { CellType, IgxGridModule } from './public_api';
+import { IgxGridDetailTemplateDirective } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxInputGroupComponent } from '../../input-group/public_api';
+import { IgxInputDirective, IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { clearGridSubs, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
+import { CellType, IgxColumnComponent } from '../public_api';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -32,12 +36,12 @@ describe('IgxGrid Master Detail #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,
                 MRLMasterDetailComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+            ]
         });
     }));
 
@@ -1253,31 +1257,32 @@ describe('IgxGrid Master Detail #grid', () => {
 
 @Component({
     template: `
-        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true"
-         [perPage]="perPage" [rowSelection]="rowSelectable">
-            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
-            </igx-column>
-            <igx-paginator *ngIf="paging"></igx-paginator>
+    <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true" [rowSelection]="rowSelectable">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width">
+        </igx-column>
+        <igx-paginator *ngIf="paging"></igx-paginator>
 
-            <ng-template igxGridDetail let-dataItem>
-                <div>
-                    <div class="checkboxArea">
-                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
-                        <span style="font-weight: 600">Available</span>
-                    </div>
-                    <div class="addressArea">{{dataItem.Address}}</div>
-                    <igx-input-group class="igxInputGroup">
-                        <input igxInput />
-                    </igx-input-group>
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div class="checkboxArea">
+                <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                    <span style="font-weight: 600">Available</span>
                 </div>
-            </ng-template>
-        </igx-grid>
-        <ng-template igxGridDetail let-dataItem #detailTemplate>
-                <div>
-                    NEW TEMPLATE
-                </div>
+                <div class="addressArea">{{dataItem.Address}}</div>
+                <igx-input-group class="igxInputGroup">
+                    <input igxInput />
+                </igx-input-group>
+            </div>
+        </ng-template>
+    </igx-grid>
+    <ng-template igxGridDetail let-dataItem #detailTemplate>
+        <div>
+            NEW TEMPLATE
+        </div>
     </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective, NgIf, NgFor]
 })
 export class DefaultGridMasterDetailComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1290,8 +1295,8 @@ export class DefaultGridMasterDetailComponent {
     public height = '500px';
     public data = SampleTestData.contactInfoDataFull();
     public columns = [
-        { field: 'ContactName', width: 400, dataType: 'string' },
-        { field: 'CompanyName', width: 400, dataType: 'string' }
+        { field: 'ContactName', width: '400px' },
+        { field: 'CompanyName', width: '400px' }
     ];
     public paging = false;
     public perPage = 15;
@@ -1300,24 +1305,26 @@ export class DefaultGridMasterDetailComponent {
 
 @Component({
     template: `
-        <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
-            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'>
-            </igx-column>
-            <igx-paginator *ngIf="paging"></igx-paginator>
+    <igx-grid [data]="data" [expansionStates]="expStates"
+        [width]="width" [height]="height" [primaryKey]="'ID'" [rowSelection]="rowSelectable">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+        </igx-column>
+        <igx-paginator *ngIf="paging"></igx-paginator>
 
-            <ng-template igxGridDetail let-dataItem>
-                <div>
-                    <div class="checkboxArea">
-                        <igx-checkbox [disableRipple]="true"></igx-checkbox>
-                        <span style="font-weight: 600">Available</span>
-                    </div>
-                    <div class="addressArea">{{dataItem.Address}}</div>
-                    <div class="inputArea"><input type="text" name="Comment"></div>
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div class="checkboxArea">
+                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                    <span style="font-weight: 600">Available</span>
                 </div>
-            </ng-template>
-        </igx-grid>
-    `
+                <div class="addressArea">{{dataItem.Address}}</div>
+                <div class="inputArea"><input type="text" name="Comment"></div>
+            </div>
+        </ng-template>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, NgFor]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
@@ -1347,19 +1354,21 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
             <igx-column  [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID"></igx-column>
         </igx-column-layout>
         <igx-paginator *ngIf="paging"></igx-paginator>
-            <ng-template igxGridDetail let-dataItem>
-                <div>
-                    <div class="checkboxArea">
-                        <igx-checkbox [disableRipple]="true"></igx-checkbox>
-                        <span style="font-weight: 600">Available</span>
-                    </div>
-                    <div class="addressArea">{{dataItem.Address}}</div>
-                    <div class="inputArea"><input type="text" name="Comment"></div>
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div class="checkboxArea">
+                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                    <span style="font-weight: 600">Available</span>
                 </div>
-            </ng-template>
-        </igx-grid>
-    `
+                <div class="addressArea">{{dataItem.Address}}</div>
+                <div class="inputArea"><input type="text" name="Comment"></div>
+            </div>
+        </ng-template>
+    </igx-grid>
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, NgFor]
 })
-export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
+export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent {}
 
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;

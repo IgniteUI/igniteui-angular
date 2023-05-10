@@ -3,7 +3,6 @@ import {
     EventEmitter,
     HostBinding,
     Input,
-    NgModule,
     Output,
     ViewChild,
     ElementRef,
@@ -15,7 +14,7 @@ import {
     Optional
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
@@ -60,10 +59,12 @@ let nextId = 0;
     providers: [{
         provide: EDITOR_PROVIDER,
         useExisting: IgxSwitchComponent,
-        multi: true 
+        multi: true
     }],
     selector: 'igx-switch',
-    templateUrl: 'switch.component.html'
+    templateUrl: 'switch.component.html',
+    standalone: true,
+    imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider, AfterViewInit {
     private static ngAcceptInputType_required: boolean | '';
@@ -494,13 +495,3 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider,
         }
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxSwitchComponent],
-    exports: [IgxSwitchComponent],
-    imports: [IgxRippleModule]
-})
-export class IgxSwitchModule { }

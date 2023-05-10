@@ -19,7 +19,8 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 

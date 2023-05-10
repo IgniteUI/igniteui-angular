@@ -46,7 +46,7 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     @Input()
     public get selected(): boolean {
         return this._selected;
-    };
+    }
 
     public set selected(value: boolean) {
         if (this._selected !== value) {

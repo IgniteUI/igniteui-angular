@@ -105,7 +105,7 @@ export class IgxTreeNavigationService implements OnDestroy {
      * @param node target node
      * @param isActive if true, sets the node as active
      */
-    public setFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true): void {
+    public setFocusedAndActiveNode(node: IgxTreeNode<any>, isActive = true): void {
         if (isActive) {
             this.activeNode = node;
         }

@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 @mixin component {
     @include b(igx-button) {
+        @include sizable();
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),

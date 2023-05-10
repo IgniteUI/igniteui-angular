@@ -57,7 +57,7 @@ export class IgxHierarchicalTransactionFactory extends IgxFlatTransactionFactory
     public override create(type: TRANSACTION_TYPE): HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
         switch (type) {
             case (TRANSACTION_TYPE.Base):
-                return new IgxHierarchicalTransactionService();;
+                return new IgxHierarchicalTransactionService();
             default:
                 return new IgxBaseTransactionService();
         }

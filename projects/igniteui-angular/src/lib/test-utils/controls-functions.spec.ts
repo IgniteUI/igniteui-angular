@@ -36,15 +36,15 @@ export class ControlsFunction {
         fix.detectChanges();
     }
 
-    public static verifyButtonIsSelected(element: HTMLElement, selected: boolean = true) {
+    public static verifyButtonIsSelected(element: HTMLElement, selected = true) {
         expect(element.classList.contains(BUTTON_SELECTED_CLASS)).toEqual(selected);
     }
 
-    public static verifyButtonIsDisabled(element: HTMLElement, disabled: boolean = true) {
+    public static verifyButtonIsDisabled(element: HTMLElement, disabled = true) {
         expect(element.classList.contains(BUTTON_DISABLED_CLASS)).toEqual(disabled);
     }
 
-    public static verifyCheckboxState(element: HTMLElement, checked: boolean = true, indeterminate = false) {
+    public static verifyCheckboxState(element: HTMLElement, checked = true, indeterminate = false) {
         expect(element.classList.contains(CHECKBOX_CHECKED_CLASS)).toEqual(checked);
         expect(element.classList.contains(CHECKBOX_IND_CLASS)).toEqual(indeterminate);
     }

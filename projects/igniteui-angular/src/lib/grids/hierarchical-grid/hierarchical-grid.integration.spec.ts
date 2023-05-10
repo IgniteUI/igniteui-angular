@@ -2,7 +2,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
@@ -10,7 +9,6 @@ import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
-import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent,
@@ -21,7 +19,7 @@ import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-fu
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -36,13 +34,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
                 IgxHierarchicalGridWithTransactionProviderComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule
             ]
         }).compileComponents();
     }))
@@ -655,7 +651,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             let headers = GridFunctions.getColumnHeaders(fixture);
             let gridRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
-            let paging = GridFunctions.getGridPaginator(fixture);
+            const paging = GridFunctions.getGridPaginator(fixture);
             let rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             let dragIndicators = GridFunctions.getDragIndicators(fixture);
             let expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');

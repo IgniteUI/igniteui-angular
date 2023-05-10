@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -9,7 +9,6 @@ import {
     HostBinding,
     Inject,
     Input,
-    NgModule,
     Output,
     Optional,
     QueryList,
@@ -18,13 +17,14 @@ import {
     OnDestroy
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxIconModule } from '../icon/public_api';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 import { mkenum } from '../core/utils';
+import { IgxIconComponent } from '../icon/icon.component';
 
 /**
  * Determines the Button Group alignment
@@ -59,7 +59,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-buttongroup',
-    templateUrl: 'buttongroup-content.component.html'
+    templateUrl: 'buttongroup-content.component.html',
+    standalone: true,
+    imports: [NgFor, IgxButtonDirective, IgxRippleDirective, NgIf, IgxIconComponent]
 })
 export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
     /**
@@ -460,9 +462,4 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
 /**
  * @hidden
  */
-@NgModule({
-    declarations: [IgxButtonGroupComponent],
-    exports: [IgxButtonGroupComponent],
-    imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
-})
-export class IgxButtonGroupModule {}
+

@@ -1,7 +1,7 @@
 
 import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
@@ -22,11 +22,11 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

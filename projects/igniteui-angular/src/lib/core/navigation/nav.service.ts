@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
  * ToggleView interface can register and toggle directives can call their methods.
  * TODO: Track currently active? Events?
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class IgxNavigationService {
     private navs: { [id: string]: IToggleView };
 

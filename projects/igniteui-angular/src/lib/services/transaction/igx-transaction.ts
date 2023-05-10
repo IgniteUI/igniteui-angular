@@ -71,7 +71,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @param pending Should get pending state
      * @returns State of the record if any
      */
-    public override getState(id: any, pending: boolean = false): S {
+    public override getState(id: any, pending = false): S {
         return pending ? this._pendingStates.get(id) : this._states.get(id);
     }
 

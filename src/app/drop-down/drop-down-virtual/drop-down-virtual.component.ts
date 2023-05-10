@@ -1,16 +1,29 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { RemoteService } from 'src/app/shared/remote.service';
+import { AsyncPipe } from '@angular/common';
+
 import { Observable } from 'rxjs';
-import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective, DisplayDensity, VerticalAlignment } from 'igniteui-angular';
+
+import { RemoteService } from 'src/app/shared/remote.service';
+import { IgxToastComponent } from '../../../../projects/igniteui-angular/src/lib/toast/toast.component';
+import { IgxDropDownItemComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
+import { IForOfState, IgxForOfDirective } from '../../../../projects/igniteui-angular/src/lib/directives/for-of/for_of.directive';
+import { IgxDropDownComponent } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
+import { IgxToggleActionDirective } from '../../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
+import { IgxButtonDirective } from '../../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { DisplayDensity } from '../../../../projects/igniteui-angular/src/lib/core/density';
+import { VerticalAlignment } from '../../../../projects/igniteui-angular/src/lib/services/public_api';
 
 interface DataItem {
   name: string;
   id: number;
 }
 @Component({
-  selector: 'app-drop-down-virtual',
-  templateUrl: './drop-down-virtual.component.html',
-  styleUrls: ['./drop-down-virtual.component.scss']
+    selector: 'app-drop-down-virtual',
+    templateUrl: './drop-down-virtual.component.html',
+    styleUrls: ['./drop-down-virtual.component.scss'],
+    standalone: true,
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxForOfDirective, IgxDropDownItemComponent, IgxToastComponent, AsyncPipe]
 })
 export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   @ViewChild('loadingToast', { read: IgxToastComponent, static: true })

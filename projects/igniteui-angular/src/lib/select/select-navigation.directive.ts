@@ -6,7 +6,8 @@ import { IgxSelectBase } from './select.common';
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectItemNavigation]'
+    selector: '[igxSelectItemNavigation]',
+    standalone: true
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
     protected override _target: IgxSelectBase = null;

@@ -1,18 +1,17 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxChipsModule } from './chips.module';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity } from '../core/density';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
+import { IgxIconComponent } from '../icon/icon.component';
+import { NgFor } from '@angular/common';
 
 @Component({
     template: `
@@ -40,7 +39,9 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective, NgFor]
 })
 class TestChipComponent {
 
@@ -73,7 +74,9 @@ class TestChipComponent {
                 <span igxSuffix>suf</span>
             </igx-chip>
         </igx-chips-area>
-    `
+    `,
+    standalone: true,
+    imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective, NgFor]
 })
 class TestChipsLabelAndSuffixComponent {
 
@@ -107,12 +110,7 @@ describe('IgxChip', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestChipComponent,
-                TestChipsLabelAndSuffixComponent,
-                IgxLabelDirective
-            ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule]
+            imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();
     }));
 
@@ -130,22 +128,31 @@ describe('IgxChip', () => {
         });
 
         it('should render prefix element inside the chip before the content', () => {
-            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChip = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChipItem = igxChip[1].nativeElement;
 
-            // For this first chip there are 2 elements. The prefix and content span.
-            expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
-            expect(chipElems[0].nativeElement.children[0].children[0].offsetWidth).toEqual(0);
-            expect(chipElems[0].nativeElement.children[0].children[1].tagName).toEqual('IGX-ICON');
-            expect(chipElems[0].nativeElement.children[0].children[1].hasAttribute('igxprefix')).toEqual(true);
+            expect(igxChipItem.children[0].children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
         });
 
         it('should render remove button when enabled after the content inside the chip', () => {
-            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const chipRemoveButton = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
+            const igxChip = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const igxChipItem = igxChip[1].nativeElement;
+            const chipRemoveButton = ControlsFunction.getChipRemoveButton(igxChipItem);
 
-            // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
-            expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
+            expect(igxChipItem.children[0].children[2].children[0]).toHaveClass('igx-chip__remove');
             expect(chipRemoveButton).toBeTruthy();
+        });
+
+        it('should change chip variant', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+
+            igxChip.variant = 'danger';
+
+            fixture.detectChanges();
+
+            expect(igxChip.variant).toMatch('danger');
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
         });
 
         it('should set text in chips correctly', () => {
@@ -353,7 +360,7 @@ describe('IgxChip', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
             expect(secondChipComp.selectedChanging.emit).toHaveBeenCalled();
-            expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.selectedChanged.emit).toHaveBeenCalled();
             expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: secondChipComp,

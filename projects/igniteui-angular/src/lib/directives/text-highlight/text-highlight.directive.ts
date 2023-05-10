@@ -4,7 +4,6 @@ import {
     ElementRef,
     EventEmitter,
     Input,
-    NgModule,
     OnChanges,
     OnDestroy,
     Renderer2,
@@ -46,7 +45,8 @@ export interface IActiveHighlightInfo {
 }
 
 @Directive({
-    selector: '[igxTextHighlight]'
+    selector: '[igxTextHighlight]',
+    standalone: true
 })
 export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
@@ -503,12 +503,3 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 this._forceEvaluation);
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxTextHighlightDirective],
-    exports: [IgxTextHighlightDirective]
-})
-export class IgxTextHighlightModule { }

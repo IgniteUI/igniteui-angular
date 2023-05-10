@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridComponent } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
@@ -22,13 +22,13 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
                 CellSelectionNoneComponent,
                 CellSelectionSingleComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+            ]
         });
     }));
 
@@ -925,7 +925,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not throw an error when trying to do a drag selection that is started outside the grid', fakeAsync(() => {
-            let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
+            const cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
             tick();
@@ -2177,8 +2177,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.dataRowList.first.virtDirRow.scrollTo(2);
             await wait(100);
             fix.detectChanges();
-            await GridSelectionFunctions.selectCellsRange
-                (fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
+            await GridSelectionFunctions.selectCellsRange(fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
             detect();
 
             const selectedData = [

@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -20,11 +19,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
         }).compileComponents();
     }));
 

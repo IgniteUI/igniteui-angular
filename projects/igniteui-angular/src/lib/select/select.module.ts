@@ -1,50 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxDropDownModule } from '../drop-down/public_api';
-import { IgxToggleModule } from './../directives/toggle/toggle.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IGX_SELECT_DIRECTIVES } from './public_api';
 
-import { IgxSelectComponent, IgxSelectToggleIconDirective, IgxSelectHeaderDirective, IgxSelectFooterDirective } from './select.component';
-import { IgxSelectItemComponent } from './select-item.component';
-import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
-import { IgxSelectGroupComponent } from './select-group.component';
-
-/** @hidden */
+/**
+ * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
+ */
 @NgModule({
-    declarations: [
-        IgxSelectComponent,
-        IgxSelectFooterDirective,
-        IgxSelectGroupComponent,
-        IgxSelectHeaderDirective,
-        IgxSelectItemComponent,
-        IgxSelectItemNavigationDirective,
-        IgxSelectToggleIconDirective
+    imports: [
+        ...IGX_SELECT_DIRECTIVES
     ],
     exports: [
-        IgxSelectComponent,
-        IgxSelectFooterDirective,
-        IgxSelectGroupComponent,
-        IgxSelectHeaderDirective,
-        IgxSelectItemComponent,
-        IgxSelectItemNavigationDirective,
-        IgxSelectToggleIconDirective,
-        IgxInputGroupModule
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxDropDownModule,
-        IgxIconModule,
-        IgxInputGroupModule,
-        IgxRippleModule,
-        IgxToggleModule,
-        ReactiveFormsModule
-    ],
-    providers: []
+        ...IGX_SELECT_DIRECTIVES
+    ]
 })
 export class IgxSelectModule { }

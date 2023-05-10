@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
@@ -8,7 +7,7 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
+import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { ReorderedColumnsComponent,
         GridIDNameJobTitleComponent,
         ProductsComponent,
@@ -31,14 +30,14 @@ describe('CSV Grid Exporter', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
                 ColumnsAddedOnInitComponent
-            ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 

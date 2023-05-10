@@ -43,7 +43,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IForOfDataChangingEventArgs, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
+import { RowEditPositionStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -60,7 +60,7 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/density';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
@@ -141,7 +141,8 @@ import {
     IgxRowSelectorTemplateContext,
     IGX_GRID_SERVICE_BASE,
     ISizeInfo,
-    RowType
+    RowType,
+    IPinningConfig
 } from './common/grid.interface';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -166,7 +167,7 @@ import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scro
 import { Action, StateUpdateEvent, TransactionEventOrigin } from '../services/transaction/transaction';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { IGridSortingStrategy } from './common/strategy';
-import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/excel-style-filtering.component';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
@@ -1816,6 +1817,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowDrag && this.hasVisibleColumns;
     }
 
+    public set rowDraggable(val: boolean) {
+        this._rowDrag = val;
+        this.notifyChanges(true);
+    }
+
     /**
      * Gets/Sets the trigger for validators used when editing the grid.
      *
@@ -1826,12 +1832,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public validationTrigger: GridValidationTrigger = 'change';
-
-
-    public set rowDraggable(val: boolean) {
-        this._rowDrag = val;
-        this.notifyChanges(true);
-    }
 
     /**
      * @hidden
@@ -2002,7 +2002,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
-            if (!!this.data) {
+            if (this.data) {
                 this.evaluateLoadingState();
             }
         }
@@ -5712,7 +5712,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let selectedData;
         if (event.type === 'copy') {
             selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        };
+        }
 
         let data = [];
         let result;
@@ -6197,7 +6197,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    protected beginAddRowForIndex(index: number, asChild: boolean = false) {
+    protected beginAddRowForIndex(index: number, asChild = false) {
         // TODO is row from rowList suitable for enterAddRowMode
         const row = index == null ?
             null : this.rowList.find(r => r.index === index);
@@ -6263,7 +6263,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.summaryService.clearSummaryCache();
         this.pipeTrigger++;
         this.notifyChanges();
-    };
+    }
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
@@ -6985,7 +6985,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
                     for (const [key, value] of this.selectionService.selection.entries()) {
-                        let updatedKey = key;
+                        const updatedKey = key;
                         let subtract = 0;
                         expansionRowIndexes.forEach((row) => {
                             if (updatedKey > Number(row)) {
