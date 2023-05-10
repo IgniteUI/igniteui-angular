@@ -64,10 +64,10 @@
 @mixin action-strip($theme) {
     @include css-vars($theme);
 
-    $padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+    $padding-inline: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
     );
 
     $variant: map.get($theme, variant);
@@ -84,7 +84,8 @@
         inset-inline-start: 0;
         background: var-get($theme, 'background');
         color: inherit;
-        padding: map.get($padding, 'comfortable');
+        padding-inline: pad-inline(map.get($padding-inline, 'compact'), map.get($padding-inline, 'cosy'), map.get($padding-inline, 'comfortable'));
+        padding-block: 0;
         z-index: 9999;
     }
 
@@ -101,14 +102,9 @@
         }
     }
 
-    %igx-action-strip--cosy {
-        @extend %action-icons-density;
-        padding: map.get($padding, 'cosy');
-    }
-
+    %igx-action-strip--cosy,
     %igx-action-strip--compact {
         @extend %action-icons-density;
-        padding: map.get($padding, 'compact');
     }
 
     %igx-action-strip__editing-actions,

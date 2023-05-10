@@ -4,6 +4,8 @@
 /// @access private
 @mixin component {
     @include b(igx-combo) {
+        @include sizable();
+
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),

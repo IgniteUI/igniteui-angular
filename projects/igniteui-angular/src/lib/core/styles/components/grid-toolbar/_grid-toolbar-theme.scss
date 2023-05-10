@@ -102,10 +102,16 @@
     // Caption
     $grid-toolbar-fs: rem(16px);
 
-    $grid-toolbar-padding: (
-        comfortable: rem(24px) rem(16px),
-        cosy: rem(16px) rem(12px),
-        compact: rem(12px) rem(8px)
+    $grid-toolbar-padding-start: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $grid-toolbar-padding-end: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
     );
 
     $grid-toolbar-spacer: (
@@ -137,12 +143,13 @@
 
         background: var-get($theme, 'background-color');
         height: auto;
-        min-height: map.get($grid-toolbar-height, 'comfortable');
+        min-height: sizable(map.get($grid-toolbar-height, 'compact'), map.get($grid-toolbar-height, 'cosy'), map.get($grid-toolbar-height, 'comfortable'));
         padding-block: 0;
-        padding-inline: map.get($grid-toolbar-padding, 'comfortable');
+        padding-inline-start: pad-inline(map.get($grid-toolbar-padding-start, 'compact'), map.get($grid-toolbar-padding-start, 'cosy'), map.get($grid-toolbar-padding-start, 'comfortable'));
+        padding-inline-end: pad-inline(map.get($grid-toolbar-padding-end, 'compact'), map.get($grid-toolbar-padding-end, 'cosy'), map.get($grid-toolbar-padding-end, 'comfortable'));
 
         [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'comfortable');
+            margin-inline-start: pad-inline(map.get($grid-toolbar-spacer, 'compact'), map.get($grid-toolbar-spacer, 'cosy'), map.get($grid-toolbar-spacer, 'comfortable'));
 
             &:first-of-type {
                 margin-inline-start: 0;
@@ -164,24 +171,6 @@
                     margin-inline-end: 0;
                 }
             }
-        }
-    }
-
-    %igx-grid-toolbar--cosy {
-        min-height: map.get($grid-toolbar-height, 'cosy');
-        padding-inline: map.get($grid-toolbar-padding, 'cosy');
-
-        [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'cosy');
-        }
-    }
-
-    %igx-grid-toolbar--compact {
-        min-height: map.get($grid-toolbar-height, 'compact');
-        padding-inline: map.get($grid-toolbar-padding, 'compact');
-
-        [igxButton] {
-            margin-inline-start: map.get($grid-toolbar-spacer, 'compact');
         }
     }
 

@@ -51,12 +51,17 @@ import { IgxGridModule } from 'igniteui-angular';
     imports: [IgxGridModule, AsyncPipe]
 })
 ```
-
+- `IgxChip`
+    - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip.
+    - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
+    - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
 ### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
 - `IgxDateRangePicker`
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
 
 ## 15.1.0
 

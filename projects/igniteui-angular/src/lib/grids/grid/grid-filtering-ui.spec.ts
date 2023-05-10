@@ -1025,7 +1025,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should allow setting filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
-            grid.columnList.get(1).width = '150px';
+            grid.columnList.get(1).width = '200px';
             fix.detectChanges();
 
             // Add initial filtering conditions

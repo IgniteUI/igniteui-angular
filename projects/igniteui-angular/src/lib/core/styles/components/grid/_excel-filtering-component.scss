@@ -27,6 +27,7 @@
         }
 
         @include e(menu) {
+            @include sizable();
             @extend %grid-excel-menu !optional;
         }
 

@@ -104,8 +104,8 @@
     }
 
     %igx-combo__search {
-        padding-inline: pad-inline(4px, 8px, 16px);
-        padding-block: pad-block(8px);
+        padding-inline: pad-inline(rem(16px));
+        padding-block: pad-block(rem(8px));
         margin: 0 !important;
         z-index: 26;
         border-bottom: rem(1px) dashed var-get($theme, 'search-separator-border-color');
@@ -115,7 +115,9 @@
             height: auto;
         }
 
-        --ig-size: var(--ig-size-small);
+        igx-input-group {
+            --ig-size: var(--ig-size-small);
+        }
     }
 
     %igx-combo__case-icon,
