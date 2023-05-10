@@ -348,7 +348,7 @@ export class IgxGridSelectionService {
         }
         const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
         for (let i = rowStart; i <= rowEnd; i++) {
-            for (let j = columnStart as number; j <= columnEnd; j++) {
+            for (let j = columnStart as number; j <= (columnEnd as number); j++) {
                 if (collection.has(i)) {
                     collection.get(i).add(j);
                 } else {

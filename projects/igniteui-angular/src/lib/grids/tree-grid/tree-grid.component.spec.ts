@@ -1,8 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import {
@@ -27,17 +26,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridNoDataComponent,
                 IgxTreeGridWithNoForeignKeyComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule
             ]
         }).compileComponents();
     }));

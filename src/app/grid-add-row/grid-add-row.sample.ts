@@ -1,10 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/select-item.component';
+import { FormsModule } from '@angular/forms';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
+import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
+import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
 
 @Component({
     selector: 'app-grid-add-row',
     styleUrls: ['grid-add-row.sample.scss'],
-    templateUrl: `grid-add-row.sample.html`
+    templateUrl: `grid-add-row.sample.html`,
+    standalone: true,
+    imports: [IgxGridComponent_1, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, NgIf, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class GridAddRowSampleComponent implements OnInit {
 

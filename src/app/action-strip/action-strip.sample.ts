@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DisplayDensity, IDataCloneStrategy, IGridEditEventArgs, IRowDataEventArgs } from 'igniteui-angular';
+import { NgIf, NgFor } from '@angular/common';
+import { DisplayDensity, IDataCloneStrategy, IGridEditEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxActionStripMenuItemDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxIconComponent } from 'igniteui-angular';
 
 
 class MyClone implements IDataCloneStrategy {
@@ -44,7 +45,22 @@ class User {
 @Component({
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
-    templateUrl: `action-strip.sample.html`
+    templateUrl: `action-strip.sample.html`,
+    standalone: true,
+    imports: [
+        NgIf,
+        NgFor,
+        IgxButtonGroupComponent,
+        IgxButtonDirective,
+        IgxActionStripComponent,
+        IgxIconComponent,
+        IgxGridComponent,
+        IgxColumnComponent,
+        IgxGridPinningActionsComponent,
+        IgxCellTemplateDirective,
+        IgxGridEditingActionsComponent,
+        IgxActionStripMenuItemDirective
+    ]
 })
 export class ActionStripSampleComponent implements OnInit {
     public result: string;

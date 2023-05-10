@@ -1,18 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    IgxCalendarComponent,
-    DateRangeType,
-    IgxDaysViewComponent
-} from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { DateRangeType, IgxButtonDirective, IgxCardComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxRippleDirective, IgxYearsViewComponent } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-calendar-views-sample',
     templateUrl: 'calendar-views.sample.html',
-    styleUrls: ['calendar-views.sample.scss']
+    styleUrls: ['calendar-views.sample.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        IgxCardComponent,
+        IgxMonthsViewComponent,
+        IgxYearsViewComponent,
+        IgxDaysViewComponent,
+        IgxButtonDirective,
+        IgxRippleDirective
+    ]
 })
 export class CalendarViewsSampleComponent implements OnInit {
-    @ViewChild('calendar', { static: true })
-    private calendar: IgxCalendarComponent;
+    // @ViewChild('calendar', { static: true })
+    // private calendar: IgxCalendarComponent;
     @ViewChild('daysView', { static: true })
     private daysView: IgxDaysViewComponent;
 
@@ -78,15 +86,15 @@ export class CalendarViewsSampleComponent implements OnInit {
         console.log(`selected date: ${date}`);
     }
 
-    public select() {
-        // this.calendar.selectDate(new Date(2019, 1, 13));
-        this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
+    // public select() {
+    //     // this.calendar.selectDate(new Date(2019, 1, 13));
+    //     this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    // }
 
-    public deselect() {
-        // this.calendar.deselectDate(new Date(2019, 1, 13));
-        this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
+    // public deselect() {
+    //     // this.calendar.deselectDate(new Date(2019, 1, 13));
+    //     this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    // }
 
     public selectDV() {
         this.daysView.selectDate(new Date(2019, 1, 13));

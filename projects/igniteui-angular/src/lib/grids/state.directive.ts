@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
+import { Directive, Optional, Input, Host, ViewContainerRef, Inject, Output, EventEmitter, createComponent, EnvironmentInjector, Injector } from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -14,10 +14,9 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
-import { IPinningConfig } from './grid.common';
 import { GridSelectionRange } from './common/types';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
-import { GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { GridType, IGX_GRID_BASE, IPinningConfig } from './common/grid.interface';
 import { IgxPivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid/pivot-grid.interface'
 import { PivotUtil } from './pivot-grid/pivot-util';
@@ -101,7 +100,8 @@ interface Feature {
 }
 
 @Directive({
-    selector: '[igxGridState]'
+    selector: '[igxGridState]',
+    standalone: true
 })
 export class IgxGridStateDirective {
     private static ngAcceptInputType_options: IGridStateOptions | '';
@@ -671,7 +671,7 @@ export class IgxGridStateDirective {
                     expr.searchVal = expr.searchVal && (dataType === 'date' || dataType === 'dateTime') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 }
 
-                let condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
+                const condition = this.generateFilteringCondition(dataType, expr.condition.name) ||
                                 this.currGrid.columns.find(c => c.field === expr.fieldName).filters.condition(expr.condition.name);
 
                 if (condition) {
@@ -722,12 +722,3 @@ export class IgxGridStateDirective {
         return feature;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxGridStateDirective],
-    exports: [IgxGridStateDirective]
-})
-export class IgxGridStateModule { }

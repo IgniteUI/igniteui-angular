@@ -1,10 +1,11 @@
-import { AfterViewInit, Directive, ElementRef, Input, NgModule, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
 
 @Directive({
-    selector: '[igxFocusTrap]'
+    selector: '[igxFocusTrap]',
+    standalone: true
 })
 export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
     /** @hidden */
@@ -100,12 +101,3 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
         return activeElement;
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxFocusTrapDirective],
-    exports: [IgxFocusTrapDirective]
-})
-export class IgxFocusTrapModule { }

@@ -31,13 +31,18 @@ import { HorizontalAlignment, OverlaySettings, PositionSettings, VerticalAlignme
 import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
+import { IgxIconComponent } from '../../../icon/icon.component';
+import { IgxButtonDirective } from '../../../directives/button/button.directive';
+import { NgClass, NgIf, NgFor } from '@angular/common';
 
 /**
  * @hidden
  */
 @Component({
     selector: 'igx-excel-style-custom-dialog',
-    templateUrl: './excel-style-custom-dialog.component.html'
+    templateUrl: './excel-style-custom-dialog.component.html',
+    standalone: true,
+    imports: [IgxToggleDirective, NgClass, NgIf, NgFor, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()

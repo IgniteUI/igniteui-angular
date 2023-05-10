@@ -5,7 +5,10 @@ import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums
 import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 
 /** @hidden */
-@Pipe({name: 'treeGridSummary'})
+@Pipe({
+    name: 'treeGridSummary',
+    standalone: true
+})
 export class IgxTreeGridSummaryPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) {}

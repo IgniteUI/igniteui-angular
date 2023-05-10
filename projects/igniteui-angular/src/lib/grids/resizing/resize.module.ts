@@ -15,15 +15,13 @@ export { IgxPivotResizeHandleDirective } from './pivot-grid/pivot-resize-handle.
 export { IgxColumnResizerDirective } from './resizer.directive';
 
 @NgModule({
-    declarations: [
+    imports: [
+        CommonModule,
         IgxGridColumnResizerComponent,
         IgxResizeHandleDirective,
         IgxColumnResizerDirective,
         IgxPivotGridColumnResizerComponent,
         IgxPivotResizeHandleDirective
-    ],
-    imports: [
-        CommonModule
     ],
     exports: [
         IgxGridColumnResizerComponent,

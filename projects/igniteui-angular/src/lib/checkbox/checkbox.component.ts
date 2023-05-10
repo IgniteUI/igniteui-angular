@@ -4,7 +4,6 @@ import {
     HostListener,
     HostBinding,
     Input,
-    NgModule,
     Output,
     ViewChild,
     ElementRef,
@@ -12,10 +11,10 @@ import {
     ChangeDetectorRef,
     Renderer2,
     Optional,
-    Self,
+    Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
 import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider, EDITOR_PROVIDER } from '../core/edit-provider';
 import { noop, Subject } from 'rxjs';
@@ -58,12 +57,14 @@ let nextId = 0;
 @Component({
     selector: 'igx-checkbox',
     providers: [{
-        provide: EDITOR_PROVIDER, 
-        useExisting: IgxCheckboxComponent, 
+        provide: EDITOR_PROVIDER,
+        useExisting: IgxCheckboxComponent,
         multi: true
     }],
     preserveWhitespaces: false,
-    templateUrl: 'checkbox.component.html'
+    templateUrl: 'checkbox.component.html',
+    standalone: true,
+    imports: [IgxRippleDirective]
 })
 export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, ControlValueAccessor {
     private static ngAcceptInputType_required: boolean | '';
@@ -607,13 +608,3 @@ export class IgxCheckboxComponent implements EditorProvider, AfterViewInit, Cont
         }
     }
 }
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxCheckboxComponent],
-    exports: [IgxCheckboxComponent],
-    imports: [IgxRippleModule]
-})
-export class IgxCheckboxModule {}

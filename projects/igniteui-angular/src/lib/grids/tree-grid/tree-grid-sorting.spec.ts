@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -15,10 +14,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSortingComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, IgxTreeGridSortingComponent]
         }).compileComponents();
     }));
 

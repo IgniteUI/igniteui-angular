@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridAPIService, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
@@ -14,20 +13,22 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { CellType } from '../grid/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
+import { CellType } from '../public_api';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
-    let treeGrid: IgxTreeGridComponent;;
+    let treeGrid: IgxTreeGridComponent;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridExpandingComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridLoadOnDemandComponent,
@@ -35,10 +36,6 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 IgxTreeGridLoadOnDemandChildDataComponent,
                 IgxTreeGridCustomExpandersTemplateComponent,
                 IgxTreeGridRowEditingComponent
-            ],
-            imports: [
-                NoopAnimationsModule,
-                IgxTreeGridModule
             ]
         }).compileComponents();
     }));
@@ -1057,7 +1054,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
             it('check expanding and collapsing a row with children', fakeAsync(() => {
                 let rows = TreeGridFunctions.getAllRows(fix);
-                let row = rows[0];
+                const row = rows[0];
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(3);
 
@@ -1397,7 +1394,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         it('should allow setting custom template for  expand/collapse icons', async () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(12);
-            let expander = TreeGridFunctions.getExpansionIndicatorDiv(rows[0]);
+            const expander = TreeGridFunctions.getExpansionIndicatorDiv(rows[0]);
             expect(expander.nativeElement.innerText).toBe('EXPANDED');
 
             expander.triggerEventHandler('click', new Event('click'));

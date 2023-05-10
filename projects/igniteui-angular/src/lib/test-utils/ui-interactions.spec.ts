@@ -426,11 +426,11 @@ export class UIInteractions {
         };
     }
 
-    public static hoverElement(element: HTMLElement, bubbles: boolean = false) {
+    public static hoverElement(element: HTMLElement, bubbles = false) {
         element.dispatchEvent(new MouseEvent('mouseenter', { bubbles }));
     }
 
-    public static unhoverElement(element: HTMLElement, bubbles: boolean = false) {
+    public static unhoverElement(element: HTMLElement, bubbles = false) {
         element.dispatchEvent(new MouseEvent('mouseleave', { bubbles }));
     }
 

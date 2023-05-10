@@ -1,15 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    ColumnType,
-    IgxNumberSummaryOperand,
-    IgxSummaryResult,
-    IGridToolbarExportEventArgs,
-    IgxGridComponent,
-    IgxTreeGridComponent
-} from 'igniteui-angular';
+import { NgIf, DatePipe } from '@angular/common';
+
 import { HGRID_DATA } from './hGridData';
 import { GRID_DATA } from './gridData';
 import { TGRID_DATA } from './tGridData';
+import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
+import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
+import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxCellTemplateDirective, IgxCellHeaderTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
+import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxNumberSummaryOperand, IgxSummaryResult } from '../../../projects/igniteui-angular/src/lib/grids/summaries/grid-summary';
+import { ColumnType, IGridToolbarExportEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 class GridSummary {
     public operate(data?: any[]): IgxSummaryResult[] {
@@ -62,8 +68,9 @@ class HGridChildSummary {
 
 @Component({
     selector: 'app-grid-export-sample',
-    styleUrls: ['grid-export.sample.scss'],
-    templateUrl: 'grid-export.sample.html'
+    templateUrl: 'grid-export.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxIconComponent, NgIf, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, DatePipe]
 })
 export class GridExportComponent {
     @ViewChild('grid', { static: true })
