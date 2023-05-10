@@ -351,6 +351,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -909,18 +912,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return row;
-    }
-
-    /**
-     * Returns if the `IgxTreeGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
-    public get hasGroupableColumns(): boolean {
-        return this.columns.some((col) => col.groupable && !col.columnGroup);
     }
 
     protected override generateDataFields(data: any[]): string[] {
