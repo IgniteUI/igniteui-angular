@@ -93,16 +93,16 @@
         color: var-get($theme, 'pinned-border-color')
     );
 
-    $item-padding: (
-        comfortable: rem(6px) 0,
-        cosy: rem(2px) 0,
+    $item-padding-block: (
+        comfortable: rem(6px),
+        cosy: rem(2px),
         compact: 0
     );
 
-    $summary-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+    $summary-padding-inline: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
     );
 
     %igx-grid-summary {
@@ -110,7 +110,8 @@
         display: flex;
         flex-direction: column;
         flex: 1 1 0%;
-        padding: map.get($summary-padding, 'comfortable');
+        padding-block: 0;
+        padding-inline: pad-inline(map.get($summary-padding-inline, 'compact'), map.get($summary-padding-inline, 'cosy'), map.get($summary-padding-inline, 'comfortable'));
         background: var-get($theme, 'background-color', inherit);
         overflow: hidden;
         outline-style: none;
@@ -123,14 +124,6 @@
         &:focus::after {
             background: var-get($theme, 'focus-background-color');
         }
-    }
-
-    %igx-grid-summary--cosy {
-        padding: map.get($summary-padding, 'cosy');
-    }
-
-    %igx-grid-summary--compact {
-        padding: map.get($summary-padding, 'compact');
     }
 
     %igx-grid-summary--pinned {
@@ -159,17 +152,10 @@
     %igx-grid-summary__item {
         display: flex;
         align-items: center;
-        padding: map.get($item-padding, 'comfortable');
+        padding-block: pad(map.get($item-padding-block, 'compact'), map.get($item-padding-block, 'cosy'), map.get($item-padding-block, 'comfortable'));
+        padding-inline: 0;
         font-size: rem(12px);
         position: relative;
-    }
-
-    %igx-grid-summary__item--cosy {
-        padding: map.get($item-padding, 'cosy');
-    }
-
-    %igx-grid-summary__item--compact {
-        padding: map.get($item-padding, 'compact');
     }
 
     %igx-grid-summary__label {

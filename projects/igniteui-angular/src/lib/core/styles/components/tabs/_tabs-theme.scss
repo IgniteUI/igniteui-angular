@@ -223,12 +223,6 @@
         $color: var-get($theme, 'button-ripple-color')
     );
 
-    $icon-space: (
-        comfortable: rem(12px),
-        cosy: rem(8px),
-        compact: rem(4px)
-    );
-
     %tabs-header,
     %tabs-header-button,
     %tabs-header-item-inner,
@@ -327,7 +321,7 @@
 
     %tabs-header-item {
         > * {
-            margin-inline-start: map.get($icon-space, 'comfortable');
+            margin-inline-start: rem(12px);
 
             &:first-child {
                 margin-inline-start: 0;
