@@ -8,7 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 
 Now you can do:
-    
+
 ```typescript
 // IGX_GRID_DIRECTIVES exports all grid related components and directives
 import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -22,7 +22,7 @@ import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 })
 ```
 
-or 
+or
 
 ```typescript
 // Single import of only the <igx-grid> component.
@@ -62,6 +62,7 @@ import { IgxGridModule } from 'igniteui-angular';
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 - `IgxGrid`, `IgxHierarchicalGrid`:
     - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
+- `ISortingExpression` is now typed, accepting a parameter for type narrowing.
 
 ## 15.1.0
 
