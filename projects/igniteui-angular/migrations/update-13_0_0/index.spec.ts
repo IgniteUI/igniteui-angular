@@ -535,7 +535,7 @@ export class AppModule {}
 </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>
 </igx-grid-toolbar>
-
+        
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>
