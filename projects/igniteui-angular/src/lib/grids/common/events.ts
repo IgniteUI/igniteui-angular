@@ -20,10 +20,10 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 16.0.0
-     * Use `primaryKey` instead
+     * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
+     * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
      */
-    rowID: any;
-    primaryKey: any    // in a major version, remove the deprecated `rowID` and migrate to `key`
+    rowID: any; // in a major version, remove the deprecated `rowID` and migrate to `key`
     cellID?: {
         rowID: any;
         columnID: any;
@@ -44,7 +44,26 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     valid?: boolean;
 }
 
-export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
+/**
+ * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
+ */
+export interface ICellEditDoneEventArgs extends IGridEditDoneEventArgs {
+    rowKey: any;
+}
+
+/**
+ * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
+ */
+export interface IRowEditDoneEventArgs extends IGridEditDoneEventArgs {
+    key: any;
+}
+
+// for cellEditEnter, cellEdit
+export interface ICellEditEventArgs extends CancelableEventArgs, ICellEditDoneEventArgs {
+}
+
+// rowEditEnter, rowEdit, rowAdd
+export interface IRowEditEventArgs extends CancelableEventArgs, IRowEditDoneEventArgs {
 }
 
 /**
@@ -184,6 +203,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs, CancelableEventArgs {
      * The ID of the row, that was pinned/unpinned.
      * ID is either the primaryKey value or the data record instance.
      */
+     // TODO shall data record be emitted?
     readonly rowID: any;
     readonly key: any;
     row?: RowType;

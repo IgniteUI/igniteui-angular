@@ -97,7 +97,6 @@ import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
-    IGridEditEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -114,13 +113,16 @@ import {
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
     IGridScrollEventArgs,
-    IGridEditDoneEventArgs,
     IActiveNodeChangeEventArgs,
     ISortingEventArgs,
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IPinColumnCancellableEventArgs
+    IPinColumnCancellableEventArgs,
+    ICellEditDoneEventArgs,
+    IRowEditDoneEventArgs,
+    IRowEditEventArgs,
+    ICellEditEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import {
@@ -570,7 +572,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public cellEditEnter = new EventEmitter<ICellEditEventArgs>();
 
     /**
      * Emitted when cell exits edit mode.
@@ -582,7 +584,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+    public cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -597,7 +599,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEdit = new EventEmitter<IGridEditEventArgs>();
+    public cellEdit = new EventEmitter<ICellEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -609,7 +611,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.
@@ -624,7 +626,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IRowEditEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -642,7 +644,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEdit = new EventEmitter<IGridEditEventArgs>();
+    public rowEdit = new EventEmitter<IRowEditEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.
@@ -659,7 +661,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public rowEditDone = new EventEmitter<IRowEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -675,7 +677,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+    public rowEditExit = new EventEmitter<IRowEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -774,28 +776,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IGridEditEventArgs` object.
+     * Returns an `IRowDataEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowDelete)="rowDelete($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowDelete = new EventEmitter<IGridEditEventArgs>();
+    public rowDelete = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * Emmited just before the newly added row is commited.
      *
      * @remarks
      * This event is cancelable.
-     * Returns an `IGridEditEventArgs` object.
+     * Returns an `IRowDataEventArgs` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (rowAdd)="rowAdd($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public rowAdd = new EventEmitter<IGridEditEventArgs>();
+    public rowAdd = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * Emitted after column is resized.

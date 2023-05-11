@@ -6,7 +6,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { CellType, ColumnType, GridServiceType, GridType, RowType } from './common/grid.interface';
-import { IGridEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
+import { ICellEditEventArgs, IPinRowEventArgs, IRowToggleEventArgs } from './common/events';
 import { IgxColumnMovingService } from './moving/moving.service';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
@@ -137,11 +137,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
     }
 
-    public update_cell(cell: IgxCell): IGridEditEventArgs {
+    public update_cell(cell: IgxCell): ICellEditEventArgs {
         if (!cell) {
             return;
         }
-        const args = cell.createEditEventArgs(true);
+        const args = cell.createCellEditEventArgs(true);
         if (!this.grid.crudService.row) {
             this.grid.summaryService.clearSummaryCache(args);
         }
@@ -188,7 +188,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const hasSummarized = grid.hasSummarizedColumns;
         this.crudService.updateRowEditData(row, value);
 
-        const args = row.createEditEventArgs(true, event);
+        const args = row.createRowEditEventArgs(true, event);
 
         // If no valid row is found
         if (index === -1) {
