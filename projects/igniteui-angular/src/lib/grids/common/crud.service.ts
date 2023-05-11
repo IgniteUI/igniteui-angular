@@ -19,7 +19,10 @@ export class IgxEditRow {
 
     public createRowEditEventArgs(includeNewValue = true, event?: Event): IRowEditEventArgs {
         const args: IRowEditEventArgs = {
-            // deprecated since 16.0, use key instead
+            /**
+             * @deprecated since version 16.0.0
+             * Use `key` instead
+             */
             rowID: this.id,
             key: this.id,
             rowData: this.data,
@@ -51,7 +54,10 @@ export class IgxEditRow {
             this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData ?? this.grid.gridAPI.getRowData(this.id);
         const args: IRowEditDoneEventArgs = {
-            // deprecated since 16.0, use key instead
+            /**
+             * @deprecated since version 16.0.0
+             * Use `key` instead
+             */
             rowID: this.id,
             key: this.id,
             rowData,
@@ -155,7 +161,11 @@ export class IgxCell {
     public createCellEditEventArgs(includeNewValue = true, event?: Event): ICellEditEventArgs {
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: ICellEditEventArgs = {
-            // deprecated since 16.00, use rowKey
+
+            /**
+             * @deprecated since version 16.0.0
+             * Use `rowKey` instead
+             */
             rowID: this.id.rowID,
             rowKey: this.id.rowID,
             cellID: this.id,
@@ -180,7 +190,10 @@ export class IgxCell {
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const formControl = this.grid.validation.getFormControl(this.id.rowID, this.column.field);
         const args: ICellEditDoneEventArgs = {
-            // deprecated since 16.0, use rowKey
+            /**
+             * @deprecated since version 16.0.0
+             * Use `rowKey` instead
+             */
             rowID: this.id.rowID,
             rowKey: this.id.rowID,
             cellID: this.id,

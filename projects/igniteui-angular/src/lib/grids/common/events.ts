@@ -29,7 +29,11 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
-/** Represents event arguments related to grid editing completion. */
+/**
+ * @deprecated since version 16.0.0. Stop exporting this interface in version 19
+ * Use ICellEditDoneEventArgs property for cellEditDone and cellEditExit events
+ * Use IRowEditDoneEventArgs property for rowEditDone and rowEditExit events
+ */
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     /**
      * @deprecated since version 16.1.0
@@ -86,24 +90,34 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
 }
 
 /**
- * Use ICellEditDoneEventArgs.rowKey property for cellEditDone, cellEditExit events
+ * `ICellEditDoneEventArgs` object is emitted by `cellEditDone` and `cellEditExit` events
  */
 export interface ICellEditDoneEventArgs extends IGridEditDoneEventArgs {
+    /**
+    * The primaryKey value of the row, which contains the edited cell
+    */
     rowKey: any;
 }
 
 /**
- * Use IRowEditDoneEventArgs.key property for rowEditDone, rowEditExit events
+ * `IRowEditDoneEventArgs` is emitted by `rowEditDone` and `rowEditExit` events
  */
 export interface IRowEditDoneEventArgs extends IGridEditDoneEventArgs {
+    /**
+     * The primaryKey value of the row
+     */
     key: any;
 }
 
-// for cellEditEnter, cellEdit
+/**
+ * `ICellEditEventArgs` is emitted by `cellEditEnter` and `cellEdit` events
+ */
 export interface ICellEditEventArgs extends CancelableEventArgs, ICellEditDoneEventArgs {
 }
 
-// rowEditEnter, rowEdit, rowAdd
+/**
+ * `IRowEditEventArgs` is emitted by `rowEditEnter` and `rowEdit` events
+ */
 export interface IRowEditEventArgs extends CancelableEventArgs, IRowEditDoneEventArgs {
 }
 
