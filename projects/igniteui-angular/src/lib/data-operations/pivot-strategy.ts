@@ -124,7 +124,6 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
 }
 
 export class DimensionValuesFilteringStrategy extends FilteringStrategy {
-    private cloneStrategy: IDataCloneStrategy;
 
     /**
      * Creates a new instance of FormattedValuesFilteringStrategy.
@@ -132,9 +131,8 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
      * @param fields An array of column field names that should be formatted.
      * If omitted the values of all columns which has formatter will be formatted.
      */
-    constructor(cloneStrategy: IDataCloneStrategy, private fields?: string[]) {
+    constructor(private fields?: string[]) {
         super();
-        this.cloneStrategy = cloneStrategy;
     }
 
     protected override getFieldValue(rec: any, fieldName: string, _isDate = false, _isTime = false,
@@ -156,7 +154,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
             [dim],
             PivotDimensionType.Column,
             grid.pivotKeys,
-            this.cloneStrategy
+            grid.pivotValueCloneStrategy
         );
         const isNoop = grid.pivotConfiguration.columnStrategy instanceof NoopPivotDimensionsStrategy || grid.pivotConfiguration.rowStrategy instanceof NoopPivotDimensionsStrategy;
         const items: IgxFilterItem[] = !isNoop ? this._getFilterItems(allValuesHierarchy, grid.pivotKeys) : [{value : ''}];

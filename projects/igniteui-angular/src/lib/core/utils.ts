@@ -143,6 +143,18 @@ export const cloneValue = (value: any): any => {
     return value;
 };
 
+/**
+ * Creates deep clone of provided value.
+ * Supports primitive values, dates and objects.
+ * If passed value is array returns shallow copy of the array.
+ * For Objects property values and references are cached and reused.
+ * This allows for circular references to same objects.
+ *
+ * @param value value to clone
+ * @param cache map of cached values already parsed
+ * @returns Deep copy of provided value
+ * @hidden
+ */
 export const cloneValueCached = (value: any, cache: Map<any, any>): any => {
     if (isDate(value)) {
         return new Date(value.getTime());

@@ -47,7 +47,7 @@ export class IgxPivotFilteringService extends IgxFilteringService {
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
         dim.filter = filteringTree;
         grid.filteringPipeTrigger++;
-        grid.filterStrategy = grid.filterStrategy ?? new DimensionValuesFilteringStrategy(grid.pivotValueCloneStrategy);
+        grid.filterStrategy = grid.filterStrategy ?? new DimensionValuesFilteringStrategy();
         if (allDimensions.indexOf(dim) !== -1) {
             // update columns
             (grid as any).setupColumns();

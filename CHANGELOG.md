@@ -62,6 +62,11 @@ import { IgxGridModule } from 'igniteui-angular';
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 - `IgxGrid`, `IgxHierarchicalGrid`:
     - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
+- `IgxPivotGrid`
+    - Added `pivotConfigurationChanged` event triggered any time any of `pivotConfiguration` properties is changed via the UI.
+    - Added `pivotValueCloneStrategy` property that specifies value clone strategy like `DefaultDataCloneStrategy` or `CachedDataCloneStrategy`.
+- `Util`
+    - Added new `CachedDataCloneStrategy` that allows for cloning object with circular references .
 
 ## 15.1.0
 

@@ -247,14 +247,13 @@ export class IgxPivotGridFilterPipe implements PipeTransform {
         config: IPivotConfiguration,
         filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree,
-        cloneStrategy: IDataCloneStrategy,
         _filterPipeTrigger: number,
         _pipeTrigger: number): any[] {
         const expressionsTree = PivotUtil.buildExpressionTree(config);
 
         const state = {
             expressionsTree,
-            strategy: filterStrategy || new DimensionValuesFilteringStrategy(cloneStrategy),
+            strategy: filterStrategy || new DimensionValuesFilteringStrategy(),
             advancedExpressionsTree
         };
 
