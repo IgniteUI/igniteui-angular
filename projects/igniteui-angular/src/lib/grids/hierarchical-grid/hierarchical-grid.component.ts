@@ -4,7 +4,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -37,7 +36,6 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
@@ -336,16 +334,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
-    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-
     /** @hidden @internal */
     @ContentChildren(IgxPaginatorComponent, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
+    /** @hidden @internal */
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
     public toolbarOutlet: ViewContainerRef;
 
+    /** @hidden @internal */
     @ViewChild('paginatorOutlet', { read: ViewContainerRef })
     public paginatorOutlet: ViewContainerRef;
     /**
@@ -431,6 +428,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
             this.reflow();
@@ -673,10 +673,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-    }
-
-    public get outletDirective(): IgxOverlayOutletDirective {
-        return this.rootGrid.outlet;
     }
 
     /**

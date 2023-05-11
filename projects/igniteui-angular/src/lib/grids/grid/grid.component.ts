@@ -347,10 +347,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected _groupRowTemplate: TemplateRef<IgxGroupByRowTemplateContext>;
-    /**
-     * @hidden
-     */
-    protected _groupAreaTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      */
@@ -385,6 +382,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -598,12 +599,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets the list of group rows.
-     *
-     * @example
-     * ```typescript
-     * const groupList = this.grid.groupsRowList;
-     * ```
+     * @hidden @internal
      */
     public get groupsRowList() {
         const res = new QueryList<any>();
@@ -710,25 +706,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public set groupRowTemplate(template: TemplateRef<IgxGroupByRowTemplateContext>) {
         this._groupRowTemplate = template;
-        this.notifyChanges();
-    }
-
-
-    /**
-     * Gets/Sets the template reference of the `IgxGridComponent`'s group area.
-     *
-     * @example
-     * ```typescript
-     * const groupAreaTemplate = this.grid.groupAreaTemplate;
-     * this.grid.groupAreaTemplate = myAreaTemplate.
-     * ```
-     */
-    public get groupAreaTemplate(): TemplateRef<any> {
-        return this._groupAreaTemplate;
-    }
-
-    public set groupAreaTemplate(template: TemplateRef<any>) {
-        this._groupAreaTemplate = template;
         this.notifyChanges();
     }
 
@@ -882,14 +859,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges();
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasGroupableColumns(): boolean {
         return this._columns.some((col) => col.groupable && !col.columnGroup);
     }
@@ -914,18 +884,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
         this.notifyChanges(true);
-    }
-
-    /**
-     * Gets if the grid's group by drop area is visible.
-     *
-     * @example
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-     */
-    public get dropAreaVisible(): boolean {
-        return this.columnInDrag?.groupable || !this.groupingExpressions.length;
     }
 
     /**
