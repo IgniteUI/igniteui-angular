@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Renderer2, ChangeDetectorRef } from '@angular/core';
+import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Renderer2, ChangeDetectorRef, QueryList, ContentChildren } from '@angular/core';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { PlatformUtil } from '../../core/utils';
@@ -39,6 +39,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         _platformUtil: PlatformUtil,
     ) {
         super(cdr, element, viewContainer, zone, renderer, _platformUtil);
+        this.ghostClass = this._ghostClass;
     }
 
     public override ngOnDestroy() {
@@ -57,14 +58,16 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
 
         super.onPointerDown(event);
+
+        if (this._clicked) {
+            this.cms.column = this.column;
+            this.column.grid.cdr.detectChanges();
+        }
     }
 
     public override onPointerMove(event: Event) {
         if (this._clicked && !this._dragStarted) {
             this._removeOnDestroy = false;
-            this.cms.column = this.column;
-            this.ghostClass = this._ghostClass;
-            this.column.grid.cdr.detectChanges();
 
             const movingStartArgs = {
                 source: this.column
