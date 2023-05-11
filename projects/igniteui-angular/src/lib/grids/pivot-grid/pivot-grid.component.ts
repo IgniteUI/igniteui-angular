@@ -186,7 +186,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public dimensionsChange = new EventEmitter<IDimensionsChange>();
 
     /**
-     * Emitted when the and of  pivotConfiguration properties is changed via the grid chip area.
+     * Emitted when any of the pivotConfiguration properties is changed via the grid chip area.
      *
      * @remarks
      * Returns the new pivotConfiguration:
