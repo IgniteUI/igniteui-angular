@@ -44,11 +44,13 @@ import { FilterMode, GridPagingMode, GridSummaryCalculationMode, GridSummaryPosi
 import { WatchChanges } from '../watch-changes';
 import { OverlaySettings } from '../../services/public_api';
 import {
+    ICellEditDoneEventArgs,
+    ICellEditEventArgs,
     ICellPosition,
     IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs,
-    IColumnVisibilityChangedEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs,
+    IColumnVisibilityChangedEventArgs, 
     IGridToolbarExportEventArgs,
-    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs
+    IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinRowEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs
 } from '../common/events';
 import { IgxGridRowComponent } from '../grid/grid-row.component';
 import { DropPosition } from '../moving/moving.service';
@@ -474,25 +476,25 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override cellEdit = new EventEmitter<IGridEditEventArgs>();
+    public override cellEdit = new EventEmitter<ICellEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public override cellEditDone = new EventEmitter<ICellEditDoneEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public override cellEditEnter = new EventEmitter<ICellEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+    public override cellEditExit = new EventEmitter<ICellEditDoneEventArgs>();
 
     /**
      * @hidden @internal
@@ -528,7 +530,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowAdd = new EventEmitter<IGridEditEventArgs>();
+    public override rowAdd = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * @hidden @internal
@@ -546,7 +548,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowDelete = new EventEmitter<IGridEditEventArgs>();
+    public override rowDelete = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * @hidden @internal
@@ -564,25 +566,25 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     @Output()
-    public override rowEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public override rowEditEnter = new EventEmitter<IRowEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override rowEdit = new EventEmitter<IGridEditEventArgs>();
+    public override rowEdit = new EventEmitter<IRowEditEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public override rowEditDone = new EventEmitter<IRowEditDoneEventArgs>();
 
     /**
      * @hidden @internal
      */
     @Output()
-    public override rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
+    public override rowEditExit = new EventEmitter<IRowEditDoneEventArgs>();
 
     /**
      * @hidden @internal

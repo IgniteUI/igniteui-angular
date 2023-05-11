@@ -1,12 +1,12 @@
 import { ColumnPinningPosition, FilterMode, GridPagingMode, GridSelectionMode, GridSummaryCalculationMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
 import {
-    ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs, IGridEditEventArgs,
+    ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
     IRowDragEndEventArgs, IColumnMovingStartEventArgs, IColumnMovingEndEventArgs,
-    IGridEditDoneEventArgs, IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
+    IRowDataEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs,
     IColumnMovingEventArgs, IPinColumnEventArgs,
     IActiveNodeChangeEventArgs,
-    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs
+    ICellPosition, IFilteringEventArgs, IColumnResizeEventArgs, IRowToggleEventArgs, IGridToolbarExportEventArgs, IPinRowEventArgs, ICellEditDoneEventArgs, IRowEditDoneEventArgs, IRowEditEventArgs, ICellEditEventArgs
 } from '../common/events';
 import { DisplayDensity, IDensityChangedEventArgs } from '../../core/density';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -637,8 +637,8 @@ export interface GridServiceType {
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
 
-    update_cell(cell: IgxCell): IGridEditEventArgs;
-    update_row(row: IgxEditRow, value: any, event?: Event): IGridEditEventArgs;
+    update_cell(cell: IgxCell): ICellEditEventArgs;
+    update_row(row: IgxEditRow, value: any, event?: Event): IRowEditEventArgs;
 
     expand_path_to_record?(record: ITreeGridRecord): void;
     get_selected_children?(record: ITreeGridRecord, selectedRowIDs: any[]): void;
@@ -1043,19 +1043,19 @@ export interface GridType extends IGridDataBindable {
     columnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     batchEditingChange?: EventEmitter<boolean>;
     densityChanged: EventEmitter<IDensityChangedEventArgs>;
-    rowAdd: EventEmitter<IGridEditEventArgs>;
+    rowAdd: EventEmitter<IRowDataEventArgs>;
     rowAdded: EventEmitter<IRowDataEventArgs>;
     rowAddedNotifier: Subject<IRowDataEventArgs>;
     rowDeleted: EventEmitter<IRowDataEventArgs>;
     rowDeletedNotifier: Subject<IRowDataEventArgs>;
-    cellEditEnter: EventEmitter<IGridEditEventArgs>;
-    cellEdit: EventEmitter<IGridEditEventArgs>;
-    cellEditDone: EventEmitter<IGridEditDoneEventArgs>;
-    cellEditExit: EventEmitter<IGridEditDoneEventArgs>;
-    rowEditEnter: EventEmitter<IGridEditEventArgs>;
-    rowEdit: EventEmitter<IGridEditEventArgs>;
-    rowEditDone: EventEmitter<IGridEditDoneEventArgs>;
-    rowEditExit: EventEmitter<IGridEditDoneEventArgs>;
+    cellEditEnter: EventEmitter<ICellEditEventArgs>;
+    cellEdit: EventEmitter<ICellEditEventArgs>;
+    cellEditDone: EventEmitter<ICellEditDoneEventArgs>;
+    cellEditExit: EventEmitter<ICellEditDoneEventArgs>;
+    rowEditEnter: EventEmitter<IRowEditEventArgs>;
+    rowEdit: EventEmitter<IRowEditEventArgs>;
+    rowEditDone: EventEmitter<IRowEditDoneEventArgs>;
+    rowEditExit: EventEmitter<IRowEditDoneEventArgs>;
     rowDragStart: EventEmitter<IRowDragStartEventArgs>;
     rowDragEnd: EventEmitter<IRowDragEndEventArgs>;
     rowToggle: EventEmitter<IRowToggleEventArgs>;
