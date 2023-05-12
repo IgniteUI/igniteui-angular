@@ -2372,7 +2372,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2413,7 +2413,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2425,7 +2425,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
-        fix.componentInstance.instance.paginate(0);
+        fix.componentInstance.instance.paginator.paginate(0);
         tick();
         fix.detectChanges();
 
@@ -3666,7 +3666,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
         grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
