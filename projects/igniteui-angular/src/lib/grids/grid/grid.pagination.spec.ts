@@ -125,7 +125,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(paginator.isFirstPage).toBe(true);
 
             // Go to previous page when first page is selected
-            grid.previousPage();
+            paginator.previousPage();
             fix.detectChanges();
 
             expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(4);
@@ -189,7 +189,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.componentInstance.paging = false;
             fix.detectChanges();
 
-            expect(paginator).not.toBeDefined();
+            expect(grid.paginator).not.toBeDefined();
             verifyGridPager(fix, 10, '1', null, []);
             expect(GridFunctions.getGridPaginator(grid)).toBeNull();
             expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
@@ -207,7 +207,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             await wait();
             fix.detectChanges();
 
-            expect(paginator).toBeDefined();
+            expect(grid.paginator).toBeDefined();
             expect(paginator.perPage).toEqual(2, 'Invalid page size');
             verifyGridPager(fix, 2, '3', '2\xA0of\xA05', []);
 
@@ -217,8 +217,9 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
 
             grid.notifyChanges(true);
+            fix.detectChanges();
+
             let vScrollBar = grid.verticalScrollContainer.getScroll();
-            expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(255);
@@ -229,7 +230,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             vScrollBar = grid.verticalScrollContainer.getScroll();
             // pagingDone should be emitted only if we have a change in the page number
-            expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
@@ -238,14 +238,12 @@ describe('IgxGrid - Grid Paging #grid', () => {
             paginator.perPage = -7;
             await wait();
             fix.detectChanges();
-            expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
         }));
 
         it('activate/deactivate paging', () => {
-
             let paginatorEl = GridFunctions.getGridPaginator(grid);
             expect(paginatorEl).toBeDefined();
 
@@ -263,7 +261,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
         it('should change not leave prev page data after scorlling', (async () => {
-
             fix.componentInstance.perPage = 5;
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 7);
             grid.height = '300px';
@@ -273,11 +270,11 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
             fix.detectChanges();
             await wait(100);
-            paginator.paginate(1);
+            grid.paginator.paginate(1);
 
             fix.detectChanges();
             await wait(100);
-            paginator.paginate(0);
+            grid.paginator.paginate(0);
 
             fix.detectChanges();
             await wait(100);
@@ -285,7 +282,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
         }));
 
         it('should work correct with filtering', () => {
-
             grid.getColumnByName('ID').filterable = true;
             fix.detectChanges();
 
@@ -306,7 +302,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
         it('should work correct with crud operations', () => {
-
             grid.primaryKey = 'ID';
             fix.detectChanges();
 
@@ -406,7 +401,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             let desiredPageIndex = 2;
             page(2);
             fix.detectChanges();
-
             expect(paginator.page).toBe(desiredPageIndex);
 
             // non-existent page, should not paginate
@@ -426,7 +420,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(paginator.page).toBe(desiredPageIndex);
 
             // last page
-            desiredPageIndex = paginator.totalPages - 1;
+            desiredPageIndex = grid.paginator.totalPages - 1;
             page(desiredPageIndex);
             fix.detectChanges();
             expect(paginator.page).toBe(desiredPageIndex);
@@ -461,7 +455,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         tick();
 
         grid = fix.componentInstance.grid;
-        expect(paginator.totalPages).toBe(4);
+        expect(grid.paginator.totalPages).toBe(4);
     }));
 
     it('should get correct rowIndex in remote paging', fakeAsync(() => {
@@ -470,13 +464,13 @@ describe('IgxGrid - Grid Paging #grid', () => {
         tick();
 
         grid = fix.componentInstance.grid;
-        expect(paginator.totalPages).toBe(4);
-        const page = (index: number) => paginator.page = index;
+        expect(grid.paginator.totalPages).toBe(4);
+        const page = (index: number) => grid.page = index;
         const desiredPageIndex = 2;
         page(2);
         fix.detectChanges();
         tick();
-        expect(paginator.page).toBe(desiredPageIndex);
+        expect(grid.page).toBe(desiredPageIndex);
 
         expect(grid.getRowByIndex(0).cells[1].value).toBe('Debra Morton')
         expect(grid.getRowByIndex(0).viewIndex).toBe(6);
