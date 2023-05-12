@@ -57,7 +57,7 @@ import { IgxGridModule } from 'igniteui-angular';
     - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
 - `IgxGrid`, `IgxHierarchicalGrid`:
     - **Breaking Change** The `IgxHeaderExpandIndicatorDirective` and `IgxHeaderCollapseIndicatorDirective` directives, as well as the `headerExpandIndicatorTemplate` and `headerCollapseIndicatorTemplate` properties have been renamed to `IgxHeaderExpandedIndicatorDirective`, `IgxHeaderCollapsedIndicatorDirective`, `headerExpandedIndicatorTemplate` and `headerCollapsedIndicatorTemplate` respectively to properly reflect their purpose. Automatic migrations are available and will be applied on `ng update`.
-    - The `draggable` attribute is no longer required to be set on interactable elemenent if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as addition if the user shoudn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
+    - The `draggable` attribute is no longer required to be set on interactable elements, if a column header is templated and the Column Moving is enabled in order for handlers for any event to be triggered. Now `draggable='false'` can be used as an addition if the user shouldn't be able to drag a column by that element, but even if omitted `click` events for example will trigger now.
 
 ### New Features
 - `IgxExpansionPanel`:
