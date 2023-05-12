@@ -10,7 +10,6 @@ describe('Update to 11.0.0', () => {
         path.join(__dirname, '../migration-collection.json')
     );
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',

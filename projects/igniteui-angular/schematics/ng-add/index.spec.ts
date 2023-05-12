@@ -11,7 +11,6 @@ describe('ng-add schematics', () => {
   let tree: UnitTestTree;
   const sourceRoot = 'testSrc';
   const ngJsonConfig = {
-    defaultProject: 'testProj',
     version: 1,
     projects: {
       testProj: {
