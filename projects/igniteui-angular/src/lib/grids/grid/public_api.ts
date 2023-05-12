@@ -1,6 +1,6 @@
 import { IGX_GRID_COMMON_DIRECTIVES } from '../public_api';
 import { IgxGridComponent } from './grid.component';
-import { IgxExcelStyleHeaderIconDirective, IgxGridDetailTemplateDirective, IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid.directives';
+import { IgxExcelStyleHeaderIconDirective, IgxGridDetailTemplateDirective, IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid.directives';
 
 export * from './grid.component';
 export * from './grid.directives';
@@ -12,8 +12,8 @@ export const IGX_GRID_DIRECTIVES = [
     IgxGridDetailTemplateDirective,
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective,
     IgxExcelStyleHeaderIconDirective,
     IgxSortHeaderIconDirective,
     IgxSortAscendingHeaderIconDirective,

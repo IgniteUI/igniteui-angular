@@ -649,8 +649,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
-        this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
-        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.headerCollapsedIndicatorTemplate = this.rootGrid.headerCollapsedIndicatorTemplate;
+        this.headerExpandedIndicatorTemplate = this.rootGrid.headerExpandedIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
         this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
@@ -925,9 +925,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get iconTemplate() {
         const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         } else {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         }
     }
 

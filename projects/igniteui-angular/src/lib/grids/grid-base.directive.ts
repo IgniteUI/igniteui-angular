@@ -78,8 +78,8 @@ import { CharSeparatedValueData } from '../services/csv/char-separated-value-dat
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
-    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
+    IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective, IgxExcelStyleHeaderIconDirective, IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective
 } from './grid/grid.directives';
 import {
@@ -1371,25 +1371,125 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The custom template, if any, that should be used when rendering a row expand indicator.
      */
     @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef })
-    public rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+    protected rowExpandedIndicatorDirectiveTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+
+    /**
+     * Gets the row expand indicator template.
+    */
+    @Input()
+    public get rowExpandedIndicatorTemplate(): TemplateRef<IgxGridRowTemplateContext> {
+        return this._rowExpandedIndicatorTemplate || this.rowExpandedIndicatorDirectiveTemplate;
+    }
+
+    /**
+     * Sets the row expand indicator template.
+     *```html
+     *<ng-template igxRowExpandedIndicator>
+     *  <igx-icon role="button">remove</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowExpandedIndicatorTemplate = this.template;
+     * ```
+    */
+    public set rowExpandedIndicatorTemplate(template: TemplateRef<IgxGridRowTemplateContext>) {
+        this._rowExpandedIndicatorTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a row collapse indicator.
      */
     @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef })
-    public rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+    protected rowCollapsedIndicatorDirectiveTemplate: TemplateRef<IgxGridRowTemplateContext> = null;
+
+    /**
+     * Gets the row collapse indicator template.
+    */
+    @Input()
+    public get rowCollapsedIndicatorTemplate(): TemplateRef<IgxGridRowTemplateContext> {
+        return this._rowCollapsedIndicatorTemplate || this.rowCollapsedIndicatorDirectiveTemplate;
+    }
+
+    /**
+     * Sets the row collapse indicator template.
+     *```html
+     *<ng-template igxRowCollapsedIndicator>
+     *  <igx-icon role="button">add</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.rowCollapsedIndicatorTemplate = this.template;
+     * ```
+    */
+    public set rowCollapsedIndicatorTemplate(template: TemplateRef<IgxGridRowTemplateContext>) {
+        this._rowCollapsedIndicatorTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a header expand indicator.
      */
-    @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
-    public headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
+    @ContentChild(IgxHeaderExpandedIndicatorDirective, { read: TemplateRef })
+    protected headerExpandedIndicatorDirectiveTemplate: TemplateRef<IgxGridTemplateContext> = null;
+
+    /**
+     * Gets the header expand indicator template.
+    */
+    @Input()
+    public get headerExpandedIndicatorTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._headerExpandIndicatorTemplate || this.headerExpandedIndicatorDirectiveTemplate;
+    }
+
+    /**
+     * Sets the header expand indicator template.
+     *```html
+     *<ng-template igxHeaderExpandedIndicator>
+     *  <igx-icon role="button">remove</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.headerExpandedIndicatorTemplate = this.template;
+     * ```
+    */
+    public set headerExpandedIndicatorTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._headerExpandIndicatorTemplate = template;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering a header collapse indicator.
      */
-    @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
-    public headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext> = null;
+    @ContentChild(IgxHeaderCollapsedIndicatorDirective, { read: TemplateRef })
+    protected headerCollapsedIndicatorDirectiveTemplate: TemplateRef<IgxGridTemplateContext> = null;
+
+    /**
+     * Gets the row collapse indicator template.
+    */
+    @Input()
+    public get headerCollapsedIndicatorTemplate(): TemplateRef<IgxGridTemplateContext> {
+        return this._headerCollapseIndicatorTemplate || this.headerCollapsedIndicatorDirectiveTemplate;
+    }
+
+    /**
+     * Sets the row collapse indicator template.
+     *```html
+     *<ng-template igxHeaderCollapsedIndicator>
+     *  <igx-icon role="button">add</igx-icon>
+     *</ng-template>
+     * ```
+     *```typescript
+     * @ViewChild('template', {read: TemplateRef })
+     * public template: TemplateRef<any>;
+     * this.grid.headerCollapsedIndicatorTemplate = this.template;
+     * ```
+    */
+    public set headerCollapsedIndicatorTemplate(template: TemplateRef<IgxGridTemplateContext>) {
+        this._headerCollapseIndicatorTemplate = template;
+    }
 
     /** @hidden @internal */
     @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
@@ -2929,6 +3029,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowAddTextTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _rowEditActionsTemplate: TemplateRef<IgxGridRowEditActionsTemplateContext>;
     private _dragGhostCustomTemplate: TemplateRef<IgxGridRowDragGhostContext>;
+    private _rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    private _rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
+    private _headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    private _headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
     private _resourceStrings;

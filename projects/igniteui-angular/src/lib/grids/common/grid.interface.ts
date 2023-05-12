@@ -401,8 +401,8 @@ export interface GridType extends IGridDataBindable {
     sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
-    headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
-    headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerCollapsedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerExpandedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;

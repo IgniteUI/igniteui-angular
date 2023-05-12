@@ -942,9 +942,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public get iconTemplate() {
         if (this.groupsExpanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 

@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -3856,7 +3856,7 @@ export class GroupableGridComponent extends DataParent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
