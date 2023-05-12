@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -2372,7 +2372,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2413,7 +2413,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2425,7 +2425,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
-        fix.componentInstance.instance.paginate(0);
+        fix.componentInstance.instance.paginator.paginate(0);
         tick();
         fix.detectChanges();
 
@@ -3666,7 +3666,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
         grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
@@ -3857,7 +3856,7 @@ export class GroupableGridComponent extends DataParent {
         </ng-template>
     `,
     standalone: true,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

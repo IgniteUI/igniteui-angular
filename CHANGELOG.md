@@ -3,12 +3,31 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 16.0.0
-
+### Breaking Changes
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    The following grid properties, deprecated since version 12.1.0 are now removed:
+        - *evenRowCSS*;
+        - *oddRowCSS*;
+        - *page*;
+        - *paging*;
+        - *perPage*;
+        - *totalPages*;
+        - *isFirstPage*;
+        - *isLastPage*;
+        - *pageChange*;
+    Also the following deprecated grid events are removed.
+        - *perPageChange*;
+        - *pagingDone*;
+    Deprecated methods removed from the grid API are:
+        - *nextPage*;
+        - *previousPage*;
+        - *paginate*;
+        - *getCellByColumnVisibleIndex*;
 ### General
 - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 
 Now you can do:
-    
+
 ```typescript
 // IGX_GRID_DIRECTIVES exports all grid related components and directives
 import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -22,7 +41,7 @@ import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 })
 ```
 
-or 
+or
 
 ```typescript
 // Single import of only the <igx-grid> component.
@@ -55,6 +74,8 @@ import { IgxGridModule } from 'igniteui-angular';
     - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip.
     - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
     - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - **Breaking Change** The `IgxHeaderExpandIndicatorDirective` and `IgxHeaderCollapseIndicatorDirective` directives, as well as the `headerExpandIndicatorTemplate` and `headerCollapseIndicatorTemplate` properties have been renamed to `IgxHeaderExpandedIndicatorDirective`, `IgxHeaderCollapsedIndicatorDirective`, `headerExpandedIndicatorTemplate` and `headerCollapsedIndicatorTemplate` respectively to properly reflect their purpose. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
@@ -62,6 +83,8 @@ import { IgxGridModule } from 'igniteui-angular';
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 - `IgxGrid`, `IgxHierarchicalGrid`:
     - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
+    - `rowExpandedIndicatorTemplate`, `rowCollapsedIndicatorTemplate`, `headerExpandedIndicatorTemplate`, `headerCollapsedIndicatorTemplate` can now also be bound as `Input` to provide templates for the row and header expand/collapse indicators respectively. This is in addition to the existing equivalent template directives to allow reuse.
+- `ISortingExpression` now accepts an optional generic type parameter for type narrowing of the `fieldName` property to keys of the data item, e.g. `ISortingExpression<MyDataItem>`
 
 ## 15.1.0
 
