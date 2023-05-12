@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 16.0.0
 ### Breaking Changes
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    The following deprecated grid properties in version 12.1.0 are now removed:
+    The following grid properties, deprecated since version 12.1.0 are now removed:
         - *evenRowCSS*;
         - *oddRowCSS*;
         - *page*;
