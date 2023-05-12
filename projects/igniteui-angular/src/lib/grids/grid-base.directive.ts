@@ -3420,23 +3420,27 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     constructor(
-        public validation: IgxGridValidationService,
-        public selectionService: IgxGridSelectionService,
-        public colResizingService: IgxColumnResizingService,
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: GridServiceType,
+        public readonly validation: IgxGridValidationService,
+        /** @hidden @internal */
+        public readonly selectionService: IgxGridSelectionService,
+        protected colResizingService: IgxColumnResizingService,
+        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: GridServiceType,
         protected transactionFactory: IgxFlatTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
         protected zone: NgZone,
+        /** @hidden @internal */
         @Inject(DOCUMENT) public document: any,
-        public cdr: ChangeDetectorRef,
+        public readonly cdr: ChangeDetectorRef,
         protected differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
         private appRef: ApplicationRef,
         protected injector: Injector,
         protected envInjector: EnvironmentInjector,
         public navigation: IgxGridNavigationService,
+        /** @hidden @internal */
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        /** @hidden @internal */
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string,
