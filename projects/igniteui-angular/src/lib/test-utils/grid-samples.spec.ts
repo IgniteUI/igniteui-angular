@@ -488,9 +488,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="300px" width="500px" [moving]="true" [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.columnInit, ''),
+        EventSubscriptions.columnInit, '', '', '<igx-paginator *ngIf="paging"></igx-paginator>'),
     standalone: true,
-    imports: [IgxGridComponent]
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 

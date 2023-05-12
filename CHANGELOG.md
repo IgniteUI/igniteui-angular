@@ -3,7 +3,26 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 16.0.0
-
+### Breaking Changes
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    The following grid properties, deprecated since version 12.1.0 are now removed:
+        - *evenRowCSS*;
+        - *oddRowCSS*;
+        - *page*;
+        - *paging*;
+        - *perPage*;
+        - *totalPages*;
+        - *isFirstPage*;
+        - *isLastPage*;
+        - *pageChange*;
+    Also the following deprecated grid events are removed.
+        - *perPageChange*;
+        - *pagingDone*;
+    Deprecated methods removed from the grid API are:
+        - *nextPage*;
+        - *previousPage*;
+        - *paginate*;
+        - *getCellByColumnVisibleIndex*;
 ### General
 - All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
 

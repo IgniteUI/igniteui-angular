@@ -2935,8 +2935,8 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 
 @Component({
     template: `<div style="height:300px">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
-                [paging]="paging" [perPage]="pageSize">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator> 
             </igx-grid>
         </div>`,
     standalone: true,
@@ -3183,7 +3183,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                 <span igxTabHeaderLabel>Tab 5</span>
             </igx-tab-header>
             <igx-tab-content>
-                <igx-grid #grid5 [data]="data"  [perPage]="4" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
+                <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
                 <igx-column
                     *ngFor="let column of columns"
                     [field]="column.field"

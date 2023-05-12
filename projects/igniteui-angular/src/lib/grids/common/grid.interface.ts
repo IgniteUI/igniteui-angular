@@ -473,8 +473,6 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     dragRowID: any;
     rowDragging: boolean;
-    evenRowCSS: string;
-    oddRowCSS: string;
 
     firstEditableColumnIndex: number;
     lastEditableColumnIndex: number;
