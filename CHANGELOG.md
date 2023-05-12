@@ -55,6 +55,8 @@ import { IgxGridModule } from 'igniteui-angular';
     - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip.
     - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
     - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - **Breaking Change** The `IgxHeaderExpandIndicatorDirective` and `IgxHeaderCollapseIndicatorDirective` directives, as well as the `headerExpandIndicatorTemplate` and `headerCollapseIndicatorTemplate` properties have been renamed to `IgxHeaderExpandedIndicatorDirective`, `IgxHeaderCollapsedIndicatorDirective`, `headerExpandedIndicatorTemplate` and `headerCollapsedIndicatorTemplate` respectively to properly reflect their purpose. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
@@ -62,7 +64,8 @@ import { IgxGridModule } from 'igniteui-angular';
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
 - `IgxGrid`, `IgxHierarchicalGrid`:
     - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
-- `ISortingExpression` is now typed, accepting a parameter for type narrowing.
+    - `rowExpandedIndicatorTemplate`, `rowCollapsedIndicatorTemplate`, `headerExpandedIndicatorTemplate`, `headerCollapsedIndicatorTemplate` can now also be bound as `Input` to provide templates for the row and header expand/collapse indicators respectively. This is in addition to the existing equivalent template directives to allow reuse.
+- `ISortingExpression` now accepts an optional generic type parameter for type narrowing of the `fieldName` property to keys of the data item, e.g. `ISortingExpression<MyDataItem>`
 
 ## 15.1.0
 

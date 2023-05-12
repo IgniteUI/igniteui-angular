@@ -1,0 +1,25 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "headerExpandIndicatorTemplate",
+            "replaceWith": "headerExpandedIndicatorTemplate",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxPivotGridComponent"
+            ]
+        },
+        {
+            "member": "headerCollapseIndicatorTemplate",
+            "replaceWith": "headerCollapsedIndicatorTemplate",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxPivotGridComponent"
+            ]
+        }
+    ]
+}
