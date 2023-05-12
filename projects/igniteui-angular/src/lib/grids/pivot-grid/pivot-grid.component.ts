@@ -395,6 +395,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * ```html
      *  <igx-pivot-grid #grid [data]="localData" [pivotValueCloneStrategy]="customCloneStrategy"></igx-pivot-grid>
      * ```
+     * @hidden @internal
      */
     @Input()
     public get pivotValueCloneStrategy(): IDataCloneStrategy {

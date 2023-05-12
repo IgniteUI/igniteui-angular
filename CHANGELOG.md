@@ -86,7 +86,6 @@ import { IgxGridModule } from 'igniteui-angular';
     - `rowExpandedIndicatorTemplate`, `rowCollapsedIndicatorTemplate`, `headerExpandedIndicatorTemplate`, `headerCollapsedIndicatorTemplate` can now also be bound as `Input` to provide templates for the row and header expand/collapse indicators respectively. This is in addition to the existing equivalent template directives to allow reuse.
 - `IgxPivotGrid`
     - Added `pivotConfigurationChanged` event triggered any time any of `pivotConfiguration` properties is changed via the UI.
-    - Added `pivotValueCloneStrategy` property that specifies value clone strategy like `DefaultDataCloneStrategy` or `CachedDataCloneStrategy`.
 - `ISortingExpression` now accepts an optional generic type parameter for type narrowing of the `fieldName` property to keys of the data item, e.g. `ISortingExpression<MyDataItem>`
 - `Util`
     - Added new `CachedDataCloneStrategy` that allows for cloning object with circular references .
