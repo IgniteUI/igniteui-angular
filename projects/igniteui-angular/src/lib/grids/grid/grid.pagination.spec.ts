@@ -49,7 +49,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            paginator = paginator;
+            paginator = grid.paginator;
         }));
 
         it('should paginate data UI', () => {
