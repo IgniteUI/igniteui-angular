@@ -55,7 +55,7 @@
         (pointerleave)="onPointerLeave()"
         >
         <ng-container *ngIf="column.collapsible">
-            <div class="igx-grid-th__expander" (pointerdown)="$event.stopPropagation()" (click)="toggleExpandState($event)">
+            <div class="igx-grid-th__expander" (pointerdown)="onPointerDownIndicator($event)" (click)="toggleExpandState($event)">
                 <ng-container
                     *ngTemplateOutlet="column.collapsibleIndicatorTemplate ? column.collapsibleIndicatorTemplate : defaultCollapseIndicator; context: {$implicit: column, column: column}">
                 </ng-container>
