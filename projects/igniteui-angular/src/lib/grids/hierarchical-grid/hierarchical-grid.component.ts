@@ -172,7 +172,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
+        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
 
@@ -517,26 +517,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
-    }
-
-    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript
@@ -662,8 +642,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
-        this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
-        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.headerCollapsedIndicatorTemplate = this.rootGrid.headerCollapsedIndicatorTemplate;
+        this.headerExpandedIndicatorTemplate = this.rootGrid.headerExpandedIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
         this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
@@ -938,9 +918,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get iconTemplate() {
         const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         } else {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         }
     }
 

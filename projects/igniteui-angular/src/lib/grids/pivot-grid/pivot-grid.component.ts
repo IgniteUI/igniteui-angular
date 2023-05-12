@@ -69,7 +69,6 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridColumnResizerComponent } from '../resizing/pivot-grid/pivot-resizer.component';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
-import { IPageEventArgs } from '../../paginator/paginator-interfaces';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-strategy';
 import { PivotSortUtil } from './pivot-sort-util';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
@@ -691,21 +690,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override pageChange = new EventEmitter<number>();
-
-    /**
-     * @hidden @internal
-     */
-    public override pagingDone = new EventEmitter<IPageEventArgs>();
-
-    /**
-     * @hidden @internal
-     */
-    public override perPageChange = new EventEmitter<number>();
-
-    /**
-     * @hidden @internal
-     */
     public override shouldGenerate: boolean;
 
     /**
@@ -766,38 +750,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get isFirstPage(): boolean {
-        return true;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public override get isLastPage(): boolean {
-        return true;
-    }
-
-    /**
-     * @hidden @internal
-     */
     @Input()
     public override get page(): number {
         return 0;
     }
 
     public override set page(_val: number) {
-    }
-
-
-    /**
-     * @hidden @internal
-     */
-    @Input()
-    public override get paging(): boolean {
-        return false;
-    }
-
-    public override set paging(_value: boolean) {
     }
 
     /**
@@ -855,13 +813,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     public override get summaryRowHeight(): number {
         return 0;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public override get totalPages(): number {
-        return;
     }
 
     /**
@@ -1476,24 +1427,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * @hidden @internal
      */
     public override clearSearch() { }
-
-    /**
-     * @hidden @internal
-     */
-    public override paginate(_val: number): void {
-    }
-
-    /**
-    * @hidden @internal
-    */
-    public override nextPage(): void {
-    }
-
-    /**
-    * @hidden @internal
-    */
-    public override previousPage(): void {
-    }
 
     /**
     * @hidden @internal

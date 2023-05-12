@@ -1606,7 +1606,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
-            grid.nextPage();
+            grid.paginator.nextPage();
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
@@ -1618,7 +1618,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
-            grid.previousPage();
+            grid.paginator.previousPage();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1642,7 +1642,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
-            grid.nextPage();
+            grid.paginator.nextPage();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1655,7 +1655,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
-            grid.previousPage();
+            grid.paginator.previousPage();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
@@ -2226,7 +2226,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should have correct indices on all pages', () => {
-            grid.nextPage();
+            grid.paginator.nextPage();
             fix.detectChanges();
 
             const firstRootRow = grid.gridAPI.get_row_by_index(0);

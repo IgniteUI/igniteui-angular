@@ -78,8 +78,8 @@ export class IgxRowCollapsedIndicatorDirective {
     selector: '[igxHeaderExpandedIndicator]',
     standalone: true
 })
-export class IgxHeaderExpandIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxHeaderExpandIndicatorDirective,
+export class IgxHeaderExpandedIndicatorDirective {
+    public static ngTemplateContextGuard(_directive: IgxHeaderExpandedIndicatorDirective,
         context: unknown): context is IgxGridTemplateContext {
         return true
     }
@@ -92,8 +92,8 @@ export class IgxHeaderExpandIndicatorDirective {
     selector: '[igxHeaderCollapsedIndicator]',
     standalone: true
 })
-export class IgxHeaderCollapseIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxHeaderCollapseIndicatorDirective,
+export class IgxHeaderCollapsedIndicatorDirective {
+    public static ngTemplateContextGuard(_directive: IgxHeaderCollapsedIndicatorDirective,
         context: unknown): context is IgxGridTemplateContext {
         return true
     }

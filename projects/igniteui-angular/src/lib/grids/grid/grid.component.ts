@@ -579,26 +579,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this._columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
-    }
-
-    /**
      * @hidden @internal
      */
     public get groupsRowList() {
@@ -962,9 +942,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public get iconTemplate() {
         if (this.groupsExpanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 
