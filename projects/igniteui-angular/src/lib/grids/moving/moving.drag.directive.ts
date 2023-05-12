@@ -56,7 +56,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     }
 
     public override onPointerDown(event: Event) {
-        if (!this.draggable) {
+        if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
         }
 
