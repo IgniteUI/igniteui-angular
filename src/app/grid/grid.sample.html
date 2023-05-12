@@ -117,7 +117,7 @@
 
         <div class="paging-config">
             <div class="switch-group">
-                <igx-switch [checked]="grid2.paging" (change)="grid2.paging = $event.switch.checked">Enable Paging</igx-switch>
+                <igx-switch [(ngModel)]="gridPaging">Enable Paging</igx-switch>
             </div>
             <div class="igx-form-group">
                 <igx-input-group>
@@ -154,7 +154,7 @@
                     <igx-checkbox [checked]="value" (change)="grid2.updateCell($event.checkbox.checked, cell.row.key, cell.column.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
-            <igx-paginator [perPage]="10"></igx-paginator>
+            <igx-paginator *ngIf="gridPaging" [perPage]="10"></igx-paginator>
         </igx-grid>
 
     </article>
