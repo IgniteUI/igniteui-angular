@@ -61,16 +61,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
 
         super.onPointerDown(event);
-
-        if (this._clicked) {
-            this.cms.column = this.column;
-            this.column.grid.cdr.detectChanges();
-        }
     }
 
     public override onPointerMove(event: Event) {
         if (this._clicked && !this._dragStarted) {
             this._removeOnDestroy = false;
+            this.cms.column = this.column;
+            this.column.grid.cdr.detectChanges();
 
             const movingStartArgs = {
                 source: this.column

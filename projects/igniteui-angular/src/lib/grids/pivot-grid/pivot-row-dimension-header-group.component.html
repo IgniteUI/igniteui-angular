@@ -23,10 +23,11 @@
         [density]="grid.displayDensity"
     >
     </igx-pivot-row-dimension-header>
-    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column"></igx-grid-filtering-cell>
+    <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode === 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
         [igxPivotResizeHandle]="column"
         [igxPivotResizeHandleHeader]="this"
+        [attr.draggable]="false"
         [style.cursor]="colResizingService.resizeCursor">
     </span>
     <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
