@@ -1,5 +1,25 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {DisplayDensity, IgxDialogComponent, IgxFilterOptions, IgxListComponent} from 'igniteui-angular';
+import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
+import { IgxDialogComponent as IgxDialogComponent_1 } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective } from '../../../projects/igniteui-angular/src/lib/list/list.common';
+import { IgxFilterDirective, IgxFilterPipe } from '../../../projects/igniteui-angular/src/lib/directives/filter/filter.directive';
+import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
+import { FormsModule } from '@angular/forms';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxCheckboxComponent } from '../../../projects/igniteui-angular/src/lib/checkbox/checkbox.component';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { NgFor } from '@angular/common';
+import { IgxCardComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
+import { IgxBadgeComponent } from '../../../projects/igniteui-angular/src/lib/badge/badge.component';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { IgxListComponent as IgxListComponent_1, IgxListLineTitleDirective, IgxListActionDirective, IgxListThumbnailDirective, IgxListLineSubTitleDirective, IgxListLineDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 interface Employee {
     imageURL: string;
@@ -12,7 +32,9 @@ interface Employee {
     selector: 'app-list-sample',
     styleUrls: ['list.sample.scss'],
     templateUrl: 'list.sample.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxListComponent_1, IgxListItemComponent, IgxListLineTitleDirective, IgxBadgeComponent, IgxListActionDirective, IgxCardComponent, NgFor, IgxRippleDirective, IgxIconComponent, IgxListThumbnailDirective, IgxCheckboxComponent, IgxAvatarComponent, IgxListLineSubTitleDirective, IgxListLineDirective, IgxSwitchComponent, IgxInputGroupComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxFilterDirective, IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxButtonDirective, IgxDialogComponent_1, IgxLabelDirective, IgxFilterPipe]
 })
 export class ListSampleComponent implements OnInit {
     @ViewChild('fruitList', { static: true })

@@ -43,7 +43,6 @@ export interface IgxStepper extends IgxCarouselComponentBase {
 }
 
 // Item interfaces
-
 export interface IgxStep extends ToggleAnimationPlayer {
     id: string;
     /** @hidden @internal */

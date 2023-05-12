@@ -16,10 +16,12 @@
         @extend %igx-drop-down !optional;
 
         @include e(list) {
+            @include sizable();
             @extend %igx-drop-down__list !optional;
         }
 
         @include e(list-scroll) {
+            @include sizable();
             @extend %igx-drop-down__list-scroll !optional;
         }
 

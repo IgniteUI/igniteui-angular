@@ -4,7 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * @hidden
  */
 @Pipe({
-    name: 'spreadTickLabels'
+    name: 'spreadTickLabels',
+    standalone: true
 })
 export class IgxTickLabelsPipe implements PipeTransform {
 

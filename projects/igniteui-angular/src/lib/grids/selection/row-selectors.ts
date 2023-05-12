@@ -6,7 +6,8 @@ import { IgxHeadSelectorTemplateContext, IgxGroupByRowSelectorTemplateContext, I
  * @internal
  */
 @Directive({
-    selector: '[igxRowSelector]'
+    selector: '[igxRowSelector]',
+    standalone: true
 })
 export class IgxRowSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxRowSelectorTemplateContext>) { }
@@ -14,7 +15,7 @@ export class IgxRowSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective,
         context: unknown): context is IgxRowSelectorTemplateContext { 
         return true
-    };
+    }
 }
 
 /**
@@ -22,7 +23,8 @@ export class IgxRowSelectorDirective {
  * @internal
  */
 @Directive({
-    selector: '[igxGroupByRowSelector]'
+    selector: '[igxGroupByRowSelector]',
+    standalone: true
 })
 export class IgxGroupByRowSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxGroupByRowSelectorTemplateContext>) { }
@@ -30,7 +32,7 @@ export class IgxGroupByRowSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective,
         context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
         return true
-    };
+    }
 }
 
 /**
@@ -38,7 +40,8 @@ export class IgxGroupByRowSelectorDirective {
  * @internal
  */
 @Directive({
-    selector: '[igxHeadSelector]'
+    selector: '[igxHeadSelector]',
+    standalone: true
 })
 export class IgxHeadSelectorDirective {
     constructor(public templateRef: TemplateRef<IgxHeadSelectorTemplateContext>) { }
@@ -46,5 +49,5 @@ export class IgxHeadSelectorDirective {
     public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective,
         context: unknown): context is IgxHeadSelectorTemplateContext { 
         return true
-    };
+    }
 }

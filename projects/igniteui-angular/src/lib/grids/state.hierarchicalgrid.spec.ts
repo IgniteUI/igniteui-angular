@@ -8,12 +8,14 @@ import { IPagingState } from '../data-operations/paging-state.interface';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
-import { IgxHierarchicalGridModule } from './hierarchical-grid/public_api';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
+import { IgxColumnComponent } from './public_api';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { NgFor } from '@angular/common';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
@@ -23,10 +25,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxHierarchicalGridTestExpandedBaseComponent
-            ],
-            imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
+            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent]
         }).compileComponents();
     }))
 
@@ -685,7 +684,9 @@ class HelperFunctions {
                 <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    standalone: true,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

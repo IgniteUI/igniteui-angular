@@ -2,20 +2,19 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPaginatorComponent, IgxPaginatorModule } from './public_api';
+import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                DefaultPaginatorComponent
-            ],
-            imports: [IgxPaginatorModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, DefaultPaginatorComponent]
         }).compileComponents();
     }));
     it('should calculate number of pages correctly', () => {
@@ -241,10 +240,7 @@ describe('IgxPaginator with custom settings', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                CustomizedPaginatorComponent
-            ],
-            imports: [IgxPaginatorModule, NoopAnimationsModule]
+            imports: [NoopAnimationsModule, CustomizedPaginatorComponent]
         }).compileComponents();
     }));
 
@@ -300,7 +296,9 @@ describe('IgxPaginator with custom settings', () => {
                     </button>
                 </div>
             </igx-paginator-content>
-        </igx-paginator>`
+        </igx-paginator>`,
+    standalone: true,
+    imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, NgIf, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
@@ -316,7 +314,9 @@ export class DefaultPaginatorComponent {
         [selectOptions]="[3,10,25,40]"
         [perPage]="7"
         >
-        </igx-paginator>`
+        </igx-paginator>`,
+    standalone: true,
+    imports: [IgxPaginatorComponent]
 })
 export class CustomizedPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;

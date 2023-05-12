@@ -1,8 +1,8 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+import { NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
-    ElementRef, EventEmitter, HostBinding, Inject, Input, NgModule, OnChanges, OnDestroy,
+    ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy,
     OnInit, Output, QueryList, SimpleChanges,TemplateRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { fadeIn } from '../animations/main';
 import { HorizontalAnimationType, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxAngularAnimationService } from '../services/animation/angular-animation-service';
 import { AnimationService } from '../services/animation/animation';
@@ -22,9 +22,7 @@ import {
 import {
     IgxStepActiveIndicatorDirective,
     IgxStepCompletedIndicatorDirective,
-    IgxStepContentDirective,
-    IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective,
-    IgxStepSubTitleDirective, IgxStepTitleDirective
+    IgxStepInvalidIndicatorDirective
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
 
@@ -74,7 +72,9 @@ import { IgxStepperService } from './stepper.service';
     providers: [
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, NgFor]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
 
@@ -540,32 +540,4 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 }
 
-@NgModule({
-    imports: [
-        CommonModule,
-        IgxRippleModule
-    ],
-    declarations: [
-        IgxStepComponent,
-        IgxStepperComponent,
-        IgxStepTitleDirective,
-        IgxStepSubTitleDirective,
-        IgxStepIndicatorDirective,
-        IgxStepContentDirective,
-        IgxStepActiveIndicatorDirective,
-        IgxStepCompletedIndicatorDirective,
-        IgxStepInvalidIndicatorDirective,
-    ],
-    exports: [
-        IgxStepComponent,
-        IgxStepperComponent,
-        IgxStepTitleDirective,
-        IgxStepSubTitleDirective,
-        IgxStepIndicatorDirective,
-        IgxStepContentDirective,
-        IgxStepActiveIndicatorDirective,
-        IgxStepCompletedIndicatorDirective,
-        IgxStepInvalidIndicatorDirective,
-    ]
-})
-export class IgxStepperModule { }
+

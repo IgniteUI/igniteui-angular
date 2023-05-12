@@ -1,10 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxCarouselComponent, CarouselIndicatorsOrientation } from 'igniteui-angular';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CarouselIndicatorsOrientation, IgxButtonDirective, IgxCarouselComponent, IgxCarouselIndicatorDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxSlideComponent, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-carousel-sample',
     styleUrls: ['carousel.sample.scss'],
-    templateUrl: 'carousel.sample.html'
+    templateUrl: 'carousel.sample.html',
+    standalone: true,
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, NgIf]
 })
 export class CarouselSampleComponent {
     @ViewChild('car', { static: true })

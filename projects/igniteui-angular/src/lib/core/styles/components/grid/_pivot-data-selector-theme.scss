@@ -171,15 +171,7 @@
         }
 
         %igx-chip__item {
-            height: map.get($chip-height-material, 'comfortable');
-        }
-
-        %igx-chip__item--cosy {
-            height: map.get($chip-height-material, 'cosy');
-        }
-
-        %igx-chip__item--compact {
-            height: map.get($chip-height-material, 'compact');
+            height: #{sizable(map.get($chip-height-material, 'compact'), map.get($chip-height-material, 'cosy'), map.get($chip-height-material, 'comfortable'))};
         }
 
         %igx-chip__content {

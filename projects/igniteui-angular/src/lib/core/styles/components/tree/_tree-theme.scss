@@ -157,8 +157,11 @@
     }
 
     %node-wrapper {
-        min-height: map.get($node-height, 'comfortable');
-        padding: 0 map.get($node-indent, 'comfortable');
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($node-height, 'compact')}, #{map.get($node-height, 'cosy')}, #{map.get($node-height, 'comfortable')})};
+        min-height: var(--size);
+        padding-inline: pad-inline(map.get($node-indent, 'compact'), map.get($node-indent, 'cosy'), map.get($node-indent, 'comfortable'));
+        padding-block: 0;
         position: relative;
         background: var-get($theme, 'background');
         color: var-get($theme, 'foreground');
@@ -203,11 +206,10 @@
         }
 
         &--cosy {
-            min-height: map.get($node-height, 'cosy');
-            padding: 0 map.get($node-indent, 'cosy');
+            --component-size: var(--ig-size, var(--ig-size-medium));
 
             %node-spacer {
-                width: map.get($node-indent, 'cosy')
+                --component-size: var(--ig-size, var(--ig-size-medium));
             }
 
             %node-drop-indicator {
@@ -222,11 +224,10 @@
         }
 
         &--compact {
-            min-height: map.get($node-height, 'compact');
-            padding: 0 map.get($node-indent, 'compact');
+            --component-size: var(--ig-size, var(--ig-size-small));
 
             %node-spacer {
-                width: map.get($node-indent, 'compact')
+                --component-size: var(--ig-size, var(--ig-size-small));
             }
 
             %node-drop-indicator {
@@ -290,8 +291,10 @@
     }
 
     %node-spacer {
+        --component-size: var(--ig-size, var(--ig-size-large));
+        --size: #{sizable(#{map.get($node-indent, 'compact')}, #{map.get($node-indent, 'cosy')}, #{map.get($node-indent, 'comfortable')})};
+        width: var(--size);
         display: inline-block;
-        width: map.get($node-indent, 'comfortable');
     }
 
     %node-content {

@@ -23,7 +23,7 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
         return this.arraySort(data, cmpFunc);
     }
 
-    protected getFieldValue(obj: IPivotGridRecord, key: string, _isDate: boolean = false, _isTime: boolean = false): any {
+    protected getFieldValue(obj: IPivotGridRecord, key: string, _isDate = false, _isTime = false): any {
         return obj.aggregationValues.get(key);
     }
 }
@@ -52,7 +52,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return this.arraySort(data, cmpFunc);
     }
 
-    protected getFieldValue(obj: any, key: string, _isDate: boolean = false, isTime: boolean = false): any {
+    protected getFieldValue(obj: any, key: string, _isDate = false, isTime = false): any {
         let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {

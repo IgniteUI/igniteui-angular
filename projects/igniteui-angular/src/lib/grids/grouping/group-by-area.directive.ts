@@ -12,7 +12,7 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent } from '../../chips/public_api';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
@@ -187,7 +187,10 @@ export abstract class IgxGroupByAreaDirective {
  *
  * @hidden @internal
  */
-@Pipe({ name: 'igxGroupByMeta' })
+@Pipe({
+    name: 'igxGroupByMeta',
+    standalone: true
+})
 export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: GridType) {

@@ -4,11 +4,67 @@ All notable changes for each version of this project will be documented in this 
 
 ## 16.0.0
 
+### General
+- All Ignite UI for Angular components are now exported as `standalone` components. The library still exports `NgModules`, which have been preserved for backward compatibility, but they no longer declare any of the Ignite UI for Angular components, instead they just import and export the `standalone` components. The `standalone` components are still in a preview stage. Some utility directive exports may change in the future and may be missing from the documentation in the initial release, hence the `preview` state of the feature.
+
+Now you can do:
+    
+```typescript
+// IGX_GRID_DIRECTIVES exports all grid related components and directives
+import { IGX_GRID_DIRECTIVES } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-grid-sample',
+    styleUrls: ['grid.sample.scss'],
+    templateUrl: 'grid.sample.html',
+    standalone: true,
+    imports: [IGX_GRID_DIRECTIVES, AsyncPipe]
+})
+```
+
+or 
+
+```typescript
+// Single import of only the <igx-grid> component.
+import { IgxGridComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-grid-sample',
+    styleUrls: ['grid.sample.scss'],
+    templateUrl: 'grid.sample.html',
+    standalone: true,
+    imports: [IgxGridComponent, AsyncPipe]
+})
+```
+
+or still
+
+```typescript
+// `NgModule` import of the `IgxGridModule` module, which is equivalent to IGX_GRID_DIRECTIVES in terms of exported components and directives.
+import { IgxGridModule } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-grid-sample',
+    styleUrls: ['grid.sample.scss'],
+    templateUrl: 'grid.sample.html',
+    standalone: true,
+    imports: [IgxGridModule, AsyncPipe]
+})
+```
+- `IgxChip`
+    - **Behavioral Change** The `igxChip` styles have been revisited and the select container animaton has been removed when selecting/deselecting a chip.
+    - **Behavioral Change** The remove button behavior have been revisited, now when the chip is in `disabled` state the remove button is hidden.
+    - The `igxChip` have new input `variant` which can take any of the following values: `'primary'`, `'info'`, `'success'`, `'warning'`, `'danger'`
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - **Breaking Change** The `IgxHeaderExpandIndicatorDirective` and `IgxHeaderCollapseIndicatorDirective` directives, as well as the `headerExpandIndicatorTemplate` and `headerCollapseIndicatorTemplate` properties have been renamed to `IgxHeaderExpandedIndicatorDirective`, `IgxHeaderCollapsedIndicatorDirective`, `headerExpandedIndicatorTemplate` and `headerCollapsedIndicatorTemplate` respectively to properly reflect their purpose. Automatic migrations are available and will be applied on `ng update`.
 ### New Features
 - `IgxExpansionPanel`:
     - `IgxExpansionPanelTitleDirective` and `IgxExpansionPanelDescriptionDirective` show tooltip of the provided text content.
 - `IgxDateRangePicker`
     - Added `showWeekNumbers` input that toggles whether or not the number of a week will be visible next to it
+- `IgxGrid`, `IgxHierarchicalGrid`:
+    - `totalItemCount` can now also be bound as `Input` in remote virtualization scenarios.
+    - `rowExpandedIndicatorTemplate`, `rowCollapsedIndicatorTemplate`, `headerExpandedIndicatorTemplate`, `headerCollapsedIndicatorTemplate` can now also be bound as `Input` to provide templates for the row and header expand/collapse indicators respectively. This is in addition to the existing equivalent template directives to allow reuse.
 
 ## 15.1.0
 

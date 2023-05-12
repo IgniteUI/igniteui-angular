@@ -1,6 +1,14 @@
 import { Component, ViewChild, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs, GridSelectionMode} from 'igniteui-angular';
+import { NgFor, NgStyle, NgIf } from '@angular/common';
+
 import { SAMPLE_DATA } from '../shared/sample-data';
+import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxColumnLayoutComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-layout.component';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
 
 interface ColumnConfig {
     key: string;
@@ -15,8 +23,10 @@ interface ColumnConfig {
 
 @Component({
     selector: 'app-grid-mrl-config-sample',
+    templateUrl: 'grid-mrl-config.sample.html',
     styleUrls: ['grid-mrl-config.sample.scss'],
-    templateUrl: 'grid-mrl-config.sample.html'
+    standalone: true,
+    imports: [NgFor, IgxDragDirective, NgStyle, IgxDropDirective, NgIf, IgxButtonDirective, IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxDialogComponent]
 })
 export class GridMRLConfigSampleComponent {
 

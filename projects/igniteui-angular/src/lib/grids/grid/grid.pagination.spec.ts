@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent, RemotePagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,12 +33,9 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                PagingComponent,
+            imports: [NoopAnimationsModule, PagingComponent,
                 GridWithUndefinedDataComponent,
-                RemotePagingComponent
-            ],
-            imports: [IgxGridModule, NoopAnimationsModule]
+                RemotePagingComponent]
         });
     }));
 
@@ -453,7 +449,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         expect(errorMessage).toBe('');
         grid = fix.componentInstance.grid;
         expect(grid.rowList.length).toBe(0);
-        tick(305);
+        tick(16);
         fix.detectChanges();
 
         expect(grid.rowList.length).toBe(5);
@@ -476,7 +472,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         grid = fix.componentInstance.grid;
         expect(grid.paginator.totalPages).toBe(4);
         const page = (index: number) => grid.page = index;
-        let desiredPageIndex = 2;
+        const desiredPageIndex = 2;
         page(2);
         fix.detectChanges();
         tick();

@@ -20,8 +20,9 @@ import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
-import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
 import { PlatformUtil } from '../core/utils';
+import { NgTemplateOutlet } from '@angular/common';
 
 let NEXT_ID = 0;
 /**
@@ -53,7 +54,9 @@ let NEXT_ID = 0;
             display: block;
             height: 100%;
         }
-    `]
+    `],
+    standalone: true,
+    imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements
     IToggleView,

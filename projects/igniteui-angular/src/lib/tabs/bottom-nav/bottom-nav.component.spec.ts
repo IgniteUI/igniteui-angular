@@ -10,19 +10,12 @@ import { BottomTabBarTestComponent,
         TabBarTestComponent,
         BottomNavRoutingGuardTestComponent,
         BottomNavTestHtmlAttributesComponent } from '../../test-utils/bottom-nav-components.spec';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxBottomNavModule } from './bottom-nav.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { IgxBottomNavComponent, IgxBottomNavItemComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxIconModule } from '../../icon/public_api';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
-import { RoutingView1Component,
-    RoutingView2Component,
-    RoutingView3Component,
-    RoutingView4Component,
-    RoutingView5Component,
-    RoutingViewComponentsModule } from '../../test-utils/routing-view-components.spec';
+import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../test-utils/routing-view-components.spec';
 
 describe('IgxBottomNav', () => {
     configureTestSuite();
@@ -40,10 +33,21 @@ describe('IgxBottomNav', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabBarTestComponent, BottomTabBarTestComponent, TabBarRoutingTestComponent,
-                TabBarTabsOnlyModeTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent],
-            imports: [IgxBottomNavModule, BrowserAnimationsModule, IgxIconModule, RoutingViewComponentsModule,
-                RouterTestingModule.withRoutes(testRoutes)],
+            imports: [
+                NoopAnimationsModule,
+                RouterTestingModule.withRoutes(testRoutes),
+                TabBarTestComponent,
+                BottomTabBarTestComponent,
+                TabBarRoutingTestComponent,
+                TabBarTabsOnlyModeTestComponent,
+                BottomNavRoutingGuardTestComponent,
+                BottomNavTestHtmlAttributesComponent,
+                RoutingView1Component,
+                RoutingView2Component,
+                RoutingView3Component,
+                RoutingView4Component,
+                RoutingView5Component
+            ],
             providers: [RoutingTestGuard]
         }).compileComponents();
     }));

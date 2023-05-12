@@ -1,10 +1,10 @@
-import { IgxSplitterModule } from './splitter.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
@@ -14,11 +14,10 @@ const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 describe('IgxSplitter', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-            declarations: [ SplitterTestComponent ],
-            imports: [
-                IgxSplitterModule
-            ]
-        }).compileComponents()));
+    imports: [
+        SplitterTestComponent
+    ]
+}).compileComponents()));
 
     let fixture; let splitter;
     beforeEach(waitForAsync(() => {
@@ -296,11 +295,10 @@ describe('IgxSplitter', () => {
 describe('IgxSplitter pane toggle', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-            declarations: [ SplitterTogglePaneComponent ],
-            imports: [
-                IgxSplitterModule
-            ]
-        }).compileComponents()));
+        imports: [
+            SplitterTogglePaneComponent
+        ]
+    }).compileComponents()));
 
     let fixture; let splitter;
     beforeEach(waitForAsync(() => {
@@ -401,11 +399,10 @@ describe('IgxSplitter pane toggle', () => {
 describe('IgxSplitter pane collapse', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => TestBed.configureTestingModule({
-            declarations: [ SplitterCollapsedPaneComponent ],
-            imports: [
-                IgxSplitterModule
-            ]
-        }).compileComponents()));
+        imports: [
+            SplitterCollapsedPaneComponent
+        ]
+    }).compileComponents()));
 
     let fixture; let splitter;
     beforeEach(waitForAsync(() => {
@@ -447,6 +444,8 @@ describe('IgxSplitter pane collapse', () => {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    standalone: true,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterTestComponent {
     @ViewChild(IgxSplitterComponent, { static: true })
@@ -474,6 +473,8 @@ export class SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    standalone: true,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 
 export class SplitterTogglePaneComponent extends SplitterTestComponent {
@@ -499,6 +500,8 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    standalone: true,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
 }

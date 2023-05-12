@@ -26,6 +26,8 @@ import { IgxDirectionality } from '../../services/direction/directionality';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
 import { IgxStepperService } from '../stepper.service';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { NgIf, NgClass, NgTemplateOutlet } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -53,7 +55,9 @@ let NEXT_ID = 0;
     templateUrl: 'step.component.html',
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {
 
