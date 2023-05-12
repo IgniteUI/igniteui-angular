@@ -10,7 +10,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { DisplayDensity } from '../../core/density';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
+import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from '../cell.component';
@@ -1953,7 +1953,7 @@ export class IgxHierarchicalGridToggleRIAndColsComponent  extends IgxHierarchica
         </ng-template>
     </igx-hierarchical-grid>`,
     standalone: true,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
@@ -2013,8 +2013,8 @@ export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalG
         IgxExcelStyleSearchComponent,
         IgxRowExpandedIndicatorDirective,
         IgxRowCollapsedIndicatorDirective,
-        IgxHeaderExpandIndicatorDirective,
-        IgxHeaderCollapseIndicatorDirective
+        IgxHeaderExpandedIndicatorDirective,
+        IgxHeaderCollapsedIndicatorDirective
     ]
 })
 export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
