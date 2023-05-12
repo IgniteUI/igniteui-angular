@@ -32,6 +32,14 @@ export interface IValuesChange {
 }
 
 /**
+ * Event emitted when pivot configuration is changed.
+ */
+export interface IPivotConfigurationChangedEventArgs {
+    /** The new configuration. */
+    pivotConfiguration: IPivotConfiguration
+}
+
+/**
 * Interface describing Pivot data processing for dimensions.
 * Should contain a process method and return records hierarchy based on the provided dimensions.
 */
