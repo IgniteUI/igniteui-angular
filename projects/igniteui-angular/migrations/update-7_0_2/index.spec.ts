@@ -7,7 +7,6 @@ describe('Update 7.0.2', () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
                 root: '/',
