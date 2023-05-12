@@ -16,6 +16,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DEFAULT_PIVOT_KEYS, IPivotConfiguration, IPivotDimension, IPivotGridColumn, IPivotGridGroupRecord, IPivotGridRecord, IPivotKeys, IPivotValue } from './pivot-grid.interface';
 import { PivotSortUtil } from './pivot-sort-util';
 import { PivotUtil } from './pivot-util';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 
 /**
  * @hidden
@@ -32,6 +33,7 @@ export class IgxPivotRowPipe implements PipeTransform {
     public transform(
         collection: any,
         config: IPivotConfiguration,
+        cloneStrategy: IDataCloneStrategy,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?
@@ -46,7 +48,7 @@ export class IgxPivotRowPipe implements PipeTransform {
         }
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
-        return rowStrategy.process(data, enabledRows, config.values, pivotKeys);
+        return rowStrategy.process(data, enabledRows, config.values, cloneStrategy, pivotKeys);
     }
 }
 
@@ -216,6 +218,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
     public transform(
         collection: IPivotGridRecord[],
         config: IPivotConfiguration,
+        cloneStrategy: IDataCloneStrategy,
         _: Map<any, boolean>,
         _pipeTrigger?: number,
         __?
@@ -226,7 +229,7 @@ export class IgxPivotColumnPipe implements PipeTransform {
 
         const colStrategy = config.columnStrategy || PivotColumnDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
-        return colStrategy.process(data, enabledColumns, enabledValues, pivotKeys);
+        return colStrategy.process(data, enabledColumns, enabledValues, cloneStrategy, pivotKeys);
     }
 }
 
