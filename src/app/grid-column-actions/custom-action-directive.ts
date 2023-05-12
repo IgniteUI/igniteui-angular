@@ -31,11 +31,11 @@ export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
     }
 
     public get allUnchecked() {
- return false;
-}
+        return false;
+    }
     public get allChecked() {
- return false;
-}
+       return false;
+    }
 
     /**
      * @hidden @internal

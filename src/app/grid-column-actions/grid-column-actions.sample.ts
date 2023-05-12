@@ -2,17 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 import { IgxColumnGroupingDirective } from './custom-action-directive';
-import { IgxColumnPinningDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-pinning.directive';
-import { IgxColumnHidingDirective } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-hiding.directive';
-import { IgxColumnActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/column-actions/column-actions.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
-import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
-import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IColumnToggledEventArgs } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -20,7 +10,7 @@ import { IColumnToggledEventArgs } from '../../../projects/igniteui-angular/src/
     styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html',
     standalone: true,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnGroupComponent, IgxColumnComponent, NgFor, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxColumnGroupingDirective]
+    imports: [IgxColumnGroupingDirective, NgFor, IGX_GRID_DIRECTIVES]
 })
 
 export class GridColumnActionsSampleComponent implements OnInit {
