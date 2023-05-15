@@ -17,6 +17,7 @@ import { IgxColumnGroupComponent } from './column-group.component';
     standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+    /** @hidden @internal **/
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.

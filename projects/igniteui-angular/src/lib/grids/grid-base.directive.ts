@@ -5652,6 +5652,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
 
+    /** @hidden @internal **/
     public combineSelectedCellAndColumnData(columnData: any[], formatters = false, headers = false) {
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers, columnData);

@@ -303,14 +303,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             });
     }
 
-    /**
-     * Returns the children columns collection.
-     * ```typescript
-     * let columns =  this.columnGroup.allChildren;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
-     */
+    /** @hidden @internal **/
     public override get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }
