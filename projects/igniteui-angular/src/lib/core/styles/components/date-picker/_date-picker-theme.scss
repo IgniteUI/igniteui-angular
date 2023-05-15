@@ -73,8 +73,10 @@
         }
 
         %cal-value--special {
-            color: var-get($theme, 'date-special-text-color');
-            background: var-get($theme, 'date-special-background');
+            %cal-value-content {
+                color: var-get($theme, 'date-special-text-color');
+                background: var-get($theme, 'date-special-background');
+            }
         }
 
         %cal-value--disabled {
