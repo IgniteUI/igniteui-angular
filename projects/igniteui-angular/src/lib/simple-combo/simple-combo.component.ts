@@ -478,7 +478,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.registerRemoteEntries(oldSelection, false);
         this.registerRemoteEntries(newSelection);
-        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
