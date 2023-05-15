@@ -188,6 +188,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        /** @hidden @internal **/
         public cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }

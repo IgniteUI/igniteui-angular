@@ -811,6 +811,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /** @hidden @internal **/
     public override ngOnDestroy() {
         if (!this.parent) {
             this.gridAPI.getChildGrids(true).forEach((grid) => {
@@ -1026,6 +1027,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /** @hidden @internal **/
     public onContainerScroll() {
         this.hideOverlays();
     }
