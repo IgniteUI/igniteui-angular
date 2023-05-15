@@ -285,6 +285,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
