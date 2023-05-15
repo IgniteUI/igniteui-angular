@@ -93,6 +93,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         this.initialDensity = this._displayDensity;
     }
 
+    /** @hidden @internal **/
     public ngDoCheck() {
         if (!this._displayDensity && this.displayDensityOptions &&
                 this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
