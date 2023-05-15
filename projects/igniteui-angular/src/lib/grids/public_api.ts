@@ -33,6 +33,7 @@ export * from './grid-footer/grid-footer.component';
 export { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 export * from './summaries/grid-summary';
 export * from './column-actions/public_api';
+export { GridType, TreeGridType, HierarchicalGridType, PivotGridType } from './common/grid.interface';
 
 /*
 export * from './api.service';
