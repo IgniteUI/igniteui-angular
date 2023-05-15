@@ -72,13 +72,6 @@
             color: var-get($theme, 'weekend-text-color');
         }
 
-        %cal-value--special {
-            %cal-value-content {
-                color: var-get($theme, 'date-special-text-color');
-                background: var-get($theme, 'date-special-background');
-            }
-        }
-
         %cal-value--disabled {
             color: var-get($theme, 'date-disabled-text-color');
         }
