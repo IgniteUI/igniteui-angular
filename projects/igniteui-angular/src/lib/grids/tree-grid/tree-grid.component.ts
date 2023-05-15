@@ -711,7 +711,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = treeRowRec.data[key];
+                row.data[key] = treeRowRec.data[this.crudService.addRowParent?.asChild ? this.primaryKey : key];
             } else {
                 row.data[key] = undefined;
             }
