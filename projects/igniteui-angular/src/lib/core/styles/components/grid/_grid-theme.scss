@@ -770,7 +770,7 @@
         }
 
         outline-style: none;
-        z-index: 1;
+        z-index: auto;
 
         %cbx-display {
             min-width: $cbx-size;
