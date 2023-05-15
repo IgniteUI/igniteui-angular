@@ -33,8 +33,8 @@ export class IgxPivotFilteringService extends IgxFilteringService {
     protected override filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         super.filter_internal(fieldName, term, conditionOrExpressionsTree, ignoreCase);
-        const grid = this.grid;
-        const config = (grid as IgxPivotGridComponent).pivotConfiguration;
+        const grid = this.grid as IgxPivotGridComponent;
+        const config = grid.pivotConfiguration;
         const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
         const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName);

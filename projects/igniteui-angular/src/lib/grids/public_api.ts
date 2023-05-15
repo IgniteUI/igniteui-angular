@@ -5,7 +5,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
 import { IGX_GRID_EXCEL_STYLE_FILTER_DIRECTIVES } from './filtering/excel-style/public_api';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import { IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTextDirective } from './grid.rowEdit.directive';
-import { IgxExcelStyleHeaderIconDirective, IgxGroupAreaDropDirective, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid/grid.directives';
+import { IgxExcelStyleHeaderIconDirective, IgxGroupAreaDropDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from './grid/grid.directives';
 import { IGX_GRID_HEADERS_DIRECTIVES } from './headers/public_api';
 import { IgxDragIndicatorIconDirective, IgxRowDragGhostDirective } from './row-drag.directive';
 import { IgxRowDirective } from './row.directive';
@@ -72,8 +72,8 @@ export const IGX_GRID_COMMON_DIRECTIVES = [
     IgxAdvancedFilteringDialogComponent,
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeaderCollapsedIndicatorDirective,
     IgxExcelStyleHeaderIconDirective,
     IgxSortAscendingHeaderIconDirective,
     IgxSortDescendingHeaderIconDirective,

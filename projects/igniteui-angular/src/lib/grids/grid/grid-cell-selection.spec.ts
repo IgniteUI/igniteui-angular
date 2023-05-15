@@ -1936,7 +1936,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Paging: selected range should be cleared on paging', fakeAsync(() => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.perPage = 5;
+            grid.paginator.perPage = 5;
             fix.detectChanges();
             tick(16);
 
@@ -1952,7 +1952,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fix.detectChanges();
             tick(16);
 

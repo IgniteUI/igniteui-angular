@@ -116,7 +116,7 @@ export class IgxGridRowClassesPipe implements PipeTransform {
         _rowData: any,
         _: number
     ) {
-        const result = new Set(['igx-grid__tr', index % 2 ? row.grid.evenRowCSS : row.grid.oddRowCSS]);
+        const result = new Set(['igx-grid__tr', index % 2 ? 'igx-grid__tr--even': 'igx-grid__tr--odd']);
         const mapping = [
             [selected, 'igx-grid__tr--selected'],
             [editMode, 'igx-grid__tr--edit'],

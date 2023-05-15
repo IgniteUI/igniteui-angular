@@ -11,7 +11,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { IgxRowDragGhostDirective } from '../../../projects/igniteui-angular/src/lib/grids/row-drag.directive';
 import { IgxPaginatorDirective } from '../../../projects/igniteui-angular/src/lib/paginator/paginator-interfaces';
 import { IgxRowIslandComponent as IgxRowIslandComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
-import { IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
+import { IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
 import { IgxColumnGroupComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-group.component';
 import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
 import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
@@ -37,7 +37,7 @@ import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/
     styleUrls: ['hierarchical-grid.sample.scss'],
     templateUrl: 'hierarchical-grid.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxHierarchicalGridComponent_1, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxGridFooterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxColumnGroupComponent, IgxHeaderCollapseIndicatorDirective, IgxHeaderExpandIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowIslandComponent_1, IgxPaginatorDirective, IgxRowDragGhostDirective, NgIf, NgFor]
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxHierarchicalGridComponent_1, IgxGridExcelStyleFilteringComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleSearchComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarExporterComponent, IgxGridFooterComponent, IgxPaginatorComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxColumnGroupComponent, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowIslandComponent_1, IgxPaginatorDirective, IgxRowDragGhostDirective, NgIf, NgFor]
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
     public columnsReady = false;
