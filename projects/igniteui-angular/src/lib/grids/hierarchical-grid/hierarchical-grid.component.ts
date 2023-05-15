@@ -172,7 +172,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
+        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
 
@@ -514,26 +514,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
-    }
-
-    /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
     }
 
     /**

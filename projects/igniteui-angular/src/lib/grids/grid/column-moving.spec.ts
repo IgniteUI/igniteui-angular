@@ -1007,7 +1007,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             // step 2 - navigate to page 2 and verify correct column order
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fixture.detectChanges();
 
             columnsList = grid.columns;
@@ -1035,7 +1035,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture.detectChanges();
 
             // step 2 - navigate to page 2 and verify correct column order
-            grid.paginate(1);
+            grid.paginator.paginate(1);
             fixture.detectChanges();
 
             const columnsList = grid.columns;

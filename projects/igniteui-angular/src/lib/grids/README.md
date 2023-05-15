@@ -169,9 +169,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`autoGenerateExclude`|Array|A list of property keys to be excluded from the generated column collection, default is _[]_|
 |`batchEditing`|boolean|Toggles batch editing in the grid, default is _false_|
 |`moving`|boolean|Enables the columns moving feature. Defaults to _false_|
-|`paging`|boolean|Enables the paging feature. Defaults to _false_.|
-|`page`| number | The current page index.|
-|`perPage`|number|Visible items per page, default is 15|
 |`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
 |`allowAdvancedFiltering`| boolean | Enables advanced filtering functionality in the grid. |
 |`filterMode`| `FilterMode` | Determines the filter mode, default value is `quickFilter`.|
@@ -184,8 +181,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
-|`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
-|`oddRowCSS`|string|Additional styling classes applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupStrategy`| IGridGroupingStrategy | Provides custom group strategy to be used when grouping |
 |`groupingExpressions`| Array | The group by state of the grid.
@@ -237,7 +232,6 @@ A list of the events emitted by the **igx-grid**:
 |`columnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
-|`pagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
 |`rowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
 |`rowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
 |`dataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
@@ -287,9 +281,6 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`enableSummaries(expressions: Array)`|Enable summaries for the columns and apply your `customSummary` if it is provided.|
 |`disableSummaries(fieldName: string)`|Disable summaries for the specified column.|
 |`disableSummaries(columns: string[])`|Disable summaries for the listed columns.|
-|`previousPage()`|Goes to the previous page if paging is enabled and the current page is not the first.|
-|`nextPage()`|Goes to the next page if paging is enabled and current page is not the last.|
-|`paginate(page: number)`|Goes to the specified page if paging is enabled. Page indices are 0 based.|
 |`markForCheck()`|Manually triggers a change detection cycle for the grid and its children.|
 |`pinColumn(name: string): boolean`|Pins a column by field name. Returns whether the operation is successful.|
 |`unpinColumn(name: string): boolean`|Unpins a column by field name. Returns whether the operation is successful.|
