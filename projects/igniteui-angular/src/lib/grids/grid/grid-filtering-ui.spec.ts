@@ -2535,6 +2535,23 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         // Filtering + Column Groups
+        it('should size correctly the header based on display density.', () => {
+            grid.displayDensity = "comfortable";
+            fix.detectChanges();
+
+            const thead = GridFunctions.getGridHeader(grid).nativeElement;
+            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+
+            grid.displayDensity = "cosy";
+            fix.detectChanges();
+            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+
+            grid.displayDensity = "compact";
+            fix.detectChanges();
+            expect(thead.getBoundingClientRect().height).toEqual(grid.defaultRowHeight * 4 + 1);
+
+        });
+
         it('should position filter row correctly when grid has column groups.', fakeAsync(() => {
             const thead = GridFunctions.getGridHeader(grid).nativeElement;
 
