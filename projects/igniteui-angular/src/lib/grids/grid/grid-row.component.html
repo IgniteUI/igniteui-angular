@@ -63,14 +63,14 @@
 
 <ng-template #mrlPinnedTemplate let-pinnedColumns>
     <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
-    [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
-    [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
-    [style.left]="mrlRightPinnedOffset"
-    [ngStyle]="{
-        'grid-template-rows':col.getGridTemplate(true),
-        'grid-template-columns':col.getGridTemplate(false),
-        'z-index': col.pinned ? 1 : null
-    }">
+        [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
+        [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
+        [style.left]="mrlRightPinnedOffset"
+        [ngStyle]="{
+            'grid-template-rows':col.getGridTemplate(true),
+            'grid-template-columns':col.getGridTemplate(false),
+            'z-index': col.pinned ? 1 : null
+        }">
         <ng-template ngFor let-col [ngForOf]="col.children">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>

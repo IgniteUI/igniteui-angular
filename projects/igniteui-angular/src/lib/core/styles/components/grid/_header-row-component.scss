@@ -178,26 +178,10 @@
 
         @include m(cosy) {
             @extend %grid-cell-header--cosy !optional;
-
-            @include e(title) {
-                @extend %grid-cell-header-title--cosy !optional;
-            }
-
-            @include e(icons) {
-                @extend %grid-cell-header-icons--cosy !optional;
-            }
         }
 
         @include m(compact) {
             @extend %grid-cell-header--compact !optional;
-
-            @include e(title) {
-                @extend %grid-cell-header-title--compact !optional;
-            }
-
-            @include e(icons) {
-                @extend %grid-cell-header-icons--compact !optional;
-            }
         }
     }
 }

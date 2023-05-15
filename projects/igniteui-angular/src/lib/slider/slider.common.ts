@@ -13,7 +13,8 @@ import { mkenum } from '../core/utils';
  * @context {@link IgxSliderComponent.context}
  */
 @Directive({
-    selector: '[igxSliderThumbFrom]'
+    selector: '[igxSliderThumbFrom]',
+    standalone: true
 })
 export class IgxThumbFromTemplateDirective {}
 
@@ -29,7 +30,8 @@ export class IgxThumbFromTemplateDirective {}
  * @context {@link IgxSliderComponent.context}
  */
 @Directive({
-    selector: '[igxSliderThumbTo]'
+    selector: '[igxSliderThumbTo]',
+    standalone: true
 })
 export class IgxThumbToTemplateDirective {}
 
@@ -39,7 +41,8 @@ export class IgxThumbToTemplateDirective {}
  * @context {@link IgxTicksComponent.context}
  */
 @Directive({
-    selector: '[igxSliderTickLabel]'
+    selector: '[igxSliderTickLabel]',
+    standalone: true
 })
 export class IgxTickLabelTemplateDirective {}
 

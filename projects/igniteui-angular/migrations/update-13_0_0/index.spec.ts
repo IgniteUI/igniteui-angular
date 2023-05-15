@@ -9,7 +9,6 @@ describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
-        defaultProject: 'testProj',
         projects: {
             testProj: {
 				root: '/',
@@ -148,7 +147,6 @@ providers: [
     IgxCsvExporterService,
     IgxExcelExporterService
 ],
-entryComponents: [],
 schemas: []
 })
 export class AppModule {}
@@ -185,7 +183,6 @@ providers: [
     IgxCsvExporterService,
     IgxExcelExporterService
 ],
-entryComponents: [],
 schemas: []
 })
 export class AppModule {}

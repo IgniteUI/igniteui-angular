@@ -1,16 +1,16 @@
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     Component,
     ElementRef,
     HostBinding,
     Input,
-    NgModule,
     OnInit,
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { IgxIconModule } from '../icon/public_api';
+
 import { mkenum } from '../core/utils';
+import { IgxIconComponent } from '../icon/icon.component';
 
 let NEXT_ID = 0;
 export const IgxAvatarSize = mkenum({
@@ -52,7 +52,9 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
  */
 @Component({
     selector: 'igx-avatar',
-    templateUrl: 'avatar.component.html'
+    templateUrl: 'avatar.component.html',
+    standalone: true,
+    imports: [IgxIconComponent, NgTemplateOutlet]
 })
 export class IgxAvatarComponent implements OnInit {
     /**
@@ -377,12 +379,3 @@ export class IgxAvatarComponent implements OnInit {
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxAvatarComponent],
-    exports: [IgxAvatarComponent],
-    imports: [CommonModule, IgxIconModule]
-})
-export class IgxAvatarModule { }

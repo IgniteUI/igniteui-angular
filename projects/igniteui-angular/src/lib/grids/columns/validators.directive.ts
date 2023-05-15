@@ -1,15 +1,15 @@
 import { Directive } from '@angular/core';
 import { RequiredValidator, NG_VALIDATORS, MinValidator, MaxValidator, EmailValidator, MinLengthValidator, MaxLengthValidator, PatternValidator } from '@angular/forms';
 
-
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[required]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumnRequiredValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnRequiredValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumnRequiredValidatorDirective extends RequiredValidator {
 }
@@ -18,10 +18,11 @@ export class IgxColumnRequiredValidatorDirective extends RequiredValidator {
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[min]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumnMinValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnMinValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumnMinValidatorDirective extends MinValidator { }
 
@@ -30,10 +31,11 @@ export class IgxColumnMinValidatorDirective extends MinValidator { }
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[max]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumnMaxValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnMaxValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumnMaxValidatorDirective extends MaxValidator { }
 
@@ -42,10 +44,11 @@ export class IgxColumnMaxValidatorDirective extends MaxValidator { }
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[email]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumnEmailValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnEmailValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumnEmailValidatorDirective extends EmailValidator { }
 
@@ -54,10 +57,11 @@ export class IgxColumnEmailValidatorDirective extends EmailValidator { }
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[minlength]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumnMinLengthValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnMinLengthValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator { }
 
@@ -65,22 +69,24 @@ export class IgxColumnMinLengthValidatorDirective extends MinLengthValidator { }
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[maxlength]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumMaxLengthValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumnMaxLengthValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
-export class IgxColumMaxLengthValidatorDirective extends MaxLengthValidator {
+export class IgxColumnMaxLengthValidatorDirective extends MaxLengthValidator {
 }
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-column[pattern]',
     providers: [{
-        provide: NG_VALIDATORS,
-        useExisting: IgxColumPatternValidatorDirective,
-        multi: true
-    }]
+            provide: NG_VALIDATORS,
+            useExisting: IgxColumPatternValidatorDirective,
+            multi: true
+        }],
+    standalone: true
 })
 export class IgxColumPatternValidatorDirective extends PatternValidator {
 }

@@ -198,6 +198,10 @@ $light-schema: (
     igx-tooltip: $light-tooltip,
     igx-tree: $light-tree,
     igx-watermark: $light-watermark,
+    _meta: (
+        theme: 'material',
+        variant: 'light',
+    ),
 );
 
 /// An alias of $light-schema.
@@ -273,6 +277,10 @@ $light-fluent-schema: (
     igx-tooltip: $fluent-tooltip,
     igx-tree: $fluent-tree,
     igx-watermark: $fluent-watermark,
+    _meta: (
+        theme: 'fluent',
+        variant: 'light',
+    ),
 );
 
 /// Used to create bootstrap component themes.
@@ -343,6 +351,10 @@ $light-bootstrap-schema: (
     igx-tooltip: $bootstrap-tooltip,
     igx-tree: $bootstrap-tree,
     igx-watermark: $bootstrap-watermark,
+    _meta: (
+        theme: 'bootstrap',
+        variant: 'light',
+    ),
 );
 
 /// Used to create indigo component themes.
@@ -413,5 +425,9 @@ $light-indigo-schema: (
     igx-tooltip: $indigo-tooltip,
     igx-tree: $indigo-tree,
     igx-watermark: $indigo-watermark,
+    _meta: (
+        theme: 'indigo-design',
+        variant: 'light',
+    ),
 );
 

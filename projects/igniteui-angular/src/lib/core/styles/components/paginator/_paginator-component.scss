@@ -16,6 +16,7 @@
         );
 
         @extend %igx-paginator !optional;
+        @extend %igx-paginator--sizable !optional;
 
         @include m(cosy) {
             @extend %igx-paginator !optional;

@@ -19,7 +19,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/density';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -36,6 +36,10 @@ import {
 import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgTemplateOutlet, NgIf, NgClass, NgFor } from '@angular/common';
 
 // TODO: Implement aria functionality
 /**
@@ -43,7 +47,8 @@ import { IgxTreeService } from '../tree.service';
  * Used for links (`a` tags) in the body of an `igx-tree-node`. Handles aria and event dispatch.
  */
 @Directive({
-    selector: `[igxTreeNodeLink]`
+    selector: `[igxTreeNodeLink]`,
+    standalone: true
 })
 export class IgxTreeNodeLinkDirective implements OnDestroy {
 
@@ -147,7 +152,9 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     templateUrl: 'tree-node.component.html',
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
-    ]
+    ],
+    standalone: true,
+    imports: [NgTemplateOutlet, NgIf, IgxIconComponent, IgxCheckboxComponent, NgClass, NgFor, IgxCircularProgressBarComponent]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, OnDestroy {
     /**
@@ -323,7 +330,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('attr.role')
     public get role() {
         return this.hasLinkChildren ? 'none' : 'treeitem';
-    };
+    }
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeLinkDirective, { read: ElementRef })
@@ -700,7 +707,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public addLinkChild(link: IgxTreeNodeLinkDirective) {
         this._tabIndex = -1;
         this.registeredChildren.push(link);
-    };
+    }
 
     /** @hidden @internal */
     public removeLinkChild(link: IgxTreeNodeLinkDirective) {

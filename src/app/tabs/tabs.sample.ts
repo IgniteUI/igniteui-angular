@@ -1,11 +1,29 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { IgxTabsComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
+import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
+import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
+import { IgxAvatarComponent } from '../../../projects/igniteui-angular/src/lib/avatar/avatar.component';
+import { IgxListItemComponent } from '../../../projects/igniteui-angular/src/lib/list/list-item.component';
+import { NgFor } from '@angular/common';
+import { IgxListComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective } from '../../../projects/igniteui-angular/src/lib/list/list.component';
+import { IgxTabContentComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tab-content.component';
+import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tabs.directives';
+import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
+import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
+import { IgxTabHeaderComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tab-header.component';
+import { IgxTabItemComponent } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tab-item.component';
+import { IgxTabsComponent as IgxTabsComponent_1 } from '../../../projects/igniteui-angular/src/lib/tabs/tabs/tabs.component';
+import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     selector: 'app-tabs-sample',
     styleUrls: ['tabs.sample.scss'],
     templateUrl: 'tabs.sample.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [IgxButtonDirective, IgxTabsComponent_1, IgxTabItemComponent, IgxTabHeaderComponent, IgxRippleDirective, IgxIconComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabContentComponent, IgxListComponent, NgFor, IgxListItemComponent, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListActionDirective, IgxButtonGroupComponent, IgxPrefixDirective, IgxSuffixDirective, IgxGridComponent]
 })
 export class TabsSampleComponent implements OnInit {
 

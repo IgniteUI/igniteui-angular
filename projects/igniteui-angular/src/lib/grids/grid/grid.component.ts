@@ -1,8 +1,10 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    OnInit, AfterViewInit, ContentChildren
+    OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
+import { NgIf, NgTemplateOutlet, NgClass, NgFor, NgStyle } from '@angular/common';
+
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
@@ -11,7 +13,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -30,6 +32,27 @@ import { IgxGridCell } from '../grid-public-cell';
 import { ISortingExpression } from '../../data-operations/sorting-strategy';
 import { IGridGroupingStrategy } from '../common/strategy';
 import { IgxGridValidationService } from './grid-validation.service';
+import { IgxGridDetailsPipe } from './grid.details.pipe';
+import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe, IgxGridFilteringPipe } from './grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxGridRowComponent } from './grid-row.component';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -75,7 +98,48 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        NgFor,
+        NgStyle,
+        NgTemplateOutlet,
+        IgxGridGroupByAreaComponent,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxGridRowComponent,
+        IgxGridGroupByRowComponent,
+        IgxSummaryRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxRowEditTabStopDirective,
+        IgxGridColumnResizerComponent,
+        IgxGridTransactionPipe,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridAddRowPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxGridGroupingPipe,
+        IgxGridPagingPipe,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridSummaryPipe,
+        IgxGridDetailsPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     /**
@@ -283,10 +347,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected _groupRowTemplate: TemplateRef<IgxGroupByRowTemplateContext>;
-    /**
-     * @hidden
-     */
-    protected _groupAreaTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      */
@@ -321,6 +382,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -345,9 +410,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid1.totalItemCount = 55;
      * ```
      */
+    @Input()
     public set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
-        this.cdr.detectChanges();
     }
 
     public get totalItemCount() {
@@ -514,32 +579,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this._columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
-    }
-
-    /**
-     * Gets the list of group rows.
-     *
-     * @example
-     * ```typescript
-     * const groupList = this.grid.groupsRowList;
-     * ```
+     * @hidden @internal
      */
     public get groupsRowList() {
         const res = new QueryList<any>();
@@ -646,25 +686,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public set groupRowTemplate(template: TemplateRef<IgxGroupByRowTemplateContext>) {
         this._groupRowTemplate = template;
-        this.notifyChanges();
-    }
-
-
-    /**
-     * Gets/Sets the template reference of the `IgxGridComponent`'s group area.
-     *
-     * @example
-     * ```typescript
-     * const groupAreaTemplate = this.grid.groupAreaTemplate;
-     * this.grid.groupAreaTemplate = myAreaTemplate.
-     * ```
-     */
-    public get groupAreaTemplate(): TemplateRef<any> {
-        return this._groupAreaTemplate;
-    }
-
-    public set groupAreaTemplate(template: TemplateRef<any>) {
-        this._groupAreaTemplate = template;
         this.notifyChanges();
     }
 
@@ -818,14 +839,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.notifyChanges();
     }
 
-    /**
-     * Returns if the `IgxGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
+    /** @hidden @internal */
     public get hasGroupableColumns(): boolean {
         return this._columns.some((col) => col.groupable && !col.columnGroup);
     }
@@ -850,18 +864,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
         this.notifyChanges(true);
-    }
-
-    /**
-     * Gets if the grid's group by drop area is visible.
-     *
-     * @example
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-     */
-    public get dropAreaVisible(): boolean {
-        return this.columnInDrag?.groupable || !this.groupingExpressions.length;
     }
 
     /**
@@ -940,9 +942,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public get iconTemplate() {
         if (this.groupsExpanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 
@@ -1209,10 +1211,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        let rec: any;
 
         const dataIndex = this._getDataViewIndex(index);
-        rec = data ?? this.dataView[dataIndex];
+        const rec = data ?? this.dataView[dataIndex];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);

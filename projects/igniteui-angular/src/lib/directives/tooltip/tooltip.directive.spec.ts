@@ -1,11 +1,12 @@
 import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
+import { IgxTooltipDirective } from './tooltip.directive';
+import { IgxTooltipTargetDirective } from './tooltip-target.directive';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
@@ -19,12 +20,12 @@ describe('IgxTooltip', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTooltipSingleTargetComponent,
                 IgxTooltipMultipleTargetsComponent,
                 IgxTooltipPlainStringComponent
-            ],
-            imports: [NoopAnimationsModule, IgxTooltipModule]
+            ]
         }).compileComponents();
         UIInteractions.clearOverlay();
     }));

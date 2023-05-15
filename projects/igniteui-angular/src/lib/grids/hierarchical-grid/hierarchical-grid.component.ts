@@ -4,8 +4,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
+    CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
     ElementRef,
     HostBinding,
@@ -21,6 +21,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
+import { NgIf, NgClass, NgFor, NgTemplateOutlet, NgStyle } from '@angular/common';
+
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -34,16 +36,33 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { IgxGridComponent } from '../grid/grid.component';
-import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/excel-style-filtering.component';
 import { IgxGridValidationService } from '../grid/grid-validation.service';
+import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierarchical-grid.pipes';
+import { IgxSummaryDataPipe } from '../summaries/grid-root-summary.pipe';
+import { IgxGridTransactionPipe, IgxHasVisibleColumnsPipe, IgxGridRowPinningPipe, IgxGridAddRowPipe, IgxGridRowClassesPipe, IgxGridRowStylesPipe } from '../common/pipes';
+import { IgxGridSortingPipe, IgxGridFilteringPipe } from '../grid/grid.pipes';
+import { IgxGridColumnResizerComponent } from '../resizing/resizer.component';
+import { IgxRowEditTabStopDirective } from '../grid.rowEdit.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxRippleDirective } from '../../directives/ripple/ripple.directive';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
+import { IgxSnackbarComponent } from '../../snackbar/snackbar.component';
+import { IgxCircularProgressBarComponent } from '../../progressbar/progressbar.component';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxGridDragSelectDirective } from '../selection/drag-select.directive';
+import { IgxGridBodyDirective } from '../grid.common';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 
 let NEXT_ID = 0;
 
@@ -55,6 +74,8 @@ export interface HierarchicalStateRecord {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html',
+    standalone: true,
+    imports: [NgClass]
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
@@ -151,7 +172,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
+        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
 
@@ -235,7 +256,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid',
@@ -253,7 +273,45 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
         IgxRowIslandAPIService
-    ]
+    ],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        NgFor,
+        NgTemplateOutlet,
+        NgStyle,
+        IgxGridHeaderRowComponent,
+        IgxGridBodyDirective,
+        IgxGridDragSelectDirective,
+        IgxColumnMovingDropDirective,
+        IgxGridForOfDirective,
+        IgxTemplateOutletDirective,
+        IgxHierarchicalRowComponent,
+        IgxOverlayOutletDirective,
+        IgxToggleDirective,
+        IgxCircularProgressBarComponent,
+        IgxSnackbarComponent,
+        IgxSummaryRowComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxRowEditTabStopDirective,
+        IgxGridColumnResizerComponent,
+        IgxChildGridRowComponent,
+        IgxGridSortingPipe,
+        IgxGridFilteringPipe,
+        IgxGridTransactionPipe,
+        IgxHasVisibleColumnsPipe,
+        IgxGridRowPinningPipe,
+        IgxGridAddRowPipe,
+        IgxGridRowClassesPipe,
+        IgxGridRowStylesPipe,
+        IgxSummaryDataPipe,
+        IgxGridHierarchicalPipe,
+        IgxGridHierarchicalPagingPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
@@ -276,16 +334,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
-    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-
     /** @hidden @internal */
     @ContentChildren(IgxPaginatorComponent, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
+    /** @hidden @internal */
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
     public toolbarOutlet: ViewContainerRef;
 
+    /** @hidden @internal */
     @ViewChild('paginatorOutlet', { read: ViewContainerRef })
     public paginatorOutlet: ViewContainerRef;
     /**
@@ -339,8 +396,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private _data;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     private childGridTemplates: Map<any, any> = new Map();
-    private scrollTop = 0;
-    private scrollLeft = 0;
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -373,6 +428,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
             this.reflow();
@@ -421,9 +479,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * this.grid1.totalItemCount = 55;
      * ```
      */
+    @Input()
     public set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
-        this.cdr.detectChanges();
     }
 
     public get totalItemCount() {
@@ -456,26 +514,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
-    }
-
-    /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
     }
 
     /**
@@ -567,10 +605,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public override ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
-            this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
-        });
         this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
@@ -608,8 +642,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
-        this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
-        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.headerCollapsedIndicatorTemplate = this.rootGrid.headerCollapsedIndicatorTemplate;
+        this.headerExpandedIndicatorTemplate = this.rootGrid.headerExpandedIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
         this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
@@ -619,10 +653,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-    }
-
-    public get outletDirective(): IgxOverlayOutletDirective {
-        return this.rootGrid.outlet;
     }
 
     /**
@@ -888,9 +918,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get iconTemplate() {
         const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         } else {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         }
     }
 
@@ -1104,14 +1134,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             grid.highlightedRowID = null;
             grid.cdr.markForCheck();
         });
-    }
-
-
-    private hg_verticalScrollHandler() {
-        this.scrollTop = this.verticalScrollContainer.scrollPosition;
-    }
-    private hg_horizontalScrollHandler() {
-        this.scrollLeft = this.headerContainer.scrollPosition;
     }
 }
 

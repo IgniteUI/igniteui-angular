@@ -4,7 +4,8 @@ import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansio
 @Component({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-body',
-    template: `<ng-content></ng-content>`
+    template: `<ng-content></ng-content>`,
+    standalone: true
 })
 export class IgxExpansionPanelBodyComponent {
     /**
