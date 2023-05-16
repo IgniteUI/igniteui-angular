@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
-
+import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -50,12 +49,19 @@ export class GridColumnGroupsSampleComponent {
     ];
     /* eslint-enable max-len */
 
+    public density: string = DisplayDensity.compact;
+    public displayDensities;
 
     constructor() {
         for (const item of this.data) {
             item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
         }
         this.selectionMode = GridSelectionMode.none;
+        this.displayDensities = [
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        ];
     }
 
     public pinGroup() {
@@ -98,5 +104,9 @@ export class GridColumnGroupsSampleComponent {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }
