@@ -15,6 +15,7 @@
 /// @param {Color} $color [null] - The text color used of the avatar.
 /// @param {Color} $background [null] - The background color used of the avatar.
 /// @param {number} $border-radius [null] - The border-radius used of the avatar.
+/// @param {number} $size [null] - The size of the avatar.
 /// @requires $light-schema
 ///
 /// @example scss Change the background and icon colors in icon avatars
@@ -26,6 +27,7 @@
     $background: null,
     $color: null,
     $border-radius: null,
+    $size: null,
 ) {
     $name: 'igx-avatar';
     $avatar-schema: ();
@@ -51,6 +53,7 @@
         background: $background,
         color: $color,
         border-radius: $border-radius,
+        size: $size
     ));
 }
 
@@ -78,7 +81,7 @@
     }
 
     %igx-avatar-display {
-        --size: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
+        --avatar-size: #{sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)})};
 
         position: relative;
         display: inline-flex;
@@ -91,8 +94,8 @@
         border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
-        width: var(--size);
-        height: var(--size);
+        width: var(--size, var(--avatar-size));
+        height: var(--size, var(--avatar-size));
 
         &::after {
             box-shadow: none;
@@ -130,8 +133,8 @@
 
     %igx-avatar--initials {
         text-transform: uppercase;
-        font-size: calc(var(--size) / 2);
-        line-height: calc(var(--size) / 2);
+        font-size: calc(var(--size, var(--avatar-size)) / 2);
+        line-height: calc(var(--size, var(--avatar-size)) / 2);
     }
 
     %igx-avatar--small,
