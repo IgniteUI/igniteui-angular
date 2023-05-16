@@ -12,7 +12,6 @@ import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
     standalone: true,
     imports: [IgxColumnGroupingDirective, NgFor, IGX_GRID_DIRECTIVES]
 })
-
 export class GridColumnActionsSampleComponent implements OnInit {
     public data: any[];
     public columns: any[];
