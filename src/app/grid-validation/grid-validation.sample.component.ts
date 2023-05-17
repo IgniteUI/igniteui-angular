@@ -5,19 +5,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validato
 import { data } from '../shared/data';
 
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
-import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
-import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
-import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
-import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
-import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
-import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
-import { IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxCellValidationErrorDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, RowType } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
-import { GridColumnDataType } from '../../../projects/igniteui-angular/src/lib/data-operations/data-util';
-import { IGX_GRID_VALIDATION_DIRECTIVES } from '../../../projects/igniteui-angular/src/lib/grids/columns/public_api';
+import { GridColumnDataType, IGX_GRID_DIRECTIVES, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RowType } from 'igniteui-angular';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -52,20 +40,11 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
         NgIf,
         NgTemplateOutlet,
         FormsModule,
-        IgxSwitchComponent,
-        IgxGridComponent,
-        IgxColumnComponent,
-        IgxCellTemplateDirective,
         ForbiddenValidatorDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellValidationErrorDirective,
-        IgxActionStripComponent,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
+        IGX_GRID_DIRECTIVES,
         IgxTreeGridComponent,
         IgxHierarchicalGridComponent,
-        IgxRowIslandComponent,
-        IGX_GRID_VALIDATION_DIRECTIVES
+        IgxRowIslandComponent
     ]
 })
 export class GridValidationSampleComponent {
@@ -158,10 +137,10 @@ public hColumns2 = [
 ];
 
 
-    @ViewChild('gridTransactions', {read:  IgxGridComponent })
+    @ViewChild('gridTransactions', { read:  IgxGridComponent })
     public gridWithTransaction: IgxGridComponent;
 
-    @ViewChild('gridNoTransactions', {read:  IgxGridComponent })
+    @ViewChild('gridNoTransactions', { read:  IgxGridComponent })
     public gridNoTransactions: IgxGridComponent;
 
     public commitWithTransactions() {

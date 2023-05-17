@@ -2,13 +2,7 @@ import { Component, ViewChild, ElementRef, ChangeDetectorRef, ViewChildren, Quer
 import { NgFor, NgStyle, NgIf } from '@angular/common';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxDialogComponent } from '../../../projects/igniteui-angular/src/lib/dialog/dialog.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxColumnLayoutComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column-layout.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDropDirective } from '../../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { GridSelectionMode } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
+import { GridSelectionMode, IDropBaseEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxColumnComponent, IgxColumnLayoutComponent, IgxDialogComponent, IgxDragDirective, IgxDropDirective, IgxGridComponent } from 'igniteui-angular';
 
 interface ColumnConfig {
     key: string;
