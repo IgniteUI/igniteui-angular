@@ -48,6 +48,10 @@
         $border-radius: border-radius(map.get($theme, 'border-radius'));
     }
 
+    @if not($size) {
+        $size: sizable(#{rem(40px)}, #{rem(64px)}, #{rem(88px)});
+    }
+
     @return extend($theme, (
         name: $name,
         background: $background,
@@ -63,7 +67,6 @@
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
-    $size: map.get($theme, 'size');
 
     $box-shadow: map.get((
         material: null,
@@ -82,12 +85,6 @@
     }
 
     %igx-avatar-display {
-        --size: #{sizable(
-            #{if($size, $size, rem(40px))},
-            #{if($size, $size, rem(64px))},
-            #{if($size, $size, rem(88px))}
-        )};
-
         position: relative;
         display: inline-flex;
         justify-content: center;
@@ -99,8 +96,8 @@
         border-radius: var-get($theme, 'border-radius');
         outline-style: none;
         flex-shrink: 0;
-        width: var(--size);
-        height: var(--size);
+        width: var-get($theme, 'size');
+        height: var-get($theme, 'size');
 
         &::after {
             box-shadow: none;
@@ -138,8 +135,8 @@
 
     %igx-avatar--initials {
         text-transform: uppercase;
-        font-size: calc(var(--size) / 2);
-        line-height: calc(var(--size) / 2);
+        font-size: calc(#{var-get($theme, 'size')} / 2);
+        line-height: calc(#{var-get($theme, 'size')} / 2);
     }
 
     %igx-avatar--small,
