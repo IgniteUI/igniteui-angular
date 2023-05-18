@@ -242,6 +242,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
+    private _groupsRecords: IGroupByRecord[] = [];
     /**
      * Gets the hierarchical representation of the group by records.
      *
@@ -250,7 +251,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let groupRecords = this.grid.groupsRecords;
      * ```
      */
-    public groupsRecords: IGroupByRecord[] = [];
+    public get groupsRecords(): IGroupByRecord[] {
+        return this._groupsRecords;
+    }
 
     /**
      * @hidden @internal
@@ -318,6 +321,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const dataLoaded = (!this._data || this._data.length === 0) && value && value.length > 0;
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
+
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -329,23 +336,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (dataLoaded && this._columns.some(x => (x as any)._width === 'auto')) {
             this.recalculateAutoSizes();
         }
-    }
-
-    /**
-     * Gets/Sets an array of objects containing the filtered data.
-     *
-     * @example
-     * ```typescript
-     * let filteredData = this.grid.filteredData;
-     * this.grid.filteredData = [...];
-     * ```
-     */
-    public get filteredData() {
-        return this._filteredData;
-    }
-
-    public set filteredData(value) {
-        this._filteredData = value;
     }
 
     /**
@@ -371,7 +361,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private get _gridAPI(): IgxGridAPIService {
         return this.gridAPI as IgxGridAPIService;
     }
-    private _filteredData = null;
 
     private childDetailTemplates: Map<any, any> = new Map();
 

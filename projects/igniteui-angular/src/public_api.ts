@@ -144,3 +144,4 @@ export { IQueryBuilderResourceStrings } from './lib/core/i18n/query-builder-reso
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';
 export { GridSelectionRange } from './lib/grids/common/types';
+export { IBannerResourceStrings } from './lib/core/i18n/banner-resources';

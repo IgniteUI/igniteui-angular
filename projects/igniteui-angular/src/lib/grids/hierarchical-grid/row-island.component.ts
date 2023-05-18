@@ -154,7 +154,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public rootGrid: GridType = null;
     public readonly data: any[] | null;
-    public readonly filteredData: any[];
 
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;

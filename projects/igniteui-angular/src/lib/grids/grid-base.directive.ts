@@ -178,7 +178,6 @@ import { IgxGridValidationService } from './grid/grid-validation.service';
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
-const FILTER_ROW_HEIGHT = 50;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
@@ -1772,7 +1771,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
                 this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
-                this.filteredData = null;
+                this._filteredData = null;
             }
 
             this.filteringService.refreshExpressions();
@@ -1809,7 +1808,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
             this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree)) {
-            this.filteredData = null;
+            this._filteredData = null;
         }
 
         this.selectionService.clearHeaderCBState();
@@ -3124,6 +3123,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+    private _filteredData = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<IgxGridEmptyTemplateContext>;
     private _excelStyleHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
@@ -3226,7 +3226,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public abstract id: string;
     public abstract data: any[] | null;
-    public abstract filteredData: any[];
+
+    /**
+     * Returns an array of objects containing the filtered data.
+     *
+     * @example
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+     */
+    public get filteredData() {
+        return this._filteredData;
+    }
+
     /**
      * Returns an array containing the filtered sorted data.
      *
@@ -3740,11 +3752,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._filteredPinnedData = data || [];
             const filteredUnpinned = this._filteredUnpinnedData || [];
             const filteredData = [... this._filteredPinnedData, ...filteredUnpinned];
-            this.filteredData = filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
+            this._filteredData = filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
-            this.filteredData = data;
+            this._filteredData = data;
         }
     }
 
@@ -6943,10 +6955,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected calcGridHeadRow() {
         if (this.maxLevelHeaderDepth) {
             this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
-            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
-            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
-                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
-            }
+            const hasFilterRow = this._allowFiltering && this._filterMode === FilterMode.quickFilter;
+            const minSize = (this.maxLevelHeaderDepth + 1 + (hasFilterRow ? 1 : 0)) * this.defaultRowHeight / this._baseFontSize;
             this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
     }
