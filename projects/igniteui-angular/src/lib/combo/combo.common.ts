@@ -1300,7 +1300,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
         const searchValue = this.searchValue || this.comboInput?.value;
-        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
+        return value?.toString().trim().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {
