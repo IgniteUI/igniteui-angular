@@ -5438,7 +5438,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Deselected selected cells.
+     * @example
+     * ```typescript
+     * this.grid.clearCellSelection();
+     * ```
      */
     public clearCellSelection(): void {
         this.selectionService.clear(true);
