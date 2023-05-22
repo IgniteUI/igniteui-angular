@@ -34,7 +34,7 @@
         >
         </igx-tree-grid-group-by-area>
 
-        <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
+        <igx-column [field]='groupKey' [resizable]="true" [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
 
         <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
             [groupable]="true" [resizable]="c.resizable" [width]="c.width"

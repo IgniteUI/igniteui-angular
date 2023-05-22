@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { IgxIconService, IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/public_api';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { IgxButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-icon-sample',

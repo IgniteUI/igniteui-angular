@@ -1,22 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, IgxTreeGridComponent, RowPinningPosition } from 'igniteui-angular';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxGridEditingActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-editing-actions.component';
-import { IgxGridPinningActionsComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/grid-actions/grid-pinning-actions.component';
-import { IgxActionStripComponent } from '../../../projects/igniteui-angular/src/lib/action-strip/action-strip.component';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
 import { NgFor } from '@angular/common';
-import { IgxTreeGridComponent as IgxTreeGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
+import { ColumnPinningPosition, IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxTreeGridComponent, RowPinningPosition } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-tree-grid-add-row',
     styleUrls: ['tree-grid-add-row.sample.scss'],
     templateUrl: `tree-grid-add-row.sample.html`,
     standalone: true,
-    imports: [IgxTreeGridComponent_1, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
+    imports: [IgxTreeGridComponent, NgFor, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class TreeGridAddRowSampleComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent)

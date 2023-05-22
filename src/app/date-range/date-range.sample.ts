@@ -1,19 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { IChangeRadioEventArgs, IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
 import { NgFor, JsonPipe } from '@angular/common';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxDateTimeEditorDirective } from '../../../projects/igniteui-angular/src/lib/directives/date-time-editor/date-time-editor.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxDateRangeStartComponent, IgxDateRangeEndComponent, DateRange } from '../../../projects/igniteui-angular/src/lib/date-range-picker/date-range-picker-inputs.common';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxPickerToggleComponent } from '../../../projects/igniteui-angular/src/lib/date-common/picker-icons.common';
-import { IgxDateRangePickerComponent } from '../../../projects/igniteui-angular/src/lib/date-range-picker/date-range-picker.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DateRange, IChangeRadioEventArgs, IgxButtonDirective, IgxDateRangeEndComponent, IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateTimeEditorDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxPickerToggleComponent, IgxPrefixDirective, IgxRadioComponent, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-date-range',

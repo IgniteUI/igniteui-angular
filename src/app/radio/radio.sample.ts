@@ -1,13 +1,8 @@
 import { Component, ViewChild, AfterContentInit } from '@angular/core';
 import { NgFor, JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxRadioGroupDirective, IgxLayoutDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent, IgxRippleDirective, IgxButtonDirective, IgxRadioComponent, RadioGroupAlignment } from 'igniteui-angular';
 
-import { IgxRadioComponent } from '../../../projects/igniteui-angular/src/lib/radio/radio.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxCardActionsComponent } from '../../../projects/igniteui-angular/src/lib/card/card.component';
-import { IgxLayoutDirective } from '../../../projects/igniteui-angular/src/lib/directives/layout/layout.directive';
-import { IgxRadioGroupDirective, RadioGroupAlignment } from '../../../projects/igniteui-angular/src/lib/directives/radio/radio-group.directive';
 
 class Person {
     public favoriteSeason: string;
