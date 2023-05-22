@@ -985,7 +985,8 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public ngOnInit() {
+    public override ngOnInit() {
+        super.ngOnInit();
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
@@ -1007,10 +1008,11 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     }
 
     /** @hidden @internal */
-    public ngDoCheck(): void {
+    public override ngDoCheck(): void {
         if (this.data?.length && this.selection.length && !this._value) {
             this._value = this.createDisplayText(this.selection, []);
         }
+        super.ngDoCheck();
     }
 
     /** @hidden @internal */
@@ -1298,7 +1300,7 @@ export abstract class IgxComboBaseDirective extends DisplayDensityBase implement
     protected findMatch = (element: any): boolean => {
         const value = this.displayKey ? element[this.displayKey] : element;
         const searchValue = this.searchValue || this.comboInput?.value;
-        return value?.toString().toLowerCase() === searchValue.trim().toLowerCase();
+        return value?.toString().trim().toLowerCase() === searchValue.trim().toLowerCase();
     };
 
     protected manageRequiredAsterisk(): void {

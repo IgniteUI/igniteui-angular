@@ -223,20 +223,20 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
             const changes = this._differ.diff(this.chipsList.toArray());
             if (changes) {
                 changes.forEachAddedItem((addedChip) => {
-                    addedChip.item.moveStart.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+                    addedChip.item.moveStart.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
                         this.onChipMoveStart(args);
                     });
-                    addedChip.item.moveEnd.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+                    addedChip.item.moveEnd.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
                         this.onChipMoveEnd(args);
                     });
-                    addedChip.item.dragEnter.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+                    addedChip.item.dragEnter.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
                         this.onChipDragEnter(args);
                     });
-                    addedChip.item.keyDown.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+                    addedChip.item.keyDown.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
                         this.onChipKeyDown(args);
                     });
                     if (addedChip.item.selectable) {
-                        addedChip.item.selectedChanging.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+                        addedChip.item.selectedChanging.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
                             this.onChipSelectionChange(args);
                         });
                     }

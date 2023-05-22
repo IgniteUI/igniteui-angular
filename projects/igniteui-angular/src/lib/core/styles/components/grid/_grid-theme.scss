@@ -709,7 +709,7 @@
         }
 
         outline-style: none;
-        z-index: 1;
+        z-index: auto;
 
         %cbx-display {
             min-width: $cbx-size;
@@ -1486,25 +1486,26 @@
         padding: 0 !important;
 
         // Have a more stable visual editing experience
-        igx-input-group,
+        > igx-input-group,
+        igx-combo,
         igx-select,
         igx-date-picker,
         igx-time-picker {
-            height: calc(100% - (#{$editing-outline-width} * 2));
-            width: calc(100% - (#{$editing-outline-width} * 2));
-            margin-inline-start: $editing-outline-width;
+            position: relative;
+            height: calc(100% - #{$editing-outline-width * 2});
+            width: calc(100% - #{$editing-outline-width * 2});
+            inset-inline-start: $editing-outline-width;
             overflow: hidden;
-
-            igx-input-group {
-                width: calc(100% - #{$editing-outline-width}) !important;
-                margin-inline-start: 0;
-                height: 100% !important;
-            }
         }
 
         igx-input-group {
+            height: 100%;
+
+            input {
+                height: 100%;
+            }
+
             --theme: fluent;
-            padding-top: 0 !important;
         }
 
         .igx-input-group__bundle {
@@ -1519,6 +1520,12 @@
             &::after {
                 display: none;
             }
+        }
+
+        .igx-input-group__bundle-main,
+        .igx-input-group__bundle-start,
+        .igx-input-group__bundle-end {
+            height: calc(100% - #{$editing-outline-width * 2});
         }
 
         &.igx-grid__td--invalid {
@@ -1539,10 +1546,6 @@
 
         igx-time-picker [igxLabel] {
             display: none;
-        }
-
-        %form-group-bundle {
-            height: 100%;
         }
 
         input {
@@ -2163,9 +2166,10 @@
     }
 
     %igx-group-label__count-badge {
-        > div {
-            background: var-get($theme, 'group-count-background');
-            color: var-get($theme, 'group-count-text-color');
+        --background-color: #{var-get($theme, 'group-count-background')};
+        --text-color: #{var-get($theme, 'group-count-text-color')};
+
+        > span {
             font-size: $grid-head-fs;
         }
     }

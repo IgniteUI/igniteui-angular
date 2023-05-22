@@ -269,18 +269,27 @@ describe('IgxSwitch', () => {
         fixture.detectChanges();
 
         const switchEl = fixture.componentInstance.switch;
-        switchEl.checked = false;
+        const switchNative = fixture.debugElement.query(By.directive(IgxSwitchComponent)).nativeElement;
         expect(switchEl.required).toBe(true);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
         expect(switchEl.nativeElement.getAttribute('aria-required')).toEqual('true');
         expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
 
-        fixture.debugElement.componentInstance.markAsTouched();
-        fixture.detectChanges();
+        dispatchCbEvent('keyup', switchNative, fixture);
+        expect(switchEl.focused).toBe(true);
+        dispatchCbEvent('blur', switchNative, fixture);
 
-        const invalidSwitch = fixture.debugElement.nativeElement.querySelectorAll(`.igx-switch--invalid`);
-        expect(invalidSwitch.length).toBe(1);
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(true);
         expect(switchEl.invalid).toBe(true);
         expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        switchEl.checked = true;
+        fixture.detectChanges();
+
+        expect(switchNative.classList.contains('igx-switch--invalid')).toBe(false);
+        expect(switchEl.invalid).toBe(false);
+        expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
     describe('EditorProvider', () => {
@@ -350,17 +359,6 @@ class SwitchFormGroupComponent {
     public myForm = this.fb.group({ switch: ['', Validators.required] });
 
     constructor(private fb: UntypedFormBuilder) {}
-
-    public markAsTouched() {
-        if (!this.myForm.valid) {
-            for (const key in this.myForm.controls) {
-                if (this.myForm.controls[key]) {
-                    this.myForm.controls[key].markAsTouched();
-                    this.myForm.controls[key].updateValueAndValidity();
-                }
-            }
-        }
-    }
 }
 
 @Component({

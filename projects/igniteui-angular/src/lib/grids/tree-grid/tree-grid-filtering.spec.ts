@@ -990,7 +990,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     });
     class CustomTreeGridFilterStrategy  extends FilteringStrategy {
 
-        public filter(data: [], expressionsTree): any[] {
+        public override filter(data: [], expressionsTree): any[] {
                 const result = [];
                 if (!expressionsTree || !expressionsTree.filteringOperands ||
                     expressionsTree.filteringOperands.length === 0 || !data.length) {

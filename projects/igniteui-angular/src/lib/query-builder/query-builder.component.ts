@@ -1164,8 +1164,8 @@ export class IgxQueryBuilderComponent extends DisplayDensityBase implements Afte
         parent.children.splice(index, 0, groupItem);
 
         for (const expr of this.selectedExpressions) {
-            this.deleteItem(expr);
             groupItem.children.push(expr);
+            this.deleteItem(expr);
             expr.parent = groupItem;
         }
 
