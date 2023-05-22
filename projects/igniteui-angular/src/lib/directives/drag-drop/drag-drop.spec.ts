@@ -1,18 +1,18 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import {
-    IgxDragDropModule,
     IgxDragDirective,
     IgxDropDirective,
     IgxDragLocation,
     IDropDroppedEventArgs,
-    DragDirection
+    DragDirection,
+    IgxDragHandleDirective,
+    IgxDragIgnoreDirective
 } from './drag-drop.directive';
 import { IgxIconModule } from '../../icon/public_api';
 
@@ -25,13 +25,7 @@ describe('General igxDrag/igxDrop', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                TestDragDropComponent
-            ],
-            imports: [
-                FormsModule,
-                IgxDragDropModule
-            ]
+            imports: [TestDragDropComponent]
         })
         .compileComponents();
     }));
@@ -1357,14 +1351,10 @@ describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
                 TestDragDropLinkedSingleComponent,
                 TestDragDropLinkedMixedComponent,
                 TestDragDropStrategiesComponent
-            ],
-            imports: [
-                FormsModule,
-                IgxDragDropModule
             ]
         })
         .compileComponents();
@@ -1990,7 +1980,9 @@ const generalStyles = [`
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }"></div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 class TestDragDropComponent {
     @ViewChildren(IgxDragDirective)
@@ -2023,7 +2015,9 @@ class TestDragDropComponent {
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="1"></div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
 
@@ -2042,7 +2036,9 @@ class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
         <br/>
         <h3>Drop area:</h3>
         <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="[1, 3]"></div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
 
@@ -2062,7 +2058,9 @@ class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
             <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }" [dragChannel]="2">Drag 2</div>
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }" [dragChannel]="3">Drag 3</div>
         </div>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDragDirective, IgxDropDirective]
 })
 class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }
 

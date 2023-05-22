@@ -1,11 +1,11 @@
 import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxPivotGridComponent, IgxPivotGridModule } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent } from '../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 
 const DEBOUNCE_TIME = 250;
@@ -21,11 +21,10 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
     let pivotGrid: IgxPivotGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
-                IgxPivotGridMultipleRowComponent
-            ],
             imports: [
-                NoopAnimationsModule, IgxPivotGridModule]
+                NoopAnimationsModule,
+                IgxPivotGridMultipleRowComponent
+            ]
         });
     }));
 
@@ -228,7 +227,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', firstHeader.nativeElement);
         fixture.detectChanges();
-        let secondHeader = fixture.debugElement.queryAll(
+        const secondHeader = fixture.debugElement.queryAll(
             By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`))[1];
         GridFunctions.verifyHeaderIsFocused(secondHeader.parent);
         activeCells = fixture.debugElement.queryAll(By.css(`${ACTIVE_CELL_CSS_CLASS}`));

@@ -2,15 +2,17 @@ import { Component, ViewChild, Pipe, PipeTransform, ElementRef } from '@angular/
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxAutocompleteModule, IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
+import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group/public_api';
-import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
+import { IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../input-group/public_api';
+import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { IgxIconModule } from '../../icon/public_api';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
+import { NgFor } from '@angular/common';
+import { IgxRippleDirective } from '../ripple/ripple.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
@@ -28,23 +30,13 @@ describe('IgxAutocomplete', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 AutocompleteComponent,
                 AutocompleteInputComponent,
-                AutocompleteFormComponent,
-                IgxAutocompletePipeStartsWith
-            ],
-            imports: [
-                IgxInputGroupModule,
-                IgxDropDownModule,
-                IgxAutocompleteModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-                IgxIconModule
+                AutocompleteFormComponent
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
     describe('General tests: ', () => {
         beforeEach(waitForAsync(() => {
@@ -933,8 +925,22 @@ describe('IgxAutocomplete', () => {
     });
 });
 
+@Pipe({
+    name: 'startsWith',
+    standalone: true
+})
+export class IgxAutocompletePipeStartsWith implements PipeTransform {
+    public transform(collection: any[], term = '', key?: string) {
+        return collection.filter(item => {
+            const currItem = key ? item[key] : item;
+            return currItem.toString().toLowerCase().startsWith(term.toString().toLowerCase());
+        });
+    }
+}
+
 @Component({
-    template: `<igx-input-group style="width: 300px;">
+    template: `
+    <igx-input-group style="width: 300px;">
         <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
@@ -946,7 +952,21 @@ describe('IgxAutocomplete', () => {
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
             {{town}}
         </igx-drop-down-item>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [
+        FormsModule,
+        IgxInputGroupComponent,
+        IgxPrefixDirective,
+        IgxSuffixDirective,
+        IgxInputDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxIconComponent,
+        IgxAutocompleteDirective,
+        IgxAutocompletePipeStartsWith,
+        NgFor
+    ]
 })
 class AutocompleteComponent {
     @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
@@ -982,7 +1002,17 @@ class AutocompleteComponent {
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
             {{town}}
         </igx-drop-down-item>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [
+        FormsModule,
+        IgxAutocompleteDirective,
+        IgxLabelDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxAutocompletePipeStartsWith,
+        NgFor
+    ]
 })
 class AutocompleteInputComponent extends AutocompleteComponent {
     @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
@@ -991,24 +1021,39 @@ class AutocompleteInputComponent extends AutocompleteComponent {
 
 @Component({
     template: `
-<form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
-<igx-input-group>
-        <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
-        <input igxInput name="towns" formControlName="towns" type="text" required
-            [igxAutocomplete]='townsPanel'
-            [igxAutocompleteSettings]='settings' />
-        <label igxLabel for="towns">Towns</label>
-        <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
-    </igx-input-group>
-    <igx-drop-down #townsPanel>
-        <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
-            {{town}}
-        </igx-drop-down-item>
-    </igx-drop-down>
-    <input #plainInput/>
-    <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
-</form>
-`
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+        <igx-input-group>
+            <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
+            <input igxInput name="towns" formControlName="towns" type="text" required
+                [igxAutocomplete]='townsPanel'
+                [igxAutocompleteSettings]='settings' />
+            <label igxLabel for="towns">Towns</label>
+            <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
+        </igx-input-group>
+        <igx-drop-down #townsPanel>
+            <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
+                {{town}}
+            </igx-drop-down-item>
+        </igx-drop-down>
+        <input #plainInput/>
+        <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+    </form>
+    `,
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        IgxInputGroupComponent,
+        IgxInputDirective,
+        IgxLabelDirective,
+        IgxPrefixDirective,
+        IgxRippleDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxIconComponent,
+        IgxAutocompleteDirective,
+        IgxAutocompletePipeStartsWith,
+        NgFor
+    ]
 })
 
 class AutocompleteFormComponent {
@@ -1033,14 +1078,4 @@ class AutocompleteFormComponent {
 
     }
     public onSubmitReactive() { }
-}
-
-@Pipe({ name: 'startsWith' })
-export class IgxAutocompletePipeStartsWith implements PipeTransform {
-    public transform(collection: any[], term = '', key?: string) {
-        return collection.filter(item => {
-            const currItem = key ? item[key] : item;
-            return currItem.toString().toLowerCase().startsWith(term.toString().toLowerCase());
-        });
-    }
 }

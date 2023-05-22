@@ -3,27 +3,32 @@ import { IgxStep, IGX_STEP_COMPONENT } from './stepper.common';
 import { IgxStepperService } from './stepper.service';
 
 @Directive({
-    selector: '[igxStepActiveIndicator]'
+    selector: '[igxStepActiveIndicator]',
+    standalone: true
 })
 export class IgxStepActiveIndicatorDirective { }
 
 @Directive({
-    selector: '[igxStepCompletedIndicator]'
+    selector: '[igxStepCompletedIndicator]',
+    standalone: true
 })
 export class IgxStepCompletedIndicatorDirective { }
 
 @Directive({
-    selector: '[igxStepInvalidIndicator]'
+    selector: '[igxStepInvalidIndicator]',
+    standalone: true
 })
 export class IgxStepInvalidIndicatorDirective { }
 
 @Directive({
-    selector: '[igxStepIndicator]'
+    selector: '[igxStepIndicator]',
+    standalone: true
 })
 export class IgxStepIndicatorDirective { }
 
 @Directive({
-    selector: '[igxStepTitle]'
+    selector: '[igxStepTitle]',
+    standalone: true
 })
 export class IgxStepTitleDirective {
     @HostBinding('class.igx-stepper__step-title')
@@ -31,7 +36,8 @@ export class IgxStepTitleDirective {
 }
 
 @Directive({
-    selector: '[igxStepSubTitle]'
+    selector: '[igxStepSubTitle]',
+    standalone: true
 })
 export class IgxStepSubTitleDirective {
     @HostBinding('class.igx-stepper__step-subtitle')
@@ -39,7 +45,8 @@ export class IgxStepSubTitleDirective {
 }
 
 @Directive({
-    selector: '[igxStepContent]'
+    selector: '[igxStepContent]',
+    standalone: true
 })
 export class IgxStepContentDirective {
     private get target(): IgxStep {

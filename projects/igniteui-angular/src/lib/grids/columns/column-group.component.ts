@@ -19,7 +19,8 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent) }],
     selector: 'igx-column-group',
-    template: ``
+    template: ``,
+    standalone: true
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
@@ -302,14 +303,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             });
     }
 
-    /**
-     * Returns the children columns collection.
-     * ```typescript
-     * let columns =  this.columnGroup.allChildren;
-     * ```
-     *
-     * @memberof IgxColumnGroupComponent
-     */
+    /** @hidden @internal **/
     public override get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }

@@ -60,6 +60,7 @@ export enum IgxInputState {
 @Directive({
     selector: '[igxInput]',
     exportAs: 'igxInput',
+    standalone: true
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private static ngAcceptInputType_required: boolean | '';
@@ -99,6 +100,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
+    private _valueChanges$: Subscription;
     private _fileNames: string;
     private _disabled = false;
 
@@ -305,6 +307,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(
                 this.onStatusChanged.bind(this)
             );
+
+            this._valueChanges$ = this.ngControl.valueChanges.subscribe(
+                this.onValueChanged.bind(this)
+            );
         }
 
         this.cdr.detectChanges();
@@ -313,6 +319,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
+        }
+
+        if (this._valueChanges$) {
+            this._valueChanges$.unsubscribe();
         }
     }
     /**
@@ -345,6 +355,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
         this.updateValidityState();
     }
+
+    /** @hidden @internal */
+    protected onValueChanged() {
+        if (this._fileNames && !this.value) {
+            this._fileNames = '';
+        }
+    }
+
     /**
      * @hidden
      * @internal

@@ -1,19 +1,23 @@
-.sample-buttons {
-    margin: 1rem 0;
-
-    &:first-child{
-        width: 10rem;
-    }
+.sample {
+    display: flex;
+    flex-direction: column;
+    gap: 32px
 }
 
-[igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
+.sample-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .density-chooser {
-    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+igx-buttongroup {
     max-width: 900px;
+    margin: 0 auto;
 }
 
 .references {
@@ -26,20 +30,3 @@
     line-height: initial;
     font-size: 1em;
 }
-
-section {
-    height: 800px;
-    padding: 0;
-    margin-bottom :2rem;
-}
-
-.igx-input-group__bundle {
-    width: 10rem;
-}
-
-// igx-grid {
-
-//     &:last-child {
-//         margin-bottom: 3rem;
-//     }
-// }

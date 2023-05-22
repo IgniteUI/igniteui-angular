@@ -20,6 +20,12 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { ColumnType, GridType, IGX_GRID_BASE } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { PlatformUtil } from '../../core/utils';
+import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from './pipes';
+import { IgxResizeHandleDirective } from '../resizing/resize-handle.directive';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { IgxColumnMovingDropDirective } from '../moving/moving.drop.directive';
+import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
+import { NgIf, NgClass, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
 
 const Z_INDEX = 9999;
 
@@ -29,7 +35,9 @@ const Z_INDEX = 9999;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header-group',
-    templateUrl: './grid-header-group.component.html'
+    templateUrl: './grid-header-group.component.html',
+    standalone: true,
+    imports: [NgIf, NgClass, NgStyle, NgFor, IgxColumnMovingDragDirective, IgxColumnMovingDropDirective, IgxIconComponent, NgTemplateOutlet, IgxGridHeaderComponent, IgxGridFilteringCellComponent, IgxResizeHandleDirective, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 

@@ -1,12 +1,14 @@
 
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
+import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
+import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { first } from 'rxjs/operators';
+import { IGridEditEventArgs } from '../public_api';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
@@ -22,11 +24,11 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridEditActionsComponent,
                 IgxTreeGridEditActionsPinningComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxActionStripModule]
+            ]
         }).compileComponents();
     }));
 
@@ -151,7 +153,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            let addRow = treeGrid.gridAPI.get_row_by_index(2);
+            const addRow = treeGrid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBeTrue();
             expect(addRow.inEditMode).toBeTrue();
 
@@ -185,12 +187,35 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            let addRow = treeGrid.gridAPI.get_row_by_index(10);
+            const addRow = treeGrid.gridAPI.get_row_by_index(10);
             expect(addRow.addRowUI).toBeTrue();
             expect(addRow.inEditMode).toBeTrue();
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
+        });
+
+        it('should have correct foreignKey value for the data record in rowAdd event arguments', () => {
+            let newRowId = null;
+            treeGrid.rowAdd.pipe(first()).subscribe((args: IGridEditEventArgs) => {
+                expect(args.newValue[treeGrid.foreignKey]).toBe(2);
+                expect(args.rowData[treeGrid.foreignKey]).toBe(2);
+                newRowId = args.newValue[treeGrid.primaryKey];
+            });
+
+            treeGrid.beginAddRowById(2, true);
+            fix.detectChanges();
+            endTransition();
+
+            const addRow = treeGrid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeTrue();
+
+            treeGrid.gridAPI.crudService.endEdit(true);
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(9);
+            const addedRow = treeGrid.getRowByKey(newRowId);
+            expect(addedRow.data[treeGrid.foreignKey]).toBe(2);
         });
     });
 });

@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
+import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -12,6 +12,8 @@ import { VirtualGridComponent, NoScrollsComponent,
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { CellType } from '../common/grid.interface';
+import { NgFor } from '@angular/common';
+import { IGridCellEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -24,10 +26,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    NoScrollsComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
+                imports: [NoopAnimationsModule, NoScrollsComponent]
             });
         }));
 
@@ -160,11 +159,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    VirtualGridComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-                providers: [{ provide: NgZone, useFactory: () =>  new TestNgZone() }]
+                imports: [NoopAnimationsModule, VirtualGridComponent],
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             });
         }));
 
@@ -276,10 +272,7 @@ describe('IgxGrid - Cell component #grid', () => {
     describe('iOS tests', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    NoScrollsComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
+                imports: [NoopAnimationsModule, NoScrollsComponent]
             });
         }));
 
@@ -335,10 +328,7 @@ describe('IgxGrid - Cell component #grid', () => {
     describe('No column widths', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    NoColumnWidthGridComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule]
+                imports: [NoopAnimationsModule, NoColumnWidthGridComponent]
             });
         }));
 
@@ -356,10 +346,7 @@ describe('IgxGrid - Cell component #grid', () => {
     describe('Cells styles', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    ConditionalCellStyleTestComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule]
+                imports: [NoopAnimationsModule, ConditionalCellStyleTestComponent]
             });
         }));
 
@@ -389,10 +376,7 @@ describe('IgxGrid - Cell component #grid', () => {
     describe('Cell properties', () => {
         configureTestSuite((() => {
             return TestBed.configureTestingModule({
-                declarations: [
-                    IgxGridDateTimeColumnComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule]
+                imports: [NoopAnimationsModule, IgxGridDateTimeColumnComponent]
             });
         }));
 
@@ -435,6 +419,8 @@ describe('IgxGrid - Cell component #grid', () => {
         </igx-column>
     </igx-grid>`,
     styleUrls: ['../../test-utils/grid-cell-style-testing.scss'],
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;

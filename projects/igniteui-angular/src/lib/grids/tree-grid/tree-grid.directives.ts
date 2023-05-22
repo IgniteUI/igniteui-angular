@@ -4,7 +4,8 @@ import { Directive, TemplateRef } from '@angular/core';
  * @hidden
  */
 @Directive({
-    selector: '[igxRowLoadingIndicator]'
+    selector: '[igxRowLoadingIndicator]',
+    standalone: true
 })
 export class IgxRowLoadingIndicatorTemplateDirective {
 

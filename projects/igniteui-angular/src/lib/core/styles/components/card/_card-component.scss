@@ -61,10 +61,6 @@
             @extend %igx-card-header-subtitle !optional;
         }
 
-        @include m(compact) {
-            @extend %igx-card-header--compact !optional;
-        }
-
         @include m(vertical) {
             @extend %igx-card-header--vertical !optional;
         }

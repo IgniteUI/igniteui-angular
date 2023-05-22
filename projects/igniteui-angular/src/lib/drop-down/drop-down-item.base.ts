@@ -13,7 +13,8 @@ let NEXT_ID = 0;
  * Method for handling click on Host()
  */
 @Directive({
-    selector: '[igxDropDownItemBase]'
+    selector: '[igxDropDownItemBase]',
+    standalone: true
 })
 export class IgxDropDownItemBaseDirective implements DoCheck {
     /**

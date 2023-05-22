@@ -1,32 +1,16 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
-import { IgxIconModule } from '../../icon/public_api';
-import { IgxBottomNavHeaderComponent } from './bottom-nav-header.component';
-import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective } from './bottom-nav.directives';
-import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
-import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
-import { IgxBottomNavComponent } from './bottom-nav.component';
+import { IGX_BOTTOM_NAV_DIRECTIVES } from './public_api';
 
-/** @hidden */
+/**
+ * @hidden
+ * IMPORTANT: The following is NgModule exported for backwards-compatibility before standalone components
+ */
 @NgModule({
-    declarations: [
-        IgxBottomNavComponent,
-        IgxBottomNavItemComponent,
-        IgxBottomNavHeaderComponent,
-        IgxBottomNavContentComponent,
-        IgxBottomNavHeaderLabelDirective,
-        IgxBottomNavHeaderIconDirective
+    imports: [
+        ...IGX_BOTTOM_NAV_DIRECTIVES
     ],
-    exports:  [
-        IgxBottomNavComponent,
-        IgxBottomNavItemComponent,
-        IgxBottomNavHeaderComponent,
-        IgxBottomNavContentComponent,
-        IgxBottomNavHeaderLabelDirective,
-        IgxBottomNavHeaderIconDirective
-    ],
-    imports: [CommonModule, IgxIconModule, IgxRippleModule]
+    exports: [
+        ...IGX_BOTTOM_NAV_DIRECTIVES
+    ]
 })
-export class IgxBottomNavModule {
-}
+export class IgxBottomNavModule { }

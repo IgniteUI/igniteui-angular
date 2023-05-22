@@ -2,11 +2,15 @@ import { Component, HostBinding, Input } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/utils';
 import { addRow, addChild  } from '@igniteui/material-icons-extended';
+import { IgxGridActionButtonComponent } from './grid-action-button.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
-    providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }]
+    providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }],
+    standalone: true,
+    imports: [NgIf, IgxGridActionButtonComponent]
 })
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
@@ -124,14 +128,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    /**
-     * Delete a row according to the context
-     *
-     * @example
-     * ```typescript
-     * this.gridEditingActions.deleteRowHandler();
-     * ```
-     */
+    /** @hidden @internal **/
     public deleteRowHandler(event?): void {
         if (event) {
             event.stopPropagation();
@@ -146,6 +143,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
+    /** @hidden @internal **/
     public addRowHandler(event?, asChild?: boolean): void {
         if (event) {
             event.stopPropagation();

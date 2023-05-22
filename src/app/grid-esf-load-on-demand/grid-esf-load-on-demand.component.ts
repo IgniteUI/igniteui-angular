@@ -1,11 +1,20 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
+import { IgxColumnComponent as IgxColumnComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
+import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
+import { IgxGridToolbarActionsComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
+import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
+import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
 
 @Component({
-  selector: 'app-grid-esf-load-on-demand',
-  templateUrl: './grid-esf-load-on-demand.component.html',
-  styleUrls: ['./grid-esf-load-on-demand.component.scss']
+    selector: 'app-grid-esf-load-on-demand',
+    templateUrl: './grid-esf-load-on-demand.component.html',
+    styleUrls: ['./grid-esf-load-on-demand.component.scss'],
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent_1, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent_1]
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
   @ViewChild('grid1', { static: true })

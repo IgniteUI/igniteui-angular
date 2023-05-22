@@ -5,7 +5,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    NgModule,
     NgZone,
     OnDestroy,
     OnInit,
@@ -151,7 +150,8 @@ export class IgxDragLocation {
 }
 
 @Directive({
-    selector: '[igxDragHandle]'
+    selector: '[igxDragHandle]',
+    standalone: true
 })
 export class IgxDragHandleDirective {
 
@@ -167,7 +167,8 @@ export class IgxDragHandleDirective {
 }
 
 @Directive({
-    selector: '[igxDragIgnore]'
+    selector: '[igxDragIgnore]',
+    standalone: true
 })
 export class IgxDragIgnoreDirective {
 
@@ -179,7 +180,8 @@ export class IgxDragIgnoreDirective {
 
 @Directive({
     exportAs: 'drag',
-    selector: '[igxDrag]'
+    selector: '[igxDrag]',
+    standalone: true
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
@@ -1289,7 +1291,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         let targetElements = [];
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
-            if (!!elFromPoint?.shadowRoot) {
+            if (elFromPoint?.shadowRoot) {
                 targetElements = targetElements.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
             } else if (targetElements.indexOf(elFromPoint) === -1) {
                 targetElements.push(elFromPoint);
@@ -1534,7 +1536,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
 @Directive({
     exportAs: 'drop',
-    selector: '[igxDrop]'
+    selector: '[igxDrop]',
+    standalone: true
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
     /**
@@ -1911,12 +1914,3 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     }
 }
 
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective],
-    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
-})
-export class IgxDragDropModule { }
