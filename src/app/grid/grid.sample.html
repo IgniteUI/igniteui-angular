@@ -121,7 +121,7 @@
             </div>
             <div class="igx-form-group">
                 <igx-input-group>
-                <input min="1" type="number" igxInput [ngModel]="grid2.perPage" (ngModelChange)="onPerPage($event)">
+                <input min="1" type="number" igxInput [(ngModel)]="perPage">
                 <label igxLabel>Records shown</label>
                 </igx-input-group>
             </div>
@@ -154,7 +154,7 @@
                     <igx-checkbox [checked]="value" (change)="grid2.updateCell($event.checkbox.checked, cell.row.key, cell.column.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
-            <igx-paginator *ngIf="gridPaging" [perPage]="10"></igx-paginator>
+            <igx-paginator *ngIf="gridPaging" [(perPage)]="perPage"></igx-paginator>
         </igx-grid>
 
     </article>

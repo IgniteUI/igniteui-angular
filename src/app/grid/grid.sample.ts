@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { RemoteService } from '../shared/remote.service';
@@ -16,6 +16,7 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
     imports: [
         FormsModule,
         NgFor,
+        NgIf,
         AsyncPipe,
         IGX_GRID_DIRECTIVES,
         IGX_CARD_DIRECTIVES,
@@ -53,6 +54,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     public customFilter = CustomStringFilter.instance();
     public selectionMode;
     public gridPaging = true;
+    public perPage = 10;
 
     constructor(private localService: LocalService,
                 private remoteService: RemoteService,
@@ -137,21 +139,10 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
 
     public onPagination(event) {
         const total = this.grid2.data.length;
-        const state = this.grid2.pagingState;
-        if ((state.recordsPerPage * event) >= total) {
+        if ((this.perPage * event) >= total) {
             return;
         }
         this.grid2.paginator.paginate(event);
-    }
-
-    public onPerPage(event) {
-        const total = this.grid2.data.length;
-        const state = this.grid2.pagingState;
-        if ((state.index * event) >= total) {
-            return;
-        }
-        this.grid2.perPage = event;
-        state.paging.recordsPerPage = event;
     }
 
     public selectCell(event) {
