@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxButtonDirective, IgxIconComponent, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular';
+import { IgxButtonDirective, IgxIconComponent, IgxSwitchComponent, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -8,7 +8,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-clipboard-sample',
     templateUrl: './grid-clipboard.sample.html',
     standalone: true,
-    imports: [FormsModule, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxIconComponent, IgxButtonDirective]
+    imports: [FormsModule, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxSwitchComponent]
 })
 export class GridClipboardSampleComponent {
     public data: any[];
