@@ -57,6 +57,9 @@ export class ListSampleComponent implements OnInit {
     @ViewChild('fruitList', { static: true })
     private fruitList: IgxListComponent;
 
+    @ViewChild('checkbox', { static: true })
+    private checkbox: any;
+
     @ViewChild('declarativeList', { static: true })
     private declarativeList: any;
 
@@ -213,7 +216,7 @@ export class ListSampleComponent implements OnInit {
         return fruitsFilterOpts;
     }
 
-    public filteringHandler = function(args) {
+    public filteringHandler = (args) => {
         args.cancel = !this.checkbox.checked;
     };
 
