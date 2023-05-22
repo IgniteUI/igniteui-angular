@@ -948,6 +948,8 @@
         }
 
         %igx-stepper__step-content {
+            flex-grow: 1;
+
             &:focus {
                 outline: none;
             }
@@ -959,6 +961,10 @@
 
         %igx-stepper__step-content-wrapper {
             text-align: center;
+        }
+
+        %igx-stepper__body-content {
+            display: flex;
         }
     }
     // HORIZONTAL MODE END
