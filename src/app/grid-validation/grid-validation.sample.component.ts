@@ -5,7 +5,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validato
 import { data } from '../shared/data';
 
 import { HIERARCHICAL_DATA } from '../shared/hierarchicalData';
-import { GridColumnDataType, IGX_GRID_DIRECTIVES, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RowType } from 'igniteui-angular';
+import { GridColumnDataType, IGX_GRID_DIRECTIVES, IGridFormGroupCreatedEventArgs, IGridValidationStatusEventArgs, IRecordValidationState, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, RowType, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent } from 'igniteui-angular';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -44,7 +44,10 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
         IGX_GRID_DIRECTIVES,
         IgxTreeGridComponent,
         IgxHierarchicalGridComponent,
-        IgxRowIslandComponent
+        IgxRowIslandComponent,
+        IgxActionStripComponent,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent,
     ]
 })
 export class GridValidationSampleComponent {

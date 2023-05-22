@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
+import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
     standalone: true,
-    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective]
+    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class GridColumnGroupsSampleComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -49,7 +49,7 @@ export class GridColumnGroupsSampleComponent {
     ];
     /* eslint-enable max-len */
 
-    public density: string = DisplayDensity.compact;
+    public density: DisplayDensity = DisplayDensity.compact;
     public displayDensities;
 
     constructor() {

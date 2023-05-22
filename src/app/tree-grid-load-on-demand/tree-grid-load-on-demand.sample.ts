@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
-import { IgxSummaryOperand, IgxSummaryResult, IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxSwitchComponent, IgxButtonDirective, GridSummaryCalculationMode, DisplayDensity, IgxExcelExporterService, IgxCsvExporterService, GridSelectionMode, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular';
+import { IgxSummaryOperand, IgxSummaryResult, IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxSwitchComponent, IgxButtonDirective, GridSummaryCalculationMode, DisplayDensity, IgxExcelExporterService, IgxCsvExporterService, GridSelectionMode, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxPaginatorComponent } from 'igniteui-angular';
 
 
 export class MySummaryOperand extends IgxSummaryOperand {
@@ -26,7 +26,7 @@ export class MySummaryOperand extends IgxSummaryOperand {
     styleUrls: ['tree-grid-load-on-demand.sample.scss'],
     templateUrl: 'tree-grid-load-on-demand.sample.html',
     standalone: true,
-    imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective]
+    imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, NgFor, IgxColumnComponent, IgxSwitchComponent, FormsModule, NgIf, IgxPaginatorComponent, IgxButtonDirective]
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
@@ -42,6 +42,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     public displayDensities;
     private dataService = new TreeGridLoadOnDemandService();
     private nextRow = 1;
+    public paging = false;
 
     constructor(private excelExporterService: IgxExcelExporterService,
                 private csvExporterService: IgxCsvExporterService) {

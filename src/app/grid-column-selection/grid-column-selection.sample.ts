@@ -1,9 +1,9 @@
 import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DisplayDensity, FilterMode, HorizontalAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxInputDirective, IgxInputGroupComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, DisplayDensity, FilterMode, HorizontalAlignment, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxInputDirective, IgxInputGroupComponent, IgxPaginatorComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective, OverlaySettings, PositionSettings, VerticalAlignment } from 'igniteui-angular';
 
 
 @Pipe({
@@ -34,7 +34,7 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
     standalone: true,
-    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]
+    imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, NgIf, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -65,6 +65,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     ];
     public density: DisplayDensity = 'comfortable';
     public displayDensities;
+    public paging = false;
 
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
