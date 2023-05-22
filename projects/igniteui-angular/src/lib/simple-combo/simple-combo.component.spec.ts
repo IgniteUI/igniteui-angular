@@ -1382,6 +1382,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
         }));
+
+        it('should select values that have spaces as prefixes/suffixes', fakeAsync(() => {
+            fixture.detectChanges();
+
+            dropdown.toggle();
+            fixture.detectChanges();
+
+            UIInteractions.simulateTyping('Ohio ', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', input.nativeElement);
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            combo.onBlur();
+            tick();
+            fixture.detectChanges();
+            expect(combo.value).toBe('Ohio ');
+        }));
     });
 
     describe('Display density', () => {
@@ -1913,6 +1935,28 @@ describe('IgxSimpleCombo', () => {
             expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
             expect(combo.selection).toEqual([selectedItem[combo.valueKey]]);
         }));
+        it('should set combo.value to empty string when bound to remote data and selected item\'s data is not present', (async () => {
+            expect(combo.valueKey).toBeDefined();
+            expect(combo.valueKey).toEqual('id');
+            expect(combo.selection.length).toEqual(0);
+
+            // current combo data - id: 0 - 9
+            // select item that is not present in the data source yet
+            combo.select(15);
+
+            expect(combo.selection.length).toEqual(1);
+            expect(combo.value).toEqual('');
+
+            combo.toggle();
+
+            // scroll to selected item
+            combo.virtualScrollContainer.scrollTo(15);
+            await wait();
+            fixture.detectChanges();
+
+            const selectedItem = combo.data[combo.data.length - 1];
+            expect(combo.value).toEqual(`${selectedItem[combo.displayKey]}`);
+        }));
     });
 });
 
@@ -1952,7 +1996,7 @@ class IgxSimpleComboSampleComponent {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
             'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
-            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 02': ['Michigan', 'Ohio ', 'Wisconsin'],
             'East North Central 01': ['Illinois', 'Indiana'],
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
@@ -2201,7 +2245,7 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
 @Component({
     template: `
         <div style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
-            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'" 
+            <igx-simple-combo #combo [data]="items" [displayKey]="'field'" [valueKey]="'field'" [width]="'100%'"
             style="margin-bottom: 60px;">
             </igx-simple-combo>
         </div>`

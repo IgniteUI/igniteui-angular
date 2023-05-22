@@ -298,6 +298,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -702,7 +705,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = treeRowRec.data[key];
+                row.data[key] = treeRowRec.data[this.crudService.addRowParent?.asChild ? this.primaryKey : key];
             } else {
                 row.data[key] = undefined;
             }

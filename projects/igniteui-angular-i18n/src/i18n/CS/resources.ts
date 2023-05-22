@@ -11,6 +11,8 @@ import { InputResourceStringsCS } from './input-resources';
 import { ChipResourceStringsCS } from './chip-resources';
 import { ComboResourceStringsCS } from './combo-resources';
 import { QueryBuilderResourceStringsCS } from './query-builder-resources';
+import { BannerResourceStringsCS } from './banner-resources';
+import { ActionStripResourceStringsCS } from './action-strip-resources';
 
 /**
  * Czech resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsCS = {
     ...InputResourceStringsCS,
     ...ChipResourceStringsCS,
     ...ComboResourceStringsCS,
-    ...QueryBuilderResourceStringsCS
+    ...QueryBuilderResourceStringsCS,
+    ...BannerResourceStringsCS,
+    ...ActionStripResourceStringsCS,
 };
