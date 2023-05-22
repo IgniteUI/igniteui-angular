@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from
 import { NgIf, NgFor } from '@angular/common';
 
 import { defineComponents, IgcInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
-import { ButtonGroupAlignment, DisplayDensity, DisplayDensityToken, IButtonGroupEventArgs, IDisplayDensityOptions, IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxInputGroupType, IgxMaskDirective } from 'igniteui-angular';
+import { ButtonGroupAlignment, DisplayDensity, DisplayDensityToken, IButtonGroupEventArgs, IDisplayDensityOptions, IGX_BUTTON_GROUP_DIRECTIVES, IGX_DATE_PICKER_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_INPUT_GROUP_TYPE, IGX_SELECT_DIRECTIVES, IgxIconComponent, IgxInputGroupType, IgxMaskDirective, IgxSwitchComponent } from 'igniteui-angular';
 
 defineComponents(IgcInputComponent, IgcIconComponent);
 
@@ -21,7 +21,7 @@ interface Selection {
     templateUrl: 'input-group.sample.html',
     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }],
     standalone: true,
-    imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor, IGX_INPUT_GROUP_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, IgxIconComponent, IGX_DATE_PICKER_DIRECTIVES, IgxMaskDirective, IGX_SELECT_DIRECTIVES],
+    imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor, IGX_INPUT_GROUP_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, IgxIconComponent, IGX_DATE_PICKER_DIRECTIVES, IgxMaskDirective, IGX_SELECT_DIRECTIVES, IgxSwitchComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
