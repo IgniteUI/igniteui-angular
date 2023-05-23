@@ -1,20 +1,9 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
+import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
 
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IButtonGroupEventArgs, IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxPrefixDirective } from '../../../projects/igniteui-angular/src/lib/directives/prefix/prefix.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectGroupComponent, IgxSelectHeaderDirective, IgxSelectItemComponent } from '../../../projects/igniteui-angular/src/lib/select/public_api';
-import { ISelectionEventArgs } from '../../../projects/igniteui-angular/src/lib/drop-down/public_api';
-import { CancelableEventArgs } from '../../../projects/igniteui-angular/src/lib/core/utils';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment } from '../../../projects/igniteui-angular/src/lib/services/public_api';
-import { scaleInTop, scaleOutBottom } from '../../../projects/igniteui-angular/src/lib/animations/scale';
+
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector

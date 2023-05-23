@@ -67,7 +67,7 @@ export class IgxGridValidationTestBaseComponent {
         <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]='true' [dataType]="c.dataType">
+            [header]="c.field" [resizable]="true" [dataType]="c.dataType">
             <ng-template igxCellValidationError let-cell='cell'>
                 <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
                     This name is forbidden.
@@ -89,7 +89,7 @@ export class IgxGridValidationTestCustomErrorComponent extends IgxGridValidation
         <igx-column igxAppForbiddenName='bob' minlength="4" maxlength='8' required
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]='true' [dataType]="c.dataType">
+            [header]="c.field" [resizable]="true" [dataType]="c.dataType">
         </igx-column>
     </igx-grid>
     <ng-template #modelTemplate igxCellEditor let-cell="cell">
@@ -117,7 +117,7 @@ export class IgxGridCustomEditorsComponent extends IgxGridValidationTestCustomEr
         <igx-column igxAppForbiddenName='bob' minlength="4" required
             *ngFor="let c of columns"
             [editable]='true' [sortable]="true" [filterable]="true" [field]="c.field"
-            [header]="c.field" [resizable]='true' [dataType]="c.dataType" >
+            [header]="c.field" [resizable]="true" [dataType]="c.dataType" >
             <ng-template igxCellValidationError let-cell='cell'>
                 <div *ngIf="cell.validation.errors?.['forbiddenName'] else cell.defaultErrorTemplate">
                     This name is forbidden.
