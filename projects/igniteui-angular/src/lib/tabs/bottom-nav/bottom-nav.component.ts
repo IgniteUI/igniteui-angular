@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
+import { NgFor, NgTemplateOutlet } from '@angular/common';
 
 
 /** @hidden */
@@ -40,13 +41,15 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
 @Component({
     selector: 'igx-bottom-nav',
     templateUrl: 'bottom-nav.component.html',
-    providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }]
+    providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
+    standalone: true,
+    imports: [NgFor, NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
     /** @hidden */
-    protected _disableAnimation = true;
+    protected override _disableAnimation = true;
     /** @hidden */
-    protected componentName = 'igx-bottom-nav';
+    protected override componentName = 'igx-bottom-nav';
 
     /** @hidden */
     protected getNextTabId() {

@@ -1,14 +1,16 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { FilterMode, IgxGridComponent } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { FilterMode, IgxButtonGroupComponent, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-types-sample',
     styleUrls: ['grid-column-types.sample.scss'],
-    templateUrl: 'grid-column-types.sample.html'
+    templateUrl: 'grid-column-types.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, NgFor, IgxColumnComponent]
 })
-
 export class GridColumnTypesSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 

@@ -64,7 +64,7 @@ const getTargetedProjectOptions = (project: workspaces.ProjectDefinition, target
 };
 
 export const getConfigFile =
-    (project: workspaces.ProjectDefinition, option: string, context: SchematicContext, configSection: string = 'build'): string => {
+    (project: workspaces.ProjectDefinition, option: string, context: SchematicContext, configSection = 'build'): string => {
         const options = getTargetedProjectOptions(project, configSection, context);
         if (!options) {
             context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +

@@ -1,12 +1,18 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { Observable } from 'rxjs';
-import { IgxGridComponent } from 'igniteui-angular';
+
 import { RemoteService } from '../shared/remote.service';
+import { IgxButtonDirective, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxRippleDirective, IgxSwitchComponent, IgxToggleActionDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-selection-sample',
+    templateUrl: 'grid-selection.sample.html',
     styleUrls: ['grid-selection.sample.scss'],
-    templateUrl: 'grid-selection.sample.html'
+    standalone: true,
+    imports: [IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, NgFor, IgxDropDownItemComponent, IgxGridComponent, IgxColumnComponent, NgIf, IgxRippleDirective, AsyncPipe]
 })
 export class GridSelectionComponent implements AfterViewInit {
     @ViewChild('grid1', { static: true })

@@ -6,9 +6,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxGroupAreaDropDirective } from './grid.directives';
+import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGridModule, IgxGrouping } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -20,6 +19,11 @@ import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { NgFor, NgIf } from '@angular/common';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
+import { IgxGrouping } from '../public_api';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -32,18 +36,18 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 DefaultGridComponent,
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
                 GroupByEmptyColumnFieldComponent,
-                MultiColumnHeadersWithGroupingComponent,
                 GridGroupByRowCustomSelectorsComponent,
                 GridGroupByCaseSensitiveComponent,
-                GridGroupByTestDateTimeDataComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+                GridGroupByTestDateTimeDataComponent,
+                MultiColumnHeadersWithGroupingComponent
+            ]
         });
     }));
 
@@ -404,7 +408,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     }));
@@ -467,6 +471,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
         expect(groupRow.expanded).toBe(false);
+
+        grid.clearGrouping();
+        tick();
+        grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Desc });
+        fix.detectChanges();
+        grid.toggleGroup(grid.groupsRowList.first.groupRow);
+        tick();
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toEqual(false);
     }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
@@ -531,8 +544,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
 
-        let groupRows = grid.groupsRowList.toArray();
-        let dataRows = grid.dataRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(5);
@@ -2359,7 +2372,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2400,7 +2413,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(dataRows[1].data.ProductName).toEqual('NetAdvantage');
 
-        fix.componentInstance.instance.paginate(1);
+        fix.componentInstance.instance.paginator.paginate(1);
         tick();
         fix.detectChanges();
 
@@ -2412,7 +2425,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].data.ProductName).toEqual('Ignite UI for Angular');
 
-        fix.componentInstance.instance.paginate(0);
+        fix.componentInstance.instance.paginator.paginate(0);
         tick();
         fix.detectChanges();
 
@@ -2622,7 +2635,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions);
-        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[0].textContent.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -3653,7 +3666,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
         grid.columnList.get(1).groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
@@ -3713,7 +3725,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         <ng-template #dropArea>
             <span> Custom template </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxPaginatorComponent, NgIf]
 })
 export class DefaultGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3751,7 +3765,7 @@ const formatUnboundValueFunction = (rowData: any | undefined): string | undefine
 
 
 class MySortingStrategy extends IgxGrouping {
-    protected getFieldValue(
+    protected override getFieldValue(
         obj: any,
         key: string,
         isDate = false,
@@ -3773,19 +3787,21 @@ class MySortingStrategy extends IgxGrouping {
             [data]="data"
             [sortStrategy]="sortStrategy"
             [groupStrategy]="groupStrategy">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" width="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" width="200" [groupable]="true" [hasSummary]="false"
                 dataType="number"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'UnboundField'" [header]="'Unbound Value'" [width]="200" [dataType]="'string'"
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'UnboundField'" [header]="'Unbound Value'" width="200" [dataType]="'string'"
                 [sortable]="true" [groupable]="true" [formatter]="formatUnboundValue">
             </igx-column>
             <igx-paginator></igx-paginator>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class GroupableGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3808,11 +3824,11 @@ export class GroupableGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="data">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Is it Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ID'" [header]="'ID'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Is it Released'" width="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRow let-groupRow>
                 <span>
                     Grouping by "{{groupRow.column.header}}".
@@ -3838,7 +3854,9 @@ export class GroupableGridComponent extends DataParent {
                     CUSTOM GROUP BY
                 </span>
         </ng-template>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowTemplateDirective, IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeaderCollapsedIndicatorDirective]
 })
 export class CustomTemplateGridComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3857,10 +3875,12 @@ export class CustomTemplateGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width + 'px'">
                 </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3898,7 +3918,9 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
                 </ng-template>
             </igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3915,13 +3937,13 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             [width]='width'
             [height]='height'
             [data]="data">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="number"></igx-column>
-            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRowSelector let-context>
                 <igx-checkbox (click)="onGroupByRowClick($event, context)" hidden='true'></igx-checkbox>
                 <p>Selected rows in the group: {{context.selectedCount}};<p>
@@ -3929,7 +3951,9 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
                 <p>Group Row instance: {{context.groupRow}};<p>
             </ng-template>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGroupByRowSelectorDirective, IgxCheckboxComponent]
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
     @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })
@@ -3949,11 +3973,13 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="testData">
-            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="200" [groupable]="true" [hasSummary]="false"
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="'200px'" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ContactTitle'" [header]="'ContactTitle'" [width]="'200px'" [groupable]="true" [hasSummary]="false"
                 dataType="string"></igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByCaseSensitiveComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -3992,13 +4018,15 @@ export class GridGroupByCaseSensitiveComponent {
             [width]='width'
             [height]='height'
             [data]="datesData">
-            <igx-column [field]="'ProductID'" [width]="200" [groupable]="true" dataType="number"></igx-column>
-            <igx-column [field]="'ProductName'" [width]="200" [groupable]="true" dataType="string"></igx-column>
-            <igx-column [field]="'DateField'" [width]="200" [groupable]="true" dataType="date"></igx-column>
-            <igx-column [field]="'TimeField'" [width]="200" [groupable]="true" dataType="time"></igx-column>
-            <igx-column [field]="'DateTimeField'" [width]="200" [groupable]="true" dataType="dateTime"></igx-column>
+            <igx-column [field]="'ProductID'" [width]="'200px'" [groupable]="true" dataType="number"></igx-column>
+            <igx-column [field]="'ProductName'" [width]="'200px'" [groupable]="true" dataType="string"></igx-column>
+            <igx-column [field]="'DateField'" [width]="'200px'" [groupable]="true" dataType="date"></igx-column>
+            <igx-column [field]="'TimeField'" [width]="'200px'" [groupable]="true" dataType="time"></igx-column>
+            <igx-column [field]="'DateTimeField'" [width]="'200px'" [groupable]="true" dataType="dateTime"></igx-column>
         </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridGroupByTestDateTimeDataComponent {
     @ViewChild("grid", { read: IgxGridComponent, static: true })

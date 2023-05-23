@@ -1,13 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
-import { IgxRowDirective } from 'projects/igniteui-angular/src/lib/grids/row.directive';
+
 import { DATA } from './nwindData';
+import { IgxColumnComponent, IgxDropDirective, IgxGridComponent, IgxRowDirective } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-grid-row-reorder-sample',
+    templateUrl: 'grid-row-reorder.sample.html',
     styleUrls: ['grid-row-reorder.sample.scss'],
-    templateUrl: 'grid-row-reorder.sample.html'
+    standalone: true,
+    imports: [IgxGridComponent, IgxDropDirective, IgxColumnComponent]
 })
 export class GridRowReorderComponent {
 

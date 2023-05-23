@@ -1,18 +1,17 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-    ISelectionEventArgs, CancelableEventArgs,
-    HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy,
-    IgxSelectComponent,
-    IButtonGroupEventArgs
-} from 'igniteui-angular';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { IgxButtonDirective, IgxSelectComponent, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, IgxSwitchComponent, ISelectionEventArgs, CancelableEventArgs, HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
+
+
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
-    templateUrl: './select.sample.html'
+    templateUrl: './select.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxSelectComponent, FormsModule, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, NgFor, IgxSelectHeaderDirective, IgxSelectFooterDirective, IgxButtonGroupComponent, IgxSuffixDirective, IgxHintDirective, IgxSelectGroupComponent, ReactiveFormsModule, IgxSwitchComponent]
 })
 export class SelectSampleComponent implements OnInit {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })

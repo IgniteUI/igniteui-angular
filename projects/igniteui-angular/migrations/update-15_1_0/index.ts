@@ -20,7 +20,7 @@ export default (options: Options): Rule => async (host: Tree, context: Schematic
     const CARD_ACTIONS = ['igx-card-actions'];
     const prop = ['igxButton'];
     const changes = new Map<string, FileChange[]>();
-    
+
     const applyChanges = () => {
       for (const [path, change] of changes.entries()) {
         let buffer = host.read(path).toString();
@@ -57,25 +57,34 @@ export default (options: Options): Rule => async (host: Tree, context: Schematic
             const icons: any[] = [];
             getChildren(card_action_elem, buttons, icons);
 
-            icons.map(node =>getSourceOffset(node as Element))
+            icons.map(node => getSourceOffset(node as Element))
             .forEach(offset => {
-                const { startTag, file } = offset;
-                addChange(file.url, new FileChange(startTag.end - 1, ' igxEnd'));
+                const { startTag, file, node } = offset;
+                const end = getAttribute(node, 'igxEnd')[0];
+
+                if (!end) {
+                    addChange(file.url, new FileChange(startTag.end - 1, ' igxEnd'));
+                }
             })
-        
+
             buttons.map(node => getSourceOffset(node as Element))
             .forEach(offset => {
                 const { startTag, file, node } = offset;
                 const { value } = getAttribute(node, prop)[0];
-                if (value === 'icon') {
-                  addChange(file.url, new FileChange(startTag.end - 1, ' igxEnd'));
-                } else {
+                const start = getAttribute(node, 'igxStart')[0];
+                const end = getAttribute(node, 'igxEnd')[0];
+
+                if (!start && value !== 'icon') {
                   addChange(file.url, new FileChange(startTag.end - 1, ' igxStart'));
+                }
+
+                if (!end && value === 'icon') {
+                  addChange(file.url, new FileChange(startTag.end - 1, ' igxEnd'));
                 }
             });
         });
     }
-    
+
     update.shouldInvokeLS = options['shouldInvokeLS'];
     update.addValueTransform('roundShape_is_deprecated', (args: BoundPropertyObject): void => {
         args.bindingType = InputPropertyType.STRING;

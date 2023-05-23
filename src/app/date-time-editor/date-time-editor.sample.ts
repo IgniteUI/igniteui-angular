@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { IgxDateTimeEditorEventArgs } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxButtonDirective, IgxDateTimeEditorDirective, IgxDateTimeEditorEventArgs, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 
 @Component({
-  selector: 'app-date-time-editor',
-  templateUrl: './date-time-editor.sample.html',
-  styleUrls: ['./date-time-editor.sample.css']
+    selector: 'app-date-time-editor',
+    templateUrl: './date-time-editor.sample.html',
+    styleUrls: ['./date-time-editor.sample.css'],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule, IgxSuffixDirective, IgxRippleDirective, IgxButtonDirective, IgxIconComponent]
 })
 export class DateTimeEditorSampleComponent {
   public date = new Date(2020, 2, 23);

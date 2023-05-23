@@ -1,12 +1,16 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
 import { SAMPLE_DATA } from '../shared/sample-data';
+import { DisplayDensity, GridSelectionMode, IgxGridComponent, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-moving-sample',
     styleUrls: ['grid-auto-size.sample.scss'],
-    templateUrl: 'grid-auto-size.sample.html'
+    templateUrl: 'grid-auto-size.sample.html',
+    standalone: true,
+    imports: [NgFor, IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES]
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {

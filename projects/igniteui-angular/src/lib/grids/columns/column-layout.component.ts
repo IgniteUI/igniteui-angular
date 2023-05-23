@@ -20,9 +20,11 @@ import { IgxColumnGroupComponent } from './column-group.component';
     selector: 'igx-column-layout',
     template: `<div #sink style="display: none;">
     <ng-content select="igx-column,igc-column"></ng-content>
-</div>`
+</div>`,
+    standalone: true
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+    /** @hidden @internal **/
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
@@ -39,14 +41,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
 
     public override set width(val: any) { }
 
-    public get columnLayout() {
+    public override get columnLayout() {
         return true;
     }
 
     /**
      * @hidden
      */
-    public getCalcWidth(): any {
+    public override getCalcWidth(): any {
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
@@ -66,7 +68,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnComponent
      */
-    public get visibleIndex(): number {
+    public override get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
             return this._vIndex;
         }
@@ -93,7 +95,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public get hidden() {
+    public override get hidden() {
         return this._hidden;
     }
 
@@ -105,7 +107,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    public set hidden(value: boolean) {
+    public override set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
@@ -122,7 +124,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public override ngAfterContentInit() {
         super.ngAfterContentInit();
         if (!this.hidden) {
             this.hidden = this.allChildren.some(x => x.hidden);
@@ -131,24 +133,12 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         }
     }
 
-    /*
-     * Gets whether the group contains the last pinned child column of the column layout.
-     * ```typescript
-     * let columsHasLastPinned = this.columnLayout.hasLastPinnedChildColumn;
-     * ```
-     * @memberof IgxColumnLayoutComponent
-     */
+    /** @hidden @internal **/
     public get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
     }
 
-    /*
-     * Gets whether the group contains the first pinned child column of the column layout.
-     * ```typescript
-     * let hasFirstPinnedChildColumn = this.columnLayout.hasFirstPinnedChildColumn;
-     * ```
-     * @memberof IgxColumnLayoutComponent
-     */
+    /** @hidden @internal **/
     public get hasFirstPinnedChildColumn() {
         return this.children.some(child => child.isFirstPinned);
     }
@@ -156,7 +146,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    public populateVisibleIndexes() {
+    public override populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];
         const columns = this.grid?.pinnedColumns && this.grid?.unpinnedColumns
             ? this.grid.pinnedColumns.concat(this.grid.unpinnedColumns)

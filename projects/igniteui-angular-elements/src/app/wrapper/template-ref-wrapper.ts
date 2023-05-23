@@ -16,9 +16,15 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
     constructor(public innerTemplateRef: TemplateRef<C>) {
         super();
     }
-    createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
+
+    override createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
+        return this.createEmbeddedViewImpl(context, injector);
+    }
+
+    /** @internal Angular 16 impl gets called directly... */
+    createEmbeddedViewImpl(context: C, injector?: Injector, _hydrationInfo: any = null): EmbeddedViewRef<C> {
         context[CONTEXT_PROP] = context;
-        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
+        const viewRef = (this.innerTemplateRef as any).createEmbeddedViewImpl(context, injector);
         var original = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(viewRef), 'context');
         Object.defineProperty(viewRef, "context", {
             set: function(val) {
@@ -31,5 +37,4 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
         });
         return viewRef;
     }
-
 }

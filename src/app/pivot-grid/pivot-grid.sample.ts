@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
     IgxPivotGridComponent,
@@ -14,7 +15,12 @@ import {
     IPivotGridRecord,
     IPivotGridColumn,
     IgxExcelExporterService,
-    IgxExcelExporterOptions
+    IgxExcelExporterOptions,
+    IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxComboComponent,
+    IgxPivotDataSelectorComponent,
+    IgxPivotValueChipTemplateDirective
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -48,7 +54,9 @@ export class IgxTotalSaleAggregate {
     providers: [],
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid.sample.scss'],
-    templateUrl: 'pivot-grid.sample.html'
+    templateUrl: 'pivot-grid.sample.html',
+    standalone: true,
+    imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;

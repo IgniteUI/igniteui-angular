@@ -11,6 +11,8 @@ import { InputResourceStringsDE } from './input-resources';
 import { ChipResourceStringsDE } from './chip-resources';
 import { ComboResourceStringsDE } from './combo-resources';
 import { QueryBuilderResourceStringsDE } from './query-builder-resources';
+import { BannerResourceStringsDE } from './banner-resources';
+import { ActionStripResourceStringsDE } from './action-strip-resources';
 
 /**
  * German resource strings for all components
@@ -28,5 +30,7 @@ export const IgxResourceStringsDE = {
     ...InputResourceStringsDE,
     ...ChipResourceStringsDE,
     ...ComboResourceStringsDE,
-    ...QueryBuilderResourceStringsDE
+    ...QueryBuilderResourceStringsDE,
+    ...BannerResourceStringsDE,
+    ...ActionStripResourceStringsDE,
 };

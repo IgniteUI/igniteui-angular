@@ -1,7 +1,7 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import {
-    IgxExpansionPanelComponent
-} from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IgxAvatarComponent, IgxButtonDirective, IgxCardActionsComponent, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderSubtitleDirective, IgxCardHeaderTitleDirective, IgxCardMediaDirective, IgxChipComponent, IgxDividerDirective, IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxIconComponent, IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxRippleDirective, IgxSliderComponent } from 'igniteui-angular';
 
 export interface ICard {
     title: string;
@@ -59,7 +59,31 @@ const detailsFactory = (params: any): Idetails => ({
     encapsulation: ViewEncapsulation.None,
     selector: 'app-card-sample',
     styleUrls: ['card.sample.scss'],
-    templateUrl: 'card.sample.html'
+    templateUrl: 'card.sample.html',
+    standalone: true,
+    imports: [
+        NgFor,
+        FormsModule,
+        IgxCardComponent,
+        IgxCardMediaDirective,
+        IgxCardHeaderComponent,
+        IgxCardContentDirective,
+        IgxDividerDirective,
+        IgxChipComponent,
+        IgxCardActionsComponent,
+        IgxButtonDirective,
+        IgxRippleDirective,
+        IgxIconComponent,
+        IgxSliderComponent,
+        IgxExpansionPanelComponent,
+        IgxExpansionPanelBodyComponent,
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListLineTitleDirective,
+        IgxAvatarComponent,
+        IgxCardHeaderTitleDirective,
+        IgxCardHeaderSubtitleDirective
+    ]
 })
 export class CardSampleComponent {
     @ViewChild(IgxExpansionPanelComponent, { static: true })

@@ -1,14 +1,19 @@
 import { Component, Input } from '@angular/core';
-import { IgxGridBaseDirective } from 'igniteui-angular';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxRippleDirective, IgxTreeGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-search-box',
     styleUrls: ['./grid-search-box.component.scss'],
-    templateUrl: './grid-search-box.component.html'
+    templateUrl: './grid-search-box.component.html',
+    standalone: true,
+    imports: [NgIf, IgxIconComponent, FormsModule, IgxRippleDirective, IGX_INPUT_GROUP_DIRECTIVES, IGX_CHIPS_DIRECTIVES]
 })
 export class GridSearchBoxComponent {
     @Input()
-    public grid: IgxGridBaseDirective;
+    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
 
     public searchText = '';
     public caseSensitive = false;

@@ -1,41 +1,31 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Inject,
-    Injector,
-    NgModule,
-    Optional,
-    Output,
-    ViewChild
+    AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Inject, Injector,
+    Optional, Output, ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
+
 import { IgxComboAddItemComponent } from '../combo/combo-add-item.component';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 import { IgxComboItemComponent } from '../combo/combo-item.component';
 import { IgxComboAPIService } from '../combo/combo.api';
 import { IgxComboBaseDirective, IGX_COMBO_COMPONENT } from '../combo/combo.common';
-import { IgxComboModule } from '../combo/combo.component';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxTextSelectionDirective, IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownModule } from '../drop-down/public_api';
-import { IgxIconModule, IgxIconService } from '../icon/public_api';
-import {
-    IgxInputGroupModule,
-    IgxInputGroupType,
-    IGX_INPUT_GROUP_TYPE} from '../input-group/public_api';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxRippleDirective } from '../directives/ripple/ripple.directive';
+import { IgxTextSelectionDirective } from '../directives/text-selection/text-selection.directive';
+import { IgxIconService } from '../icon/icon.service';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe } from '../combo/combo.pipes';
+import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 /** Emitted when an igx-simple-combo's selection is changing.  */
 export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -73,7 +63,9 @@ export interface ISimpleComboSelectionChangingEventArgs extends CancelableEventA
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
-    ]
+    ],
+    standalone: true,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, NgIf, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit {
     /** @hidden @internal */
@@ -118,10 +110,10 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public get searchValue(): string {
+    public override get searchValue(): string {
         return this._searchValue;
     }
-    public set searchValue(val: string) {
+    public override set searchValue(val: string) {
         this._searchValue = val;
     }
 
@@ -129,15 +121,15 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return this.selectionService.get(this.id).values().next().value;
     }
 
-    constructor(protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selectionService: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        protected _iconService: IgxIconService,
+    constructor(elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        selectionService: IgxSelectionAPIService,
+        comboAPI: IgxComboAPIService,
+        _iconService: IgxIconService,
         private platformUtil: PlatformUtil,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        @Optional() protected _injector: Injector) {
+        @Optional() @Inject(DisplayDensityToken) _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) _inputGroupType: IgxInputGroupType,
+        @Optional() _injector: Injector) {
         super(elementRef, cdr, selectionService, comboAPI,
             _iconService, _displayDensityOptions, _inputGroupType, _injector);
         this.comboAPI.register(this);
@@ -198,7 +190,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit(): void {
+    public override ngAfterViewInit(): void {
         this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.selection.length > 0) {
                 const index = this.virtDir.igxForOf.findIndex(e => {
@@ -261,7 +253,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleInputChange(event?: any): void {
+    public override handleInputChange(event?: any): void {
         if (event !== undefined) {
             this.filterValue = this._internalFilter = this.searchValue = typeof event === 'string' ? event : event.target.value;
         }
@@ -295,7 +287,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleKeyDown(event: KeyboardEvent): void {
+    public override handleKeyDown(event: KeyboardEvent): void {
         if (event.key === this.platformUtil.KEYMAP.ENTER) {
             const filtered = this.filteredData.find(this.findAllMatches);
             if (filtered === null || filtered === undefined) {
@@ -353,7 +345,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onBlur(): void {
+    public override onBlur(): void {
         // when clicking the toggle button to close the combo and immediately clicking outside of it
         // the collapsed state is not modified as the dropdown is still not closed
         if (this.collapsed || this._collapsing) {
@@ -378,12 +370,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
         this.clearSelection(true);
-        if (this.collapsed) {
-            this.filterValue = '';
-            this.cdr.detectChanges();
-            this.open();
-            this.dropdown.navigateFirst();
-        } else {
+        if(!this.collapsed){
             this.focusSearchInput(true);
         }
         event.stopPropagation();
@@ -404,7 +391,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public handleClosing(e: IBaseCancelableBrowserEventArgs): void {
+    public override handleClosing(e: IBaseCancelableBrowserEventArgs): void {
         const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
         this.closing.emit(args);
         e.cancel = args.cancel;
@@ -428,7 +415,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public onClick(event: Event): void {
+    public override onClick(event: Event): void {
         super.onClick(event);
         if (this.comboInput.value.length === 0) {
             this.virtDir.scrollTo(0);
@@ -492,7 +479,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         return newSelection[0]?.toString() || '';
     }
 
-    protected getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
+    protected override getRemoteSelection(newSelection: any[], oldSelection: any[]): string {
         if (!newSelection.length) {
             this.registerRemoteEntries(oldSelection, false);
             return '';
@@ -500,11 +487,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.registerRemoteEntries(oldSelection, false);
         this.registerRemoteEntries(newSelection);
-        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0];
+        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e])[0] || '';
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
-    protected registerRemoteEntries(ids: any[], add = true) {
+    protected override registerRemoteEntries(ids: any[], add = true) {
         const selection = this.getValueDisplayPairs(ids)[0];
 
         if (add && selection) {
@@ -555,16 +542,3 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         : value !== undefined;
     }
 }
-
-@NgModule({
-    declarations: [IgxSimpleComboComponent],
-    imports: [
-        IgxComboModule, IgxRippleModule, CommonModule,
-        IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule,
-        IgxDropDownModule, IgxButtonModule, IgxIconModule,
-        IgxTextSelectionModule
-    ],
-    exports: [IgxSimpleComboComponent, IgxComboModule]
-})
-export class IgxSimpleComboModule { }

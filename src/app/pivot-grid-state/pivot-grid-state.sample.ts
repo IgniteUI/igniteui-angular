@@ -8,7 +8,9 @@ import {
     IPivotDimension,
     IgxGridStateDirective,
     IGridStateOptions,
-    IPivotValue
+    IPivotValue,
+    IgxButtonDirective,
+    IgxPivotDataSelectorComponent
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
@@ -42,7 +44,9 @@ export class IgxTotalSaleAggregate {
     providers: [],
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid-state.sample.scss'],
-    templateUrl: 'pivot-grid-state.sample.html'
+    templateUrl: 'pivot-grid-state.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxPivotGridComponent, IgxGridStateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridStateSampleComponent {
     @ViewChild('grid1', { static: true }) public grid1: IgxPivotGridComponent;

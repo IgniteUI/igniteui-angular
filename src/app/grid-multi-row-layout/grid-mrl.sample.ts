@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { DisplayDensity, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-grid-mrl-sample',
-    styleUrls: ['grid-mrl.sample.scss'],
-    templateUrl: 'grid-mrl.sample.html'
+    templateUrl: 'grid-mrl.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

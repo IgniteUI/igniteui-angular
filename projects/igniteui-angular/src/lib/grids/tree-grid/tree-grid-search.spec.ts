@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './public_api';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import {
     IgxTreeGridSearchComponent,
@@ -23,12 +22,12 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSearchComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridSummariesScrollingComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            ]
         }).compileComponents();
     }));
 
@@ -388,8 +387,8 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 await wait(50);
                 fix.detectChanges();
 
-                expect(treeGrid.page).toBe(expectedPages[index]);
-                expect(treeGrid.totalPages).toBe(expectedPageCounts[index]);
+                expect(treeGrid.paginator.page).toBe(expectedPages[index]);
+                expect(treeGrid.paginator.totalPages).toBe(expectedPageCounts[index]);
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }

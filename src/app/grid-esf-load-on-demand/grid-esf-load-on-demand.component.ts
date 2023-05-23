@@ -1,11 +1,13 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode, DisplayDensity, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
 @Component({
-  selector: 'app-grid-esf-load-on-demand',
-  templateUrl: './grid-esf-load-on-demand.component.html',
-  styleUrls: ['./grid-esf-load-on-demand.component.scss']
+    selector: 'app-grid-esf-load-on-demand',
+    templateUrl: './grid-esf-load-on-demand.component.html',
+    styleUrls: ['./grid-esf-load-on-demand.component.scss'],
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
   @ViewChild('grid1', { static: true })

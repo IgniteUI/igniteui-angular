@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
+import { FormsModule } from '@angular/forms';
+import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation, IgxButtonDirective, IgxSliderComponent, IgxTickLabelTemplateDirective } from 'igniteui-angular';
 
 class Task {
     public title: string;
@@ -14,7 +15,9 @@ class Task {
 @Component({
     selector: 'app-slider-sample',
     styleUrls: ['slider.sample.scss'],
-    templateUrl: 'slider.sample.html'
+    templateUrl: 'slider.sample.html',
+    standalone: true,
+    imports: [IgxSliderComponent, FormsModule, IgxTickLabelTemplateDirective, IgxButtonDirective]
 })
 export class SliderSampleComponent {
     public labelOrientaion: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
@@ -59,7 +62,7 @@ export class SliderSampleComponent {
     }
 
     public changeLabels() {
-        this.labels = new Array('08:00', '12:00', '16:00', '20:00', '00:00');
+        this.labels = ['08:00', '12:00', '16:00', '20:00', '00:00'];
     }
 
     public changeLabelOrientation() {

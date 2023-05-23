@@ -7,7 +7,10 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 /**
  * @hidden
  */
-@Pipe({ name: 'gridHierarchical' })
+@Pipe({
+    name: 'gridHierarchical',
+    standalone: true
+})
 export class IgxGridHierarchicalPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }
@@ -56,7 +59,10 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 /**
  * @hidden
  */
-@Pipe({ name: 'gridHierarchicalPaging' })
+@Pipe({
+    name: 'gridHierarchicalPaging',
+    standalone: true
+})
 export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }

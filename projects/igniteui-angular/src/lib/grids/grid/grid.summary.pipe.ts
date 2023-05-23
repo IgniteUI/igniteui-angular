@@ -9,7 +9,10 @@ import { GridType, IGX_GRID_BASE } from '../common/grid.interface';
 interface ISkipRecord { skip?: boolean }
 
 /** @hidden */
-@Pipe({ name: 'gridSummary' })
+@Pipe({
+    name: 'gridSummary',
+    standalone: true
+})
 export class IgxGridSummaryPipe implements PipeTransform {
 
     constructor(@Inject(IGX_GRID_BASE) private grid: GridType) { }

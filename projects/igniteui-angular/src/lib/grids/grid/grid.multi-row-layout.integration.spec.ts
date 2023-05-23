@@ -3,7 +3,6 @@ import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './grid.module';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
@@ -11,6 +10,12 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy, SortingDirection } from '../../data-operations/sorting-strategy';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
+import { IgxGridToolbarActionsComponent } from '../toolbar/common';
+import { IgxGridToolbarHidingComponent } from '../toolbar/grid-toolbar-hiding.component';
+import { IgxGridToolbarPinningComponent } from '../toolbar/grid-toolbar-pinning.component';
+import { NgFor, NgIf } from '@angular/common';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -27,15 +32,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let grid: IgxGridComponent;
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
                 ColumnLayouHidingTestComponent,
                 ColumnLayoutGroupingTestComponent,
                 ColumnLayoutResizingTestComponent
-            ],
-            imports: [
-                NoopAnimationsModule, IgxGridModule]
+            ]
         });
     }));
 
@@ -234,7 +238,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.componentInstance.grid.width = '600px';
             fixture.detectChanges();
 
-            let gridFirstRow = grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
             // group1 should be hidden on init, check DOM
             GridFunctions.verifyLayoutHeadersAreAligned(grid, gridFirstRow);
             GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups.slice(1));
@@ -594,7 +598,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Fax').pinned).toBeTruthy();
             expect(grid.getColumnByName('Phone').pinned).toBeTruthy();
 
-            let gridFirstRow = grid.rowList.first;
+            const gridFirstRow = grid.rowList.first;
 
             GridFunctions.verifyDOMMatchesLayoutSettings(grid, gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
             // headers are aligned to cells
@@ -792,11 +796,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Filtering ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should enforce excel style filtering.', () => {
             const filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
@@ -830,11 +834,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('GroupBy ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
             grid.height = '600px';
@@ -899,11 +903,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
         const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async () => {
             grid.width = '1500px';
@@ -1155,11 +1159,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Selection ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
+        });
 
         it('should return correct selected data via getSelectedData API.', () => {
             const selectedData1 = [{
@@ -1204,7 +1208,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarActionsComponent, NgIf, NgFor]
 })
 export class ColumnLayouHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1251,7 +1257,9 @@ export class ColumnLayouHidingTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent, NgFor, NgIf]
 })
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
@@ -1293,7 +1301,9 @@ export class ColumnLayoutPinningTestComponent {
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestComponent {
 }
@@ -1307,17 +1317,19 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
             [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [groupable]="col.groupable"></igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
-    public showToolbar = false;
-    public cols1: Array<any> = [
+    public override showToolbar = false;
+    public override cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
         { field: 'CompanyName', rowStart: 1, colStart: 2, groupable: true },
         { field: 'ContactName', rowStart: 1, colStart: 3, groupable: true },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4, groupable: true },
     ];
-    public cols2: Array<any> = [
+    public override cols2: Array<any> = [
         { field: 'PostalCode', rowStart: 1, colStart: 1, colEnd: 3 },
         { field: 'City', rowStart: 2, colStart: 1, groupable: true },
         { field: 'Country', rowStart: 2, colStart: 2, groupable: true },
@@ -1333,7 +1345,9 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
             </igx-column>
         </igx-column-layout>
     </igx-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, NgFor]
 })
 export class ColumnLayoutResizingTestComponent {
 

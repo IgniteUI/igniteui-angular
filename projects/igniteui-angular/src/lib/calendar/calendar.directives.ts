@@ -26,7 +26,8 @@ import { PlatformUtil } from '../core/utils';
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarYear]'
+    selector: '[igxCalendarYear]',
+    standalone: true
 })
 export class IgxCalendarYearDirective {
 
@@ -77,7 +78,8 @@ export class IgxCalendarYearDirective {
 }
 
 @Directive({
-    selector: '[igxCalendarMonth]'
+    selector: '[igxCalendarMonth]',
+    standalone: true
 })
 export class IgxCalendarMonthDirective {
 
@@ -119,7 +121,8 @@ export class IgxCalendarMonthDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarHeader]'
+    selector: '[igxCalendarHeader]',
+    standalone: true
 })
 export class IgxCalendarHeaderTemplateDirective {
 
@@ -130,7 +133,8 @@ export class IgxCalendarHeaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarSubheader]'
+    selector: '[igxCalendarSubheader]',
+    standalone: true
 })
 export class IgxCalendarSubheaderTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
@@ -140,7 +144,8 @@ export class IgxCalendarSubheaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxCalendarScrollMonth]'
+    selector: '[igxCalendarScrollMonth]',
+    standalone: true
 })
 export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy {
 

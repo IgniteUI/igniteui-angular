@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
     ElementRef,
     forwardRef,
     HostBinding, Inject, Input, ViewContainerRef
@@ -13,12 +12,20 @@ import { IgxRowDirective } from '../row.directive';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IPivotGridColumn, IPivotGridRecord } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
+import { IgxPivotGridCellStyleClassesPipe } from './pivot-grid.pipes';
+import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from '../common/pipes';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { NgClass, NgStyle } from '@angular/common';
+import { IgxGridCellComponent } from '../cell.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row',
     templateUrl: './pivot-row.component.html',
-    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxPivotRowComponent) }],
+    standalone: true,
+    imports: [IgxGridForOfDirective, IgxGridCellComponent, NgClass, NgStyle, IgxCheckboxComponent, IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe, IgxPivotGridCellStyleClassesPipe]
 })
 export class IgxPivotRowComponent extends IgxRowDirective {
     /**
@@ -26,9 +33,9 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      */
     @Input()
     @HostBinding('attr.aria-selected')
-    public get selected(): boolean {
+    public override get selected(): boolean {
         let isSelected = false;
-        for (let rowDim of this.data.dimensions) {
+        for (const rowDim of this.data.dimensions) {
             const key = PivotUtil.getRecordKey(this.data, rowDim);
             if (this.selectionService.isPivotRowSelected(key)) {
                 isSelected = true;
@@ -38,11 +45,10 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     }
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
-        public selectionService: IgxGridSelectionService,
-        public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
+        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
+        selectionService: IgxGridSelectionService,
+        element: ElementRef<HTMLElement>,
+        cdr: ChangeDetectorRef,
         protected viewRef: ViewContainerRef
     ) {
         super(grid, selectionService, element, cdr);
@@ -52,7 +58,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public get viewIndex(): number {
+    public override get viewIndex(): number {
         return this.index;
     }
 
@@ -60,13 +66,13 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public disabled = false;
+    public override disabled = false;
 
     /**
      * @hidden
      * @internal
      */
-    public get addRowUI(): any {
+    public override get addRowUI(): any {
         return false;
     }
 
@@ -74,7 +80,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public get inEditMode(): boolean {
+    public override get inEditMode(): boolean {
         return false;
     }
 
@@ -82,10 +88,10 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public set pinned(_value: boolean) {
+    public override set pinned(_value: boolean) {
     }
 
-    public get pinned(): boolean {
+    public override get pinned(): boolean {
         return false;
     }
 
@@ -93,28 +99,28 @@ export class IgxPivotRowComponent extends IgxRowDirective {
      * @hidden
      * @internal
      */
-    public delete() {
+    public override delete() {
     }
 
     /**
      * @hidden
      * @internal
      */
-    public beginAddRow() {
+    public override beginAddRow() {
     }
 
     /**
      * @hidden
      * @internal
      */
-    public update(_value: any) {
+    public override update(_value: any) {
     }
 
     /**
      * @hidden
      * @internal
      */
-    public pin() {
+    public override pin() {
         return false;
     }
 
@@ -122,7 +128,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     * @hidden
     * @internal
     */
-    public unpin() {
+    public override unpin() {
         return false;
     }
 
@@ -135,11 +141,11 @@ export class IgxPivotRowComponent extends IgxRowDirective {
     * ```
     */
     @Input()
-    public get data(): IPivotGridRecord {
+    public override get data(): IPivotGridRecord {
         return this._data;
     }
 
-    public set data(v: IPivotGridRecord) {
+    public override set data(v: IPivotGridRecord) {
         this._data = v;
     }
 
@@ -166,7 +172,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         return values.find(v => v.member === measureName)?.styles;
     }
 
-    public isCellActive(visibleColumnIndex) {
+    public override isCellActive(visibleColumnIndex) {
         const nav = this.grid.navigation
         const node = nav.activeNode;
         return node && Object.keys(node).length !== 0 ?

@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/class.schema.json",
+    "changes": [
+        {
+            "name": "IgxProcessBarTextTemplateDirective",
+            "replaceWith": "IgxProgressBarTextTemplateDirective"
+        },
+        {
+            "name": "IgxColumMaxLengthValidatorDirective",
+            "replaceWith": "IgxColumnMaxLengthValidatorDirective"
+        },
+        {
+            "name": "IgxHeaderExpandIndicatorDirective",
+            "replaceWith": "IgxHeaderExpandedIndicatorDirective"
+        },
+        {
+            "name": "IgxHeaderCollapseIndicatorDirective",
+            "replaceWith": "IgxHeaderCollapsedIndicatorDirective"
+        }
+    ]
+}

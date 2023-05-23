@@ -112,7 +112,9 @@
 
   <script src="assets/data/nw-products.js"></script>
   <script type="module">
-    import { html } from "./lit-html.js";
+    import { html } from "/lit-html.js";
+    const grid1 = document.getElementById('grid1');
+    const grid2 = document.getElementById('grid2');
     grid1.data = northwindProducts;
     grid2.data = northwindProducts;
     document.addEventListener('DOMContentLoaded', () => {
@@ -286,8 +288,9 @@
   </script>
   <!-- END IgxPivotGridComponent -->
 
-  <script src="assets/data/projects-hgrid.js"></script>
-  <script>
+  <script type="module">
+    // jump around vite import analysis with dynamic import url
+    const hgridData = (await import(`/assets/${'data'}/projects-hgrid.js`)).default;
     let hgrid = document.getElementById('hgrid1');
     hgrid.data = hgridData;
   </script>

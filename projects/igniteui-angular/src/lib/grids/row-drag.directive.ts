@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
+import { Directive, Input, OnDestroy, TemplateRef } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
@@ -15,16 +15,17 @@ const cellActiveClass = 'igx-grid__td--active';
  * @hidden
  */
 @Directive({
-    selector: '[igxRowDrag]'
+    selector: '[igxRowDrag]',
+    standalone: true
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxRowDrag')
-    public set data(value: any) {
+    public override set data(value: any) {
         this._data = value;
     }
 
-    public get data(): any {
+    public override get data(): any {
         return this._data.grid.createRow(this._data.index, this._data.data);
     }
 
@@ -35,14 +36,14 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         return this._data;
     }
 
-    public onPointerDown(event) {
+    public override onPointerDown(event) {
         event.preventDefault();
         this._rowDragStarted = false;
         this._removeOnDestroy = false;
         super.onPointerDown(event);
     }
 
-    public onPointerMove(event) {
+    public override onPointerMove(event) {
         super.onPointerMove(event);
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
@@ -75,7 +76,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    public onPointerUp(event) {
+    public override onPointerUp(event) {
 
         if (!this._clicked) {
             return;
@@ -101,7 +102,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    protected createGhost(pageX, pageY) {
+    protected override createGhost(pageX, pageY) {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
         this.ghostContext = {
@@ -169,33 +170,30 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
  * @hidden
  */
 @Directive({
-    selector: '[igxDragIndicatorIcon]'
+    selector: '[igxDragIndicatorIcon]',
+    standalone: true
 })
 
 export class IgxDragIndicatorIconDirective {
     public static ngTemplateContextGuard(_directive: IgxDragIndicatorIconDirective,
         context: unknown): context is IgxGridEmptyTemplateContext {
         return true;
-    };
+    }
 }
 
 /**
  * @hidden
  */
 @Directive({
-    selector: '[igxRowDragGhost]'
+    selector: '[igxRowDragGhost]',
+    standalone: true
 })
-
 export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
     public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
         context: unknown): context is IgxGridRowDragGhostContext {
         return true;
-    };
+    }
 }
 
-@NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
-})
-export class IgxRowDragModule { }
+

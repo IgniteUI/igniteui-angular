@@ -12,9 +12,12 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { GridSelectionMode } from './common/enums';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid/public_api';
+import { IgxTreeGridComponent } from './tree-grid/public_api';
 import { ISortingExpression } from '../data-operations/sorting-strategy';
 import { GridSelectionRange } from './common/types';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { NgFor } from '@angular/common';
+import { IgxColumnComponent } from './public_api';
 
 describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
@@ -22,10 +25,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     let grid;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridTreeDataTestComponent
-            ],
-            imports: [ NoopAnimationsModule, IgxTreeGridModule ]
+            imports: [NoopAnimationsModule, IgxTreeGridTreeDataTestComponent]
         }).compileComponents();
     }));
 
@@ -348,7 +348,7 @@ class HelperFunctions {
 
 @Component({
     template: `
-    <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px" igxGridState
+    <igx-tree-grid [moving]="true" #treeGrid [data]="data" childDataKey="Employees" [expansionDepth]="2" width="900px" height="800px" igxGridState
         primaryKey="ID" rowSelection="multiple" cellSelection="multiple">
 
         <igx-column *ngFor="let c of columns"
@@ -373,7 +373,9 @@ class HelperFunctions {
         </igx-column>
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
-    `
+    `,
+    standalone: true,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective, NgFor]
 })
 export class IgxTreeGridTreeDataTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

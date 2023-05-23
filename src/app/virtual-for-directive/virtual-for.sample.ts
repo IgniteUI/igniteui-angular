@@ -1,13 +1,16 @@
 import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
-import { IgxForOfDirective, ButtonGroupAlignment } from 'igniteui-angular';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { RemoteService } from '../shared/remote.service';
+import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxInputDirective, IgxInputGroupComponent, IgxListItemComponent, IgxSuffixDirective } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-virt-for-sample',
     templateUrl: 'virtual-for.sample.html',
     styleUrls: ['virtual-for.sample.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })

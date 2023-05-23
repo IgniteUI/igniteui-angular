@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxGridCell, IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
@@ -22,8 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxGridSelectionModule } from '../selection/selection.module';
-import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
+import { IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
@@ -31,6 +29,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IRowSelectionEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-strategy';
+import { IgxGridCell } from '../public_api';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -45,7 +44,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
@@ -55,8 +55,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCascadingSelectionComponent,
                 IgxTreeGridCascadingSelectionTransactionComponent,
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
+            ]
         }).compileComponents();
     }));
 
@@ -903,9 +902,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should persist selection after scrolling', async () => {
-            treeGrid.paging = false;
-            fix.detectChanges();
-
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             UIInteractions.simulateClickAndSelectEvent(treeGridCell);

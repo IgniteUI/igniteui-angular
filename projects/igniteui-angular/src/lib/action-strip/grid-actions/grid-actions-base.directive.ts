@@ -5,9 +5,11 @@ import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
 
 @Directive({
-    selector: '[igxGridActionsBase]'
+    selector: '[igxGridActionsBase]',
+    standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
+    /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
 
@@ -23,6 +25,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     @Input()
     public asMenuItems = false;
 
+    /** @hidden @internal **/
     public strip: IgxActionStripComponent;
 
     /**

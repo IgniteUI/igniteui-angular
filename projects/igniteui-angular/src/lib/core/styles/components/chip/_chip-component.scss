@@ -9,6 +9,10 @@
     }
 
     @include b(igx-chip) {
+        @include sizable();
+
+        --component-size: var(--ig-size, var(--ig-size-large));
+
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
@@ -23,8 +27,56 @@
             @extend %igx-chip__item !optional;
         }
 
+        @include e(start) {
+            @extend %igx-chip__start !optional;
+        }
+
+        @include e(end) {
+            @extend %igx-chip__end !optional;
+        }
+
         @include e(item, $m: 'selected') {
             @extend %igx-chip__item--selected !optional;
+        }
+
+        @include m(primary) {
+            @extend %igx-chip--primary !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--primary !optional;
+            }
+        }
+
+        @include m(info) {
+            @extend %igx-chip--info !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--info !optional;
+            }
+        }
+
+        @include m(success) {
+            @extend %igx-chip--success !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--success !optional;
+            }
+        }
+
+        @include m(warning) {
+            @extend %igx-chip--warning !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--warning !optional;
+            }
+        }
+
+        @include m(danger) {
+            @extend %igx-chip--danger !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--danger !optional;
+            }
         }
 
         @include e(content) {
@@ -35,53 +87,52 @@
             @extend %igx-chip__select !optional;
         }
 
-        @include e(select, $m: 'hidden') {
-            @extend %igx-chip__select !optional;
-            @extend %igx-chip__select--hidden !optional;
-        }
-
         @include e(remove) {
             @extend %igx-chip__remove !optional;
         }
 
         @include e(ghost) {
+            @include sizable();
+
+            --component-size: var(--ig-size, var(--ig-size-large));
+
             @extend %igx-chip__ghost !optional;
         }
 
         @include e(ghost, $m: cosy) {
+            --component-size: var(--ig-size, var(--ig-size-medium));
+
             @extend %igx-chip__ghost--cosy !optional;
         }
 
         @include e(ghost, $m: compact) {
+            --component-size: var(--ig-size, var(--ig-size-small));
+
             @extend %igx-chip__ghost--compact !optional;
         }
 
         @include m(cosy) {
-            @extend %igx-chip--cosy !optional;
+            --component-size: var(--ig-size, var(--ig-size-medium));
 
             @include e(item) {
                 @extend %igx-chip__item--cosy !optional;
             }
-
-            @include e(content) {
-                @extend %igx-chip__content--cosy !optional;
-            }
         }
 
         @include m(compact) {
-            @extend %igx-chip--compact !optional;
+            --component-size: var(--ig-size, var(--ig-size-small));
 
             @include e(item) {
-                @extend %igx-chip__item--compact  !optional;
-            }
-
-            @include e(content) {
-                @extend %igx-chip__content--compact !optional;
+                @extend %igx-chip__item--compact !optional;
             }
         }
 
         @include m(disabled) {
             @extend %igx-chip--disabled !optional;
+
+            @include e(item) {
+                @extend %igx-chip__item--disabled !optional;
+            }
         }
     }
 }

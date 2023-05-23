@@ -6,15 +6,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxMonthPickerComponent } from './month-picker.component';
-import { IgxCalendarModule } from '../calendar.module';
+import { IFormattingOptions } from '../calendar';
 
 describe('IgxMonthPicker', () => {
     configureTestSuite();
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxMonthPickerSampleComponent],
-            imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule]
+            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent]
         }).compileComponents();
     });
 
@@ -90,7 +89,7 @@ describe('IgxMonthPicker', () => {
         const instance = fixture.componentInstance;
         const monthPicker = fixture.componentInstance.monthPicker;
 
-        const format = {
+        const format: IFormattingOptions = {
             day: '2-digit',
             month: 'long',
             weekday: 'long',
@@ -463,7 +462,9 @@ describe('IgxMonthPicker', () => {
                           [viewDate]="viewDate"
                           [formatOptions]="formatOptions"
                           [locale]="locale">
-                </igx-month-picker>`
+                </igx-month-picker>`,
+    standalone: true,
+    imports: [FormsModule, IgxMonthPickerComponent]
 })
 export class IgxMonthPickerSampleComponent {
     @ViewChild(IgxMonthPickerComponent, { static: true }) public monthPicker: IgxMonthPickerComponent;
@@ -472,7 +473,7 @@ export class IgxMonthPickerSampleComponent {
     public viewDate = new Date(2019, 1, 7);
     public locale = 'en';
 
-    public formatOptions = {
+    public formatOptions: IFormattingOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',

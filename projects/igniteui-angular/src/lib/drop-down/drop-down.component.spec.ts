@@ -2,20 +2,22 @@ import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList } fro
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
+import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs/public_api';
+import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
-import { IgxForOfDirective, IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { DisplayDensity } from '../core/density';
 import { IgxSelectionAPIService } from '../core/selection';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { NgFor } from '@angular/common';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
@@ -77,7 +79,8 @@ describe('IgxDropDown ', () => {
             const selectionArgs: ISelectionEventArgs = {
                 newSelection: dropdown.items[1],
                 oldSelection: null,
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             dropdown.selectItem(data[1]);
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
@@ -85,7 +88,8 @@ describe('IgxDropDown ', () => {
             const newSelectionArgs: ISelectionEventArgs = {
                 newSelection: dropdown.items[4],
                 oldSelection: dropdown.items[1],
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             dropdown.selectItem(data[4]);
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(newSelectionArgs);
@@ -106,7 +110,8 @@ describe('IgxDropDown ', () => {
             let args: ISelectionEventArgs = {
                 oldSelection: null,
                 newSelection: data[1],
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
 
@@ -116,7 +121,8 @@ describe('IgxDropDown ', () => {
             args = {
                 oldSelection: selected,
                 newSelection: null,
-                cancel: false
+                cancel: false,
+                owner: dropdown
             };
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
         });
@@ -183,14 +189,9 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDropDownTestComponent
-                    ],
                     imports: [
-                        IgxDropDownModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxForOfModule
+                        IgxDropDownTestComponent
                     ]
                 }).compileComponents();
             }));
@@ -509,7 +510,8 @@ describe('IgxDropDown ', () => {
                 const selectionArgs: ISelectionEventArgs = {
                     oldSelection: null,
                     newSelection: dropdown.items[3],
-                    cancel: false
+                    cancel: false,
+                    owner: dropdown
                 };
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(selectionArgs);
 
@@ -520,7 +522,8 @@ describe('IgxDropDown ', () => {
                 const canceledSelectionArgs: ISelectionEventArgs = {
                     oldSelection: dropdown.items[3],
                     newSelection: dropdown.items[1],
-                    cancel: true
+                    cancel: true,
+                    owner: dropdown
                 };
                 expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(canceledSelectionArgs);
             }));
@@ -790,24 +793,18 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
+                    imports: [
+                        NoopAnimationsModule,
                         DoubleIgxDropDownComponent,
                         InputWithDropDownDirectiveComponent
-                    ],
-                    imports: [
-                        IgxDropDownModule,
-                        NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxTabsModule,
-                        IgxForOfModule
                     ]
                 }).compileComponents();
             }));
-            it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
-                fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
-                fixture.detectChanges();
+            it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
+                fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
+                fixture.detectChanges();
 
-                dropdown = fixture.componentInstance.dropdown;
+                dropdown = fixture.componentInstance.dropdown;
                 dropdown.allowItemsFocus = false;
                 fixture.detectChanges();
 
@@ -820,9 +817,9 @@ describe('IgxDropDown ', () => {
                 spyOn(event, 'preventDefault');
                 itemToClick.triggerEventHandler('mousedown', event);
 
-                fixture.detectChanges();
+                fixture.detectChanges();
                 expect(event.preventDefault).toHaveBeenCalled();
-            });
+            });
             it('should properly handle OnEnterKeyDown when the dropdown is not visible', fakeAsync(() => {
                 fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
                 fixture.detectChanges();
@@ -889,14 +886,9 @@ describe('IgxDropDown ', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
-                    VirtualizedDropDownComponent
-                ],
                 imports: [
-                    IgxDropDownModule,
                     NoopAnimationsModule,
-                    IgxToggleModule,
-                    IgxForOfModule
+                    VirtualizedDropDownComponent
                 ]
             }).compileComponents();
         }));
@@ -1004,15 +996,9 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        GroupDropDownComponent
-                    ],
                     imports: [
-                        IgxDropDownModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxTabsModule,
-                        IgxForOfModule
+                        GroupDropDownComponent
                     ]
                 }).compileComponents();
             }));
@@ -1073,14 +1059,9 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDropDownTestComponent
-                    ],
                     imports: [
-                        IgxDropDownModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxForOfModule
+                        IgxDropDownTestComponent
                     ]
                 }).compileComponents();
             }));
@@ -1137,14 +1118,9 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDropDownTestComponent
-                    ],
                     imports: [
-                        IgxDropDownModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxForOfModule
+                        IgxDropDownTestComponent
                     ]
                 }).compileComponents();
             }));
@@ -1212,15 +1188,9 @@ describe('IgxDropDown ', () => {
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDropDownAnchorTestComponent
-                    ],
                     imports: [
-                        IgxDropDownModule,
                         NoopAnimationsModule,
-                        IgxToggleModule,
-                        IgxTabsModule,
-                        IgxForOfModule
+                        IgxDropDownAnchorTestComponent
                     ]
                 }).compileComponents();
             }));
@@ -1282,11 +1252,12 @@ describe('IgxDropDown ', () => {
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
     [displayDensity]="density" [allowItemsFocus]="true">
-        <igx-drop-down-item *ngFor="let item of items"
-        [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
+        <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
             {{item.field}}
         </igx-drop-down-item>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class IgxDropDownTestComponent {
 
@@ -1330,7 +1301,9 @@ class IgxDropDownTestComponent {
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
-    `
+    `,
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, NgFor]
 })
 class DoubleIgxDropDownComponent implements OnInit {
 
@@ -1385,7 +1358,9 @@ class DoubleIgxDropDownComponent implements OnInit {
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, NgFor]
 })
 class IgxDropDownAnchorTestComponent {
     @ViewChild(IgxTabsComponent, { static: true })
@@ -1420,7 +1395,9 @@ class IgxDropDownAnchorTestComponent {
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, NgFor]
 })
 class InputWithDropDownDirectiveComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
@@ -1444,7 +1421,9 @@ class InputWithDropDownDirectiveComponent {
                 {{ child.name }}
             </igx-drop-down-item>
         </igx-drop-down-item-group>
-    </igx-drop-down>`
+    </igx-drop-down>`,
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, NgFor]
 })
 class GroupDropDownComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
@@ -1490,7 +1469,9 @@ class GroupDropDownComponent {
         overflow: hidden;
         height: 400px;
     }
-    `]
+    `],
+    standalone: true,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective]
 })
 class VirtualizedDropDownComponent {
     @ViewChild('toggleButton', { read: ElementRef, static: true })

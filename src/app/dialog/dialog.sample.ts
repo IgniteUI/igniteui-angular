@@ -1,12 +1,14 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxDialogComponent, slideOutBottom, slideInTop,
-    PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
+import { HorizontalAlignment, IgxButtonDirective, IgxDialogActionsDirective, IgxDialogComponent, IgxDialogTitleDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent, PositionSettings, slideInTop, slideOutBottom, VerticalAlignment } from 'igniteui-angular';
+
 
 @Component({
     selector: 'app-dialog-sample',
     styleUrls: ['dialog.sample.scss'],
-    templateUrl: 'dialog.sample.html'
+    templateUrl: 'dialog.sample.html',
+    standalone: true,
+    imports: [IgxButtonDirective, IgxRippleDirective, IgxSwitchComponent, IgxDialogComponent, IgxInputGroupComponent, IgxPrefixDirective, IgxIconComponent, IgxInputDirective, IgxLabelDirective, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 export class DialogSampleComponent implements OnInit {
 

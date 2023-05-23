@@ -19,6 +19,7 @@ import {
     IgxGrouping
 } from '../grids/common/strategy';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from '../data-operations/data-clone-strategy';
+import { IGroupingExpression } from './grouping-expression.interface';
 
 /**
  * @hidden
@@ -132,8 +133,8 @@ export class DataUtil {
         return getHierarchy(gRow);
     }
 
-    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
-        return isHierarchyMatch(h1, h2);
+    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>, expressions: IGroupingExpression[]): boolean {
+        return isHierarchyMatch(h1, h2, expressions);
     }
 
     /**
@@ -145,7 +146,7 @@ export class DataUtil {
      * @param deleteRows Should delete rows with DELETE transaction type from data
      * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(), deleteRows: boolean = false): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(), deleteRows = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
@@ -188,7 +189,7 @@ export class DataUtil {
         childDataKey: any,
         primaryKey?: any,
         cloneStrategy: IDataCloneStrategy = new DefaultDataCloneStrategy(),
-        deleteRows: boolean = false): any[] {
+        deleteRows = false): any[] {
         for (const transaction of transactions) {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);

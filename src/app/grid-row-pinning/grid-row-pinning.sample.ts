@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
+import { NgFor } from '@angular/common';
+
 import {
     IgxGridComponent,
     ColumnPinningPosition,
@@ -12,18 +14,26 @@ import {
     GridSelectionMode,
     IPinningConfig,
     IgxIconService,
-    RowType
+    RowType,
+    IGX_HIERARCHICAL_GRID_DIRECTIVES,
+    IgxTreeGridComponent,
+    IgxIconComponent,
+    IgxSwitchComponent,
+    IgxButtonDirective
 } from 'igniteui-angular';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
+import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
     styleUrls: ['grid-row-pinning.sample.scss'],
     templateUrl: 'grid-row-pinning.sample.html',
     providers: [
-        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} },
+        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable } },
         IgxIconService
     ],
+    standalone: true,
+    imports: [NgFor, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {

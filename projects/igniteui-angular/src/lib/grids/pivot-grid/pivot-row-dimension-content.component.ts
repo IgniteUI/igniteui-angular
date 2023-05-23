@@ -2,9 +2,11 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
+    createComponent,
     ElementRef,
+    EnvironmentInjector,
     Inject,
+    Injector,
     Input,
     OnChanges,
     QueryList,
@@ -20,6 +22,9 @@ import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component'
 import { IPivotDimension, IPivotDimensionData, IPivotGridGroupRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { PivotUtil } from './pivot-util';
+import { IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe } from '../headers/pipes';
+import { IgxIconComponent } from '../../icon/icon.component';
+import { NgClass, NgStyle } from '@angular/common';
 
 /**
  *
@@ -32,7 +37,9 @@ import { PivotUtil } from './pivot-util';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-pivot-row-dimension-content',
-    templateUrl: './pivot-row-dimension-content.component.html'
+    templateUrl: './pivot-row-dimension-content.component.html',
+    standalone: true,
+    imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupWidthPipe, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
     /**
@@ -67,10 +74,11 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     public headerGroups: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
 
     constructor(
-        @Inject(IGX_GRID_BASE) public grid: PivotGridType,
-        protected ref: ElementRef<HTMLElement>,
-        protected cdr: ChangeDetectorRef,
-        protected resolver: ComponentFactoryResolver,
+        @Inject(IGX_GRID_BASE) public override grid: PivotGridType,
+        ref: ElementRef<HTMLElement>,
+        protected injector: Injector,
+        protected envInjector: EnvironmentInjector,
+        cdr: ChangeDetectorRef,
         protected viewRef: ViewContainerRef
     ) {
         super(ref, cdr);
@@ -149,7 +157,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     }
 
     protected _createColComponent(field: string, header: string, dim: IPivotDimension) {
-        const ref = this.viewRef.createComponent(IgxColumnComponent);
+        const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';

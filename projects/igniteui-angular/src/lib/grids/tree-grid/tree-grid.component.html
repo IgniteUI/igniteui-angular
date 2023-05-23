@@ -27,20 +27,20 @@
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
-            <ng-container *ngIf='data
+            <ng-container *ngIf="data
             | treeGridTransaction:pipeTrigger
             | visibleColumns:hasVisibleColumns
             | treeGridNormalizeRecord:pipeTrigger
             | treeGridAddRow:true:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger:true
-            | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true as pinnedData'>
-                <div #pinContainer *ngIf='pinnedData.length > 0'
+            | treeGridSorting:sortingExpressions:treeGroupArea?.expressions:sortStrategy:pipeTrigger:true as pinnedData">
+                <div #pinContainer *ngIf="pinnedData.length > 0"
                     [ngClass]="{
                         'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
                         'igx-grid__tr--pinned-top': isRowPinningToTop
                     }"
-                    class='igx-grid__tr--pinned' [style.width.px]='calcWidth'>
+                    class="igx-grid__tr--pinned" [style.width.px]="calcWidth">
                     <ng-container *ngFor="let rowData of pinnedData;let rowIndex = index;">
                         <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
