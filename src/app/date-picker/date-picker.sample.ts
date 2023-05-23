@@ -1,13 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-
-import { DateRangeDescriptor, DateRangeType } from 'projects/igniteui-angular/src/lib/core/dates/dateRange';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxPickerActionsDirective } from '../../../projects/igniteui-angular/src/lib/date-common/picker-icons.common';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxSuffixDirective } from '../../../projects/igniteui-angular/src/lib/directives/suffix/suffix.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxDatePickerComponent } from '../../../projects/igniteui-angular/src/lib/date-picker/date-picker.component';
+import { DateRangeDescriptor, DateRangeType, IgxButtonDirective, IgxDatePickerComponent, IgxIconComponent, IgxLabelDirective, IgxPickerActionsDirective, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-picker-sample',

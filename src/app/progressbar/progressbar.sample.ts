@@ -1,10 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { IgxTextAlign } from 'igniteui-angular';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxRippleDirective } from '../../../projects/igniteui-angular/src/lib/directives/ripple/ripple.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective } from '../../../projects/igniteui-angular/src/lib/progressbar/progressbar.common';
-import { IgxLinearProgressBarComponent, IgxCircularProgressBarComponent } from '../../../projects/igniteui-angular/src/lib/progressbar/progressbar.component';
+import { IgxButtonDirective, IgxCircularProgressBarComponent, IgxIconComponent, IgxLinearProgressBarComponent, IgxProgressBarGradientDirective, IgxProgressBarTextTemplateDirective, IgxRippleDirective, IgxTextAlign } from 'igniteui-angular';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

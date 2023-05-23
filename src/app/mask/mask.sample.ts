@@ -1,13 +1,8 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IGX_INPUT_GROUP_DIRECTIVES, IgxMaskDirective, IgxSnackbarComponent, IgxTextSelectionDirective } from 'igniteui-angular';
 
-import { IgxHintDirective } from '../../../projects/igniteui-angular/src/lib/directives/hint/hint.directive';
-import { IgxSnackbarComponent } from '../../../projects/igniteui-angular/src/lib/snackbar/snackbar.component';
-import { IgxTextSelectionDirective } from '../../../projects/igniteui-angular/src/lib/directives/text-selection/text-selection.directive';
-import { IgxMaskDirective } from '../../../projects/igniteui-angular/src/lib/directives/mask/mask.directive';
-import { IgxLabelDirective } from '../../../projects/igniteui-angular/src/lib/directives/label/label.directive';
-import { IgxInputDirective } from '../../../projects/igniteui-angular/src/lib/directives/input/input.directive';
-import { IgxInputGroupComponent } from '../../../projects/igniteui-angular/src/lib/input-group/input-group.component';
+
 
 interface IPerson {
   name: string;
@@ -21,7 +16,7 @@ interface IPerson {
     styleUrls: ['mask.sample.scss'],
     templateUrl: './mask.sample.html',
     standalone: true,
-    imports: [FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent, IgxHintDirective]
+    imports: [FormsModule, IGX_INPUT_GROUP_DIRECTIVES, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent]
 })
 export class MaskSampleComponent {
     public person: IPerson;
