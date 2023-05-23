@@ -1,5 +1,5 @@
 import { CurrentResourceStrings } from '../../core/i18n/resources';
-import { cloneValue } from '../../core/utils';
+import { IDataCloneStrategy } from '../../data-operations/data-clone-strategy';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -12,18 +12,18 @@ import { IPivotAggregator, IPivotConfiguration, IPivotDimension, IPivotGridRecor
 export class PivotUtil {
 
     // go through all children and apply new dimension groups as child
-    public static processGroups(recs: IPivotGridRecord[], dimension: IPivotDimension, pivotKeys: IPivotKeys) {
+    public static processGroups(recs: IPivotGridRecord[], dimension: IPivotDimension, pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy) {
         for (const rec of recs) {
             // process existing children
             if (rec.children && rec.children.size > 0) {
                 // process hierarchy in dept
                 rec.children.forEach((values) => {
-                    this.processGroups(values, dimension, pivotKeys);
+                    this.processGroups(values, dimension, pivotKeys, cloneStrategy);
                 });
             }
             // add children for current dimension
             const hierarchyFields = PivotUtil
-                .getFieldsHierarchy(rec.records, [dimension], PivotDimensionType.Row, pivotKeys);
+                .getFieldsHierarchy(rec.records, [dimension], PivotDimensionType.Row, pivotKeys, cloneStrategy);
             const siblingData = PivotUtil
                 .processHierarchy(hierarchyFields, pivotKeys, 0);
             rec.children.set(dimension.memberName, siblingData);
@@ -100,17 +100,17 @@ export class PivotUtil {
         }
     }
     public static getFieldsHierarchy(data: any[], dimensions: IPivotDimension[],
-        dimensionType: PivotDimensionType, pivotKeys: IPivotKeys): Map<string, any> {
+        dimensionType: PivotDimensionType, pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy): Map<string, any> {
         const hierarchy = new Map<string, any>();
         for (const rec of data) {
             const vals = dimensionType === PivotDimensionType.Column ?
                 this.extractValuesForColumn(dimensions, rec, pivotKeys) :
-                this.extractValuesForRow(dimensions, rec, pivotKeys);
+                this.extractValuesForRow(dimensions, rec, pivotKeys, cloneStrategy);
             for (const [_key, val] of vals) { // this should go in depth also vals.children
                 if (hierarchy.get(val.value) != null) {
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 } else {
-                    hierarchy.set(val.value, cloneValue(val));
+                    hierarchy.set(val.value, cloneStrategy.clone(val));
                     this.applyHierarchyChildren(hierarchy, val, rec, pivotKeys);
                 }
             }
@@ -143,12 +143,12 @@ export class PivotUtil {
         return lvl;
     }
 
-    public static extractValuesForRow(dims: IPivotDimension[], recData: any, pivotKeys: IPivotKeys) {
+    public static extractValuesForRow(dims: IPivotDimension[], recData: any, pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy) {
         const values = new Map<string, any>();
         for (const col of dims) {
             if (recData[pivotKeys.level] && recData[pivotKeys.level] > 0) {
                 const childData = recData[pivotKeys.records];
-                return this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys);
+                return this.getFieldsHierarchy(childData, [col], PivotDimensionType.Row, pivotKeys, cloneStrategy);
             }
 
             const value = this.extractValueFromDimension(col, recData);
@@ -156,7 +156,7 @@ export class PivotUtil {
             objValue['value'] = value;
             objValue['dimension'] = col;
             if (col.childLevel) {
-                const childValues = this.extractValuesForRow([col.childLevel], recData, pivotKeys);
+                const childValues = this.extractValuesForRow([col.childLevel], recData, pivotKeys, cloneStrategy);
                 objValue[pivotKeys.children] = childValues;
             }
             values.set(value, objValue);

@@ -6,6 +6,11 @@ import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { isDate } from '../core/utils';
+import { IgxIconComponent } from '../icon/icon.component';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { NgIf, NgTemplateOutlet, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 
 /** Represents a range between two dates. */
 export interface DateRange {
@@ -14,7 +19,10 @@ export interface DateRange {
 }
 
 /** @hidden @internal */
-@Pipe({ name: 'dateRange' })
+@Pipe({
+    name: 'dateRange',
+    standalone: true
+})
 export class DateRangePickerFormatPipe implements PipeTransform {
     public transform(values: DateRange, appliedFormat?: string,
         locale?: string, formatter?: (_: DateRange) => string): string {
@@ -49,7 +57,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
 @Component({
     template: ``,
     selector: `igx-date-range-base`,
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeInputsBaseComponent }]
+    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeInputsBaseComponent }],
+    standalone: true
 })
 export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     @ContentChild(IgxDateTimeEditorDirective)
@@ -116,7 +125,9 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -150,7 +161,9 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent },
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
-    ]
+    ],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, NgClass, IgxSuffixDirective, IgxIconComponent, NgSwitch, NgSwitchCase, NgSwitchDefault]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -182,6 +195,7 @@ export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { 
  * ```
  */
 @Directive({
-    selector: '[igxDateRangeSeparator]'
+    selector: '[igxDateRangeSeparator]',
+    standalone: true
 })
 export class IgxDateRangeSeparatorDirective { }

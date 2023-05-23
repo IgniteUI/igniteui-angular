@@ -1,12 +1,16 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { IChangeRadioEventArgs } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IChangeRadioEventArgs, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCheckboxComponent, IgxIconComponent, IgxRadioComponent, IgxSwitchComponent } from 'igniteui-angular';
+
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-sample',
     styleUrls: ['input.sample.scss'],
-    templateUrl: 'input.sample.html'
+    templateUrl: 'input.sample.html',
+    standalone: true,
+    imports: [FormsModule, NgFor, ReactiveFormsModule, IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxSwitchComponent, IgxIconComponent, IgxCheckboxComponent, IgxAvatarComponent, IgxRadioComponent, IgxButtonDirective]
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';

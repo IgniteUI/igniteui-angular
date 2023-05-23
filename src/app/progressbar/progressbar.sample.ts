@@ -1,11 +1,13 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { IgxTextAlign } from 'igniteui-angular';
+import { IgxButtonDirective, IgxCircularProgressBarComponent, IgxIconComponent, IgxLinearProgressBarComponent, IgxProgressBarGradientDirective, IgxProgressBarTextTemplateDirective, IgxRippleDirective, IgxTextAlign } from 'igniteui-angular';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'app-progressbar-sample',
     styleUrls: ['progressbar.sample.scss'],
-    templateUrl: 'progressbar.sample.html'
+    templateUrl: 'progressbar.sample.html',
+    standalone: true,
+    imports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective, IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 
 export class ProgressbarSampleComponent implements OnInit {

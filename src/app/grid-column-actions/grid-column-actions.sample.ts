@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { IColumnToggledEventArgs } from 'igniteui-angular';
+import { NgFor } from '@angular/common';
+
+import { IgxColumnGroupingDirective } from './custom-action-directive';
+import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
 
 @Component({
     providers: [],
     selector: 'app-grid-column-actions-sample',
     styleUrls: ['grid-column-actions.sample.scss'],
-    templateUrl: 'grid-column-actions.sample.html'
+    templateUrl: 'grid-column-actions.sample.html',
+    standalone: true,
+    imports: [IgxColumnGroupingDirective, NgFor, IGX_GRID_DIRECTIVES]
 })
-
 export class GridColumnActionsSampleComponent implements OnInit {
     public data: any[];
     public columns: any[];

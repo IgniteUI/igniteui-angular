@@ -98,7 +98,7 @@ export class IgxSorting implements IGridSortingStrategy {
         return result;
     }
 
-    protected getFieldValue<T>(obj: T, key: string, isDate: boolean = false, isTime: boolean = false) {
+    protected getFieldValue<T>(obj: T, key: string, isDate = false, isTime = false) {
         let resolvedValue = resolveNestedPath(obj, key);
         const date = parseDate(resolvedValue);
         if (date && isDate && isTime) {
@@ -115,8 +115,8 @@ export class IgxSorting implements IGridSortingStrategy {
         data: T[],
         index: number,
         expression: IGroupingExpression,
-        isDate: boolean = false,
-        isTime: boolean = false,
+        isDate = false,
+        isTime = false,
         isString: boolean,
         groupingComparer?: (a: any, b: any, currRec: any, groupRec: any) => number
     ): T[] {
@@ -148,7 +148,7 @@ export class IgxSorting implements IGridSortingStrategy {
     private sortDataRecursive<T>(
         data: T[],
         expressions: ISortingExpression[],
-        expressionIndex: number = 0,
+        expressionIndex = 0,
         grid: GridType
     ): T[] {
         let i: number;
@@ -220,7 +220,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
 export class IgxDataRecordSorting extends IgxSorting {
 
-    protected override getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+    protected override getFieldValue(obj: any, key: string, isDate = false, isTime = false): any {
         return super.getFieldValue(obj.data, key, isDate, isTime);
     }
 }

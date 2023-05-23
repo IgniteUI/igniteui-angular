@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode, DisplayDensity, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
-    templateUrl: 'grid-mrl-custom-navigation.sample.html'
+    templateUrl: 'grid-mrl-custom-navigation.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridMRLCustomNavigationSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })

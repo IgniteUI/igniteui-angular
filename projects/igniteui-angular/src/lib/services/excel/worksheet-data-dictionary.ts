@@ -41,7 +41,7 @@ export class WorksheetDataDictionary {
         return this._columnWidths;
     }
 
-    public saveValue(value: any, isHeader: boolean, shouldSanitizeValue: boolean = true): number {
+    public saveValue(value: any, isHeader: boolean, shouldSanitizeValue = true): number {
         let sanitizedValue = '';
         const isDate = value instanceof Date;
         const isSavedAsString = isHeader || (typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value) && !isDate);

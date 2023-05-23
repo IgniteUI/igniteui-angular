@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPinningPosition } from 'igniteui-angular';
+import { ColumnPinningPosition, DisplayDensity, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
-    templateUrl: 'grid-column-groups.sample.html'
+    templateUrl: 'grid-column-groups.sample.html',
+    standalone: true,
+    imports: [IgxCollapsibleIndicatorTemplateDirective, IgxIconComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class GridColumnGroupsSampleComponent {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -47,12 +49,19 @@ export class GridColumnGroupsSampleComponent {
     ];
     /* eslint-enable max-len */
 
+    public density: DisplayDensity = DisplayDensity.compact;
+    public displayDensities;
 
     constructor() {
         for (const item of this.data) {
             item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
         }
         this.selectionMode = GridSelectionMode.none;
+        this.displayDensities = [
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        ];
     }
 
     public pinGroup() {
@@ -95,5 +104,9 @@ export class GridColumnGroupsSampleComponent {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }

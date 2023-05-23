@@ -10,7 +10,8 @@ let NEXT_ID = 0;
     template: `
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-drop-down-item"></ng-content>
-    `
+    `,
+    standalone: true
 })
 export class IgxDropDownGroupComponent {
     /**

@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCircularProgressBarComponent, IgxProgressBarModule, toPercent } from './progressbar.component';
+import { IgxCircularProgressBarComponent, toPercent } from './progressbar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxProgressBarTextTemplateDirective, IgxProgressBarGradientDirective } from './progressbar.common';
 
 const CIRCULAR_INNER_CLASS = 'igx-circular-bar__inner';
 const CIRCULAR_OUTER_CLASS = 'igx-circular-bar__outer';
@@ -16,14 +17,6 @@ describe('IgxCircularBar', () => {
     describe('Unit Tests', () => {
         let progress: IgxCircularProgressBarComponent;
         let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
-
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    IgxProgressBarModule
-                ]
-            }).compileComponents();
-        }));
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxCircularProgressBarComponent);
@@ -279,12 +272,9 @@ describe('IgxCircularBar', () => {
     describe('UI Tests', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [
+                imports: [
                     CircularBarTemplateComponent,
                     CircularBarTemplateGradientComponent
-                ],
-                imports: [
-                    IgxProgressBarModule
                 ]
             }).compileComponents();
         }));
@@ -342,11 +332,13 @@ describe('IgxCircularBar', () => {
 @Component({
     template: `
         <igx-circular-bar [value]="20" [animate]="false" [max]="100" [textVisibility]="true">
-            <ng-template igxProcessBarText let-process>
+            <ng-template igxProgressBarText let-process>
                 <svg:tspan>Value is:</svg:tspan>
                 <svg:tspan>{{process.value}}</svg:tspan>
             </ng-template>
-        </igx-circular-bar>`
+        </igx-circular-bar>`,
+    standalone: true,
+    imports: [IgxCircularProgressBarComponent, IgxProgressBarTextTemplateDirective]
 })
 class CircularBarTemplateComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
@@ -362,7 +354,9 @@ class CircularBarTemplateComponent {
                     <stop offset="100%" stop-color="#ff0079" />
                 </svg:linearGradient>
             </ng-template>
-        </igx-circular-bar>`
+        </igx-circular-bar>`,
+    standalone: true,
+    imports: [IgxCircularProgressBarComponent, IgxProgressBarGradientDirective]
 })
 class CircularBarTemplateGradientComponent {
     @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;

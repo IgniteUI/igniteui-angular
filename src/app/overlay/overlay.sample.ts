@@ -1,4 +1,6 @@
 import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
 import {
     IgxDropDownComponent,
     OverlaySettings,
@@ -12,7 +14,15 @@ import {
     ElasticPositionStrategy,
     IgxDragDirective,
     ContainerPositionStrategy,
-    IAnimationParams
+    IAnimationParams,
+    IgxRadioComponent,
+    IgxSwitchComponent,
+    IgxInputGroupComponent,
+    IgxInputDirective,
+    IgxLabelDirective,
+    IgxButtonDirective,
+    IgxRippleDirective,
+    IgxDropDownItemComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -20,6 +30,8 @@ import {
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
+    standalone: true,
+    imports: [NgFor, IgxRadioComponent, FormsModule, IgxSwitchComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class OverlaySampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true })

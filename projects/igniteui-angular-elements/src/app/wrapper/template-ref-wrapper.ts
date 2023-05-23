@@ -19,17 +19,23 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
 
     private _contentContext = new Map<string, TemplateRefWrapperContentContext>();
 
-    createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
+    override createEmbeddedView(context: C, injector?: Injector): EmbeddedViewRef<C> {
+        return this.createEmbeddedViewImpl(context, injector);
+    }
+
+    /** @internal Angular 16 impl gets called directly... */
+    createEmbeddedViewImpl(context: C, injector?: Injector, _hydrationInfo: any = null): EmbeddedViewRef<C> {
+        context[CONTEXT_PROP] = context;
         context[CONTEXT_PROP] = context;
 
         let isBridged = !!this._templateFunction.___isBridged;
 
-        const viewRef = this.innerTemplateRef.createEmbeddedView(context, injector);
-        
+        const viewRef = (this.innerTemplateRef as any).createEmbeddedViewImpl(context, injector);
+
         let contentContext: TemplateRefWrapperContentContext;
         if (isBridged) {
             let root = viewRef.rootNodes[0];
-            
+
 
             contentContext = new TemplateRefWrapperContentContext();
             let contentId = uuidv4() as string;
@@ -46,8 +52,8 @@ export class TemplateRefWrapper<C> extends TemplateRef<C> {
             //contentContext.templateFunction.___onTemplateContextChanged(contentContext.templateFunction, contentContext.root, context);
         }
 
-        
-        
+
+
 
         if (isBridged) {
             viewRef.onDestroy(() => {

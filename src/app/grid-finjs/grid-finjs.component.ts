@@ -1,14 +1,24 @@
 import {
     Component,
     Input,
-    ViewChild } from '@angular/core';
+    ViewChild
+} from '@angular/core';
+import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import {
     DefaultSortingStrategy,
     GridSelectionMode,
+    IGX_GRID_DIRECTIVES,
+    IGX_SELECT_DIRECTIVES,
     IGroupingExpression,
+    IgxFocusDirective,
     IgxGridComponent,
+    IgxIconComponent,
+    IgxRippleDirective,
     SortingDirection
 } from 'igniteui-angular';
+
 import { Contract, REGIONS } from '../shared/financialData';
 
 const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
@@ -34,7 +44,9 @@ const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
 @Component({
     selector: 'app-finjs-grid',
     styleUrls: ['./grid-finjs.component.scss'],
-    templateUrl: './grid-finjs.component.html'
+    templateUrl: './grid-finjs.component.html',
+    standalone: true,
+    imports: [NgIf, FormsModule, NgFor, CurrencyPipe, IGX_GRID_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxFocusDirective, IgxIconComponent, IgxRippleDirective]
 })
 export class GridFinJSComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;

@@ -198,6 +198,10 @@ $dark-schema: (
     igx-tooltip: $dark-tooltip,
     igx-tree: $dark-tree,
     igx-watermark: $dark-watermark,
+    _meta: (
+        theme: 'material',
+        variant: 'dark',
+    ),
 );
 
 /// An alias of $dark-schema.
@@ -336,6 +340,10 @@ $dark-fluent-schema: (
     igx-tooltip: $dark-fluent-tooltip,
     igx-tree: $dark-fluent-tree,
     igx-watermark: $dark-fluent-watermark,
+    _meta: (
+        theme: 'fluent',
+        variant: 'dark',
+    ),
 );
 
 /// Used to create bootstrap component themes.
@@ -469,6 +477,10 @@ $dark-bootstrap-schema: (
     igx-tooltip: $dark-bootstrap-tooltip,
     igx-tree: $dark-bootstrap-tree,
     igx-watermark: $dark-bootstrap-watermark,
+    _meta: (
+        theme: 'bootstrap',
+        variant: 'dark',
+    ),
 );
 
 /// Used to create indigo component themes.
@@ -602,4 +614,8 @@ $dark-indigo-schema: (
     igx-tooltip: $dark-indigo-tooltip,
     igx-tree: $dark-indigo-tree,
     igx-watermark: $dark-indigo-watermark,
+    _meta: (
+        theme: 'indigo-desing',
+        variant: 'dark',
+    ),
 );

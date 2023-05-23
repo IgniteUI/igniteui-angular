@@ -4,7 +4,8 @@ import { IgxColumnActionsBaseDirective, IgxColumnActionsComponent, IgxColumnComp
 
 
 @Directive({
-    selector: '[appColumnGrouping]'
+    selector: '[appColumnGrouping]',
+    standalone: true
 })
 export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
 
@@ -30,11 +31,11 @@ export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
     }
 
     public get allUnchecked() {
- return false;
-}
+        return false;
+    }
     public get allChecked() {
- return false;
-}
+       return false;
+    }
 
     /**
      * @hidden @internal

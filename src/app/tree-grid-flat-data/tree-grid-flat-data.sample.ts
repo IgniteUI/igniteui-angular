@@ -1,9 +1,9 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
-         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult,
-         GridSelectionMode,
-         GridSummaryCalculationMode,
-         DisplayDensity} from 'igniteui-angular';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
+import { IgxSummaryOperand, IgxSummaryResult, IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, GridSummaryCalculationMode, DisplayDensity, IgxExcelExporterService, IgxCsvExporterService, GridSelectionMode, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxPaginatorComponent } from 'igniteui-angular';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public override operate(data: any[] = []): IgxSummaryResult[] {
@@ -22,7 +22,9 @@ export class MySummaryOperand extends IgxSummaryOperand {
 @Component({
     selector: 'app-tree-grid-flat-data-sample',
     styleUrls: ['tree-grid-flat-data.sample.scss'],
-    templateUrl: 'tree-grid-flat-data.sample.html'
+    templateUrl: 'tree-grid-flat-data.sample.html',
+    standalone: true,
+    imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, NgFor, NgIf, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule]
 })
 export class TreeGridFlatDataSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
@@ -34,6 +36,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public selectionMode;
     public density: DisplayDensity = 'comfortable';
     public displayDensities;
+    public paging = false;
 
     private nextRow = 1;
 

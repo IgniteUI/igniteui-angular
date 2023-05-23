@@ -17,7 +17,8 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
  * @internal
  */
 @Directive({
-    selector: '[igxResizer]'
+    selector: '[igxResizer]',
+    standalone: true
 })
 export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 

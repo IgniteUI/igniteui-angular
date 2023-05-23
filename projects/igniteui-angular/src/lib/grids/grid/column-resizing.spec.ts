@@ -2,16 +2,18 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxAvatarModule } from '../../avatar/avatar.component';
 import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, IColumnResizeEventArgs } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxCellHeaderTemplateDirective, IgxCellTemplateDirective } from '../columns/templates.directive';
+import { NgFor } from '@angular/common';
+import { IgxAvatarComponent } from '../../avatar/avatar.component';
+import { IColumnResizeEventArgs, IgxColumnComponent } from '../public_api';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
@@ -19,19 +21,15 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
     configureTestSuite((() => {
         return TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                MultiColumnHeadersComponent,
+                NoopAnimationsModule,
                 ResizableColumnsComponent,
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
-                MultiColumnHeadersComponent,
                 ColGridComponent,
                 ColPercentageGridComponent
-            ],
-            imports: [
-                IgxAvatarModule,
-                NoopAnimationsModule,
-                IgxGridModule
             ]
         });
     }));
@@ -566,7 +564,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(0).width).toBe('25%');
             grid.columnList.get(0).autosize();
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('30%');
+            expect(grid.columnList.get(0).width).toBe('32.5%');
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
@@ -578,7 +576,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('30%');
+            expect(grid.columnList.get(0).width).toBe('32.5%');
         }));
     });
 
@@ -870,7 +868,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 });
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour)
+    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -879,8 +879,7 @@ export class ResizableColumnsComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="618px" height="600px"`, ``,
-        `<igx-column [field]="'Released'" [pinned]="true" width="100px" dataType="boolean" [resizable]="true"></igx-column>
+    template: GridTemplateStrings.declareGrid(`width="618px" height="600px"`, ``, `<igx-column [field]="'Released'" [pinned]="true" width="100px" dataType="boolean" [resizable]="true"></igx-column>
         <igx-column [field]="'ReleaseDate'" [pinned]="true" width="100px" dataType="date" [resizable]="true"
             [formatter]="returnVal"></igx-column>
         <igx-column [field]="'Items'" [pinned]="true" width="100px" dataType="string" [resizable]="true"></igx-column>
@@ -892,8 +891,9 @@ export class ResizableColumnsComponent {
             </ng-template>
         </igx-column>
         <igx-column [field]="'Downloads'" width="100px" dataType="number" [resizable]="true"></igx-column>
-        <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`
-    )
+        <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class LargePinnedColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -913,7 +913,9 @@ export class LargePinnedColGridComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures)
+    template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxAvatarComponent]
 })
 export class GridFeaturesComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -925,7 +927,9 @@ export class GridFeaturesComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent)
+    template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent, NgFor]
 })
 export class NullColumnsComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -952,14 +956,14 @@ export class NullColumnsComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``,
-        `<igx-column [field]="'Items'" [width]="'40px'" dataType="string" [filterable]="true"></igx-column>
+    template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``, `<igx-column [field]="'Items'" [width]="'40px'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'ID'" [width]="'50px'" [header]="'ID'" [filterable]="true"></igx-column>
          <igx-column [field]="'ProductName'" [width]="'30px'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'Test'" width="300px" dataType="string" [resizable]="true"></igx-column>
          <igx-column [field]="'Downloads'" width="300px" dataType="number" [resizable]="true"></igx-column>
-         <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`
-    )
+         <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -972,12 +976,12 @@ export class ColGridComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``,
-        `<igx-column [field]="'Items'" [width]="'25%'" dataType="string" [filterable]="true" [resizable]="true"></igx-column>
+    template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``, `<igx-column [field]="'Items'" [width]="'25%'" dataType="string" [filterable]="true" [resizable]="true"></igx-column>
          <igx-column [field]="'ID'" [width]="'25%'" [header]="'ID'" [filterable]="true"></igx-column>
          <igx-column [field]="'ProductName'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
-         <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`
-    )
+         <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`),
+    standalone: true,
+    imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColPercentageGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;

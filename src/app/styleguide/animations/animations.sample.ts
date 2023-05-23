@@ -1,9 +1,11 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
+import { NgFor } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
+    AbsolutePosition,
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
     flipVerBck, flipVerFwd, growVerIn, growVerOut, heartbeat,
-    IgxDialogComponent, IgxOverlayService, IListItemClickEventArgs,
+    IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
     pulsateBck, pulsateFwd, rotateInBl,
     rotateInBottom, rotateInBr, rotateInCenter, rotateInDiagonal1, rotateInDiagonal2, rotateInHor,
     rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateInVer, rotateOutBl,
@@ -22,12 +24,13 @@ import {
     swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
     swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
 } from 'igniteui-angular';
-import { AbsolutePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
 
 @Component({
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
-    templateUrl: 'animations.sample.html'
+    templateUrl: 'animations.sample.html',
+    standalone: true,
+    imports: [IgxListComponent, NgFor, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
 })
 export class AnimationsSampleComponent {
     @ViewChild('dialog', { static: true, read: IgxDialogComponent })

@@ -187,8 +187,7 @@ export const SAMPLE_DATA = [
     },
     {
         ID: 'CACTU',
-        CompanyName:
-            'Cactus Comidas para llevar',
+        CompanyName: 'Cactus Comidas para llevar',
         ContactName: 'Patricio Simpson',
         ContactTitle: 'Sales Agent',
         Address: 'Cerrito 333',
