@@ -83,8 +83,9 @@ $dark-fluent-switch: extend($fluent-switch, $base-dark-switch, (
 
 /// Generates a dark bootstrap switch schema based on a mix of $bootstrap-switch and $base-dark-switch.
 /// @type {Map}
-/// @prop {Color} thumb-on-color [color: ('gray', 900)] - The color of the thumb when the switch is on.
-/// @prop {Color} thumb-on-disabled-color [color: ('gray', 900)] - The color of the thumb when the switch is on and disabled.
+/// @prop {Map} thumb-on-color [color: ('gray', 900)] - The color of the thumb when the switch is on.
+/// @prop {Map} thumb-on-disabled-color [color: ('gray', 900)] - The color of the thumb when the switch is on and disabled.
+/// @prop {Map} thumb-on-error-color [color: ('gray', 900)] - The color of the thumb when the switch is on and invalid.
 /// @requires $bootstrap-switch
 /// @requires $base-dark-switch
 $dark-bootstrap-switch: extend(
@@ -95,6 +96,10 @@ $dark-bootstrap-switch: extend(
         ),
 
         thumb-on-disabled-color: (
+            color: ('gray', 900)
+        ),
+
+        thumb-on-error-color: (
             color: ('gray', 900)
         ),
     )
