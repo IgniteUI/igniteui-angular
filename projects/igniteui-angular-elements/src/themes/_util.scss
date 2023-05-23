@@ -1,0 +1,97 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:list';
+@use '../../../igniteui-angular/src/lib/core/styles/themes' as igx;
+
+/// Callback to update component's name (for var prefix) and selectors for Elements
+/// @access private
+/// @param {Map} $theme_schema - The component's theme schema
+/// @return {Map} - Updated component theme schema
+@function updateElementName($theme_schema) {
+    $prefix: 'ig';
+    $result: $theme_schema;
+    @debug '--- called updateElementName ---';
+    // @each $key, $schema in $theme_schemas {
+    //     @if string.index($key, 'igx-') and map.has-key($schema, "name") {
+    //         $name: map.get($schema, "name");
+    //         @if string.index($name, 'igx-') {
+    //             $name: list.nth(string.split($name, 'igx-'), -1);
+    //             $name: igc-#{$name};
+    //         }
+    //         $result: map.merge($result, ($key: map.merge($schema, (name: $name) )));
+    //     } @else {
+    //         $result: map.merge($result, ($key: $schema));
+    //     }
+    // }
+
+    @if map.has-key($theme_schema, "name") {
+        $name: map.get($theme_schema, "name");
+        $selector: map.get($theme_schema, "selector") or $name;
+
+        @debug "name: #{$name}";
+
+        @if string.index($name, 'igx-') {
+            $name: list.nth(string.split($name, 'igx-'), -1);
+            $name: '#{$prefix}-#{$name}';
+            @debug "name after: #{$name}";
+        }
+
+        // TODO: For exposed components also modify selector with updated element prefix
+        // For the rest of internal components ensure selector with original name is present so it won't default to the new name
+        @debug "selector before: #{$selector}";
+        $selector: updateSelectors($selector);
+        @debug "selector after: #{$selector}";;
+
+        $result: map.merge($result, (name: $name, selector: $selector));
+    }
+    @return $result;
+}
+
+/// Break down the selector and update `igx-` element selectors with matching `igc-` for exposed Elements
+/// @access private
+/// @param {String} $selector - The selector(s) to update
+/// @return {String} - Updated selector(s) with `igc-` prefixed equivalents
+@function updateSelectors($selector) {
+    $result: ();
+    $selectors: string.split($selector, ", ");
+
+    @each $sel in $selectors {
+        $result: list.append($result, $sel, comma);
+
+        // TODO: only need igc- equivalents of exposed components, use theme include/exclude list?
+        @if string.index($sel, 'igx-') == 1 {
+            $igc-sel: list.nth(string.split($sel, 'igx-'), -1);
+            $igc-sel: 'igc-#{$igc-sel}';
+            $result: list.append($result, $igc-sel, comma);
+        }
+    }
+
+    @return "#{$result}"; // is this right?
+}
+
+/// Generates an Ignite UI for Angular Elements global theme.
+/// @param {Map} $palette - An palette to be used by the global theme.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
+/// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
+/// @param {Map} $elevations [$elevations] - The elevation map to be used by all component themes.
+/// @requires $light-material-schema
+/// @requires {function} is-component
+/// @requires {function} is-used
+@mixin elements-theme(
+    $palette,
+    $schema,
+    $exclude,
+    // $roundness,
+    // $elevation,
+    // $elevations,
+) {
+    @include igx.theme-internal(
+        $palette: $palette,
+        $exclude: $exclude,
+        $schema: igx.$light-bootstrap-schema,
+        $theme-handler: meta.get-function("updateElementName")
+    );
+}
