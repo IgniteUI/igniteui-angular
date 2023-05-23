@@ -1,4 +1,6 @@
 import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
 import {
     IgxDropDownComponent,
     OverlaySettings,
@@ -22,8 +24,6 @@ import {
     IgxRippleDirective,
     IgxDropDownItemComponent
 } from 'igniteui-angular';
-import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector

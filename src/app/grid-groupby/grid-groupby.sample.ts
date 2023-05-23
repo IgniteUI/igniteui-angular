@@ -2,20 +2,7 @@
 import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxButtonGroupComponent } from '../../../projects/igniteui-angular/src/lib/buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-item.component';
-import { IgxDropDownComponent } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down.component';
-import { IgxDropDownItemNavigationDirective } from '../../../projects/igniteui-angular/src/lib/drop-down/drop-down-navigation.directive';
-import { IgxToggleActionDirective } from '../../../projects/igniteui-angular/src/lib/directives/toggle/toggle.directive';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../../projects/igniteui-angular/src/lib/core/density';
-import { DefaultSortingStrategy, GroupMemberCountSortingStrategy, ISortingExpression, SortingDirection } from '../../../projects/igniteui-angular/src/lib/data-operations/sorting-strategy';
-import { GridSummaryCalculationMode, GridSummaryPosition } from '../../../projects/igniteui-angular/src/lib/grids/common/enums';
-import { IRowSelectionEventArgs, ISortingOptions } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
+import { DefaultSortingStrategy, DisplayDensity, DisplayDensityToken, GridSummaryCalculationMode, GridSummaryPosition, GroupMemberCountSortingStrategy, IDisplayDensityOptions, IRowSelectionEventArgs, ISortingExpression, ISortingOptions, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxGridComponent, IgxSwitchComponent, IgxToggleActionDirective, SortingDirection } from 'igniteui-angular';
 
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
