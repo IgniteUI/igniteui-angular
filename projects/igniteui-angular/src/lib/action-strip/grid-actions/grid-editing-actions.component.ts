@@ -133,14 +133,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    /**
-     * Delete a row according to the context
-     *
-     * @example
-     * ```typescript
-     * this.gridEditingActions.deleteRowHandler();
-     * ```
-     */
+    /** @hidden @internal **/
     public deleteRowHandler(event?): void {
         if (event) {
             event.stopPropagation();
@@ -155,6 +148,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
+    /** @hidden @internal **/
     public addRowHandler(event?, asChild?: boolean): void {
         if (event) {
             event.stopPropagation();

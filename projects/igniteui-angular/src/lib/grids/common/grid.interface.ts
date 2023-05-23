@@ -295,7 +295,7 @@ export interface GridServiceType {
     sort_multiple(expressions: ISortingExpression[]): void;
     clear_sort(fieldName: string): void;
 
-    get_pin_row_event_args(rowID: any, index?: number, row?: RowType , pinned?: boolean): IPinRowEventArgs;
+    get_pin_row_event_args(rowID: any, index?: number, row?: RowType, pinned?: boolean): IPinRowEventArgs;
 
     filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[];
     sortDataByExpressions(data: any[], expressions: ISortingExpression[]): any[];
@@ -335,43 +335,60 @@ export interface GridType extends IGridDataBindable {
     pipeTrigger: number;
     summaryPipeTrigger: number;
     filteringPipeTrigger: number;
+    /** @hidden @internal */
     hasColumnLayouts: boolean;
     moving: boolean;
     isLoading: boolean;
     dataCloneStrategy: IDataCloneStrategy;
 
-    gridAPI: GridServiceType;
+    readonly gridAPI: GridServiceType;
 
     filterMode: FilterMode;
 
     // TYPE
+    /** @hidden @internal */
     theadRow: any;
+    /** @hidden @internal */
     groupArea: any;
+    /** @hidden @internal */
     filterCellList: any[];
+    /** @hidden @internal */
     filteringRow: any;
+    /** @hidden @internal */
     actionStrip: any;
+    /** @hidden @internal */
     resizeLine: any;
 
+    /** @hidden @internal */
     tfoot: ElementRef<HTMLElement>;
+    /** @hidden @internal */
     paginator: IgxPaginatorComponent;
+    /** @hidden @internal */
     paginatorList?: QueryList<IgxPaginatorComponent>;
+    /** @hidden @internal */
     crudService: any;
+    /** @hidden @internal */
     summaryService: any;
 
 
 
     virtualizationState: IForOfState;
     // TYPE
+    /** @hidden @internal */
     selectionService: any;
     navigation: any;
+    /** @hidden @internal */
     filteringService: any;
     outlet: any;
+    /** @hidden @internal */
     hasMovableColumns: boolean;
     isRowSelectable: boolean;
     showRowSelectors: boolean;
     isPinningToStart: boolean;
     columnInDrag: any;
+    /** @hidden @internal */
     pinnedWidth: number;
+    /** @hidden @internal */
     unpinnedWidth: number;
     summariesMargin: number;
     headSelectorBaseAriaLabel: string;
@@ -392,8 +409,8 @@ export interface GridType extends IGridDataBindable {
     sortHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     sortAscendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
     sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext>;
-    headerCollapseIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
-    headerExpandIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerCollapsedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
+    headerExpandedIndicatorTemplate: TemplateRef<IgxGridTemplateContext>;
     dragIndicatorIconTemplate: any;
     dragIndicatorIconBase: any;
     disableTransitions: boolean;
@@ -425,10 +442,14 @@ export interface GridType extends IGridDataBindable {
     visibleColumns: ColumnType[];
     unpinnedColumns: ColumnType[];
     pinnedColumns: ColumnType[];
+    /** @hidden @internal */
     headerCellList: any[];
+    /** @hidden @internal */
     headerGroups: any[];
+    /** @hidden @internal */
     headerGroupsList: any[];
     summariesRowList: any;
+    /** @hidden @internal */
     headerContainer: any;
     isCellSelectable: boolean;
     isMultiRowSelectionEnabled: boolean;
@@ -436,6 +457,7 @@ export interface GridType extends IGridDataBindable {
     pinnedRecordsCount: number;
     pinnedRecords: any[];
     unpinnedRecords: any[];
+    /** @hidden @internal */
     pinnedDataView: any[];
     pinnedRows: any[];
     dataView: any[];
@@ -443,8 +465,8 @@ export interface GridType extends IGridDataBindable {
     _filteredSortedUnpinnedData: any[];
     filteredSortedData: any[];
     dataWithAddedInTransactionRows: any[];
-    transactions: TransactionService<Transaction, State>;
-    validation: IgxGridValidationService;
+    readonly transactions: TransactionService<Transaction, State>;
+    readonly validation: IgxGridValidationService;
     defaultSummaryHeight: number;
     summaryRowHeight: number;
     rowEditingOverlay: IgxToggleDirective;
@@ -458,22 +480,25 @@ export interface GridType extends IGridDataBindable {
     lastSearchInfo: ISearchInfo;
     page: number;
     perPage: number;
+    /** @hidden @internal */
     dragRowID: any;
     rowDragging: boolean;
-    evenRowCSS: string;
-    oddRowCSS: string;
 
     firstEditableColumnIndex: number;
     lastEditableColumnIndex: number;
     isRowPinningToTop: boolean;
     hasDetails: boolean;
+    /** @hidden @internal */
     hasSummarizedColumns: boolean;
+    /** @hidden @internal */
     hasColumnGroups: boolean;
+    /** @hidden @internal */
     hasEditableColumns: boolean;
     uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
 
-    cdr: ChangeDetectorRef;
+    readonly cdr: ChangeDetectorRef;
+    /** @hidden @internal */
     document: Document;
     rowExpandedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
     rowCollapsedIndicatorTemplate: TemplateRef<IgxGridRowTemplateContext>;
@@ -488,7 +513,9 @@ export interface GridType extends IGridDataBindable {
 
     // XXX: Work around till we fixed the injection tokens
     lastChildGrid?: GridType;
+    /** @hidden @internal */
     toolbarOutlet?: ViewContainerRef;
+    /** @hidden @internal */
     paginatorOutlet?: ViewContainerRef;
     flatData?: any[] | null;
     childRow?: any;
@@ -581,7 +608,9 @@ export interface GridType extends IGridDataBindable {
     groupingMetadata?: any[];
     selectedCells?: CellType[];
     selectedRows: any[];
+    /** @hidden @internal */
     activeDescendant?: string;
+    /** @hidden @internal */
     isPivot?: boolean;
 
     toggleGroup?(groupRow: IGroupByRecord): void;
@@ -696,17 +725,22 @@ export interface PivotGridType extends GridType {
     pivotConfiguration: IPivotConfiguration;
     allDimensions: IPivotDimension[],
     showPivotConfigurationUI: boolean;
+    /** @hidden @internal */
     columnDimensions: IPivotDimension[];
+    /** @hidden @internal */
     rowDimensions: IPivotDimension[];
     rowDimensionResizing: boolean;
+    /** @hidden @internal */
     values: IPivotValue[];
+    /** @hidden @internal */
     filterDimensions: IPivotDimension[];
+    /** @hidden @internal */
     dimensionDataColumns: ColumnType[];
     pivotRowWidths: number;
     setupColumns(): void;
     toggleRow(rowID: any): void;
     resolveDataTypes(field: any): GridColumnDataType;
-    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index? : number);
+    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number);
     getDimensionsByType(dimension: PivotDimensionType);
     toggleDimension(dimension: IPivotDimension);
     sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection);
@@ -715,6 +749,7 @@ export interface PivotGridType extends GridType {
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
     dimensionsChange: EventEmitter<IDimensionsChange>;
     valuesChange: EventEmitter<IValuesChange>;
+    /** @hidden @internal */
     pivotKeys: IPivotKeys;
     hasMultipleValues: boolean;
     excelStyleFilterMaxHeight: string;
@@ -761,7 +796,7 @@ export interface IgxGridEmptyTemplateContext {
 export interface IgxGridRowEditTemplateContext {
     $implicit: undefined,
     rowChangesCount: number,
-    endEdit:  (commit: boolean, event?: Event) => void
+    endEdit: (commit: boolean, event?: Event) => void
 }
 
 export interface IgxGridRowEditTextTemplateContext {

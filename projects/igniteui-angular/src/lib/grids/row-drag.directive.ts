@@ -188,7 +188,6 @@ export class IgxDragIndicatorIconDirective {
     selector: '[igxRowDragGhost]',
     standalone: true
 })
-
 export class IgxRowDragGhostDirective {
     constructor(public templateRef: TemplateRef<IgxGridRowDragGhostContext>) { }
     public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,

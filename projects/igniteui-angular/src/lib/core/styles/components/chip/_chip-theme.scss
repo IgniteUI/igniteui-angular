@@ -369,6 +369,7 @@
         grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
         align-items: center;
         justify-content: center;
+        text-align: center;
         flex: 1 1 auto;
         height: sizable(map.get($chip-height, 'compact'), map.get($chip-height, 'cosy'), map.get($chip-height, 'comfortable'));
         padding-inline: sizable(map.get($chip-padding, 'compact'), map.get($chip-padding, 'cosy'), map.get($chip-padding, 'comfortable'));
@@ -394,6 +395,8 @@
 
         igx-avatar,
         igx-circular-bar {
+            --component-size: 3;
+
             $avatar-size: (
                 comfortable: rem(24px),
                 cosy: rem(18),
@@ -415,6 +418,18 @@
         igx-suffix,
         [igxSuffix] {
             @extend %igx-chip__suffix;
+        }
+    }
+
+    %igx-chip__item--cosy {
+        igx-avatar {
+            --component-size: 2;
+        }
+    }
+
+    %igx-chip__item--compact {
+        igx-avatar {
+            --component-size: 1;
         }
     }
 

@@ -1516,7 +1516,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Should have correct indices on all pages', fakeAsync(() => {
             // root grid
-            hGrid.nextPage();
+            hGrid.paginator.nextPage();
             tick(100);
             fix.detectChanges();
             expect(hGrid.gridAPI.get_row_by_index(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');

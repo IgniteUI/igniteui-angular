@@ -105,6 +105,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
     public islandPaginatorTemplate: TemplateRef<any>;
 
+    /** @hidden @internal **/
     @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
     public actionStrips: QueryList<IgxActionStripComponent>;
 

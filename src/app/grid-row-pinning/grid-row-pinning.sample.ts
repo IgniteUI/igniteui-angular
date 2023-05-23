@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
+import { NgFor } from '@angular/common';
+
 import {
     IgxGridComponent,
     ColumnPinningPosition,
@@ -12,28 +14,15 @@ import {
     GridSelectionMode,
     IPinningConfig,
     IgxIconService,
-    RowType
+    RowType,
+    IGX_HIERARCHICAL_GRID_DIRECTIVES,
+    IgxTreeGridComponent,
+    IgxIconComponent,
+    IgxSwitchComponent,
+    IgxButtonDirective
 } from 'igniteui-angular';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { IgxGridToolbarExporterComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-exporter.component';
-import { IgxTreeGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
-import { IgxRowIslandComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/row-island.component';
-import { IgxHierarchicalGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.component';
-import { IgxPaginatorComponent } from '../../../projects/igniteui-angular/src/lib/paginator/paginator.component';
-import { NgFor } from '@angular/common';
-import { IgxIconComponent } from '../../../projects/igniteui-angular/src/lib/icon/icon.component';
-import { IgxCellTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/columns/templates.directive';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/columns/column.component';
-import { IgxGridDetailTemplateDirective } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.directives';
-import { IgxGridToolbarHidingComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-hiding.component';
-import { IgxGridToolbarPinningComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar-pinning.component';
-import { IgxGridToolbarActionsComponent, IgxExcelTextDirective, IgxCSVTextDirective } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/common';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
-import { IgxGridToolbarComponent } from '../../../projects/igniteui-angular/src/lib/grids/toolbar/grid-toolbar.component';
-import { IgxGridStateDirective as IgxGridStateDirective_1 } from '../../../projects/igniteui-angular/src/lib/grids/state.directive';
-import { IgxGridComponent as IgxGridComponent_1 } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { IgxSwitchComponent } from '../../../projects/igniteui-angular/src/lib/switch/switch.component';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
@@ -44,7 +33,7 @@ import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/d
         IgxIconService
     ],
     standalone: true,
-    imports: [IgxButtonDirective, IgxSwitchComponent, IgxGridComponent_1, IgxGridStateDirective_1, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridDetailTemplateDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, NgFor, IgxPaginatorComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective]
+    imports: [NgFor, IGX_HIERARCHICAL_GRID_DIRECTIVES, IgxGridComponent, IgxTreeGridComponent, IgxIconComponent, GridSearchBoxComponent, IgxSwitchComponent, IgxButtonDirective]
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {

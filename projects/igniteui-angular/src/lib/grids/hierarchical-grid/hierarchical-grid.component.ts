@@ -4,7 +4,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ContentChildren,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
@@ -37,7 +36,6 @@ import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { CellType, GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, RowType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { IgxGridCell } from '../grid-public-cell';
@@ -174,7 +172,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     constructor(
-        @Inject(IGX_GRID_SERVICE_BASE) public gridAPI: IgxHierarchicalGridAPIService,
+        @Inject(IGX_GRID_SERVICE_BASE) public readonly gridAPI: IgxHierarchicalGridAPIService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
 
@@ -342,16 +340,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
-    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-
     /** @hidden @internal */
     @ContentChildren(IgxPaginatorComponent, { descendants: true })
     public paginatorList: QueryList<IgxPaginatorComponent>;
 
+    /** @hidden @internal */
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
     public toolbarOutlet: ViewContainerRef;
 
+    /** @hidden @internal */
     @ViewChild('paginatorOutlet', { read: ViewContainerRef })
     public paginatorOutlet: ViewContainerRef;
     /**
@@ -437,6 +434,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
             this.reflow();
@@ -485,9 +485,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * this.grid1.totalItemCount = 55;
      * ```
      */
+    @Input()
     public set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
-        this.cdr.detectChanges();
     }
 
     public get totalItemCount() {
@@ -520,26 +520,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get expandChildren(): boolean {
         return this._defaultExpandState;
-    }
-
-    /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
     }
 
     /**
@@ -668,8 +648,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
-        this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
-        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.headerCollapsedIndicatorTemplate = this.rootGrid.headerCollapsedIndicatorTemplate;
+        this.headerExpandedIndicatorTemplate = this.rootGrid.headerExpandedIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.sortAscendingHeaderIconTemplate = this.rootGrid.sortAscendingHeaderIconTemplate;
         this.sortDescendingHeaderIconTemplate = this.rootGrid.sortDescendingHeaderIconTemplate;
@@ -679,10 +659,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.rootGrid.hasChildrenKey;
         this.showExpandAll = this.parentIsland ?
             this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
-    }
-
-    public get outletDirective(): IgxOverlayOutletDirective {
-        return this.rootGrid.outlet;
     }
 
     /**
@@ -841,6 +817,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /** @hidden @internal **/
     public override ngOnDestroy() {
         if (!this.parent) {
             this.gridAPI.getChildGrids(true).forEach((grid) => {
@@ -948,9 +925,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get iconTemplate() {
         const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+            return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         } else {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+            return this.headerExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         }
     }
 
@@ -1056,6 +1033,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    /** @hidden @internal **/
     public onContainerScroll() {
         this.hideOverlays();
     }

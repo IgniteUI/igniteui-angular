@@ -9,6 +9,7 @@ import { IgxIconService } from '../../icon/icon.service';
     standalone: true
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
+    /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
 
@@ -24,6 +25,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     @Input()
     public asMenuItems = false;
 
+    /** @hidden @internal **/
     public strip: IgxActionStripComponent;
 
     /**

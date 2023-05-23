@@ -510,6 +510,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /** @hidden @internal **/
     public autoSize: number;
 
     /**
@@ -901,6 +902,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.getCalcWidth();
     }
 
+    /** @hidden @internal **/
     public calcPixelWidth: number;
 
     /**
@@ -1459,15 +1461,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.parent && this.parent.columnLayout;
     }
 
-    /**
-     * Returns the children columns collection.
-     * Returns an empty array if the column does not contain children columns.
-     * ```typescript
-     * let childrenColumns =  this.column.allChildren;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
+    /** @hidden @internal **/
     public get allChildren(): IgxColumnComponent[] {
         return [];
     }
@@ -1491,16 +1485,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return lvl;
     }
 
+    /** @hidden @internal **/
     public get isLastPinned(): boolean {
         return this.grid.isPinningToStart &&
             this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
 
+    /** @hidden @internal **/
     public get isFirstPinned(): boolean {
         const pinnedCols = this.grid.pinnedColumns.filter(x => !x.columnGroup);
         return !this.grid.isPinningToStart && pinnedCols[0] === this;
     }
 
+    /** @hidden @internal **/
     public get rightPinnedOffset(): string {
         return this.pinned && !this.grid.isPinningToStart ?
             - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
@@ -1588,12 +1585,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set expanded(_value: boolean) { }
 
     /**
-     * hidden
+     * @hidden
      */
     public defaultWidth: string;
 
     /**
-     * hidden
+     * @hidden
      */
     public widthSetByUser: boolean;
 
@@ -1763,6 +1760,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     constructor(
         @Inject(IGX_GRID_BASE) public grid: GridType,
         @Optional() @Self() @Inject(NG_VALIDATORS) private _validators: Validator[],
+        /** @hidden @internal **/
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
     ) {
@@ -1878,6 +1876,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /** @hidden @internal **/
     public getInitialChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<MRLColumnSizeInfo> {
         const columnSizes: MRLColumnSizeInfo[] = [];
         // find the smallest col spans
@@ -1993,6 +1992,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return columnSizes;
     }
 
+    /** @hidden @internal **/
     public getFilledChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<string> {
         const columnSizes = this.getInitialChildColumnSizes(children);
 
@@ -2008,6 +2008,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return result;
     }
 
+    /** @hidden @internal **/
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
         if (this.columnLayout || !this.columnLayoutChild || this.columnGroup) {
             return [{ target: this, spanUsed: 1 }];

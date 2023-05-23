@@ -116,22 +116,18 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
-    /**
-     * Sets the class of the IgxPaginatorComponent based
-     * on the provided displayDensity.
-     */
     @HostBinding('class.igx-paginator--cosy')
-    public get classCosy(): boolean {
+    private get classCosy(): boolean {
         return this.displayDensity === DisplayDensity.cosy;
     }
 
     @HostBinding('class.igx-paginator--compact')
-    public get classCompact(): boolean {
+    private get classCompact(): boolean {
         return this.displayDensity === DisplayDensity.compact;
     }
 
     @HostBinding('class.igx-paginator')
-    public get classComfortable(): boolean {
+    private get classComfortable(): boolean {
         return this.displayDensity === DisplayDensity.comfortable;
     }
 

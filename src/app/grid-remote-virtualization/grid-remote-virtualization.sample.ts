@@ -2,8 +2,7 @@ import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '
 import { AsyncPipe } from '@angular/common';
 
 import { RemoteService } from '../shared/remote.service';
-import { IgxButtonDirective } from '../../../projects/igniteui-angular/src/lib/directives/button/button.directive';
-import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/grids/grid/grid.component';
+import { IgxButtonDirective, IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-remote-virtualization-sample',
@@ -11,7 +10,6 @@ import { IgxGridComponent } from '../../../projects/igniteui-angular/src/lib/gri
     standalone: true,
     imports: [IgxGridComponent, IgxButtonDirective, AsyncPipe]
 })
-
 export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;

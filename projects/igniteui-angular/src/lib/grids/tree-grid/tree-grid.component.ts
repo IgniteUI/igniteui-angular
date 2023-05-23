@@ -351,6 +351,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
+        if (!this._init) {
+            this.validation.updateAll(this._data);
+        }
         if (this.shouldGenerate) {
             this.setupColumns();
         }
@@ -447,26 +450,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super(validationService, selectionService, colResizingService, gridAPI, transactionFactory, _elementRef,
             _zone, document, cdr, differs, viewRef, appRef, injector, envInjector, navigation, filteringService,
             overlayService, summaryService, _displayDensityOptions, localeId, platform, _diTransactions);
-    }
-
-    /**
-     * @deprecated in version 12.1.0. Use `getCellByColumn` or `getCellByKey` instead
-     *
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columns.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this as any, rowIndex, column.field);
-        }
     }
 
     /**
@@ -728,7 +711,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = treeRowRec.data[key];
+                row.data[key] = treeRowRec.data[this.crudService.addRowParent?.asChild ? this.primaryKey : key];
             } else {
                 row.data[key] = undefined;
             }
@@ -928,18 +911,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return row;
-    }
-
-    /**
-     * Returns if the `IgxTreeGridComponent` has groupable columns.
-     *
-     * @example
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-     */
-    public get hasGroupableColumns(): boolean {
-        return this.columns.some((col) => col.groupable && !col.columnGroup);
     }
 
     protected override generateDataFields(data: any[]): string[] {
