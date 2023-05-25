@@ -292,6 +292,13 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             fix.componentInstance.data = null;
             expect(() => fix.detectChanges()).not.toThrow();
         });
+
+        it('should not throw error when data is null and row is pinned', () => {
+            fix = TestBed.createComponent(IgxTreeGridNoDataComponent);
+            grid = fix.componentInstance.treeGrid;
+            grid.pinRow(4);
+            expect(() => fix.detectChanges()).not.toThrow();
+        });
     });
 
     describe('Displaying empty grid message', () => {
