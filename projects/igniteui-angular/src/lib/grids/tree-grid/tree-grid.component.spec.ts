@@ -300,7 +300,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         it('should not throw error when data is null and row is pinned', () => {
             let errorMessage = '';
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
-            const grid = fix.componentInstance.treeGrid;
+            grid = fix.componentInstance.treeGrid;
             grid.data = null;
             fix.detectChanges();
 
