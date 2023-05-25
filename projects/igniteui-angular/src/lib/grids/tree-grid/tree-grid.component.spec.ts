@@ -296,6 +296,21 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             }
             expect(errorMessage).toBe('');
         });
-    });
 
+        it('should not throw error when data is null and row is pinned', () => {
+            let errorMessage = '';
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            const grid = fix.componentInstance.treeGrid;
+            grid.data = null;
+            fix.detectChanges();
+
+            grid.pinRow(4);
+            try {
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
+    });
 });
